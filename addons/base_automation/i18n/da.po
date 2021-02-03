@@ -7,17 +7,19 @@
 # Morten Schou <ms@msteknik.dk>, 2018
 # Jesper Carstensen <jc@danodoo.dk>, 2018
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
+# lhmflexerp <lhm@flexerp.dk>, 2018
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
-# lhmflexerp <lhm@flexerp.dk>, 2019
+# Walther Barnett <wba@miracle.dk>, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,21 +30,7 @@ msgstr ""
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"En kode server handling kan udføres fra hjemmesiden, ved hjælp af en "
-"dedikeret controller. Adressen er <base>/website/action/<website_path>. "
-"Angiv dette felt som True for at give brugerne mulighed for at køre denne "
-"handling. Hvis den er sat til False, kan handlingen ikke køres gennem "
-"hjemmesiden."
+msgstr "<div>E-mail automatisering</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -78,7 +66,7 @@ msgstr "Aktivitet"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Activity Bruger Type"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -115,12 +103,12 @@ msgstr "Automatiske aktioner"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Automatiseret regel linje test"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Automatiseret regel test"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -128,63 +116,58 @@ msgid "Automation"
 msgstr "Automatisering"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Synlig på hjemmesiden"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Basis handlings regel: tjek og udfør"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
 #: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
 msgid "Base Automation: test recursive rule"
-msgstr ""
+msgstr "Basis automatisering: test rekursiv regel"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_create
 #: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
 msgid "Base Automation: test rule on create"
-msgstr ""
+msgstr "Basis automatisering: test regel ved oprettelse"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_recompute
 #: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
 msgid "Base Automation: test rule on recompute"
-msgstr ""
+msgstr "Basis automatisering: test regel ved genudregning"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_line
 #: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
 msgid "Base Automation: test rule on secondary model"
-msgstr ""
+msgstr "Basis automatisering: test regel på sekundær model"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
 msgid "Base Automation: test rule on write"
-msgstr ""
+msgstr "Basis automatisering: Test regel på skrivning"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_check_context
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
-msgstr ""
+msgstr "Basis automatisering: Test regel på skrivning tjek kontekst"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
 msgid "Base Automation: test send an email"
-msgstr ""
+msgstr "Base automatisering: Test send en email"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Baseret på Formular modificering"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -199,12 +182,12 @@ msgstr "Før opdater domæne"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Bindingsmodel"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Bindingstype"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -217,11 +200,12 @@ msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
 msgstr ""
+"Marker denne boks, hvis denne kontakt er en kunde. Kan vælges i salgsordre."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Nedarvedes handlinger"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
@@ -229,6 +213,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Afkoms server handlinger, som vil blive udført. Bemærk at den sidst "
+"returnerede handlings værdi, vil blive brugs som global returnerings værdi."
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -238,12 +224,12 @@ msgstr "Lukket"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Komma-separeret liste over felt navne der afvikler onchange."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "Opret/skriv mål model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -276,6 +262,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Forsinkelse efter trigger dato.\n"
+"                                 Du kan angive et negativt tal hvis du skal bruge en forsinkelse før\n"
+"                                trigger datoen, som at sende en påmindelse 15 minutter før et møde."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -302,12 +291,12 @@ msgstr "Vis navn"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Forfaldsdato om"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Forfaldstype"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -332,16 +321,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr ""
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
+"Hvis tilstede, skal denne betingelse være opfyldt før afviklingen af "
+"handlings rollen."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -405,7 +391,7 @@ msgstr "Linje"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
 msgid "Link using field"
-msgstr ""
+msgstr "Forbind via felt"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -428,11 +414,13 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
+"Model for datasæt oprettelse / opdatering. Udfyld kun dette felt for at "
+"angive en anden model end basis modellen."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Model hvorpå server handlingen kører."
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -457,7 +445,7 @@ msgstr "Notat"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "On Change Fields Trigger"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -485,6 +473,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Valgfri hjælpetekst til brugere, med en beskrivelse af mål visningen, så som"
+" forbrug eller formål."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__partner_id
@@ -507,6 +497,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Angiv feltet som er brugt til at forbinde det nyligt oprettede datasæt til "
+"det datasæt brugt af server handlingen."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -546,11 +538,13 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Indstillingen af en værdi giver adgang til denne handling gennem sidebaren "
+"for den givne model."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Opret en ny automatiseret automatisering"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -570,12 +564,12 @@ msgstr "Opsummering"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model"
-msgstr ""
+msgstr "Mål model"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Teknisk navn på bruger i datasæt"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
@@ -584,12 +578,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr ""
-"Den fulde URL for at få adgang til serverens handling via hjemmesiden."
+"\"%(trigger_value)s\" %(trigger_label)s Kan kun bruges sammen med "
+"\"%(state_value)s\" handlingstypen"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -606,12 +596,21 @@ msgstr "Trigger dato"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typer af server handlinger. De følgende værdier er tilgængelige:\n"
+"- 'Kør Python kode': En blok python kode vil blive udført\n"
+"- 'Opret': Opret et nyt datasæt med nye værdier\n"
+"- 'Opdater et datasæt': Opdater værdierne i et datasæt\n"
+"- 'Kør flere handlinger': Definer en handling der afvikler flere andre server handlinger\n"
+"- 'Send email': Send automatisk en email (Diskuter)\n"
+"- 'Tilføj følgere': Tilføj følgere til et datasæt (Diskuter)\n"
+"- 'Opret næste aktivitet': Opret en aktivitet (Diskuter)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -626,6 +625,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Brug 'Specifik bruger' for altid at tildele den samme bruger på næste "
+"aktivitet. Brug 'Generisk bruger fra datasæt' for at specificere felt navnet"
+" på brugeren som skal vælges i datasættet."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -641,6 +643,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Brug automatiserede handlinger til at automatisk afvikle handlinger for\n"
+"                 diverse skærme. Eksempel: en potentiel kunde oprettet af en specifik bruger kan\n"
+"                 automatisk sættes til et specifikt salgsteam, eller en\n"
+"                 mulighed som stadig har afventende status efter 14 dage kan\n"
+"                 udløve en automatisk påmindelses email."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -650,12 +657,12 @@ msgstr "Bruger"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr ""
+msgstr "Bruger felt navn"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "Værdi mapping"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:86
@@ -664,21 +671,13 @@ msgid "Warning"
 msgstr "Advarsel!"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Hjemmeside sti"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Hjemmeside URL"
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Ved udregning af en dags-baseret timet betingelse, er det muligt at bruge en"
+" kalender til at udregne datoen, baseret på arbejdsdage."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -695,6 +694,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Hvornår skal betingelsen udløses.\n"
+"                            Hvis til stede, vil det tjekkes af planlæggeren. Hvis tom, vil det tjekkes ved oprettelse og opdatering."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -707,3 +708,5 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Skriv python koden handlingen skal udføre. Nogle variabler er tilgængelig "
+"til brug; hjælp vedrørende python udtryk findes under hjælp fanen."

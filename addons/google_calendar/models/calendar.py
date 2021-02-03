@@ -21,7 +21,10 @@ class Meeting(models.Model):
     def write(self, values):
         sync_fields = set(self.get_fields_need_update_google())
         if (set(values) and sync_fields) and 'oe_update_date' not in values and 'NewMeeting' not in self._context:
-            values['oe_update_date'] = fields.Datetime.now()
+            if 'oe_update_date' in self._context:
+                values['oe_update_date'] = self._context.get('oe_update_date')
+            else:
+                values['oe_update_date'] = fields.Datetime.now()
         return super(Meeting, self).write(values)
 
     @api.multi

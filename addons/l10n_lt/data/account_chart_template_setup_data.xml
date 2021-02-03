@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <!-- Setup Chart of Accounts Template -->
+    <record id="account_chart_template_lithuania" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="account_account_template_2410"/>
+        <field name="property_account_payable_id" ref="account_account_template_4430"/>
+        <field name="property_account_expense_categ_id" ref="account_account_template_6000"/>
+        <field name="property_account_income_categ_id" ref="account_account_template_5000"/>
+        <field name="income_currency_exchange_account_id" ref="account_account_template_5803"/>
+        <field name="expense_currency_exchange_account_id" ref="account_account_template_6803"/>
+        <field name="property_stock_account_input_categ_id" ref="account_account_template_2045"/>
+        <field name="property_stock_account_output_categ_id" ref="account_account_template_2045"/>
+        <field name="property_stock_valuation_account_id" ref="account_account_template_2040"/>
+    </record>
+</odoo>

@@ -3,23 +3,20 @@
 # * google_calendar
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Martin Trigaux, 2018
-# Giovanni Perteghella <giovanni@perteghella.org>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Paolo Valier, 2018
 # Pietro Della Notte <pdellanotte@gmail.com>, 2018
-# David Minneci <david@numeko.it>, 2018
-# mymage <stefano.consolaro@mymage.it>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,14 +27,14 @@ msgstr ""
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Guida utente"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:89
 #, python-format
 msgid "Accounts"
-msgstr "Conti"
+msgstr "Account"
 
 #. module: google_calendar
 #. openerp-web
@@ -47,8 +44,8 @@ msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
 msgstr ""
-"Tutti gli eventi sono stati scollegati dal tuo account precedente. Puoi ora "
-"sincronizzare il calendario."
+"Tutti gli eventi sono stati disconnessi dal precedente account. Ora è "
+"possibile riavviare la sincronizzare."
 
 #. module: google_calendar
 #. openerp-web
@@ -58,8 +55,8 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
-"Un amministratore di sistema deve configurare la sincronizzazione con "
-"Google, prima di poterla usare!"
+"Per essere utilizzata, la sincronizzazione Google deve essere configurata da"
+" un amministratore."
 
 #. module: google_calendar
 #. openerp-web
@@ -69,8 +66,8 @@ msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
 msgstr ""
-"Si è verificato un errore scollegando gli eventi dal tuo account precedente."
-" Riprova o contatta il tuo amministratore di sistema."
+"Errore nella disconnessione degli eventi dal precedente account. Riprovare o"
+" contattare l'amministratore."
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
@@ -80,17 +77,17 @@ msgstr "Calendario"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr ""
+msgstr "Informazioni partecipante in calendario"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "ID Calendario"
+msgstr "ID calendario"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "Client ID"
+msgstr "ID client"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -142,24 +139,24 @@ msgstr "Evento"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:84
 #, python-format
 msgid "Event disconnection error"
-msgstr "Errore disconnessione evento"
+msgstr "Errore nella disconnessione evento"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:80
 #, python-format
 msgid "Event disconnection success"
-msgstr "Disconnessione evento avvenuta con successo"
+msgstr "Successo nella disconnessione evento"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar
 msgid "Google Calendar"
-msgstr "Google Calendar"
+msgstr "Calendario Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr "Google Calendar ID Evento"
+msgstr "ID evento calendario Google"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -171,7 +168,7 @@ msgstr "Calendario Google: sincronizzazione"
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr "Il Google ID dovrebbe essere univoco!"
+msgstr "L'ID Google deve essere univoco."
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:688
@@ -181,7 +178,7 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
-"Google è perso ... la prossima sincronizzazione sarà una sincronizzazione completa\n"
+"Google è confuso... la prossima sincronizzazione sarà completa. \n"
 "\n"
 " %s"
 
@@ -198,8 +195,8 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
-"Per farlo, gli eventi esistenti devono prima essere scollegati dal vecchio "
-"account."
+"Per eseguire l'operazione, disconnettere prima tutti gli eventi esistenti "
+"dal vecchio account."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
@@ -207,41 +204,40 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
-"Ultimo ID calendario che è stato sincronizzato. Se è cambiato verranno "
-"rimossi tutti i collegamenti tra l'ID google e l'ID del calendario interno "
-"in Odoo"
+"Ultimo ID calendario sincronizzato. Se è stato modificato, verranno rimossi "
+"tutti i collegamenti tra ID Google e ID Google interno a Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_last_sync_date
 msgid "Last synchro date"
-msgstr "Data di ultima sincronizzazione"
+msgstr "Data ultima sincronizzazione"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__oe_synchro_date
 msgid "Odoo Synchro Date"
-msgstr "Data sincro Odoo"
+msgstr "Data sincronizzazione Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__oe_update_date
 msgid "Odoo Update Date"
-msgstr "Odoo data aggiornamento"
+msgstr "Data aggiornamento Odoo"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:46
 #, python-format
 msgid "Redirection"
-msgstr "Redirezione"
+msgstr "Reindirizzamento"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
-msgstr "Aggiorna token"
+msgstr "Token di aggiornamento"
 
 #. module: google_calendar
 #. openerp-web
@@ -258,8 +254,8 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"La sincronizzazione con Google deve essere configurata prima di essere "
-"usata, vuoi configurarla ora?"
+"Per essere usata, la sincronizzazione Google deve essere configurata, "
+"procedere ora?"
 
 #. module: google_calendar
 #. openerp-web
@@ -269,13 +265,20 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr ""
-"L'account che stai cercando di sincronizzare (%s) non è lo stesso utlizzato "
-"l'ultima volta (%s)!"
+"L'account da sincronizzare (%s) non corrisponde all'ultimo utilizzato (%s)."
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/google_calendar.py:278
+#, python-format
+msgid ""
+"The event \"%s\", %s (ID: %s) cannot be synchronized because of the "
+"following error: %s"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
-msgstr "Validità Token"
+msgstr "Validità token"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__server_uri
@@ -298,10 +301,11 @@ msgstr "Utenti"
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
-"Sarai reindirizzato su Google per autorizzare l'accesso al tuo calendario!"
+"Per autorizzare l'accesso al calendario verrà effettuato un reindirizzamento"
+" a Google."
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr "Il tuo token è invalido o è stato revocato"
+msgstr "Il token non è valido o è stato revocato."

@@ -8,9 +8,9 @@
 # Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
-# nle_odoo, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2018
 # Murat Kaplan <muratk@projetgrup.com>, 2018
+# nle_odoo, 2018
 # Umur Akın <umura@projetgrup.com>, 2019
 # 
 msgid ""
@@ -67,13 +67,13 @@ msgstr "Etkin"
 #. module: google_drive
 #: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Add a new template"
-msgstr ""
+msgstr "Yeni bir şablon ekleyin"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:42
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern."
-msgstr ""
+msgstr "Google Drive isim örneğinizde, en az bir anahtar bulunamadı."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
@@ -109,6 +109,14 @@ msgstr "Oluşturulma"
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Google sürücü oluşturma yalnızca tek tek tarafından yapılabilir."
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:161
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -266,6 +274,8 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
+"Eklenen dosyanın adı sabit ya da değişken bir data kullanabilir. Google drive'da verileri birbirinden ayırmak için, sabit kelimeler ve alanlar kullanın.Örnekte olduğu gibi eğer Google drivedaki dokumanın adına  Deco_Addict_%(name)s_Sales yazarsanız\n"
+"                                          'Deco_Addict_SO0001_Sales' olarak kaydedilecektir."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135

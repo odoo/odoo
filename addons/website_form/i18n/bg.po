@@ -1,57 +1,58 @@
-# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_form
-#
+# 
 # Translators:
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# #-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * website_form
-#
-# Translators:
-#, fuzzy
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2019
+# aleksandar ivanov, 2019
+# Albena Mincheva <albena_vicheva@abv.bg>, 2019
+# Boyan Rabchev <boyan.rabchev@plana.solutions>, 2019
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# Igor Sheludko <igor.sheludko@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
-"bg/)\n"
-"Language: bg\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2020\n"
+"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:209
+#: code:addons/website_form/static/src/js/website_form.js:230
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "\"%s\" не е правилна дата"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:204
+#: code:addons/website_form/static/src/js/website_form.js:225
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "\"%s\" не е правилна дата и час"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:221
+#: code:addons/website_form/controllers/main.py:229
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Прикачи файлове: </p>"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
 msgstr "Позволено да се използва във форми"
 
@@ -63,35 +64,43 @@ msgid "An error has occured, the form has not been sent."
 msgstr "Възникна грешка, формата не беше изпратена."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr ""
+msgstr "Поставете това поле за уебформи в черен списък"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr ""
+msgstr "Вписан в черен списък в уебформи"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:49
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "Config Settings"
+msgstr "Конфиг Настройки"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Custom infos"
 msgstr "Персонализирана информация"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr "Активирай редактор на форми за този модел."
+msgstr "Активирайте функцията за съставяне на форми за този модел."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
-msgid "Enable writing metadata on form submit."
-msgstr "Позволи добавянето на мета-данни при изпращане на формата."
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:21
+#, python-format
+msgid "Error"
+msgstr "Грешка"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr "Поле за персонализирани данни във формата"
+msgstr "Поле за персонализирани данни от форма"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -99,19 +108,21 @@ msgid "Fields"
 msgstr "Полета"
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
+"Етикет за форма на действие. Напр: crm.lead би могло да бъде 'Изпратете "
+"имейл', а project.issue би могло да бъде 'Регистрирайте грешка'."
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
+#: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
 msgstr "Етикет за действие на формата"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:50
+#: code:addons/website_form/controllers/main.py:55
 #, python-format
 msgid "Metadata"
 msgstr "Метаданни"
@@ -126,11 +137,27 @@ msgstr "Модели"
 #: code:addons/website_form/static/src/xml/website_form.xml:14
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr "Моля, попълнето правилно формата."
+msgstr "Моля, попълнете правилно формата."
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
-msgid "Specify the field which will contain meta and custom form fields datas."
+#: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
+msgid ""
+"Specify the field which will contain meta and custom form fields datas."
+msgstr ""
+"Посочете полето, което ще съдържа полевите данни за мета- и персонализирани "
+"формуляри."
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:7
+#, python-format
+msgid "Success"
+msgstr "Успех"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
+msgid "Technical data on contact form"
 msgstr ""
 
 #. module: website_form
@@ -141,11 +168,17 @@ msgid "The form has been sent successfully."
 msgstr "Формата е изпратена успешно."
 
 #. module: website_form
-#: model:ir.model,name:website_form.model_website
-msgid "Website"
-msgstr "Уеб-страница"
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
+msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
-msgid "Write metadata"
-msgstr "Напиши метаданни"
+#: model:ir.model,name:website_form.model_website
+msgid "Website"
+msgstr "Уебсайт"
+
+#. module: website_form
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
+msgid "You can choose to log technical data like IP, User Agent ,..."
+msgstr ""

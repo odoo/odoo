@@ -7,6 +7,7 @@ from werkzeug.wrappers import Response
 from odoo.http import Controller, dispatch_rpc, request, route
 from odoo.service import wsgi_server
 from odoo.fields import Date, Datetime
+from odoo.tools import lazy
 
 
 class OdooMarshaller(xmlrpc.client.Marshaller):
@@ -28,6 +29,11 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
         self.dump_unicode(value, write)
     dispatch[date] = dump_date
 
+    def dump_lazy(self, value, write):
+        v = value._value
+        return self.dispatch[type(v)](self, v, write)
+    dispatch[lazy] = dump_lazy
+
 
 # monkey-patch xmlrpc.client's marshaller
 xmlrpc.client.Marshaller = OdooMarshaller
@@ -43,7 +49,7 @@ class RPC(Controller):
         result = dispatch_rpc(service, method, params)
         return dumps((result,), methodresponse=1, allow_none=False)
 
-    @route("/xmlrpc/<service>", auth="none", method="POST", csrf=False, save_session=False)
+    @route("/xmlrpc/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_1(self, service):
         """XML-RPC service that returns faultCode as strings.
 
@@ -56,7 +62,7 @@ class RPC(Controller):
             response = wsgi_server.xmlrpc_handle_exception_string(error)
         return Response(response=response, mimetype='text/xml')
 
-    @route("/xmlrpc/2/<service>", auth="none", method="POST", csrf=False, save_session=False)
+    @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
         try:

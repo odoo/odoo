@@ -110,6 +110,7 @@ class Registry(Mapping):
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
         self._post_init_queue = deque()
+        self._notnull_errors = {}
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -246,8 +247,15 @@ class Registry(Mapping):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
-        lazy_property.reset_all(self)
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+
+        # Uninstall registry hooks. Because of the condition, this only happens
+        # on a fully loaded registry, and not on a registry being loaded.
+        if self.ready:
+            for model in env.values():
+                model._unregister_hook()
+
+        lazy_property.reset_all(self)
 
         # add manual models
         if self._init_modules:
@@ -271,6 +279,12 @@ class Registry(Mapping):
 
         self.registry_invalidated = True
 
+        # Reinstall registry hooks. Because of the condition, this only happens
+        # on a fully loaded registry, and not on a registry being loaded.
+        if self.ready:
+            for model in env.values():
+                model._register_hook()
+
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
         self._post_init_queue.append(partial(func, *args, **kwargs))
@@ -291,6 +305,9 @@ class Registry(Mapping):
 
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
+
+        # make sure the queue does not contain some leftover from a former call
+        self._post_init_queue.clear()
 
         for model in models:
             model._auto_init()
@@ -391,8 +408,9 @@ class Registry(Mapping):
             # Check if the model caches must be invalidated.
             elif self.cache_sequence != c:
                 _logger.info("Invalidating all model caches after database signaling.")
-                self.clear_caches()
-                self.cache_invalidated = False
+                # Bypass self.clear_caches() to avoid invalidation loops in multi-threaded
+                # configs due to the `cache_invalidated` flag being set, causing more signaling.
+                self.cache.clear()
             self.registry_sequence = r
             self.cache_sequence = c
 

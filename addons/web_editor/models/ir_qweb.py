@@ -9,6 +9,7 @@ Also, adds methods to convert values back to Odoo models.
 """
 
 import ast
+import babel
 import base64
 import io
 import itertools
@@ -17,10 +18,11 @@ import logging
 import os
 import re
 import hashlib
+from datetime import datetime
 
 import pytz
 import requests
-from dateutil import parser
+from datetime import datetime
 from lxml import etree, html
 from PIL import Image as I
 from werkzeug import urls
@@ -28,8 +30,9 @@ from werkzeug import urls
 import odoo.modules
 
 from odoo import api, models, fields
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
+from odoo.tools.misc import babel_locale_parse
 from odoo.addons.base.models import ir_qweb
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
@@ -202,6 +205,21 @@ class Date(models.AbstractModel):
         attrs = super(Date, self).attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             attrs['data-oe-original'] = record[field_name]
+
+            if record._fields[field_name].type == 'datetime':
+                attrs = self.env['ir.qweb.field.datetime'].attributes(record, field_name, options, values)
+                attrs['data-oe-type'] = 'datetime'
+                return attrs
+
+            lg = self.env['res.lang']._lang_get(self.env.user.lang)
+            locale = babel_locale_parse(lg.code)
+            babel_format = value_format = posix_to_ldml(lg.date_format, locale=locale)
+
+            if record[field_name]:
+                date = fields.Date.from_string(record[field_name])
+                value_format = pycompat.to_text(babel.dates.format_date(date, format=babel_format, locale=locale))
+
+            attrs['data-oe-original-with-format'] = value_format
         return attrs
 
     @api.model
@@ -210,7 +228,9 @@ class Date(models.AbstractModel):
         if not value:
             return False
 
-        return value
+        lg = self.env['res.lang']._lang_get(self.env.user.lang)
+        date = datetime.strptime(value, lg.date_format)
+        return fields.Date.to_string(date)
 
 
 class DateTime(models.AbstractModel):
@@ -221,15 +241,26 @@ class DateTime(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(DateTime, self).attributes(record, field_name, options, values)
+
         if options.get('inherit_branding'):
             value = record[field_name]
+            lg = self.env['res.lang']._lang_get(self.env.user.lang)
+            locale = babel_locale_parse(lg.code)
+            babel_format = value_format = posix_to_ldml('%s %s' % (lg.date_format, lg.time_format), locale=locale)
+            tz = record.env.context.get('tz') or self.env.user.tz
+
             if isinstance(value, pycompat.string_types):
                 value = fields.Datetime.from_string(value)
+
             if value:
                 # convert from UTC (server timezone) to user timezone
-                value = fields.Datetime.context_timestamp(self, timestamp=value)
+                value = fields.Datetime.context_timestamp(self.with_context(tz=tz), timestamp=value)
+                value_format = pycompat.to_text(babel.dates.format_datetime(value, format=babel_format, locale=locale))
                 value = fields.Datetime.to_string(value)
+
             attrs['data-oe-original'] = value
+            attrs['data-oe-original-with-format'] = value_format
+            attrs['data-oe-original-tz'] = tz
         return attrs
 
     @api.model
@@ -239,10 +270,11 @@ class DateTime(models.AbstractModel):
             return False
 
         # parse from string to datetime
-        dt = parser.parse(value)
+        lg = self.env['res.lang']._lang_get(self.env.user.lang)
+        dt = datetime.strptime(value, '%s %s' % (lg.date_format, lg.time_format))
 
         # convert back from user's timezone to UTC
-        tz_name = self.env.context.get('tz') or self.env.user.tz
+        tz_name = element.attrib.get('data-oe-original-tz') or self.env.context.get('tz') or self.env.user.tz
         if tz_name:
             try:
                 user_tz = pytz.timezone(tz_name)
@@ -319,6 +351,8 @@ class Image(models.AbstractModel):
 
     @api.model
     def from_html(self, model, field, element):
+        if element.find('img') is None:
+            return False
         url = element.find('img').get('src')
 
         url_object = urls.url_parse(url)

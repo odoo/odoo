@@ -41,6 +41,10 @@
                 });
                 // close modal on submit
                 $('.modal').on('submit', 'form', function (ev) {
+          var form = $(this).closest('form')[0];
+          if (form && form.checkValidity && !form.checkValidity()) {
+              return;
+          }
                     var modal = $(this).parentsUntil('body', '.modal');
                     if (modal.hasClass('o_database_backup')) {
                         $(modal).modal('hide');

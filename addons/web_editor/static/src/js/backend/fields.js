@@ -30,7 +30,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      * @override
      */
     start: function () {
-        new SummernoteManager(this);
+        this._summernoteManager = new SummernoteManager(this);
         return this._super.apply(this, arguments);
     },
 
@@ -46,6 +46,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      * @override
      */
     commitChanges: function () {
+        var self = this;
         // switch to WYSIWYG mode if currently in code mode to get all changes
         if (config.debug && this.mode === 'edit') {
             var layoutInfo = this.$textarea.data('layoutInfo');
@@ -54,7 +55,11 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         if (this._getValue() !== this.value) {
             this._isDirty = true;
         }
-        this._super.apply(this, arguments);
+        var _super = this._super;
+        var args = arguments;
+        return this._summernoteManager.saveCroppedImages(this.$content).then(function () {
+            return _super.apply(self, args);
+        });
     },
     /**
      * @override
@@ -400,8 +405,6 @@ var FieldTextHtml = AbstractField.extend({
             }
         }
 
-        // delete datarecord[this.name];
-        src += "&datarecord="+ encodeURIComponent(JSON.stringify(datarecord));
         return src;
     },
     old_initialize_content: function () {

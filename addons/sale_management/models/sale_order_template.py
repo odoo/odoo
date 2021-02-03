@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
@@ -36,7 +36,7 @@ class SaleOrderTemplate(models.Model):
             template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
             for template in self:
                 if template_id and template_id == template.id:
-                    raise UserError('Before archiving "%s" please select another default template in the settings.' % template.name)
+                    raise UserError(_('Before archiving "%s" please select another default template in the settings.') % template.name)
         return super(SaleOrderTemplate, self).write(vals)
 
 
@@ -87,7 +87,7 @@ class SaleOrderTemplateLine(models.Model):
     @api.multi
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type.")
+            raise UserError(_("You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."))
         return super(SaleOrderTemplateLine, self).write(values)
 
     _sql_constraints = [
@@ -119,7 +119,7 @@ class SaleOrderTemplateOption(models.Model):
         if not self.product_id:
             return
         product = self.product_id
-        self.price_unit = product.list_price
+        self.price_unit = product.lst_price
         name = product.name
         if self.product_id.description_sale:
             name += '\n' + self.product_id.description_sale
@@ -136,4 +136,4 @@ class SaleOrderTemplateOption(models.Model):
             self.price_unit = 0.0
             return
         if self.uom_id.id != self.product_id.uom_id.id:
-            self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)
+            self.price_unit = self.product_id.uom_id._compute_price(self.product_id.lst_price, self.uom_id)

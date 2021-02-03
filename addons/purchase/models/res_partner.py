@@ -34,7 +34,7 @@ class res_partner(models.Model):
 
         supplier_invoice_groups = self.env['account.invoice'].read_group(
             domain=[('partner_id', 'in', all_partners.ids),
-                    ('type', '=', 'in_invoice')],
+                    ('type', 'in', ['in_invoice', 'in_refund'])],
             fields=['partner_id'], groupby=['partner_id']
         )
         for group in supplier_invoice_groups:

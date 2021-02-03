@@ -102,6 +102,10 @@ var FormView = BasicView.extend({
                     var refinedContext = _.pick(self.loadParams.context, function (value, key) {
                         return key.indexOf('_view_ref') === -1;
                     });
+                    // Specify the main model to prevent access rights defined in the context
+                    // (e.g. create: 0) to apply to subviews. We use here the same logic as
+                    // the one applied by the server for inline views.
+                    refinedContext.base_model_name = self.controllerParams.modelName;
                     defs.push(parent.loadViews(
                             field.relation,
                             new Context(context, self.userContext, refinedContext).eval(),
@@ -131,11 +135,8 @@ var FormView = BasicView.extend({
      */
     _setSubViewLimit: function (attrs) {
         var view = attrs.views && attrs.views[attrs.mode];
-        var limit = view && view.arch.attrs.limit && parseInt(view.arch.attrs.limit);
-        if (!limit && attrs.widget === 'many2many_tags') {
-            limit = 1000;
-        }
-        attrs.limit = limit || 40;
+        var limit = view && view.arch.attrs.limit && parseInt(view.arch.attrs.limit, 10);
+        attrs.limit = limit || attrs.Widget.prototype.limit || 40;
     },
 });
 

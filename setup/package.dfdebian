@@ -15,8 +15,11 @@ ENV LC_ALL C.UTF-8
 
 RUN apt-get update -qq &&  \
     apt-get upgrade -qq -y && \
-    apt-get install \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -yq \
         adduser \
+        dh-python \
+        packaging-dev \
         postgresql \
         postgresql-client \
         python3 \
@@ -50,6 +53,7 @@ RUN apt-get update -qq &&  \
         python3-vobject \
         python3-werkzeug \
         python3-xlsxwriter \
+        rsync && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc

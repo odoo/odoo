@@ -4,19 +4,22 @@
 # 
 # Translators:
 # Rui Andrada <shingonoide@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
 # Mateus Lopes <mateus1@gmail.com>, 2018
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
 # grazziano <gra.negocia@gmail.com>, 2018
 # Silmar <pinheirosilmar@gmail.com>, 2018
+# Martin Trigaux, 2019
+# Fernanda Marques <fem@odoo.com>, 2020
+# Fernando Colus <fcolus1@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-11-14 07:35+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Fernando Colus <fcolus1@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +32,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__description
 #: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
 #: model:ir.model.fields,field_description:website_mail.field_mail_message__description
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message__description
 msgid "Description"
 msgstr "Descrição"
 
@@ -47,6 +51,7 @@ msgstr "Mensagem"
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message__description
 #: model:ir.model.fields,help:website_mail.field_mail_mail__description
 #: model:ir.model.fields,help:website_mail.field_mail_message__description
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message__description
 msgid "Message description: either the subject, or the beginning of the body"
 msgstr "Descrição da mensagem: ou o assunto, ou o início do corpo"
 
@@ -57,6 +62,7 @@ msgstr "Descrição da mensagem: ou o assunto, ou o início do corpo"
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message__website_published
 #, python-format
 msgid "Published"
 msgstr "Publicado"
@@ -64,7 +70,13 @@ msgstr "Publicado"
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Contrato de Garantia do Editor"
+
+#. module: website_mail
+#: code:addons/website_mail/models/mail_message.py:64
+#, python-format
+msgid "Records:"
+msgstr "Registros:"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
@@ -72,7 +84,7 @@ msgid "Subscribe"
 msgstr "Inscrever"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:57
+#: code:addons/website_mail/models/mail_message.py:63
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -95,10 +107,17 @@ msgid "Unsubscribe"
 msgstr "Cancelar a inscrição"
 
 #. module: website_mail
+#: code:addons/website_mail/models/mail_message.py:64
+#, python-format
+msgid "User:"
+msgstr "Usuário:"
+
+#. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_account_invoice_send__website_published
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message__website_published
 #: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
 #: model:ir.model.fields,help:website_mail.field_mail_message__website_published
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message__website_published
 msgid "Visible on the website as a comment"
 msgstr "Visível no site como um comentário"
 

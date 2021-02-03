@@ -353,5 +353,39 @@ QUnit.test('parse datetime', function (assert) {
     core._t.database.parameters = originalParameters;
 });
 
+QUnit.test('parse date without separator', function (assert) {
+    assert.expect(8);
+
+    var originalParameters = _.clone(core._t.database.parameters);
+
+    _.extend(core._t.database.parameters, {date_format: '%d.%m/%Y'});
+    var dateFormat = "DD.MM/YYYY";
+
+    assert.throws(function () {fieldUtils.parse.date("1197")}, /is not a correct/, "Wrongly formated dates should be invalid");
+    assert.throws(function () {fieldUtils.parse.date("0131")}, /is not a correct/, "Wrongly formated dates should be invalid");
+    assert.throws(function () {fieldUtils.parse.date("970131")}, /is not a correct/, "Wrongly formated dates should be invalid");
+    assert.equal(fieldUtils.parse.date("3101").format(dateFormat), "31.01/" + moment.utc().year());
+    assert.equal(fieldUtils.parse.date("31.01").format(dateFormat), "31.01/" + moment.utc().year());
+    assert.equal(fieldUtils.parse.date("310197").format(dateFormat), "31.01/1997");
+    assert.equal(fieldUtils.parse.date("310117").format(dateFormat), "31.01/2017");
+    assert.equal(fieldUtils.parse.date("31011985").format(dateFormat), "31.01/1985");
+
+    core._t.database.parameters = originalParameters;
+});
+
+QUnit.test('parse datetime without separator', function (assert) {
+    assert.expect(3);
+
+    var originalParameters = _.clone(core._t.database.parameters);
+
+    _.extend(core._t.database.parameters, {date_format: '%d.%m/%Y', time_format: '%H:%M/%S'});
+    var dateTimeFormat = "DD.MM/YYYY HH:mm/ss";
+
+    assert.equal(fieldUtils.parse.datetime("3101198508").format(dateTimeFormat), "31.01/1985 08:00/00");
+    assert.equal(fieldUtils.parse.datetime("310119850833").format(dateTimeFormat), "31.01/1985 08:33/00");
+    assert.equal(fieldUtils.parse.datetime("31/01/1985 08").format(dateTimeFormat), "31.01/1985 08:00/00");
+
+    core._t.database.parameters = originalParameters;
+});
 });
 });

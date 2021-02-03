@@ -336,6 +336,9 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         body = this._generateEmojis(body);
         var messageData = {
             partner_ids: data.partner_ids,
+            channel_ids: _.map(data.channel_ids, function (channelID) {
+               return [4, channelID, false];
+            }),
             body: body,
             attachment_ids: data.attachment_ids,
             canned_response_ids: data.canned_response_ids,

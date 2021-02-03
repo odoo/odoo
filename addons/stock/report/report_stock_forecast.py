@@ -21,7 +21,7 @@ class ReportStockForecat(models.Model):
         self._cr.execute("""CREATE or REPLACE VIEW report_stock_forecast AS (SELECT
         MIN(id) as id,
         product_id as product_id,
-        date as date,
+        to_char(date, 'YYYY-MM-DD') as date,
         sum(product_qty) AS quantity,
         sum(sum(product_qty)) OVER (PARTITION BY product_id ORDER BY date) AS cumulative_quantity,
         company_id

@@ -147,12 +147,18 @@ class Channel(models.Model):
         self.can_upload = self.can_see and (not self.upload_group_ids or bool(self.upload_group_ids & self.env.user.groups_id))
 
     @api.multi
-    @api.depends('name')
+    def get_base_url(self):
+        self.ensure_one()
+        icp = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return self.website_id and self.website_id._get_http_domain() or icp
+
+    @api.multi
+    @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
         super(Channel, self)._compute_website_url()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for channel in self:
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                base_url = channel.get_base_url()
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.onchange('visibility')
@@ -305,7 +311,7 @@ class Slide(models.Model):
                 record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
             else:
                 record.image_medium = False
-                record.iamge_thumb = False
+                record.image_thumb = False
 
     # content
     slide_type = fields.Selection([
@@ -364,7 +370,9 @@ class Slide(models.Model):
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    query = urls.url_parse(record.url).query
+                    query = query + '&theme=light' if query else 'theme=light'
+                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -372,12 +380,12 @@ class Slide(models.Model):
                 record.embed_code = False
 
     @api.multi
-    @api.depends('name')
+    @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
         super(Slide, self)._compute_website_url()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self:
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                base_url = slide.channel_id.get_base_url()
                 # link_tracker is not in dependencies, so use it to shorten url only if installed.
                 if self.env.registry.get('link.tracker'):
                     url = self.env['link.tracker'].sudo().create({
@@ -516,7 +524,7 @@ class Slide(models.Model):
     def _fetch_data(self, base_url, data, content_type=False, extra_params=False):
         result = {'values': dict()}
         try:
-            response = requests.get(base_url, params=data)
+            response = requests.get(base_url, timeout=3, params=data)
             response.raise_for_status()
             if content_type == 'json':
                 result['values'] = response.json()
@@ -534,7 +542,7 @@ class Slide(models.Model):
         url_obj = urls.url_parse(url)
         if url_obj.ascii_host == 'youtu.be':
             return ('youtube', url_obj.path[1:] if url_obj.path else False)
-        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com'):
+        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'www.youtube-nocookie.com'):
             v_query_value = url_obj.decode_query().get('v')
             if v_query_value:
                 return ('youtube', v_query_value)

@@ -3,18 +3,17 @@
 # * website_livechat
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
 # Paolo Valier, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"POT-Creation-Date: 2019-11-14 07:35+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,13 +27,13 @@ msgid ""
 "<span class=\"o_form_label\">Live Chat</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Chat in diretta</span>\n"
-"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+"<span class=\"o_form_label\">Chat dal vivo</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"I valori impostati qui sono specifici per azienda.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
-msgstr "<span>Canale Livechat</span>"
+msgstr "<span>Canale chat dal vivo</span>"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
@@ -49,7 +48,12 @@ msgstr "Impostazioni di configurazione"
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
-msgstr "Descrizione del canale visualizzata sul sito web"
+msgstr "Descrizione del canale visualizzato sulla pagina del sito web"
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_ir_http
+msgid "HTTP Routing"
+msgstr "Instradamento HTTP"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -59,22 +63,22 @@ msgstr "Faccia contenta"
 #. module: website_livechat
 #: model:website.menu,name:website_livechat.menu_livechat
 msgid "Live Support"
-msgstr "Supporto Live"
+msgstr "Supporto in linea"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Live chat channel of your website"
-msgstr "Canale di chat in diretta del tuo sito web"
+msgstr "Canale chat dal vivo per il sito web"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr "Canale Livechat"
+msgstr "Canale chat dal vivo"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "Livechat Support Channels"
-msgstr "Canali di supporto Livechat"
+msgstr "Canali di supporto chat dal vivo"
 
 #. module: website_livechat
 #. openerp-web
@@ -108,22 +112,22 @@ msgstr "Statistiche"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr "Il"
+msgstr "Le ultime"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The Team"
-msgstr "Il Team"
+msgstr "Il team"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
-msgstr "Non è presente alcun canale livechat pubblico da mostrare."
+msgstr "Nessun canale pubblico chat dal vivo da mostrare."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "There is no rating for this channel for now."
-msgstr "Al momento, non c'è nessuna valutazione per questo canale."
+msgstr "Ancora nessuna valutazione per questo canale."
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
@@ -133,12 +137,12 @@ msgstr "Sito web"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
 msgid "Website Live Channel"
-msgstr "Canale chat in diretta del sito web"
+msgstr "Canale dal vivo sito web"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
-msgstr "Canale chat in diretta del sito web"
+msgstr "Canale chat dal vivo del sito web"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
@@ -148,4 +152,4 @@ msgstr "Descrizione sito web"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
-msgstr "ultimi feedback"
+msgstr "opinioni"

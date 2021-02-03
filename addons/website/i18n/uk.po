@@ -11,15 +11,15 @@
 # ТАрас <tratatuta@i.ua>, 2018
 # Oleg Pikarevskyi <o@btegri.co>, 2018
 # Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:08+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1191,13 +1191,19 @@ msgstr "Фільтри CDN "
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:103
-#: code:addons/website/static/src/js/menu/new_content.js:271
+#: code:addons/website/static/src/js/backend/dashboard.js:106
+#: code:addons/website/static/src/js/menu/new_content.js:286
 #: code:addons/website/static/src/xml/website.xml:27
 #: model_terms:ir.ui.view,arch_db:website.500
 #, python-format
 msgid "Cancel"
 msgstr "Скасувати"
+
+#. module: website
+#: code:addons/website/models/res_lang.py:15
+#, python-format
+msgid "Cannot deactivate a language that is currently used on a website."
+msgstr "Неможливо видалити мову, яка зараз використовується на веб-сайті."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1526,7 +1532,7 @@ msgstr "Налаштувати тему"
 msgid ""
 "Customize any block through this menu. Try to change the background of the "
 "banner."
-msgstr "Налаштуйте блоки через це меню. Спробуйте змінити тло банера."
+msgstr "Налаштуйте блоки через це меню. Спробуйте змінити фон банера."
 
 #. module: website
 #. openerp-web
@@ -1892,6 +1898,11 @@ msgid "Email support"
 msgstr "Email-підтримка"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Enable billing on your Google Project"
+msgstr "Увімкніть виставлення рахунків у вашому Google Проекті"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
@@ -2005,7 +2016,7 @@ msgstr "Властивість 2"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Features"
-msgstr "Можливості"
+msgstr "Функції"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -2043,7 +2054,7 @@ msgstr "Згорнутий список"
 #: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "Follow all the"
-msgstr "Дотримуйтесь усіх"
+msgstr "Слідкувати за"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2232,7 +2243,7 @@ msgstr "Велике значення"
 #: model_terms:ir.ui.view,arch_db:website.aboutus
 #: model_terms:website.page,arch_db:website.aboutus_page
 msgid "Great products for great people"
-msgstr "Хороші товари - хорошим людям"
+msgstr "Хороші товари хорошим людям"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2441,7 +2452,7 @@ msgid ""
 "possibility to reset one or more templates to their <strong>factory "
 "settings</strong>."
 msgstr ""
-"Якщо ця помилка спричинена вашими змінами у шаблонах,- у вас є можливість "
+"Якщо ця помилка спричинена вашими змінами у шаблонах, у вас є можливість "
 "відновити один чи більше шаблонів до <strong>заводського вигляду</strong>."
 
 #. module: website
@@ -2639,6 +2650,7 @@ msgid "Keywords"
 msgstr "Ключові слова"
 
 #. module: website
+#: model:ir.model,name:website.model_res_lang
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
 #: model:ir.model.fields,field_description:website.field_website__language_ids
 msgid "Languages"
@@ -3250,7 +3262,7 @@ msgstr "Загальнодоступна ERP-система"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Optimize SEO"
-msgstr "Оптимізувати СЕО"
+msgstr "Оптимізувати SEO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -4248,7 +4260,7 @@ msgstr "Переключити"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle navigation"
-msgstr "Управління перемикачем"
+msgstr "Перемкнути навігацію"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -4472,15 +4484,6 @@ msgstr "Використовується у заголовку сторінки"
 msgid "Used when multiple websites have the same domain."
 msgstr ""
 "Використовується, коли кілька веб-сайтів мають один і той самий домен."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid ""
-"User-agent: *\n"
-"Sitemap:"
-msgstr ""
-"Агент користувача: *\n"
-"Мапа сайту:"
 
 #. module: website
 #: model:ir.model,name:website.model_res_users
@@ -4867,6 +4870,12 @@ msgid ""
 msgstr ""
 "Ви приховали цю сторінку з результатів пошуку. Він не буде індексований "
 "пошуковими системами."
+
+#. module: website
+#: code:addons/website/models/website.py:162
+#, python-format
+msgid "You must keep at least one website."
+msgstr "Ви повинні зберегти принаймні один веб-сайт."
 
 #. module: website
 #. openerp-web

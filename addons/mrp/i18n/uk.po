@@ -4,17 +4,17 @@
 # 
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2018
-# Bohdan Lisnenko, 2018
 # Martin Trigaux, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Bohdan Lisnenko, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,6 +190,11 @@ msgstr "<span class=\"o_stat_text\">Завантаження робочого ц
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Work Orders</span>"
 msgstr "<span class=\"o_stat_text\">Робочі замовлення</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
+msgid "<span>1.0</span>"
+msgstr "<span>1.0</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -1097,7 +1102,7 @@ msgstr "Документ"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: selection:mrp.production,state:0 selection:mrp.unbuild,state:0
 msgid "Done"
-msgstr "Готово"
+msgstr "Виконано"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1601,6 +1606,11 @@ msgstr "Є публічним документом"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
 msgid "Is the Current User Working"
 msgstr "Чи працює поточний користувач"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_first_wo
+msgid "Is the first WO to produce"
+msgstr "Це перше РЗ для виконання"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:163
@@ -2159,7 +2169,7 @@ msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
 "Жодного робочого замовлення наразі не обробляється. Натисніть, щоб "
-"відзначити роботу центру як заблоковано."
+"відзначити робочий центр як заблоковано."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -2575,6 +2585,7 @@ msgid "Processed Disassembly Lines"
 msgstr "Рядки обробленого розбирання"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_procurement_group
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__procurement_group_id
 msgid "Procurement Group"
 msgstr "Група забезпечення"
@@ -2699,7 +2710,6 @@ msgstr "Виробничий документ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing__location_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 msgid "Production Location"
 msgstr "Розташування виробництва"
@@ -2874,6 +2884,7 @@ msgstr "Сировина"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing__location_id
 msgid "Raw Materials Location"
 msgstr "Розташування сировини"
 
@@ -2882,7 +2893,7 @@ msgstr "Розташування сировини"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Ready"
-msgstr "Готово"
+msgstr "Підготовлено"
 
 #. module: mrp
 #. openerp-web
@@ -3295,7 +3306,7 @@ msgstr "Розпочніть нове робоче замовлення"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
 msgid "State"
-msgstr "Область"
+msgstr "Статус"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__state
@@ -3430,6 +3441,11 @@ msgid ""
 msgstr ""
 "Технічне поле, яке є помилковим, коли тимчасово заповнюється в робочому "
 "порядку"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
+msgid "Technical compute"
+msgstr "Технічне обчислення"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
@@ -4015,6 +4031,11 @@ msgstr ""
 "на основі прогнозованих продажів."
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
+msgid "Valid Product Attribute Values"
+msgstr "Дійсні значення атрибута товару"
+
+#. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:21
 #, python-format
@@ -4442,10 +4463,24 @@ msgstr ""
 "виправте зашифровані серійні номери."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:109
+#, python-format
+msgid "You cannot create a new Bill of Material from here."
+msgstr "Ви не можете створити нову специфікацію звідси."
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:88
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Ви не можете видалити замовлення на розбирання, якщо стан - \"Готово\"."
+msgstr "Ви не можете видалити замовлення на розбирання, якщо стан - \"Виконано\"."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:533
+#, python-format
+msgid "You cannot produce a MO with a bom kit product."
+msgstr ""
+"Ви не можете виготовити замовлення на виробництво з комплектом товару "
+"специфікації."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:82

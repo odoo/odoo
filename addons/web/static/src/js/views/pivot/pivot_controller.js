@@ -221,13 +221,18 @@ var PivotController = AbstractController.extend({
                     .expandAll()
                     .then(this.update.bind(this, {}, {reload: false}));
         }
-        if ($target.parents('.o_pivot_measures_list').length) {
-            var field = $target.data('field');
+        if (
+            $target.parents('.o_pivot_measures_list').length ||
+            $target.hasClass('o_pivot_measures_list')
+        ) {
             event.preventDefault();
             event.stopPropagation();
-            this.model
-                    .toggleMeasure(field)
-                    .then(this.update.bind(this, {}, {reload: false}));
+            var field = $target.data('field');
+            if (field) {
+                this.model
+                        .toggleMeasure(field)
+                        .then(this.update.bind(this, {}, {reload: false}));
+            }
         }
         if ($target.hasClass('o_pivot_download')) {
             this._downloadTable();
@@ -296,8 +301,9 @@ var PivotController = AbstractController.extend({
         } else {
             this.lastHeaderSelected = id;
             var position = $target.position();
-            var top = position.top + $target.height();
-            var left = position.left + event.offsetX;
+            var $parent = $target.offsetParent();
+            var top = position.top + $target.height() + $parent.scrollTop();
+            var left = position.left + event.offsetX + $parent.scrollLeft();
             this._renderFieldSelection(top, left);
             event.stopPropagation();
         }

@@ -69,6 +69,13 @@ class ir_cron(models.Model):
         values['usage'] = 'ir_cron'
         return super(ir_cron, self).create(values)
 
+    @api.model
+    def default_get(self, fields_list):
+        # only 'code' state is supported for cron job so set it as default
+        if not self._context.get('default_state'):
+            self = self.with_context(default_state='code')
+        return super(ir_cron, self).default_get(fields_list)
+
     @api.multi
     def method_direct_trigger(self):
         self.check_access_rights('write')
@@ -221,6 +228,7 @@ class ir_cron(models.Model):
                     try:
                         registry = odoo.registry(db_name)
                         registry[cls._name]._process_job(job_cr, job, lock_cr)
+                        _logger.info('Job `%s` done.', job['cron_name'])
                     except Exception:
                         _logger.exception('Unexpected exception while processing cron job %r', job)
                     finally:

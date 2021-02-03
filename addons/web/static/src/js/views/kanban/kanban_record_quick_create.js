@@ -278,6 +278,11 @@ var RecordQuickCreate = Widget.extend({
             return;
         }
 
+        // ignore clicks while a modal is just about to open
+        if ($(document.body).hasClass('modal-open')) {
+            return;
+        }
+
         // ignore clicks if target is no longer in dom (e.g., a click on the
         // 'delete' trash icon of a m2m tag)
         if (!document.contains(ev.target)) {
@@ -285,7 +290,7 @@ var RecordQuickCreate = Widget.extend({
         }
 
         // ignore clicks if target is inside the quick create
-        if (this.el.contains(ev.target) && this.el !== ev.target) {
+        if (this.el.contains(ev.target) || this.el === ev.target) {
             return;
         }
 

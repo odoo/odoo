@@ -38,7 +38,7 @@
                     <h1 style="color:#A9A9A9;">THERE'S SOMETHING IN YOUR CART.</h1>
                     Would you like to complete your purchase?<br/><br/>
                     % if object.order_line:
-                        % for line in object.order_line:
+                        % for line in object.website_order_line:
                             <hr/>
                             <table width="100%">
                                 <tr>
@@ -63,7 +63,7 @@
                             Resume order
                         </a>
                     </div>
-                    <div style="text-align: center;"><strong>Thank you for shopping with ${user.company_id.name}!</strong></div>
+                    <div style="text-align: center;"><strong>Thank you for shopping with ${company.name}!</strong></div>
                 </td></tr>
                 <tr><td style="text-align:center;">
                   <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>

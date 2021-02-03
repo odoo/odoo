@@ -107,8 +107,8 @@ class ResPartner(models.Model):
 
         allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
         for partner in self:
+            partner = partner.sudo()
             if allow_signup and not partner.user_ids:
-                partner = partner.sudo()
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token
             elif partner.user_ids:

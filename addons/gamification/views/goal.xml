@@ -135,6 +135,7 @@
                 <field name="completeness"/>
                 <field name="state"/>
                 <field name="target_goal"/>
+                <field name="definition_description"/>
                 <field name="definition_condition"/>
                 <field name="definition_suffix"/>
                 <field name="definition_display"/>
@@ -143,7 +144,9 @@
                 <field name="last_update"/>
                 <templates>
                     <t t-name="kanban-tooltip">
-                       <field name="definition_description"/>
+                        <ul class="oe_kanban_tooltip">
+                            <li><t t-esc="record.definition_description.value" /></li>
+                        </ul>
                     </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">

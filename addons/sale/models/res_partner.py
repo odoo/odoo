@@ -15,7 +15,7 @@ class ResPartner(models.Model):
 
     def _compute_sale_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
-        all_partners = self.search([('id', 'child_of', self.ids)])
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
         sale_order_groups = self.env['sale.order'].read_group(
@@ -30,6 +30,7 @@ class ResPartner(models.Model):
                 partner = partner.parent_id
 
     def can_edit_vat(self):
+        ''' Can't edit `vat` if there is (non draft) issued SO. '''
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat

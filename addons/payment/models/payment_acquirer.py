@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 from dateutil import relativedelta
 import pprint
+import psycopg2
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
@@ -14,6 +15,7 @@ from odoo.exceptions import ValidationError
 from odoo import api, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -211,6 +213,19 @@ class PaymentAcquirer(models.Model):
         (_check_required_if_provider, 'Required fields not filled', []),
     ]
 
+    def get_base_url(self):
+        self.ensure_one()
+        # priority is always given to url_root
+        # from the request
+        url = ''
+        if request:
+            url = request.httprequest.url_root
+
+        if not url and 'website_id' in self and self.website_id:
+            url = self.website_id._get_http_domain()
+
+        return url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
     def _get_feature_support(self):
         """Get advanced feature support by provider.
 
@@ -250,6 +265,16 @@ class PaymentAcquirer(models.Model):
             'outbound_payment_method_ids': [],
         }
 
+    def _get_acquirer_journal_domain(self):
+        """Returns a domain for finding a journal corresponding to an acquirer"""
+        self.ensure_one()
+        code_cutoff = self.env['account.journal']._fields['code'].size
+        return [
+            ('name', '=', self.name),
+            ('code', '=', self.name.upper()[:code_cutoff]),
+            ('company_id', '=', self.company_id.id),
+        ]
+
     @api.model
     def _create_missing_journal_for_acquirers(self, company=None):
         '''Create the journal for active acquirers.
@@ -258,22 +283,35 @@ class PaymentAcquirer(models.Model):
         (e.g. payment_paypal for Paypal). We can't do that in such modules because we have no guarantee the chart template
         is already installed.
         '''
-        # Search for installed acquirers modules.
+        # Search for installed acquirers modules that have no journal for the current company.
         # If this method is triggered by a post_init_hook, the module is 'to install'.
         # If the trigger comes from the chart template wizard, the modules are already installed.
-        acquirer_modules = self.env['ir.module.module'].search(
-            [('name', 'like', 'payment_%'), ('state', 'in', ('to install', 'installed'))])
-        acquirer_names = [a.name.split('_')[1] for a in acquirer_modules]
-
-        # Search for acquirers having no journal
         company = company or self.env.user.company_id
-        acquirers = self.env['payment.acquirer'].search(
-            [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
+        acquirers = self.env['payment.acquirer'].search([
+            ('module_state', 'in', ('to install', 'installed')),
+            ('journal_id', '=', False),
+            ('company_id', '=', company.id),
+        ])
 
-        journals = self.env['account.journal']
+        # Here we will attempt to first create the journal since the most common case (first
+        # install) is to successfully to create the journal for the acquirer, in the case of a
+        # reinstall (least common case), the creation will fail because of a unique constraint
+        # violation, this is ok as we catch the error and then perform a search if need be
+        # and assign the existing journal to our reinstalled acquirer. It is better to ask for
+        # forgiveness than to ask for permission as this saves us the overhead of doing a select
+        # that would be useless in most cases.
+        Journal = journals = self.env['account.journal']
         for acquirer in acquirers.filtered(lambda l: not l.journal_id and l.company_id.chart_template_id):
-            acquirer.journal_id = self.env['account.journal'].create(acquirer._prepare_account_journal_vals())
-            journals += acquirer.journal_id
+            try:
+                with self.env.cr.savepoint():
+                    journal = Journal.create(acquirer._prepare_account_journal_vals())
+            except psycopg2.IntegrityError as e:
+                if e.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                    journal = Journal.search(acquirer._get_acquirer_journal_domain(), limit=1)
+                else:
+                    raise
+            acquirer.journal_id = journal
+            journals += journal
         return journals
 
     @api.model
@@ -317,7 +355,7 @@ class PaymentAcquirer(models.Model):
             company = self.env.user.company_id
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
+        active_acquirers = self.search([('website_published', '=', True), ('company_id', '=', company.id)])
         acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                                (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
@@ -388,7 +426,7 @@ class PaymentAcquirer(models.Model):
                 'partner_zip': partner.zip,
                 'partner_city': partner.city,
                 'partner_address': _partner_format_address(partner.street, partner.street2),
-                'partner_country_id': partner.country_id.id,
+                'partner_country_id': partner.country_id.id or self.env['res.company']._company_default_get().country_id.id,
                 'partner_country': partner.country_id,
                 'partner_phone': partner.phone,
                 'partner_state': partner.state_id,
@@ -644,6 +682,10 @@ class PaymentTransaction(models.Model):
         transactions = self.filtered(lambda t: t.state != 'draft')
         return transactions and transactions[0] or transactions
 
+    def _get_processing_info(self):
+        """ Extensible method for providers if they need specific fields/info regarding a tx in the payment processing page. """
+        return dict()
+
     @api.multi
     def _get_payment_transaction_sent_message(self):
         self.ensure_one()
@@ -701,31 +743,73 @@ class PaymentTransaction(models.Model):
             for inv in trans.invoice_ids:
                 inv.message_post(body=post_message)
 
+    def _filter_transaction_state(self, allowed_states, target_state):
+        """Divide a set of transactions according to their state.
+
+        :param tuple(string) allowed_states: tuple of allowed states for the target state (strings)
+        :param string target_state: target state for the filtering
+        :return: tuple of transactions divided by their state, in that order
+                    tx_to_process: tx that were in the allowed states
+                    tx_already_processed: tx that were already in the target state
+                    tx_wrong_state: tx that were not in the allowed state for the transition
+        :rtype: tuple(recordset)
+        """
+        tx_to_process = self.filtered(lambda tx: tx.state in allowed_states)
+        tx_already_processed = self.filtered(lambda tx: tx.state == target_state)
+        tx_wrong_state = self -tx_to_process - tx_already_processed
+        return (tx_to_process, tx_already_processed, tx_wrong_state)
+
     @api.multi
     def _set_transaction_pending(self):
         '''Move the transaction to the pending state(e.g. Wire Transfer).'''
-        if any(trans.state != 'draft' for trans in self):
-            raise ValidationError(_('Only draft transaction can be processed.'))
+        allowed_states = ('draft',)
+        target_state = 'pending'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
-        self.write({'state': 'pending', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
+            'state_message': '',
+        })
+        tx_to_process._log_payment_transaction_received()
 
     @api.multi
     def _set_transaction_authorized(self):
         '''Move the transaction to the authorized state(e.g. Authorize).'''
-        if any(trans.state != 'draft' for trans in self):
-            raise ValidationError(_('Only draft transaction can be authorized.'))
-
-        self.write({'state': 'authorized', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
+        allowed_states = ('draft', 'pending')
+        target_state = 'authorized'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
+            'state_message': '',
+        })
+        tx_to_process._log_payment_transaction_received()
 
     @api.multi
     def _set_transaction_done(self):
         '''Move the transaction's payment to the done state(e.g. Paypal).'''
-        if any(trans.state not in ('draft', 'authorized', 'pending') for trans in self):
-            raise ValidationError(_('Only draft/authorized transaction can be posted.'))
+        allowed_states = ('draft', 'authorized', 'pending', 'error')
+        target_state = 'done'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
-        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
+            'state_message': '',
+        })
 
     @api.multi
     def _reconcile_after_transaction_done(self):
@@ -753,29 +837,47 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _set_transaction_cancel(self):
         '''Move the transaction's payment to the cancel state(e.g. Paypal).'''
-        if any(trans.state not in ('draft', 'authorized') for trans in self):
-            raise ValidationError(_('Only draft/authorized transaction can be cancelled.'))
+        allowed_states = ('draft', 'authorized')
+        target_state = 'cancel'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
         # Cancel the existing payments.
-        self.mapped('payment_id').cancel()
+        tx_to_process.mapped('payment_id').cancel()
 
-        self.write({'state': 'cancel', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
+        tx_to_process.write({'state': target_state, 'date': fields.Datetime.now()})
+        tx_to_process._log_payment_transaction_received()
 
     @api.multi
     def _set_transaction_error(self, msg):
         '''Move the transaction to the error state (Third party returning error e.g. Paypal).'''
-        if any(trans.state != 'draft' for trans in self):
-            raise ValidationError(_('Only draft transaction can be processed.'))
+        allowed_states = ('draft', 'authorized', 'pending')
+        target_state = 'error'
+        (tx_to_process, tx_already_processed, tx_wrong_state) = self._filter_transaction_state(allowed_states, target_state)
+        for tx in tx_already_processed:
+            _logger.info('Trying to write the same state twice on tx (ref: %s, state: %s' % (tx.reference, tx.state))
+        for tx in tx_wrong_state:
+            _logger.warning('Processed tx with abnormal state (ref: %s, target state: %s, previous state %s, expected previous states: %s)' % (tx.reference, target_state, tx.state, allowed_states))
 
-        self.write({
-            'state': 'error',
-            'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+        tx_to_process.write({
+            'state': target_state,
+            'date': fields.Datetime.now(),
             'state_message': msg,
         })
 
+    def _check_context_lang(self):
+        langs = [code for code, _ in self.env['res.lang'].get_installed()]
+        if self.env.context.get('lang') not in langs:
+            lang = self.env.user.lang or self.env.user.company_id.partner_id.lang or langs[0]
+            return self.with_context(lang=lang)
+        return self
+
     @api.multi
     def _post_process_after_done(self):
+        self = self._check_context_lang()
         self._reconcile_after_transaction_done()
         self._log_payment_transaction_received()
         self.write({'is_processed': True})
@@ -858,7 +960,11 @@ class PaymentTransaction(models.Model):
             invoice = invoice_ids[0]
             action['res_id'] = invoice
             action['view_mode'] = 'form'
-            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+            form_view = [(self.env.ref('account.invoice_form').id, 'form')]
+            if 'views' in action:
+                action['views'] = form_view + [(state,view) for state,view in action['views'] if view != 'form']
+            else:
+                action['views'] = form_view
         else:
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', invoice_ids)]

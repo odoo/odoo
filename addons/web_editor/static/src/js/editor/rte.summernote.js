@@ -9,6 +9,7 @@ var mixins = require('web.mixins');
 var base = require('web_editor.base');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
+var ServicesMixin = require('web.ServicesMixin');
 var weWidgets = require('web_editor.widget');
 
 var QWeb = core.qweb;
@@ -453,9 +454,10 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         $editable: $editable,
         media: media,
         options: {
-            lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
-            noVideos: $editable.data('oe-model') === "mail.compose.message",
+            noVideos:
+                $editable.data('oe-model') === "mail.compose.message" ||
+                $editable.data('oe-model') === "mail.mass_mailing",
         },
     });
     return new $.Deferred().reject();
@@ -1096,7 +1098,7 @@ $.summernote.lang.odoo = {
  * instantiate media, link and alt dialogs outside the main editor: in the
  * simple HTML fields and forum textarea.
  */
-var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
+var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     /**
      * @constructor
      */
@@ -1121,6 +1123,67 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Create/Update cropped attachments.
+     *
+     * @param {jQuery} $editable
+     * @returns {Deferred}
+     */
+    saveCroppedImages: function ($editable) {
+        var self = this;
+        var defs = _.map($editable.find('.o_cropped_img_to_save'), function (croppedImg) {
+            var $croppedImg = $(croppedImg);
+            $croppedImg.removeClass('o_cropped_img_to_save');
+
+            var resModel = $croppedImg.data('crop:resModel');
+            var resID = $croppedImg.data('crop:resID');
+            var cropID = $croppedImg.data('crop:id');
+            var mimetype = $croppedImg.data('crop:mimetype');
+            var originalSrc = $croppedImg.data('crop:originalSrc');
+
+            var datas = $croppedImg.attr('src').split(',')[1];
+            var def;
+            if (!cropID) {
+                var name = originalSrc + '.crop';
+                def = self._rpc({
+                    model: 'ir.attachment',
+                    method: 'create',
+                    args: [{
+                        res_model: resModel,
+                        res_id: resID,
+                        name: name,
+                        datas_fname: name,
+                        datas: datas,
+                        mimetype: mimetype,
+                        url: originalSrc, // To save the original image that was cropped
+                    }],
+                });
+            } else {
+                def = self._rpc({
+                    model: 'ir.attachment',
+                    method: 'write',
+                    args: [[cropID], {datas: datas}],
+                }).then(function () {
+                    return cropID;
+                });
+            }
+            return def.then(function (attachmentID) {
+                return self._rpc({
+                    model: 'ir.attachment',
+                    method: 'generate_access_token',
+                    args: [[attachmentID]],
+                }).then(function (access_token) {
+                    $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
+                });
+            });
+        });
+        return $.when.apply($, defs);
     },
 
     //--------------------------------------------------------------------------
@@ -1271,6 +1334,20 @@ rte.Class.include({
     cancel: function () {
         this._super.apply(this, arguments);
         this._summernoteManager.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Create/Update cropped attachments.
+     *
+     * @param {jQuery} $editable
+     * @returns {Deferred}
+     */
+    saveCroppedImages: function ($editable) {
+        return this._summernoteManager.saveCroppedImages($editable);
     },
 });
 return SummernoteManager;

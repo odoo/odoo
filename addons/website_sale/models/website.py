@@ -196,8 +196,8 @@ class Website(models.Model):
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
         addr = partner.address_get(['delivery'])
         if not request.website.is_public_user():
-            last_sale_order = self.env['sale.order'].search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
-            if last_sale_order:  # first = me
+            last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
+            if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
                 addr['delivery'] = last_sale_order.partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
@@ -213,6 +213,8 @@ class Website(models.Model):
         company = self.company_id or pricelist.company_id
         if company:
             values['company_id'] = company.id
+            if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
+                values['note'] = company.sale_note or ""
 
         return values
 
@@ -246,7 +248,7 @@ class Website(models.Model):
             self = self.with_context(pricelist=pricelist_id)
 
         # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].sudo().browse(sale_order_id).exists() if sale_order_id else None
+        sale_order = self.env['sale.order'].with_context(force_company=request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
 
         # create so if needed
         if not sale_order and (force_create or code):
@@ -317,7 +319,7 @@ class Website(models.Model):
                 if code_pricelist:
                     pricelist_id = code_pricelist.id
                     update_pricelist = True
-            elif code is not None and sale_order.pricelist_id.code:
+            elif code is not None and sale_order.pricelist_id.code and code != sale_order.pricelist_id.code:
                 # code is not None when user removes code and click on "Apply"
                 pricelist_id = partner.property_product_pricelist.id
                 update_pricelist = True
@@ -333,7 +335,7 @@ class Website(models.Model):
 
         else:
             request.session['sale_order_id'] = None
-            return self.env['sale.order']
+            return self.env['sale.order'].with_context(force_company=request.website.company_id.id)
 
         return sale_order
 

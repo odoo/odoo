@@ -36,3 +36,6 @@ Patrick Tombez patrick.tombez@camptocamp.com https://github.com/p-tombez
 Julien Coux julien.coux@camptocamp.com https://github.com/jcoux
 Alexandre Saunier alexandre.saunier@camptocamp.com https://github.com/asaunier
 Frédéric Junod frederic.junod@camptocamp.com https://github.com/fredj
+Thomas Nowicki thomas.nowicki@camptocamp.com https://github.com/Tonow-c2c
+Stéphane Mangin stephane.mangin@camptocamp.com https://github.com/StephaneMangin
+Anna Janiszewska anna.janiszewska@camptocamp.com https://github.com/ajaniszewska-dev

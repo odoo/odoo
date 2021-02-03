@@ -11,6 +11,7 @@ Sell event tickets through eCommerce app.
     'data': [
         'data/event_data.xml',
         'views/event_templates.xml',
+        'views/event_views.xml',
         'security/ir.model.access.csv',
         'security/website_event_sale_security.xml',
     ],

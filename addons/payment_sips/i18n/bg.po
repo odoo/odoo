@@ -1,114 +1,148 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment_sips
-#
+# 
 # Translators:
+# Bernard <bernard@abv.bg>, 2019
+# Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2019
+# Albena Mincheva <albena_vicheva@abv.bg>, 2019
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-11-26 13:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
-"bg/)\n"
-"Language: bg\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2019\n"
+"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:163
+#: code:addons/payment_sips/models/payment.py:164
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; открити множество поръчки"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:161
+#: code:addons/payment_sips/models/payment.py:162
 #, python-format
 msgid "; no order found"
-msgstr "Не е открита заявка"
+msgstr "; не е открита поръчка"
 
 #. module: payment_sips
-#: model_terms:payment.acquirer,cancel_msg:payment_sips.payment_acquirer_sips
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Отказ,</i> Вашето плащане е отказано.</span>"
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
 
 #. module: payment_sips
-#: model_terms:payment.acquirer,done_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-"<span><i>Готово,</i> Вашето онлайн плащане е успешно. Благодарим Ви, за "
-"поръчката!.</span>"
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
 
 #. module: payment_sips
-#: model_terms:payment.acquirer,error_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-"<span><i>Грешка,</i> Моля, имайте предвид, че възникна грешка по време на "
-"транзакцията. Поръчката е потвърдена, но не е платена. Не се колебайте да се "
-"свържете с нас ако имате въпроси относно статуса на Вашата поръчка.</span>"
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
 
 #. module: payment_sips
-#: model_terms:payment.acquirer,pending_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-"<span><i>Задържано,</i>  Вашето онлайн плащане е успешно, но поръчката Ви "
-"още не е потвърдена.</span>"
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:84
+#: code:addons/payment_sips/models/payment.py:75
 #, python-format
 msgid "Currency not supported by Wordline"
+msgstr "Валута, която не се поддържа от Wordline"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:56
+#, python-format
+msgid "Incorrect payment acquirer provider"
+msgstr "Некоректен доставчик на обработчик на плащане"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
+msgid "Interface Version"
 msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:65
-#, python-format
-msgid "Incorrect payment acquirer provider"
-msgstr ""
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Механична конфигурация"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
+msgid "Merchant ID"
+msgstr "ИН на търговец"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Обработчик на плащането"
+msgstr "Обработчик на плащане"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Плащане"
+msgstr "Платежна транзакция"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
-msgid "SIPS API User Password"
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "PayPal"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+msgid "Production url"
 msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
-msgid "SIPS Secret"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Доставчик"
 
 #. module: payment_sips
-#: model:payment.acquirer,name:payment_sips.payment_acquirer_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
+msgid "Secret Key"
+msgstr "Таен ключ"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:159
+#: code:addons/payment_sips/models/payment.py:160
 #, python-format
 msgid "Sips: received data for reference %s"
+msgstr "В малки дози: получени данни за референция %s"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+msgid "Test url"
 msgstr ""
 
 #. module: payment_sips
-#: model_terms:payment.acquirer,pre_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"You will be redirected to the Sips website after clicking on payment button."
-msgstr ""
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
+msgid "Used for production only"
+msgstr "Използва се само в продукционна среда"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Банков превод"

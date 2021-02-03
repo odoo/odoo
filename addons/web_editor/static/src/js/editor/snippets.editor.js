@@ -41,6 +41,8 @@ var SnippetEditor = Widget.extend({
         this.$target = $(target);
         this.$target.data('snippet-editor', this);
         this.templateOptions = templateOptions;
+
+        this.__isStarted = $.Deferred();
     },
     /**
      * @override
@@ -80,7 +82,16 @@ var SnippetEditor = Widget.extend({
                     return $clone;
                 },
                 start: _.bind(self._onDragAndDropStart, self),
-                stop: _.bind(self._onDragAndDropStop, self)
+                stop: function () {
+                    // Delay our stop handler so that some summernote handlers
+                    // which occur on mouseup (and are themself delayed) are
+                    // executed first (this prevents the library to crash
+                    // because our stop handler may change the DOM).
+                    var args = arguments;
+                    setTimeout(function () {
+                        self._onDragAndDropStop.apply(self, args);
+                    }, 0);
+                },
             });
         }
 
@@ -94,7 +105,9 @@ var SnippetEditor = Widget.extend({
             }
         });
 
-        return $.when.apply($, defs);
+        return $.when.apply($, defs).then(function () {
+            self.__isStarted.resolve(self);
+        });
     },
     /**
      * @override
@@ -249,6 +262,34 @@ var SnippetEditor = Widget.extend({
             return false;
         }
     },
+    /**
+     * Clones the current snippet.
+     *
+     * @private
+     * @param {boolean} recordUndo
+     */
+    clone: function (recordUndo) {
+        this.trigger_up('snippet_will_be_cloned', {$target: this.$target});
+
+        var $clone = this.$target.clone(false);
+
+        if (recordUndo) {
+            this.trigger_up('request_history_undo_record', {$target: this.$target});
+        }
+
+        this.$target.after($clone);
+        this.trigger_up('call_for_each_child_snippet', {
+            $snippet: $clone,
+            callback: function (editor, $snippet) {
+                for (var i in editor.styles) {
+                    editor.styles[i].onClone({
+                        isCurrent: ($snippet.is($clone)),
+                    });
+                }
+            },
+        });
+        this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -300,7 +341,14 @@ var SnippetEditor = Widget.extend({
                 self.$el,
                 val.data
             );
-            self.styles[optionName || _.uniqueId('option')] = option;
+            var key = optionName || _.uniqueId('option');
+            if (self.styles[key]) {
+                // If two snippet options use the same option name (and so use
+                // the same JS option), store the subsequent ones with a unique
+                // ID (TODO improve)
+                key = _.uniqueId(key);
+            }
+            self.styles[key] = option;
             option.__order = i++;
             return option.attachTo($el);
         });
@@ -340,22 +388,7 @@ var SnippetEditor = Widget.extend({
      */
     _onCloneClick: function (ev) {
         ev.preventDefault();
-        var $clone = this.$target.clone(false);
-
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
-
-        this.$target.after($clone);
-        this.trigger_up('call_for_each_child_snippet', {
-            $snippet: $clone,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onClone({
-                        isCurrent: ($snippet.is($clone)),
-                    });
-                }
-            },
-        });
-        this.trigger_up('snippet_cloned', {$target: $clone});
+        this.clone(true);
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
@@ -403,14 +436,20 @@ var SnippetEditor = Widget.extend({
 
         $('.oe_drop_zone').droppable({
             over: function () {
-                $('.oe_drop_zone.hide').removeClass('hide');
-                $(this).addClass('hide').first().after(self.$target);
+                if (self.dropped) {
+                    self.$target.detach();
+                    $('.oe_drop_zone').removeClass('invisible');
+                }
                 self.dropped = true;
+                $(this).first().after(self.$target).addClass('invisible');
             },
             out: function () {
-                $(this).removeClass('hide');
-                self.$target.detach();
-                self.dropped = false;
+                var prev = self.$target.prev();
+                if (this === prev[0]) {
+                    self.dropped = false;
+                    self.$target.detach();
+                    $(this).removeClass('invisible');
+                }
             },
         });
     },
@@ -480,26 +519,33 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onOptionUpdate: function (ev) {
+        var self = this;
         // If multiple option names are given, we suppose it should not be
         // propagated to parent editor
         if (ev.data.optionNames) {
             ev.stopPropagation();
-            var self = this;
             _.each(ev.data.optionNames, function (name) {
-                var option = self.styles[name];
-                if (option) {
-                    option.notify(ev.data.name, ev.data.data);
-                }
+                notifyForEachMatchedOption(name);
             });
         }
         // If one option name is given, we suppose it should be handle by the
         // first parent editor which can do it
         if (ev.data.optionName) {
-            var option = this.styles[ev.data.optionName];
-            if (option) {
+            if (notifyForEachMatchedOption(ev.data.optionName)) {
                 ev.stopPropagation();
-                option.notify(ev.data.name, ev.data.data);
             }
+        }
+
+        function notifyForEachMatchedOption(name) {
+            var regex = new RegExp('^' + name + '\\d+$');
+            var hasOption = false;
+            for (var key in self.styles) {
+                if (key === name || regex.test(key)) {
+                    self.styles[key].notify(ev.data.name, ev.data.data);
+                    hasOption = true;
+                }
+            }
+            return hasOption;
         }
     },
     /**
@@ -536,6 +582,7 @@ var SnippetsMenu = Widget.extend({
     custom_events: {
         activate_insertion_zones: '_onActivateInsertionZones',
         call_for_each_child_snippet: '_onCallForEachChildSnippet',
+        clone_snippet: '_onCloneSnippet',
         deactivate_snippet: '_onDeactivateSnippet',
         drag_and_drop_stop: '_onDragAndDropStop',
         go_to_parent: '_onGoToParent',
@@ -693,55 +740,78 @@ var SnippetsMenu = Widget.extend({
             class: 'oe_drop_zone oe_insert',
         });
 
-        function isFullWidth($elem) {
-            return $elem.parent().width() === $elem.outerWidth(true);
+        // Check if the drop zone should be horizontal or vertical
+        function setDropZoneDirection($drop, $elem, height, $parent, $sibling) {
+            $sibling = $sibling || $elem;
+            var css = window.getComputedStyle($elem[0]);
+            var parentCss = window.getComputedStyle($parent[0]);
+            var float = css.float || css.cssFloat;
+            var display = parentCss.display;
+            var flex = parentCss.flexDirection;
+            if (float === 'left' || float === 'right' || (display === 'flex' && flex === 'row')) {
+                $drop.css('float', float);
+                if ($sibling.parent().width() !== $sibling.outerWidth(true)) {
+                    $drop.addClass('oe_vertical').css('height', height);
+                }
+            }
+        }
+
+        // If the previous sibling is a BR tag or a non-whitespace text, it
+        // should be a vertical dropzone.
+        function testPreviousSibling($drop, $zone) {
+            var node = $drop[0].previousSibling;
+            var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
+            if (test) {
+                $drop.addClass('oe_vertical').css({
+                    height: parseInt(window.getComputedStyle($zone[0]).lineHeight),
+                    float: 'none',
+                    display: 'inline-block',
+                });
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // Firstly, add a dropzone after the clone
+        var $clone = $('.oe_drop_clone');
+        if ($clone.length) {
+            var $drop = zone_template.clone();
+            var neighbor = $clone.prev()[0] || $clone.next()[0];
+            if (neighbor) {
+                var $neighbor = $(neighbor);
+                var height = Math.max($neighbor.outerHeight(), 30);
+                setDropZoneDirection($drop, $neighbor, height, $neighbor.parent());
+            }
+            $clone.after($drop);
         }
 
         if ($selectorChildren) {
             $selectorChildren.each(function () {
                 var $zone = $(this);
-                var css = window.getComputedStyle(this);
-                var parentCss = window.getComputedStyle($zone.parent()[0]);
-                var float = css.float || css.cssFloat;
-                var parentDisplay = parentCss.display;
-                var parentFlex = parentCss.flexDirection;
                 var $drop = zone_template.clone();
+                var $children = $zone.find('> :not(.oe_drop_zone, .oe_drop_clone)');
+                var height;
 
-                $zone.append($drop);
-                var node = $drop[0].previousSibling;
-                var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
-                if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block',
-                    });
-                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
-                    if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                if (!$zone.children().last().is('.oe_drop_zone')) {
+                    $zone.append($drop);
+                    if (!testPreviousSibling($drop, $zone)) {
+                        var $lastChild = $children.last();
+                        height = Math.max(Math.min($zone.outerHeight(), $lastChild.outerHeight()), 30);
+                        setDropZoneDirection($drop, $zone, height, $zone, $lastChild);
                     }
                 }
 
-                $drop = $drop.clone();
-
-                $zone.prepend($drop);
-                node = $drop[0].nextSibling;
-                test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
-                if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block'
-                    });
-                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
-                    if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                if (!$zone.children().first().is('.oe_drop_clone')) {
+                    $drop = zone_template.clone();
+                    $zone.prepend($drop);
+                    if (!testPreviousSibling($drop, $zone)) {
+                        var $firstChild = $children.first();
+                        height = Math.max(Math.min($zone.outerHeight(), $firstChild.outerHeight()), 30);
+                        setDropZoneDirection($drop, $zone, height, $zone, $firstChild);
+                    } else {
+                        $drop.css({'float': 'none', 'display': 'inline-block'});
                     }
-                }
-                if (test) {
-                    $drop.css({'float': 'none', 'display': 'inline-block'});
                 }
             });
 
@@ -753,30 +823,18 @@ var SnippetsMenu = Widget.extend({
             $selectorSiblings.filter(':not(.oe_drop_zone):not(.oe_drop_clone)').each(function () {
                 var $zone = $(this);
                 var $drop;
-                var css = window.getComputedStyle(this);
-                var parentCss = window.getComputedStyle($zone.parent()[0]);
-                var float = css.float || css.cssFloat;
-                var parentDisplay = parentCss.display;
-                var parentFlex = parentCss.flexDirection;
+                var height;
 
-                if ($zone.prev('.oe_drop_zone:visible').length === 0) {
+                if ($zone.prev('.oe_drop_zone:visible, .oe_drop_clone').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
-                        if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
-                        }
-                    }
+                    height = Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30);
+                    setDropZoneDirection($drop, $zone, height, $zone.parent());
                     $zone.before($drop);
                 }
-                if ($zone.next('.oe_drop_zone:visible').length === 0) {
+                if ($zone.next('.oe_drop_zone:visible, .oe_drop_clone').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
-                        if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
-                        }
-                    }
+                    height = Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30);
+                    setDropZoneDirection($drop, $zone, height, $zone.parent());
                     $zone.after($drop);
                 }
             });
@@ -862,6 +920,7 @@ var SnippetsMenu = Widget.extend({
         _.each(this.snippetEditors, function (snippetEditor) {
             snippetEditor.destroy();
         });
+        this.snippetEditors.splice(0);
     },
     /**
      * Updates the cover dimensions of the current snippet editor.
@@ -1155,7 +1214,7 @@ var SnippetsMenu = Widget.extend({
         var self = this;
         var snippetEditor = $snippet.data('snippet-editor');
         if (snippetEditor) {
-            return $.when(snippetEditor);
+            return snippetEditor.__isStarted;
         }
 
         var def;
@@ -1165,6 +1224,15 @@ var SnippetsMenu = Widget.extend({
         }
 
         return $.when(def).then(function (parentEditor) {
+            // When reaching this position, after the Promise resolution, the
+            // snippet editor instance might have been created by another call
+            // to _createSnippetEditor... the whole logic should be improved
+            // to avoid doing this here.
+            snippetEditor = $snippet.data('snippet-editor');
+            if (snippetEditor) {
+                return snippetEditor.__isStarted;
+            }
+
             snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions);
             self.snippetEditors.push(snippetEditor);
             return snippetEditor.appendTo(self.$snippetEditorArea);
@@ -1268,17 +1336,19 @@ var SnippetsMenu = Widget.extend({
 
                 $('.oe_drop_zone').droppable({
                     over: function () {
-                        if (!dropped) {
-                            dropped = true;
-                            $(this).first().after($toInsert).addClass('d-none');
+                        if (dropped) {
+                            $toInsert.detach();
+                            $('.oe_drop_zone').removeClass('invisible');
                         }
+                        dropped = true;
+                        $(this).first().after($toInsert).addClass('invisible');
                     },
                     out: function () {
                         var prev = $toInsert.prev();
                         if (this === prev[0]) {
                             dropped = false;
                             $toInsert.detach();
-                            $(this).removeClass('d-none');
+                            $(this).removeClass('invisible');
                         }
                     },
                 });
@@ -1390,6 +1460,19 @@ var SnippetsMenu = Widget.extend({
      */
     _onCleanForSaveDemand: function (ev) {
         this.cleanForSave();
+    },
+    /**
+     * Called when a child editor asks to clone a snippet, allows to correctly
+     * call the _onClone methods if the element's editor has one.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onCloneSnippet: function (ev) {
+        ev.stopPropagation();
+        this._createSnippetEditor(ev.data.$snippet).then(function (editor) {
+            editor.clone();
+        });
     },
     /**
      * Called when a child editor asks to deactivate the current snippet

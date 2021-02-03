@@ -162,7 +162,7 @@
         <div class="btn-group o_reconcile_models" t-if="state.reconcileModels">
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
                 <button class="btn btn-primary"
-                        t-if="reconcileModel.rule_type === 'writeoff_button' &amp;&amp; (reconcileModel.match_journal_ids.length == 0 || reconcileModel.match_journal_ids.includes(state.st_line.journal_id))"
+                        t-if="reconcileModel.rule_type === 'writeoff_button' &amp;&amp; (reconcileModel.match_journal_ids.length == 0 || reconcileModel.match_journal_ids.includes(state.st_line.journal_id) || state.st_line.journal_id === undefined)"
                         t-att-data-reconcile-model-id="reconcileModel.id">
                     <t t-esc="reconcileModel.name"/>
                 </button>
@@ -186,11 +186,11 @@
             <td class="o_td_label">Tax</td>
             <td class="o_td_field"></td>
         </tr>
-        <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">
+        <tr class="create_analytic_account_id" t-if="group_acc">
             <td class="o_td_label">Analytic Acc.</td>
             <td class="o_td_field"></td>
         </tr>
-        <tr class="create_analytic_tag_ids" groups="analytic.group_analytic_tags">
+        <tr class="create_analytic_tag_ids" t-if="group_tags">
             <td class="o_td_label">Analytic Tags.</td>
             <td class="o_td_field"></td>
         </tr>
@@ -285,7 +285,7 @@
 <t t-name="reconciliation.line.mv_line.details">
     <table class='details'>
         <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
-        <tr><td>Journal</td><td><t t-esc="line.journal_id[1]"/></td></tr>
+        <tr><td>Journal</td><td><t t-esc="line.journal_id.display_name"/></td></tr>
         <tr><td>Label</td><td><t t-esc="line.label"/></td></tr>
         <tr t-if="line.ref"><td>Ref</td><td><t t-esc="line.ref"/></td></tr>
         <tr t-if="line.partner_id"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>

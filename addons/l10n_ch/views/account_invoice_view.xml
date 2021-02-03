@@ -12,7 +12,7 @@
 
                 <xpath expr="//field[@name='sent']" position="after">
                     <field name="l10n_ch_isr_sent" invisible="1"/>
-                    <field name="l10n_ch_currency_name" invisible="1"/>
+                    <field name="l10n_ch_currency_name" invisible="1" readonly="1"/>
                 </xpath>
 
                 <xpath expr="//button[@id='account_invoice_payment_btn']" position="before">
@@ -36,6 +36,25 @@
                         attrs="{'invisible':['|', ('l10n_ch_isr_sent', '=', False),
                                                 '|', ('state', '!=', 'open'),
                                                     ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'open'),
+                                             '|', ('l10n_ch_isr_sent', '=', True),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        class="oe_highlight"
+                        />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'open'),
+                                             '|', ('l10n_ch_isr_sent', '=', False),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         groups="base.group_user"
                         />
                 </xpath>

@@ -99,14 +99,14 @@ class Employee(models.Model):
                     SELECT holiday_status_id, number_of_days,
                         state, employee_id
                     FROM hr_leave_allocation
-                    UNION
+                    UNION ALL
                     SELECT holiday_status_id, (number_of_days * -1) as number_of_days,
                         state, employee_id
                     FROM hr_leave
                 ) h
                 join hr_leave_type s ON (s.id=h.holiday_status_id)
             WHERE
-                h.state='validate' AND
+                s.active = true AND h.state='validate' AND
                 (s.allocation_type='fixed' OR s.allocation_type='fixed_allocation') AND
                 h.employee_id in %s
             GROUP BY h.employee_id""", (tuple(self.ids),))
@@ -125,6 +125,7 @@ class Employee(models.Model):
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
+            ('holiday_status_id.active', '=', True),
             ('state', 'not in', ('cancel', 'refuse'))
         ])
         leave_data = {}
@@ -146,6 +147,7 @@ class Employee(models.Model):
         all_leaves = self.env['hr.leave.report'].read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.allocation_type', '!=', 'no'),
+            ('holiday_status_id.active', '=', 'True'),
             ('state', '=', 'validate')
         ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
         mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in all_leaves])

@@ -3,14 +3,18 @@
 # * base_address_extended
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2019
+# oihane <oihanecruce@gmail.com>, 2019
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2019
+# Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,22 +37,28 @@ msgstr "Enpresak"
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontaktua"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
 msgid "Country"
+msgstr "Herrialdea"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
+msgid "Door"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number2
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number2
-#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
+#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "Ate zenbakia"
 
 #. module: base_address_extended
-#: model:ir.model.fields,help:base_address_extended.field_res_country_street_format
+#: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
 msgid ""
 "Format to use for streets belonging to this country.\n"
 "\n"
@@ -59,23 +69,29 @@ msgid ""
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number
-#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number
-msgid "House Number"
-msgstr ""
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
+msgid "House"
+msgstr "Etxea"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country_street_format
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
+#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
+msgid "House Number"
+msgstr "Etxe zenbakia"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_name
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_name
-#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Kalearen izena"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
@@ -90,8 +106,8 @@ msgid "Street format..."
 msgstr ""
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:60
-#: code:addons/base_address_extended/models/base_address_extended.py:126
+#: code:addons/base_address_extended/models/base_address_extended.py:65
+#: code:addons/base_address_extended/models/base_address_extended.py:113
 #, python-format
 msgid "Unrecognized field %s in street format."
 msgstr ""

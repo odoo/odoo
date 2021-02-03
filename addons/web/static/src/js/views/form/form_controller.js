@@ -232,7 +232,9 @@ var FormController = BasicController.extend({
                 for (var k = 0; k < changedFields.length; k++) {
                     var field = fields[changedFields[k]];
                     var fieldData = data[changedFields[k]];
-                    if (field.translate && fieldData) {
+                    // An empty HTML field will always contain at least '<p><br></p>'. Do not
+                    // suggest a translation in this case.
+                    if (field.translate && fieldData && fieldData !== '<p><br></p>') {
                         alertFields[changedFields[k]] = field;
                     }
                 }
@@ -561,7 +563,9 @@ var FormController = BasicController.extend({
      * @private
      */
     _onEdit: function () {
-        this._setMode('edit');
+        // wait for potential pending changes to be saved (done with widgets
+        // allowing to edit in readonly)
+        this.mutex.getUnlockedDef().then(this._setMode.bind(this, 'edit'));
     },
     /**
      * This method is called when someone tries to freeze the order, most likely
@@ -596,9 +600,12 @@ var FormController = BasicController.extend({
      * @private
      * @param {OdooEvent} event
      */
-    _onFormDialogDiscarded: function(e) {
-        e.stopPropagation();
-        this.renderer.focusLastActivatedWidget();
+    _onFormDialogDiscarded: function(ev) {
+        ev.stopPropagation();
+        var isFocused = this.renderer.focusLastActivatedWidget();
+        if (ev.data.callback) {
+            ev.data.callback(_.str.toBool(isFocused));
+        }
     },
     /**
      * Opens a one2many record (potentially new) in a dialog. This handler is

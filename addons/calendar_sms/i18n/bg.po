@@ -2,12 +2,19 @@
 # This file contains the translation of the following modules:
 # * calendar_sms
 # 
+# Translators:
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2019
+# Albena Mincheva <albena_vicheva@abv.bg>, 2019
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# Igor Sheludko <igor.sheludko@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18+e\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 11:33+0000\n"
-"PO-Revision-Date: 2017-09-20 11:33+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2020\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,33 +23,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Email"
+msgstr "Електронна поща"
+
+#. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Event"
-msgstr ""
+msgstr "Събитие"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
-msgid "Event alarm"
-msgstr ""
+msgid "Event Alarm"
+msgstr "Събитие - Аларма"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Събитие - управление аларми"
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:23
 #, python-format
 msgid "Event reminder: %s on %s."
-msgstr ""
+msgstr "Напомняне за събитие: %s на %s."
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Notification"
+msgstr "Известие"
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "SMS Text Message"
+msgstr "Тексови съобщения"
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:24
 #, python-format
 msgid "SMS text message reminder sent !"
-msgstr ""
+msgstr "SMS текстово съобщение за напомняне е изпратено!"
 
 #. module: calendar_sms
 #: model:ir.actions.act_window,name:calendar_sms.sms_message_send_action_mutli
 msgid "Send SMS to attendees"
-msgstr ""
+msgstr "Изпрати SMS на присъстващите"
 
 #. module: calendar_sms
-#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
-msgid "calendar.alarm_manager"
-msgstr ""
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__type
+msgid "Type"
+msgstr "Вид"

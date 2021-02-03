@@ -15,7 +15,7 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         var $amount_delivery = $('#order_delivery span.oe_currency_value');
         var $amount_untaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amount_tax = $('#order_total_taxes span.oe_currency_value');
-        var $amount_total = $('#order_total span.oe_currency_value');
+        var $amount_total = $('#order_total, #amount_total_summary').find('span.oe_currency_value');
         var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge:not(.o_delivery_compute)');
         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
         var $discount = $('#order_discounted');
@@ -62,12 +62,16 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 
     var $carriers = $("#delivery_carrier input[name='delivery_type']");
     $carriers.click(_onCarrierClick);
-    // Workaround to:
-    // - update the amount/error on the label at first rendering
-    // - prevent clicking on 'Pay Now' if the shipper rating fails
-    if ($carriers.length > 0) {
-        $carriers.filter(':checked').click();
-    }
+
+    // Wait a tick in case form is updated on page load (eg. back button on Chromium browser)
+    setTimeout(function () {
+        // Workaround to:
+        // - update the amount/error on the label at first rendering
+        // - prevent clicking on 'Pay Now' if the shipper rating fails
+        if ($carriers.length > 0) {
+            $carriers.filter(':checked').click();
+        }
+    })
 
     /* Handle stuff */
     $(".oe_website_sale select[name='shipping_id']").on('change', function () {

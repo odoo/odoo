@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_order_view_form_inherit_cash_rounding" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.cash_rounding</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="amount_paid"
+                    string="Total Paid (with rounding)"
+                    class="oe_subtotal_footer_separator"
+                    widget="monetary"
+                    attrs="{'invisible': [('amount_paid','=', 'amount_total')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

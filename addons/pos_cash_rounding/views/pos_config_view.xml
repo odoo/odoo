@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_inherit_cash_rounding" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.cash_rounding</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='payment_methods']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" groups="account.group_cash_rounding">
+                    <div class="o_setting_left_pane">
+                        <field name="cash_rounding"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="cash_rounding"/>
+                        <div class="text-muted">
+                            Define the smallest coinage of the currency used to pay
+                        </div>
+                        <div class="content-group mt16" attrs="{'invisible': [('cash_rounding', '=', False)]}">
+                            <div class="row mt16">
+                                <label string="Rounding Method" for="rounding_method" class="col-lg-3 o_light_label" />
+                                <field name="rounding_method" attrs="{'required' : [('cash_rounding', '=', True)]}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

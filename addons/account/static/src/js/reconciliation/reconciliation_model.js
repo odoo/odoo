@@ -382,16 +382,11 @@ var StatementModel = BasicModel.extend({
             domainReconcile.push(['company_id', 'in', context.company_ids]);
         }
         if (context && context.active_model === 'account.journal' && context.active_ids) {
-            domainReconcile.push(['journal_id', 'in', [false].concat(context.active_ids)]);
+            domainReconcile.push('|');
+            domainReconcile.push(['match_journal_ids', '=', false]);
+            domainReconcile.push(['match_journal_ids', 'in', context.active_ids]);
         }
-        var def_reconcileModel = this._rpc({
-                model: 'account.reconcile.model',
-                method: 'search_read',
-                domain: domainReconcile,
-            })
-            .then(function (reconcileModels) {
-                self.reconcileModels = reconcileModels;
-            });
+        var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_account = this._rpc({
                 model: 'account.account',
                 method: 'search_read',
@@ -411,7 +406,59 @@ var StatementModel = BasicModel.extend({
             return self._formatLine(self.statement.lines);
         });
     },
-
+    _readAnalyticTags: function (params) {
+        var self = this;
+        this.analyticTags = {};
+        if (!params || !params.res_ids || !params.res_ids.length) {
+            return $.when();
+        }
+        var fields = (params && params.fields || []).concat(['id', 'display_name']);
+        return this._rpc({
+                model: 'account.analytic.tag',
+                method: 'read',
+                args: [
+                    params.res_ids,
+                    fields,
+                ],
+            }).then(function (tags) {
+                for (var i=0; i<tags.length; i++) {
+                    var tag = tags[i];
+                    self.analyticTags[tag.id] = tag;
+                }
+            });
+    },
+    _loadReconciliationModel: function (params) {
+        var self = this;
+        return this._rpc({
+                model: 'account.reconcile.model',
+                method: 'search_read',
+                domain: params.domainReconcile || [],
+            })
+            .then(function (reconcileModels) {
+               var analyticTagIds = [];
+                for (var i=0; i<reconcileModels.length; i++) {
+                    var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                    for (var j=0; j<modelTags.length; j++) {
+                        if (analyticTagIds.indexOf(modelTags[j]) === -1) {
+                            analyticTagIds.push(modelTags[j]);
+                        }
+                    }
+                }
+                return self._readAnalyticTags({res_ids: analyticTagIds}).then(function () {
+                    for (var i=0; i<reconcileModels.length; i++) {
+                        var recModel = reconcileModels[i];
+                        var analyticTagData = [];
+                        var modelTags = reconcileModels[i].analytic_tag_ids || [];
+                        for (var j=0; j<modelTags.length; j++) {
+                            var tagId = modelTags[j];
+                            analyticTagData.push([tagId, self.analyticTags[tagId].display_name])
+                        }
+                        recModel.analytic_tag_ids = analyticTagData;
+                    }
+                    self.reconcileModels = reconcileModels;
+                });
+            });
+    },
     _loadTaxes: function(){
         var self = this;
         self.taxes = {};
@@ -853,7 +900,7 @@ var StatementModel = BasicModel.extend({
                                 'link': prop.id,
                                 'tax_id': [tax.id, null],
                                 'amount': tax.amount,
-                                'label': tax.name,
+                                'label': prop.label ? prop.label + " " + tax.name : tax.name,
                                 'date': prop.date,
                                 'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
                                 'analytic': tax.analytic,
@@ -949,7 +996,7 @@ var StatementModel = BasicModel.extend({
     _formatMany2ManyTags: function (value) {
         var res = [];
         for (var i=0, len=value.length; i<len; i++) {
-            res[i] = {data: {'id': value[i][0], 'display_name': value[i][1]}};
+            res[i] = {'id': value[i][0], 'display_name': value[i][1]};
         }
         return res;
     },
@@ -1290,15 +1337,7 @@ var ManualModel = StatementModel.extend({
         if (company_ids) {
             domainReconcile.push(['company_id', 'in', company_ids]);
         }
-        var def_reconcileModel = this._rpc({
-                model: 'account.reconcile.model',
-                method: 'search_read',
-                domain: domainReconcile,
-            })
-            .then(function (reconcileModels) {
-                self.reconcileModels = reconcileModels;
-            });
-
+        var def_reconcileModel = this._loadReconciliationModel({domainReconcile: domainReconcile});
         var def_taxes = this._loadTaxes();
 
         return $.when(def_reconcileModel, def_account, def_taxes).then(function () {
@@ -1317,7 +1356,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = result;
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1332,7 +1371,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = result;
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1354,7 +1393,7 @@ var ManualModel = StatementModel.extend({
                             self.manualLines = [].concat(result.accounts, result.customers, result.suppliers)
                             self.valuenow = 0;
                             self.valuemax = Object.keys(self.manualLines).length;
-                            var lines = self.manualLines.splice(0, self.defaultDisplayQty);
+                            var lines = self.manualLines.slice(0, self.defaultDisplayQty);
                             self.pagerIndex = lines.length;
                             return self.loadData(lines);
                         });
@@ -1371,7 +1410,7 @@ var ManualModel = StatementModel.extend({
         if (qty === undefined) {
             qty = this.defaultDisplayQty;
         }
-        var lines = this.manualLines.splice(this.pagerIndex, qty);
+        var lines = this.manualLines.slice(this.pagerIndex, this.pagerIndex + qty);
         this.pagerIndex += qty;
         return this.loadData(lines);
     },
@@ -1467,7 +1506,7 @@ var ManualModel = StatementModel.extend({
                         if (line.type === 'accounts') {
                             account_ids.push(line.account_id.id);
                         } else {
-                            partner_ids.push(line.partner_id.id);
+                            partner_ids.push(line.partner_id);
                         }
                     }
                 }));

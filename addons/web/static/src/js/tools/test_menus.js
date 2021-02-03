@@ -120,7 +120,8 @@
      */
     function testMenuItem(element){
         if (testedMenus.indexOf(element.dataset.menuXmlid) >= 0) return $.Deferred().resolve(); // Avoid infinite loop
-        console.log("Testing menu", element.innerText.trim(), " ", element.dataset.menuXmlid);
+        var menuDescription = element.innerText.trim() + " " + element.dataset.menuXmlid;
+        console.log("Testing menu", menuDescription);
         testedMenus.push(element.dataset.menuXmlid);
         var startActionCount = clientActionCount;
         element.click();
@@ -143,7 +144,7 @@
                 return testViews();
             }
         }).fail(function() {
-            console.error("Error while testing", element);
+            console.error("Error while testing", menuDescription);
         });
     };
 
@@ -246,7 +247,7 @@
                     // recursive call until the resolve or the timeout
                     setTimeout(checkCondition, interval);
                 } else {
-                    console.error("Timeout exceeded", stopCondition);
+                    console.error('Timeout, the clicked element took more than 15 seconds to load');
                     def.reject();
                 }
             }

@@ -42,13 +42,13 @@
                         <group>
                             <field name="tax_ids" widget="one2many_list" nolabel="1">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
-                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none')]"/>
                                 </tree>
                                 <form name="tax_map_form" string="Tax Mapping">
                                     <group>
-                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
+                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]"/>
+                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=','none')]"/>
                                     </group>
                                 </form>
                             </field>
@@ -79,6 +79,7 @@
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
                 <search string="Search Fiscal Positions">
+                    <field name="name" string="Fiscal Position"/>
                     <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
                 </search>
             </field>

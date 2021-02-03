@@ -39,6 +39,9 @@ var FieldPad = AbstractField.extend({
             this.$(".oe_configured").addClass('d-none');
             return;
         }
+        if (this.mode === 'edit' && typeof(this.value) === 'object') {
+            this.value = this.value.toJSON();
+        }
         if (this.mode === 'edit' && _.str.startsWith(this.value, 'http')) {
             this.url = this.value;
             // please close your eyes and look elsewhere...

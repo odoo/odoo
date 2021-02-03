@@ -33,7 +33,7 @@
                 <field name="name"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
-                <field name="partner_phone"/>
+                <field name="partner_phone" class="o_force_ltr"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
                 <field name="medium_id"/>
@@ -124,8 +124,8 @@
                     <group>
                         <field name="partner_id"/>
                         <field name="email_from" widget="email"/>
-                        <field name="partner_phone"/>
-                        <field name="partner_mobile"/>
+                        <field name="partner_phone" class="o_force_ltr"/>
+                        <field name="partner_mobile" class="o_force_ltr"/>
                         <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
@@ -277,6 +277,7 @@
                 <field name="user_email"/>
                 <field name="partner_name"/>
                 <field name="type_id"/>
+                <field name="partner_id"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="message_needaction_counter"/>
@@ -313,7 +314,7 @@
                                     </div>
                                 </div>
                                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile"/><br/></t>
+                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile" widget="phone"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="float-left mr4" groups="base.group_user">

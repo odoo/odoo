@@ -51,7 +51,20 @@ Available manifest fields are:
 ``website`` (``str``)
     website URL for the module author
 ``license`` (``str``, defaults: ``LGPL-3``)
-    distribution license for the module
+    distribution license for the module.
+    Possible values:
+
+    * `GPL-2`
+    * `GPL-2 or any later version`
+    * `GPL-3`
+    * `GPL-3 or any later version`
+    * `AGPL-3`
+    * `LGPL-3`
+    * `Other OSI approved licence`
+    * `OEEL-1` (Odoo Enterprise Edition License v1.0)
+    * `OPL-1` (Odoo Proprietary License v1.0)
+    * `Other proprietary`
+
 ``category`` (``str``, default: ``Uncategorized``)
     classification category within Odoo, rough business domain for the module.
 
@@ -106,7 +119,7 @@ Available manifest fields are:
     located in ``static/src/css`` inside the module.
 ``images`` (``list(str)``)
     Specify image files to be used by the module.
-``installable`` (``bool`` default: ``False``)
+``installable`` (``bool`` default: ``True``)
     Whether a user should be able to install the module from the Web UI or not.
 ``maintainer`` (``str``)
     Person or entity in charge of the maintenance of this module, by default
@@ -128,6 +141,6 @@ Available manifest fields are:
     These hooks should only be used when setup/cleanup required for this module
     is either extremely difficult or impossible through the api.
 
-.. _semantic versioning: http://semver.org
+.. _semantic versioning: https://semver.org
 .. _existing categories:
      https://github.com/odoo/odoo/blob/12.0/odoo/addons/base/data/ir_module_category_data.xml

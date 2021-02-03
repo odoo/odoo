@@ -6,6 +6,8 @@ import random
 from odoo import api, fields, models, _
 from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 from odoo.exceptions import AccessDenied, AccessError
+from odoo.tools import html_escape
+
 
 class CrmLead(models.Model):
     _inherit = "crm.lead"
@@ -181,7 +183,7 @@ class CrmLead(models.Model):
     def partner_interested(self, comment=False):
         message = _('<p>I am interested by this lead.</p>')
         if comment:
-            message += '<p>%s</p>' % comment
+            message += '<p>%s</p>' % html_escape(comment)
         for lead in self:
             lead.message_post(body=message, subtype="mail.mt_note")
             lead.sudo().convert_opportunity(lead.partner_id.id)  # sudo required to convert partner data
@@ -196,7 +198,7 @@ class CrmLead(models.Model):
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
         self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
-            message += '<p>%s</p>' % comment
+            message += '<p>%s</p>' % html_escape(comment)
         self.message_post(body=message, subtype="mail.mt_note")
         values = {
             'partner_assigned_id': False,

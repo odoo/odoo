@@ -30,8 +30,8 @@
                                     </div>
                                 </group>
                                 <group>
-                                    <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
-                                    <field name="phone"/>
+                                    <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
+                                    <field name="phone" class="o_force_ltr"/>
                                     <field name="email"/>
                                     <field name="vat"/>
                                     <field name="company_registry"/>
@@ -81,10 +81,10 @@
                                     <div t-if="record.phone.value" class="col-6 text-center">
                                         <strong>Phone</strong>
                                     </div>
-                                    <div t-if="record.phone.value" class="col-6 text-center">
+                                    <div t-if="record.email.value" class="col-6 text-center">
                                         <field name="email"/>
                                     </div>
-                                    <div t-if="record.phone.value" class="col-6 text-center">
+                                    <div t-if="record.phone.value" class="col-6 text-center o_force_ltr">
                                         <field name="phone"/>
                                     </div>
                                 </div>

@@ -748,6 +748,36 @@ var ListFieldMany2One = FieldMany2One.extend({
     _renderReadonly: function () {
         this.$el.text(this.m2o_value);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * In case the focus is lost from a mousedown, we want to prevent the click occuring on the
+     * following mouseup since it might trigger some unwanted list functions.
+     * If it's not the case, we want to remove the added handler on the next mousedown.
+     * @see list_editable_renderer._onWindowClicked()
+     *
+     * @override
+     * @private
+     */
+    _onInputFocusout: function () {
+        if (this.can_create && this.floating) {
+            // In case the focus out is due to a mousedown, we want to prevent the next click
+            var attachedEvents = ['click', 'mousedown'];
+            var stopNextClick = (function (ev) {
+                ev.stopPropagation();
+                attachedEvents.forEach(function (eventName) {
+                    window.removeEventListener(eventName, stopNextClick, true);
+                });
+            }).bind(this);
+            attachedEvents.forEach(function (eventName) {
+                window.addEventListener(eventName, stopNextClick, true);
+            });
+        }
+        return this._super.apply(this, arguments);
+    },
 });
 
 var KanbanFieldMany2One = AbstractField.extend({
@@ -1845,6 +1875,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     fieldsToFetch: {
         display_name: {type: 'char'},
     },
+    limit: 1000,
 
     /**
      * @constructor
@@ -2176,17 +2207,27 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     /**
      * @private
      */
-    _render: function () {
+    _renderCheckboxes: function () {
         var self = this;
-        this._super.apply(this, arguments);
+        this.m2mValues = this.record.specialData[this.name];
+        this.$el.html(qweb.render(this.template, {widget: this}));
         _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
         });
     },
     /**
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        this._renderCheckboxes();
+    },
+    /**
+     * @override
      * @private
      */
     _renderReadonly: function () {
+        this._renderCheckboxes();
         this.$("input").prop("disabled", true);
     },
 
@@ -2308,7 +2349,7 @@ var FieldStatus = AbstractField.extend({
 var FieldSelection = AbstractField.extend({
     template: 'FieldSelection',
     specialData: "_fetchSpecialRelation",
-    supportedFieldTypes: ['selection', 'many2one'],
+    supportedFieldTypes: ['selection'],
     events: _.extend({}, AbstractField.prototype.events, {
         'change': '_onChange',
     }),
@@ -2465,6 +2506,27 @@ var FieldRadio = FieldSelection.extend({
         return true;
     },
 
+    /**
+     * Returns the currently-checked radio button, or the first one if no radio
+     * button is checked.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        var checked = this.$("[checked='true']");
+        return checked.length ? checked : this.$("[data-index='0']");
+    },
+
+    /**
+     * Associates the 'for' attribute to the radiogroup, instead of the selected
+     * radio button.
+     *
+     * @param {string} id
+     */
+    setIDForLabel: function (id) {
+        this.$el.attr('id', id);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2482,11 +2544,14 @@ var FieldRadio = FieldSelection.extend({
             currentValue = this.value;
         }
         this.$el.empty();
+        this.$el.attr('role', 'radiogroup')
+            .attr('aria-label', this.string);
         _.each(this.values, function (value, index) {
             self.$el.append(qweb.render('FieldRadio.button', {
                 checked: value[0] === currentValue,
                 id: self.unique_id + '_' + value[0],
                 index: index,
+                name: self.unique_id,
                 value: value,
             }));
         });

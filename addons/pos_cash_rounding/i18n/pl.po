@@ -1,0 +1,140 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_cash_rounding
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2020
+# Tomasz Leppich <t.leppich@gmail.com>, 2020
+# Paweł Michoń <michon.pawel@wp.pl>, 2020
+# Paweł Wodyński <pw@myodoo.pl>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-25 08:38+0000\n"
+"PO-Revision-Date: 2020-05-14 12:49+0000\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_account_cash_rounding
+msgid "Account Cash Rounding"
+msgstr "Zaokrąglanie gotówki na koncie"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__cash_rounding
+msgid "Cash Rounding"
+msgstr "Zaokrąglenie gotówki"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Cash Roundings"
+msgstr "Zaokrąglenie gotówki"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__rounding_method
+msgid "Cash rounding"
+msgstr "Zaokrąglenie gotówki"
+
+#. module: pos_cash_rounding
+#: code:addons/pos_cash_rounding/models/pos_config.py:19
+#, python-format
+msgid "Cash rounding strategy must be: 'Add a rounding line'"
+msgstr ""
+"Strategia zaokrąglania gotówki musi być następująca: „Dodaj pozycję "
+"zaokrąglania”"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
+msgid "Define the smallest coinage of the currency used to pay"
+msgstr "Zdefiniuj najmniejszą monetę używanej waluty"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Define the smallest coinage of the currency used to pay by cash"
+msgstr "Określ najmniejszą walutę używaną do płatności gotówką"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_account_cash_rounding__loss_account_id
+msgid "Loss Account"
+msgstr "Konto strat"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__only_round_cash_method
+msgid "Only apply rounding on cash"
+msgstr "Zaokrąglanie dotyczy wyłącznie gotówki"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Payments"
+msgstr "Wpłaty"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Konfiguracja punktu sprzedaży"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Zamówienia Punktu Sprzedaży"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesja punktu sprzedaży"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_rounding_form_view_inherited
+msgid "Profit Account"
+msgstr "Konto wynikowe"
+
+#. module: pos_cash_rounding
+#. openerp-web
+#: code:addons/pos_cash_rounding/static/src/xml/pos.xml:19
+#, python-format
+msgid "ROUNDED"
+msgstr "ZAOKRĄGLONE"
+
+#. module: pos_cash_rounding
+#. openerp-web
+#: code:addons/pos_cash_rounding/static/src/xml/pos.xml:7
+#, python-format
+msgid "ROUNDED:"
+msgstr "ZAOKRĄGLONE:"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
+msgid "Rounding Method"
+msgstr "Metoda zaokrąglania"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_rounding_form_view_inherited
+msgid ""
+"The Point of Sale only support the \"add a rounding line\" rounding "
+"strategy."
+msgstr ""
+"Punkt sprzedaży obsługuje tylko strategię zaokrąglania „dodaj pozycję "
+"zaokrąglania”."
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_order_view_form_inherit_cash_rounding
+msgid "Total Paid (with rounding)"
+msgstr "Płatne ogółem (z zaokrągleniem)"
+
+#. module: pos_cash_rounding
+#: code:addons/pos_cash_rounding/models/account_cash_rounding.py:20
+#, python-format
+msgid ""
+"You are not allowed to change the cash rounding configuration while a pos "
+"session using it is already opened."
+msgstr ""
+"Nie można zmieniać konfiguracji zaokrąglania gotówki, gdy sesja pos "
+"korzystająca z niej jest już otwarta."

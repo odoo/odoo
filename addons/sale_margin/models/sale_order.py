@@ -18,7 +18,8 @@ class SaleOrderLine(models.Model):
         if product_uom_id != product_id.uom_id:
             purchase_price = product_id.uom_id._compute_price(purchase_price, product_uom_id)
         price = frm_cur._convert(
-            purchase_price, to_cur, order_id.company_id, order_id.date_order or fields.Date.today(), round=False)
+            purchase_price, to_cur, order_id.company_id or self.env.user.company_id,
+            order_id.date_order or fields.Date.today(), round=False)
         return price
 
     @api.model
@@ -57,6 +58,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'purchase_price', 'product_uom_qty', 'price_unit', 'price_subtotal')
     def _product_margin(self):
+        if not self.env.in_onchange:
+            # prefetch the fields needed for the computation
+            self.read(['price_subtotal', 'purchase_price', 'product_uom_qty', 'order_id'])
         for line in self:
             currency = line.order_id.pricelist_id.currency_id
             price = line.purchase_price
@@ -70,5 +74,19 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.margin')
     def _product_margin(self):
-        for order in self:
-            order.margin = sum(order.order_line.filtered(lambda r: r.state != 'cancel').mapped('margin'))
+        if self.env.in_onchange:
+            for order in self:
+                order.margin = sum(order.order_line.filtered(lambda r: r.state != 'cancel').mapped('margin'))
+        else:
+            # On batch records recomputation (e.g. at install), compute the margins
+            # with a single read_group query for better performance.
+            # This isn't done in an onchange environment because (part of) the data
+            # may not be stored in database (new records or unsaved modifications).
+            grouped_order_lines_data = self.env['sale.order.line'].read_group(
+                [
+                    ('order_id', 'in', self.ids),
+                    ('state', '!=', 'cancel'),
+                ], ['margin', 'order_id'], ['order_id'])
+            for data in grouped_order_lines_data:
+                order = self.browse(data['order_id'][0])
+                order.margin = data['margin']

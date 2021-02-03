@@ -233,7 +233,10 @@ var ListRenderer = BasicRenderer.extend({
                 if (!formatFunc) {
                     formatFunc = field_utils.format[field.type];
                 }
-                var formattedValue = formatFunc(value, field, { escape: true });
+                var formattedValue = formatFunc(value, field, {
+                    escape: true,
+                    digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined,
+                });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -315,6 +318,7 @@ var ListRenderer = BasicRenderer.extend({
             data: record.data,
             escape: true,
             isPassword: 'password' in node.attrs,
+            digits: node.attrs.digits ? JSON.parse(node.attrs.digits) : undefined,
         });
         this._handleAttributes($td, node);
         return $td.html(formattedValue);
@@ -560,7 +564,7 @@ var ListRenderer = BasicRenderer.extend({
         }
 
         if (field.type === 'float' || field.type === 'integer' || field.type === 'monetary') {
-            $th.css({ textAlign: 'right' });
+            $th.addClass('o_list_number_th');
         }
 
         if (config.debug) {

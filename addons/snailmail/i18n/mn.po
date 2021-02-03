@@ -6,6 +6,8 @@
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Martin Trigaux, 2018
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# nurbahyt baha <nurbahyt.kh@gmail.com>, 2019
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
+"Last-Translator: tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,12 +37,14 @@ msgstr ""
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
+"Баримтыг шуудангаар илгээх үед алдаа гарсан. <br>\n"
+"Алдаа: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:215
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Тодорхойгүй алдаа гарсан. Дуудлагын төвтэй холбогдоно уу."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -50,12 +54,12 @@ msgstr "Хавсралт"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Хоёр тал"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Хоёр талууд"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -70,12 +74,12 @@ msgstr "Цуцлагдсан"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
-msgstr ""
+msgstr "Баримтуудыг хэвлэхэд ашиглах өнгө сонгох"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
-msgstr ""
+msgstr "Баримтуудыг хэвлэх цаасны хэмжээг сонгох"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -168,7 +172,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Захианууд"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -179,7 +183,7 @@ msgstr "Модел"
 #: code:addons/snailmail/models/snailmail_letter.py:211
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Нэг эсвэл олон тооны бөглөх шаардлагатай талбар хоосон байна."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -190,7 +194,7 @@ msgstr "Хэвлэх болон хавсаргах заавал биш тайл�
 #: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
-msgstr ""
+msgstr "Захиа илгээх: алдаа гарсан"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
@@ -200,17 +204,17 @@ msgstr "Шуудангийн хэвлэлүүд"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Хоёр талаар хэвлэх"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "Өнгөтөөр хэвлэх"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Qweb талбартай холбоо тогтоох"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -220,7 +224,7 @@ msgstr "Хүлээн авагч"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Тайлагнах үйлдэл"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -235,14 +239,14 @@ msgstr "Илгээгдсэн"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "Шуудан илгээх"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr ""
+msgstr "Шуудан илгээх: Хүлээгдэж буй захиануудыг илгээх"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -256,24 +260,26 @@ msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Захидлын хавсралтыг илгээх боломжгүй. \n"
+"Контентыг шалгаж үзээд, алдаа гарсаар байвал холбоо барина уу."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:209
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Түншийн улс орныг Snailmail хамардаггүй."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:242
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
-msgstr ""
+msgstr "Баримт шуудангаар зөв илгээгдсэн. <br> Мөшгөх дугаар нь %s send_id"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "User sending the letter"
-msgstr ""
+msgstr "Захидал илгээсэн хэрэглэгч"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -282,6 +288,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Захидал үүсгэх үед статус нь 'Ноорог' болно.\n"
+"Хэрэв захиа зөв илгээгдсэн бол статус 'Илгээсэн' хэсэгт орно.\n"
+"Хэрэв үгүй ​​бол энэ нь 'Алдаа' төлөвт ордог бөгөөд алдааны мессеж нь 'Алдааны мессеж' талбарт гарч ирнэ."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:207
@@ -290,6 +299,8 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"<a href=%s target=\"new\">iap.odoo.com </a> хаягаар орж үнэгүй кредит авах "
+"боломжтой.<br>"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:204
@@ -298,3 +309,5 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Энэ үйлдлийг гүйцэтгэхэд хангалттай кредит байхгүй байна. Өөрийн <a href=%s "
+"target=\"new\">iap данс</a> руу очно уу.<br>"

@@ -5,6 +5,7 @@ from itertools import chain
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_repr
 
 from odoo.addons import decimal_precision as dp
 
@@ -100,7 +101,7 @@ class Pricelist(models.Model):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
-        If date in context: Date of the pricelist (%Y-%m-%d)
+        Date in context can be a date, datetime, ...
 
             :param products_qty_partner: list of typles products, quantity, partner
             :param datetime date: validity date
@@ -108,7 +109,8 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         if not date:
-            date = self._context.get('date') or fields.Date.context_today(self)
+            date = self._context.get('date') or fields.Date.today()
+        date = fields.Date.to_date(date)  # boundary conditions differ if we have a datetime
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:
@@ -168,7 +170,6 @@ class Pricelist(models.Model):
             # which case the price_uom_id contains that UoM.
             # The final price will be converted to match `qty_uom_id`.
             qty_uom_id = self._context.get('uom') or product.uom_id.id
-            price_uom_id = product.uom_id.id
             qty_in_product_uom = qty
             if qty_uom_id != product.uom_id.id:
                 try:
@@ -207,38 +208,15 @@ class Pricelist(models.Model):
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)])[product.id][0]  # TDE: 0 = price, 1 = rule
+                    price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
                     price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.user.company_id, date, round=False)
                 else:
                     # if base option is public price take sale price else cost price of product
                     # price_compute returns the price in the context UoM, i.e. qty_uom_id
                     price = product.price_compute(rule.base)[product.id]
 
-                convert_to_price_uom = (lambda price: product.uom_id._compute_price(price, price_uom))
-
                 if price is not False:
-                    if rule.compute_price == 'fixed':
-                        price = convert_to_price_uom(rule.fixed_price)
-                    elif rule.compute_price == 'percentage':
-                        price = (price - (price * (rule.percent_price / 100))) or 0.0
-                    else:
-                        # complete formula
-                        price_limit = price
-                        price = (price - (price * (rule.price_discount / 100))) or 0.0
-                        if rule.price_round:
-                            price = tools.float_round(price, precision_rounding=rule.price_round)
-
-                        if rule.price_surcharge:
-                            price_surcharge = convert_to_price_uom(rule.price_surcharge)
-                            price += price_surcharge
-
-                        if rule.price_min_margin:
-                            price_min_margin = convert_to_price_uom(rule.price_min_margin)
-                            price = max(price, price_limit + price_min_margin)
-
-                        if rule.price_max_margin:
-                            price_max_margin = convert_to_price_uom(rule.price_max_margin)
-                            price = min(price, price_limit + price_max_margin)
+                    price = rule._compute_price(price, price_uom, product, quantity=qty, partner=partner)
                     suitable_rule = rule
                 break
             # Final price conversion into pricelist currency
@@ -486,7 +464,13 @@ class PricelistItem(models.Model):
             self.name = _("All Products")
 
         if self.compute_price == 'fixed':
-            self.price = ("%s %s") % (self.fixed_price, self.pricelist_id.currency_id.name)
+            self.price = ("%s %s") % (
+                float_repr(
+                    self.fixed_price,
+                    self.pricelist_id.currency_id.decimal_places,
+                ),
+                self.pricelist_id.currency_id.name
+            )
         elif self.compute_price == 'percentage':
             self.price = _("%s %% discount") % (self.percent_price)
         else:
@@ -523,3 +507,33 @@ class PricelistItem(models.Model):
         # to be invalided and recomputed.
         self.invalidate_cache()
         return res
+
+    def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
+        """Compute the unit price of a product in the context of a pricelist application.
+           The unused parameters are there to make the full context available for overrides.
+        """
+        self.ensure_one()
+        convert_to_price_uom = (lambda price: product.uom_id._compute_price(price, price_uom))
+        if self.compute_price == 'fixed':
+            price = convert_to_price_uom(self.fixed_price)
+        elif self.compute_price == 'percentage':
+            price = (price - (price * (self.percent_price / 100))) or 0.0
+        else:
+            # complete formula
+            price_limit = price
+            price = (price - (price * (self.price_discount / 100))) or 0.0
+            if self.price_round:
+                price = tools.float_round(price, precision_rounding=self.price_round)
+
+            if self.price_surcharge:
+                price_surcharge = convert_to_price_uom(self.price_surcharge)
+                price += price_surcharge
+
+            if self.price_min_margin:
+                price_min_margin = convert_to_price_uom(self.price_min_margin)
+                price = max(price, price_limit + price_min_margin)
+
+            if self.price_max_margin:
+                price_max_margin = convert_to_price_uom(self.price_max_margin)
+                price = min(price, price_limit + price_max_margin)
+        return price

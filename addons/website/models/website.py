@@ -13,6 +13,7 @@ from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
+from odoo.exceptions import UserError
 from odoo.tools import pycompat
 from odoo.http import request
 from odoo.osv import expression
@@ -146,7 +147,7 @@ class Website(models.Model):
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
             if public_user_to_change_websites:
                 company = self.env['res.company'].browse(values['company_id'])
-                super(Website, public_user_to_change_websites).write(dict(values, user_id=company._get_public_user().id))
+                super(Website, public_user_to_change_websites).write(dict(values, user_id=company and company._get_public_user().id))
 
         result = super(Website, self - public_user_to_change_websites).write(values)
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
@@ -154,10 +155,27 @@ class Website(models.Model):
             self.env['ir.qweb'].clear_caches()
         return result
 
+    @api.multi
+    def unlink(self):
+        website = self.search([('id', 'not in', self.ids)], limit=1)
+        if not website:
+            raise UserError(_('You must keep at least one website.'))
+        # Do not delete invoices, delete what's strictly necessary
+        attachments_to_unlink = self.env['ir.attachment'].search([
+            ('website_id', 'in', self.ids),
+            '|', '|',
+            ('key', '!=', False),  # theme attachment
+            ('url', 'ilike', '.custom.'),  # customized theme attachment
+            ('url', 'ilike', '.assets\\_'),
+        ])
+        attachments_to_unlink.unlink()
+        return super(Website, self).unlink()
+
     # ----------------------------------------------------------
     # Page Management
     # ----------------------------------------------------------
     def _bootstrap_homepage(self):
+        Page = self.env['website.page']
         standard_homepage = self.env.ref('website.homepage', raise_if_not_found=False)
         if not standard_homepage:
             return
@@ -170,10 +188,19 @@ class Website(models.Model):
         </t>''' % (self.id)
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
-        self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
-                                                            ('key', '=', standard_homepage.key)])
+        homepage_page = Page.search([
+            ('website_id', '=', self.id),
+            ('key', '=', standard_homepage.key),
+        ], limit=1)
+        if not homepage_page:
+            homepage_page = Page.create({
+                'website_published': True,
+                'url': '/',
+                'view_id': self.with_context(website_id=self.id).viewref('website.homepage').id,
+            })
         # prevent /-1 as homepage URL
-        self.homepage_id.url = '/'
+        homepage_page.url = '/'
+        self.homepage_id = homepage_page
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
@@ -455,7 +482,12 @@ class Website(models.Model):
     @api.model
     def get_current_website(self, fallback=True):
         if request and request.session.get('force_website_id'):
-            return self.browse(request.session['force_website_id'])
+            website_id = self.browse(request.session['force_website_id']).exists()
+            if not website_id:
+                # Don't crash is session website got deleted
+                request.session.pop('force_website_id')
+            else:
+                return website_id
 
         website_id = self.env.context.get('website_id')
         if website_id:
@@ -684,7 +716,7 @@ class Website(models.Model):
                 continue
 
             converters = rule._converters or {}
-            if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
+            if query_string and not converters and (query_string not in rule.build({}, append_unknown=False)[1]):
                 continue
             values = [{}]
             # converters with a domain are processed after the other ones
@@ -712,9 +744,6 @@ class Website(models.Model):
                 domain_part, url = rule.build(value, append_unknown=False)
                 if not query_string or query_string.lower() in url.lower():
                     page = {'loc': url}
-                    for key, val in value.items():
-                        if key.startswith('__'):
-                            page[key[2:]] = val
                     if url in ('/sitemap.xml',):
                         continue
                     if url in url_set:
@@ -738,9 +767,9 @@ class Website(models.Model):
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
-                record['__priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
+                record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             if page['write_date']:
-                record['__lastmod'] = page['write_date'].date()
+                record['lastmod'] = page['write_date'].date()
             yield record
 
     @api.multi
@@ -896,7 +925,7 @@ class WebsiteMultiMixin(models.AbstractModel):
     _name = 'website.multi.mixin'
     _description = 'Multi Website Mixin'
 
-    website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
+    website_id = fields.Many2one('website', string='Website', ondelete='restrict', help='Restrict publishing to this website.')
 
     @api.multi
     def can_access_from_current_website(self, website_id=False):
@@ -1007,7 +1036,7 @@ class Page(models.Model):
     header_color = fields.Char()
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
-    website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
+    website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
 
     @api.one
     def _compute_homepage(self):
@@ -1183,7 +1212,7 @@ class Menu(models.Model):
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     new_window = fields.Boolean('New Window')
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True)
@@ -1311,7 +1340,7 @@ class Menu(models.Model):
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
-                page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
+                page = self.env['website.page'].search(self.env["website"].website_domain(website_id) + ['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url
@@ -1331,6 +1360,6 @@ class WebsiteRedirect(models.Model):
     type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True, default='301')
     url_from = fields.Char('Redirect From', required=True)
     url_to = fields.Char('Redirect To', required=True)
-    website_id = fields.Many2one('website', 'Website')
+    website_id = fields.Many2one('website', 'Website', ondelete='cascade')
     active = fields.Boolean(default=True)
     sequence = fields.Integer()

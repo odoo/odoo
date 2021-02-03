@@ -596,16 +596,19 @@ which will generate a 32 characters pseudorandom printable string.
 Supported Browsers
 ==================
 
-Odoo is supported by multiple browsers for each of its versions. No
-distinction is made according to the browser version in order to be
-up-to-date. Odoo is supported on the current browser version. The list
-of the supported browsers is the following:
+Odoo supports all the major desktop and mobile browsers available on the market,
+as long as they are supported by their publishers.
 
-- IE11,
-- Mozilla Firefox,
-- Google Chrome,
-- Safari,
+Here are the supported browsers:
+
+- Google Chrome
+- Mozilla Firefox
 - Microsoft Edge
+- Apple Safari
+
+.. warning:: Please make sure your browser is up-to-date and still supported by
+    its publisher before filing a bug report.
+
 
 
 .. [#different-machines]
@@ -624,16 +627,16 @@ of the supported browsers is the following:
     environment than over the internet.
 
 .. _regular expression: https://docs.python.org/3/library/re.html
-.. _ARP spoofing: http://en.wikipedia.org/wiki/ARP_spoofing
+.. _ARP spoofing: https://en.wikipedia.org/wiki/ARP_spoofing
 .. _Nginx termination example:
-    http://nginx.com/resources/admin-guide/nginx-ssl-termination/
+    https://nginx.com/resources/admin-guide/nginx-ssl-termination/
 .. _Nginx proxying example:
-    http://nginx.com/resources/admin-guide/reverse-proxy/
+    https://nginx.com/resources/admin-guide/reverse-proxy/
 .. _socat: http://www.dest-unreach.org/socat/
 .. _PostgreSQL connection settings:
 .. _listen to network interfaces:
-    http://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
+    https://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
 .. _use an SSH tunnel:
-    http://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
-.. _WSGI: http://wsgi.readthedocs.org/
+    https://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
+.. _WSGI: https://wsgi.readthedocs.org/
 .. _POSBox: https://www.odoo.com/page/point-of-sale-hardware#part_2

@@ -3,10 +3,9 @@
 # * website_sale_stock
 # 
 # Translators:
-# Hwang, Geon Gu <under_09@naver.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linkup <link-up@naver.com>, 2018
 # Seongseok Shin <shinss61@hotmail.com>, 2018
+# Linkup <link-up@naver.com>, 2019
 # JH CHOI <hwangtog@gmail.com>, 2019
 # 
 msgid ""
@@ -27,13 +26,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
-msgstr "<strong>경고</strong>"
+msgstr "<strong>경고!</strong>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
-msgstr ""
+msgstr "재고 물품가능 상태가 웹의 상품 페이지에 추가됩니다."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -45,7 +44,7 @@ msgstr "가용성"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
-msgstr ""
+msgstr "가능한 최소 수량"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
@@ -61,7 +60,7 @@ msgstr "설정 구성"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
 msgid "Custom Message"
-msgstr ""
+msgstr "고객 메시지"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -73,7 +72,7 @@ msgstr ""
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
-msgstr ""
+msgstr "새로 만든 저장 가능한 제품에 설정된 기본 가용성 모드입니다. 이는 제품 수준에서 변경할 수 있습니다."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -130,19 +129,19 @@ msgstr "판매 주문 라인"
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Sell regardless of inventory"
-msgstr ""
+msgstr "재고와 상관없이 판매합니다"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
-msgstr ""
+msgstr "재고를 임계 값 미만으로 표시하고 재고가 충분하지 않은 경우 판매 중지"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory on website and prevent sales if not enough stock"
-msgstr ""
+msgstr "웹사이트에 재고를 표시하고 재고가 충분하지 않은 경우 판매를 중지"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
@@ -191,14 +190,14 @@ msgstr "웹사이트"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website this picking belongs to."
-msgstr ""
+msgstr "이 피킹이 속한 웹사이트."
 
 #. module: website_sale_stock
 #. openerp-web
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:19
 #, python-format
 msgid "You already added"
-msgstr "이미 추가하였습니다"
+msgstr "이미 추가되었습니다"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:27
@@ -211,7 +210,7 @@ msgstr "%s 상품을 요청하였으나 %s 만 사용가능합니다"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
 #, python-format
 msgid "all"
-msgstr "모두"
+msgstr "전체"
 
 #. module: website_sale_stock
 #. openerp-web

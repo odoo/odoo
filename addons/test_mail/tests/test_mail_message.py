@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+from unittest.mock import patch
 
 from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.exceptions import AccessError, except_orm
 from odoo.tools import mute_logger
 from odoo.tests import tagged
@@ -39,8 +41,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_alias(self):
@@ -50,8 +52,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_alias_catchall(self):
         alias_domain = 'example.com'
@@ -61,8 +63,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id.split('@')[0], 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_no_alias(self):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
@@ -72,8 +74,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_document_alias(self):
@@ -86,8 +88,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s %s" <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_alias_catchall(self):
         alias_domain = 'example.com'
@@ -100,8 +102,8 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
-        self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
+        self.assertEqual(msg.reply_to, '"%s %s" <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
+        self.assertEqual(msg.email_from, '"%s" <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.Message.create({
@@ -290,6 +292,39 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
     def test_mail_message_access_create_reply(self):
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
+
+    def test_mail_message_access_create_wo_parent_access(self):
+        """ Purpose is to test posting a message on a record whose first message / parent
+        is not accessible by current user. """
+        message = self.test_record.message_post(
+            body='<p>This is First Message</p>', subject='Subject',
+            message_type='comment', subtype='mail.mt_note')
+        # portal user have no rights to read the message
+        with self.assertRaises(except_orm):
+            message.sudo(self.user_portal).read(['subject, body'])
+
+        with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
+            with self.assertRaises(except_orm):
+                message.sudo(self.user_portal).read(['subject, body'])
+
+            # parent message is accessible to references notification mail values
+            # for _notify method and portal user have no rights to send the message for this model
+            new_msg = self.test_record.sudo(self.user_portal).message_post(
+                body='<p>This is Second Message</p>',
+                subject='Subject',
+                parent_id=message.id,
+                partner_ids=[self.user_admin.partner_id.id],
+                message_type='comment',
+                subtype='mail.mt_comment',
+                mail_auto_delete=False)
+
+        new_mail = self.env['mail.mail'].search([
+            ('mail_message_id', '=', new_msg.id),
+            ('references', '=', message.message_id),
+        ])
+
+        self.assertTrue(new_mail)
+        self.assertEqual(new_msg.parent_id, message)
 
     # --------------------------------------------------
     # WRITE

@@ -296,7 +296,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         var def = $.Deferred();
         var $image = $('<img/>');
-        var editor = new widgets.MediaDialog(this, {onlyImages: true, firstFilters: ['background']}, null, $image[0]);
+        var editor = new widgets.MediaDialog(this, {onlyImages: true}, null, $image[0]);
 
         editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
             var src = $(media).attr('src');
@@ -331,6 +331,34 @@ var ThemeCustomizeDialog = Dialog.extend({
      */
     _setActive: function () {
         var self = this;
+
+        // First enforce that all input groups have only one element checked as
+        // it is supposed to be (it might not be the case on initialization, for
+        // exemple if we had data-xmlid="A" and data-xmlid="A,B" and if A and B
+        // are active, the 2 related inputs would be checked).
+        var $radioXMLInputs = this.$inputs.filter('[type="radio"][data-xmlid]');
+        var optionNames = _.uniq(_.map($radioXMLInputs, function (option) {
+            return option.name;
+        }));
+        _.each(optionNames, function (optionName) {
+            var $inputs = $radioXMLInputs.filter('[name="' + optionName + '"]:checked');
+            if ($inputs.length > 1) {
+                $inputs.prop('checked', false);
+
+                var maxNbXMLIDs = -1;
+                var $maxInput = null;
+                _.each($inputs, function (input) {
+                    var $input = $(input);
+                    var xmlID = $input.data('xmlid');
+                    var nbXMLIDs = xmlID ? xmlID.split(',').length : 0;
+                    if (nbXMLIDs >= maxNbXMLIDs) {
+                        maxNbXMLIDs = nbXMLIDs;
+                        $maxInput = $input;
+                    }
+                });
+                $maxInput.prop('checked', true);
+            }
+        });
 
         // Look at all options to see if they are enabled or disabled
         var $enable = this.$inputs.filter('[data-xmlid]:checked');

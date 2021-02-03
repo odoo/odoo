@@ -5,6 +5,7 @@ var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var time = require('web.time');
+var session = require('web.session');
 
 var _t = core._t;
 
@@ -35,14 +36,18 @@ var PortalSidebar = Widget.extend({
                 diff = dateTime.diff(today, 'days', true),
                 displayStr;
 
-            if (diff === 0){
-                displayStr = _t('Due today');
-            } else if (diff > 0) {
-                displayStr = _.str.sprintf(_t('Due in %d days'), Math.abs(diff));
-            } else {
-                displayStr = _.str.sprintf(_t('%d days overdue'), Math.abs(diff));
-            }
-             $(el).text(displayStr);
+            session.is_bound.then(function (){
+                if (diff === 0){
+                    displayStr = _t('Due today');
+                } else if (diff > 0) {
+                    // Workaround: force uniqueness of these two translations. We use %1d because the string
+                    // with %d is already used in mail and mail's translations are not sent to the frontend.
+                    displayStr = _.str.sprintf(_t('Due in %1d days'), Math.abs(diff));
+                } else {
+                    displayStr = _.str.sprintf(_t('%1d days overdue'), Math.abs(diff));
+                }
+                $(el).text(displayStr);
+            });
         });
     },
     /**

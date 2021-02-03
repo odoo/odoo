@@ -123,14 +123,32 @@ class AccountVoucher(models.Model):
     @api.multi
     @api.depends('tax_correction', 'line_ids.price_subtotal')
     def _compute_total(self):
+        tax_calculation_rounding_method = self.env.user.company_id.tax_calculation_rounding_method
         for voucher in self:
             total = 0
             tax_amount = 0
+            tax_lines_vals_merged = {}
             for line in voucher.line_ids:
                 tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
-                total += tax_info.get('total_included', 0.0)
-                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)])
-            voucher.amount = total + voucher.tax_correction
+                if tax_calculation_rounding_method == 'round_globally':
+                    total += tax_info.get('total_excluded', 0.0)
+                    for t in tax_info.get('taxes', False):
+                        key = (
+                            t['id'],
+                            t['account_id'],
+                        )
+                        if key not in tax_lines_vals_merged:
+                            tax_lines_vals_merged[key] = t.get('amount', 0.0)
+                        else:
+                            tax_lines_vals_merged[key] += t.get('amount', 0.0)
+                else:
+                    total += tax_info.get('total_included', 0.0)
+                    tax_amount += sum([t.get('amount', 0.0) for t in tax_info.get('taxes', False)])
+            if tax_calculation_rounding_method == 'round_globally':
+                tax_amount = sum([voucher.currency_id.round(t) for t in tax_lines_vals_merged.values()])
+                voucher.amount = total + tax_amount + voucher.tax_correction
+            else:
+                voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
     @api.onchange('date')
@@ -255,7 +273,6 @@ class AccountVoucher(models.Model):
             'currency_id': self.currency_id.id,
             'payment_date': self.date,
             'journal_id': self.payment_journal_id.id,
-            'company_id': self.company_id.id,
             'communication': self.name,
         }
 
@@ -304,7 +321,7 @@ class AccountVoucher(models.Model):
                 'payment_id': self._context.get('payment_id'),
             }
             # Create one line per tax and fix debit-credit for the move line if there are tax included
-            if (line.tax_ids):
+            if (line.tax_ids and tax_calculation_rounding_method == 'round_per_line'):
                 tax_group = line.tax_ids.compute_all(self._convert(line.price_unit), self.company_id.currency_id, line.quantity, line.product_id, self.partner_id)
                 if move_line['debit']: move_line['debit'] = tax_group['total_excluded']
                 if move_line['credit']: move_line['credit'] = tax_group['total_excluded']
@@ -329,20 +346,28 @@ class AccountVoucher(models.Model):
                         }
                         if company_currency != current_currency:
                             ctx = {}
+                            sign = temp['credit'] and -1 or 1
+                            amount_currency = company_cur._convert(tax_vals['amount'], current_cur, line.company_id,
+                                                 self.account_date or fields.Date.today(), round=True)
                             if self.account_date:
                                 ctx['date'] = self.account_date
                             temp['currency_id'] = current_currency
-                            temp['amount_currency'] = company_cur._convert(tax_vals['amount'], current_cur, line.company_id, self.account_date or fields.Date.today(), round=True)
+                            temp['amount_currency'] = sign * abs(amount_currency)
                         self.env['account.move.line'].create(temp)
 
-            self.env['account.move.line'].create(move_line)
             # When global rounding is activated, we must wait until all tax lines are computed to
             # merge them.
             if tax_calculation_rounding_method == 'round_globally':
+                # _apply_taxes modifies the dict move_line in place to account for included/excluded taxes
                 tax_lines_vals += self.env['account.move.line'].with_context(round=False)._apply_taxes(
                     move_line,
                     move_line.get('debit', 0.0) - move_line.get('credit', 0.0)
                 )
+                # rounding False means the move_line's amount are not rounded
+                currency = self.env['res.currency'].browse(company_currency)
+                move_line['debit'] = currency.round(move_line['debit'])
+                move_line['credit'] = currency.round(move_line['credit'])
+            self.env['account.move.line'].create(move_line)
 
         # When round globally is set, we merge the tax lines
         if tax_calculation_rounding_method == 'round_globally':
@@ -396,7 +421,9 @@ class AccountVoucher(models.Model):
 
             # Create a payment to allow the reconciliation when pay_now = 'pay_now'.
             if voucher.pay_now == 'pay_now':
-                payment_id = self.env['account.payment'].create(voucher.voucher_pay_now_payment_create())
+                payment_id = (self.env['account.payment']
+                    .with_context(force_counterpart_account=voucher.account_id.id)
+                    .create(voucher.voucher_pay_now_payment_create()))
                 payment_id.post()
 
                 # Reconcile the receipt with the payment
@@ -519,3 +546,19 @@ class AccountVoucherLine(models.Model):
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}
+
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    # Allows to force the destination account
+    # for receivable/payable
+    #
+    # @override
+    def _get_counterpart_move_line_vals(self, invoice=False):
+        values = super(AccountPayment, self)._get_counterpart_move_line_vals(invoice)
+
+        if self._context.get('force_counterpart_account'):
+            values['account_id'] = self._context['force_counterpart_account']
+
+        return values

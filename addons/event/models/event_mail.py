@@ -73,7 +73,7 @@ class EventMailScheduler(models.Model):
         help='This field contains the template of the mail that will be automatically sent')
     scheduled_date = fields.Datetime('Scheduled Sent Mail', compute='_compute_scheduled_date', store=True)
     mail_registration_ids = fields.One2many('event.mail.registration', 'scheduler_id')
-    mail_sent = fields.Boolean('Mail Sent on Event')
+    mail_sent = fields.Boolean('Mail Sent on Event', copy=False)
     done = fields.Boolean('Sent', compute='_compute_done', store=True)
 
     @api.one
@@ -157,7 +157,8 @@ class EventMailScheduler(models.Model):
         for scheduler in schedulers:
             try:
                 with self.env.cr.savepoint():
-                    scheduler.execute()
+                    # Prevent a mega prefetch of the registration ids of all the events of all the schedulers
+                    self.browse(scheduler.id).execute()
             except Exception as e:
                 _logger.exception(e)
                 self.invalidate_cache()

@@ -3,12 +3,16 @@
 import time
 import math
 import re
+import logging
 
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, remove_accents
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountAccountType(models.Model):
@@ -70,7 +74,7 @@ class AccountAccount(models.Model):
         result = self.read_group([('user_type_id', '=', data_unaffected_earnings.id)], ['company_id'], ['company_id'])
         for res in result:
             if res.get('company_id_count', 0) >= 2:
-                account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]), 
+                account_unaffected_earnings = self.search([('company_id', '=', res['company_id'][0]),
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)') % [a.code for a in account_unaffected_earnings])
 
@@ -120,11 +124,10 @@ class AccountAccount(models.Model):
             if record.company_id.account_opening_move_id:
                 for line in self.env['account.move.line'].search([('account_id', '=', record.id),
                                                                  ('move_id','=', record.company_id.account_opening_move_id.id)]):
-                    #could be executed at most twice: once for credit, once for debit
                     if line.debit:
-                        opening_debit = line.debit
+                        opening_debit += line.debit
                     elif line.credit:
-                        opening_credit = line.credit
+                        opening_credit += line.credit
             record.opening_debit = opening_debit
             record.opening_credit = opening_credit
 
@@ -147,24 +150,33 @@ class AccountAccount(models.Model):
 
         if opening_move.state == 'draft':
             # check whether we should create a new move line or modify an existing one
-            opening_move_line = self.env['account.move.line'].search([('account_id', '=', self.id),
+            account_op_lines = self.env['account.move.line'].search([('account_id', '=', self.id),
                                                                       ('move_id','=', opening_move.id),
                                                                       (field,'!=', False),
                                                                       (field,'!=', 0.0)]) # 0.0 condition important for import
 
-            counter_part_map = {'debit': opening_move_line.credit, 'credit': opening_move_line.debit}
-            # No typo here! We want the credit value when treating debit and debit value when treating credit
+            if account_op_lines:
+                op_aml_debit = sum(account_op_lines.mapped('debit'))
+                op_aml_credit = sum(account_op_lines.mapped('credit'))
 
-            if opening_move_line:
+                # There might be more than one line on this account if the opening entry was manually edited
+                # If so, we need to merge all those lines into one before modifying its balance
+                opening_move_line = account_op_lines[0]
+                if len(account_op_lines) > 1:
+                    merge_write_cmd = [(1, opening_move_line.id, {'debit': op_aml_debit, 'credit': op_aml_credit, 'partner_id': None ,'name': _("Opening balance")})]
+                    unlink_write_cmd = [(2, line.id) for line in account_op_lines[1:]]
+                    opening_move.write({'line_ids': merge_write_cmd + unlink_write_cmd})
+
                 if amount:
                     # modify the line
-                    setattr(opening_move_line.with_context({'check_move_validity': False}), field, amount)
-                elif counter_part_map[field]:
+                    opening_move_line.with_context(check_move_validity=False)[field] = amount
+                else:
                     # delete the line (no need to keep a line with value = 0)
-                    opening_move_line.with_context({'check_move_validity': False}).unlink()
+                    opening_move_line.with_context(check_move_validity=False).unlink()
+
             elif amount:
                 # create a new line, as none existed before
-                self.env['account.move.line'].with_context({'check_move_validity': False}).create({
+                self.env['account.move.line'].with_context(check_move_validity=False).create({
                         'name': _('Opening balance'),
                         field: amount,
                         'move_id': opening_move.id,
@@ -541,7 +553,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.refund_sequence_id and journal.refund_sequence and journal.refund_sequence_number_next:
                 sequence = journal.refund_sequence_id._get_current_sequence()
-                sequence.number_next = journal.refund_sequence_number_next
+                sequence.sudo().number_next = journal.refund_sequence_number_next
 
     @api.one
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
@@ -561,7 +573,10 @@ class AccountJournal(models.Model):
             # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
             # Or they are part of a bank journal and their partner_id must be the company's partner_id.
             if self.bank_account_id.partner_id != self.company_id.partner_id:
-                raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % self.company_id.name)
+                raise ValidationError(_('The holder of the bank account of a "Bank" type journal must be the company (%s).\n'
+                                        'However, the holder of "%s" is "%s".\n'
+                                        'Please select another bank account or change the holder of "%s".'
+                                        ) % (self.company_id.name, self.bank_account_id.acc_number, self.bank_account_id.partner_id.name, self.bank_account_id.acc_number))
 
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
@@ -579,6 +594,19 @@ class AccountJournal(models.Model):
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
                 alias_name += '-' + str(self.company_id.name)
+
+        try:
+            remove_accents(alias_name).encode('ascii')
+        except UnicodeEncodeError:
+            try:
+                remove_accents(self.code).encode('ascii')
+                safe_alias_name = self.code
+            except UnicodeEncodeError:
+                safe_alias_name = self.type
+            _logger.warning("Cannot use '%s' as email alias, fallback to '%s'",
+                alias_name, safe_alias_name)
+            alias_name = safe_alias_name
+
         return {
             'alias_defaults': {'type': 'in_invoice', 'company_id': self.company_id.id},
             'alias_parent_thread_id': self.id,
@@ -654,7 +682,7 @@ class AccountJournal(models.Model):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
-            if vals.get('type') == 'purchase':
+            if vals.get('type') == 'purchase' or (journal.type == 'purchase' and 'alias_name' in vals):
                 journal._update_mail_alias(vals)
         result = super(AccountJournal, self).write(vals)
 
@@ -824,7 +852,7 @@ class AccountJournal(models.Model):
     @api.depends('company_id')
     def _belong_to_company(self):
         for journal in self:
-            journal.belong_to_company = (journal.company_id.id == self.env.user.company_id.id)
+            journal.belongs_to_company = (journal.company_id.id == self.env.user.company_id.id)
 
     @api.multi
     def _search_company_journals(self, operator, value):
@@ -992,6 +1020,8 @@ class AccountTax(models.Model):
     def onchange_amount_type(self):
         if self.amount_type is not 'group':
             self.children_tax_ids = [(5,)]
+        if self.amount_type == 'group':
+            self.description = None
 
     @api.onchange('account_id')
     def onchange_account_id(self):
@@ -1029,7 +1059,10 @@ class AccountTax(models.Model):
             else:
                 return quantity * self.amount
 
-        price_include = self.price_include or self._context.get('force_price_include')
+        if self._context.get('handle_price_include', True):
+            price_include = (self.price_include or self._context.get('force_price_include'))
+        else:
+            price_include = False
 
         if (self.amount_type == 'percent' and not price_include) or (self.amount_type == 'division' and price_include):
             return base_amount * self.amount / 100
@@ -1113,7 +1146,10 @@ class AccountTax(models.Model):
         for tax in self.sorted(key=lambda r: r.sequence):
             # Allow forcing price_include/include_base_amount through the context for the reconciliation widget.
             # See task 24014.
-            price_include = self._context.get('force_price_include', tax.price_include)
+            if self._context.get('handle_price_include', True):
+                price_include = self._context.get('force_price_include', tax.price_include)
+            else:
+                price_include = False
 
             if tax.amount_type == 'group':
                 children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))

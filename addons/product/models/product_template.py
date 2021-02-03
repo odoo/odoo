@@ -304,7 +304,7 @@ class ProductTemplate(models.Model):
         for template in unique_variants:
             template.default_code = template.product_variant_ids.default_code
         for template in (self - unique_variants):
-            template.default_code = ''
+            template.default_code = False
 
     @api.one
     def _set_default_code(self):
@@ -394,7 +394,7 @@ class ProductTemplate(models.Model):
     @api.multi
     def name_get(self):
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
-        self.read(['name', 'default_code'])
+        self.browse(self.ids).read(['name', 'default_code'])
         return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
                 for template in self]
 
@@ -407,13 +407,20 @@ class ProductTemplate(models.Model):
 
         Product = self.env['product.product']
         templates = self.browse([])
+        domain_no_variant = [('product_variant_ids', '=', False)]
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
             products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
-            if (not products) or (limit and (len(templates) > limit)):
+            current_round_templates = self.browse([])
+            if not products:
+                domain_template = args + domain_no_variant + (templates and [('id', 'not in', templates.ids)] or [])
+                template_ns = super(ProductTemplate, self)._name_search(name=name, args=domain_template, operator=operator, limit=limit, name_get_uid=name_get_uid)
+                current_round_templates |= self.browse([ns[0] for ns in template_ns])
+                templates |= current_round_templates
+            if (not products and not current_round_templates) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get
@@ -523,10 +530,12 @@ class ProductTemplate(models.Model):
             #   deleted
             valid_value_ids = tmpl_id.valid_product_attribute_value_wnva_ids
             valid_attribute_ids = tmpl_id.valid_product_attribute_wnva_ids
+            seen_attributes = set(p.attribute_value_ids for p in tmpl_id.product_variant_ids if p.active)
             for product_id in tmpl_id.product_variant_ids:
                 if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
-                    if not product_id.active:
+                    if not product_id.active and product_id.attribute_value_ids not in seen_attributes:
                         variants_to_activate += product_id
+                        seen_attributes.add(product_id.attribute_value_ids)
                 else:
                     variants_to_unlink += product_id
 
@@ -537,6 +546,16 @@ class ProductTemplate(models.Model):
             if variants_to_create:
                 Product.create(variants_to_create)
 
+            # Avoid access errors in case the products is shared amongst companies but the underlying
+            # objects are not. If unlink fails because of an AccessError (e.g. while recomputing
+            # fields), the 'write' call will fail as well for the same reason since the field has
+            # been set to recompute.
+            if variants_to_unlink:
+                variants_to_unlink.check_access_rights('unlink')
+                variants_to_unlink.check_access_rule('unlink')
+                variants_to_unlink.check_access_rights('write')
+                variants_to_unlink.check_access_rule('write')
+                variants_to_unlink = variants_to_unlink.sudo()
             # unlink or inactive product
             # try in batch first because it is much faster
             try:
@@ -887,7 +906,7 @@ class ProductTemplate(models.Model):
         for pav in attribute_values:
             domain = expression.AND([[('attribute_value_ids', 'in', pav.id)], domain])
 
-        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC')
+        res = self.env['product.product'].with_context(active_test=False).search(domain, order='active DESC, id ASC')
 
         # The domain above is checking for the `product.attribute.value`, but we
         # need to make sure it's the same `product.template.attribute.value`.

@@ -81,10 +81,16 @@ class PurchaseRequisition(models.Model):
 
     @api.depends('state')
     def _set_state(self):
-        self.state_blanket_order = self.state
+        for requisition in self:
+            requisition.state_blanket_order = requisition.state
 
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
+        if not self.vendor_id:
+            self.currency_id = self.env.user.company_id.currency_id.id
+        else:
+            self.currency_id = self.vendor_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
+
         requisitions = self.env['purchase.requisition'].search([
             ('vendor_id', '=', self.vendor_id.id),
             ('state', '=', 'ongoing'),
@@ -224,7 +230,9 @@ class PurchaseRequisitionLine(models.Model):
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
-            if vals['price_unit'] <= 0.0:
+            if vals['price_unit'] <= 0.0 and any(
+                    requisition.state not in ['draft', 'cancel', 'done'] and
+                    requisition.is_quantity_copy == 'none' for requisition in self.mapped('requisition_id')):
                 raise UserError(_('You cannot confirm the blanket order without price.'))
             # If the price is updated, we have to update the related SupplierInfo
             self.supplier_info_ids.write({'price': vals['price_unit']})
@@ -406,14 +414,13 @@ class PurchaseOrderLine(models.Model):
     def _onchange_quantity(self):
         res = super(PurchaseOrderLine, self)._onchange_quantity()
         if self.order_id.requisition_id:
-            for line in self.order_id.requisition_id.line_ids:
-                if line.product_id == self.product_id:
-                    if line.product_uom_id != self.product_uom:
-                        self.price_unit = line.product_uom_id._compute_price(
-                            line.price_unit, self.product_uom)
-                    else:
-                        self.price_unit = line.price_unit
-                    break
+            for line in self.order_id.requisition_id.line_ids.filtered(lambda l: l.product_id == self.product_id):
+                if line.product_uom_id != self.product_uom:
+                    self.price_unit = line.product_uom_id._compute_price(
+                        line.price_unit, self.product_uom)
+                else:
+                    self.price_unit = line.price_unit
+                break
         return res
 
 
@@ -489,8 +496,10 @@ class StockMove(models.Model):
     requisition_line_ids = fields.One2many('purchase.requisition.line', 'move_dest_id')
 
     def _get_upstream_documents_and_responsibles(self, visited):
-        if self.requisition_line_ids:
-            return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in self.requisition_line_ids if requisition_line.requisition_id.state not in ('done', 'cancel')]
+        # People without purchase rights should be able to do this operation
+        requisition_lines_sudo = self.sudo().requisition_line_ids
+        if requisition_lines_sudo:
+            return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in requisition_lines_sudo if requisition_line.requisition_id.state not in ('done', 'cancel')]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 

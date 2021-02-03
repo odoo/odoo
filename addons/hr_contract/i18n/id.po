@@ -11,16 +11,18 @@
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2019
 # Febrasari Almania <febrasari.almania@gmail.com>, 2019
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2019
-# Ryanto The <ry.the77@gmail.com>, 2019
 # Gusti Rini <gustirini@gmail.com>, 2019
+# PAS IRVANUS <ipankbiz@gmail.com>, 2019
+# Ryanto The <ry.the77@gmail.com>, 2020
+# Gradien Foundation <gradien.co@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2020-02-06 19:08+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Gusti Rini <gustirini@gmail.com>, 2019\n"
+"Last-Translator: Gradien Foundation <gradien.co@gmail.com>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,7 +78,7 @@ msgstr "Diarsipkan"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Attachment Count"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -215,7 +217,7 @@ msgstr "Nama Tampilan"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Menu dropdown"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -223,6 +225,7 @@ msgid "Edit Contract"
 msgstr "Ubah Kontrak"
 
 #. module: hr_contract
+#: model:hr.contract.type,name:hr_contract.hr_contract_type_emp
 #: model:ir.model,name:hr_contract.model_hr_employee
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -296,6 +299,11 @@ msgid "Followers (Partners)"
 msgstr "Pengikut (Rekanan)"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Aktivitas Akan Datang"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type__sequence
 msgid "Gives the sequence when displaying a list of Contract."
 msgstr "Peroleh penomoran ketika menampilkan daftar Kontrak."
@@ -338,7 +346,7 @@ msgstr "Jika dicentang pesan-pesan baru membutuhkan penanganan lebih lanjut."
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "If checked, some messages have a delivery error."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -384,6 +392,11 @@ msgid "Last Updated on"
 msgstr "Terakhir Diperbarui pada"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Late Activities"
+msgstr "Aktivitas Terakhir"
+
+#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Latest contract of the employee"
 msgstr "Kontrak Terbaru  Karyawan"
@@ -391,7 +404,7 @@ msgstr "Kontrak Terbaru  Karyawan"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Main Attachment"
 
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
@@ -411,7 +424,7 @@ msgstr "Tanggal Pemeriksaan Kesehatan"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Message Delivery error"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
@@ -467,7 +480,7 @@ msgstr "Jumlah pesan yang butuh tindakan"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Number of messages with delivery error"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_unread_counter
@@ -516,6 +529,11 @@ msgid "Sequence"
 msgstr "Penomoran"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Show all records which have a next action date before today"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__reported_to_secretariat
 msgid "Social Secretariat"
 msgstr ""
@@ -559,6 +577,11 @@ msgid "Status of the contract"
 msgstr "Status kontrak"
 
 #. module: hr_contract
+#: model:hr.contract.type,name:hr_contract.hr_contract_type_sub
+msgid "Subcontractor"
+msgstr "Subcontractor"
+
+#. module: hr_contract
 #: selection:hr.contract,state:0
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
@@ -574,6 +597,11 @@ msgstr ""
 #: selection:hr.contract,activity_state:0
 msgid "Today"
 msgstr "Hari Ini"
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Today Activities"
+msgstr "Aktivitas Hari Ini"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread
@@ -614,6 +642,11 @@ msgstr "Sejarah komunikasi situs"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "No. Ijin Kerja"
+
+#. module: hr_contract
+#: model:hr.contract.type,name:hr_contract.hr_contract_type_wrkr
+msgid "Worker"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id

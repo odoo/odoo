@@ -60,6 +60,47 @@ class TestMenu(common.TransactionCase):
         Website.create({'name': 'new website'})
         self.assertEqual(total_menus + 4, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Contactus/Sub Default Menu)")
 
+    def test_specific_menu_translation(self):
+        Translation = self.env['ir.translation']
+        Website = self.env['website']
+        Menu = self.env['website.menu']
+        existing_menus = Menu.search([])
+
+        default_menu = self.env.ref('website.main_menu')
+        template_menu = Menu.create({
+            'parent_id': default_menu.id,
+            'name': 'Menu in english',
+            'url': 'turlututu',
+        })
+        new_menus =  Menu.search([]) - existing_menus
+        specific1, specific2 = new_menus.with_context(lang='fr_FR') - template_menu
+
+        # create fr_FR translation for template menu
+        self.env.ref('base.lang_fr').active = True
+        template_menu.with_context(lang='fr_FR').name = 'Menu en français'
+        Translation.search([
+            ('name', '=', 'website.menu,name'), ('res_id', '=', template_menu.id),
+        ]).module = 'website'
+        self.assertEquals(specific1.name,  'Menu in english',
+            'Translating template menu does not translate specific menu')
+
+        # have different translation for specific website
+        specific1.name = 'Menu in french'
+
+        # loading translation add missing specific translation
+        Translation.load_module_terms(['website'], ['fr_FR'])
+        Menu.invalidate_cache(['name'])
+        self.assertEquals(specific1.name,  'Menu in french',
+            'Load translation without overwriting keep existing translation')
+        self.assertEquals(specific2.name,  'Menu en français',
+            'Load translation add missing translation from template menu')
+
+        # loading translation with overwrite sync all translations from menu template
+        Translation.with_context(overwrite=True).load_module_terms(['website'], ['fr_FR'])
+        Menu.invalidate_cache(['name'])
+        self.assertEquals(specific1.name,  'Menu en français',
+            'Load translation with overwriting update existing menu from template')
+
     def test_default_menu_unlink(self):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])

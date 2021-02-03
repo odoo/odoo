@@ -117,13 +117,12 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="reveal_state" widget="statusbar"/>
+                    <field name="reveal_state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <group>
                         <field name="reveal_ip"/>
                         <field name="reveal_rule_id"/>
-                        <field name="reveal_state"/>
                         <field name="create_date"/>
                     </group>
                 </sheet>

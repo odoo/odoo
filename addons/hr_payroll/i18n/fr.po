@@ -5,17 +5,19 @@
 # Translators:
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
-# Cécile Collart <cco@odoo.com>, 2018
 # Olivier ANDRE <frsw194@gmail.com>, 2018
 # Martin Trigaux, 2019
+# Cécile Collart <cco@odoo.com>, 2020
+# Pauline Thiry <pth@odoo.com>, 2020
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Anthony Chaussin <chaussin.anthony@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,8 +153,8 @@ msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
-msgid "Account Accountant"
-msgstr "Comptable"
+msgid "Account"
+msgstr "Compte"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -445,12 +447,12 @@ msgstr "Registres des contributions"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
 msgid "Conveyance Allowance"
-msgstr ""
+msgstr "Indemnité de transport"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
 msgid "Conveyance Allowance For Gravie"
-msgstr ""
+msgstr "Indemnité de transport pour Gravie"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -1109,7 +1111,7 @@ msgstr "Feuille de paye"
 #: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
-msgstr ""
+msgstr "La date de début de la fiche de paie doit précéder la date de fin."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1128,7 +1130,7 @@ msgstr "Détails pour le calcul du bulletin"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
 msgid "Payslip Count"
-msgstr ""
+msgstr "Décompte de la fiche de paie"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
@@ -1349,7 +1351,7 @@ msgstr "Calcul de salaire"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "Salary Rule"
-msgstr ""
+msgstr "Règles salariales"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1629,6 +1631,14 @@ msgstr ""
 #, python-format
 msgid "You cannot create a recursive salary structure."
 msgstr "Vous ne pouvez pas créer une structure de salaire récursive."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:608
+#, python-format
+msgid "You cannot delete a payslip batch which is not draft!"
+msgstr ""
+"Vous ne pouvez pas supprimer un lot de fiches de paie qui n'est pas en "
+"brouillon !"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:127

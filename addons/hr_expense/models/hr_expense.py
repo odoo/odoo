@@ -31,14 +31,19 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_employee_id_domain(self):
-
         res= [('id', '=', 0)] # Nothing accepted by domain, by default
         if self.user_has_groups('hr_expense.group_hr_expense_manager') or self.user_has_groups('account.group_account_user'):
             res = [] # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_user') and self.env.user.employee_ids:
-            employee = self.env.user.employee_ids[0]
-            res = ['|', '|', ('department_id.manager_id.id', '=', employee.id),
-                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.id)]
+            user = self.env.user
+            employee = user.employee_ids[0]
+            res = [
+                '|', '|', '|',
+                ('department_id.manager_id', '=', employee.id),
+                ('parent_id', '=', employee.id),
+                ('id', '=', employee.id),
+                ('expense_manager_id', '=', user.id),
+            ]
         elif self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = [('id', '=', employee.id)]
@@ -65,7 +70,7 @@ class HrExpense(models.Model):
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
         ("company_account", "Company")
-    ], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)], 'submitted': [('readonly', True)]}, string="Paid By")
+    ], default='own_account', states={'done': [('readonly', True)], 'approved': [('readonly', True)], 'reported': [('readonly', True)]}, string="Paid By")
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -107,7 +112,7 @@ class HrExpense(models.Model):
                 date_expense = expense.date
                 amount = expense.currency_id._convert(
                     expense.total_amount, expense.company_currency_id,
-                    expense.company_id, date_expense or fields.Date.today())
+                    expense.company_id or expense.sheet_id.company_id, date_expense or fields.Date.today())
             expense.total_amount_company = amount
 
     @api.multi
@@ -312,8 +317,8 @@ class HrExpense(models.Model):
                 'currency_id': expense.currency_id.id if different_currency else False,
             }
             move_line_values.append(move_line_src)
-            total_amount -= move_line_src['debit']
-            total_amount_currency -= move_line_src['amount_currency'] or move_line_src['debit']
+            total_amount += -move_line_src['debit'] or move_line_src['credit']
+            total_amount_currency += -move_line_src['amount_currency'] if move_line_src['currency_id'] else (-move_line_src['debit'] or move_line_src['credit'])
 
             # taxes move lines
             for tax in taxes['taxes']:
@@ -333,6 +338,8 @@ class HrExpense(models.Model):
                     'expense_id': expense.id,
                     'partner_id': partner_id,
                     'currency_id': expense.currency_id.id if different_currency else False,
+                    'analytic_account_id': expense.analytic_account_id.id if tax['analytic'] else False,
+                    'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)] if tax['analytic'] else False,
                 }
                 total_amount -= amount
                 total_amount_currency -= move_line_tax_values['amount_currency'] or amount
@@ -437,6 +444,9 @@ class HrExpense(models.Model):
             ('work_email', 'ilike', email_address),
             ('user_id.email', 'ilike', email_address)
         ], limit=1)
+        # The expenses alias is the same for all companies, we need to set the proper context
+        company = employee.company_id or self.env.user.company_id
+        self = self.with_context(force_company=company.id)
 
         expense_description = msg_dict.get('subject', '')
 
@@ -480,6 +490,7 @@ class HrExpense(models.Model):
             'quantity': 1,
             'unit_amount': price,
             'company_id': employee.company_id.id,
+            'currency_id': employee.company_id.currency_id.id,
         })
         if account:
             custom_values['account_id'] = account.id
@@ -682,7 +693,7 @@ class HrExpenseSheet(models.Model):
         if not self.user_has_groups('hr_expense.group_hr_expense_user'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
         elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
-            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id | self.employee_id.expense_manager_id
 
             if self.employee_id.user_id == self.env.user:
                 raise UserError(_("You cannot approve your own expenses"))
@@ -703,7 +714,7 @@ class HrExpenseSheet(models.Model):
         if not self.user_has_groups('hr_expense.group_hr_expense_user'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
         elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
-            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id | self.employee_id.expense_manager_id
 
             if self.employee_id.user_id == self.env.user:
                 raise UserError(_("You cannot refuse your own expenses"))

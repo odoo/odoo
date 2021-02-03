@@ -107,7 +107,7 @@
                                     <span role="separator">Reconciliation</span>
                                 </div>
                                 <div>
-                                    <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_account_reconcile_model', 'use_domain': True}" groups="account.group_account_manager">Reconciliation Models</a>
+                                    <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_account_reconcile_model', 'use_domain': ['|', ('match_journal_ids', '=', False), ('match_journal_ids', 'in', active_id)]}" groups="account.group_account_manager">Reconciliation Models</a>
                                 </div>
                             </div>
                         </div>

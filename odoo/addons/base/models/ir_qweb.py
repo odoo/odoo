@@ -61,7 +61,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if b'data-pagebreak=' not in result:
             return result
 
-        fragments = html.fragments_fromstring(result)
+        fragments = html.fragments_fromstring(result.decode('utf-8'))
 
         for fragment in fragments:
             for row in fragment.iterfind('.//tr[@data-pagebreak]'):
@@ -431,10 +431,10 @@ class IrQWeb(models.AbstractModel, QWeb):
     def _get_attr_bool(self, attr, default=False):
         if attr:
             if attr is True:
-                return ast.Name(id='True', ctx=ast.Load())
+                return ast.NameConstant(True)
             attr = attr.lower()
             if attr in ('false', '0'):
-                return ast.Name(id='False', ctx=ast.Load())
+                return ast.NameConstant(False)
             elif attr in ('true', '1'):
-                return ast.Name(id='True', ctx=ast.Load())
-        return ast.Name(id=str(attr if attr is False else default), ctx=ast.Load())
+                return ast.NameConstant(True)
+        return ast.NameConstant(attr if attr is False else bool(default))

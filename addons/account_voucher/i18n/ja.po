@@ -9,15 +9,18 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
 # kent_ocean <ke.tanabe@gmail.com>, 2018
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Yoon Nankyung <nankyung.yoon@pactera.com>, 2019
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2020
+# Noma Yuki, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
+"Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +61,7 @@ msgstr "会計バウチャー"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Accounting Voucher Line"
-msgstr ""
+msgstr "会計バウチャー明細"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
@@ -84,7 +87,7 @@ msgstr "分析タグ"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "キャンセルしますか？"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_attachment_count
@@ -258,7 +261,7 @@ msgstr "チェックされている場合は、新しいメッセージに注意
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "チェックした場合、一部のメッセージが配信エラーが発生しています。"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__tax_correction
@@ -418,13 +421,18 @@ msgid "Payment Method"
 msgstr "支払方法"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:208
+#: model:ir.model,name:account_voucher.model_account_payment
+msgid "Payments"
+msgstr "支払"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:226
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:211
+#: code:addons/account_voucher/models/account_voucher.py:229
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -485,7 +493,7 @@ msgstr "入荷"
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Register a new purchase receipt"
-msgstr ""
+msgstr "購買記録を登録"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -686,4 +694,4 @@ msgstr "販売記録では売上計上とともに顧客支払を記録するこ
 #: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
 msgid "You must first select a partner."
-msgstr ""
+msgstr "取引先を選択してください。"

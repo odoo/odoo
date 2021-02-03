@@ -138,8 +138,23 @@ class Field(MetaField('DummyField', (object,), {})):
             ``one2many`` and computed fields, including property fields and
             related fields)
 
-        :param string oldname: the previous name of this field, so that ORM can rename
+        :param str oldname: the previous name of this field, so that ORM can rename
             it automatically at migration
+
+        :param str group_operator: aggregate function used by :meth:`~odoo.models.Model.read_group`
+            when grouping on this field.
+
+            Supported aggregate functions are:
+
+                * ``array_agg`` : values, including nulls, concatenated into an array
+                * ``count`` : number of rows
+                * ``count_distinct`` : number of distinct rows
+                * ``bool_and`` : true if all values are true, otherwise false
+                * ``bool_or`` : true if at least one value is true, otherwise false
+                * ``max`` : maximum value of all values
+                * ``min`` : minimum value of all values
+                * ``avg`` : the average (arithmetic mean) of all values
+                * ``sum`` : sum of all values
 
         .. _field-computed:
 
@@ -205,6 +220,22 @@ class Field(MetaField('DummyField', (object,), {})):
         computation gives the expected value. Note that a computed field without
         an inverse method is readonly by default.
 
+        .. warning::
+
+            While it is possible to use the same compute method for multiple
+            fields, it is not recommended to do the same for the inverse
+            method.
+
+            During the computation of the inverse, **all** fields that use
+            said inverse are protected, meaning that they can't be computed,
+            even if their value is not in the cache.
+
+            If any of those fields is accessed and its value is not in cache,
+            the ORM will simply return a default value of `False` for these fields.
+            This means that the value of the inverse fields (other than the one
+            triggering the inverse method) may not give their correct value and
+            this will probably break the expected behavior of the inverse method.
+
         The search method is invoked when processing domains before doing an
         actual search on the model. It must return a domain equivalent to the
         condition: ``field operator value``.
@@ -238,6 +269,11 @@ class Field(MetaField('DummyField', (object,), {})):
         Formerly known as 'property' fields, the value of those fields depends
         on the company. In other words, users that belong to different companies
         may see different values for the field on a given record.
+
+        .. warning::
+
+            Company-dependent fields aren't stored in the table of the model they're defined on,
+            instead, they are stored in the ``ir.property`` model's table.
 
         :param company_dependent: whether the field is company-dependent (boolean)
 
@@ -490,6 +526,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_regular_base(self, model):
         """ Setup the attributes of a non-related field. """
+        pass
+
+    def _setup_regular_full(self, model):
+        """ Determine the dependencies and inverse field(s) of ``self``. """
         if self.depends is not None:
             return
 
@@ -506,10 +546,6 @@ class Field(MetaField('DummyField', (object,), {})):
             )
         else:
             self.depends = tuple(get_depends(self.compute))
-
-    def _setup_regular_full(self, model):
-        """ Setup the inverse field(s) of ``self``. """
-        pass
 
     #
     # Setup of related fields
@@ -578,6 +614,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # copy the cache of draft records into others' cache
         if records.env.in_onchange and records.env != others.env:
             copy_cache(records - records.filtered('id'), others.env)
+            others.env._protected = records.env._protected
         #
         # Traverse fields one by one for all records, in order to take advantage
         # of prefetching for each field access. In order to clarify the impact
@@ -691,15 +728,19 @@ class Field(MetaField('DummyField', (object,), {})):
         result = []
 
         # add self's own dependencies
-        for dotnames in self.depends:
-            if dotnames == self.name:
-                _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
-            model, path = model0, path0
-            for fname in dotnames.split('.'):
-                field = model._fields[fname]
-                result.append((model, field, path))
-                model = model0.env.get(field.comodel_name)
-                path = None if path is None else path + [fname]
+        try:
+            for dotnames in self.depends:
+                if dotnames == self.name:
+                    _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
+                model, path = model0, path0
+                for fname in dotnames.split('.'):
+                    field = model._fields[fname]
+                    result.append((model, field, path))
+                    model = model0.env.get(field.comodel_name)
+                    path = None if path is None else path + [fname]
+        except KeyError:
+            msg = "Field %s cannot find dependency %r on model %r."
+            raise ValueError(msg % (self, fname, model._name))
 
         # add self's model dependencies
         for mname, fnames in model0._depends.items():
@@ -724,7 +765,10 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
         for model, field, path in self.resolve_deps(model):
             if self.store and not field.store:
-                _logger.info("Field %s depends on non-stored field %s", self, field)
+                _logger.debug(
+                    "Field %s depends on non-stored field %s, this operation is sub-optimal"
+                    % (self, field)
+                )
             if field is not self:
                 path_str = None if path is None else ('.'.join(path) or 'id')
                 model._field_triggers.add(field, (self, path_str))
@@ -769,7 +813,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_sortable(self):
-        return self.store or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
 
     def _description_string(self, env):
         if self.string and env.lang:
@@ -878,6 +922,21 @@ class Field(MetaField('DummyField', (object,), {})):
         self.update_db_notnull(model, column)
         self.update_db_index(model, column)
 
+        # optimization for computing simple related fields like 'foo_id.bar'
+        if (
+            not column
+            and len(self.related or ()) == 2
+            and self.related_field.store and not self.related_field.compute
+        ):
+            join_field = model._fields[self.related[0]]
+            if (
+                join_field.type == 'many2one'
+                and join_field.store and not join_field.compute
+            ):
+                model.pool.post_init(self.update_db_related, model)
+                # discard the "classical" computation
+                return False
+
         return not column
 
     def update_db_column(self, model, column):
@@ -917,10 +976,17 @@ class Field(MetaField('DummyField', (object,), {})):
             if model._table_has_rows():
                 model._init_column(self.name)
 
-        if self.required and not has_notnull:
-            sql.set_not_null(model._cr, model._table, self.name)
-        elif not self.required and has_notnull:
-            sql.drop_not_null(model._cr, model._table, self.name)
+        if self.required:
+            if not has_notnull:
+                err_msg = sql.set_not_null(model._cr, model._table, self.name)
+                if err_msg:
+                    model.pool._notnull_errors.setdefault((model._table, self.name), err_msg)
+        else:
+            if has_notnull:
+                sql.drop_not_null(model._cr, model._table, self.name)
+            # the NOT NULL constraint should not be there, so make sure to not
+            # log an error message about its absence
+            model.pool._notnull_errors.pop((model._table, self.name), None)
 
     def update_db_index(self, model, column):
         """ Add or remove the index corresponding to ``self``.
@@ -937,6 +1003,22 @@ class Field(MetaField('DummyField', (object,), {})):
                 _schema.error("Unable to add index for %s", self)
         else:
             sql.drop_index(model._cr, indexname, model._table)
+
+    def update_db_related(self, model):
+        """ Compute a stored related field directly in SQL. """
+        comodel = model.env[self.related_field.model_name]
+        model.env.cr.execute("""
+            UPDATE "{model_table}" AS x
+            SET "{model_field}" = y."{comodel_field}"
+            FROM "{comodel_table}" AS y
+            WHERE x."{join_field}" = y.id
+        """.format(
+            model_table=model._table,
+            model_field=self.name,
+            comodel_table=comodel._table,
+            comodel_field=self.related[1],
+            join_field=self.related[0],
+        ))
 
     ############################################################################
     #
@@ -1347,6 +1429,7 @@ class _String(Field):
     """ Abstract class for string fields. """
     _slots = {
         'translate': False,             # whether the field is translated
+        'prefetch': None,
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -1354,6 +1437,12 @@ class _String(Field):
         if 'translate' in kwargs and not callable(kwargs['translate']):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
+
+    def _setup_attrs(self, model, name):
+        super()._setup_attrs(model, name)
+        if self.prefetch is None:
+            # do not prefetch complex translated fields by default
+            self.prefetch = not callable(self.translate)
 
     _related_translate = property(attrgetter('translate'))
 
@@ -1489,11 +1578,13 @@ class Html(_String):
         'strip_classes': False,         # whether to strip classes attributes
     }
 
-    def _setup_attrs(self, model, name):
-        super(Html, self)._setup_attrs(model, name)
+    def _get_attrs(self, model, name):
+        # called by _setup_attrs(), working together with _String._setup_attrs()
+        attrs = super()._get_attrs(model, name)
         # Translated sanitized html fields must use html_translate or a callable.
-        if self.translate is True and self.sanitize:
-            self.translate = html_translate
+        if attrs.get('translate') is True and attrs.get('sanitize', True):
+            attrs['translate'] = html_translate
+        return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
@@ -1764,6 +1855,12 @@ class Binary(Field):
     @property
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
+
+    def _get_attrs(self, model, name):
+        attrs = super(Binary, self)._get_attrs(model, name)
+        if not attrs.get('store', True):
+            attrs['attachment'] = False
+        return attrs
 
     _description_attachment = property(attrgetter('attachment'))
 
@@ -2110,6 +2207,9 @@ class Many2one(_Relational):
 
     def update_db_foreign_key(self, model, column):
         comodel = model.env[self.comodel_name]
+        # foreign keys do not work on views, and users can define custom models on sql views.
+        if not model._is_an_ordinary_table() or not comodel._is_an_ordinary_table():
+            return
         # ir_actions is inherited, so foreign key doesn't work on it
         if not comodel._auto or comodel._table == 'ir_actions':
             return
@@ -2334,8 +2434,8 @@ class _RelationalMulti(_Relational):
             for record in records:
                 record[self.name] = record[self.name].filtered(accessible)
 
-    def _setup_regular_base(self, model):
-        super(_RelationalMulti, self)._setup_regular_base(model)
+    def _setup_regular_full(self, model):
+        super(_RelationalMulti, self)._setup_regular_full(model)
         if isinstance(self.domain, list):
             self.depends += tuple(
                 self.name + '.' + arg[0]
@@ -2743,21 +2843,20 @@ class Many2many(_RelationalMulti):
             return
 
         cr = records.env.cr
-        comodel = records.env[self.comodel_name]
+        comodel = records.env[self.comodel_name].with_context(**self.context)
 
         # determine old links (set of pairs (id1, id2))
-        clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
-        if '"%s"' % self.relation not in tables:
-            tables.append('"%s"' % self.relation)
+        domain = self.domain if isinstance(self.domain, list) else []
+        wquery = comodel._where_calc(domain)
+        comodel._apply_ir_rules(wquery, 'read')
+        from_clause, where_clause, where_params = wquery.get_sql()
         query = """
-            SELECT {rel}.{id1}, {rel}.{id2} FROM {tables}
-            WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
-        """.format(
-            rel=self.relation, id1=self.column1, id2=self.column2,
-            table=comodel._table, tables=",".join(tables),
-            cond=" AND ".join(clauses) if clauses else "1=1",
-        )
-        cr.execute(query, [tuple(records.ids)] + params)
+            SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_clause}
+            WHERE {where_clause} AND {rel}.{id1} IN %s AND {rel}.{id2} = {table}.id
+        """.format(rel=self.relation, id1=self.column1, id2=self.column2,
+                   table=comodel._table, from_clause=from_clause,
+                   where_clause=where_clause or '1=1')
+        cr.execute(query, where_params + [tuple(records.ids)])
         old_links = set(cr.fetchall())
 
         # determine new links (set of pairs (id1, id2))

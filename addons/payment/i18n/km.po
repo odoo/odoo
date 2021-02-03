@@ -5,15 +5,15 @@
 # Translators:
 # Samkhann Seang <seangsamkhann@gmail.com>, 2018
 # Sengtha Chay <sengtha@gmail.com>, 2018
-# Chan Nath <channath@gmail.com>, 2018
 # AN Souphorn <ansouphorn@gmail.com>, 2018
+# Chan Nath <channath@gmail.com>, 2019
 # Lux Sok <sok.lux@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-09 10:31+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
 "Last-Translator: Lux Sok <sok.lux@gmail.com>, 2019\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
@@ -26,7 +26,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
 msgid "# of Invoices"
-msgstr ""
+msgstr "ចំនួនវិក័យប័ត្រ។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -36,12 +36,12 @@ msgstr "&amp;times;"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
 msgid "3D Secure HTML"
-msgstr ""
+msgstr "HTML សុវត្ថិភាព 3D ។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>ចំនួន</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -51,12 +51,12 @@ msgstr "<b>ការទំនាក់ទំនង</b>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>លេខយោង</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/>ត្រលប់ទៅកាន់គណនី"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -64,6 +64,8 @@ msgid ""
 "<i class=\"fa fa-check text-success\" title=\"This payment method is "
 "verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 msgstr ""
+"<i class=\"fa fa-check text-success\" title=\"This payment method is "
+"verified by our system.\" role=\"img\" aria-label=\"Ok\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -71,32 +73,34 @@ msgid ""
 "<i class=\"fa fa-close text-danger\" title=\"This payment method has not "
 "been verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
+"<i class=\"fa fa-close text-danger\" title=\"This payment method has not "
+"been verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\">បង់</i>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\">បន្ថែមលើកាតថ្មី</i>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/>លប់ចោល"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>លុប</i>ការចំណាយរបស់អ្នកត្រូវបានលុបចោល"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:120
@@ -105,6 +109,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>រួចរាល់</i>ត្រូវបានបង់តាមប្រព័ន្ឋ អេទ្បិចត្រូនិចដោយជោគជ័យ "
+"អរគុណសម្រាប់ការម៉ង់"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:128
@@ -114,6 +120,9 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>ប្រើការលេងកើត</i>សូមមេត្តាជ្រាបថាមានកំហុសកើតឡើងកំឡុងពេលប្រតិបត្តិការ។ "
+"ការបញ្ជាទិញត្រូវបានបញ្ជាក់ប៉ុន្តែនឹងមិនត្រូវបានបង់ទេ។ "
+"កុំស្ទាក់ស្ទើរក្នុងការទាក់ទងមកយើងប្រសិនបើអ្នកមានសំណួរអំពីស្ថានភាពនៃការបញ្ជាទិញរបស់អ្នក។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -122,28 +131,30 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>ផ្អកសិន</i>ការទូទាត់តាមអ៊ីនធឺណិតរបស់អ្នកត្រូវបានដំណើរការដោយជោគជ័យ។ "
+"ប៉ុន្តែការបញ្ជាទិញរបស់អ្នកមិនទាន់មានសុពលភាពនៅឡើយទេ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>បច្ចុប្បន្នកាតនេះត្រូវបានភ្ជាប់ជាមួយកំណត់ត្រាខាងក្រោម៖<p/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Create a PayPal account</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\">បង្កើតគណនី PayPal ។</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\">យកកូនសោឆ្នូតរបស់ខ្ញុំ។</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Credit card(s)</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">កាតឥណទា(s)</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -151,6 +162,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">សាកល្បង</span>\n"
+"<span class=\"o_stat_text\">បរិយាកាស</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -158,6 +171,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">ផលិតផល</span>\n"
+"<span class=\"o_stat_text\">បរិស្ថាន</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -171,7 +186,7 @@ msgstr ""
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>បោះបង់,</i> ការបង់ប្រាក់របស់អ្នកត្រូវបានបោះបង់។</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -188,6 +203,8 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
+"<span><i>រួចរាល់,</i>ការទូទាត់តាមអ៊ីនធឺណិតរបស់អ្នកត្រូវបានដំណើរការដោយជោគជ័យ។"
+" សូមអរគុណសម្រាប់ការបញ្ជាទិញរបស់អ្នក។</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -206,6 +223,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>កំហុស,</i>សូមមេត្តាជ្រាបថាមានកំហុសកើតឡើងកំឡុងពេលប្រតិបត្តិការ។ "
+"ការបញ្ជាទិញត្រូវបានបញ្ជាក់ប៉ុន្តែនឹងមិនត្រូវបានបង់ទេ។ "
+"កុំស្ទាក់ស្ទើរក្នុងការទាក់ទងមកយើងប្រសិនបើអ្នកមានសំណួរអំពីស្ថានភាពនៃការបញ្ជាទិញរបស់អ្នក។</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -221,6 +241,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
+"<span><i>ការបង្ខំាងទុក</i>ការទូទាត់តាមអ៊ីនធឺណិតរបស់អ្នកត្រូវបានដំណើរការដោយជោគជ័យ។"
+" ប៉ុន្តែការបញ្ជាទិញរបស់អ្នកមិនទាន់មានសុពលភាពនៅឡើយទេ។</span>"
 
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -228,54 +250,56 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
+"<span><i>បង្ខំាទុក</i>ការបញ្ជាទិញនឹងមានសុពលភាពបន្ទាប់ពីការទូទាត់។</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
 msgstr ""
+"ការបញ្ជាទិញនឹងត្រូវបានធ្វើឱ្យមានសុពលភាពបន្ទាប់ពីទិនានុប្បវត្តិទូទាត់ប្រាក់ត្រូវតែបញ្ជាក់ពីការទទួលបាន។%s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "អ្នកទទួលការទូទាត់តម្រូវឱ្យបង្កើតប្រតិបត្តិការ។"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:55
 #, python-format
 msgid "A payment transaction already exists."
-msgstr ""
+msgstr "ប្រតិបត្តិការទូទាត់មានរួចហើយ។"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:57
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "ថូខឹនត្រូវបានទាមទារដើម្បីបង្កើតប្រតិបត្តិការទូទាត់ថ្មី។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:657
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr ""
+msgstr "អ្នកបកប្រែ%sជាមួយ%sចាប់ផ្តើមប្រើប្រាស់%sកាតឥទាន"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:663
 #, python-format
 msgid "A transaction %s with %s initiated."
-msgstr ""
+msgstr "ដំណើរការជា%sមួយនិង%sការប្រើប្រាស់"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:36
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
-msgstr ""
+msgstr "ប្រតិបត្តិការមិនអាចភ្ជាប់ទៅវិក័យប័ត្រដែលមានរូបិយប័ណ្ណផ្សេងៗគ្នាបានទេ។"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:41
 #, python-format
 msgid "A transaction can't be linked to invoices having different partners."
-msgstr ""
+msgstr "ប្រតិបត្តិការមិនអាចភ្ជាប់ទៅវិក័យប័ត្រដែលមានដៃគូផ្សេងគ្នាបានទេ។"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -297,37 +321,37 @@ msgstr "លេខគណនី"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Acquirer"
-msgstr ""
+msgstr "ទិញយក។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "គណនេយ្យទិញយក។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "ទិញយក។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr " លេខយោង ទិញយក "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "ទិញយក"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "បញ្ជីទិញ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Activate"
-msgstr ""
+msgstr "សកម្មភាព"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -337,7 +361,7 @@ msgstr "សកម្ម"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "បន្ថែមថ្លៃឈ្នួលបន្ថែម។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -349,7 +373,7 @@ msgstr "អាសយដ្ឋាន"
 #: model:payment.acquirer,name:payment.payment_acquirer_adyen
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen "
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -367,7 +391,7 @@ msgstr "ចំនួន"
 #: code:addons/payment/static/src/xml/payment_processing.xml:17
 #, python-format
 msgid "An error occured during the processing of this payment."
-msgstr ""
+msgstr "កំហុសមួយបានកើតឡើងកំឡុងពេលដំណើរការការទូទាត់នេះ។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -381,27 +405,29 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"តើអ្នកពិតជាចង់លុបចោលប្រតិបត្តិការដែលបានអនុញ្ញាតមែនទេ? "
+"ប្រតិបត្តិការនេះមិនអាចមិនធ្វើវិញបានទេ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr ""
+msgstr "យន្តការផ្តល់សិទ្ធិអំណាចត្រូវបានគាំទ្រ។"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "ផ្តល់សិទ្ធិ.សុទ្ធ"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr ""
+msgstr "ផ្តល់សិទ្ធិ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "ប្រតិបត្តិការដែលមានការអនុញ្ញាត"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
@@ -418,33 +444,33 @@ msgstr "គណនីធនាគារ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
-msgstr ""
+msgstr "ឈ្មោះ​របស់​ធនាគារ"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "អត្តសញ្ញាណប័ណ្ណ Callback ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "គំរូឯកសារ Callback ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "តេ ត្រលប់ទៅកាន់ Hash ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "វិធីសាស្ត្រហៅត្រឡប់មកវិញ។"
 
 #. module: payment
 #. openerp-web
@@ -457,12 +483,12 @@ msgstr "លុបចោល"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "បោះបង់សារ។"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "លុបចោល"
 
 #. module: payment
 #. openerp-web
@@ -470,46 +496,51 @@ msgstr ""
 #, python-format
 msgid "Cancelled payments"
 msgstr ""
+"18/5000\n"
+" \n"
+" \n"
+" \n"
+"បានលុបចោលការបង់ប្រាក់។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:190
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr ""
+msgstr "មិនអាចដំឡើងការបង់ប្រាក់បានទេ។"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:225
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "មិនអាចរៀបចំការបង់ប្រាក់បានទេ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "ចាប់យកចំនួនដោយដៃ។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "ចាប់យកប្រតិបត្តិការ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr ""
+msgstr "ចាប់យកចំនួនទឹកប្រាក់ពី Odoo នៅពេលការដឹកជញ្ជូនត្រូវបានបញ្ចប់។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr ""
+msgstr "ពិនិត្យទីនេះ"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "ជ្រើសរើសវិធីសាស្ត្រទូទាត់។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -522,7 +553,7 @@ msgstr "ក្រុង"
 #: code:addons/payment/static/src/xml/payment_processing.xml:40
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "ចុចត្រង់នេះដើម្បីបញ្ជូនបន្តទៅទំព័របញ្ជាក់។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -558,14 +589,14 @@ msgstr "កំណត់ផ្លាស់ប្តូរ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Configure your payment methods."
-msgstr ""
+msgstr "កំណត់វិធីសាស្រ្តទូទាត់របស់អ្នក។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:359
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "បញ្ជាក់ការលុប។"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -575,18 +606,18 @@ msgstr "ទំនាក់ទំនង"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "ម៉ូឌុលដែលត្រូវគ្នា។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "រាប់ថូខឹនទូទាត់។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
 msgid "Countries"
-msgstr ""
+msgstr "ប្រទេស"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
@@ -597,22 +628,22 @@ msgstr "ប្រទេស"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr ""
+msgstr "បង្កើតអ្នកទទួលការទូទាត់ថ្មី។"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "បង្កើតប្រតិបត្តិការទូទាត់ថ្មី។"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "បង្កើតរូបតំណាងទូទាត់ប្រាក់។"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
 msgid "Create a saved payment data"
-msgstr ""
+msgstr "បង្កើតទិន្នន័យទូទាត់ដែលបានរក្សាទុក។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -635,7 +666,7 @@ msgstr "បង្កើតនៅ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "លិខិតបញ្ជាក់។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
@@ -650,7 +681,7 @@ msgstr "អតិថជន"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "សេចក្តីណែនាំអំពីការបង់ប្រាក់ផ្ទាល់ខ្លួន"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -665,12 +696,12 @@ msgstr "ការពិពណ៌​នា​"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "កំណត់លំដាប់បង្ហាញ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "បោះបង់ចោល។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
@@ -690,7 +721,7 @@ msgstr "រួចរាល"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "សារធ្វើរួច"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -700,12 +731,12 @@ msgstr "ព្រៀង"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr ""
+msgstr "អ៊ីមែល"
 
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "អេឡិចត្រូនិច។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
@@ -733,37 +764,38 @@ msgstr "សារកំហុស"
 #: code:addons/payment/static/src/js/payment_form.js:430
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "កំហុស៖"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
 msgid "Fees"
-msgstr ""
+msgstr "ថ្លៃឈ្នួល។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "គាំទ្រការគណនាថ្លៃឈ្នួល។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "ចំនួនថ្លៃសេវា; កំណត់ដោយប្រព័ន្ធពីព្រោះអាស្រ័យលើអ្នកទិញ។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "Field used to store error and/or validation messages for information"
 msgstr ""
+"វាលត្រូវបានប្រើដើម្បីរក្សាទុកសារកំហុសនិង / ឬសារដែលមានសុពលភាពសម្រាប់ព័ត៌មាន។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "ថ្លៃដើមក្នុងស្រុកថេរ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "ថ្លៃដើមអន្តរជាតិថេរ "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -773,22 +805,22 @@ msgstr "សំរាប់ចំណូលពីការបង់"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form"
-msgstr ""
+msgstr "សំណុំបែបបទ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "គំរូប៊ូតុងសំណុំបែបបទ។"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "ទម្រង់ជាមួយនិមិត្តសញ្ញា។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr ""
+msgstr "មកពី"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
@@ -796,14 +828,19 @@ msgid "Group By"
 msgstr "ជា​ក្រុម​តាម"
 
 #. module: payment
+#: model:ir.model,name:payment.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP ជុំវិញ"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "តើការទូទាត់ត្រូវបានដំណើរការរួចរាល់ហើយ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "សារជំនួយ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
@@ -819,14 +856,14 @@ msgstr "ID"
 msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
-msgstr ""
+msgstr "ប្រសិនបើអ្នកទុកវាចោលអ្នកទទួលការទូទាត់នឹងអាចរកបានសម្រាប់ប្រទេសទាំងអស់។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:132
 #, python-format
 msgid "If, the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "ប្រសិនបើការបង់ប្រាក់មិនបានបញ្ជាក់អ្នកអាចទាក់ទងមកយើងបាន។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
@@ -837,47 +874,47 @@ msgstr "Image"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "រូបភាពត្រូវបានបង្ហាញនៅលើទម្រង់ទូទាត់ប្រាក់។"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
 msgid "Ingenico"
-msgstr ""
+msgstr "អ៊ីនហ្គីនីកូ។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr ""
+msgstr "ដំឡើង។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
 msgid "Installation State"
-msgstr ""
+msgstr "ស្ថានភាពតំឡើង។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
-msgstr ""
+msgstr "ឯកសារយោងផ្ទៃក្នុងរបស់ TX ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:145
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "កំហុសម៉ាស៊ីនមេខាងក្នុង។"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "រកឃើញនិមិត្តសញ្ញាមិនត្រឹមត្រូវ! អ្នកទិញថូខឹន។%s!= %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "រកឃើញនិមិត្តសញ្ញាមិនត្រឹមត្រូវ! ដៃគូថូនី។%s!= %s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
@@ -887,7 +924,7 @@ msgstr "វិកិយប័ត្រ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "វ(s)"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:851
@@ -899,12 +936,12 @@ msgstr "វិកិយប័ត្រ"
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
 msgid "Just done"
-msgstr ""
+msgstr "ទើបតែរួចរាល់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
 msgid "Language"
-msgstr ""
+msgstr "ភាសារ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer____last_update
@@ -936,27 +973,27 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Let the customer decide"
-msgstr ""
+msgstr "សូមឱ្យអតិថិជនសម្រេចចិត្ត។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "បញ្ជីអ្នកទទួលដែលគាំទ្ររូបតំណាងទូទាត់ប្រាក់នេះ។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "ធ្វើឱ្យអ្នកទទួលការទូទាត់នេះមាន (វិក័យប័ត្ររបស់អតិថិជន។ ល។ )"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "គ្រប់គ្រងវិធីសាស្ត្រទូទាត់របស់អ្នក។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "គ្រប់គ្រងវិធីសាស្ត្រទូទាត់របស់អ្នក"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -966,7 +1003,7 @@ msgstr "ហត្ថកម្ម"
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "ការកំណត់រចនាសម្ព័ន្ធដោយដៃ "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -988,7 +1025,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "រូបភាពមានទំហំមធ្យម"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image_medium
@@ -997,6 +1034,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"រូបភាពទំហំមធ្យមរបស់អ្នកផ្តល់សេវានេះ។ "
+"វាត្រូវបានផ្លាស់ប្តូរទំហំដោយស្វ័យប្រវត្តិជារូបភាព ១២៨ គុណ ១២៨ ភីច, "
+"មានសមាមាត្ររក្សាទុក។ ប្រើវាលនេះជាទិដ្ឋភាពសំណុំបែបបទឬទស្សនៈកានបែនមួយចំនួន។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1007,22 +1047,23 @@ msgstr "សារ"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__post_msg
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "សារត្រូវបានបង្ហាញបន្ទាប់ពីបានដំណើរការបង់ប្រាក់។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "សារបានបង្ហាញដើម្បីពន្យល់និងជួយដល់ដំណើរការបង់ប្រាក់។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "សារបានបង្ហាញប្រសិនបើមានកំហុសកើតឡើងក្នុងកំឡុងពេលដំណើរការទូទាត់។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
+"សារបានបង្ហាញប្រសិនបើការបញ្ជាទិញត្រូវបានលុបចោលក្នុងកំឡុងពេលដំណើរការទូទាត់។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
@@ -1030,6 +1071,7 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
+"សារត្រូវបានបង្ហាញប្រសិនបើការបញ្ជាទិញត្រូវបានធ្វើឡើងដោយជោគជ័យបន្ទាប់ពីបានដំណើរការទូទាត់រួចរាល់។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
@@ -1037,6 +1079,7 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
+"សារត្រូវបានបង្ហាញប្រសិនបើការបញ្ជាទិញស្ថិតក្នុងស្ថានភាពមិនទាន់សម្រេចបន្ទាប់ពីបានដំណើរការបង់ប្រាក់។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1052,7 +1095,7 @@ msgstr "វិធីសាស្រ្ត"
 #: code:addons/payment/models/payment_acquirer.py:469
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr ""
+msgstr "បាត់សេចក្តីយោងពីដៃគូនៅពេលដែលព្យាយាមបង្កើតនិមិត្តសញ្ញាទូទាត់ថ្មី។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1067,7 +1110,7 @@ msgstr "ឈ្មោះ"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "ឈ្មោះនិមិត្តសញ្ញាទូទាត់។"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -1081,18 +1124,20 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"មិនមានវិធីសាស្រ្តទូទាត់ដោយដៃសម្រាប់ក្រុមហ៊ុននេះទេ។ "
+"សូមបង្កើតឯកសារមួយពីបញ្ជីទូទាត់សំណងដែលទទួលបាន។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "រកមិនឃើញអ្នកទទួលការទូទាត់ទេ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:118
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "គ្មានការទូទាត់ត្រូវបានដំណើរការទេ។"
 
 #. module: payment
 #. openerp-web
@@ -1100,12 +1145,12 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:310
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "មិនបានជ្រើសវិធីសាស្ត្រទូទាត់ទេ។"
 
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
 msgid "Not done"
-msgstr ""
+msgstr "មិនទាន់រួចរាល់ទេ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1113,6 +1158,8 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"ចំណាំថាថូខឹនពីអ្នកទទួលបានកំណត់ដើម្បីផ្តល់សិទ្ធិប្រតិបត្តិការតែប៉ុណ្ណោះ "
+"(ជំនួសឱ្យការចាប់យកចំនួនទឹកប្រាក់) មិនមានទេ។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__payment_flow
@@ -1120,11 +1167,12 @@ msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
 msgstr ""
+"សម្គាល់ៈការជាវមិនយកផ្នែកនេះទៅក្នុងគណនីទេវាប្រើម៉ាស៊ីនមេទៅម៉ាស៊ីនមេតាមលំនាំដើម។"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone "
 
 #. module: payment
 #. openerp-web
@@ -1137,55 +1185,59 @@ msgstr "យលព្រម"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:48
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "មានតែអ្នកគ្រប់គ្រងទេដែលអាចចូលប្រើទិន្នន័យនេះ។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:723
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "មានតែសេចក្តីព្រាងប្រតិបត្តិការទេដែលអាចអនុញ្ញាតបាន។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:714
 #: code:addons/payment/models/payment_acquirer.py:775
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "មានតែប្រតិបត្តិការប្រតិបត្តិការសេចក្តីព្រាងទេដែលអាចដំណើរការបាន។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:763
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
 msgstr ""
+"មានតែការធ្វើសេចក្តីព្រាង / "
+"ប្រតិបត្តិការដែលមានការអនុញ្ញាតប៉ុណ្ណោះដែលអាចត្រូវបានលុបចោល។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:732
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
 msgstr ""
+"មានតែការធ្វើសេចក្តីព្រាង / "
+"ប្រតិបតិ្តការដែលមានការអនុញ្ញាតប៉ុណ្ណោះដែលត្រូវបានចុះផ្សាយ។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1018
 #, python-format
 msgid "Only transactions having the capture status can be captured."
-msgstr ""
+msgstr "មានតែប្រតិបត្តិការដែលមានស្ថានភាពចាប់យកប៉ុណ្ណោះទើបអាចចាប់បាន។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:1025
 #, python-format
 msgid "Only transactions having the capture status can be voided."
-msgstr ""
+msgstr "មានតែប្រតិបត្តិការដែលមានស្ថានភាពចាប់យកទេ។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "ឬស្កេនខ្ញុំជាមួយកម្មវិធីធនាគាររបស់អ្នក។"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "Other"
-msgstr ""
+msgstr "ផ្សេអទៀត"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__partner_id
@@ -1195,38 +1247,38 @@ msgstr "ដៃគូ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
 msgid "Partner Name"
-msgstr ""
+msgstr "ឈ្មោះដៃគូ"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr ""
+msgstr "ទូទាត់ជាមួយ PayPal ។"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "បង់ជាមួយអ្នកទទួលការទូទាត់ផ្សេងទៀត។"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr ""
+msgstr "ទូទាត់ប្រាក់ជាមួយកាតឥណទាន (តាមរយៈខ្សែ)"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "PayPal"
-msgstr ""
+msgstr "ផេរផាល"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_email_account
 msgid "PayPal Email ID"
-msgstr ""
+msgstr "លេខសម្គាល់អ៊ីមែលរបស់ផេរផាល"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_id
@@ -1239,41 +1291,41 @@ msgstr "ការចំណាយ"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "ការបង់ថ្លៃទំនិញ"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "អ្នកទទួលការទូទាត់។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
 msgid "Payment Flow"
-msgstr ""
+msgstr "លំហូរទូទាត់។"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
-msgstr ""
+msgstr "ការប៉ាន់ស្មានការបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "ការប៉ានស្មានការបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "សេចក្តីណែនាំអំពីការបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "ទិនានុប្បវត្តិបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
@@ -1285,12 +1337,15 @@ msgstr "យុទ្ឋសាស្រ្តបង់ប្រាក់"
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "Payment Methods"
 msgstr ""
+"វិធី​ទូទាត់លុយ\n"
+" \n"
+" "
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "ការទូទាត់ Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_ids
@@ -1299,7 +1354,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "ភស្តុតាងការបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1315,28 +1370,22 @@ msgstr "ការបង់ប្រាក់សំរាប់ប្រតិប
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 #: model_terms:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "ប្រតិបត្តិការការបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr ""
+msgstr "ការទូទាត់ទទួលបានអ្នកជំនួយការនៅលើកប៉ាល់"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Payment from Odoo"
-msgstr ""
+msgstr "ការបង់ប្រាក់មកពី Odoo"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/controllers/portal.py:252
-#, python-format
-msgid "Payment transaction failed."
-msgstr ""
+msgstr "វិធីសាស្រ្តទូទាត់!"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1350,14 +1399,14 @@ msgstr "ការបង់ប្រាក់"
 #: code:addons/payment/static/src/xml/payment_processing.xml:9
 #, python-format
 msgid "Payments failed"
-msgstr ""
+msgstr "ការទូទាត់បរាជ័យ"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:26
 #, python-format
 msgid "Payments received"
-msgstr ""
+msgstr "ការទទួលបានការទូទាត់"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1370,32 +1419,46 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"ការទូទាត់នឹងត្រូវបានចុះបញ្ជីនៅក្នុងទិនានុប្បវត្តិនេះ។ "
+"ប្រសិនបើអ្នកទទួលបានប្រាក់ខែតាមគណនីធនាគាររបស់អ្នក                 "
+"ជ្រើសគណនីធនាគាររបស់អ្នក។ "
+"ប្រសិនបើអ្នកត្រូវបានបង់ជាបាច់សម្រាប់ប្រតិបត្តិការជាច្រើនបង្កើតជាក់លាក់"
+"                 "
+"ទិនានុប្បវត្តិបង់ប្រាក់សម្រាប់អ្នកទទួលការទូទាត់នេះដើម្បីគ្រប់គ្រងការផ្សះផ្សារបស់ធនាគារយ៉ាងងាយស្រួល។"
+" អ្នកកាន់                 "
+"ចំនួនទឹកប្រាក់នៅក្នុងគណនីផ្ទេរបណ្តោះអាសន្ននៃសៀវភៅរបស់អ្នក "
+"(បង្កើតដោយស្វ័យប្រវត្តិនៅពេលអ្នកបង្កើត                 "
+"ទិនានុប្បវត្តិបង់ប្រាក់) ។ "
+"បន្ទាប់មកនៅពេលដែលអ្នកទទួលបានប្រាក់នៅក្នុងគណនីធនាគាររបស់អ្នកដោយអ្នកទិញទូទាត់អ្នក"
+"                 "
+"ផ្សះផ្សាបន្ទាត់របាយការណ៍ធនាគារជាមួយគណនីផ្ទេរប្រាក់បណ្តោះអាសន្ននេះ។ "
+"ប្រើការផ្សះផ្សា                 គំរូដើម្បីធ្វើវាដោយចុចតែម្តង។"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Paypal Merchant ID"
-msgstr ""
+msgstr "លេខសម្គាល់ពាណិជ្ជករ Paypal "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "Paypal PDT Token"
-msgstr ""
+msgstr "Paypal PDT Token "
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr ""
+msgstr "ការបង្ខំាទុក"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "សារមិនទាន់សម្រេច"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1405,7 +1468,7 @@ msgstr "ទូរស័ព្ទ"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "សូមកំណត់រចនាសម្ព័ន្ធអ្នកទទួលការទូទាត់។"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
@@ -1414,56 +1477,58 @@ msgid ""
 "Please make a payment to <ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"សូមធ្វើការទូទាត់ទៅ<ul><li>ធនាគារ: %s</li><li>លេខគណនី: "
+"%s</li><li>ម្ចាស់​គណនី: %s</li></ul>"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:202
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "សូមធ្វើការជ្រើសរើសយុទ្ធសាស្ត្រនៃការទូទាត់"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:311
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "សូមជ្រើសរើសជំរើសដើម្បីបន្ថែមវិធីសាស្ត្រទូទាត់ថ្មី។"
 
 #. module: payment
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
-msgstr ""
+msgstr "សូមប្រើប្រាស់ព័ត៌មានលំអិតនៃការផ្ទេរប្រាក់ខាងក្រោម "
 
 #. module: payment
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "សូមប្រើឈ្មោះបញ្ជាទិញនេះជាឯកសារយោងនៃការទំនាក់ទំនង។ "
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:139
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "សូមធ្វើការរងចាំ"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "ប្រតិបត្តិការបង់ប្រាក់តាមប្រៃសណីយ៍"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "ដំណើរការដោយ"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr ""
+msgstr "ផលិតកម្ម"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
@@ -1474,15 +1539,29 @@ msgstr "ការផ្តល់ជូន"
 
 #. module: payment
 #. openerp-web
+#: code:addons/payment/static/src/js/payment_translations.js:10
+#, python-format
+msgid "Publish"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_translations.js:9
+#, python-format
+msgid "Published"
+msgstr "ចេញផ្សាយ"
+
+#. module: payment
+#. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:19
 #, python-format
 msgid "Reason:"
-msgstr ""
+msgstr "យោបល់ៈ"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "ប្តូរទិសទៅគេហទំព័រអ្នកទិញ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1493,58 +1572,58 @@ msgstr "អ្នកធានា"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "ឯកសារយោងត្រូវតែមានតែមួយគត់!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "ឯកសារយោងនៃ TX ដែលត្រូវបានរក្សាទុកនៅក្នុងមូលដ្ឋានទិន្នន័យអ្នកទិញ"
 
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "ការស្នើរឯកសារដែលមិនមែនជាឯកសារ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "ត្រឡប់ URL បន្ទាប់ពីទូទាត់ប្រាក់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "មកពីតារាងS2S"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "រក្សាទុកកាត "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Save my payment data"
-msgstr ""
+msgstr "ការរក្សាទិន្នន័យការបង់ប្រាក់របស់ខ្ញុំ"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_token_action
 #: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
-msgstr ""
+msgstr "ទិន្នន័យទូទាត់ប្រាក់បានរក្សាទុក។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "ការរក្សាភស្តុតាងការបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "ដែលជាការផ្គត់ផ្គង់នូវរក្សាទិន្ន័យកាត"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "ការជ្រើសរើសយុទ្ធសាស្រ្តទៅលើការទូទាត់កប៉ាល់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1562,47 +1641,47 @@ msgstr "លំដាប់"
 #: code:addons/payment/static/src/js/payment_form.js:369
 #, python-format
 msgid "Server Error"
-msgstr ""
+msgstr "កំហុសម៉ាស៊ីន"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Server To Server"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:302
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "ម៉ាស៊ីនខូច"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "ម៉ាស៊ីនខូចៈ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Set payments"
-msgstr ""
+msgstr "ការបង្កើតការបង់ប្រាក់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
 msgid "Short name"
-msgstr ""
+msgstr "ឈ្មោះខ្លី"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "រូបភាពមានទំហំតូច។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image_small
@@ -1611,16 +1690,20 @@ msgid ""
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
 msgstr ""
+"រូបភាពទំហំតូចរបស់អ្នកផ្តល់សេវានេះ។ "
+"វាត្រូវបានផ្លាស់ប្តូរទំហំដោយស្វ័យប្រវត្តិជារូបភាពទំហំ64 គុណនឹង 64 "
+"ភីចជាមួយនឹងសមាមាត្រត្រូវបានរក្សាទុក។ "
+"ប្រើវាលនេះនៅកន្លែងណាដែលរូបភាពតូចត្រូវបានទាមទារ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "ប្រទេសដែលជាក់លាក់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "ស្ថានភាពនៃជំហានអ្នកទទួលការទូទាត់តាមកប៉ាល់"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1632,55 +1715,55 @@ msgstr "ស្ថានភាព"
 #: selection:payment.acquirer,provider:0
 #: selection:res.company,payment_onboarding_payment_method:0
 msgid "Stripe"
-msgstr ""
+msgstr "ឆ្នូត"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "កូដបោះពុម្ពឆ្នូត "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "កូដគន្លឹះសម្ងាត់ "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "ក្រុមនៃការទូទាត់លើការផ្គត់ផ្គង់"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
 msgid "Template for method registration"
-msgstr ""
+msgstr "គំរូសម្រាប់ការចុះឈ្មោះវិធីសាស្ត្រ"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr ""
+msgstr "ការសាកល្បង"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__post_msg
 msgid "Thanks Message"
-msgstr ""
+msgstr "សារអរគុណ"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:871
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
-msgstr ""
+msgstr "នេះ%s អ្នកទទួលការទូទាត់មិនត្រូវបានអនុញ្ញាតឱ្យរបៀបចាប់យកដោយដៃទេ!"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "ព័ត៌មានរបស់ SEPA QR Code មិនត្រូវបានកំណត់ត្រឹមត្រូវទេ។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr ""
+msgstr "ការជ្រើសរើសអោយមានអតិថិជន %sទៅលើការបង់ឯកសារ។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:677
@@ -1689,6 +1772,7 @@ msgid ""
 "The transaction %s with %s for %s has been authorized. Waiting for "
 "capture..."
 msgstr ""
+"ប្រតិបត្តិការ%s ជាមួយ %sសម្រាប់%s ត្រូវបានអនុញ្ញាត។ កំពុងរង់ចាំចាប់យក ..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:682
@@ -1697,12 +1781,13 @@ msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
 "message: %s"
 msgstr ""
+"ប្រតិបត្តិការ %s ជាមួយ%s សម្រាប់ %s ត្រូវបានលុបចោលដោយមានសារដូចខាងក្រោមៈ%s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:685
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr ""
+msgstr "ប្រតិបត្តិការ%s ជាមួយ%s សម្រាប់ %s ត្រូវបានលុបចោល។"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:679
@@ -1711,12 +1796,14 @@ msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
 msgstr ""
+"ប្រតិបត្តិការ %s ជាមួយ %s សម្រាប់ %sត្រូវបានបញ្ជាក់។ "
+"ការទូទាត់ពាក់ព័ន្ធត្រូវបានចុះផ្សាយ៖ %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:675
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "ប្រតិបត្តិការ %sជាមួយ %s សម្រាប់ %sកំពុងរង់ចាំ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1724,12 +1811,14 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"វាលនេះផ្ទុករូបភាពដែលបានប្រើសម្រាប់រូបតំណាងទូទាត់នេះមានកំណត់1024x1024px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
+"វាលនេះផ្ទុករូបភាពដែលបានប្រើសម្រាប់អ្នកផ្តល់សេវានេះដែលបានកំណត់ 1024x1024px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__save_token
@@ -1739,6 +1828,9 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"ជម្រើសនេះអនុញ្ញាតឱ្យអតិថិជនរក្សាទុកកាតឥណទានរបស់ពួកគេជានិមិត្តសញ្ញាទូទាត់និងប្រើវាឡើងវិញសម្រាប់ការទិញនៅពេលក្រោយ។"
+" ប្រសិនបើអ្នកគ្រប់គ្រងការជាវ (វិក្កយបត្រកើតឡើង) "
+"អ្នកត្រូវគិតថ្លៃអតិថិជនដោយស្វ័យប្រវត្តិនៅពេលអ្នកចេញវិក្កយបត្រ។"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1746,6 +1838,8 @@ msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
 msgstr ""
+"ច្រកចេញចូលនេះមានសម្រាប់ប្រទេសដែលបានជ្រើសរើស។ "
+"ប្រសិនបើគ្មាននរណាម្នាក់ត្រូវបានជ្រើសរើសទេនោះវាអាចប្រើបានសម្រាប់ប្រទេសទាំងអស់។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1753,13 +1847,16 @@ msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
+"គំរូនេះផ្តល់នូវប៊ូតុងអ្នកទទួលជាមួយនឹងតម្លៃចាំបាច់ទាំងអស់។"
+"                                             វាត្រូវបានបង្ហាញជាមួយ qWeb "
+"ជាមួយនឹងបរិបទវាយតម្លៃខាងក្រោម៖"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "ប្រតិបត្តិការនេះត្រូវបានលុបចោល។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1770,7 +1867,7 @@ msgstr "ប្រតិបត្តិការណ"
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
-msgstr ""
+msgstr "ព័ត៌មានផ្ទេរនឹងត្រូវបានផ្តល់ជូនបន្ទាប់ពីជ្រើសរើសអ្នកបង់លុយទូទាត់។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
@@ -1782,82 +1879,82 @@ msgstr "ប្រភេទ"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "មិនអាចទាក់ទងម៉ាស៊ីនមេអូដូ។"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Use SEPA QR Code"
-msgstr ""
+msgstr "ប្រើ SEPA QR កូដ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
 msgid "Validation Date"
-msgstr ""
+msgstr "កាលបរិច្ឆេទសុពលភាព"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Validation of the bank card"
-msgstr ""
+msgstr "សុពលភាពនៃកាតធនាគារ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "ថ្លៃដើមក្នុងស្រុកអថេរ (គិតជាភាគរយ) "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "ថ្លៃអន្ដរជាតិអថេរ (គិតជាភាគរយ) "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
 msgid "Verified"
-msgstr ""
+msgstr "ពិនិត្យម្តងទៀត"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__website_published
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "អាចមើលបាននៅក្នុងវិបផតថល / គេហទំព័រ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "ប្រតិបតិ្តការអវត្តមាន"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "ការរងចាំសម្រាប់ការបង់"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:666
 #, python-format
 msgid "Waiting for payment confirmation..."
-msgstr ""
+msgstr "កំពុងរង់ចាំការបញ្ជាក់ពីការបង់ប្រាក់ ..."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:355
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "ការព្រមាន!"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:136
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "យើងមិនអាចបន្ថែមវិធីសាស្ត្រទូទាត់របស់អ្នកបានទេនៅពេលនេះ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:303
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
-msgstr ""
+msgstr "យើងមិនអាចបន្ថែមវិធីសាស្ត្រទូទាត់របស់អ្នកបានទេនៅពេលនេះ.</p>"
 
 #. module: payment
 #. openerp-web
@@ -1865,68 +1962,68 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:370
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
-msgstr ""
+msgstr "យើងមិនអាចលុបវិធីសាស្ត្រទូទាត់របស់អ្នកបានទេនៅពេលនេះ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:130
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "យើងមិនអាចរកការទូទាត់របស់អ្នកទេប៉ុន្តែកុំបារម្ភ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:176
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "យើងមិនអាចប្តូរទិសអ្នកទៅទម្រង់ទូទាត់ទេ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:182
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "យើងមិនអាចប្តូរទិសអ្នកទៅទម្រង់ទូទាត់ទេ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_processing.js:117
 #, python-format
 msgid "We are processing your payments, please wait ..."
-msgstr ""
+msgstr "យើងកំពុងដំណើរការការបង់ប្រាក់របស់អ្នកសូមរង់ចាំ ..."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "យើងកំពុងរង់ចាំអ្នកទិញទូទាត់ដើម្បីបញ្ជាក់ពីការទូទាត់។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:191
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "យើងមិនអាចដំណើរការការទូទាត់របស់អ្នកបានទេ។"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "ខ្សែ​បញ្ជូន "
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "អ្នកអាចចុចត្រង់នេះដើម្បីបញ្ជូនបន្តទៅទំព័របញ្ជាក់។"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "អ្នកត្រូវកំណត់ទិនានុប្បវត្តិសម្រាប់អ្នកទិញទូទាត់របស់អ្នក%s."
 
 #. module: payment
 #. openerp-web
@@ -1934,32 +2031,34 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"អ្នកគួរតែទទួលបានអ៊ីមែលដែលបញ្ជាក់ពីការបង់ប្រាក់របស់អ្នកក្នុងរយៈពេលពីរបីនាទី។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "អ្នកនឹងត្រូវបានជូនដំណឹងនៅពេលការទូទាត់ត្រូវបានបញ្ជាក់។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "អ្នកនឹងត្រូវបានជូនដំណឹងនៅពេលការទូទាត់ត្រូវបានបញ្ជាក់ពេញលេញ។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompted with Stripe Payment page for payment information."
 msgstr ""
+"អ្នកនឹងត្រូវបានវាយបញ្ចូលជាមួយទំព័រទូទាត់ប្រាក់កូដសម្រាប់ព័ត៌មានអំពីការបង់ប្រាក់។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "អ្នកនឹងត្រូវបានបញ្ជូនបន្តទៅគេហទំព័រអាឌីនេនបន្ទាប់ពីចុចលើប៊ូតុងទូទាត់។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
@@ -1967,6 +2066,7 @@ msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
 msgstr ""
+"អ្នកនឹងត្រូវបានបញ្ជូនបន្តទៅគេហទំព័រផ្តល់សិទ្ធិបន្ទាប់ពីចុចលើប៊ូតុងទូទាត់។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
@@ -1974,6 +2074,7 @@ msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
 msgstr ""
+"អ្នកនឹងត្រូវបានបញ្ជូនបន្តទៅគេហទំព័រហ្គូហ្ការូបន្ទាប់ពីចុចលើប៊ូតុងទូទាត់។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
@@ -1981,6 +2082,7 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"អ្នកនឹងត្រូវបានបញ្ជូនបន្តទៅគេហទំព័រអ៊ីនឌីកូកូបន្ទាប់ពីចុចលើប៊ូតុងទូទាត់។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -1988,6 +2090,7 @@ msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
 msgstr ""
+"អ្នកនឹងត្រូវបានបញ្ជូនបន្តទៅគេហទំព័រ PayUmoney បន្ទាប់ពីចុចលើប៊ូតុងទូទាត់។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
@@ -1995,80 +2098,81 @@ msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
 msgstr ""
+"អ្នកនឹងត្រូវបានបញ្ជូនបន្តទៅគេហទំព័រ Paypal បន្ទាប់ពីចុចលើប៊ូតុងទូទាត់។"
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
-msgstr ""
+msgstr "អ្នកនឹងត្រូវបានបញ្ជូនបន្តទៅគេហទំព័រស៊ីបបន្ទាប់ពីចុចលើប៊ូតុងទូទាត់។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "ការបញ្ជាទិញរបស់អ្នកត្រូវបានដំណើរការ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "ការបញ្ជាទិញរបស់អ្នកកំពុងដំណើរការសូមរង់ចាំ ..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "ការទូទាត់របស់អ្នកត្រូវបានអនុញ្ញាត។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:76
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "ការទូទាត់របស់អ្នកត្រូវបានទទួលប៉ុន្តែចាំបាច់ត្រូវបញ្ជាក់ដោយដៃ។"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:57
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "ការបង់ប្រាក់របស់អ្នកស្ថិតក្នុងស្ថានភាពមិនទាន់សម្រេច។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
-msgstr ""
+msgstr "ហ្ស៊ីប"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
-msgstr ""
+msgstr "ពង្រួម"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "អ្នកទិញ៖ កំណត់ត្រារកលុយ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "ចំនួនទឹកប្រាក់: ចំនួនទឹកប្រាក់ប្រតិបត្តិការ, អណ្តែតមួយ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "បន្ថែមទៀត"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "បរិបទ៖ វចនានុក្រមបរិបទបច្ចុប្បន្ន"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "រូបិយប័ណ្ណ៖ កំណត់ត្រារកមើលរូបិយប័ណ្ណប្រតិបត្តិការ"
 
 #. module: payment
 #. openerp-web
@@ -2076,41 +2180,41 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:288
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
-msgstr ""
+msgstr "ឧ។ ព័ត៌មានលំអិតកាតឥណទានរបស់អ្នកខុស។ សូម​ផ្ទៀងផ្ទាត់។"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "ដៃគូ៖ កំណត់ត្រារកមើលដៃគូទិញមិនចាំបាច់កំណត់ទេ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
+msgstr "partner_values៖ តម្លៃជាក់លាក់អំពីអ្នកទិញឧទាហរណ៍មកពីទំរង់ដឹកជញ្ជូន"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "យោង: លេខយោងប្រតិបត្តិការ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
-msgstr ""
+msgstr "ជ្រើសរើសយុទ្ធសាស្រ្តការបង់ដ៏ទៃទៀត"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: URL ប្រតិបត្តិការដើម្បីប្រកាសទម្រង់"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: តម្លៃប្រតិបត្តិការ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "អ្នកប្រើ: កំណត់ត្រារកមើលអ្នកប្រើបច្ចុប្បន្ន"

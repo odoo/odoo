@@ -125,7 +125,7 @@
                 <field name="f2" attrs="{'readonly': [['f1', '=', '63'], ['f3', '=', 5]]}"/>
                 <field name="f3"/>
                 <field name="f4"/>
-                <field name="f5" readonly="1"/>
+                <field name="f5" attrs="{'readonly': 1}"/>
                 <field name="f6" readonly="1" force_save="1"/>
             </form>
         </field>
@@ -161,6 +161,44 @@
                     <field name="one_to_many_id"/>
                     <field name="many_to_one_ids"/>
                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="o2m_modifier" model="ir.ui.view">
+        <field name="name">Modifier check</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="inherit_id" ref="o2m_parent"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="subs" position="inside">
+                <form>
+                    <field name="value" attrs="{'readonly': [('v', '!=', False)]}"/>
+                    <field name="v"/>
+                </form>
+            </field>
+        </field>
+    </record>
+
+    <record id="o2m_widget_m2m" model="ir.ui.view">
+        <field name="name">Treat o2m as m2m</field>
+        <field name="model">test_testing_utilities.parent</field>
+        <field name="inherit_id" ref="o2m_parent"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="subs" position="attributes">
+                <attribute name="widget">many2many</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="attrs_using_m2m" model="ir.ui.view">
+        <field name="name">Check attr domain using an m2m value</field>
+        <field name="model">test_testing_utilities.e</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="count" attrs="{'readonly': [('m2m', '=', [])]}"/>
+                <field name="m2m"/>
             </form>
         </field>
     </record>

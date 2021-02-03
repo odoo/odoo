@@ -31,7 +31,7 @@ class PaymentProcessing(http.Controller):
         if not transactions:
             return False
         tx_ids_list = set(request.session.get("__payment_tx_ids__", [])) | set(transactions.ids)
-        request.session["__payment_tx_ids__"] = tx_ids_list
+        request.session["__payment_tx_ids__"] = list(tx_ids_list)
         return True
 
     @staticmethod
@@ -79,7 +79,7 @@ class PaymentProcessing(http.Controller):
         # populate the returned dictionnary with the transactions data
         for tx in payment_transaction_ids:
             message_to_display = tx.acquirer_id[tx.state + '_msg'] if tx.state in ['done', 'pending', 'cancel', 'error'] else None
-            result['transactions'].append({
+            tx_info = {
                 'reference': tx.reference,
                 'state': tx.state,
                 'return_url': tx.return_url,
@@ -89,7 +89,9 @@ class PaymentProcessing(http.Controller):
                 'amount': tx.amount,
                 'currency': tx.currency_id.name,
                 'acquirer_provider': tx.acquirer_id.provider,
-            })
+            }
+            tx_info.update(tx._get_processing_info())
+            result['transactions'].append(tx_info)
 
         tx_to_process = payment_transaction_ids.filtered(lambda x: x.state == 'done' and x.is_processed is False)
         try:
@@ -258,11 +260,7 @@ class WebsitePayment(http.Controller):
 
         try:
             res = tx.s2s_do_transaction()
-            if tx.state == 'done':
-                tx.return_url = return_url or '/website_payment/confirm?tx_id=%d' % tx.id
-            valid_state = 'authorized' if tx.acquirer_id.capture_manually else 'done'
-            if not res or tx.state != valid_state:
-                tx.return_url = '/website_payment/pay?error_msg=%s' % _('Payment transaction failed.')
+            tx.return_url = return_url or '/website_payment/confirm?tx_id=%d' % tx.id
             return request.redirect('/payment/process')
         except Exception as e:
             return request.redirect('/payment/process')
@@ -272,7 +270,7 @@ class WebsitePayment(http.Controller):
         tx_id = int(kw.get('tx_id', 0))
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
-            if tx.state == 'done':
+            if tx.state in ['done', 'authorized']:
                 status = 'success'
                 message = tx.acquirer_id.done_msg
             elif tx.state == 'pending':

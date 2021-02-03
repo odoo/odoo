@@ -473,8 +473,8 @@ table.table_desc tr td {
     // Default
     &.s_carousel_default {
         // Controls - chevron
-        .carousel-control-prev-icon:before { content: "\f053"; margin-left: 1.5rem; }
-        .carousel-control-next-icon:before { content: "\f054"; margin-right: 1.5rem; }
+        .carousel-control-prev-icon:before { content: "\f053" #{"/*rtl:'\f054'*/"}; margin-left: 1.5rem; }
+        .carousel-control-next-icon:before { content: "\f054" #{"/*rtl:'\f053'*/"}; margin-right: 1.5rem; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             background-color: rgba(0,0,0,0);
@@ -827,8 +827,13 @@ table.table_desc tr td {
 // Parallax
 .parallax {
     position: relative;
-    overflow: hidden;
-    z-index: 0;
+
+    // TODO this introduces a limitation: no dropdown will be able to
+    // overflow. Maybe there is a better way to find.
+    &:not(.s_parallax_no_overflow_hidden) {
+        overflow: hidden;
+    }
+
     > * {
         position: relative;
     }
@@ -847,8 +852,14 @@ table.table_desc tr td {
             background-color: inherit;
         }
     }
-    &.s_parallax_is_fixed > .s_parallax_bg {
-        background-attachment: fixed;
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
+        }
     }
 }
 
@@ -1020,6 +1031,22 @@ table.table_desc tr td {
     }
 }
 
+// Navbar Dropdown Menu
+header {
+    // In mobile there is no need to limit the height...
+    @include media-breakpoint-up(lg) {
+        .navbar .dropdown-menu {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+    }
+    // ... but we limit the navbar-collapse height in mobile affix version
+    &.o_header_affix .navbar-collapse.show {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+
 // Copyright
 .o_footer_copyright {
     padding: 8px;
@@ -1044,16 +1071,15 @@ table.table_desc tr td {
         > .navbar {
             background-color: transparent !important;
             border-color: transparent;
+            color: inherit;
 
             .nav-item {
                 > .nav-link {
                     background-color: transparent;
                     color: inherit;
-                }
-                &.show, &.active {
-                    > .nav-link {
-                        background-color: white;
-                        color: black;
+
+                    &.active {
+                        font-weight: bolder;
                     }
                 }
             }
@@ -1070,4 +1096,9 @@ table.table_desc tr td {
 // TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
 .modal-footer > .float-left {
     margin-right: auto;
+}
+
+// Fixing job perks icons in website_hr_recruitement by making them full-width
+.o_perk span {
+    display: block;
 }

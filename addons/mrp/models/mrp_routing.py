@@ -21,7 +21,7 @@ class MrpRouting(models.Model):
         'mrp.routing.workcenter', 'routing_id', 'Operations',
         copy=True, oldname='workcenter_lines')
     location_id = fields.Many2one(
-        'stock.location', 'Production Location',
+        'stock.location', 'Raw Materials Location',
         help="Keep empty if you produce at the location where you find the raw materials. "
              "Set a location if you produce at a fixed location. This can be a partner location "
              "if you subcontract the manufacturing operations.")
@@ -87,7 +87,7 @@ class MrpRoutingWorkcenter(models.Model):
                 limit=operation.time_mode_batch)
             count_data = dict((item['operation_id'][0], (item['duration'], item['qty_produced'])) for item in data)
             if count_data.get(operation.id) and count_data[operation.id][1]:
-                operation.time_cycle = count_data[operation.id][0] / count_data[operation.id][1]
+                operation.time_cycle = (count_data[operation.id][0] / count_data[operation.id][1]) * (operation.workcenter_id.capacity or 1.0)
             else:
                 operation.time_cycle = operation.time_cycle_manual
 

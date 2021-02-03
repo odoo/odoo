@@ -256,8 +256,14 @@ var BoardRenderer = FormRenderer.extend({
                 var rawContext = new Context(action.context, evalContext, {lang: session.user_context.lang});
                 var context = pyUtils.eval('context', rawContext, evalContext);
                 var domain = params.domain || pyUtils.eval('domain', action.domain || '[]', action.context);
-                var viewType = params.viewType || action.views[0][1];
-                var view = _.find(action.views, function (descr) {
+
+                // When creating a view, `action.views` is expected to be an array of dicts, while
+                // '/web/action/load' returns an array of arrays.
+                action._views = action.views;
+                action.views = $.map(action.views, function (view) { return {viewID: view[0], type: view[1]}});
+
+                var viewType = params.viewType || action._views[0][1];
+                var view = _.find(action._views, function (descr) {
                     return descr[1] === viewType;
                 }) || [false, viewType];
                 return self.loadViews(action.res_model, context, [view])
@@ -274,7 +280,7 @@ var BoardRenderer = FormRenderer.extend({
                     });
                     return view.getController(self).then(function (controller) {
                         self._boardFormViewIDs[controller.handle] = _.first(
-                            _.find(action.views, function (descr) {
+                            _.find(action._views, function (descr) {
                                 return descr[1] === 'form';
                             })
                         );

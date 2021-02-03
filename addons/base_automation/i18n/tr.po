@@ -5,18 +5,19 @@
 # Translators:
 # Levent Karakaş <levent@mektup.at>, 2018
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Umur Akın <umura@projetgrup.com>, 2018
 # Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2019\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,21 +28,7 @@ msgstr ""
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Bir kod sunucusu eylemi, özel bir denetleyiciyi kullanarak web sitesinden "
-"yürütülebilir. Adres <base> / web sitesi / action / <web sitesi_ yolu> "
-"şeklindedir. Kullanıcıların bu işlemi gerçekleştirmesine izin vermek için bu"
-" alanı True olarak ayarlayın. False olarak ayarlanırsa, eylem web sitesi "
-"aracılığıyla çalıştırılamaz."
+msgstr "<div>Email otomasyonu</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -77,7 +64,7 @@ msgstr "Aktivite"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Faaliyet Kullanıcı Türü"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -114,22 +101,17 @@ msgstr "Otomatik İşlemler"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Automated Rule Line Test"
-msgstr ""
+msgstr "Otomatik Kural Satırı Testi"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Automated Rule Test"
-msgstr ""
+msgstr "Otomatik Kural Testi"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Otomasyon"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Web Sitesinde Görünür"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -178,7 +160,7 @@ msgstr "Temel Otomasyon: Yazma kontrol test kuralı"
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
 msgid "Base Automation: test send an email"
-msgstr ""
+msgstr "Temel Otomasyon: bir test maili gönderin"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -216,6 +198,8 @@ msgid ""
 "Check this box if this contact is a customer. It can be selected in sales "
 "orders."
 msgstr ""
+"Eğer kontak bir müşteri ise bu kutuyu işaretleyin. Böylece satış "
+"siparişlerinde seçilebilir olacaktır."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -306,12 +290,12 @@ msgstr "Görünüm Adı"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Vade Tarihi"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Vade türü"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -334,11 +318,6 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "Bir XML dosyasında tanımlıysa, eylemin kimliği"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -563,7 +542,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Yeni bir otomasyon ayarlayın"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
@@ -588,7 +567,7 @@ msgstr "Hedef Model"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr ""
+msgstr "Kaydın üzerindeki kullanıcının teknik adı"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
@@ -597,11 +576,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "Web sitesinden sunucu eylemine erişmek için tam URL."
+"\"%(trigger_value)s\" %(trigger_label)s sadece \"%(state_value)s\" eylem "
+"türü ile kullanılabilir"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -618,20 +594,21 @@ msgstr "Tetikleyici Tarihi"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Sunucu eylemi türü. Aşağıdaki değerler mevcuttur: \\ n- 'Execute Python "
-"Code': yürütülecek bir python kod bloğu \\ n- 'Yeni Kayıt Oluşturun veya "
-"Kopyala': yeni değerlerle yeni bir kayıt oluşturun veya mevcut bir kaydı "
-"kopyalayın \\ N- 'Bir kaydın üzerine yaz': bir kaydın değerlerini güncelle "
-"\\ n- 'Birkaç eylemi uygula': birkaç diğer sunucu eylemini tetikleyen bir "
-"eylem tanımla \\ n- 'Takipçileri ekle': bir kaydın takipçileri ekle ( "
-"Tartışmada mevcuttur) \\ n- 'E-postayı gönder': otomatik olarak bir e-posta "
-"gönder (e-posta_template'de mevcuttur)"
+"Sunucu eylemi türü. Aşağıdaki değerler mevcuttur:\n"
+"- 'Python Kodunu Yürüt': yürütülecek bir python kodu bloğu\n"
+"- 'Oluştur': yeni değerlerle yeni bir kayıt oluştur\n"
+"- 'Bir Kaydı Güncelle': bir kaydın değerlerini günceller\n"
+"- 'Birkaç işlemi yürüt': diğer birkaç sunucu işlemini tetikleyen bir eylem tanımlayın\n"
+"- 'E-posta Gönder': otomatik olarak bir e-posta gönder (Tartışma)\n"
+"- 'Takipçi Ekle': bir kayda takipçi ekleyin (Tartışın)\n"
+"- 'Sonraki Etkinlik Oluştur': etkinlik oluştur (Tartışma)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -646,6 +623,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Gelecek eyleme aynı kullanıcıyı atamak için her zaman 'Özel Kullanıcı'yı "
+"kullanın. Kayıtta seçilecek kullanıcının alan adını belirlemek için "
+"'Kayıttan Genel Kullanıcı' seçeneğini kullanın."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -661,6 +641,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Çeşitli ekranlarda otomatik olarak eylemleri tetiklemek için \n"
+"otomatik eylemler kullanın. Örnek: Belirli bir kullanıcı tarafından oluşturulan bir yol,\n"
+" belirli bir satış ekibine, \n"
+"otomatik olarak ayarlanabilir veya 14 gün sonra durumu hala bekleyen bir\n"
+"fırsat otomatik hatırlatma e-postasını tetikleyebilir."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -682,16 +667,6 @@ msgstr "Değer Eşleme"
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Web Sitesi Yolu"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Web Sitesi URL'si"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -731,3 +706,5 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
+"Python kod yazmak eylemi çalıştırır. Bazı değişkenler kullanılabilir; python"
+" ifade ile ilgili yardım yardım sekmesinde verilir."

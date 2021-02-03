@@ -196,7 +196,7 @@ class Goal(models.Model):
                 if goal.current >= goal.target_goal:
                     goal.completeness = 100.0
                 else:
-                    goal.completeness = round(100.0 * goal.current / goal.target_goal, 2)
+                    goal.completeness = round(100.0 * goal.current / goal.target_goal, 2) if goal.target_goal else 0.0
             elif goal.current < goal.target_goal:
                 # a goal 'lower than' has only two values possible: 0 or 100%
                 goal.completeness = 100.0

@@ -53,6 +53,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._documentID = data.res_id;
         this._emailFrom = data.email_from;
         this._info = data.info;
+        this._isNote = data.is_note;
         this._moduleIcon = data.module_icon;
         this._needactionPartnerIDs = data.needaction_partner_ids || [];
         this._starredPartnerIDs = data.starred_partner_ids || [];
@@ -606,7 +607,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         _.each(emojis, function (emoji) {
             var unicode = emoji.unicode;
             var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + unicode + ")(?=\\s|$|</[a-z]*>)", 'g');
-            var originalBody = self.body;
+            var originalBody = self._body;
             self._body = self._body.replace(regexp,
                 ' <span class="o_mail_emoji">' + unicode + '</span> ');
             // Idiot-proof limit. If the user had the amazing idea of

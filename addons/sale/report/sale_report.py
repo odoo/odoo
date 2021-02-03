@@ -12,6 +12,10 @@ class SaleReport(models.Model):
     _rec_name = 'date'
     _order = 'date desc'
 
+    @api.model
+    def _get_done_states(self):
+        return ['sale', 'done', 'paid']
+
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Order Date', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
@@ -85,7 +89,7 @@ class SaleReport(models.Model):
             sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
             sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume,
             l.discount as discount,
-            sum((l.price_unit * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END)) as discount_amount,
+            sum((l.price_unit * l.product_uom_qty * l.discount / 100.0 / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END)) as discount_amount,
             s.id as order_id
         """
 

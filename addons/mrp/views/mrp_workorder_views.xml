@@ -141,7 +141,8 @@
                     <group>
                         <group>
                             <field name="qty_producing" string="Current Qty" attrs="{'readonly': ['|', ('product_tracking', '=', 'serial'), ('state', 'in', ('done', 'cancel'))]}"/>
-                            <field name="final_lot_id" context="{'default_product_id': product_id}" domain="['|', '&amp;', ('product_id', '=', product_id), ('product_id.tracking', '!=', 'serial'), ('use_next_on_work_order_id', '=', id)]" attrs="{'invisible': [('product_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
+                            <field name='is_first_wo' invisible="1"/>
+                            <field name="final_lot_id" context="{'default_product_id': product_id}" domain="['|', '&amp;', ('product_id', '=', product_id), '|', ('product_id.tracking', '!=', 'serial'), '&amp;', ('use_next_on_work_order_id', '=', False), ('use_next_on_work_order_id', '!=', 'is_first_wo'), ('use_next_on_work_order_id', '=', id)]" attrs="{'invisible': [('product_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
                             <field name="product_tracking" invisible="1"/>
                         </group>
                     </group>
@@ -326,7 +327,7 @@
         <field name="name">mrp.production.work.order.kanban</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_small_column" create="0">
+            <kanban class="o_kanban_small_column o_mrp_workorder_kanban" create="0">
                 <field name="name"/>
                 <field name="production_id"/>
                 <field name="state"/>

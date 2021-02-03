@@ -26,18 +26,21 @@ WebsiteNewMenu.include({
     _createNewBlogPost: function () {
         return this._rpc({
             model: 'blog.blog',
-            method: 'name_search',
-        }).then(function (blog_ids) {
-            if (blog_ids.length === 1) {
-                document.location = '/blog/' + blog_ids[0][0] + '/post/new';
+            method: 'search_read',
+            args: [wUtils.websiteDomain(), ['name']],
+        }).then(function (blogs) {
+            if (blogs.length === 1) {
+                document.location = '/blog/' + blogs[0]['id'] + '/post/new';
                 return $.Deferred();
-            } else if (blog_ids.length > 1) {
+            } else if (blogs.length > 1) {
                 return wUtils.prompt({
                     id: 'editor_new_blog',
                     window_title: _t("New Blog Post"),
                     select: _t("Select Blog"),
                     init: function (field) {
-                        return blog_ids;
+                        return _.map(blogs, function (blog) {
+                            return [blog['id'], blog['name']];
+                        });
                     },
                 }).then(function (blog_id) {
                     if (!blog_id) {
@@ -82,8 +85,12 @@ rte.Class.include({
     /**
      * @override
      */
-    _saveElement: function ($el, context) {
+    _saveElement: function ($el, context, withLang) {
         var defs = [this._super.apply(this, arguments)];
+        // do not save cover in translation mode
+        if (withLang) {
+            return defs[0];
+        }
         // TODO the o_dirty class is not put on the right element for blog cover
         // edition. For some strange reason, it was forcly put (even if not
         // dirty) in <= saas-16 but this is not the case anymore.
@@ -179,7 +186,6 @@ options.registry.blog_cover = options.Class.extend({
 
         var editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
-            firstFilters: ['background']
         }, $image, $image[0]).open();
         editor.on('save', this, function (event, img) {
             var src = $image.attr('src');

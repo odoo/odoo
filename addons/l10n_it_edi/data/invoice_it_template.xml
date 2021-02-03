@@ -18,9 +18,9 @@
                     <t t-esc="line.name[:1000]"/>
                     <t t-if="not line.name" t-esc="'NO NAME'"/>
                 </Descrizione>
-                <Quantita t-esc="format_numbers(line.quantity)"/>
+                <Quantita t-esc="format_numbers(abs(line.quantity))"/>
                 <UnitaMisura t-if="line.uom_id.category_id.measure_type != 'unit'" t-esc="line.uom_id.name"/>
-                <PrezzoUnitario t-esc="format_monetary(taxes['total_excluded'], currency)"/>
+                <PrezzoUnitario t-esc="format_monetary(taxes['total_excluded'] if line.price_subtotal >= 0 else -abs(taxes['total_excluded']), currency)"/>
                 <ScontoMaggiorazione t-if="line.discount != 0">
                     <!-- [2.2.1.10] -->
                     <Tipo t-esc="discount_type(line.discount)"/>
@@ -100,22 +100,30 @@
                             <CodiceFiscale t-if="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale" t-esc="record.company_id.l10n_it_tax_representative_partner_id.l10n_it_codice_fiscale"/>
                             <Anagrafica>
                                 <Denominazione t-if="record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="record.company_id.l10n_it_tax_representative_partner_id.display_name"/>
-                                <Nome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="record.company_id.l10n_it_tax_representative_partner_id.name"/>
-                                <Cognome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="record.company_id.l10n_it_tax_representative_partner_id.name"/>
+                                <Nome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[:1])"/>
+                                <Cognome t-if="not record.company_id.l10n_it_tax_representative_partner_id.is_company" t-esc="' '.join(record.company_id.l10n_it_tax_representative_partner_id.name.split()[1:])"/>
                             </Anagrafica>
                         </DatiAnagrafici>
                     </RappresentanteFiscale>
                     <CessionarioCommittente>
                         <DatiAnagrafici>
-                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat">
+                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat and in_eu(record.commercial_partner_id)">
                                 <IdPaese t-esc="get_vat_country(record.commercial_partner_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.commercial_partner_id.vat)"/>
                             </IdFiscaleIVA>
+                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat and not in_eu(record.commercial_partner_id)">
+                                <IdPaese t-esc="record.commercial_partner_id.country_id.code"/>
+                                <IdCodice t-esc="'OO99999999999'"/>
+                            </IdFiscaleIVA>
+                            <IdFiscaleIVA t-if="not record.commercial_partner_id.vat and record.commercial_partner_id.country_id.code != 'IT'">
+                                <IdCodice t-esc="'0000000'"/>
+                            </IdFiscaleIVA>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="record.commercial_partner_id.l10n_it_codice_fiscale"/>
+                            <CodiceFiscale t-if="not record.commercial_partner_id.vat and not record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="99999999999"/>
                             <Anagrafica>
                                 <Denominazione t-if="record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.display_name"/>
-                                <Nome t-if="not record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.name"/>
-                                <Cognome t-if="not record.commercial_partner_id.is_company" t-esc="record.commercial_partner_id.name"/>
+                                <Nome t-if="not record.commercial_partner_id.is_company" t-esc="' '.join(record.commercial_partner_id.name.split()[:1])"/>
+                                <Cognome t-if="not record.commercial_partner_id.is_company" t-esc="' '.join(record.commercial_partner_id.name.split()[1:])"/>
                             </Anagrafica>
                         </DatiAnagrafici>
                         <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
@@ -137,6 +145,9 @@
                                 <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                             </DatiBollo>
                         </DatiGeneraliDocumento>
+                        <DatiOrdineAcquisto t-if="record.ref">
+                            <IdDocumento t-esc="record.ref" />
+                        </DatiOrdineAcquisto>
                         <DatiDDT t-if="record.l10n_it_ddt_id">
                             <!--2.1.8-->
                             <NumeroDDT t-esc="record.l10n_it_ddt_id.name"/>

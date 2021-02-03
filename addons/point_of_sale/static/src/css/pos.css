@@ -357,6 +357,9 @@ td {
     height:100%;
     display: -webkit-flex;
     display: flex;
+    overflow : hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .pos .pos-rightheader > * {
     border-right: 1px solid #292929;
@@ -437,8 +440,6 @@ td {
     display: flex;
     -webkit-flex: 1;
     flex: 1;
-    max-width: -moz-available;
-    max-width: -webkit-fill-available;
 }
 .pos .orders {
     display: -webkit-flex;
@@ -446,8 +447,6 @@ td {
     vertical-align: top;
     margin-left: 0px;
     overflow: hidden;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 /*  c) The session buttons */
@@ -1482,6 +1481,7 @@ td {
         /* avoid black background if backgrounds are printed */
         background: initial;
     }
+    .o_notification_manager,
     .oe_leftbar,
     .oe_loading,
     .pos .pos-topheader, 
@@ -1489,7 +1489,8 @@ td {
     .pos .keyboard_frame,
     .pos .receipt-screen header,
     .pos .receipt-screen .top-content,
-    .pos .receipt-screen .centered-content .button {
+    .pos .receipt-screen .centered-content .button,
+    .pos .receipt-screen .centered-content .print_invoice {
         display: none !important;
     }
     .pos,
@@ -1543,6 +1544,9 @@ td {
         display: none !important;
     }
     .o_chat_window {
+        display: none !important;
+    }
+    .blockUI {
         display: none !important;
     }
 }

@@ -28,19 +28,24 @@
 # Martin Trigaux, 2018
 # keecome <7017511@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
-# Jerry Pan <panjianyu@inspur.com>, 2019
 # Liping Wang <lynn.config@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # John An <johnxan@163.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# F4NNIU <sparkamax@gmail.com>, 2019
+# 张宏奎 <zhanghongkui@inspur.com>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
+# Jerry Pan <panjianyu@inspur.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# Lin Li <ljsrzc007@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:08+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2019\n"
+"Last-Translator: Lin Li <ljsrzc007@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -212,6 +217,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                产品不能被预留。点击 “检查可用” 按钮来尝试预留产品。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -256,6 +263,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">On Hand</span>"
 msgstr "<span class=\"o_stat_text\">在手</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "<span class=\"o_stat_text\">Operations</span>"
+msgstr "<span class=\"o_stat_text\">操作</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -725,6 +737,12 @@ msgstr "可用"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "可用的产品"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr "更改类型之前，可用数量应设置为零"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1632,7 +1650,7 @@ msgstr "交货"
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
-msgstr "交货单"
+msgstr "出库单"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_lot
@@ -1647,7 +1665,7 @@ msgstr "交货路线"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "交货单"
+msgstr "打印单据"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__move_type
@@ -1678,7 +1696,7 @@ msgstr "说明"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "交货单的说明"
+msgstr "出库单的说明"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1694,7 +1712,7 @@ msgstr "收货单说明"
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "交货单说明"
+msgstr "出库单说明"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
@@ -1837,7 +1855,7 @@ msgstr "显示名称"
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
 msgid "Display Serial & Lot Number in Delivery Slips"
-msgstr "用于在交货单上显示的批次 / 序列号"
+msgstr "用于在出库单上显示的批次 / 序列号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__qty_done
@@ -1847,6 +1865,7 @@ msgstr "用于在交货单上显示的批次 / 序列号"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 #: selection:stock.move,state:0 selection:stock.package_level,state:0
 #: selection:stock.picking,state:0 selection:stock.scrap,state:0
 msgid "Done"
@@ -2441,11 +2460,12 @@ msgstr "入库"
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Initial Demand"
 msgstr "初始需求"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:453
 #, python-format
 msgid "Input"
 msgstr "进货"
@@ -2929,6 +2949,11 @@ msgid "List view of lines"
 msgstr "明细行的列表视图"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "List view of operations"
+msgstr "作业的列表视图"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Localization"
 msgstr "定位"
@@ -3064,7 +3089,7 @@ msgstr "批次和序列号"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots &amp; Serial numbers will appear on the delivery slip"
-msgstr "批次 / 序列号会出现在交货单"
+msgstr "批次 / 序列号会出现在出库单"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -3495,7 +3520,7 @@ msgstr "备注"
 #: code:addons/stock/models/stock_picking.py:562
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr "没有东西要检查可用量。"
+msgstr "没有产品需要检查可用量。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction_counter
@@ -3904,7 +3929,7 @@ msgid ""
 " A package can also be unpacked, allowing the disposal of its former content"
 " as single units again."
 msgstr ""
-"包裹通常是由包装作业员在调拨时创建的，并且能够包含多个不同产品。你可以把包裹里面的东西拿出之放在别处并再次重用此包裹，或者把此包裹打包在更大的包裹中。一个包裹可以被拆解，让包裹之前的内容作为单一的单位弃置。"
+"包裹通常是由包装作业员在调拨时创建的，并且能够包含多个不同产品。你可以把包裹里面的东西拿出之后放在别处并再次重用此包裹，或者把此包裹打包在更大的包裹中。一个包裹可以被拆解，让包裹之前的内容作为单一的单位弃置。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4060,6 +4085,12 @@ msgstr "计划的调拨"
 #, python-format
 msgid "Please add some items to move."
 msgstr "请添加一些项目到移动"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:92
+#, python-format
+msgid "Please check the following serial number (name, id): "
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:132
@@ -4386,7 +4417,7 @@ msgstr "推"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__putaway_id
 msgid "Put Away Method"
-msgstr "上架方法"
+msgstr "上架方式"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_putaway
@@ -4611,7 +4642,7 @@ msgstr "收货路线"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "收货"
+msgstr "入库单"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -4632,19 +4663,19 @@ msgstr "接收产品到收料区， 检验， 然后入库（3步收货）"
 #: code:addons/stock/models/stock_warehouse.py:524
 #, python-format
 msgid "Receive in 1 step (stock)"
-msgstr "单步收货"
+msgstr "单步收货（入库）"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:524
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
-msgstr "两步收货(收货+入库）"
+msgstr "两步入库(收货+入库）"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:525
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
-msgstr "三步收货(收货+质检+入库)"
+msgstr "三步入库(收货+质检+入库)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:327
@@ -4687,7 +4718,7 @@ msgstr "每个公司的参考必须是唯一！"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__origin
 msgid "Reference of the document"
-msgstr "单据的参照"
+msgstr "文档的参照"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_receipt_picking_move
@@ -4804,6 +4835,7 @@ msgstr "预留"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 #: selection:stock.package_level,state:0
 msgid "Reserved"
@@ -5185,7 +5217,7 @@ msgstr "设为草稿"
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
-msgstr "如果你在一个固定的位置生产配置一个位置。如果你将生产作业转包，这可以是业务伙伴的位置。"
+msgstr "如果在固定位置生产，则可在此处配置库位；如果你将生产作业转包，这可以是业务伙伴的库位。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -5311,7 +5343,7 @@ msgstr "来源"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__origin
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__origin
 msgid "Source Document"
-msgstr "源单据"
+msgstr "源文档"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:95
@@ -5469,6 +5501,7 @@ msgstr "库存移动"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Stock Moves"
 msgstr "库存移动"
 
@@ -5957,7 +5990,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note will show up on delivery orders."
-msgstr "此备注将在交货单上显示。"
+msgstr "此备注将在出库单上显示。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6241,6 +6274,7 @@ msgstr "单位产品"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking_board
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
@@ -6590,10 +6624,8 @@ msgstr "称重的产品"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
-msgstr "当仓库中此路线被勾选, 那么经过此仓库的所有产品都会被设为默认此路线。但此行为能够被产品／产品种类的路线或者补货规则优先路线所覆盖。"
+"the default route when products pass through this warehouse."
+msgstr "当为该路由选择仓库时，当产品通过该仓库时，该路由应被视为默认路由。"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -6604,15 +6636,13 @@ msgstr "当所有产品就绪时"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
-msgstr "一旦勾选了，此路径在产品表格中的库存页面将会显示为可选的。这将会比仓库路径的优先级更高。"
+"Product form."
+msgstr "选中此选项后，可以在产品表单的存货选项卡中选择路由。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
-msgstr "一旦勾选了，此路径在产品种类中将会显示为可选的。这将会比仓库路径的优先级更高。"
+msgid "When checked, the route will be selectable on the Product Category."
+msgstr "选中此选项后，将在品类上选择该路线"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:113
@@ -6766,7 +6796,7 @@ msgstr "你只能删除草稿状态的移动。"
 #: code:addons/stock/models/stock_move_line.py:140
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
-msgstr "只能处理1.0个%s具有唯一序列号的产品。"
+msgstr "只能处理1.0%s具有唯一序列号的产品。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1014
@@ -6890,7 +6920,7 @@ msgstr "您不能使用两次相同的序列号。 请更正序列号编码。"
 msgid ""
 "You cannot validate a transfer if no quantites are reserved nor done. To "
 "force the transfer, switch in edit more and encode the done quantities."
-msgstr "你不能过帐没有保留数量的移库。要强制过帐， 请切换到编辑模式并修改完成数量。"
+msgstr "你不能过账没有保留数量的移库。要强制过帐， 请切换到编辑模式并修改完成数量。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:112
@@ -7074,3 +7104,9 @@ msgstr "已做替代处理"
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ 设置数量为 0"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:223
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr "只允许在“草稿”状态下更改产品。"

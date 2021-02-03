@@ -236,7 +236,7 @@
                             <field name="pay_now" required="1"/>
                             <field name="payment_journal_id"
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
-                            <field name="account_id" groups="account.group_account_user"/>
+                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" groups="account.group_account_user"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -354,7 +354,7 @@
                             <field name="pay_now" required="1"/>
                             <field name="payment_journal_id"
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
-                            <field name="account_id" groups="account.group_account_user"/>
+                            <field name="account_id" groups="account.group_account_user" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="reference"/>
                         </group>

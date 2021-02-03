@@ -146,12 +146,14 @@ var Tip = Widget.extend({
     },
     _reposition: function () {
         if (this.tip_opened) return;
+        if (!this.$el) return;
         this.$el.removeClass("o_animated");
 
         // Reverse left/right position if direction is right to left
         var appendAt = this.info.position;
-        if (_t.database.parameters.direction === 'rtl') {
-            appendAt = appendAt === 'right' ? 'left': 'right';
+        var rtlMap = {left: 'right', right: 'left'};
+        if (rtlMap[appendAt] && _t.database.parameters.direction === 'rtl') {
+            appendAt = rtlMap[appendAt];
         }
         this.$el.position({
             my: this._get_spaced_inverted_position(appendAt),

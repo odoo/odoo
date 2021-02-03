@@ -96,12 +96,7 @@ var Chatter = Widget.extend({
             }));
         }
         // render and append the buttons
-        this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
-            newMessageButton: !!this.fields.thread,
-            logNoteButton: this.hasLogButton,
-            scheduleActivityButton: !!this.fields.activity,
-            isMobile: config.device.isMobile,
-        }));
+        this._$topbar.prepend(this._renderButtons());
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
         var def = this._dp.add($.when.apply($, fieldDefs));
@@ -319,17 +314,17 @@ var Chatter = Widget.extend({
                     self.fields.thread.postMessage(messageData).then(function () {
                         self._closeComposer(true);
                         if (self._reloadAfterPost(messageData)) {
-                            self.trigger_up('reload');
+                            self.trigger_up('reload', { keepChanges: true });
                         } else if (messageData.attachment_ids.length) {
                             self._reloadAttachmentBox();
-                            self.trigger_up('reload', {fieldNames: ['message_attachment_count'], keepChanges: true});
+                            self.trigger_up('reload', { fieldNames: ['message_attachment_count'], keepChanges: true });
                         }
                     }).fail(function () {
                         self._enableComposer();
                     });
                 });
             });
-            self._composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
+            self._composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload', { keepChanges: true }));
             self._composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
             self.$el.addClass('o_chatter_composer_active');
@@ -405,6 +400,14 @@ var Chatter = Widget.extend({
             // disable widgets in create mode, otherwise enable
             self._isCreateMode ? self._disableChatter() : self._enableChatter();
             $spinner.remove();
+        });
+    },
+    _renderButtons: function () {
+        return QWeb.render('mail.chatter.Buttons', {
+            newMessageButton: !!this.fields.thread,
+            logNoteButton: this.hasLogButton,
+            scheduleActivityButton: !!this.fields.activity,
+            isMobile: config.device.isMobile,
         });
     },
     /**
@@ -501,7 +504,7 @@ var Chatter = Widget.extend({
                     if (self.fields.thread) {
                         self.fields.thread.removeAttachments([ev.data.attachmentId]);
                     }
-                    self.trigger_up('reload');
+                    self.trigger_up('reload', { keepChanges: true });
                 });
             }
         };
@@ -578,7 +581,7 @@ var Chatter = Widget.extend({
      */
     _onReloadAttachmentBox: function () {
         if (this.reloadOnUploadAttachment) {
-            this.trigger_up('reload');
+            this.trigger_up('reload', { keepChanges: true });
         }
         this._reloadAttachmentBox();
     },

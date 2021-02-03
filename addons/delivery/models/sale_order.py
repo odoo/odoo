@@ -21,11 +21,11 @@ class SaleOrder(models.Model):
         delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
         return self.amount_total - delivery_cost
 
-    @api.depends('partner_id')
+    @api.depends('partner_shipping_id')
     def _compute_available_carrier(self):
         carriers = self.env['delivery.carrier'].search([])
         for rec in self:
-            rec.available_carrier_ids = carriers.available_carriers(rec.partner_shipping_id) if rec.partner_id else carriers
+            rec.available_carrier_ids = carriers.available_carriers(rec.partner_shipping_id) if rec.partner_shipping_id else carriers
 
     def get_delivery_price(self):
         for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):
@@ -49,10 +49,13 @@ class SaleOrder(models.Model):
             self.delivery_rating_success = False
             self.delivery_message = False
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_shipping_id')
     def onchange_partner_id_carrier_id(self):
-        if self.partner_id:
-            self.carrier_id = self.partner_id.property_delivery_carrier_id.filtered('active')
+        if self.partner_shipping_id:
+            self.carrier_id = (
+                self.partner_shipping_id.property_delivery_carrier_id or
+                self.partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
+            ).filtered('active')
 
     # TODO onchange sol, clean delivery price
 
@@ -121,11 +124,11 @@ class SaleOrder(models.Model):
         return sol
 
     @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines',
-                 'order_line.is_delivery', 'order_line.is_downpayment', 'order_line.product_id.invoice_policy')
+                 'order_line.is_delivery', 'order_line.is_downpayment')
     def _get_invoiced(self):
         super(SaleOrder, self)._get_invoiced()
         for order in self:
-            order_line = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment)
+            order_line = order.order_line.filtered(lambda x: not x.is_delivery and not x.is_downpayment and not x.display_type)
             if all(line.product_id.invoice_policy == 'delivery' and line.invoice_status == 'no' for line in order_line):
                 order.update({'invoice_status': 'no'})
 
@@ -140,7 +143,7 @@ class SaleOrderLine(models.Model):
     def _compute_product_qty(self):
         for line in self:
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
-                return 0.0
+                continue
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
 
     def _is_delivery(self):

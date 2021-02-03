@@ -97,15 +97,17 @@ class AccountFiscalPosition(models.Model):
             return False
         base_domain = [('auto_apply', '=', True), ('vat_required', '=', vat_required)]
         if self.env.context.get('force_company'):
-            base_domain.append(('company_id', '=', self.env.context.get('force_company')))
+            base_domain.append(('company_id', 'in', [self.env.context.get('force_company'), False]))
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', 0), ('zip_to', '=', 0)]
         null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
 
-        if zipcode and zipcode.isdigit():
+        # DO NOT USE zipcode.isdigit() b/c '4020²' would be true, so we try/except
+        try:
             zipcode = int(zipcode)
-            zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
-        else:
+            if zipcode != 0:
+                zip_domain = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
+        except (ValueError, TypeError):
             zipcode = 0
 
         if state_id:
@@ -204,12 +206,12 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        tables, where_clause, where_params = self.env['account.move.line'].with_context(company_id=self.env.user.company_id.id)._query_get()
+        tables, where_clause, where_params = self.env['account.move.line'].with_context(state='posted', company_id=self.env.user.company_id.id)._query_get()
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
         self._cr.execute("""SELECT account_move_line.partner_id, act.type, SUM(account_move_line.amount_residual)
-                      FROM account_move_line
+                      FROM """ + tables + """
                       LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
                       WHERE act.type IN ('receivable','payable')
@@ -238,11 +240,13 @@ class ResPartner(models.Model):
             SELECT partner.id
             FROM res_partner partner
             LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
+            JOIN account_move move ON move.id = aml.move_id
             RIGHT JOIN account_account acc ON aml.account_id = acc.id
             WHERE acc.internal_type = %s
-              AND NOT acc.deprecated
+              AND NOT acc.deprecated AND acc.company_id = %s
+              AND move.state = 'posted'
             GROUP BY partner.id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, sign, operand))
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.user.company_id.id, sign, operand))
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -260,7 +264,6 @@ class ResPartner(models.Model):
     def _invoice_total(self):
         account_invoice_report = self.env['account.invoice.report']
         if not self.ids:
-            self.total_invoiced = 0.0
             return True
 
         user_currency_id = self.env.user.company_id.currency_id.id
@@ -309,7 +312,14 @@ class ResPartner(models.Model):
             partner.contracts_count = AccountAnalyticAccount.search_count([('partner_id', '=', partner.id)])
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
-        domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable'), '|', ('debit', '!=', 0), ('credit', '!=', 0), ('company_id', '=', self.env.user.company_id.id)]
+        domain = [
+            ('reconciled', '=', False),
+            ('account_id.deprecated', '=', False),
+            ('account_id.internal_type', '=', 'receivable'),
+            '|', ('debit', '!=', 0), ('credit', '!=', 0),
+            ('company_id', '=', self.env.user.company_id.id),
+            ('move_id.state', '=', 'posted'),
+        ]
         if only_unblocked:
             domain += [('blocked', '=', False)]
         if self.ids:
@@ -452,6 +462,7 @@ class ResPartner(models.Model):
         return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
 
     def can_edit_vat(self):
+        ''' Can't edit `vat` if there is (non draft) issued invoices. '''
         can_edit_vat = super(ResPartner, self).can_edit_vat()
         if not can_edit_vat:
             return can_edit_vat

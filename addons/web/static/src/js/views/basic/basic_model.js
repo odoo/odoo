@@ -144,6 +144,8 @@ var BasicModel = AbstractModel.extend({
         'ir.filters',
         'ir.ui.view',
     ],
+    // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+    disableBatchedRPCs: false, // to be overriden in tests
 
     /**
      * @override
@@ -153,6 +155,11 @@ var BasicModel = AbstractModel.extend({
         // sequentially, for example, an onchange needs to be completed before a
         // save is performed.
         this.mutex = new concurrency.Mutex();
+
+        // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+        // this array is used to accumulate RPC requests done in the same call
+        // stack, so that they can be batched in the minimum number of RPCs
+        this.batchedRPCsRequests = [];
 
         this.localData = Object.create(null);
         this._super.apply(this, arguments);
@@ -850,6 +857,7 @@ var BasicModel = AbstractModel.extend({
         });
         _.each(fields, function (field) {
             var dataPoint;
+            record.data[field.name] = null;
             if (field.type === 'many2one') {
                 if (field.value) {
                     var id = _.isArray(field.value) ? field.value[0] : field.value;
@@ -1420,6 +1428,8 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.doNotSetDirty=false] if this flag is set to
      *   true, then we will not tag the record as dirty.  This should be avoided
      *   for most situations.
+     * @param {boolean} [options.forceFail=false] if this flag is set to true, then
+     *   promise will fail when onchange fails (added as local patch only in stable)
      * @param {boolean} [options.notifyChange=true] if this flag is set to
      *   false, then we will not notify and not trigger the onchange, even though
      *   it was changed.
@@ -1448,9 +1458,9 @@ var BasicModel = AbstractModel.extend({
         // apply changes to local data
         for (var fieldName in changes) {
             field = record.fields[fieldName];
-            if (field.type === 'one2many' || field.type === 'many2many') {
+            if (field && (field.type === 'one2many' || field.type === 'many2many')) {
                 defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType, options.allowWarning));
-            } else if (field.type === 'many2one' || field.type === 'reference') {
+            } else if (field && (field.type === 'many2one' || field.type === 'reference')) {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
                 record._changes[fieldName] = changes[fieldName];
@@ -1465,7 +1475,7 @@ var BasicModel = AbstractModel.extend({
             var onChangeFields = []; // the fields that have changed and that have an on_change
             for (var fieldName in changes) {
                 field = record.fields[fieldName];
-                if (field.onChange) {
+                if (field && field.onChange) {
                     var isX2Many = field.type === 'one2many' || field.type === 'many2many';
                     if (!isX2Many || (self._isX2ManyValid(record._changes[fieldName] || record.data[fieldName]))) {
                         onChangeFields.push(fieldName);
@@ -1482,7 +1492,12 @@ var BasicModel = AbstractModel.extend({
                         self._visitChildren(record, function (elem) {
                             _.extend(elem, initialData[elem.id]);
                         });
-                        onchangeDef.resolve({});
+                        // safe fix for stable version, for opw-2267444
+                        if (!options.force_fail) {
+                            onchangeDef.resolve({});
+                        } else {
+                            onchangeDef.reject({});
+                        }
                     });
             } else {
                 onchangeDef = $.Deferred().resolve(_.keys(changes));
@@ -3843,8 +3858,12 @@ var BasicModel = AbstractModel.extend({
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
 
+        // remove default_* keys from parent context to avoid issue of same field name in x2m
+        var parentContext = _.omit(record.context, function (val, key) {
+            return _.str.startsWith(key, 'default_');
+        });
         var x2manyList = self._makeDataPoint({
-            context: record.context,
+            context: parentContext,
             fieldsInfo: fieldsInfo,
             fields: fields,
             limit: fieldInfo.limit,
@@ -3947,6 +3966,93 @@ var BasicModel = AbstractModel.extend({
 
         return $.when.apply($, defs);
     },
+    // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+    /**
+     * Empty the pool of accumulated RPC requests: regroup similar requests in
+     * batches and perform an RPC for each batch.
+     *
+     * @private
+     */
+    _performBatchedRPCs: function () {
+        if (!this.batchedRPCsRequests.length) {
+            // pool has already been processed
+            return;
+        }
+
+        // reset pool of RPC requests
+        var batchedRPCsRequests = this.batchedRPCsRequests;
+        this.batchedRPCsRequests = [];
+
+        // batch similar requests
+        var batches = {};
+        var key;
+        for (var i = 0; i < batchedRPCsRequests.length; i++) {
+            var request = batchedRPCsRequests[i];
+            key = request.model + ',' + JSON.stringify(request.context);
+            if (!batches[key]) {
+                batches[key] = _.extend({}, request, {requests: [request]});
+            } else {
+                batches[key].ids = _.uniq(batches[key].ids.concat(request.ids));
+                batches[key].fieldNames = _.uniq(batches[key].fieldNames.concat(request.fieldNames));
+                batches[key].requests.push(request);
+            }
+        }
+
+        // perform batched RPCs
+        function onSuccess(batch, results) {
+            for (var i = 0; i < batch.requests.length; i++) {
+                var request = batch.requests[i];
+                var fieldNames = request.fieldNames.concat(['id']);
+                var filteredResults = results.filter(function (record) {
+                    return request.ids.indexOf(record.id) >= 0;
+                }).map(function (record) {
+                    return _.pick(record, fieldNames);
+                });
+                request.def.resolve(filteredResults);
+            }
+        }
+        function onFailure(batch, error) {
+            for (var i = 0; i < batch.requests.length; i++) {
+                var request = batch.requests[i];
+                request.def.reject(error);
+            }
+        }
+        for (key in batches) {
+            var batch = batches[key];
+            this._rpc({
+                model: batch.model,
+                method: 'read',
+                args: [batch.ids, batch.fieldNames],
+                context: batch.context,
+            }).then(onSuccess.bind(null, batch)).fail(onFailure.bind(null, batch));
+        }
+    },
+    /**
+     * This function accumulates RPC requests done in the same call stack, and
+     * performs them in the next micro task tick so that similar requests can be
+     * batched in a single RPC.
+     *
+     * For now, only 'read' calls are supported.
+     *
+     * @private
+     * @param {Object} params
+     * @returns {Promise}
+     */
+    _performRPC: function (params) {
+        // save the RPC request
+        var def = $.Deferred();
+        var request = _.extend({}, params, {def: def});
+        this.batchedRPCsRequests.push(request);
+
+        if (this.disableBatchedRPCs) {
+            this._performBatchedRPCs();
+        } else {
+            // empty the pool of RPC requests in the next tick
+            setTimeout(this._performBatchedRPCs.bind(this));
+        }
+
+        return def;
+    },
     /**
      * Reads data from server for all missing fields.
      *
@@ -3976,11 +4082,13 @@ var BasicModel = AbstractModel.extend({
 
         var def;
         if (missingIDs.length && fieldNames.length) {
-            def = self._rpc({
-                model: list.model,
-                method: 'read',
-                args: [missingIDs, fieldNames],
+            // FORWARDPORT THIS UP TO 12.2, NOT FURTHER
+            def = self._performRPC({
                 context: list.getContext(),
+                fieldNames: fieldNames,
+                ids: missingIDs,
+                method: 'read',
+                model: list.model,
             });
         } else {
             def = $.when(_.map(missingIDs, function (id) {
@@ -4234,6 +4342,7 @@ var BasicModel = AbstractModel.extend({
                     fieldsInfo: element.fieldsInfo,
                     fields: element.fields,
                     viewType: element.viewType,
+                    allowWarning: true,
                 };
                 return this._makeDefaultRecord(element.model, params);
             }

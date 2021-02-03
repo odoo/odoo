@@ -48,12 +48,13 @@ var SwitchCompanyMenu = Widget.extend({
         }
         _.each(session.user_companies.allowed_companies, function(company) {
             var a = '';
-            if (company[0] === session.user_companies.current_company[0]) {
+            var isCurrentCompany = company[0] === session.user_companies.current_company[0];
+            if (isCurrentCompany) {
                 a = '<i class="fa fa-check mr8"></i>';
             } else {
                 a = '<span style="margin-right: 24px;"/>';
             }
-            companiesList += '<a role="menuitem" href="#" class="dropdown-item" data-menu="company" data-company-id="' +
+            companiesList += '<a role="menuitemradio" aria-checked="' + isCurrentCompany + '" href="#" class="dropdown-item" data-menu="company" data-company-id="' +
                             company[0] + '">' + a + company[1] + '</a>';
         });
         this.$('.dropdown-menu').html(companiesList);

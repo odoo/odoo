@@ -26,7 +26,7 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="public"/>
                         </group>
-                        <group string="History" groups="base.group_no_one">
+                        <group string="History" groups="base.group_no_one" attrs="{'invisible':[('create_date','=',False)]}">
                             <label for="create_uid" string="Creation"/>
                             <div name="creation_div">
                                 <field name="create_uid" readonly="1" class="oe_inline"/> on
@@ -54,6 +54,7 @@
                     <field name="res_field"/>
                     <field name="res_id"/>
                     <field name="type"/>
+                    <field name="file_size"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="create_uid"/>
                     <field name="create_date"/>

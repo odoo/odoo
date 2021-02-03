@@ -3,12 +3,11 @@
 # * sale_stock
 # 
 # Translators:
-# Fishfur A Banter <fishfurbanter@gmail.com>, 2018
 # ExcaliberX <excaliberx@gmail.com>, 2018
-# Moshe Flam <pashute@gmail.com>, 2018
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,6 +93,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -108,18 +110,18 @@ msgstr "<span class=\"o_stat_text\">נמכר</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>הפניית לקוח:</strong>"
+msgstr "<strong>מזהה לקוח:</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Delivery Orders</strong>"
-msgstr "<strong>משלוח הזמנות</strong>"
+msgstr "<strong>הזמנות משלוח</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>תנאי שילוח בינלאומיים:</strong>"
+msgstr "<strong>מונחי סחר בינלאומיים :</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -131,9 +133,9 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "על פי תצורת המוצר,  הכמות הנשלחת יכולה להיות מחושבת באופן אוטומטי על ידי מנגנון:\n"
-"  - ידני: הכמות נקבעת ידנית על הקו\n"
+"  - ידני: הכמות נקבעת ידנית בשורה\n"
 "  - אנליטית מהוצאות: הכמות היא הסכום הכמותי מהוצאות שנרשמו\n"
-"  - גליון זמנים: הכמות היא מספר השעות שנרשמו במשימות הקשורות לקו מכירה זה\n"
+"  - גליון זמנים: הכמות היא מספר השעות שנרשמו במשימות הקשורות לשורת מכירה זו\n"
 "  - תנועות מלאי: הכמות מגיעה מליקוטים שאושרו\n"
 
 #. module: sale_stock
@@ -144,7 +146,7 @@ msgstr "לאחר המכירה"
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr "ניתוח אנליסטי מתוך הוצאות "
+msgstr "ניתוח מהוצאות "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -194,7 +196,7 @@ msgstr "משלוח"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "משלוח הזמנות"
+msgstr "הזמנות משלוח"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -204,14 +206,14 @@ msgstr "הצגת את תנאי סחר בהזמנת ובחשבוניות קשור
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "הצג מונחי מסחר בינלאומיים בהזמנות וחשבוניות"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:101
 #, python-format
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
+msgstr "אל תשכח לשנות את הלקוח בהזמנות המשלוח הבאות: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -221,17 +223,17 @@ msgstr "תאריך אפקטיבי"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr "לאפשר מסלול על שורת הזמנת"
+msgstr "אפשר מסלול בשורת הזמנת הלקוח"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr "חריג(ים) התרחשו ביום האיסוף"
+msgstr "חריג(ים) שהתרחשו בליקוט"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "חריגים (ים) שהתרחשו בהזמנה:"
+msgstr "חריגים (ים) שהתרחשו בהזמנת לקוח:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -252,7 +254,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "העברות שהושפעו:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
@@ -284,7 +286,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "נתיבי מלאי"
+msgstr "מסלולי מלאי"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -299,7 +301,7 @@ msgstr "שורה בחשבונית"
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "הפקת חשבוניות"
+msgstr "חיוב"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
@@ -310,7 +312,7 @@ msgstr "סידורי/אצווה"
 #: code:addons/sale_stock/models/sale_order.py:418
 #, python-format
 msgid "Make To Order"
-msgstr "הכן לפי הזמנה"
+msgstr "הכן להזמנה"
 
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
@@ -349,7 +351,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr "שיטה לעדכון כמות הנמסרת"
+msgstr "שיטה לעדכון הכמות הנשלחת"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -381,18 +383,18 @@ msgstr "חבילה"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr "מדיניות האיסוף"
+msgstr "מדיניות ליקוט"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Pickings"
-msgstr "בחירות"
+msgstr "ליקוטים"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
-msgstr "קבוצת רכישה"
+msgstr "קבוצת רכש"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -419,7 +421,7 @@ msgstr "מסלול"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr "נתיבים עבור קווי הזמנת מכירות"
+msgstr "מסלולים עבור שורות הזמנת לקוח"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
@@ -435,7 +437,7 @@ msgstr "הזמנת לקוח"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
-msgstr "הזמנות מכירה"
+msgstr "הזמנות לקוח"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
@@ -480,12 +482,12 @@ msgstr "תזמן משלוחים מוקדם יותר כדי למנוע עיכוב
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "אבטח את זמן האספקה"
+msgstr "זמן בטחון לאספקה"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "אבטח את זמן האספקה עבור המכירות"
+msgstr "זמן בטחון לאספקה עבור מכירות"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
@@ -554,12 +556,12 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:397
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr "מוצר זה נארוז על ידי %.2f %s. אתה צריך למכור %.2f %s."
+msgstr "מוצר זה נארז על ידי %.2f %s. אתה צריך למכור %.2f %s."
 
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Timesheets"
-msgstr "גיליון לוח זמנים"
+msgstr "גיליונות שעות"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -640,7 +642,7 @@ msgstr "של"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr "הורה במקום"
+msgstr "הוזמן במקום"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking

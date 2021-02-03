@@ -4,14 +4,13 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Andy Cheng <andy.cheng@richsoda.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -24,18 +23,7 @@ msgstr ""
 #. module: base_automation
 #: model:mail.template,body_html:base_automation.test_mail_template_automation
 msgid "<div>Email automation</div>"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"使用專用控制器可從網站上執行代碼伺服器操作。地址為<base> /website/action/<website_path>。將此字段設定為 "
-"True，可允許使用者運行此操作。如果將此字段設定為 False，則無法通過網站運行該操作。"
+msgstr "<div>電子郵件自動規則</div>"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -121,11 +109,6 @@ msgid "Automation"
 msgstr "自動化"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "可用於網站"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
@@ -172,7 +155,7 @@ msgstr "Base Automation: test rule on write check context"
 #: model:base.automation,name:base_automation.test_rule_on_write_recompute_send_email
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_recompute_send_email_ir_actions_server
 msgid "Base Automation: test send an email"
-msgstr ""
+msgstr "基本自動化：測試發送電子郵件"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -326,11 +309,6 @@ msgstr "小時"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "此動作的 ID，如果在 XML 檔案中有定義"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -581,11 +559,6 @@ msgid ""
 msgstr "這個 \"%(trigger_value)s\" %(trigger_label)s 只能與 \"%(state_value)s\" 動作類型"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "通過網站存取此伺服器動作的完整網址。"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger Condition"
 msgstr "觸發條件"
@@ -600,19 +573,21 @@ msgstr "觸發日期"
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-"- 'Write on a Record': update the values of a record\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Add Followers': add followers to a record (available in Discuss)\n"
-"- 'Send Email': automatically send an email (available in email_template)"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"伺服器操作的類型。 以下值可用：\n"
-"- 「執行Python代碼」：將被執行的一段python代碼\n"
-"- 「創建或複製新記錄」：用新值創建新記錄，或複製資料庫中的現有記錄\n"
-"- '在記錄上寫'：更新記錄的值\n"
-"- 「執行幾個動作」：定義觸發其他幾個伺服器動作的動作\n"
-"- 「添加追隨者」：將追隨者添加到記錄中（在討論中可用）\n"
-"- 「發送電子信件」：自動發送電子信件（在email_template中提供）"
+"伺服器操作的類型。以下值可用：\n"
+"- \"執行 Python 代碼\"：將執行的 Python 代碼塊\n"
+"- \"創建\"：使用新值創建新記錄\n"
+"- \"更新記錄\"：更新記錄的值\n"
+"- \"執行多個操作\"：定義觸發其他幾個伺服器操作的操作\n"
+"- \"發送電子郵件\"：自動發送電子郵件（討論）\n"
+"- \"添加關注者\"：將關注者添加到記錄（討論）\n"
+"- \"創建下一個活動\"：創建活動（討論）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -668,16 +643,6 @@ msgstr "映射的值"
 #, python-format
 msgid "Warning"
 msgstr "警告"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "網站路徑"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "網站網址"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

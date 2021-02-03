@@ -4,14 +4,12 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 import pytz
-import unittest
 
-from odoo.tools import misc, date_utils
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tools import misc, date_utils, remove_accents
+from odoo.tests.common import TransactionCase, BaseCase
 
 
-@tagged('standard', 'at_install')
-class TestCountingStream(unittest.TestCase):
+class TestCountingStream(BaseCase):
     def test_empty_stream(self):
         s = misc.CountingStream(iter([]))
         self.assertEqual(s.index, -1)
@@ -42,8 +40,7 @@ class TestCountingStream(unittest.TestCase):
         self.assertEqual(s.index, 0)
 
 
-@tagged('standard', 'at_install')
-class TestDateRangeFunction(unittest.TestCase):
+class TestDateRangeFunction(BaseCase):
     """ Test on date_range generator. """
 
     def test_date_range_with_naive_datetimes(self):
@@ -195,3 +192,18 @@ class TestFormatLangDate(TransactionCase):
 
         # Change 3 parameters
         self.assertEqual(misc.format_date(lang.with_context(lang='zh_CN').env, date_str, lang_code='en_US', date_format='MMM d, y'), 'Jan 31, 2017')
+
+
+class TestRemoveAccents(BaseCase):
+    def test_empty_string(self):
+        self.assertEqual(remove_accents(False), False)
+        self.assertEqual(remove_accents(''), '')
+        self.assertEqual(remove_accents(None), None)
+
+    def test_latin(self):
+        self.assertEqual(remove_accents('Niño Hernández'), 'Nino Hernandez')
+        self.assertEqual(remove_accents('Anaïs Clémence'), 'Anais Clemence')
+
+    def test_non_latin(self):
+        self.assertEqual(remove_accents('العربية'), 'العربية')
+        self.assertEqual(remove_accents('русский алфавит'), 'русскии алфавит')

@@ -8,14 +8,17 @@
 # Onii Onii <onii0223@yahoo.com>, 2018
 # Martin Trigaux, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
+# nurbahyt baha <nurbahyt.kh@gmail.com>, 2019
+# baaska sh <sh.baaskash@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019\n"
+"Last-Translator: baaska sh <sh.baaskash@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +39,7 @@ msgstr "# Борлуулалтын захиалгын тоо"
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -334,7 +337,7 @@ msgstr "<span>Үнийн дүн:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span>Pro-Forma Нэхэмжлэл # </span>"
+msgstr "<span>Урьдчилсан Нэхэмжлэл # </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -402,7 +405,7 @@ msgstr "<strong>Борлуулагч:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "Хүргэх хаяг:"
+msgstr "<strong>Хүргэх хаяг:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -521,7 +524,7 @@ msgstr "Зөвшөөрөх &amp; Төлөх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept and sign online"
-msgstr ""
+msgstr "Зөвшөөрч, онлайн гарын үсэг баталгаажуулах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -632,11 +635,10 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Pro-forma нэхэмжлэл илгээхийг зөвшөөрөх"
+msgstr "Урьдчилсан нэхэмжлэл илгээхийг зөвшөөрөх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Amount"
 msgstr "Дүн"
 
@@ -644,6 +646,12 @@ msgstr "Дүн"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
 msgstr "Хөнгөлөлт хасаагүй дүн"
+
+#. module: sale
+#: code:addons/sale/models/payment.py:90
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr "Үнийн дүн тохирахгүй байна (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -3314,7 +3322,7 @@ msgstr "Урьдчилсан нэхэмжлэл илгээх"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr ""
+msgstr "Нэхэмжлэх батлагдах үед бараатай холбоотой имэйл илгээх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3710,6 +3718,14 @@ msgstr ""
 "дүнг хассан ялгавар юм."
 
 #. module: sale
+#: code:addons/sale/models/payment.py:97
+#, python-format
+msgid ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
 msgstr "Уг борлуулалтын захиалгын төлбөрийн харилцаа."
@@ -3954,7 +3970,6 @@ msgstr "Нийт"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Total Price"
 msgstr "Нийт үнэ"
 
@@ -4265,6 +4280,16 @@ msgstr ""
 "Та энд тухайн захиалгын харилцаа холбооны төрлийг тодорхойлох боломжтой. "
 "Захиалагчыг төлбөрийн төлөх оролдлого хийх үед түүнд харилцаа холбооны "
 "мэдээллийг харуулна."
+
+#. module: sale
+#: code:addons/sale/models/sale.py:1115
+#, python-format
+msgid ""
+"You cannot change the type of a sale order line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Та борлуулалтын захиалгын мөрийн төрөл өөрчлөх боломжгүй. Харин та тухайн "
+"мөрийг устгаад дахин шинээр зохих төрөл бүхий мөр үүсгэх боломжтой."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action

@@ -64,6 +64,7 @@ var MockMailService = Class.extend({
     bus_service: function () {
         return BusService.extend({
             _poll: function () {}, // Do nothing
+            _registerWindowUnload: function () {}, // Do nothing
             isOdooFocused: function () { return true; },
             updateOption: function () {},
         });

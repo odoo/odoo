@@ -188,7 +188,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         }
         var data = {channels: this._channels, last: this._lastNotificationID, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
-        this._pollRpc = this._rpc({route: this.POLL_ROUTE, params: data}, {shadow : true, timeout: 60000});
+        this._pollRpc = this._makePoll(data);
         this._pollRpc.then(function (result) {
             self._pollRpc = false;
             self._onPoll(result);
@@ -205,6 +205,15 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
             }
         });
     },
+
+    /**
+     * @private
+     * @param data: object with poll parameters
+     */
+    _makePoll: function(data) {
+        return this._rpc({route: this.POLL_ROUTE, params: data}, {shadow : true, timeout: 60000});
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

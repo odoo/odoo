@@ -100,7 +100,7 @@ var GroupByMenu = DropdownMenu.extend({
      * @private
      */
     start: function () {
-        this.$menu = this.$('.o_dropdown_menu');
+        this._super.apply(this, arguments);
         this.$menu.addClass('o_group_by_menu');
         var $generatorMenu = QWeb.render('GroupbyMenuGenerator', {widget: this});
         this.$menu.append($generatorMenu);

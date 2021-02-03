@@ -527,19 +527,19 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                         # Special case when value is the id of a deleted record, we do not want to
                         # block the settings screen
                         value = self.env[field.comodel_name].browse(int(value)).exists().id
-                    except ValueError:
+                    except (ValueError, TypeError):
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = False
                 elif field.type == 'integer':
                     try:
                         value = int(value)
-                    except ValueError:
+                    except (ValueError, TypeError):
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0
                 elif field.type == 'float':
                     try:
                         value = float(value)
-                    except ValueError:
+                    except (ValueError, TypeError):
                         _logger.warning(WARNING_MESSAGE, value, field, icp)
                         value = 0.0
                 elif field.type == 'boolean':
@@ -577,14 +577,14 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # group fields: modify group / implied groups
         current_settings = self.default_get(list(self.fields_get()))
         with self.env.norecompute():
-            for name, groups, implied_group in classified['group']:
+            for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
                 if self[name] == current_settings[name]:
                     continue
                 if self[name]:
                     groups.write({'implied_ids': [(4, implied_group.id)]})
                 else:
                     groups.write({'implied_ids': [(3, implied_group.id)]})
-                    implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
+                    implied_group.sudo().write({'users': [(5,)]})
         self.recompute()
 
         # config fields: store ir.config_parameters

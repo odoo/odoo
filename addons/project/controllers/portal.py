@@ -213,5 +213,8 @@ class CustomerPortal(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
+        # ensure attachment are accessible with access token inside template
+        for attachment in task_sudo.attachment_ids:
+            attachment.generate_access_token()
         values = self._task_get_page_view_values(task_sudo, access_token, **kw)
         return request.render("project.portal_my_task", values)

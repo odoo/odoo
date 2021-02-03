@@ -14,6 +14,7 @@ from odoo.tools.translate import translate
 from odoo.tools.translate import _
 
 from . import security
+from ..tools import traverse_containers, lazy
 
 _logger = logging.getLogger(__name__)
 
@@ -118,22 +119,40 @@ def check(f):
                     if key in inst.pgerror:
                         raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst.pgerror)
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
-                    msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
+                    msg = _('The operation cannot be completed:')
                     _logger.debug("IntegrityError", exc_info=True)
                     try:
-                        errortxt = inst.pgerror.replace('«','"').replace('»','"')
-                        if '"public".' in errortxt:
-                            context = errortxt.split('"public".')[1]
-                            model_name = table = context.split('"')[1]
-                        else:
-                            last_quote_end = errortxt.rfind('"')
-                            last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
-                            model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                        model = table.replace("_",".")
-                        if model in registry:
-                            model_class = registry[model]
-                            model_name = model_class._description or model_class._name
-                        msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
+                        # Get corresponding model and field
+                        model = field = None
+                        for name, rclass in registry.items():
+                            if inst.diag.table_name == rclass._table:
+                                model = rclass
+                                field = model._fields.get(inst.diag.column_name)
+                                break
+                        if inst.pgcode == errorcodes.NOT_NULL_VIOLATION:
+                            # This is raised when a field is set with `required=True`. 2 cases:
+                            # - Create/update: a mandatory field is not set.
+                            # - Delete: another model has a not nullable using the deleted record.
+                            msg += '\n'
+                            msg += _(
+                                '- Create/update: a mandatory field is not set.\n'
+                                '- Delete: another model requires the record being deleted. If possible, archive it instead.'
+                            )
+                            if model:
+                                msg += '\n\n{} {} ({}), {} {} ({})'.format(
+                                    _('Model:'), model._description, model._name,
+                                    _('Field:'), field.string if field else _('Unknown'), field.name if field else _('Unknown'),
+                                )
+                        elif inst.pgcode == errorcodes.FOREIGN_KEY_VIOLATION:
+                            # This is raised when a field is set with `ondelete='restrict'`, at
+                            # unlink only.
+                            msg += _(' another model requires the record being deleted. If possible, archive it instead.')
+                            constraint = inst.diag.constraint_name
+                            if model or constraint:
+                                msg += '\n\n{} {} ({}), {} {}'.format(
+                                    _('Model:'), model._description if model else _('Unknown'), model._name if model else _('Unknown'),
+                                    _('Constraint:'), constraint if constraint else _('Unknown'),
+                                )
                     except Exception:
                         pass
                     raise ValidationError(msg)
@@ -143,10 +162,16 @@ def check(f):
     return wrapper
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
+    odoo.api.Environment.reset()  # clean cache etc if we retry the same transaction
     recs = odoo.api.Environment(cr, uid, {}).get(obj)
     if recs is None:
         raise UserError(_("Object %s doesn't exist") % obj)
-    return odoo.api.call_kw(recs, method, args, kw)
+    result = odoo.api.call_kw(recs, method, args, kw)
+    # force evaluation of lazy values before the cursor is closed, as it would
+    # error afterwards if the lazy isn't already evaluated (and cached)
+    for l in traverse_containers(result, lazy):
+        _0 = l._value
+    return result
 
 
 def execute_kw(db, uid, obj, method, args, kw=None):

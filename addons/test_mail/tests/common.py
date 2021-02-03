@@ -3,12 +3,12 @@
 import json
 
 from contextlib import contextmanager
-from email.utils import formataddr
 from functools import partial
 
 from odoo import api
 from odoo.addons.bus.models.bus import json_dump
 from odoo.tests import common, tagged, new_test_user
+from odoo.tools import formataddr
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
@@ -262,6 +262,39 @@ class MockEmails(common.SingleTransactionCase):
         mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
+
+    def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):
+        """ Simulate a reply through the mail gateway. Usage: giving a record,
+        find an email sent to him and use its message-ID to simulate a reply.
+
+        Some noise is added in References just to test some robustness. """
+        email = self._find_sent_email_wrecord(record)
+
+        if use_in_reply_to:
+            extra = 'In-Reply-To:\r\n\t%s\n' % email['message_id']
+        else:
+            disturbing_other_msg_id = '<123456.654321@another.host.com>'
+            extra = 'References:\r\n\t%s\n\r%s' % (email['message_id'], disturbing_other_msg_id)
+
+        return self.format_and_process(
+            template, email_from=email['email_to'][0], to=email['reply_to'],
+            subject='Re: %s' % email['subject'],
+            extra=extra,
+            msg_id='<123456.%s.%d@test.example.com>' % (record._name, record.id),
+            target_model=record._name,
+            target_field=record._rec_name,
+        )
+
+    def _find_sent_email_wrecord(self, record):
+        """ Helper to find in outgoing emails (see build_email) an email linked to
+        a given record. It has been introduced with a fix for mass mailing and is
+        not meant to be used widely, proper tools are available in later versions. """
+        for mail in self._mails:
+            if mail['object_id'] == '%d-%s' % (record.id, record._name):
+                break
+        else:
+            raise AssertionError('Sent email not found for record %s' % record)
+        return mail
 
 
 @tagged('moderation')

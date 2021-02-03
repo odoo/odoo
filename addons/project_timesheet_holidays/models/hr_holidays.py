@@ -61,8 +61,8 @@ class Holidays(models.Model):
                 fields.Datetime.from_string(holiday.date_to),
             )
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
-                self.env['account.analytic.line'].create({
-                    'name': "%s (%s/%s)" % (holiday.name or '', index + 1, len(work_hours_data)),
+                self.env['account.analytic.line'].sudo().create({
+                    'name': "%s (%s/%s)" % (holiday.holiday_status_id.name or '', index + 1, len(work_hours_data)),
                     'project_id': holiday_project.id,
                     'task_id': holiday_task.id,
                     'account_id': holiday_project.analytic_account_id.id,
@@ -71,6 +71,7 @@ class Holidays(models.Model):
                     'date': fields.Date.to_string(day_date),
                     'holiday_id': holiday.id,
                     'employee_id': holiday.employee_id.id,
+                    'company_id': holiday_task.company_id.id or holiday_project.company_id.id,
                 })
 
         return super(Holidays, self)._validate_leave_request()

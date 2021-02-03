@@ -19,7 +19,7 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def create(self, values):
         result = super(AccountAnalyticLine, self).create(values)
-        if 'so_line' not in values and not result.so_line and result.product_id and result.product_id.expense_policy not in [False, 'no'] and result.amount <= 0:  # allow to force a False value for so_line
+        if 'so_line' not in values and not result.so_line and result.product_id and result.product_id.expense_policy not in [False, 'no'] and result.amount < 0:  # allow to force a False value for so_line
             result.sudo()._sale_determine_order_line()
         return result
 

@@ -44,16 +44,18 @@ msgid ""
 "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
 "title=\"Period\"/><strong> From: </strong>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
+"title=\"Period\"/><strong> 발신 : </strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<strong> To:</strong>"
-msgstr ""
+msgstr "<strong> 수신 :</strong>"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__associate_member
@@ -76,7 +78,7 @@ msgstr "설명 추가..."
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid "Add a new member"
-msgstr ""
+msgstr "새 회원 추가"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -104,7 +106,7 @@ msgstr "준회원"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr "관련 파트너"
+msgstr "관련 협력사"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
@@ -137,13 +139,13 @@ msgstr "취소 회원"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Category"
-msgstr "분류"
+msgstr "범주"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership
 #: model:ir.model.fields,help:membership.field_product_template__membership
 msgid "Check if the product is eligible for membership."
-msgstr "멤버십에 적격한 제품인지 아닌지 확인하십시오."
+msgstr "회원 자격이 있는 제품인지 확인합니다."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__company_id
@@ -155,7 +157,7 @@ msgstr "회사"
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
 msgid "Configuration"
-msgstr "구성"
+msgstr "환경 설정"
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -183,13 +185,13 @@ msgstr "작성일"
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Current Membership State"
-msgstr "현재 멤버십 상태"
+msgstr "현재 회원권 상태"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_state
 msgid "Current Membership Status"
-msgstr "현재 멤버십 상태"
+msgstr "현재 회원권 상태"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -202,18 +204,18 @@ msgstr "고객"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_start
 #: model:ir.model.fields,help:membership.field_res_users__membership_start
 msgid "Date from which membership becomes active."
-msgstr "멤버십이 활성화 되는 날짜"
+msgstr "회원권이 활성화 되는 날짜"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__date
 msgid "Date on which member has joined the membership"
-msgstr "회원이 멤버십에 가입한 날짜"
+msgstr "회원이 회원권에 가입한 날짜"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,help:membership.field_res_users__membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr "멤버십을 취소한 날짜"
+msgstr "회원권을 취소한 날짜"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product__membership_date_to
@@ -221,7 +223,7 @@ msgstr "멤버십을 취소한 날짜"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_stop
 #: model:ir.model.fields,help:membership.field_res_users__membership_stop
 msgid "Date until which membership remains active."
-msgstr "멤버십 만기까지의 날짜"
+msgstr "회원권 유지 기간"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
@@ -244,17 +246,17 @@ msgstr "종료일"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Membership Date"
-msgstr "멤버십 종료일"
+msgstr "회원권 종료일"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
-msgstr "멤버십 종료일"
+msgstr "회원권 종료일"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Ending Date Of Membership"
-msgstr ""
+msgstr "회원권 종료일"
 
 #. module: membership
 #: sql_constraint:product.template:0
@@ -264,7 +266,7 @@ msgstr "오류! 시작일 전에 마감일을 설정할 수 없습니다."
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Forecast"
-msgstr "Forcast"
+msgstr "예상"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__free_member
@@ -289,7 +291,7 @@ msgstr "그룹별"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Group by..."
-msgstr "그룹 분류 기준"
+msgstr "그룹별..."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__id
@@ -312,13 +314,13 @@ msgstr "청구서"
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "청구서 라인"
+msgstr "청구서 명세"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Invoice Membership"
-msgstr "청구서 멤버십"
+msgstr "청구서 회원권"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -363,6 +365,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"멤버십 상태를 나타냅니다.\n"
+"-비 회원 : 어떤 회원권에도 해당되지 않는 파트너\n"
+"-취소 회원 : 회원권을 취소한 회원\n"
+"-이전 회원 : 회원권 날짜가 만기된 회원\n"
+"-대기 회원 : 송장을 작성하거나 회원권이 적용된 회원\n"
+"-송장 회원 : 송장을 작성한 멤버\n"
+"-지불 회원 : 회비를 지불한 회원"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
@@ -374,7 +383,7 @@ msgstr "가입 날짜"
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line____last_update
 #: model:ir.model.fields,field_description:membership.field_report_membership____last_update
 msgid "Last Modified on"
-msgstr "최근 수정"
+msgstr "최근 수정일"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_uid
@@ -386,17 +395,17 @@ msgstr "최근 갱신한 사람"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__write_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__write_date
 msgid "Last Updated on"
-msgstr "최근 갱신 날짜"
+msgstr "최근 갱신일"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__partner_id
 msgid "Member"
-msgstr "구성원"
+msgstr "회원"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
 msgid "Member Price"
-msgstr "회원 가격"
+msgstr "회원가"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -404,7 +413,7 @@ msgstr "회원 가격"
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
-msgstr "참여자"
+msgstr "회원 관리"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
@@ -423,23 +432,23 @@ msgstr "회원 분석"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_pivot
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership"
-msgstr "멤버십"
+msgstr "회원권"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_amount
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_amount
 msgid "Membership Amount"
-msgstr "멤버십 금액"
+msgstr "회원권 금액"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr "멤버십 분석"
+msgstr "회원권 분석"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr "멤버십 기간"
+msgstr "회원권 기간"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product__membership_date_to
@@ -447,43 +456,43 @@ msgstr "멤버십 기간"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_stop
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_stop
 msgid "Membership End Date"
-msgstr "멤버십 마감일"
+msgstr "회원권 마감일"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__member_price
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership Fee"
-msgstr "멤버십 회비"
+msgstr "회원권 회비"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
 #: model_terms:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Membership Invoice"
-msgstr "멤버십 청구서"
+msgstr "회원권 청구서"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Membership Line"
-msgstr "멤버십 명세"
+msgstr "회원권 명세"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
-msgstr "멤버십 파트너"
+msgstr "회원권 협력사"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_id
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership Product"
-msgstr "멤버십 상품"
+msgstr "회원권 상품"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
-msgstr "멤버십 상품"
+msgstr "회원권 상품"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product__membership_date_from
@@ -491,35 +500,35 @@ msgstr "멤버십 상품"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_start
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_start
 msgid "Membership Start Date"
-msgstr "멤버십 시작일"
+msgstr "회원권 시작일"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership State"
-msgstr "멤버십 상태"
+msgstr "회원권 상태"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__state
 msgid "Membership Status"
-msgstr "멤버십 상태"
+msgstr "회원권 상태"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_tree
 msgid "Membership products"
-msgstr "멤버십 상품"
+msgstr "회원권 상품"
 
 #. module: membership
 #: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
 #: model:ir.cron,cron_name:membership.ir_cron_update_membership
 #: model:ir.cron,name:membership.ir_cron_update_membership
 msgid "Membership: update memberships"
-msgstr ""
+msgstr "회원권 : 회원권 갱신"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
-msgstr "멤버십"
+msgstr "회원권"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -544,6 +553,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"Odoo는 회원과 관련된 모든 활동을 쉽게 추적할 수 있도록 도와줍니다 : \n"
+"                  현재 회원 상태, 토론 및 회원 기록 등입니다."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -568,13 +579,13 @@ msgstr "협력사"
 #: code:addons/membership/models/partner.py:186
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr "파트너가 청구서를 만들기 위한 주소를 가지고 있지 않습니다."
+msgstr "협력사가 청구서를 만들기 위한 주소를 가지고 있지 않습니다."
 
 #. module: membership
 #: code:addons/membership/models/partner.py:184
 #, python-format
 msgid "Partner is a free Member."
-msgstr "파트너는 무료 회원입니다."
+msgstr "협력사는 무료 회원입니다."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
@@ -584,7 +595,7 @@ msgstr "보류 금액"
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "제품 양식"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__quantity
@@ -612,7 +623,7 @@ msgstr "영업사원"
 #: model:ir.model.fields,help:membership.field_res_partner__free_member
 #: model:ir.model.fields,help:membership.field_res_users__free_member
 msgid "Select if you want to give free membership."
-msgstr "무료 멤버십을 얻고 싶은 경우 선택하십시오."
+msgstr "무료 회원권을 얻고 싶은 경우 선택하십시오."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
@@ -624,7 +635,7 @@ msgstr "시작일"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Date Of Membership"
-msgstr ""
+msgstr "회원권 시작일"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -635,7 +646,7 @@ msgstr "세금"
 #: model:ir.model.fields,help:membership.field_res_partner__membership_amount
 #: model:ir.model.fields,help:membership.field_res_users__membership_amount
 msgid "The price negotiated by the partner"
-msgstr "파트너 협상 가격"
+msgstr "협력사 협상 가격"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
@@ -673,4 +684,4 @@ msgstr "대기 회원"
 #: code:addons/membership/models/partner.py:162
 #, python-format
 msgid "You cannot create recursive associated members."
-msgstr ""
+msgstr "재귀 연결 구성원을 생성할 수 없습니다."

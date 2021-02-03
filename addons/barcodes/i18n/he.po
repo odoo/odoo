@@ -5,6 +5,7 @@
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2018
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,13 +25,13 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:204
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr "'*' אינו ביטוי תקין של תבנית ברקוד. האם התכוונת '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid ": a rule can only contain one pair of braces."
-msgstr ""
+msgstr ": כלל יכול להכיל זוג סוגריים אחד בלבד."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:198
@@ -42,7 +43,7 @@ msgstr ":סוגרים מסולסלים יכולים להכיל רק N-ים בא 
 #: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid ": empty braces."
-msgstr ":סוגרים מסולסלים ריקות"
+msgstr "סוגריים ריקים:"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -66,7 +67,7 @@ msgstr "ברקוד נומנקלטורה מגדיר כיצד נקודת המכי�
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr ""
+msgstr "הוסף קידומת ברקוד חדשה"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -97,7 +98,7 @@ msgstr "כל"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "ערבוב אירועי ברקוד"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -183,17 +184,17 @@ msgstr "השם המוצג"
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
 msgid "EAN-13"
-msgstr ""
+msgstr "EAN-13"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "EAN-13 to UPC-A"
-msgstr ""
+msgstr "EAN-13 ל- UPC-A"
 
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
 msgid "EAN-8"
-msgstr ""
+msgstr "EAN-8"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
@@ -205,21 +206,21 @@ msgstr "קידוד"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:326
 #, python-format
 msgid "Error: Barcode command is undefined"
-msgstr ""
+msgstr "שגיאה: פקודת הברקוד אינה מוגדרת"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:63
 #, python-format
 msgid "Error: Document not editable"
-msgstr ""
+msgstr "שגיאה: המסמך אינו ניתן לעריכה"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:362
 #, python-format
 msgid "Error: No last scanned barcode"
-msgstr ""
+msgstr "שגיאה: אין ברקוד אחרון שנסרק"
 
 #. module: barcodes
 #. openerp-web
@@ -229,7 +230,7 @@ msgstr ""
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:139
 #, python-format
 msgid "Error: Pager not available"
-msgstr ""
+msgstr "שגיאה: הביפר לא זמין"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -280,7 +281,7 @@ msgstr "לעולם לא"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "מונחים"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -297,6 +298,12 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
+"תבניות יכולות גם להגדיר כיצד ערכים מספריים, כמו משקל או מחיר, יכולים להיות\n"
+"                                מקודדים לברקוד. הם מסומנים ע\"י <code>{NNN}</code> כאשר ה- N's\n"
+"                                מגדירים היכן מקודדות הספרות של המספר. ערכים המכילים שברים עשרוניים נתמכים גם עם \n"
+"                                שברים עשרונים שמסומנים עם D's, כגון <code>{NNNDD}</code>. במקרים אלה, \n"
+"                                שדה הברקוד ברשומות המשויכות <i>צריך</i> להראות את הספרות האלה  \n"
+"                                כאפסים."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -350,7 +357,7 @@ msgstr "רשימת כללי ברקוד"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "התבנית המותאמת תהיה כינוי לברקוד זה"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:198
@@ -400,17 +407,17 @@ msgstr ""
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
 msgid "UPC-A"
-msgstr ""
+msgstr "UPC-A"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
 msgid "UPC-A to EAN-13"
-msgstr ""
+msgstr "UPC-A ל- EAN-13"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid "UPC/EAN Conversion"
-msgstr ""
+msgstr "המרה UPC/EAN "
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -421,7 +428,7 @@ msgstr "יחידת מוצר "
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
-msgstr ""
+msgstr "משמש לסידור חוקים כך שחוקים עם רצף קטן יותר יתאימו קודם"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

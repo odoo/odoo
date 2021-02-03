@@ -130,7 +130,7 @@ class EventEvent(models.Model):
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
-        readonly=True, compute='_compute_seats')
+        readonly=True, compute='_compute_seats_expected')
 
     # Registration fields
     registration_ids = fields.One2many(
@@ -198,6 +198,11 @@ class EventEvent(models.Model):
         for event in self:
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
+
+    @api.multi
+    @api.depends('seats_unconfirmed', 'seats_reserved', 'seats_used')
+    def _compute_seats_expected(self):
+        for event in self:
             event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
     @api.model
@@ -529,7 +534,7 @@ class EventRegistration(models.Model):
         elif event_date.month == (today + relativedelta(months=+1)).month:
             return _('next month')
         else:
-            return _('on ') + format_tz(self.with_context({'use_babel': True}).env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
+            return _('on ') + format_tz(self.with_context(use_babel=True).env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
 
     @api.multi
     def summary(self):

@@ -21,16 +21,39 @@ e.g. button methods. All actions share two mandatory attributes:
 
 A client can get actions in 4 forms:
 
-``False``
-    if any action dialog is currently open, close it
-A string
-    if a :ref:`client action <reference/actions/client>` matches, interpret as
-    a client action's tag, otherwise treat as a number
-A number
-    read the corresponding action record from the database, may be a database
-    identifier or an :term:`external id`
-A dictionary
-    treat as a client action descriptor and execute
+*  ``False``
+      if any action dialog is currently open, close it
+*  A string
+      if a :ref:`client action <reference/actions/client>` matches, interpret as
+      a client action's tag, otherwise treat as a number
+*  A number
+      read the corresponding action record from the database, may be a database
+      identifier or an :term:`external id`
+*  A dictionary
+      treat as a client action descriptor and execute
+
+.. _reference/bindings:
+
+Bindings
+========
+
+Aside from their two mandatory attributes, all actions also share *optional*
+attributes used to present an action in an arbitrary model's contextual menu:
+
+``binding_model_id``
+    specifies which model the action is bound to
+
+    .. note:: For Server Actions, use ``model_id``.
+``binding_type``
+    specifies the type of binding, which is mostly which contextual menu the
+    action will appear under
+
+    ``action`` (default)
+        Specifies that the action will appear in the :menuselection:`Action`
+        contextual menu of the bound model.
+    ``report``
+        Specifies that the action will appear in the :menuselection:`Print`
+        contextual menu of the bound model.
 
 .. _reference/actions/window:
 
@@ -102,12 +125,27 @@ dialog::
 In-database window actions have a few different fields which should be ignored
 by clients, mostly to use in composing the ``views`` list:
 
-``view_mode``
-    comma-separated list of view types as a string. All of these types will be
+``view_mode`` (default= ``tree,form`` )
+    comma-separated list of view types as a string (/!\\ No spaces /!\\). All of these types will be
     present in the generated ``views`` list (with at least a ``False`` view_id)
 ``view_ids``
     M2M\ [#notquitem2m]_ to view objects, defines the initial content of
     ``views``
+
+    .. note:: Act_window views can also be defined cleanly through ``ir.actions.act_window.view``.
+
+        If you plan to allow multiple views for your model, prefer using
+        ir.actions.act_window.view instead of the action ``view_ids``
+
+        .. code-block:: xml
+
+            <record model="ir.actions.act_window.view" id="test_action_tree">
+               <field name="sequence" eval="1"/>
+               <field name="view_mode">tree</field>
+               <field name="view_id" ref="view_test_tree"/>
+               <field name="act_window_id" ref="test_action"/>
+            </record>
+
 ``view_id``
     specific view added to the ``views`` list in case its type is part of the
     ``view_mode`` list and not already filled by one of the views in
@@ -142,6 +180,9 @@ The server-side composition of the ``views`` sequence is the following:
     * ``groups_id``?
     * ``filter``?
 
+.. [#notquitem2m] technically not an M2M: adds a sequence field and may be
+                  composed of just a view type, without a view id.
+
 .. _reference/actions/url:
 
 URL Actions (``ir.actions.act_url``)
@@ -160,7 +201,7 @@ via two fields:
 
     {
         "type": "ir.actions.act_url",
-        "url": "http://odoo.com",
+        "url": "https://odoo.com",
         "target": "self",
     }
 
@@ -170,6 +211,8 @@ will replace the current content section by the Odoo home page.
 
 Server Actions (``ir.actions.server``)
 ======================================
+
+.. autoclass:: odoo.addons.base.models.ir_actions.IrActionsServer
 
 Allow triggering complex server code from any valid action location. Only
 two fields are relevant to clients:
@@ -184,151 +227,92 @@ specific or generic actions based on their ``state``. Some fields (and
 corresponding behaviors) are shared between states:
 
 ``model_id``
-    Odoo model linked to the action, made available in
-    :ref:`evaluation contexts <reference/actions/server/context>`
-``condition`` (optional)
-    evaluated as Python code using the server action's
-    :ref:`evaluation context <reference/actions/server/context>`. If
-    ``False``, prevents the action from running. Default: ``True``
+    Odoo model linked to the action.
 
-Valid action types (``state`` field) are extensible, the default types are:
+``state``
 
-``code``
---------
+* ``code``: Executes python code given through the ``code`` argument.
 
-The default and most flexible server action type, executes arbitrary Python
-code with the action's :ref:`evaluation context
-<reference/actions/server/context>`. Only uses one specific type-specific
-field:
+* ``object_create``: Creates a new record of model ``crud_model_id`` following ``fields_lines`` specifications.
 
-``code``
-    a piece of Python code to execute when the action is called
+* ``object_write``: Updates the current record(s) following ``fields_lines`` specifications
 
-.. code-block:: xml
+* ``multi``: Executes serveral actions given through the ``child_ids`` argument.
 
-    <record model="ir.actions.server" id="print_instance">
-        <field name="name">Res Partner Server Action</field>
-        <field name="model_id" ref="model_res_partner"/>
-        <field name="code">
-            raise Warning(object.name)
-        </field>
-    </record>
+State fields
+------------
 
-.. note::
+Depending on its state, the behavior is defined through different fields.
+The concerned state is given after each field.
 
-    The code segment can define a variable called ``action``, which will be
-    returned to the client as the next action to execute:
+``code`` (code)
+  Specify a piece of Python code to execute when the action is called
 
-    .. code-block:: xml
+  .. code-block:: xml
 
-        <record model="ir.actions.server" id="print_instance">
-            <field name="name">Res Partner Server Action</field>
-            <field name="model_id" ref="model_res_partner"/>
-            <field name="code">
-                if object.some_condition():
-                    action = {
-                        "type": "ir.actions.act_window",
-                        "view_mode": "form",
-                        "res_model": object._name,
-                        "res_id": object.id,
-                    }
-            </field>
-        </record>
+      <record model="ir.actions.server" id="print_instance">
+          <field name="name">Res Partner Server Action</field>
+          <field name="model_id" ref="model_res_partner"/>
+          <field name="state">code</field>
+          <field name="code">
+              raise Warning(record.name)
+          </field>
+      </record>
 
-    will ask the client to open a form for the record if it fulfills some
-    condition
+  .. note::
 
-This tends to be the only action type created from :ref:`data files
-<reference/data>`, other types aside from
-:ref:`reference/actions/server/multi` are simpler than Python code to define
-from the UI, but not from :ref:`data files <reference/data>`.
+      The code segment can define a variable called ``action``, which will be
+      returned to the client as the next action to execute:
 
-.. _reference/actions/server/object_create:
+      .. code-block:: xml
 
-``object_create``
------------------
+          <record model="ir.actions.server" id="print_instance">
+              <field name="name">Res Partner Server Action</field>
+              <field name="model_id" ref="model_res_partner"/>
+              <field name="state">code</field>
+              <field name="code">
+                  if record.some_condition():
+                      action = {
+                          "type": "ir.actions.act_window",
+                          "view_mode": "form",
+                          "res_model": record._name,
+                          "res_id": record.id,
+                      }
+              </field>
+          </record>
 
-Creates a new record, from scratch (via :meth:`~odoo.models.Model.create`)
-or by copying an existing record (via :meth:`~odoo.models.Model.copy`)
+      will ask the client to open a form for the record if it fulfills some
+      condition
 
-``use_create``
-    the creation policy, one of:
+  ..  This tends to be the only action type created from :ref:`data files
+      <reference/data>`, other types aside from
+      :ref:`reference/actions/server/multi` are simpler than Python code to define
+      from the UI, but not from :ref:`data files <reference/data>`.
 
-    ``new``
-        creates a record in the model specified by ``model_id``
-    ``new_other``
-        creates a record in the model specified by ``crud_model_id``
-    ``copy_current``
-        copies the record on which the action was invoked
-    ``copy_other``
-        copies an other record, obtained via ``ref_object``
-``fields_lines``
+``crud_model_id`` (create)(required)
+    model in which to create a new record
+``link_field_id`` (create)
+    many2one to ``ir.model.fields``, specifies the current record's m2o field
+    on which the newly created record should be set (models should match)
+
+``fields_lines`` (create/write)
     fields to override when creating or copying the record.
     :class:`~odoo.fields.One2many` with the fields:
 
     ``col1``
-        ``ir.model.fields`` to set in the model implied by ``use_create``
+        ``ir.model.fields`` to set in the concerned model
+        (``crud_model_id`` for creates, ``model_id`` for updates)
     ``value``
         value for the field, interpreted via ``type``
-    ``type``
+    ``type`` (value|reference|equation)
         If ``value``, the ``value`` field is interpreted as a literal value
         (possibly converted), if ``equation`` the ``value`` field is
         interpreted as a Python expression and evaluated
-``crud_model_id``
-    model in which to create a new record, if ``use_create`` is set to
-    ``new_other``
-``ref_object``
-    :class:`~odoo.fields.Reference` to an arbitrary record to copy, used if
-    ``use_create`` is set to ``copy_other``
-``link_new_record``
-    boolean flag linking the newly created record to the current one via a
-    many2one field specified through ``link_field_id``, defaults to ``False``
-``link_field_id``
-    many2one to ``ir.model.fields``, specifies the current record's m2o field
-    on which the newly created record should be set (models should match)
 
-``object_write``
-----------------
-
-Similar to :ref:`reference/actions/server/object_create` but alters an
-existing records instead of creating one
-
-``use_write``
-    write policy, one of:
-
-    ``current``
-        write to the current record
-    ``other``
-        write to an other record selected via ``crud_model_id`` and
-        ``ref_object``
-    ``expression``
-        write to an other record whose model is selected via ``crud_model_id``
-        and whose id is selected by evaluating ``write_expression``
-``write_expression``
-    Python expression returning a record or an object id, used when
-    ``use_write`` is set to ``expression`` in order to decide which record
-    should be modified
-``fields_lines``
-    see :ref:`reference/actions/server/object_create`
-``crud_model_id``
-    see :ref:`reference/actions/server/object_create`
-``ref_object``
-    see :ref:`reference/actions/server/object_create`
-
-.. _reference/actions/server/multi:
-
-``multi``
----------
-
-Executes multiple actions one after the other. Actions to execute are defined
-via the ``child_ids`` m2m. If sub-actions themselves return actions, the last
-one will be returned to the client as the multi's own next action
-
-``client_action``
------------------
-
-Indirection for directly returning an other action defined using
-``action_id``. Simply returns that action to the client for execution.
+``child_ids`` (multi)
+    Specify the multiple sub-actions (``ir.actions.server``) to enact in state multi.
+    If sub-actions themselves return actions, the last
+    one will be returned to the client as the multi's own next action
 
 .. _reference/actions/server/context:
 
@@ -338,43 +322,44 @@ Evaluation context
 A number of keys are available in the evaluation context of or surrounding
 server actions:
 
-``model``
-    the model object linked to the action via ``model_id``
-``object``, ``obj``
-    only available if ``active_model`` and ``active_id`` are provided (via
-    context) otherwise ``None``. The actual record selected by ``active_id``
-``pool``
-    the current database registry
-``datetime``, ``dateutil``, ``time``
-    corresponding Python modules
-``cr``
-    the current cursor
-``user``
-    the current user record
-``context``
-    execution context
-``Warning``
-    constructor for the ``Warning`` exception
+* ``model`` model object linked to the action via ``model_id``
+* ``record``/``records`` record/recorset on which the action is triggered, can be void.
+* ``env`` Odoo Environment
+* ``datetime``, ``dateutil``, ``time``, ``timezone`` corresponding Python modules
+* ``log: log(message, level='info')`` logging function to record debug information in ir.logging table
+* ``Warning`` constructor for the ``Warning`` exception
 
 .. _reference/actions/report:
 
 Report Actions (``ir.actions.report``)
 ======================================
 
-Triggers the printing of a report
+Triggers the printing of a report.
+
+If you define your report through a `<record>` instead of a `<report>` tag and
+want the action to show up in the Print menu of the model's views, you will
+also need to specify ``binding_model_id`` from :ref:`reference/bindings`. It's
+not necessary to set ``binding_type`` to ``report``, since
+``ir.actions.report`` will implicitly default to that.
+
 
 ``name`` (mandatory)
-    only useful as a mnemonic/description of the report when looking for one
-    in a list of some sort
+    used as the file name if ``print_report_name`` is not specified.
+    Otherwise, only useful as a mnemonic/description of the report
+    when looking for one in a list of some sort
 ``model`` (mandatory)
     the model your report will be about
-``report_type`` (mandatory)
+``report_type`` (default=qweb-pdf)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
-``report_name``
-    the name of your report (which will be the name of the PDF output)
+``report_name`` (mandatory)
+    the name (:term:`external id`) of the qweb template used to render the report
+``print_report_name``
+    python expression defining the name of the report.
 ``groups_id``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current report
+``multi``
+    if set to ``True``, the action will not be displayed on a form view.
 ``paperformat_id``
     :class:`~odoo.fields.Many2one` field to the paper format you wish to
     use for this report (if not specified, the company format will be used)
@@ -418,5 +403,43 @@ Triggers an action implemented entirely in the client.
 tells the client to start the Point of Sale interface, the server has no idea
 how the POS interface works.
 
-.. [#notquitem2m] technically not an M2M: adds a sequence field and may be
-                  composed of just a view type, without a view id.
+.. seealso::
+   - :ref:`Tutorial: Client Actions <howtos/web/client_actions>`
+
+.. _reference/actions/cron:
+
+Automated Actions (``ir.cron``)
+======================================
+
+Actions triggered automatically on a predefined frequency.
+
+``name``
+    Name of the automated action (Mainly used in log display)
+
+``interval_number``
+    Number of *interval_type* uom between two executions of the action
+
+``interval_type``
+    Unit of measure of frequency interval (``minutes``, ``hours``, ``days``, ``weeks``, ``months``,
+
+``numbercall``
+    Number of times this action has to be run.
+    If the action is expected to run indefinitely, set to ``-1``.
+
+``doall``
+    Boolean precising whether the missed actions have to be executed in case of
+    server restarts.
+
+``model_id``
+    Model on which this action will be called
+
+``code``
+    Code content of the action.
+    Can be a simple call to the model's method :
+
+    .. code-block:: python
+
+      model.<method_name>()
+
+``nextcall``
+    Next planned execution date of this action (date/time format)

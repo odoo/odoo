@@ -384,6 +384,22 @@ var NumericField = InputField.extend({
     },
 
     /**
+     * Parse numerical value (integer or float)
+     *
+     * Note: We have to overwrite this method to skip the format if we are into
+     * edit mode on a input type number.
+     *
+     * @override
+     * @private
+     */
+    _parseValue: function (value) {
+        if (this.mode === 'edit' && this.nodeOptions.type === 'number') {
+            return Number(value);
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
@@ -1652,7 +1668,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
                     'id': this.res_id,
                     'field': this.name,
                     'filename_field': filename_fieldname,
-                    'filename': this.recordData[filename_fieldname] || null,
+                    'filename': this.recordData[filename_fieldname] || "",
                     'download': true,
                     'data': utils.is_bin_size(this.value) ? null : this.value,
                 },
@@ -1777,10 +1793,14 @@ var PriorityWidget = AbstractField.extend({
     // the current implementation of this widget makes it
     // only usable for fields of type selection
     className: "o_priority",
+    attributes: {
+        'role': 'radiogroup',
+    },
     events: {
         'mouseover > a': '_onMouseOver',
         'mouseout > a': '_onMouseOut',
         'click > a': '_onClick',
+        'keydown > a': '_onKeydown',
     },
     supportedFieldTypes: ['selection'],
 
@@ -1796,6 +1816,17 @@ var PriorityWidget = AbstractField.extend({
      */
     isSet: function () {
         return true;
+    },
+
+    /**
+     * Returns the currently-checked star, or the first one if no star is
+     * checked.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        var checked = this.$("[aria-checked='true']");
+        return checked.length ? checked : this.$("[data-index='1']");
     },
 
     //--------------------------------------------------------------------------
@@ -1815,8 +1846,9 @@ var PriorityWidget = AbstractField.extend({
         }) : 0;
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
+        this.$el.attr('aria-label', this.string);
         _.each(this.field.selection.slice(1), function (choice, index) {
-            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1]));
+            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1], index_value));
         });
     },
 
@@ -1827,12 +1859,18 @@ var PriorityWidget = AbstractField.extend({
      * @param {boolean} isFull whether the star is a full star or not
      * @param {integer} index the index of the star in the series
      * @param {string} tip tooltip for this star's meaning
+     * @param {integer} indexValue the index of the last full star or 0
      * @private
      */
-    _renderStar: function (tag, isFull, index, tip) {
+    _renderStar: function (tag, isFull, index, tip, indexValue) {
+        var isChecked = indexValue === index;
+        var defaultFocus = indexValue === 0 && index === 1;
         return $(tag)
+            .attr('role', 'radio')
+            .attr('aria-checked', isChecked)
             .attr('title', tip)
             .attr('aria-label', tip)
+            .attr('tabindex', isChecked || defaultFocus ? 0 : -1)
             .attr('data-index', index)
             .addClass('o_priority_star fa')
             .toggleClass('fa-star', isFull)
@@ -1884,6 +1922,36 @@ var PriorityWidget = AbstractField.extend({
         this.$('.o_priority_star').removeClass('fa-star-o').addClass('fa-star');
         $(event.currentTarget).nextAll().removeClass('fa-star').addClass('fa-star-o');
     },
+
+    /**
+     * Runs the default behavior when <enter> is pressed over a star
+     * (the same as if it was clicked); otherwise forwards event to the widget.
+     *
+     * @param {KeydownEvent} event
+     * @private
+     */
+    _onKeydown: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
+
+    _onNavigationMove: function (ev) {
+        var $curControl = this.$('a:focus');
+        var $nextControl;
+        if (ev.data.direction === 'right' || ev.data.direction === 'down') {
+            $nextControl = $curControl.next('a');
+        } else if (ev.data.direction === 'left' || ev.data.direction === 'up') {
+            $nextControl = $curControl.prev('a');
+        }
+        if ($nextControl && $nextControl.length) {
+            ev.stopPropagation();
+            $nextControl.focus();
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
 });
 
 var AttachmentImage = AbstractField.extend({
@@ -1915,6 +1983,19 @@ var StateSelectionWidget = AbstractField.extend({
         'click .dropdown-item': '_setSelection',
     },
     supportedFieldTypes: ['selection'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the drop down button.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.$("a[data-toggle='dropdown']");
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1971,7 +2052,7 @@ var StateSelectionWidget = AbstractField.extend({
             .addClass(currentState.state_class)
             .prop('special_click', true)
             .parent().attr('title', currentState.state_name)
-            .attr('aria-label', currentState.state_name);
+            .attr('aria-label', self.string + ": " + currentState.state_name);
 
         // Render "FormSelection.Items" and move it into "FormSelection"
         var $items = $(qweb.render('FormSelection.items', {
@@ -2291,11 +2372,28 @@ var FieldProgressBar = AbstractField.extend({
         if (this.recordData[this.nodeOptions.current_value]) {
             this.value = this.recordData[this.nodeOptions.current_value];
         }
-        this.max_value = this.recordData[this.nodeOptions.max_value] || 100;
+
+        // The few next lines determine if the widget can write on the record or not
+        this.editable_readonly = !!this.nodeOptions.editable_readonly;
+        // "hard" readonly
         this.readonly = this.nodeOptions.readonly || !this.nodeOptions.editable;
-        this.edit_max_value = this.nodeOptions.edit_max_value || false;
+
+        this.canWrite = !this.readonly && (
+            this.mode === 'edit' ||
+            (this.editable_readonly && this.mode === 'readonly') ||
+            (this.viewType === 'kanban') // Keep behavior before commit
+        );
+
+        // Boolean to toggle if we edit the numerator (value) or the denominator (max_value)
+        this.edit_max_value = !!this.nodeOptions.edit_max_value;
+        this.max_value = this.recordData[this.nodeOptions.max_value] || 100;
+
         this.title = _t(this.attrs.title || this.nodeOptions.title) || '';
-        this.edit_on_click = !this.nodeOptions.edit_max_value || false;
+
+        // Ability to edit the field through the bar
+        // /!\ this feature is disabled
+        this.enableBarAsInput = false;
+        this.edit_on_click = this.enableBarAsInput && this.mode === 'readonly' && !this.edit_max_value;
 
         this.write_mode = false;
     },
@@ -2303,19 +2401,19 @@ var FieldProgressBar = AbstractField.extend({
         var self = this;
         this._render_value();
 
-        if (!this.readonly) {
+        if (this.canWrite) {
             if (this.edit_on_click) {
                 this.$el.on('click', '.o_progress', function (e) {
                     var $target = $(e.currentTarget);
-                    self.value = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
+                    var numValue = Math.floor((e.pageX - $target.offset().left) / $target.outerWidth() * self.max_value);
+                    self.on_update(numValue);
                     self._render_value();
-                    self.on_update(self.value);
                 });
             } else {
                 this.$el.on('click', function () {
                     if (!self.write_mode) {
                         var $input = $('<input>', {type: 'text', class: 'o_progressbar_value o_input'});
-                        $input.on('blur', _.bind(self.on_change_input, self));
+                        $input.on('blur', self.on_change_input.bind(self));
                         self.$('.o_progressbar_value').replaceWith($input);
                         self.write_mode = true;
                         self._render_value();
@@ -2325,24 +2423,25 @@ var FieldProgressBar = AbstractField.extend({
         }
         return this._super();
     },
+    /**
+     * Updates the widget with value
+     *
+     * @param {Number} value
+     */
     on_update: function (value) {
-        if (!isNaN(value)) {
-            if (this.edit_max_value) {
-                try {
-                    this.max_value = this._parseValue(value);
-                    this._isValid = true;
-                } catch (e) {
-                    this._isValid = false;
-                }
-                var changes = {};
-                changes[this.nodeOptions.max_value] = this.max_value;
-                this.trigger_up('field_changed', {
-                    dataPointID: this.dataPointID,
-                    changes: changes,
-                });
-            } else {
-                this._setValue(value);
-            }
+        if (this.edit_max_value) {
+            this.max_value = value;
+            this._isValid = true;
+            var changes = {};
+            changes[this.nodeOptions.max_value] = this.max_value;
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+            });
+        } else {
+            // _setValues accepts string and will parse it
+            var formattedValue = this._formatValue(value);
+            this._setValue(formattedValue);
         }
     },
     on_change_input: function (e) {
@@ -2350,29 +2449,42 @@ var FieldProgressBar = AbstractField.extend({
         if (e.type === 'change' && !$input.is(':focus')) {
             return;
         }
-        if (isNaN($input.val())) {
-            this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
-        } else {
-            if (e.type === 'input') {
-                this._render_value($input.val());
-                if (parseFloat($input.val()) === 0) {
+
+        var parsedValue;
+        try {
+            // Cover all numbers with parseFloat
+            parsedValue = field_utils.parse.float($input.val());
+        } catch (error) {
+            this.do_warn(_t("Wrong value entered!"), _t("Only Integer or Float Value should be valid."));
+        }
+
+        if (parsedValue !== undefined) {
+            if (e.type === 'input') { // ensure what has just been typed in the input is a number
+                // returns NaN if not a number
+                this._render_value(parsedValue);
+                if (parsedValue === 0) {
                     $input.select();
                 }
-            } else {
+            } else { // Implicit type === 'blur': we commit the value
                 if (this.edit_max_value) {
-                    this.max_value = $(e.target).val();
-                } else {
-                    this.value = $(e.target).val() || 0;
+                    parsedValue = parsedValue || 100;
                 }
+
                 var $div = $('<div>', {class: 'o_progressbar_value'});
                 this.$('.o_progressbar_value').replaceWith($div);
                 this.write_mode = false;
 
+                this.on_update(parsedValue);
                 this._render_value();
-                this.on_update(this.edit_max_value ? this.max_value : this.value);
             }
         }
     },
+    /**
+     * Renders the value
+     *
+     * @private
+     * @param {Number} v
+     */
     _render_value: function (v) {
         var value = this.value;
         var max_value = this.max_value;
@@ -2530,6 +2642,10 @@ var JournalDashboardGraph = AbstractField.extend({
      * Called when the field is detached from the DOM.
      */
     on_detach_callback: function () {
+        // ignore chart that have not yet been rendered
+        if (this.chart !== null) {
+            this.chart.tooltip.hidden(true);
+        }
         this._isInDOM = false;
     },
 

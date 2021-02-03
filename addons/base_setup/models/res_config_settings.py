@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -71,7 +72,10 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def open_default_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
-        action['res_id'] = self.env.ref('base.default_user').id
+        if self.env.ref('base.default_user', raise_if_not_found=False):
+            action['res_id'] = self.env.ref('base.default_user').id
+        else:
+            raise UserError(_("Default User Template not found."))
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action
 

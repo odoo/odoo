@@ -33,7 +33,7 @@ class StockRule(models.Model):
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         cache = {}
         suppliers = product_id.seller_ids\
-            .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id))
+            .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id) and r.name.active)
         if not suppliers:
             msg = _('There is no vendor associated to the product %s. Please define a vendor for this product.') % (product_id.display_name,)
             raise UserError(msg)   
@@ -172,7 +172,7 @@ class StockRule(models.Model):
             'partner_id': partner.id,
             'picking_type_id': self.picking_type_id.id,
             'company_id': values['company_id'].id,
-            'currency_id': partner.with_context(force_company=values['company_id'].id).property_purchase_currency_id.id or self.env.user.company_id.currency_id.id,
+            'currency_id': partner.with_context(force_company=values['company_id'].id).property_purchase_currency_id.id or values['company_id'].currency_id.id,
             'dest_address_id': values.get('partner_id', False),
             'origin': origin,
             'payment_term_id': partner.with_context(force_company=values['company_id'].id).property_supplier_payment_term_id.id,

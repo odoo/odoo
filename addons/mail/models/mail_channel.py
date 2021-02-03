@@ -5,13 +5,12 @@ import base64
 import logging
 import re
 
-from email.utils import formataddr
 from uuid import uuid4
 
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import ormcache, pycompat
+from odoo.tools import ormcache, pycompat, formataddr
 from odoo.tools.safe_eval import safe_eval
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
@@ -33,6 +32,27 @@ class ChannelPartner(models.Model):
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
+
+    @api.model
+    def create(self, vals):
+        if 'channel_id' in vals and not self.env.user._is_admin():
+            channel_id = self.env['mail.channel'].browse(vals['channel_id'])
+            if not channel_id._can_invite(vals.get('partner_id')):
+                raise AccessError(_('The partner can not join this channel'))
+        return super(ChannelPartner, self).create(vals)
+
+    def write(self, vals):
+        if not self.env.user._is_admin():
+            if {'channel_id', 'partner_id', 'partner_email'} & set(vals):
+                raise AccessError(_('You can not write on this field'))
+            elif self.mapped('partner_id') != self.env.user.partner_id:
+                raise AccessError(_('You can not write on the record of other users'))
+        return super(ChannelPartner, self).write(vals)
+
+    def unlink(self):
+        if not self.env.user._is_admin() and not all(record.channel_id.is_member for record in self):
+            raise AccessError(_('You can not remove this partner from this channel'))
+        return super(ChannelPartner, self).unlink()
 
 
 class Moderation(models.Model):
@@ -151,23 +171,23 @@ class Channel(models.Model):
     @api.constrains('moderator_ids')
     def _check_moderator_email(self):
         if any(not moderator.email for channel in self for moderator in channel.moderator_ids):
-            raise ValidationError("Moderators must have an email address.")
+            raise ValidationError(_("Moderators must have an email address."))
 
     @api.constrains('moderator_ids', 'channel_partner_ids', 'channel_last_seen_partner_ids')
     def _check_moderator_is_member(self):
         for channel in self:
             if not (channel.mapped('moderator_ids.partner_id') <= channel.sudo().channel_partner_ids):
-                raise ValidationError("Moderators should be members of the channel they moderate.")
+                raise ValidationError(_("Moderators should be members of the channel they moderate."))
 
     @api.constrains('moderation', 'email_send')
     def _check_moderation_parameters(self):
         if any(not channel.email_send and channel.moderation for channel in self):
-            raise ValidationError('Only mailing lists can be moderated.')
+            raise ValidationError(_('Only mailing lists can be moderated.'))
 
     @api.constrains('moderator_ids')
     def _check_moderator_existence(self):
         if any(not channel.moderator_ids for channel in self if channel.moderation):
-            raise ValidationError('Moderated channels must have moderators.')
+            raise ValidationError(_('Moderated channels must have moderators.'))
 
     @api.multi
     def _compute_is_member(self):
@@ -218,6 +238,10 @@ class Channel(models.Model):
             vals['image'] = defaults['image']
 
         tools.image_resize_images(vals)
+
+        # always add the current user to the channel
+        vals['channel_partner_ids'] = vals.get('channel_partner_ids', []) + [(4, self.env.user.partner_id.id)]
+
         # Create channel and alias
         channel = super(Channel, self.with_context(
             alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
@@ -254,7 +278,7 @@ class Channel(models.Model):
         # First checks if user tries to modify moderation fields and has not the right to do it.
         if any(key for key in MODERATION_FIELDS if vals.get(key)) and any(self.env.user not in channel.moderator_ids for channel in self if channel.moderation):
             if not self.env.user.has_group('base.group_system'):
-                raise UserError("You do not possess the rights to modify fields related to moderation on one of the channels you are modifying.")
+                raise UserError(_("You do not have the rights to modify fields related to moderation on one of the channels you are modifying."))
 
         tools.image_resize_images(vals)
         result = super(Channel, self).write(vals)
@@ -389,13 +413,13 @@ class Channel(models.Model):
         if moderation_status == 'rejected':
             return self.env['mail.message']
 
-        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
+        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({'is_pinned': True})
 
         message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(message_type=message_type, moderation_status=moderation_status, **kwargs)
 
         # Notifies the message author when his message is pending moderation if required on channel.
         # The fields "email_from" and "reply_to" are filled in automatically by method create in model mail.message.
-        if self.moderation_notify and self.moderation_notify_msg and message_type == 'email' and moderation_status == 'pending_moderation':
+        if self.moderation_notify and self.moderation_notify_msg and message_type in ['email','comment'] and moderation_status == 'pending_moderation':
             self.env['mail.mail'].create({
                 'body_html': self.moderation_notify_msg,
                 'subject': 'Re: %s' % (kwargs.get('subject', '')),
@@ -431,9 +455,9 @@ class Channel(models.Model):
         if self.env.user in self.moderator_ids or self.env.user.has_group('base.group_system'):
             success = self._send_guidelines(self.channel_partner_ids)
             if not success:
-                raise UserError('View "mail.mail_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.')
+                raise UserError(_('View "mail.mail_channel_send_guidelines" was not found. No email has been sent. Please contact an administrator to fix this issue.'))
         else:
-            raise UserError("Only an administrator or a moderator can send guidelines to channel members!")
+            raise UserError(_("Only an administrator or a moderator can send guidelines to channel members!"))
 
     @api.multi
     def _send_guidelines(self, partners):
@@ -718,6 +742,8 @@ class Channel(models.Model):
             :param partner_ids : list of partner id to add
         """
         partners = self.env['res.partner'].browse(partner_ids)
+        self._invite_check_access(partners)
+
         # add the partner
         for channel in self:
             partners_to_add = partners - channel.channel_partner_ids
@@ -736,6 +762,36 @@ class Channel(models.Model):
 
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
+
+    def _invite_check_access(self, partners):
+        """ Check invited partners could match channel access """
+        failed = []
+        if any(channel.public == 'groups' for channel in self):
+            for channel in self.filtered(lambda c: c.public == 'groups'):
+                invalid_partners = [partner for partner in partners if channel.group_public_id not in partner.mapped('user_ids.groups_id')]
+                failed += [(channel, partner) for partner in invalid_partners]
+
+        if failed:
+            raise UserError(
+                _('Following invites are invalid as user groups do not match: %s') %
+                  ', '.join('%s (channel %s)' % (partner.name, channel.name) for channel, partner in failed)
+            )
+
+    def _can_invite(self, partner_id):
+        """Return True if the current user can invite the partner to the channel."""
+        self.ensure_one()
+        sudo_self = self.sudo()
+        if sudo_self.public == 'public':
+            return True
+        if sudo_self.public == 'private':
+            return self.is_member
+
+        # get the user related to the invited partner
+        partner = self.env['res.partner'].browse(partner_id).exists()
+        invited_user_id = partner.user_ids[:1]
+        if invited_user_id:
+            return (self.env.user | invited_user_id) <= sudo_self.group_public_id.users
+        return False
 
     @api.multi
     def notify_typing(self, is_typing, is_website_user=False):
@@ -829,7 +885,6 @@ class Channel(models.Model):
             'name': name,
             'public': privacy,
             'email_send': False,
-            'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")

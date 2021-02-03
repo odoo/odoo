@@ -504,3 +504,37 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         # CASE: clear_caches in product.product write
         variant.attribute_value_ids = False
         self.assertFalse(self.computer._get_variant_id_for_combination(attribute_values))
+
+    def test_unlink_unused_product_template_attributes_values(self):
+        computer = self.env['product.template'].create({
+            'name': "Computer",
+        })
+
+        computer_attribute_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': computer.id,
+            'attribute_id': self.ssd_attribute.id,
+            'value_ids': [(6, 0, self.ssd_256.ids)],
+        })
+
+        template_attribute_values = self.env['product.template.attribute.value'].search([('product_tmpl_id', '=', computer.id)])
+        self.assertEqual(template_attribute_values.mapped('product_attribute_value_id'), self.ssd_256)
+
+        # writing through product
+        computer.write({
+            'attribute_line_ids': [(1, computer_attribute_line.id, {
+                'attribute_id': self.hdd_attribute.id,
+                'value_ids': [(6, 0, self.hdd_1.ids)],
+            })],
+        })
+
+        template_attribute_values = self.env['product.template.attribute.value'].search([('product_tmpl_id', '=', computer.id)])
+        self.assertEqual(template_attribute_values.mapped('product_attribute_value_id'), self.hdd_1)
+
+        # writing through attribute line
+        computer_attribute_line.write({
+            'attribute_id': self.ssd_attribute.id,
+            'value_ids': [(6, 0, self.ssd_256.ids)],
+        })
+
+        template_attribute_values = self.env['product.template.attribute.value'].search([('product_tmpl_id', '=', computer.id)])
+        self.assertEqual(template_attribute_values.mapped('product_attribute_value_id'), self.ssd_256)

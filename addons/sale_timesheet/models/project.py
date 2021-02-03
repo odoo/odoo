@@ -156,7 +156,7 @@ class ProjectTask(models.Model):
     def _compute_sale_order_id(self):
         for task in self:
             if task.billable_type == 'task_rate':
-                task.sale_order_id = task.sale_line_id.order_id or task.project_id.sale_order_id
+                task.sale_order_id = task.sale_line_id.sudo().order_id or task.project_id.sale_order_id
             elif task.billable_type == 'employee_rate':
                 task.sale_order_id = task.project_id.sale_order_id
             elif task.billable_type == 'no':
@@ -176,7 +176,7 @@ class ProjectTask(models.Model):
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
         for task in self:
-            task.is_project_map_empty = not bool(task.project_id.sale_line_employee_ids)
+            task.is_project_map_empty = not bool(task.sudo().project_id.sale_line_employee_ids)
 
     @api.onchange('project_id')
     def _onchange_project(self):
@@ -236,7 +236,8 @@ class ProjectTask(models.Model):
     def _subtask_write_values(self, values):
         result = super(ProjectTask, self)._subtask_write_values(values)
         # changing the partner on a task will reset the sale line of its subtasks
-        if 'partner_id' in result:
+        # if a sale line is not beeing set
+        if 'partner_id' in result and 'sale_line_id' not in result:
             result['sale_line_id'] = False
         elif 'sale_line_id' in result:
             result.pop('sale_line_id')

@@ -57,7 +57,7 @@ except ImportError:
     def phone_format(number, country_code, country_phone_code, always_international=True, raise_exception=True):
         global _phonenumbers_lib_warning
         if not _phonenumbers_lib_warning:
-            _logger.warning(
+            _logger.info(
                 "The `phonenumbers` Python module is not installed, contact numbers will not be "
                 "verified. Please install the `phonenumbers` Python module."
             )

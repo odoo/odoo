@@ -25,7 +25,7 @@
         name="event.event_registration_report_template_badge"
         file="event.event_registration_report_template_badge"
         paperformat="event.paperformat_euro_lowmargin"
-        print_report_name="'Registration Event - %s' % (object.name).replace('/','')"
+        print_report_name="'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
     />
 
      <report

@@ -266,10 +266,13 @@ class LunchOrderLine(models.Model):
 
             template = self.env.ref('lunch.lunch_order_mail_supplier', raise_if_not_found=False)
             ctx = dict(
-                default_composition_mode='mass_mail',
+                default_composition_mode='comment',
                 default_use_template=bool(template),
                 default_template_id=template.id,
                 default_lang=order['supplier'].lang or self.env.user.lang,
+                default_partner_ids=order['supplier'].ids,
+                default_res_id=self.ids[0],
+                default_model=self._name,
                 order=order,
                 lines=lines,
             )

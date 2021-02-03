@@ -96,3 +96,54 @@ class TestAccountVoucher(common.TransactionCase):
         self.assertEquals(vendor_voucher_move.journal_id, cash_journal_id, 'Journal is incorrect on account move.')
         # Check amount in Account move line.
         self.assertEquals(vendor_voucher_move.amount, 1000.0, 'Amount is incorrect in acccount move.')
+
+    def test_different_account_than_default(self):
+        self._load('account', 'test', 'account_minimal_test.xml')
+
+        # User-groups and References
+        cash_journal_id = self.env.ref('account_voucher.cash_journal')
+        sales_journal_id = self.env.ref('account_voucher.sales_journal')
+        account_receivable_id = self.env.ref('account_voucher.a_recv')
+
+        receivable_other = account_receivable_id.copy({
+            'name': 'Other Receivable',
+            'code': '666',
+        })
+
+        income_account = self.env['account.account'].create({
+            'name': 'income',
+            'code': '999',
+            'user_type_id': self.env.ref('account.data_account_type_other_income').id,
+        })
+
+        partner = self.env['res.partner'].create({
+            'name': 'Ian Anderson',
+            'property_account_receivable_id': account_receivable_id.id,
+        })
+
+        voucher = self.env['account.voucher'].create({
+            'voucher_type': 'sale',
+            'partner_id': partner.id,
+            'account_id': receivable_other.id,
+            'journal_id': sales_journal_id.id,
+            'pay_now': 'pay_now',
+            'payment_journal_id': cash_journal_id.id,
+            'line_ids': [(0, False, {
+                'name': 'Test',
+                'quantity': 12.0,
+                'price_unit': 500,
+                'account_id': income_account.id
+            })]
+        })
+
+        # validation
+        voucher.proforma_voucher()
+
+        line_rcv = voucher.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+
+        self.assertEquals(line_rcv.account_id, receivable_other)
+        self.assertTrue(line_rcv.full_reconcile_id.exists())
+
+        self.assertEquals(len(line_rcv.full_reconcile_id.reconciled_line_ids), 2)
+        reconciled_line = line_rcv.full_reconcile_id.reconciled_line_ids - line_rcv
+        self.assertEquals(reconciled_line.account_id, receivable_other)

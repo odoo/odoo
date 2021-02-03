@@ -53,9 +53,9 @@
                                 </td>
                                 <t t-foreach="data['quantities']" t-as="quantity">
                                     <td><strong t-esc="categ_data['prices'][product.id][quantity]"
-                                                t-esc-options="{
-                                                    'widget': 'monetary',
-                                                    'display_currency': data['pricelist'].currency_id}"/>
+                                                t-options="{
+                                                    'widget': 'float',
+                                                    'decimal_precision': 'Product Price'}"/>
                                     </td>
                                 </t>
                             </tr>

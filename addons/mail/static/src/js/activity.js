@@ -176,11 +176,11 @@ var BasicActivity = AbstractField.extend({
                 if (rslt_action) {
                     self.do_action(rslt_action, {
                         on_close: function () {
-                            self.trigger_up('reload');
+                            self.trigger_up('reload', { keepChanges: true });
                         },
                     });
                 } else {
-                    self.trigger_up('reload');
+                    self.trigger_up('reload', { keepChanges: true });
                 }
             }
         );
@@ -319,7 +319,7 @@ var BasicActivity = AbstractField.extend({
                 container: $markDoneBtn,
                 title : _t("Feedback"),
                 html: true,
-                trigger:'click',
+                trigger: 'manual',
                 placement: 'right', // FIXME: this should work, maybe a bug in the popper lib
                 content : function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', { previous_activity_type_id: previousActivityTypeID, force_next: forceNextActivity}));
@@ -333,6 +333,11 @@ var BasicActivity = AbstractField.extend({
                 $popover.find('#activity_feedback').focus();
                 self._bindPopoverFocusout($(this));
             }).popover('show');
+        } else {
+            var popover = $markDoneBtn.data('bs.popover');
+            if ($('#' + popover.tip.id).length === 0) {
+               popover.show();
+            }
         }
     },
     /**
@@ -393,7 +398,7 @@ var BasicActivity = AbstractField.extend({
             },
         };
         return this.do_action(action, { on_close: function () {
-            self.trigger_up('reload');
+            self.trigger_up('reload', { keepChanges: true });
         } });
     },
     /**
@@ -566,7 +571,7 @@ var KanbanActivity = BasicActivity.extend({
      * @private
      */
     _reload: function () {
-        this.trigger_up('reload', { db_id: this.record_id });
+        this.trigger_up('reload', { db_id: this.record_id, keepChanges: true });
     },
     /**
      * @override

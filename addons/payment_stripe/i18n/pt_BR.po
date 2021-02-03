@@ -3,19 +3,24 @@
 # * payment_stripe
 # 
 # Translators:
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2018
 # danimaribeiro <danimaribeiro@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
 # Mateus Lopes <mateus1@gmail.com>, 2018
 # grazziano <gra.negocia@gmail.com>, 2018
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
+# Fernando Colus <fcolus1@gmail.com>, 2020
+# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: grazziano <gra.negocia@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +42,9 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"Um URL relativo ou absoluto que aponta para uma imagem quadrada de sua marca"
+" ou produto. Conforme definido em seu perfil Stripe. Veja: "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -71,7 +79,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "URL de Imagem de Checkout"
 
 #. module: payment_stripe
 #. openerp-web
@@ -102,7 +110,7 @@ msgstr ""
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Configuração Manual"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -122,7 +130,7 @@ msgstr "Método de Pagamento"
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Token de pagamento"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
@@ -134,7 +142,7 @@ msgstr "Transação do Pagamento"
 #: code:addons/payment_stripe/static/src/js/stripe.js:59
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "Erro de Pagamento"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
@@ -148,6 +156,8 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"Talvez o problema possa ser resolvido verificando novamente os detalhes do "
+"cartão de crédito ou entrando em contato com o banco."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
@@ -162,23 +172,23 @@ msgstr "Sips"
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Chave pública Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Secret Key"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "Stripe nos deu as seguintes informações sobre o problema: '%s'"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:184
@@ -190,13 +200,19 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
+msgstr "Stripe: nenhum pedido encontrado para referência %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:260
+#, python-format
+msgid "Stripe: no payment token was provided or the token creation failed."
 msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:170
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
+msgstr "Lamentamos informar que a transação falhou."
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0

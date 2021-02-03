@@ -107,3 +107,10 @@ class ProductProduct(models.Model):
             'graph_measure': 'product_uom_qty',
         }
         return action
+
+    def _is_phantom_bom(self):
+        self.ensure_one()
+        boms = self.sudo().bom_ids
+        if boms and boms[0].type == 'phantom':
+            return True
+        return super(ProductProduct, self)._is_phantom_bom()

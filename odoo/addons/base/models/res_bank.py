@@ -2,7 +2,7 @@
 
 import re
 
-import collections
+from collections.abc import Iterable
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -117,7 +117,7 @@ class ResPartnerBank(models.Model):
             if args[pos][0] == 'acc_number':
                 op = args[pos][1]
                 value = args[pos][2]
-                if not isinstance(value, pycompat.string_types) and isinstance(value, collections.Iterable):
+                if not isinstance(value, pycompat.string_types) and isinstance(value, Iterable):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)
@@ -139,11 +139,6 @@ class ResPartnerBank(models.Model):
     @api.multi
     def _validate_qr_code_arguments(self):
         for bank in self:
-            if bank.currency_id.name == False:
-                currency = bank.company_id.currency_id
-            else:
-                currency = bank.currency_id
             bank.qr_code_valid = (bank.bank_bic
                                             and bank.company_id.name
-                                            and bank.acc_number
-                                            and (currency.name == 'EUR'))
+                                            and bank.acc_number)

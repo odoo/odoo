@@ -122,6 +122,8 @@ var utils = {
             // formatterCallback seems useless here.
             return number + 'e' + numberMagnitude;
         }
+        var sign = Math.sign(number);
+        number = Math.abs(number);
         for (var i = val.length; i > 0 ; i--) {
             var s = Math.pow(10, i * 3);
             if (s <= number / Math.pow(10, minDigits - 1)) {
@@ -130,6 +132,7 @@ var utils = {
                 break;
             }
         }
+        number = sign * number;
         return formatterCallback('' + number) + symbol;
     },
     /**
@@ -292,7 +295,15 @@ var utils = {
      * @param {Number} decimals the number of decimals. eg: round_decimals(3.141592,2) -> 3.14
      */
     round_decimals: function (value, decimals) {
-        return utils.round_precision(value, Math.pow(10,-decimals));
+        /**
+         * The following decimals introduce numerical errors:
+         * Math.pow(10, -4) = 0.00009999999999999999
+         * Math.pow(10, -5) = 0.000009999999999999999
+         *
+         * Such errors will propagate in round_precision and lead to inconsistencies between Python
+         * and JavaScript. To avoid this, we parse the scientific notation.
+         */
+        return utils.round_precision(value, parseFloat('1e' + -decimals));
     },
     /**
      * performs a half up rounding with arbitrary precision, correcting for float loss of precision
@@ -309,7 +320,7 @@ var utils = {
         }
         var normalized_value = value / precision;
         var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
-        var epsilon = Math.pow(2, epsilon_magnitude - 53);
+        var epsilon = Math.pow(2, epsilon_magnitude - 52);
         normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
 
         /**

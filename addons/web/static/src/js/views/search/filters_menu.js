@@ -78,7 +78,7 @@ var FiltersMenu = DropdownMenu.extend({
      * @private
      */
     start: function () {
-        this.$menu = this.$('.o_dropdown_menu');
+        this._super.apply(this, arguments);
         this.$menu.addClass('o_filters_menu');
         var generatorMenu = QWeb.render('FiltersMenuGenerator', {widget: this});
         this.$menu.append(generatorMenu);
@@ -203,6 +203,9 @@ var FiltersMenu = DropdownMenu.extend({
                 .toggleClass('o_closed_menu', !self.generatorMenuIsOpen)
                 .toggleClass('o_open_menu', self.generatorMenuIsOpen);
             self.$('.o_add_filter_menu').toggle();
+            // Reposition the Popper, since we have added element in it
+            // https://getbootstrap.com/docs/4.0/components/dropdowns/#methods
+            self.$dropdownReference.dropdown('update');
         });
     },
 

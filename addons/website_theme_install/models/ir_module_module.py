@@ -165,6 +165,8 @@ class IrModuleModule(models.Model):
                         # at update, ignore active field
                         if 'active' in rec_data:
                             rec_data.pop('active')
+                        if model_name == 'ir.ui.view' and (not find.arch_fs or find.arch == rec_data['arch']):
+                            rec_data.pop('arch')
                         find.update(rec_data)
                         self._post_copy(rec, find)
                 else:
@@ -193,7 +195,6 @@ class IrModuleModule(models.Model):
                                 ON CONFLICT DO NOTHING""",
                              (dst_field, new_rec.id, src_field, old_rec.id))
 
-
     @api.multi
     def _theme_load(self, website):
         """
@@ -208,9 +209,6 @@ class IrModuleModule(models.Model):
             for model_name in self._theme_model_names:
                 module._update_records(model_name, website)
 
-            # reload registry to check if 'theme.utils'._<theme_name>_post_copy exists
-            self.env.reset()
-            self = self.env()[self._name].browse(self.id)
             self.env['theme.utils']._post_copy(module, website)
 
     @api.multi

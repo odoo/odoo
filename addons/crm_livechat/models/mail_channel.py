@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
-from odoo.tools import html2plaintext
+from odoo.tools import html2plaintext, html_escape
 
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
@@ -33,5 +33,5 @@ class MailChannel(models.Model):
                 'referred': partner.name
             })
             lead._onchange_partner_id()
-            msg = _('Created a new lead: <a href="#" data-oe-id="%s" data-oe-model="crm.lead">%s</a>') % (lead.id, lead.name)
+            msg = _('Created a new lead: <a href="#" data-oe-id="%s" data-oe-model="crm.lead">%s</a>') % (lead.id, html_escape(lead.name))
         self._send_transient_message(partner, msg)

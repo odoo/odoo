@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="PosTicket">
+        <t t-jquery='.receipt-total' t-operation='append'>
+          <t t-if="order.get_rounding_applied()">
+              <tr class="emph">
+                  <td>ROUNDED:</td>
+                  <td class="pos-right-align">
+                      <t t-esc="widget.format_currency(order.get_total_with_tax() + order.get_rounding_applied())"/>
+                  </td>
+              </tr>
+          </t>
+        </t>
+    </t>
+    <t t-extend="XmlReceipt">
+        <t t-jquery='.total' t-operation='after'>
+            <t t-if="receipt.rounding_applied">
+                <line class='total' size='double-height'>
+                    <left><pre>      ROUNDED</pre></left>
+                    <right><t t-esc='widget.format_currency(receipt.total_rounded)' /></right>
+                </line>
+            </t>
+        </t>
+    </t>
+    <t t-extend="PaymentScreen-Paymentlines">
+        <t t-jquery='.paymentlines-empty > .total' t-operation='replace'>
+            <div class='total'>
+                <t t-esc="widget.format_currency(order.get_total_with_tax() + order.get_rounding_applied())"/>
+            </div>
+        </t>
+    </t>
+</templates>

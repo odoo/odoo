@@ -59,8 +59,13 @@ class Image(models.AbstractModel):
         elif options.get('zoom'):
             src_zoom = options['zoom']
 
+        itemprop = None
+        if options.get('itemprop'):
+            itemprop = options['itemprop']
+
         atts = OrderedDict()
         atts["src"] = src
+        atts["itemprop"] = itemprop
         atts["class"] = classes
         atts["style"] = options.get('style')
         atts["alt"] = alt

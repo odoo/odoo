@@ -223,7 +223,7 @@ QUnit.test('unescape channel name in the sidebar', function (assert) {
             channel_channel: [{
                 id: 1,
                 channel_type: "channel",
-                name: "R&amp;D",
+                name: "R&D",
             }],
         },
     };

@@ -3,18 +3,18 @@
 # * payment_stripe
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # hoxhe Aits <hoxhe0@gmail.com>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
-# Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,26 +36,28 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"رابط ويب نسبي أو مطلق يشير لصورة مربعة لعلامتك التجارية أو منتجك. كما قمت "
+"بتعريفه في ملفك الشخصي على Stripe. راجع: https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "رمز التحقق من البطاقة"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -65,12 +67,12 @@ msgstr "رقم البطاقة"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "اسم حامل البطاقة"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "رابط صورة تسجيل الخروج"
 
 #. module: payment_stripe
 #. openerp-web
@@ -89,39 +91,39 @@ msgstr "خطأ"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "تنتهي صلاحيته في (MM / YY)"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:33
 #, python-format
 msgid "Just one more second, confirming your payment..."
-msgstr ""
+msgstr "برجاء الانتظار لثوانٍ، جاري تأكيد دفعتك..."
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "الإعدادات اليدوية"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "طريقة السداد الإلكتروني"
+msgstr "معالج السداد"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "كلمة سر السداد"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
@@ -133,12 +135,12 @@ msgstr "معاملة السداد"
 #: code:addons/payment_stripe/static/src/js/stripe.js:59
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "خطأ في عملية السداد"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr "المستحق"
+msgstr "Paypal"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:174
@@ -147,6 +149,8 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"ربما يمكن حل المشكلة بالتحقق من بيانات بطاقتك الائتمانية، أو التواصل مع "
+"البنك؟"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
@@ -156,48 +160,54 @@ msgstr "المزود"
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "مفتاح Stripe القابل للنشر"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "مفتاح Stripe السري"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "أرسل إلينا Stripe هذه المعلومات عن المشكلة: '%s'"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:184
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "Stripe: تم العثور على %s طلبات لرقم الإشارة %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
+msgstr "Stripe: لم يُعثر على طلبات لرقم الإشارة %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:260
+#, python-format
+msgid "Stripe: no payment token was provided or the token creation failed."
 msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:170
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
+msgstr "نأسف لإبلاغكم بفشل المعاملة."
 
 #. module: payment_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "تحويل بنكي"

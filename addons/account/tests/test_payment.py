@@ -34,6 +34,8 @@ class TestPayment(AccountingTestCase):
         self.bank_journal_euro = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
         self.account_eur = self.bank_journal_euro.default_debit_account_id
 
+        self.cash_journal_euro = self.env['account.journal'].create({'name': 'Cash', 'type': 'cash', 'code': 'CASH'})
+
         self.bank_journal_usd = self.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': self.currency_usd_id})
         self.account_usd = self.bank_journal_usd.default_debit_account_id
 
@@ -91,6 +93,7 @@ class TestPayment(AccountingTestCase):
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
         })
         register_payments.create_payments()
         payment = self.payment_model.search([], order="id desc", limit=1)
@@ -249,6 +252,7 @@ class TestPayment(AccountingTestCase):
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
+            'group_invoices': True,
         })
 
         # Perform the partial payment by setting the amount at 300 instead of 500
@@ -570,7 +574,7 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment_two.mapped('move_line_ids.move_id.state'), ['draft'], "A posted payment (payment_two) in a bank journal with the 'post at bank reconciliation' option activated should correspond to a draft account.move")
 
         # Reconcile the two payments with an invoice, whose full amount is equal to their sum
-        invoice = self.create_invoice(amount=53, partner=self.partner_agrolait.id)
+        invoice = self.create_invoice(amount=53, partner=self.partner_agrolait.id, account_id=self.partner_agrolait.property_account_receivable_id.id)
         (payment_one.move_line_ids + payment_two.move_line_ids + invoice.move_id.line_ids).filtered(lambda x: x.account_id.user_type_id.type == 'receivable').reconcile()
 
         self.assertTrue(invoice.reconciled, "Invoice should have been reconciled with the payments")
@@ -603,6 +607,7 @@ class TestPayment(AccountingTestCase):
 
         batch_payment = self.env['account.register.payments'].with_context(active_ids=(inv1 + inv2).ids).create({
             'amount': 70,
+            'group_invoices': True,
             'partner_id': inv1.partner_id.id,
             'journal_id': self.bank_journal_usd.id,
             'invoice_ids': [(6, False, (inv1 + inv2).ids)],
@@ -629,3 +634,184 @@ class TestPayment(AccountingTestCase):
         )
         write_off_line = payment_id.move_line_ids.filtered(lambda l: l.account_id == payment_id.writeoff_account_id)
         self.assertEqual(write_off_line.debit, 10)
+
+    def test_payment_cancel_keep_name(self):
+        self.bank_journal_euro.update_posted = True
+
+        payment = self.payment_model.create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.payment_method_manual_in.id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'journal_id': self.bank_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
+        name = payment.move_line_ids.mapped('move_id').name
+        self.assertTrue(name)
+
+        payment.cancel()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
+        payment.action_draft()
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
+        self.assertEqual(name, payment.move_line_ids.mapped('move_id').name)
+
+    def test_payment_transfer_cancel_keep_names(self):
+        self.bank_journal_euro.update_posted = True
+        self.cash_journal_euro.update_posted = True
+
+        payment = self.payment_model.create({
+            'payment_type': 'transfer',
+            'payment_method_id': self.payment_method_manual_out.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'destination_journal_id': self.cash_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
+
+        all_moves = payment.move_line_ids.mapped('move_id')
+        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
+        transfer_move = all_moves - move
+        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
+
+        name = move.name
+        transfer_name = transfer_move.name
+        self.assertTrue(name)
+        self.assertTrue(transfer_name)
+        self.assertNotEqual(name, transfer_name)
+
+        reconciled_lines = payment.move_line_ids.filtered(lambda l: l.reconciled)
+        self.assertEqual(len(reconciled_lines), 2)
+        self.assertEqual(reconciled_lines.mapped('move_id'), all_moves)
+
+        reconciled_lines.remove_move_reconcile()
+        payment.cancel()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
+        payment.action_draft()
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
+
+        all_moves = payment.move_line_ids.mapped('move_id')
+        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
+        transfer_move = all_moves - move
+        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
+
+        self.assertEqual(name, move.name)
+        self.assertEqual(transfer_name, transfer_move.name)
+
+    def test_payment_cancel_to_transfer(self):
+        self.bank_journal_euro.update_posted = True
+
+        payment = self.payment_model.create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.payment_method_manual_in.id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'journal_id': self.bank_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 1)
+        name = payment.move_line_ids.mapped('move_id').name
+        self.assertTrue(name)
+
+        payment.cancel()
+        self.assertFalse(payment.move_line_ids.mapped('move_id'))
+        payment.action_draft()
+
+        payment.write({
+            'payment_type': 'transfer',
+            'payment_method_id': self.payment_method_manual_out.id,
+            'partner_id': False,
+            'destination_journal_id': self.cash_journal_euro.id,
+        })
+
+        payment.post()
+        self.assertEqual(len(payment.move_line_ids.mapped('move_id')), 2)
+
+        all_moves = payment.move_line_ids.mapped('move_id')
+        move = all_moves.filtered(lambda m: m.journal_id == self.bank_journal_euro)
+        transfer_move = all_moves - move
+        self.assertEqual(transfer_move.journal_id, self.cash_journal_euro)
+
+        self.assertEqual(name, move.name)
+        self.assertTrue(transfer_move.name)
+        self.assertNotEqual(name, transfer_move.name)
+
+    def test_partial_payment_inv_foreign_payment_domestic(self):
+        """
+            Invoice of 1000$ (foreign $) at 01/01 with foreign exchange rate of 0.50000
+            Payment of 500 (domestic €) at 15/01 with foreign exchange rate of 1.00000
+            The residuals should be 500 in foreign and 1500 in domestic.
+        """
+        company = self.env.ref('base.main_company')
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-01-01',
+            'rate': 1.0,
+            'currency_id': self.currency_eur_id,
+            'company_id': company.id
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-01-01',
+            'rate': 0.5,  # Don't change this !
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-01-15',
+            'rate': 1.0,  # Don't change this !
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        inv1 = self.invoice_model.create({
+            'partner_id': self.partner_agrolait.id,
+            'currency_id': self.currency_usd_id,
+            'name': 'out_invoice',
+            'account_id': self.partner_agrolait.property_account_receivable_id.id,
+            'type': 'out_invoice',
+            'date_invoice': time.strftime('%Y') + '-01-01',
+        })
+        self.invoice_line_model.create({
+            'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': 1000,
+            'invoice_id': inv1.id,
+            'name': 'something',
+            'account_id': self.account_revenue.id,
+        })
+        inv1.action_invoice_open()
+        payment = self.env['account.payment'].create({
+            'payment_date': time.strftime('%Y') + '-01-15',
+            'payment_method_id': self.payment_method_manual_in.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': inv1.partner_id.id,
+            'amount': 500,
+            'journal_id': self.bank_journal_euro.id,
+            'company_id': company.id,
+            'currency_id': self.currency_eur_id,
+        })
+        payment.post()
+        inv1_receivable = inv1.move_id.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+        pay_receivable = payment.move_line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
+
+        self.assertEqual(inv1_receivable.balance, 2000)
+        self.assertEqual(pay_receivable.balance, -500)
+
+        (inv1_receivable + pay_receivable).reconcile()
+        self.assertEquals(inv1.residual, 500)
+        self.assertEquals(inv1.residual_company_signed, 1500)

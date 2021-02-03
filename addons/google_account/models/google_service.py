@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from pprint import pformat
 import json
 import logging
 
@@ -145,7 +144,7 @@ class GoogleService(models.TransientModel):
         except requests.HTTPError as error:
             if error.response.status_code == 400:  # invalid grant
                 with registry(request.session.db).cursor() as cur:
-                    self.env(cur)['res.users'].browse(self.env.uid).write({'google_%s_rtoken' % service: False})
+                    self.env(cur)['res.users'].browse(self.env.uid).sudo().write({'google_%s_rtoken' % service: False})
             error_key = error.response.json().get("error", "nc")
             _logger.exception("Bad google request : %s !", error_key)
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]") % error_key
@@ -184,17 +183,14 @@ class GoogleService(models.TransientModel):
             except:
                 pass
         except requests.HTTPError as error:
-            # https://developers.google.com/calendar/v3/errors
             if error.response.status_code in (204, 404):
                 status = error.response.status_code
                 response = ""
             else:
-                req = json.loads(error.request.body or 'null')
-                res = error.response.json()
-                _logger.exception("Error while requesting Google Services\nRequest:\n%s\nResponse:\n%s", pformat(req), pformat(res))
+                _logger.exception("Bad google request : %s !", error.response.content)
                 if error.response.status_code in (400, 401, 410):
-                    raise UserError(_("Error while requesting Google Services: %s") % res['error']['message'])
-                raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google: %s") % res['error']['message'])
+                    raise error
+                raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google"))
         return (status, response, ask_time)
 
     # TODO : remove me, it is only used in google calendar. Make google_calendar use the constants

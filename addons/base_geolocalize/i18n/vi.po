@@ -3,15 +3,17 @@
 # * base_geolocalize
 # 
 # Translators:
-# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +46,11 @@ msgid ""
 "                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
 "                          "
 msgstr ""
+"Yêu cầu khóa API cho GeoCoding (Places).\n"
+"\n"
+"                          Lưu thông tin này ở mục Thông số hệ thống vào các trường sau: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:28
@@ -52,6 +59,8 @@ msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
 msgstr ""
+"Không thể kết nối đến máy chủ định vị vị trí. Hãy đảm bảo đường truyền của "
+"bạn vẫn hoạt động (%s)."
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner
@@ -62,13 +71,13 @@ msgstr "Liên hệ"
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_latitude
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_latitude
 msgid "Geo Latitude"
-msgstr "Vĩ độ Địa lý"
+msgstr "Vĩ độ địa lý"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__partner_longitude
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__partner_longitude
 msgid "Geo Longitude"
-msgstr "Kinh độ Địa lý"
+msgstr "Kinh độ địa lý"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -78,15 +87,37 @@ msgstr "Định vị"
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
-msgstr "Vị trí Địa lý"
+msgstr "Vị trí địa lý"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner__date_localization
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_users__date_localization
 msgid "Geolocation Date"
-msgstr "Ngày xác định Vị trí"
+msgstr "Ngày xác định vị trí"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
-msgstr "Phân công Đối tác"
+msgstr "Phân công đối tác"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:33
+#, python-format
+msgid ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+"error_message"
+msgstr ""
+"Không thể định vị địa lý, lỗi nhận được:\n"
+"%s\n"
+"\n"
+"Google đã biến điều này thành một tính năng trả phí.\n"
+"Trước tiên, bạn nên kích hoạt thanh toán trên tài khoản Google của mình.\n"
+"Sau đó, truy cập Developer Console, và kích hoạt APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+"error_message"

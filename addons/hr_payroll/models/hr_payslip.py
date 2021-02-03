@@ -82,12 +82,23 @@ class HrPayslip(models.Model):
             raise ValidationError(_("Payslip 'Date From' must be earlier 'Date To'."))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        rec = super(HrPayslip, self).copy(default)
+        for l in self.input_line_ids:
+            l.copy({'payslip_id': rec.id})
+        for l in self.line_ids:
+            l.copy({'slip_id': rec.id, 'input_ids': []})
+        return rec
+
+    @api.multi
     def action_payslip_draft(self):
         return self.write({'state': 'draft'})
 
     @api.multi
     def action_payslip_done(self):
-        self.compute_sheet()
+        if not self.env.context.get('without_compute_sheet'):
+            self.compute_sheet()
         return self.write({'state': 'done'})
 
     @api.multi
@@ -100,8 +111,9 @@ class HrPayslip(models.Model):
     def refund_sheet(self):
         for payslip in self:
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
-            copied_payslip.compute_sheet()
-            copied_payslip.action_payslip_done()
+            number = copied_payslip.number or self.env['ir.sequence'].next_by_code('salary.slip')
+            copied_payslip.write({'number': number})
+            copied_payslip.with_context(without_compute_sheet=True).action_payslip_done()
         formview_ref = self.env.ref('hr_payroll.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll.view_hr_payslip_tree', False)
         return {
@@ -177,7 +189,7 @@ class HrPayslip(models.Model):
             tz = timezone(calendar.tz)
             day_leave_intervals = contract.employee_id.list_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
             for day, hours, leave in day_leave_intervals:
-                holiday = leave.holiday_id
+                holiday = leave[:1].holiday_id
                 current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
                     'name': holiday.holiday_status_id.name or _('Global Leaves'),
                     'sequence': 5,
@@ -234,7 +246,12 @@ class HrPayslip(models.Model):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
+
+            if category.code in localdict['categories'].dict:
+                localdict['categories'].dict[category.code] += amount
+            else:
+                localdict['categories'].dict[category.code] = amount
+
             return localdict
 
         class BrowsableObject(object):
@@ -584,3 +601,11 @@ class HrPayslipRun(models.Model):
     @api.multi
     def close_payslip_run(self):
         return self.write({'state': 'close'})
+    
+    @api.multi
+    def unlink(self):
+        if any(self.filtered(lambda payslip_run: payslip_run.state not in ('draft'))):
+            raise UserError(_('You cannot delete a payslip batch which is not draft!'))
+        if any(self.mapped('slip_ids').filtered(lambda payslip: payslip.state not in ('draft','cancel'))):
+            raise UserError(_('You cannot delete a payslip which is not draft or cancelled!'))
+        return super(HrPayslipRun, self).unlink()

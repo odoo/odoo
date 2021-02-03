@@ -10,6 +10,7 @@ from lxml import etree
 import math
 
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
+from odoo.tools.misc import babel_locale_parse
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -232,7 +233,7 @@ class DateTimeConverter(models.AbstractModel):
         if not value:
             return ''
         lang = self.user_lang()
-        locale = babel.Locale.parse(lang.code)
+        locale = babel_locale_parse(lang.code)
 
         if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
@@ -477,14 +478,14 @@ class FloatTimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        sign = math.copysign(1.0, value)
         hours, minutes = divmod(abs(value) * 60, 60)
         minutes = round(minutes)
         if minutes == 60:
             minutes = 0
             hours += 1
-        return '%02d:%02d' % (sign * hours, minutes)
-
+        if value < 0:
+            return '-%02d:%02d' % (hours, minutes)
+        return '%02d:%02d' % (hours, minutes)
 
 class DurationConverter(models.AbstractModel):
     """ ``duration`` converter, to display integral or fractional values as
@@ -521,7 +522,7 @@ class DurationConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         units = dict(TIMEDELTA_UNITS)
 
-        locale = babel.Locale.parse(self.user_lang().code)
+        locale = babel_locale_parse(self.user_lang().code)
         factor = units[options.get('unit', 'second')]
         round_to = units[options.get('round', 'second')]
 
@@ -574,7 +575,7 @@ class RelativeDatetimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        locale = babel.Locale.parse(self.user_lang().code)
+        locale = babel_locale_parse(self.user_lang().code)
 
         if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
@@ -604,7 +605,7 @@ class BarcodeConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(BarcodeConverter, self).get_available_options()
         options.update(
-            type=dict(type='string', string=_('Barcode type'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
+            symbology=dict(type='string', string=_('Barcode symbology'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
             width=dict(type='integer', string=_('Width'), default_value=600),
             height=dict(type='integer', string=_('Height'), default_value=100),
             humanreadable=dict(type='integer', string=_('Human Readable'), default_value=0),
@@ -613,9 +614,9 @@ class BarcodeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options=None):
-        barcode_type = options.get('type', 'Code128')
+        barcode_symbology = options.get('symbology', 'Code128')
         barcode = self.env['ir.actions.report'].barcode(
-            barcode_type,
+            barcode_symbology,
             value,
             **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable']})
         return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')

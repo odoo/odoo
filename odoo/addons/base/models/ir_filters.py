@@ -69,7 +69,7 @@ class IrFilters(models.Model):
         # and filters for the action (action_id=action_id) or global (action_id=NULL)
         action_domain = self._get_action_domain(action_id)
         filters = self.search(action_domain + [('model_id', '=', model), ('user_id', 'in', [self._uid, False])])
-        user_context = self.env.user.context_get()
+        user_context = self.env['res.users'].context_get()
         return filters.with_context(user_context).read(['name', 'is_default', 'domain', 'context', 'user_id', 'sort'])
 
     @api.model

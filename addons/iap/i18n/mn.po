@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Minj P <pminj322@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:05+0000\n"
-"PO-Revision-Date: 2018-10-02 10:05+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2019-08-08 13:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Minj P <pminj322@gmail.com>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,26 +23,26 @@ msgstr ""
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Account Information"
-msgstr ""
+msgstr "Дансны мэдээлэл"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
 msgid "Account Token"
-msgstr ""
+msgstr "Дансны токен"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Buy credits at Odoo"
-msgstr ""
+msgstr "Odoo-оос нэгж авах"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:41
 #, python-format
 msgid "Buy more credits"
-msgstr ""
+msgstr "Нэмж нэгж авах"
 
 #. module: iap
 #. openerp-web
@@ -54,7 +56,7 @@ msgstr "Цуцлах"
 #: code:addons/iap/static/src/xml/iap_templates.xml:28
 #, python-format
 msgid "Checking remaining credit ..."
-msgstr ""
+msgstr "Үлдэгдэл нэгжийг шалгаж байна ..."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_id
@@ -79,20 +81,20 @@ msgstr "Дэлгэцийн Нэр"
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
 msgid "IAP"
-msgstr ""
+msgstr "IAP"
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
 #: model:ir.model,name:iap.model_iap_account
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
-msgstr ""
+msgstr "IAP данс"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_account_menu
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "IAP Accounts"
-msgstr ""
+msgstr "IAP данс"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -104,28 +106,28 @@ msgstr "ID"
 #: code:addons/iap/static/src/xml/iap_templates.xml:21
 #, python-format
 msgid "In-App Purchases"
-msgstr ""
+msgstr "In-App Purchases"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:51
 #, python-format
 msgid "Insufficient Balance"
-msgstr ""
+msgstr "Үлдэгдэл хүрэлцэхгүй"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:31
 #, python-format
 msgid "Insufficient credit"
-msgstr ""
+msgstr "Нэгж хүрэлцэхгүй байна"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:14
 #, python-format
 msgid "Insufficient credit to perform this service."
-msgstr ""
+msgstr "Энэ үйлчилгээг үзүүлэхэд шаардлагатай нэгж хүрэлцэхгүй байна."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
@@ -147,30 +149,40 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #: code:addons/iap/static/src/xml/iap_templates.xml:34
 #, python-format
 msgid "Remaining :"
-msgstr ""
+msgstr "Үлдэгдэл:"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
 msgid "Service Name"
-msgstr ""
+msgstr "Үйлчилгээний нэр:"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr ""
+msgstr "Odoo системийг туршиж эхлэх"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:37
 #, python-format
 msgid "Temporarily unavailable"
+msgstr "Түр хугацаанд ашиглах боломжгүй"
+
+#. module: iap
+#: code:addons/iap/models/iap.py:72
+#, python-format
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author the app. The url it tried to contact was %s"
 msgstr ""
+"Энэ үйлчилгээний хүсэлтийг илгээх url нь алдаатай байна. Та энэ аппын "
+"зохиогчтой нь холбогдоно уу. Таны илгээсэн url: %s"
 
 #. module: iap
 #. openerp-web
 #: code:addons/iap/static/src/xml/iap_templates.xml:34
 #, python-format
 msgid "credits"
-msgstr ""
+msgstr "нэгж"

@@ -3,14 +3,13 @@
 
 from lxml import etree
 import io
-import unittest
 
-from odoo.tests.common import tagged
+from odoo.tests.common import BaseCase
 from odoo.tools.view_validation import (
     valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
     valid_type_in_col, valid_att_in_field, valid_att_in_label,
     valid_field_in_graph, valid_field_in_tree, valid_alternative_image_text,
-    valid_alternative_icon_text, valid_title_icon, valid_simili_button,
+    valid_simili_button,
     valid_simili_progressbar, valid_dialog, valid_simili_dropdown,
     valid_focusable_button, valid_prohibited_none_role, valid_simili_tabpanel,
     valid_simili_tab, valid_simili_tablist, valid_alerts
@@ -131,8 +130,7 @@ valid_tree = etree.parse(io.BytesIO(b'''\
 ''')).getroot()
 
 
-@tagged('standard', 'at_install')
-class TestViewValidation(unittest.TestCase):
+class TestViewValidation(BaseCase):
     """ Test the view validation code (but not the views themselves). """
 
     def test_page_validation(self):
@@ -169,10 +167,6 @@ class TestViewValidation(unittest.TestCase):
     def test_a11y_validation(self):
         assert valid_alternative_image_text(invalid_form) == "Warning"
         assert valid_alternative_image_text(valid_form) is True
-        assert valid_alternative_icon_text(invalid_form) == "Warning"
-        assert valid_alternative_icon_text(valid_form) is True
-        assert valid_title_icon(invalid_form) == "Warning"
-        assert valid_title_icon(valid_form) is True
         assert valid_simili_button(invalid_form) == "Warning"
         assert valid_simili_button(valid_form) is True
         assert valid_dialog(invalid_form) == "Warning"

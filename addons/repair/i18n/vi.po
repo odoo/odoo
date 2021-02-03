@@ -8,8 +8,8 @@
 # son dang <son.dang@doda100.com>, 2018
 # Minh Nguyen <ndminh210994@gmail.com>, 2018
 # khoibv Mr <kendev2009@gmail.com>, 2018
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
 # Duy BQ <duybq86@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -223,6 +223,8 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Chọn đối tác mà đơn hàng sẽ được lên công nợ và giao hàng. Bạn có thể tìm "
+"một đối tác bằng Tên, MST, Email hoặc Mã nội bộ."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
@@ -262,7 +264,7 @@ msgstr "Tạo Hoá đơn"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "Tạo công nợ (sửa chữa)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -626,20 +628,20 @@ msgstr "Không có tài khoản được xác định cho sản phẩm \"%s\"."
 #: code:addons/repair/models/repair.py:658
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "Không thấy có bảng giá hợp lệ."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:355
 #, python-format
 msgid "No product defined on fees."
-msgstr ""
+msgstr "Không có sản phẩm phí."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:605
 #: code:addons/repair/models/repair.py:665
 #, python-format
 msgid "No valid pricelist line found."
-msgstr ""
+msgstr "Không thấy có bảng giá hợp lệ."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -675,7 +677,7 @@ msgstr "Số thông điệp chưa đọc"
 #: code:addons/repair/models/repair.py:232
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr ""
+msgstr "Chỉ có thể xác nhận phiếu sửa nháp."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
@@ -811,7 +813,7 @@ msgstr "Sửa chữa"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "Phí sửa"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -821,7 +823,7 @@ msgstr "Hạng mục sửa chữa"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr ""
+msgstr "Hạng mục sửa chữa (bộ phận)"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -1016,6 +1018,8 @@ msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
 msgstr ""
+"Đơn vị đo lường sản phẩm mà bạn chọn có một nhóm khác với đơn vị trên form "
+"sản phẩm."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:246
@@ -1045,7 +1049,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "Đây là vị trí mà sản phẩm cần sửa chữa được đặt."
 
 #. module: repair
 #: selection:repair.order,state:0
@@ -1127,7 +1131,7 @@ msgstr "Tổng tiền trước thuế"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "Cảnh báo không đủ số lượng sửa chữa"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:172
@@ -1171,4 +1175,4 @@ msgstr ""
 #: code:addons/repair/models/repair.py:296
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
+msgstr "Bạn phải chọn địa chỉ hóa đơn thanh toán trên mẫu sửa."

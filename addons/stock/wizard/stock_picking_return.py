@@ -45,7 +45,13 @@ class ReturnPicking(models.TransientModel):
             res.update({'picking_id': picking.id})
             if picking.state != 'done':
                 raise UserError(_("You may only return Done pickings."))
+            # In case we want to set specific default values (e.g. 'to_refund'), we must fetch the
+            # default values for creation.
+            line_fields = [f for f in self.env['stock.return.picking.line']._fields.keys()]
+            product_return_moves_data_tmpl = self.env['stock.return.picking.line'].default_get(line_fields)
             for move in picking.move_lines:
+                if move.state == 'cancel':
+                    continue
                 if move.scrapped:
                     continue
                 if move.move_dest_ids:
@@ -53,7 +59,14 @@ class ReturnPicking(models.TransientModel):
                 quantity = move.product_qty - sum(move.move_dest_ids.filtered(lambda m: m.state in ['partially_available', 'assigned', 'done']).\
                                                   mapped('move_line_ids').mapped('product_qty'))
                 quantity = float_round(quantity, precision_rounding=move.product_uom.rounding)
-                product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id, 'uom_id': move.product_id.uom_id.id}))
+                product_return_moves_data = dict(product_return_moves_data_tmpl)
+                product_return_moves_data.update({
+                    'product_id': move.product_id.id,
+                    'quantity': quantity,
+                    'move_id': move.id,
+                    'uom_id': move.product_id.uom_id.id,
+                })
+                product_return_moves.append((0, 0, product_return_moves_data))
 
             if not product_return_moves:
                 raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)."))
@@ -124,8 +137,22 @@ class ReturnPicking(models.TransientModel):
                 # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
                 # +--------------------------------------------------------------------------------------------------------+
                 move_orig_to_link = return_line.move_id.move_dest_ids.mapped('returned_move_ids')
+                # link to original move
+                move_orig_to_link |= return_line.move_id
+                # link to siblings of original move, if any
+                move_orig_to_link |= return_line.move_id\
+                    .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))\
+                    .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))
                 move_dest_to_link = return_line.move_id.move_orig_ids.mapped('returned_move_ids')
-                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link | return_line.move_id]
+                # link to children of originally returned moves, if any. Note that the use of
+                # 'return_line.move_id.move_orig_ids.returned_move_ids.move_orig_ids.move_dest_ids'
+                # instead of 'return_line.move_id.move_orig_ids.move_dest_ids' prevents linking a
+                # return directly to the destination moves of its parents. However, the return of
+                # the return will be linked to the destination moves.
+                move_dest_to_link |= return_line.move_id.move_orig_ids.mapped('returned_move_ids')\
+                    .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))\
+                    .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))
+                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link]
                 vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
                 r.write(vals)
         if not returned_lines:

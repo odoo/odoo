@@ -137,7 +137,7 @@ var DateTimePicker = function ($, moment) {
             previous: 'fa fa-chevron-left',
             next: 'fa fa-chevron-right',
             today: 'fa fa-calendar-check-o',
-            clear: 'fa fa-delete',
+            clear: 'fa fa-trash',
             close: 'fa fa-times'
         },
         tooltips: {
@@ -2777,7 +2777,8 @@ var TempusDominusBootstrap4 = function ($) {
         if ($target.length === 0) {
             return;
         }
-        if (!config._options.allowInputToggle) {
+        // /!\ ODOO FIX: check on 'config' existence added by odoo
+        if (!(config && config._options.allowInputToggle)) {
             return;
         }
         TempusDominusBootstrap4._jQueryInterface.call($target, 'show', event);

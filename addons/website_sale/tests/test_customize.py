@@ -214,4 +214,10 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('tour_shop_no_variant_attribute')", "odoo.__DEBUG__.services['web_tour.tour'].tours.tour_shop_no_variant_attribute.ready", login="demo")
 
     def test_06_admin_list_view_b2c(self):
+        # activate b2c
+        config = self.env['res.config.settings'].create({})
+        config.show_line_subtotals_tax_selection = "tax_included"
+        config._onchange_sale_tax()
+        config.execute()
+
         self.browser_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('shop_list_view_b2c')", "odoo.__DEBUG__.services['web_tour.tour'].tours.shop_list_view_b2c.ready", login="admin")

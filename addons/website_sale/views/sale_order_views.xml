@@ -59,6 +59,7 @@
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="domain">[]</field>
         <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="html">
@@ -265,7 +266,12 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="attributes">
-                <attribute name="context">{'display_website': True}</attribute>
+                <attribute name="context">{
+                    'display_website': True,
+                    'search_default_customer': 1,
+                    'show_address': 1,
+                    'show_vat': True,
+                }</attribute>
             </field>
             <field name="company_id" position="after">
                 <field name="website_id" groups="website.group_multi_website"/>

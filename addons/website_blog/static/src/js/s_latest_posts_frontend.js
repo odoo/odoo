@@ -18,11 +18,11 @@ sAnimation.registry.js_get_posts = sAnimation.Class.extend({
         var blogID = self.$target.data('filterByBlogId');
         var template = self.$target.data('template') || 'website_blog.s_latest_posts_list_template';
         var loading = self.$target.data('loading');
+        var domain = [];
 
         this.$target.empty(); // Compatibility with db that saved content inside by mistake
         this.$target.attr('contenteditable', 'False'); // Prevent user edition
 
-        var domain = [['website_published', '=', true]];
         if (blogID) {
             domain.push(['blog_id', '=', parseInt(blogID)]);
         }
@@ -109,7 +109,7 @@ sAnimation.registry.js_get_posts = sAnimation.Class.extend({
             $progress.appendTo($loadingContainer);
             $post.appendTo(self.$target);
 
-            var m = $thumb.css('background-image').match(/url\(["']?(.+)["']?\)/);
+            var m = $thumb.css('background-image').match(/url\(["']?(.+?)["']?\)/);
             var bg = m ? m[1] : 'none';
             var loaded = false;
 

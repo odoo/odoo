@@ -160,7 +160,7 @@ class Track(models.Model):
     def message_get_suggested_recipients(self):
         recipients = super(Track, self).message_get_suggested_recipients()
         for track in self:
-            if track.partner_email != track.partner_id.email:
+            if track.partner_email and track.partner_email != track.partner_id.email:
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 

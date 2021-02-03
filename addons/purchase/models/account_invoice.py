@@ -74,7 +74,7 @@ class AccountInvoice(models.Model):
             'analytic_tag_ids': line.analytic_tag_ids.ids,
             'invoice_line_tax_ids': invoice_line_tax_ids.ids
         }
-        account = invoice_line.get_invoice_line_account('in_invoice', line.product_id, line.order_id.fiscal_position_id, self.env.user.company_id)
+        account = invoice_line.with_context(purchase_line_id=line.id).get_invoice_line_account('in_invoice', line.product_id, line.order_id.fiscal_position_id, self.env.user.company_id)
         if account:
             data['account_id'] = account.id
         return data
@@ -137,18 +137,19 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self)._onchange_partner_id()
         if payment_term_id:
             self.payment_term_id = payment_term_id
-        if not self.env.context.get('default_journal_id') and self.partner_id and\
+        if self.partner_id and\
                 self.type in ['in_invoice', 'in_refund'] and\
                 self.currency_id != self.partner_id.property_purchase_currency_id and\
                 self.partner_id.property_purchase_currency_id.id:
-            journal_domain = [
-                ('type', '=', 'purchase'),
-                ('company_id', '=', self.company_id.id),
-                ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
-            ]
-            default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
-            if default_journal_id:
-                self.journal_id = default_journal_id
+            if not self.env.context.get('default_journal_id'):
+                journal_domain = [
+                    ('type', '=', 'purchase'),
+                    ('company_id', '=', self.company_id.id),
+                    ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
+                ]
+                default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
+                if default_journal_id:
+                    self.journal_id = default_journal_id
             if self.env.context.get('default_currency_id'):
                 self.currency_id = self.env.context['default_currency_id']
             if self.partner_id.property_purchase_currency_id:

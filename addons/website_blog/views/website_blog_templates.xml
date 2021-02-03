@@ -164,7 +164,7 @@
 
                             <!-- To display tags //no options -->
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+                                <a class="mr8" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
                             </t>
                             <div class="o_sharing_links">
                                 <a class="fa fa-twitter-square o_twitter" aria-label="Twitter" title="Twitter"></a>
@@ -198,7 +198,7 @@
     <xpath expr="//h2[@t-field='blog_post.name']/.." position="before">
         <t t-call="website_blog.blog_cover">
             <t t-set="cover_properties" t-value="blog_posts_cover_properties[blog_post_index]"/>
-            <t t-set="additionnal_classes" t-value="'o_list_cover mt16 mb32'"/>
+            <t t-set="additionnal_classes" t-value="'o_list_cover mt16 mb32 o_not_editable'"/>
         </t>
     </xpath>
 </template>
@@ -249,7 +249,7 @@
                     <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                         <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
                         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                            <a class="badge badge-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                            <a class="badge badge-primary mr8" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
                         </t>
                     </p>
                     <div t-if="'cover_full' in blog_post_cover_properties.get('resize_class', '')" id="blog_angle_down">
@@ -393,7 +393,7 @@
             <t t-foreach="tags" t-as="tag">
                 <t t-if="tag.post_ids">
                     <li class="nav-item">
-                        <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="nav-link#{tag.id in active_tag_ids and ' active' or ''}">
+                        <a t-att-rel="'nofollow' if active_tag_ids else None" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="nav-link#{tag.id in active_tag_ids and ' active' or ''}">
                             <span t-field="tag.name"/>
                         </a>
                     </li>
@@ -443,10 +443,10 @@
                 <ul t-attf-class="blog_post_year collapse nav nav-pills flex-column #{not date and year_index == 0 and 'in'}" t-att-id="'b_' + year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">
                         <li t-if="months['date_begin'] == date" class="nav-item">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" rel="nofollow" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
                         </li>
                         <li t-else="1" class="nav-item">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}" class="nav-link"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" rel="nofollow" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}" class="nav-link"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -565,7 +565,7 @@
     <title t-esc="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
     <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-esc="str((posts[0] if posts else blog).post_date).replace(' ', 'T') + 'Z'"/>
+    <updated t-esc="str(posts[0].post_date).replace(' ', 'T') + 'Z' if posts else ''"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
@@ -581,7 +581,7 @@
 <template id="blog_post_template_new_post">
     <p>A new post <t t-esc="post.name" /> has been published on the <t t-esc="object.name" /> blog. Click here to access the blog :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-        <a href="/blog/#{slug(object)}/post/#{slug(post)}"
+        <a t-attf-href="/blog/#{slug(object)}/post/#{slug(post)}"
             style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             Access post
         </a>

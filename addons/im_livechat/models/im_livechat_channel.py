@@ -239,7 +239,9 @@ class ImLivechatChannelRule(models.Model):
         """
         def _match(rules):
             for rule in rules:
-                if re.search(rule.regex_url or '', url):
+                # url might not be set because it comes from referer, in that
+                # case match the first rule with no regex_url
+                if re.search(rule.regex_url or '', url or ''):
                     return rule
             return False
         # first, search the country specific rules (the first match is returned)

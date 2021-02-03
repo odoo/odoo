@@ -5,21 +5,22 @@
 # Translators:
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
 # Constantin Ehrenstein <transifex@skiller.eu>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Martin Trigaux, 2018
 # Wolfgang Taferner, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Tobias Arndt, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"Last-Translator: Tobias Arndt, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,6 +196,11 @@ msgstr "<span class=\"o_stat_text\">Arbeitsplatzauslastung</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Work Orders</span>"
 msgstr "<span class=\"o_stat_text\">Arbeitsaufträge</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.label_production_view_pdf
+msgid "<span>1.0</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -1609,6 +1615,11 @@ msgid "Is the Current User Working"
 msgstr "Arbeitet der aktuelle Benutzer"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_first_wo
+msgid "Is the first WO to produce"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:163
 #, python-format
 msgid "It has already been unblocked."
@@ -2577,6 +2588,7 @@ msgid "Processed Disassembly Lines"
 msgstr "Verarbeitete Demontagereihen"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_procurement_group
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__procurement_group_id
 msgid "Procurement Group"
 msgstr "Beschaffungsgruppe"
@@ -2699,7 +2711,6 @@ msgstr "Produktionsdokument"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing__location_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 msgid "Production Location"
 msgstr "Fertigungort (virtuelles Lager)"
@@ -2874,6 +2885,7 @@ msgstr "Rohmaterial"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing__location_id
 msgid "Raw Materials Location"
 msgstr "Komponenten Lager"
 
@@ -3235,6 +3247,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
+"Einige der Komponenten werden verfolgt. Um die korrekten Komponenten zu "
+"erhalten, müssen Sie einen Fertigungsauftrag spezifizieren."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:590
@@ -3322,7 +3336,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr ""
+msgstr "Bestand nach Fertigungsregel"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -3352,7 +3366,7 @@ msgstr "Bestand nach Fertigungsstandort"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Lagerregelbericht"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:200
@@ -3425,6 +3439,11 @@ msgid ""
 msgstr ""
 "Technisches Feld, das den Wert „Falsch” wiedergibt, wenn es im "
 "Arbeitsauftrag temporär ausgefüllt wird"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
+msgid "Technical compute"
+msgstr "Technische Berechnung"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
@@ -3627,6 +3646,9 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
+"Das sind die auf die Stückliste basierenden Kosten für dieses Produkt. Es "
+"wird durch das Addieren der Komponenten- und Vorgangskosten, die für die "
+"Fertigung benötigt werden, berechnet."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4005,6 +4027,11 @@ msgstr ""
 "Die Verwendung eines MPS-Bericht zur Planung Ihrer Nachbestell- und "
 "Fertigungsabläufe ist nützlich bei einer langen Vorlaufzeit und einer "
 "Fertigung auf Grundlage von Verkaufsprognosen."
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__valid_product_attribute_value_ids
+msgid "Valid Product Attribute Values"
+msgstr "Gültige Werte für Produktattribute"
 
 #. module: mrp
 #. openerp-web
@@ -4434,9 +4461,21 @@ msgstr ""
 "Sie die verschlüsselten Seriennummern."
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:109
+#, python-format
+msgid "You cannot create a new Bill of Material from here."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:88
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
+msgstr "Sie können keinen Demontageauftrag mit dem Status 'Erledigt' löschen."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:533
+#, python-format
+msgid "You cannot produce a MO with a bom kit product."
 msgstr ""
 
 #. module: mrp

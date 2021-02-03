@@ -43,7 +43,7 @@ class MaintenanceEquipmentCategory(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete='restrict', required=True,
         help="Email alias for this equipment category. New emails will automatically "
-        "create new maintenance request for this equipment category.")
+        "create a new equipment under this category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     @api.multi
@@ -187,7 +187,7 @@ class MaintenanceEquipment(models.Model):
                 if next_date < date_now:
                     next_date = date_now
             else:
-                next_date = self.effective_date + timedelta(days=equipment.period)
+                next_date = equipment.effective_date + timedelta(days=equipment.period)
             equipment.next_action_date = next_date
 
     @api.one
@@ -238,6 +238,7 @@ class MaintenanceEquipment(models.Model):
             'user_id': self.technician_user_id.id,
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
+            'company_id': self.company_id.id,
             })
 
     @api.model
@@ -291,7 +292,7 @@ class MaintenanceRequest(models.Model):
                                    ondelete='restrict', index=True)
     user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='technician_user_id')
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', track_visibility='onchange',
-                               group_expand='_read_group_stage_ids', default=_default_stage)
+                               group_expand='_read_group_stage_ids', default=_default_stage, copy=False)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
     color = fields.Integer('Color Index')
     close_date = fields.Date('Close Date', help="Date the maintenance was finished. ")

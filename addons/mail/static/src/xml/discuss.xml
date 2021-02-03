@@ -137,7 +137,7 @@
                         </t>
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
-                    <t t-esc="_.unescape(thread.getName())"/>
+                    <t t-esc="thread.getName()"/>
                     <i t-if="thread.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
                 <span t-attf-class="fa fa-cog o_mail_channel_settings"

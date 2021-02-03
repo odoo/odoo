@@ -35,6 +35,7 @@ if records:
         <field name="email_from">${ctx['order']['supplier_email'] |safe}</field>
         <field name="partner_to">${ctx['order']['supplier_id']}</field>
         <field name="subject">Orders for ${ctx['order']['company_name']}</field>
+        <field name="lang">${ctx.get('default_lang')}</field>
         <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">

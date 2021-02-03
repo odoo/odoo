@@ -168,6 +168,63 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
         self.assertEquals(invoice.amount_untaxed, sum([x.base for x in invoice.tax_line_ids]))
 
+
+    def test_customer_invoice_tax_include_base_amount(self):
+        # When an include_base_amount tax T is applied on a invoice line with an other tax T0
+        # where sequence of T < sequence of T0, the account move line generated for T when validating
+        # the invoice must include T0 in the applied taxes even if the amount of T0 is 0.0
+
+        payment_term = self.env.ref('account.account_payment_term_advance')
+        journalrec = self.env['account.journal'].search([('type', '=', 'sale')])[0]
+        partner3 = self.env.ref('base.res_partner_3')
+        account_id = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id
+
+        tax_0 = self.env['account.tax'].create({
+            'name': 'Tax 0.0',
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'sequence': 10
+        })
+
+        tax_rec = self.env['account.tax'].create({
+            'name': 'Tax REC',
+            'amount': 10.0,
+            'amount_type': 'fixed',
+            'type_tax_use': 'sale',
+            'include_base_amount': True,
+            'sequence': 5
+        })
+
+        invoice_line_data_rec = [
+            (0, 0,
+                {
+                    'product_id': self.env.ref('product.product_product_1').id,
+                    'quantity': 40.0,
+                    'account_id': account_id,
+                    'name': 'product test 1',
+                    'discount' : 10.00,
+                    'price_unit': 2.27,
+                    'invoice_line_tax_ids': [(6, 0, [tax_rec.id, tax_0.id])],
+                }
+             )
+        ]
+
+        invoice_rec = self.env['account.invoice'].create(dict(
+            name="Test Customer Invoice",
+            payment_term_id=payment_term.id,
+            journal_id=journalrec.id,
+            partner_id=partner3.id,
+            invoice_line_ids=invoice_line_data_rec
+        ))
+
+        invoice_rec.action_invoice_open()
+
+        tax_applied = invoice_rec.move_id.line_ids.filtered(lambda l: l.name == 'Tax REC').tax_ids
+
+        self.assertEquals(tax_applied.name, 'Tax 0.0')
+
+
     def test_customer_invoice_tax_refund(self):
         company = self.env.user.company_id
         tax_account = self.env['account.account'].create({

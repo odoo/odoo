@@ -170,7 +170,12 @@ class IrHttp(models.AbstractModel):
                 return serve
 
         # Don't handle exception but use werkzeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode'] and not isinstance(exception, werkzeug.exceptions.NotFound):
+        # Don't intercept JSON request to respect the JSON Spec and return exception as JSON
+        # "The Response is expressed as a single JSON Object, with the following members:
+        #   jsonrpc, result, error, id"
+        if ('werkzeug' in tools.config['dev_mode']
+                and not isinstance(exception, werkzeug.exceptions.NotFound)
+                and request._request_type != 'json'):
             raise exception
 
         try:
@@ -344,12 +349,14 @@ class IrHttp(models.AbstractModel):
             content = obj[field] or ''
 
         # filename
+        default_filename = False
         if not filename:
             if filename_field in obj:
                 filename = obj[filename_field]
-            elif module_resource_path:
+            if not filename and module_resource_path:
                 filename = os.path.basename(module_resource_path)
-            else:
+            if not filename:
+                default_filename = True
                 filename = "%s-%s-%s" % (obj._name, obj.id, field)
 
         # mimetype
@@ -362,7 +369,18 @@ class IrHttp(models.AbstractModel):
                 attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
                 mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
             if not mimetype:
-                mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
+                try:
+                    decoded_content = base64.b64decode(content)
+                except base64.binascii.Error:  # if we could not decode it, no need to pass it down: it would crash elsewhere...
+                    return (404, [], None)
+                mimetype = guess_mimetype(decoded_content, default=default_mimetype)
+
+        # extension
+        _, existing_extension = os.path.splitext(filename)
+        if not existing_extension or default_filename:
+            extension = mimetypes.guess_extension(mimetype)
+            if extension:
+                filename = "%s%s" % (filename, extension)
 
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 

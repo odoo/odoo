@@ -10,7 +10,7 @@
         <div t-foreach="categories" t-as="supplier" class="col-lg-4">
             <h3><t t-esc="supplier"/></h3>
             <div t-foreach='categories[supplier]' t-as='order' class="o_lunch_vignette">
-                <button type="button" class="float-right o_add_button oe_edit_only oe_link" t-att-data-id="order.line_id">
+                <button type="button" class="float-right o_add_button oe_edit_only btn-link border-0" t-att-data-id="order.line_id">
                     <span class="fa fa-plus-square"></span>
                     <span>Add</span>
                 </button>

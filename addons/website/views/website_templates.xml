@@ -345,7 +345,7 @@
                             <h5>Connect with us</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/contactus">Contact us</a></li>
-                                <li><i class="fa fa-phone"/> <span t-field="res_company.phone"/></li>
+                                <li><i class="fa fa-phone"/> <span class="o_force_ltr" t-field="res_company.phone"/></li>
                                 <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
                             </ul>
                             <p>
@@ -1063,8 +1063,10 @@
 </template>
 
 <template id="robots">
+<t t-translation="off">
 User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml
+</t>
 </template>
 
 <template id="sitemap_locs">

@@ -11,6 +11,10 @@ from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
+# see rfc5322 section 3.2.3
+atext = r"[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]"
+dot_atom_text = re.compile(r"^%s+(\.%s+)*$" % (atext, atext))
+
 
 class Alias(models.Model):
     """A Mail Alias is a mapping of an email address with a given Odoo Document
@@ -72,6 +76,17 @@ class Alias(models.Model):
     _sql_constraints = [
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')
     ]
+
+    @api.constrains('alias_name')
+    def _alias_is_ascii(self):
+        """ The local-part ("display-name" <local-part@domain>) of an
+            address only contains limited range of ascii characters.
+            We DO NOT allow anything else than ASCII dot-atom formed
+            local-part. Quoted-string and internationnal characters are
+            to be rejected. See rfc5322 sections 3.4.1 and 3.2.3
+        """
+        if self.alias_name and not dot_atom_text.match(self.alias_name):
+            raise ValidationError(_("You cannot use anything else than unaccented latin characters in the alias address."))
 
     @api.multi
     def _get_alias_domain(self):
@@ -152,6 +167,7 @@ class Alias(models.Model):
         # when an alias name appears to already be an email, we keep the local part only
         name = remove_accents(name).lower().split('@')[0]
         name = re.sub(r'[^\w+.]+', '-', name)
+        name = name.encode('ascii', errors='replace').decode()
         return self._find_unique(name, alias_ids=alias_ids)
 
     @api.multi
@@ -249,7 +265,7 @@ class AliasMixin(models.AbstractModel):
         for record in child_model.search([('alias_id', '=', False)]):
             # create the alias, and link it to the current record
             alias = alias_model.create(record.get_alias_values())
-            record.with_context({'mail_notrack': True}).alias_id = alias
+            record.with_context(mail_notrack=True).alias_id = alias
             _logger.info('Mail alias created for %s %s (id %s)',
                          record._name, record.display_name, record.id)
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- © 2009-2011 Jordi Esteve - Zikzakmedia
-     © 2011 Ignacio Ibeas - Acysos
+     © 2011-2019 Ignacio Ibeas - Acysos
      © 2014 Pablo Cayuela - Aserti Global Solutions
      © 2014 Ángel Moya - Domatix
      © 2015 Carlos Liébana - Factor Libre
      © 2015 Albert Cabedo - GAFIC consultores
      © 2015 Vicent Cubells
-     © 2013-2016 Pedro M. Baeza
+     © 2013-2020 Pedro M. Baeza
+     © 2020 Harald Panten - Sygel Technology
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
 
@@ -131,7 +132,7 @@
 
     <record id="account_tax_template_s_iva21b" model="account.tax.template">
         <field name="sequence" eval="0"/> <!-- Para que sea el impuesto por defecto de ventas -->
-        <field name="description">S_IVA21B</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">IVA 21% (Bienes)</field>
@@ -143,7 +144,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_iva21s" model="account.tax.template">
-        <field name="description">S_IVA21S</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">IVA 21% (Servicios)</field>
@@ -155,7 +156,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_07_09'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_iva21isp" model="account.tax.template">
-        <field name="description">S_IVA21ISP</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">IVA 21% (ISP)</field>
@@ -168,7 +169,7 @@
     </record>
     <record id="account_tax_template_p_iva21_bc" model="account.tax.template">
         <field name="sequence" eval="0"/> <!-- Para que sea el impuesto por defecto de compras -->
-        <field name="description">P_IVA21_BC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">21% IVA soportado (bienes corrientes)</field>
@@ -180,7 +181,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_sc" model="account.tax.template">
-        <field name="description">P_IVA21_SC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">21% IVA soportado (servicios corrientes)</field>
@@ -218,13 +219,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_sp_in" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 21% Adquisición de servicios intracomunitarios</field>
-        <field name="description">P_IVA21_SP_IN</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_sp_in_1'), ref('account_tax_template_p_iva21_sp_in_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
     <record id="account_tax_template_p_iva21_ic_bc_1" model="account.tax.template">
@@ -254,10 +256,11 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_ic_bc" model="account.tax.template">
-        <field name="description">P_IVA21_IC_BC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
-        <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_ic_bc_1'), ref('account_tax_template_p_iva21_ic_bc_2')])]"/>
+        <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_ic_bc_1'), ref('account_tax_template_p_iva21_ic_bc_2'), ])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 21% Adquisición Intracomunitaria. Bienes corrientes</field>
@@ -290,17 +293,18 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_ic_bi" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 21% Adquisición Intracomunitaria. Bienes de inversión</field>
-        <field name="description">P_IVA21_IC_BI</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_ic_bi_1'), ref('account_tax_template_p_iva21_ic_bi_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
     <record id="account_tax_template_p_iva21_ibc" model="account.tax.template">
-        <field name="description">P_IVA21_IBC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">IVA 21% Importaciones bienes corrientes</field>
@@ -312,7 +316,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_32_33'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_ibi" model="account.tax.template">
-        <field name="description">P_IVA21_IBI</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">IVA 21% Importaciones bienes de inversión</field>
@@ -324,13 +328,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_34_35'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_irpf21td" model="account.tax.template">
-        <field name="description">P_IRPFTD</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF (Trabajadores) dinerarios</field>
         <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        <field name="amount" eval="-21"/>
+        <!-- Obtained from https://www.agenciatributaria.es/AEAT.internet/Inicio/La_Agencia_Tributaria/Campanas/Retenciones/Cuadro_informativo_tipos_de_retencion_aplicables__2020_.shtml -->
+        <field name="amount" eval="-15"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_02'), ref('mod_111_03')])]"/>
@@ -362,12 +367,13 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_sp_ex" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA4_SP_EX</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_sp_ex_1'), ref('account_tax_template_p_iva4_sp_ex_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="name">IVA 4% Adquisición de servicios extracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
@@ -398,11 +404,12 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_sp_ex" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA10_SP_EX</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_sp_ex_1'), ref('account_tax_template_p_iva10_sp_ex_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición de servicios extracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
@@ -434,13 +441,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_sp_ex" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 21% Adquisición de servicios extracomunitarios</field>
-        <field name="description">P_IVA21_SP_EX</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount" eval="100"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_sp_ex_1'), ref('account_tax_template_p_iva21_sp_ex_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase'), ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bc_1" model="account.tax.template">
@@ -470,13 +478,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bc" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA4_IC_BC</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición Intracomunitario. Bienes corrientes</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_ic_bc_1'), ref('account_tax_template_p_iva4_ic_bc_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bi_1" model="account.tax.template">
@@ -507,13 +516,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_ic_bi" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA4_IC_BI</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición Intracomunitario. Bienes de inversión</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_ic_bi_1'), ref('account_tax_template_p_iva4_ic_bi_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bc_1" model="account.tax.template">
@@ -543,13 +553,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bc" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA10_IC_BC</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición Intracomunitario. Bienes corrientes</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_ic_bc_1'), ref('account_tax_template_p_iva10_ic_bc_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bi_1" model="account.tax.template">
@@ -579,17 +590,18 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_ic_bi" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA10_IC_BI</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición Intracomunitario. Bienes de inversión</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_ic_bi_1'), ref('account_tax_template_p_iva10_ic_bi_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_38_39'), ref('mod_303_40_41'), ref('mod_303_10_11'), ref('mod_303_14_15_purchase')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
     <record id="account_tax_template_s_iva0_sp_i" model="account.tax.template">
-        <field name="description">S_IVA0_SP_I</field>
+        <field name="description">Intracomunitario exento servicios</field>
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 0% Prestación de servicios intracomunitario</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -599,9 +611,19 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_59')])]"/>
     </record>
     <record id="account_tax_template_s_iva_ns" model="account.tax.template">
-        <field name="description">S_IVA_NS</field>
+        <field name="description">No sujeto (Servicios)</field>
         <field name="type_tax_use">sale</field>
-        <field name="name">No sujeto Repercutido</field>
+        <field name="name">No sujeto Repercutido (Servicios)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_61')])]"/>
+    </record>
+    <record id="account_tax_template_s_iva_ns_b" model="account.tax.template">
+        <field name="description">No sujeto (Bienes)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">No sujeto Repercutido (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
@@ -609,7 +631,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_61')])]"/>
     </record>
     <record id="account_tax_template_s_iva_e" model="account.tax.template">
-        <field name="description">S_IVA_SP_E</field>
+        <field name="description">Extracomunitario (Servicios)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 0% Prestación de servicios extracomunitaria</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -619,7 +641,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_61')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_ibc" model="account.tax.template">
-        <field name="description">P_IVA4_IBC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">IVA 4% Importaciones bienes corrientes</field>
@@ -631,7 +653,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_32_33'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_ibi" model="account.tax.template">
-        <field name="description">P_IVA4_IBI</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">IVA 4% Importaciones bienes de inversión</field>
@@ -643,7 +665,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_34_35'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_ibc" model="account.tax.template">
-        <field name="description">P_IVA10_IBC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">IVA 10% Importaciones bienes corrientes</field>
@@ -655,7 +677,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_32_33'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_ibi" model="account.tax.template">
-        <field name="description">P_IVA10_IBI</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">IVA 10% Importaciones bienes de inversión</field>
@@ -667,7 +689,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_34_35'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_bi" model="account.tax.template">
-        <field name="description">P_IVA4_BI</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">4% IVA Soportado (bienes de inversión)</field>
@@ -679,7 +701,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_30_31'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_sc" model="account.tax.template">
-        <field name="description">P_IVA4_SC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">4% IVA soportado (servicios corrientes)</field>
@@ -691,7 +713,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_bi" model="account.tax.template">
-        <field name="description">P_IVA10_BI</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">10% IVA Soportado (bienes de inversión)</field>
@@ -703,7 +725,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_30_31'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_bi" model="account.tax.template">
-        <field name="description">P_IVA21_BI</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">21% IVA Soportado (bienes de inversión)</field>
@@ -715,7 +737,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_30_31'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_bc" model="account.tax.template">
-        <field name="description">P_IVA10_BC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">10% IVA soportado (bienes corrientes)</field>
@@ -727,7 +749,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_bc" model="account.tax.template">
-        <field name="description">P_IVA4_BC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">4% IVA soportado (bienes corrientes)</field>
@@ -739,7 +761,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_sc" model="account.tax.template">
-        <field name="description">P_IVA10_SC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">10% IVA soportado (servicios corrientes)</field>
@@ -751,16 +773,29 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_s_iva0" model="account.tax.template">
-        <field name="description">S_IVA0</field>
+        <field name="description">IVA Exento</field>
         <field name="type_tax_use">sale</field>
-        <field name="name">IVA Exento Repercutido</field>
+        <field name="name">IVA Exento Repercutido Sujeto</field>
+        <field name="account_id" ref="l10n_es.account_common_472"/>
+        <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+    </record>
+    <record id="account_tax_template_s_iva0_ns" model="account.tax.template">
+        <field name="description">IVA Exento No Sujeto</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">IVA Exento Repercutido No Sujeto</field>
+        <field name="account_id" ref="l10n_es.account_common_472"/>
+        <field name="refund_account_id" ref="l10n_es.account_common_472"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
     </record>
     <record id="account_tax_template_s_req05" model="account.tax.template">
-        <field name="description">S_REQ05</field>
+        <field name="description">0.50% Rec. Eq.</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">0.50% Recargo Equivalencia Ventas</field>
@@ -772,7 +807,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_16_18'), ref('mod_303_25_26')])]"/>
     </record>
     <record id="account_tax_template_s_iva4b" model="account.tax.template">
-        <field name="description">S_IVA4B</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">IVA 4% (Bienes)</field>
@@ -784,7 +819,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_14_15_sale'), ref('mod_303_01_03')])]"/>
     </record>
     <record id="account_tax_template_s_iva10b" model="account.tax.template">
-        <field name="description">S_IVA10B</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">IVA 10% (Bienes)</field>
@@ -796,16 +831,34 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_04_06'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_p_iva0_nd" model="account.tax.template">
-        <field name="description">P_IVA0_ND</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA Soportado no deducible</field>
+        <field name="name">21% IVA Soportado no deducible</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
+    <record id="account_tax_template_p_iva10_nd" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">10% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="10"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_10"/>
+    </record>
+    <record id="account_tax_template_p_iva4_nd" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">4% IVA Soportado no deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="4"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_4"/>
+    </record>
     <record id="account_tax_template_s_iva4s" model="account.tax.template">
-        <field name="description">S_IVA4S</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">IVA 4% (Servicios)</field>
@@ -817,7 +870,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_01_03'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_iva10s" model="account.tax.template">
-        <field name="description">S_IVA10S</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">IVA 10% (Servicios)</field>
@@ -829,7 +882,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_04_06'), ref('mod_303_14_15_sale')])]"/>
     </record>
     <record id="account_tax_template_s_req014" model="account.tax.template">
-        <field name="description">S_REQ014</field>
+        <field name="description">1.4% Rec. Eq.</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">1.4% Recargo Equivalencia Ventas</field>
@@ -841,7 +894,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_19_21'), ref('mod_303_25_26')])]"/>
     </record>
     <record id="account_tax_template_s_req52" model="account.tax.template">
-        <field name="description">S_REQ52</field>
+        <field name="description">5.2% Rec. Eq.</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_477"/>
         <field name="name">5.2% Recargo Equivalencia Ventas</field>
@@ -853,25 +906,36 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_22_24'), ref('mod_303_25_26')])]"/>
     </record>
     <record id="account_tax_template_p_iva0_bc" model="account.tax.template">
-        <field name="description">P_IVA0_BC</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA Soportado exento (operaciones corrientes)</field>
+        <field name="account_id" ref="l10n_es.account_common_472"/>
+        <field name="refund_account_id" ref="l10n_es.account_common_472"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
     </record>
     <record id="account_tax_template_p_iva0_ns" model="account.tax.template">
-        <field name="description">P_IVA0_NS</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA Soportado no sujeto</field>
+        <field name="name">IVA Soportado no sujeto (Servicios)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+    </record>
+    <record id="account_tax_template_p_iva0_ns_b" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">IVA Soportado no sujeto (Bienes)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
     </record>
     <record id="account_tax_template_s_irpf9" model="account.tax.template">
-        <field name="description">S_IRPF9</field>
+        <field name="description">Retención 9%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 9%</field>
@@ -882,7 +946,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_9"/>
     </record>
     <record id="account_tax_template_s_irpf18" model="account.tax.template">
-        <field name="description">S_IRPF18</field>
+        <field name="description">Retención 18%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 18%</field>
@@ -893,7 +957,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_18"/>
     </record>
     <record id="account_tax_template_s_irpf19" model="account.tax.template">
-        <field name="description">S_IRPF19</field>
+        <field name="description">Retención 19%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 19%</field>
@@ -904,7 +968,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
     </record>
     <record id="account_tax_template_s_irpf19a" model="account.tax.template">
-        <field name="description">S_RAC19A</field>
+        <field name="description">Retención 19% (Arrend.)</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta 19% (Arrendamientos)</field>
@@ -915,7 +979,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
     </record>
     <record id="account_tax_template_s_irpf195a" model="account.tax.template">
-        <field name="description">S_RAC195A</field>
+        <field name="description">Retención 19,5% (Arrend.)</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta 19,5% (Arrendamientos)</field>
@@ -926,7 +990,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_19-5"/>
     </record>
     <record id="account_tax_template_p_irpf19" model="account.tax.template">
-        <field name="description">P_IRPF19</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 19%</field>
@@ -938,7 +1002,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf20a" model="account.tax.template">
-        <field name="description">P_RAC20A</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones 20% (Arrendamientos)</field>
@@ -950,7 +1014,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_115_02_03')])]"/>
     </record>
     <record id="account_tax_template_p_irpf18" model="account.tax.template">
-        <field name="description">P_IRPF18</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 18%</field>
@@ -962,7 +1026,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf19a" model="account.tax.template">
-        <field name="description">P_RAC19A</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones 19% (Arrendamientos)</field>
@@ -974,7 +1038,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_115_02_03')])]"/>
     </record>
     <record id="account_tax_template_p_irpf195a" model="account.tax.template">
-        <field name="description">P_RAC195A</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones 19,5% (Arrendamientos)</field>
@@ -986,7 +1050,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_115_02_03')])]"/>
     </record>
     <record id="account_tax_template_p_irpf7" model="account.tax.template">
-        <field name="description">P_IRPF7</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 7%</field>
@@ -998,7 +1062,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf9" model="account.tax.template">
-        <field name="description">P_IRPF9</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 9%</field>
@@ -1010,7 +1074,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_s_irpf20" model="account.tax.template">
-        <field name="description">S_IRPF20</field>
+        <field name="description">Retención 20%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 20%</field>
@@ -1021,7 +1085,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
     </record>
     <record id="account_tax_template_s_irpf20a" model="account.tax.template">
-        <field name="description">S_RAC20A</field>
+        <field name="description">Retención 20% (Arrend.)</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta 20% (Arrendamientos)</field>
@@ -1032,7 +1096,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
     </record>
     <record id="account_tax_template_p_iva12_agr" model="account.tax.template">
-        <field name="description">P_IVA12_AGR</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">12% IVA Soportado régimen agricultura</field>
@@ -1045,7 +1109,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_42')])]"/>
     </record>
     <record id="account_tax_template_p_iva105_gan" model="account.tax.template">
-        <field name="description">P_IVA105_GAN</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">10,5% IVA Soportado régimen ganadero o pesca</field>
@@ -1054,10 +1118,11 @@
         <field name="amount" eval="10.5"/>
         <field name="amount_type">percent</field>
         <field name="include_base_amount" eval="1"/>
+        <field name="tax_group_id" ref="tax_group_iva_10-5"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_42')])]"/>
     </record>
     <record id="account_tax_template_s_iva0_e" model="account.tax.template">
-        <field name="description">S_IVA0_E</field>
+        <field name="description">Exportación (Bienes)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 0% Exportaciones</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1067,7 +1132,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_60')])]"/>
     </record>
     <record id="account_tax_template_s_iva0_ic" model="account.tax.template">
-        <field name="description">S_IVA0_IC</field>
+        <field name="description">Intracomunitario exento (bienes)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">IVA 0% Entregas Intracomunitarias exentas</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
@@ -1077,7 +1142,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_59')])]"/>
     </record>
     <record id="account_tax_template_p_req014" model="account.tax.template">
-        <field name="description">P_REQ014</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">1.4% Recargo Equivalencia Compras</field>
@@ -1089,7 +1154,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_req05" model="account.tax.template">
-        <field name="description">P_REQ05</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">0.50% Recargo Equivalencia Compras</field>
@@ -1101,7 +1166,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_req52" model="account.tax.template">
-        <field name="description">P_REQ5.2</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="name">5.2% Recargo Equivalencia Compras</field>
@@ -1113,7 +1178,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_s_irpf1" model="account.tax.template">
-        <field name="description">S_IRPF1</field>
+        <field name="description">Retención 1%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 1%</field>
@@ -1124,7 +1189,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_1"/>
     </record>
     <record id="account_tax_template_s_irpf2" model="account.tax.template">
-        <field name="description">S_IRPF2</field>
+        <field name="description">Retención 2%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 2%</field>
@@ -1135,7 +1200,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_2"/>
     </record>
     <record id="account_tax_template_s_irpf21" model="account.tax.template">
-        <field name="description">S_IRPF21</field>
+        <field name="description">Retención 21%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 21%</field>
@@ -1146,7 +1211,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
     </record>
     <record id="account_tax_template_s_irpf21a" model="account.tax.template">
-        <field name="description">S_RAC21A</field>
+        <field name="description">Retención  21% (Arrend.)</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta 21% (Arrendamientos)</field>
@@ -1157,7 +1222,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
     </record>
     <record id="account_tax_template_s_irpf7" model="account.tax.template">
-        <field name="description">S_IRPF7</field>
+        <field name="description">Retención 7%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 7%</field>
@@ -1168,7 +1233,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_7"/>
     </record>
     <record id="account_tax_template_s_irpf15" model="account.tax.template">
-        <field name="description">S_IRPF15</field>
+        <field name="description">Retención 15%</field>
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="l10n_es.account_common_473"/>
         <field name="name">Retenciones a cuenta IRPF 15%</field>
@@ -1179,7 +1244,7 @@
         <field name="tax_group_id" ref="tax_group_retenciones_15"/>
     </record>
     <record id="account_tax_template_p_irpf1" model="account.tax.template">
-        <field name="description">P_IRPF1</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 1%</field>
@@ -1191,7 +1256,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf15" model="account.tax.template">
-        <field name="description">P_IRPF15</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 15%</field>
@@ -1203,13 +1268,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf21t" model="account.tax.template">
-        <field name="description">P_IRPFT</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
-        <field name="name">Retenciones IRPF 21% (Trabajadores)</field>
+        <field name="name">Retenciones IRPF (Trabajadores)</field>
         <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        <field name="amount" eval="-21"/>
+        <!-- Obtained from https://www.agenciatributaria.es/AEAT.internet/Inicio/La_Agencia_Tributaria/Campanas/Retenciones/Cuadro_informativo_tipos_de_retencion_aplicables__2020_.shtml -->
+        <field name="amount" eval="-15"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_02'), ref('mod_111_03')])]"/>
@@ -1241,13 +1307,14 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_sp_in" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA10_SP_IN</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 10% Adquisición de servicios intracomunitarios</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_sp_in_1'), ref('account_tax_template_p_iva10_sp_in_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
     <record id="account_tax_template_p_iva4_sp_in_1" model="account.tax.template">
@@ -1277,29 +1344,31 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_sp_in" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="amount" eval="100"/>
-        <field name="description">P_IVA4_SP_IN</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
         <field name="name">IVA 4% Adquisición de servicios intracomunitarios</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_sp_in_1'), ref('account_tax_template_p_iva4_sp_in_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_10_11'), ref('mod_303_14_15_purchase'), ref('mod_303_36_37'), ref('mod_303_40_41')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
     <record id="account_tax_template_p_irpf21te" model="account.tax.template">
-        <field name="description">P_IRPFTE</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF (Trabajadores) en especie</field>
         <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        <field name="amount" eval="-21"/>
+        <!-- Obtained from https://www.agenciatributaria.es/AEAT.internet/Inicio/La_Agencia_Tributaria/Campanas/Retenciones/Cuadro_informativo_tipos_de_retencion_aplicables__2020_.shtml -->
+        <field name="amount" eval="-15"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_21"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_05'), ref('mod_111_06')])]"/>
     </record>
     <record id="account_tax_template_p_irpf20" model="account.tax.template">
-        <field name="description">P_IRPF20</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 20%</field>
@@ -1311,7 +1380,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf21a" model="account.tax.template">
-        <field name="description">P_RAC21A</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones 21% (Arrendamientos)</field>
@@ -1323,7 +1392,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_115_02_03')])]"/>
     </record>
     <record id="account_tax_template_p_irpf21p" model="account.tax.template">
-        <field name="description">P_IRPF21P</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 21%</field>
@@ -1335,7 +1404,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf2" model="account.tax.template">
-        <field name="description">P_IRPF2</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="name">Retenciones IRPF 2%</field>
@@ -1348,7 +1417,7 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_s_iva0_isp" model="account.tax.template">
-        <field name="description">S_IVA0_ISP</field>
+        <field name="description">IVA 0% ISP</field>
         <field name="name">IVA 0% Venta con Inversión del Sujeto Pasivo</field>
         <field name="type_tax_use">sale</field>
         <field name="amount_type">percent</field>
@@ -1384,12 +1453,13 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_isp" model="account.tax.template">
-        <field name="description">P_IVA4_ISP</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 4% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva4_isp_1'), ref('account_tax_template_p_iva4_isp_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
     </record>
@@ -1420,12 +1490,13 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_isp" model="account.tax.template">
-        <field name="description">P_IVA10_ISP</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 10% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva10_isp_1'), ref('account_tax_template_p_iva10_isp_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
     </record>
@@ -1456,18 +1527,19 @@
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
     </record>
     <record id="account_tax_template_p_iva21_isp" model="account.tax.template">
-        <field name="description">P_IVA21_ISP</field>
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="name">IVA 21% Compra con Inversión del Sujeto Pasivo Nacional</field>
         <field name="type_tax_use">purchase</field>
         <field name="amount_type">group</field>
         <field name="amount" eval="100"/>
         <field name="children_tax_ids" eval="[(6, 0, [ref('account_tax_template_p_iva21_isp_1'), ref('account_tax_template_p_iva21_isp_2')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41'), ref('mod_303_12_13'), ref('mod_303_14_15_purchase')])]"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
     </record>
     <record id="account_tax_template_p_rp19" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
-        <field name="description">P_RP19</field>
         <field name="name">Retenciones 19% (préstamos)</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
@@ -1477,8 +1549,8 @@
         <field name="tax_group_id" ref="tax_group_retenciones_19"/>
     </record>
     <record id="account_tax_template_p_rrD19" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
-        <field name="description">P_RRD19</field>
         <field name="name">Retenciones 19% (reparto de dividendos)</field>
         <field name="account_id" ref="l10n_es.account_common_4751"/>
         <field name="refund_account_id" ref="l10n_es.account_common_4751"/>

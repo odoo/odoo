@@ -9,14 +9,19 @@
 # Joerg Hueneburg <melikeymedia@gmail.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# Wolfgang Taferner, 2019
+# Malin Kienke <malin.kienke@initos.com>, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 10:09+0000\n"
+"POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Anja Uebermuth <anja.uebermuth@arts.eu>, 2019\n"
+"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,21 +81,21 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sehr geehrte(r) ${object.partner_id.name}\n"
+"        Guten Tag ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"          im Anhang ist Ihre Bestellbestätigung <strong>${object.name}</strong>\n"
+"          Beiliegend erhalten Sie den Einkaufsauftrag <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            mit der Bestellnummer: ${object.partner_ref}\n"
 "        % endif\n"
-"        Preis in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        im Gesamtbetrag von <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        von ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"        Wenn Sie Fragen haben , zögern Sie nicht und Kontaktieren uns.\n"
+"        Wenn Sie Fragen haben, zögern Sie nicht und kontaktieren uns.\n"
 "        <br/><br/>\n"
-"        Mit freundlichen Grüßen,\n"
+"        Mit freundlichen Grüßen\n"
 "    </p>\n"
 "</div>"
 
@@ -118,12 +123,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"       Sehr geehrte (r) ${object.partner_id.name}\n"
+"       Guten Tag ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Hier im Anhang ist eine Angebotsanfrage<strong>${object.name}</strong>\n"
+"        Im Anhang finden Sie eine Angebotsanfrage <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            mit der Referenz: ${object.partner_ref}\n"
 "        % endif\n"
@@ -131,7 +136,7 @@ msgstr ""
 "        <br/><br/>\n"
 "      Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
 "        <br/><br/>\n"
-"        Mit Freundliche Grüßen,\n"
+"        Mit freundlichen Grüßen\n"
 "    </p>\n"
 "</div>"
 
@@ -150,6 +155,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Shopping cart\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -183,9 +190,13 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"<span class=\"o_form_label\" string=\"Request for Quotation \" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\"/>\n"
-"                        <span class=\"o_form_label\" string=\"Purchase Order \" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\"/>"
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('state','in',('draft','sent'))]}\">Purchase Order </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not "
+"in',('draft','sent'))]}\">Angebotsanfrage </span> <span "
+"class=\"o_form_label\" attrs=\"{'invisible': "
+"[('state','in',('draft','sent'))]}\">Bestellung </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -404,7 +415,7 @@ msgstr "Rechnungsprüfung"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
 msgid "Bill Count"
-msgstr ""
+msgstr "Anzahl Rechnungen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
@@ -906,6 +917,8 @@ msgid ""
 "Load the vendor bill based on selected purchase order. Several PO can be "
 "selected."
 msgstr ""
+"Laden Sie die Lieferantenrechnung basierend auf der ausgewählten Bestellung."
+" Es können mehrere Bestellungen ausgewählt werden."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1137,6 +1150,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"Auf bestellte Mengen: Kontrolle der Rechnungen auf der Grundlage der bestellten Mengen.\n"
+"Auf eingegangene Mengen: Kontrolle der Rechnungen auf der Grundlage der erhaltenen Mengen."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1459,7 +1474,7 @@ msgstr "Bestellstatistik"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Einkaufsbericht"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1514,7 +1529,7 @@ msgstr "Einkauf"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Einkaufs- und Rechnungsunion"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1601,6 +1616,7 @@ msgstr "Neue Eingangsrechnung eintragen."
 #: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Record a vendor bill related to this purchase"
 msgstr ""
+"Erfassen Sie eine Lieferantenrechnung, die sich auf diesen Kauf bezieht"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
@@ -1833,8 +1849,8 @@ msgid ""
 "The quotation contains the history of the discussion\n"
 "                you had with your vendor."
 msgstr ""
-"Das Zitat enthält die Geschichte der Diskussion\n"
-"                Sie hatten mit Ihrem Verkäufer."
+"Die Angebotsanfrage enthält den Verlauf der Diskussion mit Ihrem "
+"Lieferanten."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1855,6 +1871,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"Dieses Konto wird in der automatisierten Bestandsbewertung verwendet, um die"
+" Preisdifferenz zwischen einer Bestellung und der zugehörigen "
+"Lieferantenrechnung beim Validieren dieser Lieferantenrechnung zu erfassen."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ

@@ -692,6 +692,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     width: auto;
     text-align: center;
     box-shadow: none;
+    z-index: 1000;
 
     .popover-body {
         height: $o-navbar-height;
@@ -866,6 +867,17 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 }
             }
         }
+    }
+}
+
+.panel-heading.note-toolbar .note-custom-color-palette .note-color-row {
+    height: auto!important;
+    .note-color-btn {
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin: 0;
+        border: 1px solid #fff;
     }
 }
 

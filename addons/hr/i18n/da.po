@@ -9,11 +9,13 @@
 # JonathanStein <jstein@image.dk>, 2018
 # Jesper Carstensen <jc@danodoo.dk>, 2018
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
-# lhmflexerp <lhm@flexerp.dk>, 2018
 # Martin Trigaux, 2019
 # Joe Hansen <joedalton2@yahoo.dk>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2019
+# Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-04-12 12:19+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +45,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -89,6 +91,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -136,6 +141,33 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Hej,<br/>\n"
+"                        Dit dokument er ikke blevet oprettet, fordi din email adresse ikke kan genkendes. Vær venlig at sende emails med den email adresse registreret under din medarbejder informationer, eller kontakt din HR leder.\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"    </td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        I kraft af <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -195,7 +227,7 @@ msgstr "Aktivitetstilstand"
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "Tilføj en ny medarbejder"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -213,7 +245,7 @@ msgstr "Alias kontakt sikkerhed"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
-msgstr ""
+msgstr "Analysér behov, skriv specifikations dokumenter og tilbud"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
@@ -236,17 +268,17 @@ msgstr "Godkendte medarbejdere"
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr ""
+msgstr "Autentificerede partnere"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Abonner afdelinger automatisk"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
+msgstr "Abonner automatisk medlemmer af de afdelinger til denne kanal."
 
 #. module: hr
 #: selection:hr.employee,certificate:0
@@ -266,6 +298,10 @@ msgid ""
 "source project in a friendly and cooperative atmosphere sounds like fun to "
 "you, read on..."
 msgstr ""
+"Grundet vores konstante vækst, er vi nu på udkig efter folk til at forstærke"
+" vores hold af entusiastiske tekniske chefer. Så hvis det at arbejde på et "
+"open source projekt, i en venlig og samarbejdsvillig atmosfære, lyder godt, "
+"bør du læse videre..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -278,6 +314,10 @@ msgid ""
 "our team of enthusiastic developers. So if working on an open source project"
 " in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
+"Grundet vores konstante vækst, er vi nu på udkig efter folk til at forstærke"
+" vores hold af entusiastiske udviklere. Så hvis det at arbejde på et open "
+"source projekt, i en venlig og samarbejdsvillig atmosfære, lyder godt, bør "
+"du læse videre..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -286,6 +326,10 @@ msgid ""
 "our team of enthusiastic trainees. So if working on an open source project "
 "in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
+"Grundet vores konstante vækst, er vi nu på udkig efter folk til at forstærke"
+" vores hold af entusiastiske elever. Så hvis det at arbejde på et open "
+"source projekt, i en venlig og samarbejdsvillig atmosfære, lyder godt, bør "
+"du læse videre..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -295,7 +339,7 @@ msgstr "Født"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "Certifikat niveau"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -400,12 +444,12 @@ msgstr "Bidragere til open source projekter"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "Fødselsland"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr ""
+msgstr "Opret en ny afdeling"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -474,7 +518,7 @@ msgstr "Afdelinger"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Diskussionskanaler"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -502,7 +546,7 @@ msgstr "Email aliaser"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr ""
+msgstr "Email kaldenavne Mixin"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
@@ -528,7 +572,7 @@ msgstr "Medarbejder kategori"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__google_drive_link
 msgid "Employee Documents"
-msgstr ""
+msgstr "Medarbejder Dokumenter"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -616,7 +660,7 @@ msgstr "Kvinde"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "Studieområde"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -713,7 +757,7 @@ msgstr "HR afdeling"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "HR afdelinger"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -802,7 +846,7 @@ msgstr ""
 #: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
-msgstr ""
+msgstr "Importskabelon for medarbejdere"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -881,7 +925,7 @@ msgstr "Job"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 msgid "Km home-work"
-msgstr ""
+msgstr "KM hjem-arbejde"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -930,12 +974,12 @@ msgstr "Lancer nye produkter, reklamekampagner og tilbud"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "Registreret partner"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
-msgstr ""
+msgstr "Lad os oprette en stilling."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
@@ -1144,6 +1188,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"Odoo's afdelings struktur bruges til at administrere all dokumenter\n"
+"                relateret til ansatte ud fra afdelinger: udgifter, timesedler,\n"
+"                orlog, ansættelse, osv."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -1268,7 +1315,7 @@ msgstr "Hurtig og selvstændig elev"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr ""
+msgstr "Klar til at rekruttere mere effektivt?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1341,7 +1388,7 @@ msgstr "SSN Nr."
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Scale our events organization all around the world"
-msgstr ""
+msgstr "Skalér vores begivenheds organisation over hele verden"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
@@ -1354,6 +1401,8 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"Angiv standard kalender anvendt til at udregne tidsallokering for orlog, "
+"timesedler, ..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
@@ -1429,17 +1478,17 @@ msgstr "CPR nummer"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "Partners fødselsdag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr ""
+msgstr "Partners fulde navn"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
-msgstr ""
+msgstr "Start rekruttering"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
@@ -1499,7 +1548,7 @@ msgstr "Holdånd og god kommunikation"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "Medarbejde adressen har en virksomhed forbundet"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1510,6 +1559,7 @@ msgstr "Stillingsnavnet skal være unikt pr. afdeling i firmaet!"
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
 msgstr ""
+"Brugeren vil være i stand til at godkende dokumenter oprettet af ansatte."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -1517,6 +1567,8 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"Brugeren vil have adgang til HR konfiguration så vel som statistiske "
+"rapporter."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__image
@@ -1532,6 +1584,8 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"Dette felt bruges til at definere i hvilken tidszone ressourcerne vil "
+"fungere."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -1561,7 +1615,7 @@ msgstr "Trainee"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Transform our product into a suite of well positioned business Apps"
-msgstr ""
+msgstr "Omform vores produkt til en række af velstillede forretnings Apps"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -1587,6 +1641,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"Anvend medarbejderens hjemmeadresse her.\n"
+"                                           Den private adresse anvendes i udgifts rapport refusions dokumentet.\n"
+"                                           Den bør være forskellig fra arbejdsadressen."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
@@ -1623,6 +1680,12 @@ msgid ""
 " give him the best service. You report to the head of consulting service and"
 " will be coached by a senior consultant."
 msgstr ""
+"Vi er på udkig efter en motiveret og resultat-orienteret Funktionel "
+"Konsulent! Du vil være del af konsultations tjenesten vi udbyder til vores "
+"partnere og kunder, på den funktionelle side. Dit arbejder starter ved "
+"tilbuddet til kunden frem til leveringen. Du lytter til kunden og prøver at "
+"giver dem den bedste service. Du rapporterer til chefen for konsultations "
+"tjenesten, og vil blive oplært af en senior konsulent."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -1705,7 +1768,7 @@ msgstr "Enkemand"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Will report to the Head of Professional Services"
-msgstr ""
+msgstr "Vil rapportere til Chefen for Professionelle Tjenester"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -1732,6 +1795,9 @@ msgid ""
 "source, full featured and it’s online offer is 3 times cheaper than "
 "traditional competitors. We have 2.000.000 users, and we're growing fast."
 msgstr ""
+"Med vores produkt, som er en række af 3000 forretnings apps. Det er fuldt ud"
+" open source, fuld funktionelt og dens online tilbud er 3 gange billigere en"
+" traditionelle konkurrenter. Vi har 2.000.000 brugere, og vi vokser hurtigt."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -1761,7 +1827,7 @@ msgstr "Arbejdsmobil"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Arbejde organisation"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1843,13 +1909,13 @@ msgstr "Du er klar til at arbejde i en dynamisk virksomhed"
 #: code:addons/hr/models/hr.py:206
 #, python-format
 msgid "You cannot create a recursive hierarchy."
-msgstr ""
+msgstr "Du kan ikke oprette et rekursivt hierarki."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "Du kan ikke lave rekursive afdelinger."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1865,14 +1931,14 @@ msgstr "Du har en mastergrad i Business management"
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the IT world"
-msgstr ""
+msgstr "Du har en affinitet til IT verdenen"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the product"
-msgstr ""
+msgstr "Du har en affinitet til produktet"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1898,6 +1964,10 @@ msgid ""
 "small distributed development teams for specific projects. You will become a"
 " technical                 expert of the product."
 msgstr ""
+"Du vil være ansvarlig for udvikling og forbedring af applikationer Du vil "
+"arbejde selvstændigt samt                            koordinere og overvåge "
+"små spredte udviklingshold for specifikke projekter. Du vil blive en teknisk"
+" ekspert for produktet."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -1921,6 +1991,10 @@ msgid ""
 "distributed development teams for specific projects. You will become a "
 "techinical expert of the product."
 msgstr ""
+"Du vil være ansvarlig for udvikling og forbedring af produkt kommunikation. "
+"Du vil arbejde selvstændigt samt koordinere og overvåge små spredte "
+"udviklingshold for specifikke projekter. Du vil blive teknisk ekspert for "
+"produktet."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1932,17 +2006,17 @@ msgstr "Du vil blive teknisk ekspert for produktet."
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "You will initially be coached by senior developers"
-msgstr "Du vil med tiden blive undervist af senior udviklere"
+msgstr "Du vil til at starte med blive undervist af en senior udviklere"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "You will initially be coached by senior technical officer"
-msgstr ""
+msgstr "Du vil til at starte med blive trænet af en senior teknisk chef"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "You will initially be coached by senior trainees"
-msgstr ""
+msgstr "Du vil til at starte med blive trænet af senior elever"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1959,7 +2033,7 @@ msgstr "Du vil arbejde tæt med alle udviklerne"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
 msgid "You will work closely with all technical officer"
-msgstr ""
+msgstr "Du vil arbejde tæt sammen med alle tekniske chefer"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee

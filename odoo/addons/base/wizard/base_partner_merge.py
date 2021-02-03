@@ -6,6 +6,7 @@ import functools
 import itertools
 import logging
 import psycopg2
+import datetime
 
 from odoo import api, fields, models
 from odoo import SUPERUSER_ID, _
@@ -195,6 +196,7 @@ class MergePartnerAutomatic(models.TransientModel):
             update_records('calendar', src=partner, field_model='model_id.model')
             update_records('ir.attachment', src=partner, field_model='res_model')
             update_records('mail.followers', src=partner, field_model='res_model')
+            update_records('mail.activity', src=partner, field_model='res_model')
             update_records('mail.message', src=partner)
             update_records('ir.model.data', src=partner)
 
@@ -292,10 +294,12 @@ class MergePartnerAutomatic(models.TransientModel):
         if extra_checks and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])]):
             raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
-        # Make the company of all related users consistent
-        for user in partner_ids.mapped('user_ids'):
-            user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
-                        'company_id': dst_partner.company_id.id})
+        # Make the company of all related users consistent with destination partner company
+        if dst_partner.company_id:
+            partner_ids.mapped('user_ids').sudo().write({
+                'company_ids': [(4, dst_partner.company_id.id)],
+                'company_id': dst_partner.company_id.id
+            })
 
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
@@ -390,11 +394,11 @@ class MergePartnerAutomatic(models.TransientModel):
 
     @api.model
     def _get_ordered_partner(self, partner_ids):
-        """ Helper : returns a `res.partner` recordset ordered by create_date/active fields
+        """ Helper : returns a `res.partner` recordset ordered by id/create_date/active fields
             :param partner_ids : list of partner ids to sort
         """
         return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, (p.create_date or '')),
+            key=lambda p: (p.active, (p.create_date or datetime.datetime(1970, 1, 1), p.id)),
             reverse=True,
         )
 

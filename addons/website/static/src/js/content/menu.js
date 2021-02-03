@@ -21,6 +21,7 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         this.$headerClone.insertAfter(this.$target);
         this.$headers = this.$target.add(this.$headerClone);
         this.$dropdowns = this.$headers.find('.dropdown');
+        this.$dropdownMenus = this.$headers.find('.dropdown-menu');
         this.$navbarCollapses = this.$headers.find('.navbar-collapse');
 
         // Handle events for the collapse menus
@@ -69,7 +70,7 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
 
         // Reset opened menus
-        this.$dropdowns.removeClass('show');
+        this.$dropdowns.add(this.$dropdownMenus).removeClass('show');
         this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
     },
 });

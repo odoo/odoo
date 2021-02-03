@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
         company_dependent=True, copy=True, default='manual_periodic',
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
         Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.""")
-    valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type')
+    valuation = fields.Char(compute='_compute_valuation_type', inverse='_set_valuation_type', search='_search_valuation')
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
         ('fifo', 'First In First Out (FIFO)'),
@@ -47,6 +47,16 @@ class ProductTemplate(models.Model):
     @api.one
     def _set_valuation_type(self):
         return self.write({'property_valuation': self.valuation})
+
+    def _search_valuation(self, operator, value):
+        # The search is rather limited since 'property_valuation' is a Selection field, meaning that
+        # the user must search on the technical name of the field, in this case 'manual_periodic' or
+        # 'real_time'.
+        return [
+            '|',
+                '&', ('property_valuation', '!=', False), ('property_valuation', operator, value),
+                '&', ('property_valuation', '=', False), ('categ_id.property_valuation', operator, value)
+        ]
 
     @api.one
     @api.depends('property_cost_method', 'categ_id.property_cost_method')
@@ -122,10 +132,11 @@ class ProductProduct(models.Model):
 
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
 
+        prec = self.env['decimal.precision'].precision_get('Product Price')
         for location in locations:
             for product in self.with_context(location=location.id, compute_child=False).filtered(lambda r: r.valuation == 'real_time'):
                 diff = product.standard_price - new_price
-                if float_is_zero(diff, precision_rounding=product.currency_id.rounding):
+                if float_is_zero(diff, precision_digits=prec):
                     raise UserError(_("No difference between the standard price and the new price."))
                 if not product_accounts[product.id].get('stock_valuation', False):
                     raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
@@ -322,7 +333,7 @@ class ProductProduct(models.Model):
         :param Model account_analytic: a account.account.analytic record from the line of the product being sold
         """
 
-        if product.type == 'product' and product.valuation == 'real_time':
+        if (product.valuation == 'real_time' and (product.type == 'product' or (product.type == 'consu' and product._is_phantom_bom()))) :
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             # debit account dacc will be the output account
             dacc = accounts['stock_output'].id
@@ -341,8 +352,6 @@ class ProductProduct(models.Model):
                         'account_id': dacc,
                         'product_id': product.id,
                         'uom_id': uom.id,
-                        'account_analytic_id': account_analytic and account_analytic.id,
-                        'analytic_tag_ids': analytic_tags and analytic_tags.ids and [(6, 0, analytic_tags.ids)] or False,
                     },
 
                     {

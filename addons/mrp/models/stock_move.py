@@ -189,7 +189,7 @@ class StockMove(models.Model):
         move_line_to_unlink = self.env['stock.move.line']
         for move in self:
             reserved_quantity = quantity
-            for move_line in self.move_line_ids:
+            for move_line in move.move_line_ids:
                 if move_line.product_uom_qty > reserved_quantity:
                     move_line.product_uom_qty = reserved_quantity
                 else:
@@ -199,6 +199,11 @@ class StockMove(models.Model):
                     move_line_to_unlink |= move_line
         move_line_to_unlink.unlink()
         return True
+
+    def _do_unreserve(self):
+        production_moves = self.filtered(lambda m: m.raw_material_production_id or m.production_id)
+        production_moves._decrease_reserved_quanity(0.0)
+        return super(StockMove, self - production_moves)._do_unreserve()
 
     def _prepare_phantom_move_values(self, bom_line, quantity):
         return {
@@ -234,7 +239,7 @@ class StockMove(models.Model):
             qty_to_add -= quantity_to_process
 
             new_quantity_done = (ml.qty_done + quantity_to_process)
-            if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
+            if float_compare(ml.product_uom_id._compute_quantity(new_quantity_done, ml.product_id.uom_id), ml.product_qty, precision_rounding=rounding) >= 0:
                 ml.write({'qty_done': new_quantity_done, 'lot_produced_id': final_lot.id})
             else:
                 new_qty_reserved = ml.product_uom_qty - new_quantity_done
@@ -256,7 +261,7 @@ class StockMove(models.Model):
                 ), self.product_uom
             )
             location_id = False
-            if float_compare(qty_to_add, available_quantity, precision_rounding=self.product_uom.rounding) < 0:
+            if float_compare(qty_to_add, available_quantity, precision_rounding=self.product_uom.rounding) < 1:
                 location_id = quants.filtered(lambda r: r.quantity > 0)[-1:].location_id
 
             vals = {

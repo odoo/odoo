@@ -1,8 +1,9 @@
 .o_has_banner {
     .o_view_nocontent {
         top: 30%;
-        @media screen and (max-height:  map-get($grid-breakpoints, 'md')) {
+        @include media-breakpoint-down(sm) {
             position: relative;
+            margin: auto;
         }
     }
 }

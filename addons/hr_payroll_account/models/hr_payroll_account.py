@@ -42,7 +42,7 @@ class HrPayslip(models.Model):
     @api.onchange('contract_id')
     def onchange_contract(self):
         super(HrPayslip, self).onchange_contract()
-        self.journal_id = self.contract_id.journal_id.id or (not self.contract_id and self.default_get(['journal_id'])['journal_id'])
+        self.journal_id = self.contract_id.journal_id.id or (not self.contract_id and self.default_get(['journal_id'])['journal_id']) or self.journal_id
 
     @api.multi
     def action_payslip_cancel(self):
@@ -60,7 +60,7 @@ class HrPayslip(models.Model):
             debit_sum = 0.0
             credit_sum = 0.0
             date = slip.date or slip.date_to
-            currency = slip.company_id.currency_id
+            currency = slip.company_id.currency_id or slip.journal_id.company_id.currency_id
 
             name = _('Payslip of %s') % (slip.employee_id.name)
             move_dict = {

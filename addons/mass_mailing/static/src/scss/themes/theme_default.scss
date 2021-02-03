@@ -23,19 +23,10 @@ $o-mm-def-btn-bg        : $o-mm-def-color-gamma;
 $o-mm-def-btn-text      : $o-mm-def-color-beta;
 
 // ===== Colors =====
-.bg-beta {
-    background-color: $o-mm-def-color-zeta;
-    color:  $o-mm-def-color-beta;
-}
-.text-beta {
-    color: $o-mm-def-color-zeta;
-}
-.bg-delta {
-    background-color: $o-mm-def-color-eta;
-}
-.bg-gray-lighter {
-    background-color: $o-mm-def-color-alpha;
-}
+@include bg-variant(".bg-beta", $o-mm-def-color-zeta);
+@include text-emphasis-variant(".text-beta", $o-mm-def-color-zeta);
+@include bg-variant(".bg-delta", $o-mm-def-color-eta);
+@include bg-variant(".bg-gray-lighter", $o-mm-def-color-alpha);
 
 td {
     // Default browser style but needed so that alignment works on some mail
@@ -97,7 +88,7 @@ td {
         background-color: $o-mm-def-btn-bg;
     }
 
-    a, .btn.btn-link {
+    a:not(.btn), .btn.btn-link {
         color: $o-mm-def-color-epsilon;
         font-weight: bold;
         text-decoration: none !important;
@@ -127,7 +118,7 @@ td {
             background-color: $o-mm-def-color-eta;
         }
 
-        a, .btn.btn-link {
+        a:not(.btn), .btn.btn-link {
             color: $o-mm-def-color-eta;
         }
     }
@@ -146,7 +137,8 @@ td {
     }
     .o_mail_header_social {
         margin-right: 20px;
-        a {
+
+        a:not(.btn), .btn.btn-link {
             display: inline-block;
         }
     }

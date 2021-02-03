@@ -6,13 +6,6 @@ import psycopg2
 
 _schema = logging.getLogger('odoo.schema')
 
-_TABLE_KIND = {
-    'BASE TABLE': 'r',
-    'VIEW': 'v',
-    'FOREIGN TABLE': 'f',
-    'LOCAL TEMPORARY': 't',
-}
-
 _CONFDELTYPES = {
     'RESTRICT': 'r',
     'NO ACTION': 'a',
@@ -40,11 +33,18 @@ def table_exists(cr, tablename):
 
 def table_kind(cr, tablename):
     """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
-        ``'f'`` (foreign table), ``'t'`` (temporary table), or ``None``.
+        ``'f'`` (foreign table), ``'t'`` (temporary table),
+        ``'m'`` (materialized view), or ``None``.
     """
-    query = "SELECT table_type FROM information_schema.tables WHERE table_name=%s"
+    query = """
+        SELECT c.relkind
+          FROM pg_class c
+          JOIN pg_namespace n ON (n.oid = c.relnamespace)
+         WHERE c.relname = %s
+           AND n.nspname = 'public'
+    """
     cr.execute(query, (tablename,))
-    return _TABLE_KIND[cr.fetchone()[0]] if cr.rowcount else None
+    return cr.fetchone()[0] if cr.rowcount else None
 
 def create_model_table(cr, tablename, comment=None):
     """ Create the table for a model. """
@@ -102,16 +102,17 @@ def convert_column(cr, tablename, columnname, columntype):
     _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
 
 def set_not_null(cr, tablename, columnname):
-    """ Add a NOT NULL constraint on the given column. """
+    """ Add a NOT NULL constraint on the given column, and return ``None`` (in
+        case of success) or an error message (in case of failure).
+    """
     query = 'ALTER TABLE "{}" ALTER COLUMN "{}" SET NOT NULL'.format(tablename, columnname)
     try:
         with cr.savepoint():
-            cr.execute(query)
+            cr.execute(query, log_exceptions=False)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
-    except Exception:
-        msg = "Table %r: unable to set NOT NULL on column %r!\n" \
-              "If you want to have it, you should update the records and execute manually:\n%s"
-        _schema.warning(msg, tablename, columnname, query, exc_info=True)
+    except Exception as e:
+        _schema.debug("Table %r: column %r: unable to set constraint NOT NULL", tablename, columnname)
+        return str(e)
 
 def drop_not_null(cr, tablename, columnname):
     """ Drop the NOT NULL constraint on the given column. """

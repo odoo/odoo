@@ -9,16 +9,18 @@
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # gezgin biri <gezginbiri@hotmail.com>, 2018
-# Abdullah onur uğur <aonurugur@outlook.com>, 2018
-# Matanat Ahmadova <ahmadova.matanat01@gmail.com>, 2018
+# Abdullah Onur Uğur <aonurugur@outlook.com>, 2018
+# Matanat Ahmadova, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
+# abc Def <hdogan1974@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +53,8 @@ msgid ""
 "                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
 "                          "
 msgstr ""
+"Coğrafi Kodlama (Yerler) için API anahtarı gerekir. Bu anahtarı şu anahtarla Sistem Değiştirgelerine kaydedin: google.api_key_geocode, değer: <your api key>\n"
+"Daha fazla bilgi için  https://developers.google.com/maps/documentation/geocoding/get-api-key adresini ziyaret edin"
 
 #. module: base_geolocalize
 #: code:addons/base_geolocalize/models/res_partner.py:28
@@ -99,3 +103,25 @@ msgstr "Coğrafi Konum"
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
 msgstr "İş Ortağı Atama"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:33
+#, python-format
+msgid ""
+"Unable to geolocate, received the error:\n"
+"%s\n"
+"\n"
+"Google made this a paid feature.\n"
+"You should first enable billing on your Google account.\n"
+"Then, go to Developer Console, and enable the APIs:\n"
+"Geocoding, Maps Static, Maps Javascript.\n"
+"error_message"
+msgstr ""
+"Coğrafi konum belirlenemiyor, hata alındı:\n"
+"%s\n"
+"\n"
+"Google bunu ücretli bir özellik haline getirdi.\n"
+"Önce Google hesabınızdan faturalandırmayı etkinleştirmelisiniz.\n"
+"Ardından, Geliştirici Konsolu'na gidin ve API'ları etkinleştirin:\n"
+"Coğrafi Kodlama, Haritalar Statik , Haritalar Javascript.\n"
+"hata_mesajı"

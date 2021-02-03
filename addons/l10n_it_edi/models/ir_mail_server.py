@@ -36,7 +36,7 @@ class FetchmailServer(models.Model):
     def _check_pec(self):
         for record in self:
             if record.l10n_it_is_pec and record.type != 'imap':
-                raise ValidationError("PEC mail server must be of type IMAP.")
+                raise ValidationError(_("PEC mail server must be of type IMAP."))
 
     @api.multi
     def fetch_mail(self):
@@ -177,7 +177,7 @@ class FetchmailServer(models.Model):
                         _logger.info('Error in decoding new receipt file: %s', attachment_name)
                         return
 
-                    elements = tree.xpath('//NomeFile', namespaces=tree.nsmap)
+                    elements = tree.xpath('//NomeFile')
                     if elements and elements[0].text:
                         filename = elements[0].text
                     else:
@@ -203,7 +203,7 @@ class FetchmailServer(models.Model):
             _logger.info('Error in decoding new receipt file: %s', attachment.fname)
             return {}
 
-        elements = tree.xpath('//NomeFile', namespaces=tree.nsmap)
+        elements = tree.xpath('//NomeFile')
         if elements and elements[0].text:
             filename = elements[0].text
         else:
@@ -281,7 +281,7 @@ class FetchmailServer(models.Model):
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
-            elements = tree.xpath('//Esito', namespaces=tree.nsmap)
+            elements = tree.xpath('//Esito')
             if elements and elements[0].text:
                 if elements[0].text == 'EC01':
                     related_invoice.l10n_it_send_state = 'delivered_accepted'
@@ -337,7 +337,7 @@ class FetchmailServer(models.Model):
         output_str = "<ul>"
 
         for element_tag in element_tags:
-            elements = tree.xpath(element_tag, namespaces=tree.nsmap)
+            elements = tree.xpath(element_tag)
             if not elements:
                 continue
             for element in elements:
@@ -349,7 +349,7 @@ class FetchmailServer(models.Model):
     def _return_error_xml(self, tree):
         output_str = "<ul>"
 
-        elements = tree.xpath('//Errore', namespaces=tree.nsmap)
+        elements = tree.xpath('//Errore')
         if not elements:
             return
         for element in elements:
@@ -357,3 +357,17 @@ class FetchmailServer(models.Model):
             if descrizione:
                 output_str += "<li>Errore %s: %s</li>" % (element[0].text, descrizione)
         return output_str + "</ul>"
+
+class IrMailServer(models.Model):
+    _name = "ir.mail_server"
+    _inherit = "ir.mail_server"
+
+    def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+                attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
+                body_alternative=None, subtype_alternative='plain'):
+
+        if self.env.context.get('wo_bounce_return_path') and headers:
+            headers['Return-Path'] = email_from
+        return super(IrMailServer, self).build_email(email_from, email_to, subject, body, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to,
+                attachments=attachments, message_id=message_id, references=references, object_id=object_id, subtype=subtype, headers=headers,
+                body_alternative=body_alternative, subtype_alternative=subtype_alternative)

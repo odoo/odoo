@@ -138,10 +138,9 @@
             min-width: 0;
             max-width: 100%;
             word-wrap: break-word;
-            > pre {
+            .o_thread_message_content > pre {
                 white-space: pre-wrap;
                 word-break: break-word;
-                text-align: justify;
             }
 
 
@@ -169,8 +168,9 @@
                 display: inline-block;
                 word-break: break-all;
             }
-            img {
+            :not(.o_image_box) > img {
                 max-width: 100%;
+                height: auto;
             }
 
             .o_mail_body_long {

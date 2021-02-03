@@ -56,7 +56,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test('human_number', function (assert) {
-        assert.expect(13);
+        assert.expect(26);
 
         var human_number = utils.human_number;
 
@@ -73,8 +73,82 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(human_number(1.0045e+22, 3, 1), '1.005e+22');
         assert.strictEqual(human_number(1.012e+43, 2, 1), '1.01e+43');
         assert.strictEqual(human_number(1.012e+43, 2, 2), '1.01e+43');
+
+        assert.strictEqual(human_number(-1020, 2, 1), '-1.02k');
+        assert.strictEqual(human_number(-1020000, 2, 2), '-1020k');
+        assert.strictEqual(human_number(-10200000, 2, 2), '-10.2M');
+        assert.strictEqual(human_number(-1020, 2, 1), '-1.02k');
+        assert.strictEqual(human_number(-1002, 2, 1), '-1k');
+        assert.strictEqual(human_number(-101, 2, 1), '-101');
+        assert.strictEqual(human_number(-64.2, 2, 1), '-64');
+        assert.strictEqual(human_number(-1e+18), '-1E');
+        assert.strictEqual(human_number(-1e+21, 2, 1), '-1e+21');
+        assert.strictEqual(human_number(-1.0045e+22, 2, 1), '-1e+22');
+        assert.strictEqual(human_number(-1.0045e+22, 3, 1), '-1.004e+22');
+        assert.strictEqual(human_number(-1.012e+43, 2, 1), '-1.01e+43');
+        assert.strictEqual(human_number(-1.012e+43, 2, 2), '-1.01e+43');
     });
 
+    QUnit.test('round_decimals', function (assert) {
+        assert.expect(21);
+
+        var round_di = utils.round_decimals;
+
+        assert.strictEqual(String(round_di(1.0, 0)), '1');
+        assert.strictEqual(String(round_di(1.0, 1)), '1');
+        assert.strictEqual(String(round_di(1.0, 2)), '1');
+        assert.strictEqual(String(round_di(1.0, 3)), '1');
+        assert.strictEqual(String(round_di(1.0, 4)), '1');
+        assert.strictEqual(String(round_di(1.0, 5)), '1');
+        assert.strictEqual(String(round_di(1.0, 6)), '1');
+        assert.strictEqual(String(round_di(1.0, 7)), '1');
+        assert.strictEqual(String(round_di(1.0, 8)), '1');
+        assert.strictEqual(String(round_di(0.5, 0)), '1');
+        assert.strictEqual(String(round_di(-0.5, 0)), '-1');
+        assert.strictEqual(String(round_di(2.6745, 3)), '2.6750000000000003');
+        assert.strictEqual(String(round_di(-2.6745, 3)), '-2.6750000000000003');
+        assert.strictEqual(String(round_di(2.6744, 3)), '2.674');
+        assert.strictEqual(String(round_di(-2.6744, 3)), '-2.674');
+        assert.strictEqual(String(round_di(0.0004, 3)), '0');
+        assert.strictEqual(String(round_di(-0.0004, 3)), '0');
+        assert.strictEqual(String(round_di(357.4555, 3)), '357.456');
+        assert.strictEqual(String(round_di(-357.4555, 3)), '-357.456');
+        assert.strictEqual(String(round_di(457.4554, 3)), '457.455');
+        assert.strictEqual(String(round_di(-457.4554, 3)), '-457.455');
+    });
+
+    QUnit.test('round_precision', function (assert) {
+        assert.expect(26);
+
+        var round_pr = utils.round_precision;
+
+        assert.strictEqual(String(round_pr(1.0, 1)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.1)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.01)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.0001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.00001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.000001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.0000001)), '1');
+        assert.strictEqual(String(round_pr(1.0, 0.00000001)), '1');
+        assert.strictEqual(String(round_pr(0.5, 1)), '1');
+        assert.strictEqual(String(round_pr(-0.5, 1)), '-1');
+        assert.strictEqual(String(round_pr(2.6745, 0.001)), '2.6750000000000003');
+        assert.strictEqual(String(round_pr(-2.6745, 0.001)), '-2.6750000000000003');
+        assert.strictEqual(String(round_pr(2.6744, 0.001)), '2.674');
+        assert.strictEqual(String(round_pr(-2.6744, 0.001)), '-2.674');
+        assert.strictEqual(String(round_pr(0.0004, 0.001)), '0');
+        assert.strictEqual(String(round_pr(-0.0004, 0.001)), '0');
+        assert.strictEqual(String(round_pr(357.4555, 0.001)), '357.456');
+        assert.strictEqual(String(round_pr(-357.4555, 0.001)), '-357.456');
+        assert.strictEqual(String(round_pr(457.4554, 0.001)), '457.455');
+        assert.strictEqual(String(round_pr(-457.4554, 0.001)), '-457.455');
+        assert.strictEqual(String(round_pr(-457.4554, 0.05)), '-457.45000000000005');
+        assert.strictEqual(String(round_pr(457.444, 0.5)), '457.5');
+        assert.strictEqual(String(round_pr(457.3, 5)), '455');
+        assert.strictEqual(String(round_pr(457.5, 5)), '460');
+        assert.strictEqual(String(round_pr(457.1, 3)), '456');
+    });
 });
 
 });

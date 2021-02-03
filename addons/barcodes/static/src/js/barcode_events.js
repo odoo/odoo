@@ -64,6 +64,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 'top': '50%',
                 'transform': 'translateY(-50%)',
                 'z-index': '-1',
+                'opacity': '0',
             },
         });
         // Avoid to show autocomplete for a non appearing input
@@ -219,7 +220,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
      */
     _listenBarcodeScanner: function (e) {
         if ($(document.activeElement).not('input:text, textarea, [contenteditable], ' +
-            '[type="email"], [type="number"], [type="password"], [type="tel"]').length) {
+            '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]').length) {
             $('body').append(this.$barcodeInput);
             this.$barcodeInput.focus();
         }

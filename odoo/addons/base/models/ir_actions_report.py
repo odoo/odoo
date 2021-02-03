@@ -7,6 +7,7 @@ from odoo.tools.misc import find_in_path
 from odoo.tools import config
 from odoo.sql_db import TestCursor
 from odoo.http import request
+from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
 import time
 import base64
@@ -24,6 +25,7 @@ from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
+from collections.abc import Iterable
 
 
 _logger = logging.getLogger(__name__)
@@ -85,7 +87,8 @@ class IrActionsReport(models.Model):
     name = fields.Char(translate=True)
     type = fields.Char(default='ir.actions.report')
     binding_type = fields.Selection(default='report')
-    model = fields.Char(required=True)
+    model = fields.Char(required=True, string='Model Name')
+    model_id = fields.Many2one('ir.model', string='Model', compute='_compute_model_id', search='_search_model_id')
 
     report_type = fields.Selection([
         ('qweb-html', 'HTML'),
@@ -110,6 +113,32 @@ class IrActionsReport(models.Model):
                                     help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
+
+    @api.depends('model')
+    def _compute_model_id(self):
+        for action in self:
+            action.model_id = self.env['ir.model']._get(action.model).id
+
+    def _search_model_id(self, operator, value):
+        ir_model_ids = None
+        if isinstance(value, str):
+            names = self.env['ir.model'].name_search(value, operator=operator)
+            ir_model_ids = [n[0] for n in names]
+
+        elif isinstance(value, Iterable):
+            ir_model_ids = value
+
+        elif isinstance(value, int) and not isinstance(value, bool):
+            ir_model_ids = [value]
+
+        if ir_model_ids:
+            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+            ir_model = self.env['ir.model'].browse(ir_model_ids)
+            return [('model', operator, ir_model.mapped('model'))]
+        elif isinstance(value, bool) or value is None:
+            return [('model', operator, value)]
+        else:
+            return FALSE_DOMAIN
 
     @api.multi
     def associated_view(self):
@@ -150,7 +179,7 @@ class IrActionsReport(models.Model):
         :param attachment_name: The optional name of the attachment.
         :return: A recordset of length <=1 or None
         '''
-        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
+        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time}) if self.attachment else ''
         if not attachment_name:
             return None
         return self.env['ir.attachment'].search([
@@ -455,15 +484,21 @@ class IrActionsReport(models.Model):
 
     @api.model
     def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0):
+        kwargs = {}
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
+        # add QR_quiet type for QR type with no border (not in 13.0 since there is quiet argument)
+        if barcode_type == 'QR_quiet':
+            kwargs['quiet'] = 1
+            kwargs['barBorder'] = 0
+            barcode_type = 'QR'
         try:
             width, height, humanreadable = int(width), int(height), bool(int(humanreadable))
             barcode = createBarcodeDrawing(
                 barcode_type, value=value, format='png', width=width, height=height,
-                humanReadable=humanreadable
+                humanReadable=humanreadable, **kwargs
             )
             return barcode.asString('png')
         except (ValueError, AttributeError):
@@ -553,15 +588,25 @@ class IrActionsReport(models.Model):
                     streams.append(pdf_content_stream)
                 else:
                     # In case of multiple docs, we need to split the pdf according the records.
-                    # To do so, we split the pdf based on outlines computed by wkhtmltopdf.
+                    # To do so, we split the pdf based on top outlines computed by wkhtmltopdf.
                     # An outline is a <h?> html tag found on the document. To retrieve this table,
-                    # we look on the pdf structure using pypdf to compute the outlines_pages that is
-                    # an array like [0, 3, 5] that means a new document start at page 0, 3 and 5.
+                    # we look on the pdf structure using pypdf to compute the outlines_pages from
+                    # the top level heading in /Outlines.
                     reader = PdfFileReader(pdf_content_stream)
-                    if reader.trailer['/Root'].get('/Dests'):
-                        outlines_pages = sorted(
-                            [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
+                    root = reader.trailer['/Root']
+                    if '/Outlines' in root and '/First' in root['/Outlines']:
+                        outlines_pages = []
+                        node = root['/Outlines']['/First']
+                        while True:
+                            outlines_pages.append(root['/Dests'][node['/Dest']][0])
+                            if '/Next' not in node:
+                                break
+                            node = node['/Next']
+                        outlines_pages = sorted(set(outlines_pages))
+                        # There should be only one top-level heading by document
                         assert len(outlines_pages) == len(res_ids)
+                        # There should be a top-level heading on first page
+                        assert outlines_pages[0] == 0
                         for i, num in enumerate(outlines_pages):
                             to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                             attachment_writer = PdfFileWriter()

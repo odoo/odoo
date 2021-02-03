@@ -246,7 +246,6 @@ var WebsiteRoot = BodyManager.extend({
     _onPublishBtnClick: function (ev) {
         ev.preventDefault();
 
-        var self = this;
         var $data = $(ev.currentTarget).parents(".js_publish_management:first");
         this._rpc({
             route: $data.data('controller') || '/website/publish',
@@ -259,19 +258,6 @@ var WebsiteRoot = BodyManager.extend({
             $data.toggleClass("css_unpublished css_published");
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
-        })
-        .fail(function (err, data) {
-            return new Dialog(self, {
-                title: data.data ? data.data.arguments[0] : "",
-                $content: $('<div/>', {
-                    html: (data.data ? data.data.arguments[1] : data.statusText)
-                        + '<br/>'
-                        + _.str.sprintf(
-                            _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
-                            '/web#return_label=Website&model=' + $data.data('object') + '&id=' + $data.data('id')
-                        ),
-                }),
-            }).open();
         });
     },
     /**
@@ -303,21 +289,14 @@ var WebsiteRoot = BodyManager.extend({
      * @param {OdooEvent} ev
      */
     _multiWebsiteSwitch: function (ev) {
-        var website_id_to_switch_to = ev.currentTarget.getAttribute('website-id');
-
-        // need to force in each case, even if domain is set
-        // Website 1: localhost; Website 2: 0.0.0.0; website 3: -
-        // when you switch 3 <--> 1, you need to force the website
-
-        var website_domain = ev.currentTarget.getAttribute('domain');
-        var url = $.param.querystring(window.location.href, {'fw': website_id_to_switch_to});
-        if (website_domain && window.location.hostname !== website_domain) {
-            // if domain unchanged, this line will do a nop while we need to refresh
-            // the page to load the new forced website.
-            url = new URL(url);
-            url.hostname = website_domain;
+        var websiteId = ev.currentTarget.getAttribute('website-id');
+        var websiteDomain = ev.currentTarget.getAttribute('domain');
+        var url = window.location.href;
+        if (websiteDomain && window.location.hostname !== websiteDomain) {
+            var path = window.location.pathname + window.location.search + window.location.hash;
+            url = websiteDomain + path;
         }
-        window.location.href = url;
+        window.location.href = $.param.querystring(url, {'fw': websiteId});
     },
 
     _multiCompanySwitch: function (ev) {

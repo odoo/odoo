@@ -69,4 +69,4 @@ class CalendarController(http.Controller):
 
     @http.route('/calendar/notify_ack', type='json', auth="user")
     def notify_ack(self, type=''):
-        return request.env['res.partner']._set_calendar_last_notif_ack()
+        return request.env['res.partner'].sudo()._set_calendar_last_notif_ack()

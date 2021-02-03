@@ -1,0 +1,132 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_cash_rounding
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Noma Yuki, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-25 08:38+0000\n"
+"PO-Revision-Date: 2020-05-14 12:49+0000\n"
+"Last-Translator: Noma Yuki, 2020\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_account_cash_rounding
+msgid "Account Cash Rounding"
+msgstr "会計現金丸め"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__cash_rounding
+msgid "Cash Rounding"
+msgstr "現金丸め"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Cash Roundings"
+msgstr "現金丸め"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__rounding_method
+msgid "Cash rounding"
+msgstr "キャッシュラウンディング"
+
+#. module: pos_cash_rounding
+#: code:addons/pos_cash_rounding/models/pos_config.py:19
+#, python-format
+msgid "Cash rounding strategy must be: 'Add a rounding line'"
+msgstr "現金の丸め戦略は次のようにする必要があります: '丸め線を追加'"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
+msgid "Define the smallest coinage of the currency used to pay"
+msgstr "支払いに使用される通貨の最小の硬貨を定義します"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Define the smallest coinage of the currency used to pay by cash"
+msgstr "現金支払に使用される最小硬貨額を定義"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_account_cash_rounding__loss_account_id
+msgid "Loss Account"
+msgstr "費用勘定"
+
+#. module: pos_cash_rounding
+#: model:ir.model.fields,field_description:pos_cash_rounding.field_pos_config__only_round_cash_method
+msgid "Only apply rounding on cash"
+msgstr "現金にのみ丸めを適用する"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.res_config_view_form_inherit_pos_cash_rounding
+msgid "Payments"
+msgstr "支払"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "POS設定"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "POSオーダ"
+
+#. module: pos_cash_rounding
+#: model:ir.model,name:pos_cash_rounding.model_pos_session
+msgid "Point of Sale Session"
+msgstr "POSセッション"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_rounding_form_view_inherited
+msgid "Profit Account"
+msgstr "収益勘定"
+
+#. module: pos_cash_rounding
+#. openerp-web
+#: code:addons/pos_cash_rounding/static/src/xml/pos.xml:19
+#, python-format
+msgid "ROUNDED"
+msgstr "丸め"
+
+#. module: pos_cash_rounding
+#. openerp-web
+#: code:addons/pos_cash_rounding/static/src/xml/pos.xml:7
+#, python-format
+msgid "ROUNDED:"
+msgstr ""
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_config_view_form_inherit_cash_rounding
+msgid "Rounding Method"
+msgstr "丸め方法"
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_rounding_form_view_inherited
+msgid ""
+"The Point of Sale only support the \"add a rounding line\" rounding "
+"strategy."
+msgstr ""
+
+#. module: pos_cash_rounding
+#: model_terms:ir.ui.view,arch_db:pos_cash_rounding.pos_order_view_form_inherit_cash_rounding
+msgid "Total Paid (with rounding)"
+msgstr "合計支払額(四捨五入あり)"
+
+#. module: pos_cash_rounding
+#: code:addons/pos_cash_rounding/models/account_cash_rounding.py:20
+#, python-format
+msgid ""
+"You are not allowed to change the cash rounding configuration while a pos "
+"session using it is already opened."
+msgstr "それを使用するPOSセッションがすでに開かれている間は、現金丸め構成を変更することはできません。"

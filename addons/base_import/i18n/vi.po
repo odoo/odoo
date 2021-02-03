@@ -3,8 +3,9 @@
 # * base_import
 # 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-02 10:05+0000\n"
 "PO-Revision-Date: 2018-08-24 09:16+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
+"Last-Translator: Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "%d records were successfully imported"
-msgstr ""
+msgstr "%d dữ liệu đã được import"
 
 #. module: base_import
 #. openerp-web
@@ -55,6 +56,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Đã xảy ra sự cố không xác định trong quá trình nạp tập tin (có thể bị mất "
+"kết nối, vượt quá giới hạn dữ liệu hoặc vượt quá giới hạn bộ nhớ). Vui lòng "
+"thử lại trong trường hợp vấn đề là nhất thời. Nếu sự cố vẫn xảy ra, hãy thử "
+"chia nhỏ tệp thay vì nhập cùng một lúc."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -64,7 +69,7 @@ msgstr "Cơ bản"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "Base Import"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
@@ -95,7 +100,7 @@ msgstr "Cột %s chứa giá trị không hợp lệ. Lỗi ở dòng %d: %s)"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Tên cột"
 
 #. module: base_import
 #. openerp-web
@@ -112,13 +117,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Không thể truy cập đường dẫn: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:108
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "Tạo mới nếu không tồn tại"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -171,6 +178,9 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Tạo bản ghi mới nếu không thể tìm thấy chúng (thay vì không nhập). Lưu ý "
+"rằng giá trị trong cột sẽ được sử dụng làm 'tên' của bản ghi mới và giả sử "
+"điều này là đủ để tạo bản ghi."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -292,6 +302,8 @@ msgstr "Mọi thứ dường như hợp lệ."
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
 msgstr ""
+"Tài liệu excel được khuyến nghị vì các trường dữ liệu sẽ được định dạng tự "
+"động."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:169
@@ -325,7 +337,7 @@ msgstr "Kiểu Tập tin"
 #: code:addons/base_import/models/base_import.py:814
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Tập tin vượt quá dung lượng tối đa (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -337,14 +349,14 @@ msgstr "Tập tin để kiểm tra và/hoặc nhập, raw binary (không phải 
 #: code:addons/base_import/static/src/xml/base_import.xml:137
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "Đối với tài liệu dạng CSV, bạn cần chọn đúng dấu phân cách."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:13
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Tùy chọn định dạng"
 
 #. module: base_import
 #. openerp-web
@@ -424,6 +436,8 @@ msgid ""
 "parent / child relation occurs on every line, and lead to a slower import."
 "                     Defering it can speed up import."
 msgstr ""
+"Nếu mô hình sử dụng quan hệ cha/con, việc tính toán quan hệ cha/con xảy ra "
+"trên mọi dòng và dẫn đến nhập chậm hơn. Trì hoãn nó có thể tăng tốc độ nhập."
 
 #. module: base_import
 #. openerp-web
@@ -452,7 +466,7 @@ msgstr "Import một tập tin"
 #: code:addons/base_import/static/src/js/import_action.js:612
 #, python-format
 msgid "Import completed"
-msgstr ""
+msgstr "Nạp hoàn tất"
 
 #. module: base_import
 #. openerp-web
@@ -470,6 +484,9 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Đã hết thời gian nhập. Hãy thử lại. Nếu bạn vẫn gặp phải sự cố này, tệp có "
+"thể quá lớn so với cấu hình của hệ thống, hãy thử tách nó (nhập ít bản ghi "
+"hơn cho mỗi tệp)."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -546,7 +563,7 @@ msgstr "Nạp tập tin"
 #: code:addons/base_import/static/src/js/import_action.js:364
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "Nạp tập tin"
 
 #. module: base_import
 #. openerp-web
@@ -570,7 +587,7 @@ msgstr "Tên"
 #: code:addons/base_import/static/src/xml/base_import.xml:85
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "Cần giúp đỡ?"
 
 #. module: base_import
 #. openerp-web
@@ -827,6 +844,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"Không thể nạp hình ảnh thông qua URL, liên hệ với quản trị hoặc người hỗ trợ"
+" để biết được nguyên nhân."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:631

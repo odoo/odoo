@@ -3,19 +3,23 @@
 # * payment_authorize
 # 
 # Translators:
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2018
 # Martin Trigaux, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
 # Mateus Lopes <mateus1@gmail.com>, 2018
 # grazziano <gra.negocia@gmail.com>, 2018
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
+# Fernando Colus <fcolus1@gmail.com>, 2020
+# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: grazziano <gra.negocia@gmail.com>, 2018\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +39,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
 msgstr "API Login"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
+msgid "API Signature Key"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -95,15 +104,7 @@ msgid "How to get paid with Authorize.Net"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:64
-#, python-format
-msgid ""
-"If you don't have any account, please ask your salesperson to update your "
-"profile. "
-msgstr ""
-
-#. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:261
+#: code:addons/payment_authorize/models/payment.py:292
 #, python-format
 msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
@@ -113,7 +114,7 @@ msgstr ""
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Configuração Manual"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -133,7 +134,7 @@ msgstr "Método de Pagamento"
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Token de pagamento"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
@@ -155,7 +156,7 @@ msgstr ""
 #: code:addons/payment_authorize/controllers/main.py:61
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "Por favor, faça login para completar o pagamento."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -166,7 +167,7 @@ msgstr "Fornecedor"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Salvar Cartões"
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
@@ -176,7 +177,7 @@ msgstr "Sips"
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:365
@@ -207,6 +208,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Esta opção permite que os clientes salvem seu cartão de crédito como um "
+"token de pagamentoe reutilizá-lo para uma compra posterior. Se você "
+"gerenciar assinaturas (recorrentesfaturamento), você precisa cobrar "
+"automaticamente do cliente quando emitir uma fatura."
 
 #. module: payment_authorize
 #: selection:payment.acquirer,provider:0

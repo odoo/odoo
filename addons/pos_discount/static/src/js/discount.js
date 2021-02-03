@@ -3,6 +3,7 @@ odoo.define('pos_discount.pos_discount', function (require) {
 
 var core = require('web.core');
 var screens = require('point_of_sale.screens');
+var field_utils = require('web.field_utils');
 
 var _t = core._t;
 
@@ -14,7 +15,7 @@ var DiscountButton = screens.ActionButtonWidget.extend({
             'title': _t('Discount Percentage'),
             'value': this.pos.config.discount_pc,
             'confirm': function(val) {
-                val = Math.round(Math.max(0,Math.min(100,val)));
+                val = Math.round(Math.max(0,Math.min(100,field_utils.parse.float(val))));
                 self.apply_discount(val);
             },
         });
@@ -42,10 +43,16 @@ var DiscountButton = screens.ActionButtonWidget.extend({
         }
 
         // Add discount
+        // We add the price as manually set to avoid recomputation when changing customer.
         var discount = - pc / 100.0 * order.get_total_with_tax();
 
         if( discount < 0 ){
-            order.add_product(product, { price: discount });
+            order.add_product(product, {
+                price: discount,
+                extras: {
+                    price_manually_set: true,
+                },
+            });
         }
     },
 });

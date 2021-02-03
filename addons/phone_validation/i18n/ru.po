@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "Add international prefix"
-msgstr ""
+msgstr "Добавьте код страны"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_res_company__phone_international_format
@@ -30,6 +32,9 @@ msgid ""
 "coming from the company's country are nationaly formatted. International "
 "numbers are always using international format."
 msgstr ""
+"Всегда кодируйте номера телефонов в международном формате. Иначе цифры, "
+"поступающих из страны компании, отформатированные по национальным данным. "
+"Международные номера всегда используют международный формат."
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_company
@@ -50,13 +55,13 @@ msgstr "Номер"
 #: code:addons/phone_validation/tools/phone_validation.py:23
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits"
-msgstr ""
+msgstr "Невозможен номер %s: наверное, недействительна количество цифр"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:25
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix"
-msgstr ""
+msgstr "Недействителен номер %s: вероятно неправильный префикс"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
@@ -66,17 +71,17 @@ msgstr "Последнее изменение"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_res_company__phone_international_format
 msgid "Local Numbers"
-msgstr ""
+msgstr "местные номера"
 
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "No prefix"
-msgstr ""
+msgstr "без префикса"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "Phone Validation Mixin"
-msgstr ""
+msgstr "Проверка телефона Mixin"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:44
@@ -84,7 +89,7 @@ msgstr ""
 msgid ""
 "Unable to format %s:\n"
 "%s"
-msgstr ""
+msgstr "Невозможно отформатировать %s:%s "
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:20
@@ -92,4 +97,4 @@ msgstr ""
 msgid ""
 "Unable to parse %s:\n"
 "%s"
-msgstr ""
+msgstr "Невозможно проанализировать %s:%s "

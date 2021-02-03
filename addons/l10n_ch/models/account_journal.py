@@ -29,7 +29,7 @@ class AccountJournal(models.Model):
 
         # The call to super() creates the related bank_account_id field if necessary
         if 'l10n_ch_postal' in vals:
-            for record in self:
+            for record in self.filtered('bank_account_id'):
                 record.bank_account_id.l10n_ch_postal = vals['l10n_ch_postal']
         return rslt
 

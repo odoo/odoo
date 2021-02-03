@@ -3,17 +3,16 @@
 # * base_address_city
 # 
 # Translators:
-# Collex100, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux, 2018
+# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@it-projects.info>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +28,14 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
+"Отметьте это, чтобы каждый адрес, созданная в этой стране, содержала "
+"`Город`, избранное в списке городов страны."
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
 msgid "Cities"
-msgstr ""
+msgstr "города"
 
 #. module: base_address_city
 #: code:addons/base_address_city/models/res_partner.py:29
@@ -49,7 +50,7 @@ msgstr "Город"
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
 #: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
 msgid "City of Address"
-msgstr ""
+msgstr "город адреса"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
@@ -84,13 +85,16 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"Показать и управлять списком всех городов, на которые можно назначить ваши "
+"партнерские записи. Заметьте, что опцию можно установить отдельно в каждой "
+"стране чтобы обеспечить любую его адрес, чтобы город в этом списке."
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr ""
+msgstr "Обеспечить применение городов"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__id
@@ -120,7 +124,7 @@ msgstr "Название"
 #. module: base_address_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 msgid "Search City"
-msgstr ""
+msgstr "Поиск города"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id

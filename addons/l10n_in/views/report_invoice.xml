@@ -37,7 +37,7 @@
         </xpath>
 
         <xpath expr="//t[@name='account_invoice_line_accountable']" position="inside">
-            <td>
+            <td t-if="o.company_id.country_id.code == 'IN'">
               <span t-if="line.product_id.l10n_in_hsn_code" t-field="line.product_id.l10n_in_hsn_code"></span>
             </td>
             <t t-if="o.company_id.country_id.code == 'IN'">

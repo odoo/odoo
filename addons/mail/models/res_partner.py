@@ -117,7 +117,8 @@ class Partner(models.Model):
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id,
             'auto_delete': mail_auto_delete,
-            'references': message.parent_id.message_id if message.parent_id else False
+            # due to ir.rule, user have no right to access parent message if message is not published
+            'references': message.parent_id.sudo().message_id if message.parent_id else False,
         }
         if record:
             base_mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(message, records=record))
@@ -132,7 +133,7 @@ class Partner(models.Model):
         for group_tpl_values in [group for group in recipients.values() if group['recipients']]:
             # generate notification email content
             template_ctx = {**base_template_ctx, **group_tpl_values}
-            mail_body = base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+            mail_body = base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True) if base_template else message.body
             mail_body = self.env['mail.thread']._replace_local_links(mail_body)
             mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name)
 
@@ -236,10 +237,11 @@ class Partner(models.Model):
         """ Return 'limit'-first partners' id, name and email such that the name or email matches a
             'search' string. Prioritize users, and then extend the research to all partners. """
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
+        search_dom = expression.AND([[('active', '=', True)], search_dom])
         fields = ['id', 'name', 'email']
 
         # Search users
-        domain = expression.AND([[('user_ids.id', '!=', False)], search_dom])
+        domain = expression.AND([[('user_ids.id', '!=', False), ('user_ids.active', '=', True)], search_dom])
         users = self.search_read(domain, fields, limit=limit)
 
         # Search partners if less than 'limit' users found

@@ -115,8 +115,8 @@
                     </group>
                     <notebook>
                         <page string="Consumed Materials">
-                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'confirmed', 'default_raw_material_production_id': id}" attrs="{'readonly': [('is_locked', '=', True)]}">
-                                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="not is_done and quantity_done==product_uom_qty" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty">
+                            <field name="move_raw_ids" context="{'final_lots': show_final_lots, 'form_view_ref': 'mrp.view_stock_move_lots', 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'confirmed', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id}" attrs="{'readonly': [('is_locked', '=', True)]}">
+                                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty and product_uom_qty - reserved_availability &gt; 0.0001">
                                     <field name="product_id" required="1"/>
                                     <field name="name" invisible="1"/>
                                     <field name="unit_factor" invisible="1"/>
@@ -183,7 +183,7 @@
                     <field name="product_qty"/>
                      <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
                     <field name="date_planned_start"/>
-                    <field name="state"/>
+                    <field name="state" readonly="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -365,6 +365,7 @@
         <field name="res_model">mrp.production</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
+        <field name="context">{'default_picking_type_id': active_id}</field>
     </record>
     </data>
 </odoo>

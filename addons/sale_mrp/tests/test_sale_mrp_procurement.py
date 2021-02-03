@@ -59,3 +59,105 @@ class TestSaleMrpProcurement(TransactionCase):
         # I verify that a manufacturing order has been generated, and that its name and reference are correct
         mo = self.env['mrp.production'].search([('origin', 'like', sale_order_so0.name)], limit=1)
         self.assertTrue(mo, 'Manufacturing order has not been generated')
+
+    def test_sale_mrp_pickings(self):
+        """ Test sale of multiple mrp products in MTO
+        to avoid generating multiple deliveries
+        to the customer location
+        """
+
+        # Create warehouse
+        self.customer_location = self.env['ir.model.data'].xmlid_to_res_id('stock.stock_location_customers')
+        warehouse_form = Form(self.env['stock.warehouse'])
+        warehouse_form.name = 'Test Warehouse'
+        warehouse_form.code = 'TWH'
+        self.warehouse = warehouse_form.save()
+
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # Create raw product for manufactured product
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Raw Stick'
+        product_form.type = 'product'
+        product_form.uom_id = self.uom_unit
+        product_form.uom_po_id = self.uom_unit
+        self.raw_product = product_form.save()
+
+        # Create manufactured product
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Stick'
+        product_form.uom_id = self.uom_unit
+        product_form.uom_po_id = self.uom_unit
+        product_form.type = 'product'
+        product_form.route_ids.clear()
+        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
+        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
+        self.finished_product = product_form.save()
+
+        # Create manifactured product which uses another manifactured
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Arrow'
+        product_form.type = 'product'
+        product_form.route_ids.clear()
+        product_form.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
+        product_form.route_ids.add(self.warehouse.mto_pull_id.route_id)
+        self.complex_product = product_form.save()
+
+        ## Create raw product for manufactured product
+        product_form = Form(self.env['product.product'])
+        product_form.name = 'Raw Iron'
+        product_form.type = 'product'
+        product_form.uom_id = self.uom_unit
+        product_form.uom_po_id = self.uom_unit
+        self.raw_product_2 = product_form.save()
+
+        # Create bom for manufactured product
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.finished_product
+        bom_product_form.product_tmpl_id = self.finished_product.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'normal'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.raw_product
+            bom_line.product_qty = 2.0
+
+        self.bom = bom_product_form.save()
+
+        ## Create bom for manufactured product
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_id = self.complex_product
+        bom_product_form.product_tmpl_id = self.complex_product.product_tmpl_id
+        with bom_product_form.bom_line_ids.new() as line:
+            line.product_id = self.finished_product
+            line.product_qty = 1.0
+        with bom_product_form.bom_line_ids.new() as line:
+            line.product_id = self.raw_product_2
+            line.product_qty = 1.0
+
+        self.complex_bom = bom_product_form.save()
+
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.env.ref('base.res_partner_4')
+        with so_form.order_line.new() as line:
+            line.product_id = self.complex_product
+            line.price_unit = 1
+            line.product_uom_qty = 1
+        with so_form.order_line.new() as line:
+            line.product_id = self.finished_product
+            line.price_unit = 1
+            line.product_uom_qty = 1
+        sale_order_so0 = so_form.save()
+
+        sale_order_so0.action_confirm()
+
+        pickings = sale_order_so0.picking_ids
+
+        # One delivery...
+        self.assertEqual(len(pickings), 1)
+
+        # ...with two products
+        move_lines = pickings[0].move_lines
+        self.assertEqual(len(move_lines), 2)

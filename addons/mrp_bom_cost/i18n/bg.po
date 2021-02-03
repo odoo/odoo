@@ -1,149 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_extended
-#
+# * mrp_bom_cost
+# 
 # Translators:
+# Martin Trigaux, 2019
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-16 05:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
-"bg/)\n"
-"Language: bg\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2019\n"
+"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:24
-#: code:addons/product_extended/wizard/wizard_price.py:40
-#, python-format
-msgid "Active ID is not set in Context."
+#. module: mrp_bom_cost
+#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_product
+#: model:ir.actions.server,name:mrp_bom_cost.action_compute_price_bom_template
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
+msgid "Compute Price from BoM"
 msgstr ""
 
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Списък с материали"
-
-#. module: product_extended
-#: model_terms:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Cancel"
-msgstr "Откажи"
-
-#. module: product_extended
-#: model_terms:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Price"
-msgstr "Промени цена"
-
-#. module: product_extended
-#: model_terms:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Standard Price"
-msgstr "Промени стандартна цена"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
-msgid "Change prices of child BoMs too"
-msgstr ""
-
-#. module: product_extended
-#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute Price Wizard"
-msgstr ""
-
-#. module: product_extended
-#: model_terms:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
-msgid "Compute from BOM"
-msgstr ""
-
-#. module: product_extended
-#: model_terms:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#. module: mrp_bom_cost
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_ext_form_view2
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_product_view_form_normal_inherit_extended
+#: model_terms:ir.ui.view,arch_db:mrp_bom_cost.product_variant_easy_edit_view_bom_inherit
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
+"Изчислете цената на продукта, като използвате продукти и операции от "
+"свързана фактура за покупка на материали, само за производствени продукти."
 
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
-msgid "Created by"
-msgstr "Създадено от"
+#. module: mrp_bom_cost
+#: model:ir.model,name:mrp_bom_cost.model_product_product
+msgid "Product"
+msgstr "Продукт"
 
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
-msgid "Created on"
-msgstr "Създадено на"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
-msgid "Display Name"
-msgstr "Име за показване"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
-msgstr ""
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
-msgid "ID"
-msgstr "ID"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
-msgid "Info"
-msgstr "Информация"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
-msgid "Last Modified on"
-msgstr "Последно променено на"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
-msgid "Last Updated by"
-msgstr "Последно обновено от"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
-msgid "Last Updated on"
-msgstr "Последно обновено на"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
-msgid "Number of variant for the product"
-msgstr ""
-
-#. module: product_extended
-#: model:ir.model,name:product_extended.model_product_template
+#. module: mrp_bom_cost
+#: model:ir.model,name:mrp_bom_cost.model_product_template
 msgid "Product Template"
-msgstr "Шаблон за продукт"
+msgstr "Шаблон за продукт "
 
-#. module: product_extended
-#: model_terms:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Set price on BoM"
-msgstr ""
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
-msgid "Standard Price"
-msgstr "Стандартна цена"
-
-#. module: product_extended
-#: model_terms:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid ""
-"The price is computed from the bill of material lines which are not variant "
-"specific"
-msgstr ""
-
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:38
+#. module: mrp_bom_cost
+#: code:addons/mrp_bom_cost/models/product.py:40
 #, python-format
 msgid ""
-"This wizard is built for product templates, while you are currently running "
-"it from a product variant."
+"The inventory valuation of some products %s is automated. You can only "
+"update their cost from the product form."
 msgstr ""

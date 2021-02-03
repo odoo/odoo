@@ -79,6 +79,13 @@ web_editor.Class.include({
             $target.modal('hide');
             $target.css("display", "none");
             $('.o_popup_bounce_small').show();
+            // add hidden copy of input in case of Html field sanitize
+            $target.find('.o_popup_bounce_small input').each(function () {
+                var $copy = $(this).next('span.popup_newsletter_input_conserve');
+                $copy = $copy.length ? $copy : $('<span />').insertAfter(this);
+                $copy.attr($(this).getAttributes());
+                $copy.addClass('d-none popup_newsletter_input_conserve');
+            });
             if (!$target.find('.o_popup_content_dev').length) {
                 $target.find('.o_popup_modal_body').prepend($('<div class="o_popup_content_dev" data-oe-placeholder="' + _t("Type Here ...") + '"></div>'));
             }

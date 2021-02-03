@@ -34,7 +34,7 @@ class Partner(models.Model):
         # update at each change country, and so erase old pricelist
         if self.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
             # keep the company of the current user before sudo
-            self.env['ir.property'].with_context(force_company=self.env.user.company_id.id).sudo().set_multi(
+            self.env['ir.property'].with_context(force_company=self._context.get('force_company', self.env.user.company_id.id)).sudo().set_multi(
                 'property_product_pricelist',
                 self._name,
                 {self.id: self.property_product_pricelist or default_for_country.id},

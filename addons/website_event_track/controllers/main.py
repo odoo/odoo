@@ -10,6 +10,7 @@ from werkzeug.exceptions import NotFound
 from odoo import fields, http
 from odoo.http import request
 from odoo.tools import html_escape as escape, html2plaintext
+from odoo.tools.misc import babel_locale_parse
 
 
 class WebsiteEventTrackController(http.Controller):
@@ -29,7 +30,7 @@ class WebsiteEventTrackController(http.Controller):
             :param dt_time: datetime object
             :param lang_code: language code (eg. en_US)
         """
-        locale = babel.Locale.parse(lang_code)
+        locale = babel_locale_parse(lang_code)
         return babel.dates.format_time(dt_time, format='short', locale=locale)
 
     def _prepare_calendar(self, event, event_track_ids):
