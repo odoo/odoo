@@ -1039,7 +1039,6 @@ class Message(models.Model):
                     ('moderation_status', '=', 'pending_moderation'),
                 ]]) + domain[channels_dom_index+1:]
         messages = self.search(domain, limit=limit)
-        messages = messages.sorted(key='id', reverse=True)[:limit]
         return messages.message_format()
 
     def message_format(self):
