@@ -691,6 +691,17 @@ var ListController = BasicController.extend({
         }
     },
     /**
+     * Save the row in edition, if any, when we are about to leave Odoo.
+     *
+     * @override
+     */
+    _onBeforeUnload: function () {
+        const recordId = this.renderer.getEditableRecordID();
+        if (recordId) {
+            this._urgentSave(recordId);
+        }
+    },
+    /**
      * Handles a click on a button by performing its action.
      *
      * @private
@@ -887,24 +898,6 @@ var ListController = BasicController.extend({
             await this._executeButtonAction(actionData, recordData);
         } finally {
             this._enableButtons();
-        }
-    },
-    /**
-     * @override
-     * @private
-     */
-    _onBeforeUnload: function () {
-        // we can't wait for the returned promise (and thus for onchanges to be applied)
-        // because the 'beforeunload' handler must be *almost* sync (< 10 ms setTimeout
-        // seems fine, but an rpc roundtrip is definitely to long
-        const recordId = this.renderer.getEditableRecordID();
-        if (recordId) {
-            this.renderer.commitChanges(recordId);
-            if (this.isDirty(recordId)) {
-                this._saveRecord(recordId, {
-                    urgentSave: true,
-                });
-            }
         }
     },
     /**

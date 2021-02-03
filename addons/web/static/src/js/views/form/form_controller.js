@@ -5,7 +5,6 @@ var BasicController = require('web.BasicController');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dialogs = require('web.view_dialogs');
-var FieldManagerMixin = require('web.FieldManagerMixin');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -480,42 +479,12 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Odoo is about to be closed, and we want to save potential changes.
-     * We can't follow the normal flow (onchange(s) + save, mutexified),
-     * because the 'beforeunload' handler must be *almost* sync (< 10 ms
-     * setTimeout seems fine, but an rpc roundtrip is definitely too long),
-     * so here we bypass the standard mechanism of notifying changes and
-     * saving them:
-     *  - we set a flag on the model s.t. it will bypass its mutex for
-     *    upcoming 'notifyChanges' and 'save' requests
-     *  - we ask all widgets to commit their changes (in case there would
-     *    be a focused field with a fresh value)
-     *  - we take all pendingChanges (changes that have been reported to the
-     *    controller, but not yet sent to the model because of the mutex),
-     *    and directly notify the model about them
-     *  - we reset the widgets with all those changes, s.t. a further call
-     *    to 'canBeRemoved' uses the correct data (it asks the widgets if
-     *    they are set/valid, based on their internal state)
-     *  - if the record is dirty, we save directly
+     * Save the record when we are about to leave Odoo.
      *
      * @override
      */
     _onBeforeUnload: async function () {
-        this.model.urgent = true;
-        this.renderer.commitChanges(this.handle);
-        for (const key in this.pendingChanges) {
-            const { changes, dataPointID, event } = this.pendingChanges[key];
-            const options = {
-                context: event.data.context,
-                viewType: event.data.viewType,
-                notifyChange: false,
-            };
-            this.model.notifyChanges(dataPointID, changes, options);
-            this._confirmChange(dataPointID, Object.keys(changes), event);
-        }
-        if (this.isDirty()) {
-            this._saveRecord(this.handle, { reload: false, stayInEdit: true });
-        }
+        this._urgentSave(this.handle);
     },
     /**
      * @private

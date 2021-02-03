@@ -10194,6 +10194,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Auto save: save on closing tab/browser (onchanges + invalid field)', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.name = `copy: ${obj.display_name}`;
+            },
+        };
+
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="name" required="1"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC(route, { method }) {
+                assert.step(method);
+                if (method === 'onchange') {
+                    return def;
+                }
+                if (method === 'write') {
+                    throw new Error('Should not save the record');
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), 'test');
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="name"]'), '');
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        assert.verifySteps(['read', 'onchange']);
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: click on a quick editable field', async function (assert) {
         assert.expect(3);
 

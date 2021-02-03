@@ -50,6 +50,13 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // discard when discardChanges is called
         this.savingDef = Promise.resolve();
         this.viewId = params.viewId;
+
+        // In this controller, '_applyChanges' is overridden s.t. '_notifyChanges'
+        // of the model is called in a mutex. The following object is used to
+        // accumulate change requests that haven't been sent to the model yet,
+        // because of the mutex. This is useful when we want to quickly save a
+        // record before leaving Odoo (see '_urgentSave').
+        this.pendingChanges = {};
     },
     /**
      * @override
@@ -264,15 +271,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @override
      */
-    _applyChanges: async function (dataPointID, changes, event) {
+    _applyChanges: function (dataPointID, changes, event) {
         const requestId = id++;
-        this.pendingChanges = this.pendingChanges || {};
         this.pendingChanges[requestId] = { dataPointID, changes, event };
         var _super = FieldManagerMixin._applyChanges.bind(this);
-        await this.mutex.exec(function () {
+        return this.mutex.exec(() => {
+            delete this.pendingChanges[requestId];
             return _super(dataPointID, changes, event);
         });
-        delete this.pendingChanges[requestId];
     },
     /**
      * Archive the current selection
@@ -688,6 +694,47 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
         return this.updateControlPanel(props);
     },
+    /**
+     * To be called when Odoo is about to be closed, and we want to save
+     * potential changes on a given record.
+     *
+     * We can't follow the normal flow (onchange(s) + save, mutexified),
+     * because the 'beforeunload' handler must be *almost* sync (< 10 ms
+     * setTimeout seems fine, but an rpc roundtrip is definitely too long),
+     * so here we bypass the standard mechanism of notifying changes and
+     * saving them:
+     *  - we set a flag on the model s.t. it will bypass its mutex for
+     *    upcoming 'notifyChanges' and 'save' requests
+     *  - we ask all widgets to commit their changes (in case there would
+     *    be a focused field with a fresh value)
+     *  - we take all pendingChanges (changes that have been reported to the
+     *    controller, but not yet sent to the model because of the mutex),
+     *    and directly notify the model about them
+     *  - we reset the widgets with all those changes, s.t. a further call
+     *    to 'canBeRemoved' uses the correct data (it asks the widgets if
+     *    they are set/valid, based on their internal state)
+     *  - if the record is dirty, we save directly
+     *
+     * @param {string} recordID
+     * @private
+     */
+    _urgentSave(recordID) {
+        this.model.urgent = true;
+        this.renderer.commitChanges(recordID);
+        for (const key in this.pendingChanges) {
+            const { changes, dataPointID, event } = this.pendingChanges[key];
+            const options = {
+                context: event.data.context,
+                viewType: event.data.viewType,
+                notifyChange: false,
+            };
+            this.model.notifyChanges(dataPointID, changes, options);
+            this._confirmChange(dataPointID, Object.keys(changes), event);
+        }
+        if (this.isDirty()) {
+            this._saveRecord(recordID, { reload: false, stayInEdit: true });
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -766,7 +813,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     /**
      * Called when the user closes the tab or browser. To be overriden by
      * specific controllers to execute some code (e.g. save pending changes)
-     * just before leaving.
+     * just before leaving Odoo.
      *
      * @abstract
      * @private

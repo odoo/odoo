@@ -1090,9 +1090,9 @@ var BasicModel = AbstractModel.extend({
      *   Resolved with the list of field names (whose value has been modified)
      */
     save: function (recordID, options) {
-        options = options || {};
         var self = this;
         function _save() {
+            options = options || {};
             var record = self.localData[recordID];
             if (options.savePoint) {
                 self._visitChildren(record, function (rec) {
