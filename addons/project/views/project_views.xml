@@ -248,7 +248,7 @@
             <field name="arch" type="xml">
                 <form string="Project" delete="0">
                     <header>
-                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
+                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only" groups="project.group_project_manager"/>
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
@@ -692,6 +692,8 @@
                             <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
+                                options="{'no_open': True}"
+                                widget="many2one_avatar_user"
                                 domain="[('share', '=', False)]"/>
                             <field
                                 name="parent_id"

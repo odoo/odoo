@@ -36,7 +36,7 @@
                         type="object" name="action_view_so" icon="fa-dollar"
                         attrs="{'invisible': [('sale_order_id', '=', False)]}"
                         string="Sales Order"
-                        groups="sales_team.group_sale_salesman"/>
+                        groups="sales_team.group_sale_salesman_all_leads"/>
             </div>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="options">{'always_reload': True}</attribute>

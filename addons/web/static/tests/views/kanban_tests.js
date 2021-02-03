@@ -3801,6 +3801,47 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test("quick create column's apply button's display text", async function (assert) {
+        assert.expect(1);
+
+        const applyExamplesText = 'Use This For My Test';
+        kanbanExamplesRegistry.add('test', {
+            applyExamplesText: applyExamplesText,
+            examples:[{
+                name: "A first example",
+                columns: ["Column 1", "Column 2", "Column 3"],
+                description: "Some description",
+            }, {
+                name: "A second example",
+                columns: ["Col 1", "Col 2"],
+            }],
+        });
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban examples="test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        // open the quick create
+        await testUtils.dom.click(kanban.$('.o_column_quick_create .o_quick_create_folded'));
+
+        // click to see the examples
+        await testUtils.dom.click(kanban.$('.o_column_quick_create .o_kanban_examples'));
+
+        const $primaryActionButton = $('.modal footer.modal-footer button.btn-primary > span');
+        assert.strictEqual($primaryActionButton.text(), applyExamplesText, 'the primary button should display the value of applyExamplesText');
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create column and examples background with ghostColumns titles', async function (assert) {
         assert.expect(4);
 
