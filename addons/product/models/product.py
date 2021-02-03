@@ -60,6 +60,11 @@ class ProductCategory(models.Model):
     def name_create(self, name):
         return self.create({'name': name}).name_get()[0]
 
+    def name_get(self):
+        if not self.env.context.get('hierarchical_naming', True):
+            return [(record.id, record.name) for record in self]
+        return super().name_get()
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_category(self):
         main_category = self.env.ref('product.product_category_all')
