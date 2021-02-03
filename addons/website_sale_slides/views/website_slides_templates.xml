@@ -68,32 +68,6 @@
 </template>
 
 <!-- COURSE -->
-<template name="Documentation Course Content: add Buy Button in nav" id="course_slides_cards_buy_course" inherit_id="website_slides.course_slides_cards">
-    <xpath expr="//nav[hasclass('navbar')]" position="before">
-        <div class="col-12 col-md-4 col-lg-3"
-            t-if="(not channel.is_member or channel.can_upload) and channel.enroll == 'payment'">
-            <div class="bg-white px-3 py-2 border-left border-right">
-                <div class="o_wslides_sidebar_top d-flex justify-content-between">
-                    <div class="o_wslides_js_course_join flex-grow-1">
-                        <t t-call="website_sale_slides.course_buy_course_button" />
-                    </div>
-                    <button t-attf-class="btn d-md-none bg-white ml-1 border #{'align-self-end' if channel.is_member else 'align-self-start alert'}" type="button" data-toggle="collapse" data-target="#o_wslides_sidebar_collapse" aria-expanded="false" aria-controls="o_wslides_sidebar_collapse">More info</button>
-                </div>
-                <div id="o_wslides_sidebar_collapse" class="collapse d-md-block">
-                    <table class="table table-sm mt-3">
-                        <tbody>
-                            <tr>
-                                <th class="border-top-0">Last Update</th>
-                                <td class="border-top-0"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </xpath>
-</template>
-
 <template name="Course Sidebar (infos, CTA)" id='course_sidebar' inherit_id="website_slides.course_sidebar">
     <!-- Channel main template: override button to join channel -->
     <xpath expr="//div[hasclass('o_wslides_js_course_join')]" position="inside">
