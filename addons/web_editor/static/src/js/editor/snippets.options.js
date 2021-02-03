@@ -1320,7 +1320,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     async setValue(color) {
         await this._super(...arguments);
 
-        await this._renderColorPalette();
+        this.colorPalette.setSelectedColor(this._value);
 
         const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
         this.colorPreviewEl.classList.remove(...classes);
