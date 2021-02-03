@@ -29,6 +29,8 @@ var Notification = Widget.extend({
      * @param {string} params.title
      * @param {string} params.subtitle
      * @param {string} [params.message]
+     * @param {DOMElement|jQuery} [params.contentEl] element to insert inside the
+     *      notification, useful to keep a reference to the notification content
      * @param {string} [params.type='warning'] 'info', 'success', 'warning', 'danger' or ''
      * @param {boolean} [params.sticky=false] if true, the notification will
      *      stay visible until the user clicks on it.
@@ -45,7 +47,8 @@ var Notification = Widget.extend({
         this._super.apply(this, arguments);
         this.title = params.title;
         this.subtitle = params.subtitle;
-        this.message = params.message;
+        this.contentEl = params.contentEl;
+        this.message = params.message || this.contentEl && true;
         this.buttons = params.buttons || [];
         this.sticky = !!this.buttons.length || !!params.sticky;
         this.type = params.type === undefined ? 'warning' : params.type;
@@ -66,6 +69,9 @@ var Notification = Widget.extend({
      * @override
      */
     start: function () {
+        if (this.contentEl) {
+            this.$('.o_notification_content').empty().append(this.contentEl);
+        }
         this.$el.toast({
             animation: this._animation,
             autohide: false,
