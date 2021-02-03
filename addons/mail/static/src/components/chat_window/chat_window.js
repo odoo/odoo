@@ -289,12 +289,6 @@ class ChatWindow extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydown(ev) {
-        /**
-         * Prevent auto-focus of fuzzy search in the home menu.
-         * Useful in order to allow copy/paste content inside chat window with
-         * CTRL-C & CTRL-V when on the home menu.
-         */
-        ev.stopPropagation();
         if (!this.chatWindow) {
             // prevent crash during delete
             return;
