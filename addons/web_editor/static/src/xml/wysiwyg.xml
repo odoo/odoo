@@ -280,6 +280,24 @@
         </div>
     </t>
 
+    <t t-name="wysiwyg.widgets.upload.progressbar">
+        <div t-attf-class="o_we_progressbar js_progressbar_#{fileId}">
+            <div class="d-flex text-info">
+                <span><i class="fa fa-spinner fa-pulse"/></span>
+                <span class="font-italic font-weight-bold text-truncate flex-grow-1 mx-2" t-esc="fileName"/>
+                <span class="text-nowrap" t-esc="fileSize"/>
+            </div>
+            <div class='js_progressbar_txt'>
+                <span class="text-success d-none"><i class='fa fa-check'/> File has been uploaded</span>
+                <span class="text-danger d-none"><i class='fa fa-times'/> File could not be saved</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;">0%</div>
+            </div>
+            <hr/>
+        </div>
+    </t>
+
     <!-- Icon choosing part of the Media Dialog -->
     <t t-name="wysiwyg.widgets.font-icons">
         <form action="#">
