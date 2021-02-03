@@ -4,7 +4,6 @@
 
         <record model="mail.channel" id="channel_all_employees">
             <field name="name">general</field>
-            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="description">General announcements for all employees.</field>
         </record>
 
@@ -18,6 +17,17 @@
             <field name="subject">Welcome to Odoo!</field>
             <field name="body"><![CDATA[<p>Welcome to the #general channel.</p>
             <p>This channel is accessible to all users to <b>easily share company information</b>.</p>]]></field>
+        </record>
+
+        <record model="mail.channel.partner" id="channel_partner_general_channel_for_admin">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.channel_all_employees"/>
+            <field name="fetched_message_id" ref="mail.module_install_notification"/>
+            <field name="seen_message_id" ref="mail.module_install_notification"/>
+        </record>
+
+        <record model="mail.channel" id="mail.channel_all_employees">
+            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
     </data>
 </odoo>
