@@ -1086,8 +1086,6 @@ var BasicModel = AbstractModel.extend({
      *   be restored later by call discardChanges with option rollback to true
      * @param {string} [options.viewType] current viewType. If not set, we will
      *   assume main viewType from the record
-     * @param {boolean} [options.urgentSave=false] if true, we won't wait for the mutex
-     *   This should be used only when we leave odoo
      * @returns {Promise}
      *   Resolved with the list of field names (whose value has been modified)
      */

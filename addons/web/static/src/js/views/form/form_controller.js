@@ -480,12 +480,27 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @private
+     * Odoo is about to be closed, and we want to save potential changes.
+     * We can't follow the normal flow (onchange(s) + save, mutexified),
+     * because the 'beforeunload' handler must be *almost* sync (< 10 ms
+     * setTimeout seems fine, but an rpc roundtrip is definitely too long),
+     * so here we bypass the standard mechanism of notifying changes and
+     * saving them:
+     *  - we set a flag on the model s.t. it will bypass its mutex for
+     *    upcoming 'notifyChanges' and 'save' requests
+     *  - we ask all widgets to commit their changes (in case there would
+     *    be a focused field with a fresh value)
+     *  - we take all pendingChanges (changes that have been reported to the
+     *    controller, but not yet sent to the model because of the mutex),
+     *    and directly notify the model about them
+     *  - we reset the widgets with all those changes, s.t. a further call
+     *    to 'canBeRemoved' uses the correct data (it asks the widgets if
+     *    they are set/valid, based on their internal state)
+     *  - if the record is dirty, we save directly
+     *
+     * @override
      */
-    _onBeforeUnload: async function (e) {
-        // we can't wait for the returned promise (and thus for onchanges to be applied)
-        // because the 'beforeunload' handler must be *almost* sync (< 10 ms setTimeout
-        // seems fine, but an rpc roundtrip is definitely to long)
+    _onBeforeUnload: async function () {
         this.model.urgent = true;
         this.renderer.commitChanges(this.handle);
         for (const key in this.pendingChanges) {
