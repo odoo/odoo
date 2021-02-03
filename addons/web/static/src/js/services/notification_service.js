@@ -42,13 +42,20 @@ var NotificationService = AbstractService.extend({
      * @param {number} notificationId
      * @param {boolean} [silent=false] if true, the notification does not call
      *   onClose callback
+     * @param {integer} [wait=0] seconds to wait before closing the notification
      */
-    close: function (notificationId, silent) {
+    close: function (notificationId, silent, wait = 0) {
         var notification = this.notifications[notificationId];
         if (!notification) {
             return;
         }
-        notification.close(silent);
+        if (wait) {
+            setTimeout(() => {
+                notification.close(silent);
+            }, wait);
+        } else {
+            notification.close(silent);
+        }
     },
     /**
      * Display a notification at the appropriate location, and returns the
