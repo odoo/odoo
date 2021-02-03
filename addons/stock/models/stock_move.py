@@ -784,10 +784,17 @@ class StockMove(models.Model):
     @api.model
     def _prepare_merge_move_sort_method(self, move):
         move.ensure_one()
+
+        description_picking = move.description_picking or ""
+
         return [
             move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
+<<<<<<< HEAD
             move.package_level_id.id, move.propagate_cancel, move.description_picking or ""
+=======
+            move.package_level_id.id, move.propagate_cancel, description_picking
+>>>>>>> ecda05b979e... temp
         ]
 
     def _clean_merged(self):
