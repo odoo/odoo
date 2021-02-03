@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import threading
@@ -11,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import unique
 
 _logger = logging.getLogger(__name__)
 
@@ -393,36 +393,59 @@ class ir_cron(models.Model):
         return self.try_write({'active': active})
 
     @api.model
-    def _trigger(self, delay=None, at=None):
+    def _trigger(self, at=None):
         """
         Schedule a cron job to be executed soon independently of its
         ``nextcall`` field value.
 
-        By default the cron is scheduled to be executed in the next
-        batch but optional arguments may be given to delay the execution
+        By default the cron is scheduled to be executed in the next batch but
+        the optional `at` argument may be given to delay the execution later
         with a precision down to 1 minute.
 
-        :param datetime.timedelta delay:
-            Execute the cron later, after the delay expires. 
+        The method may be called with a datetime or an iterable of datetime.
+        The actual implementation is in :meth:`~._trigger_list`, which is the
+        recommended method for overrides.
 
-        :param datetime.datetime at:
-            Execute the cron later, at a precise moment in time.
+        :param Optional[Union[datetime.datetime, list[datetime.datetime]]] at:
+            When to execute the cron, at one or several moments in time instead
+            of as soon as possible.
         """
+        if at is None:
+            at_list = [datetime.utcnow()]
+        elif isinstance(at, datetime):
+            at_list = [at]
+        else:
+            at_list = list(at)
+            assert all(isinstance(at, datetime) for at in at_list)
+
+        self._trigger_list(at_list)
+
+    @api.model
+    def _trigger_list(self, at_list):
+        """
+        Implementation of :meth:`~._trigger`.
+
+        :param list[datetime.datetime] at_list:
+            Execute the cron later, at precise moments in time.
+        """
+        if not at_list:
+            return
+
         self.ensure_one()
+        now = datetime.utcnow().replace(second=0, microsecond=0)
 
-        if delay and at:
-            raise ValueError("Set either a delay either a moment, not both.")
+        # compress the list to insert at most one trigger per minute
+        at_list = list(unique(at.replace(second=0, microsecond=0) for at in at_list))
 
-        now = datetime.utcnow()
-        call_at = at or now
-        if delay:
-            call_at += delay
+        self.env['ir.cron.trigger'].sudo().create([
+            {'cron_id': self.id, 'call_at': at}
+            for at in at_list
+        ])
+        if _logger.isEnabledFor(logging.DEBUG):
+            ats = ', '.join(map(str, at_list))
+            _logger.debug("will execute '%s' at %s", self.sudo().name, ats)
 
-        self.env['ir.cron.trigger'].sudo().create({'cron_id': self.id, 'call_at': call_at})
-        _logger.debug("will execute '%s' at %s",
-            self.name, call_at if call_at > now else "soon as possible")
-
-        if call_at <= now:
+        if min(at_list) <= now:
             self._cr.postcommit.add(self._notifydb)
 
     def _notifydb(self):
