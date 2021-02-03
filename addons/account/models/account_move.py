@@ -3853,38 +3853,6 @@ class AccountMoveLine(models.Model):
                         move_initial_values[line.move_id.id] = {}
                     move_initial_values[line.move_id.id].update({field: line[field]})
 
-            # Create the dict for the message post
-            tracking_values = {} # Tracking values to write in the message post
-            for move_id, modified_lines in move_initial_values.items():
-                tmp_move = {move_id: []}
-                for line in self.filtered(lambda l: l.move_id.id == move_id):
-                    changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines) # Return a tuple like (changed field, ORM command)
-                    tmp = {'line_id': line.id}
-                    if tracking_value_ids:
-                        selected_field = tracking_value_ids[0][2] # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
-                        tmp.update({
-                            **{'field_name': selected_field.get('field_desc')},
-                            **self._get_formated_values(selected_field)
-                        })
-                    elif changes:
-                        field_name = line._fields[changes.pop()].string # Get the field name
-                        tmp.update({
-                            'error': True,
-                            'field_error': field_name
-                        })
-                    else:
-                        continue
-                    tmp_move[move_id].append(tmp)
-                if len(tmp_move[move_id]) > 0:
-                    tracking_values.update(tmp_move)
-
-            # Write in the chatter.
-            for move in self.mapped('move_id'):
-                fields = tracking_values.get(move.id, [])
-                if len(fields) > 0:
-                    msg = self._get_tracking_field_string(tracking_values.get(move.id))
-                    move.message_post(body=msg) # Write for each concerned move the message in the chatter
-
         result = True
         for line in self:
             cleaned_vals = line.move_id._cleanup_write_orm_values(line, vals)
@@ -3929,6 +3897,39 @@ class AccountMoveLine(models.Model):
             self.mapped('move_id')._check_balanced()
 
         self.mapped('move_id')._synchronize_business_models({'line_ids'})
+
+        if not self.env.context.get('tracking_disable', False):
+            # Create the dict for the message post
+            tracking_values = {}  # Tracking values to write in the message post
+            for move_id, modified_lines in move_initial_values.items():
+                tmp_move = {move_id: []}
+                for line in self.filtered(lambda l: l.move_id.id == move_id):
+                    changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines)  # Return a tuple like (changed field, ORM command)
+                    tmp = {'line_id': line.id}
+                    if tracking_value_ids:
+                        selected_field = tracking_value_ids[0][2]  # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
+                        tmp.update({
+                            **{'field_name': selected_field.get('field_desc')},
+                            **self._get_formated_values(selected_field)
+                        })
+                    elif changes:
+                        field_name = line._fields[changes.pop()].string  # Get the field name
+                        tmp.update({
+                            'error': True,
+                            'field_error': field_name
+                        })
+                    else:
+                        continue
+                    tmp_move[move_id].append(tmp)
+                if len(tmp_move[move_id]) > 0:
+                    tracking_values.update(tmp_move)
+
+            # Write in the chatter.
+            for move in self.mapped('move_id'):
+                fields = tracking_values.get(move.id, [])
+                if len(fields) > 0:
+                    msg = self._get_tracking_field_string(tracking_values.get(move.id))
+                    move.message_post(body=msg)  # Write for each concerned move the message in the chatter
 
         return result
 
