@@ -12,6 +12,8 @@ class IrActionsReport(models.Model):
             if record.message_main_attachment_id.mimetype == 'application/pdf' or \
                record.message_main_attachment_id.mimetype.startswith('image'):
                 return record.message_main_attachment_id
+        if self.report_name in ('account.report_invoice_with_payments', 'account.report_invoice') and not record.is_invoice():
+            raise UserError(_("Only invoices could be printed."))
         return super(IrActionsReport, self).retrieve_attachment(record)
 
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
