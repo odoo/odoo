@@ -497,6 +497,7 @@ var FileWidget = SearchableMediaWidget.extend({
                     self.$media.removeAttr('data-' + attr);
                 });
             }
+            self.$media.trigger('save')
             return self.media;
         });
     },
