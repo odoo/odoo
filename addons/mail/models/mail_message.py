@@ -1020,20 +1020,26 @@ class Message(models.Model):
               pending moderation;
             :returns list(dict).
         """
-        messages = self.search(domain, limit=limit)
         if moderated_channel_ids:
             # Split load moderated and regular messages, as the ORed domain can
             # cause performance issues on large databases.
-            moderated_messages_dom = [
-                ('model', '=', 'mail.channel'),
-                ('res_id', 'in', moderated_channel_ids),
-                '|',
-                ('author_id', '=', self.env.user.partner_id.id),
-                ('moderation_status', '=', 'pending_moderation'),
-            ]
-            messages |= self.search(moderated_messages_dom, limit=limit)
-            # Truncate the results to `limit`
-            messages = messages.sorted(key='id', reverse=True)[:limit]
+            channels_dom_index = None
+            channels_dom = []
+            for i, sub_dom in enumerate(domain):
+                if 'channel_ids' in sub_dom:
+                    channels_dom_index = i
+                    channels_dom = sub_dom
+                    break
+            if type(channels_dom_index) == int:
+                domain = domain[:channels_dom_index] + expression.OR([[channels_dom], [
+                    ('model', '=', 'mail.channel'),
+                    ('res_id', 'in', moderated_channel_ids),
+                    '|',
+                    ('author_id', '=', self.env.user.partner_id.id),
+                    ('moderation_status', '=', 'pending_moderation'),
+                ]]) + domain[channels_dom_index+1:]
+        messages = self.search(domain, limit=limit)
+        messages = messages.sorted(key='id', reverse=True)[:limit]
         return messages.message_format()
 
     def message_format(self):
