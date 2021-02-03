@@ -108,6 +108,17 @@ var ColorpickerWidget = Widget.extend({
         this._super.apply(this, arguments);
         $(document).off(`.${this.uniqueId}`);
     },
+    /**
+     * Sets the currently selected color
+     *
+     * @param {string} color rgb[a]
+     */
+    setSelectedColor: function (color) {
+        var rgba = ColorpickerWidget.convertCSSColorToRgba(color);
+        if (rgba) {
+            this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
