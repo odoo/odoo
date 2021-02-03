@@ -30,6 +30,8 @@
 
 # Generic fallback rules
 
+/addons/account*/ @odoo/rd-accounting
+/addons/l10n_*/ @odoo/rd-accounting
 /addons/*/models/ir_http.py @odoo/rd-website
 /addons/*/models/ir_qweb.py @odoo/rd-website
 /addons/*/models/ir_qweb_fields.py @odoo/rd-website
@@ -40,7 +42,7 @@
 
 /.github/CODEOWNERS @odoo/rd-code-owners
 
-/addons/account/tests/test_portal_attachment.py @odoo/rd-images
+/addons/account/tests/test_portal_attachment.py @odoo/rd-accounting @odoo/rd-images
 
 /addons/http_routing/ @odoo/rd-website
 
