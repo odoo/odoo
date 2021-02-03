@@ -22,12 +22,12 @@ odoo.define('sport_management.website_salon_booking_system', function(require) {
             if (isNaN(time_left_char) || isNaN(time_right_char) || time_separator != ":") {
                 alert("Select a valid Time");
             } else {
-                document.querySelector("#submit_button").innerText = "Sending";
                 var time_left = parseInt(time_left_char);
                 var time_right = parseInt(time_right_char);
                 console.log(time_left, time_right)
                 if ((time_left < 24) && (time_right < 60) && (time_left >= 0) && (time_right >= 0)) {
                     var booking_record = { 'name': name, 'date': date, 'time': time, 'phone': phone, 'chair': chair, 'duration': duration,'bank_trx_id':bank_trx_id };
+                    document.querySelector("#submit_button").innerText = "Sending";
                     $.ajax({
                         url: "/page/salon_details",
                         type: "POST",
@@ -38,6 +38,7 @@ odoo.define('sport_management.website_salon_booking_system', function(require) {
                             window.location.href = "/page/sport_management.sport_booking_thank_you";
                         },
                         error: function(error) {
+                            document.querySelector("#submit_button").innerText = "Send";
                             alert('error: ' + error);
                         }
                     });
