@@ -226,7 +226,7 @@ class ResPartnerBank(models.Model):
             '{:.2f}'.format(amount),                              # Amount
             currency.name,                                        # Currency
             'K',                                                  # Ultimate Debtor Address Type
-            debtor_partner.commercial_company_name[:70],          # Ultimate Debtor Name
+            debtor_partner.commercial_partner_id.name[:70],       # Ultimate Debtor Name
             debtor_addr_1,                                        # Ultimate Debtor Address Line 1
             debtor_addr_2,                                        # Ultimate Debtor Address Line 2
             '',                                                   # Ultimate Debtor Postal Code (not to be provided for address type K)
