@@ -131,11 +131,9 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * @return {Promise}
      */
     commitChanges: function (recordID) {
-        const widgets = this.allFieldWidgets[recordID];
-        const defs = [];
-        for (const widget of widgets) {
-            defs.push(widget.commitChanges());
-        }
+        var defs = _.map(this.allFieldWidgets[recordID], function (widget) {
+            return widget.commitChanges();
+        });
         return Promise.all(defs);
     },
     /**

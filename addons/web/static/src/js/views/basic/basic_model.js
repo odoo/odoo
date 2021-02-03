@@ -938,7 +938,7 @@ var BasicModel = AbstractModel.extend({
     notifyChanges: function (record_id, changes, options) {
         const notifyChanges = () => this._applyChange(record_id, changes, options);
         if (this.urgent) {
-            notifyChanges();
+            return notifyChanges();
         }
         return this.mutex.exec(notifyChanges);
     },

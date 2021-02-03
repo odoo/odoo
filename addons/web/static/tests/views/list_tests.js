@@ -11333,7 +11333,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
+    QUnit.skip("Auto save: save on closing tab/browser", async function (assert) {
         assert.expect(1);
 
         const list = await createView({

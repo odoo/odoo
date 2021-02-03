@@ -9952,7 +9952,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('Auto save: save on closing tab/browser (detach form)', async function (assert) {
+    QUnit.test('Auto save: save on closing tab/browser (detached form)', async function (assert) {
         assert.expect(3);
 
         const actions = [{
@@ -10050,6 +10050,146 @@ QUnit.module('Views', {
 
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
+
+        form.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (onchanges 2)', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges = {
+            display_name: function () {},
+        };
+
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="name"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC(route, { args, method }) {
+                if (method === 'onchange') {
+                    return def;
+                }
+                if (method === 'write') {
+                    assert.deepEqual(args, [
+                        [1],
+                        { display_name: 'test', name: 'test' },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), 'test');
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="name"]'), 'test');
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        form.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (pending change)', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            fieldDebounce: 1000,
+            arch: `<form><field name="foo"/></form>`,
+            res_id: 1,
+            mockRPC(route, { args, method }) {
+                assert.step(method);
+                if (method === 'write') {
+                    assert.deepEqual(args, [[1], { foo: 'test' }]);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        // edit 'foo' but do not focusout -> the model isn't aware of the change
+        // until the 'beforeunload' event is triggered
+        form.$('.o_field_widget[name="foo"]').val('test');
+        await testUtils.dom.triggerEvent(form.$('.o_field_widget[name="foo"]'), 'input');
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        assert.verifySteps(['read', 'write']);
+
+        form.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (onchanges + pending change)', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.name = `copy: ${obj.display_name}`;
+            },
+        };
+
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            fieldDebounce: 1000,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="name"/>
+                    <field name="foo"/>
+                </form>`,
+            res_id: 1,
+            mockRPC(route, { args, method }) {
+                assert.step(method);
+                if (method === 'onchange') {
+                    return def;
+                }
+                if (method === 'write') {
+                    assert.deepEqual(args, [
+                        [1],
+                        { display_name: 'test', name: 'test', foo: 'test' },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        // edit 'display_name' and simulate a focusout (trigger the 'change' event)
+        // -> notifies the model of the change and performs the onchange
+        form.$('.o_field_widget[name="display_name"]').val('test');
+        await testUtils.dom.triggerEvent(form.$('.o_field_widget[name="display_name"]'), 'change');
+
+        // edit 'name' and simulate a focusout (trigger the 'change' event)
+        // -> waits for the mutex (i.e. the onchange) to notify the model
+        form.$('.o_field_widget[name="name"]').val('test');
+        await testUtils.dom.triggerEvent(form.$('.o_field_widget[name="name"]'), 'change');
+
+        // edit 'foo' but do not focusout -> the model isn't aware of the change
+        // until the 'beforeunload' event is triggered
+        form.$('.o_field_widget[name="foo"]').val('test');
+        await testUtils.dom.triggerEvent(form.$('.o_field_widget[name="foo"]'), 'input');
+
+        // trigger the 'beforeunload' event -> notifies the model directly and saves
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        assert.verifySteps(['read', 'onchange', 'write']);
 
         form.destroy();
     });

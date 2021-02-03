@@ -5,6 +5,7 @@ var BasicController = require('web.BasicController');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dialogs = require('web.view_dialogs');
+var FieldManagerMixin = require('web.FieldManagerMixin');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -478,6 +479,29 @@ var FormController = BasicController.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onBeforeUnload: async function (e) {
+        // we can't wait for the returned promise (and thus for onchanges to be applied)
+        // because the 'beforeunload' handler must be *almost* sync (< 10 ms setTimeout
+        // seems fine, but an rpc roundtrip is definitely to long)
+        this.model.urgent = true;
+        this.renderer.commitChanges(this.handle);
+        for (const key in this.pendingChanges) {
+            const { changes, dataPointID, event } = this.pendingChanges[key];
+            const options = {
+                context: event.data.context,
+                viewType: event.data.viewType,
+                notifyChange: false,
+            };
+            this.model.notifyChanges(dataPointID, changes, options);
+            this._confirmChange(dataPointID, Object.keys(changes), event);
+        }
+        if (this.isDirty()) {
+            this._saveRecord(this.handle, { reload: false, stayInEdit: true });
+        }
+    },
     /**
      * @private
      * @param {OdooEvent} ev

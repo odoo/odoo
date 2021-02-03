@@ -15,6 +15,8 @@ var TranslationDialog = require('web.TranslationDialog');
 
 var _t = core._t;
 
+let id = 1;
+
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     events: Object.assign({}, AbstractController.prototype.events, {
         'click .o_content': '_onContentClicked',
@@ -262,12 +264,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @override
      */
-    _applyChanges: function (dataPointID, changes, event) {
-        const applyChanges = FieldManagerMixin._applyChanges.bind(this, dataPointID, changes, event);
-        if (this.model.urgent) {
-            return applyChanges();
-        }
-        return this.mutex.exec(applyChanges);
+    _applyChanges: async function (dataPointID, changes, event) {
+        const requestId = id++;
+        this.pendingChanges = this.pendingChanges || {};
+        this.pendingChanges[requestId] = { dataPointID, changes, event };
+        var _super = FieldManagerMixin._applyChanges.bind(this);
+        await this.mutex.exec(function () {
+            return _super(dataPointID, changes, event);
+        });
+        delete this.pendingChanges[requestId];
     },
     /**
      * Archive the current selection
@@ -762,19 +767,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
-     * Called when the user closes the tab or browser.
+     * Called when the user closes the tab or browser. To be overriden by
+     * specific controllers to execute some code (e.g. save pending changes)
+     * just before leaving.
      *
+     * @abstract
      * @private
      */
     _onBeforeUnload: async function () {
-        // we can't wait for the returned promise (and thus for onchanges to be applied)
-        // because the 'beforeunload' handler must be *almost* sync (< 10 ms setTimeout
-        // seems fine, but an rpc roundtrip is definitely to long)
-        this.model.urgent = true;
-        this.renderer.commitChanges(this.handle);
-        if (this.isDirty()) {
-            this._saveRecord(this.handle, { stayInEdit: true });
-        }
     },
     /**
      * When a reload event triggers up, we need to reload the full view.
