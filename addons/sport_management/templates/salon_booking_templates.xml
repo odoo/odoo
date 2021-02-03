@@ -23,7 +23,7 @@
                                 <t t-foreach="working_time" t-as="working_time_obj">
                                     <tr>
                                         <td>
-                                            <span t-field="working_time_obj.name" />.
+                                            <span t-field="working_time_obj.name" />
                                         </td>
                                         <td>
                                             <t t-esc="'%02d:%02d' % (int(working_time_obj.from_time), working_time_obj.from_time % 1 * 60)" />
