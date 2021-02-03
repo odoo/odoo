@@ -18,8 +18,8 @@
     </t>
 
     <t t-name="portal_rating.rating_card">
-        <div class="row o_website_rating_card_container">
-            <div class="col-lg-3 offset-lg-2" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+        <div class="row o_website_rating_card_container justify-content-center">
+            <div class="col-lg-3" t-if="!_.isEmpty(widget.get('rating_card_values'))">
                 <p><strong>Average</strong></p>
                 <div class="o_website_rating_avg text-center">
                     <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
@@ -35,7 +35,7 @@
                     <table class="o_website_rating_progress_table">
                         <t t-foreach="widget.get('rating_card_values')['percent']" t-as="percent">
                             <tr class="o_website_rating_select" t-att-data-star="percent['num']" style="opacity: 1">
-                                <td class="o_website_rating_table_star_num" t-att-data-star="percent['num']">
+                                <td class="o_website_rating_table_star_num text-nowrap" t-att-data-star="percent['num']">
                                     <t t-esc="percent['num']"/> stars
                                 </td>
                                 <td class="o_website_rating_table_progress">
