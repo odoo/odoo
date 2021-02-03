@@ -560,19 +560,24 @@ class BtManager(Thread):
 
 class SocketManager(Thread):
 
+    def __init__(self):
+        super(SocketManager, self).__init__()
+        self.open_socket(9000)
+
+    def open_socket(self, port):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind(('', port))
+
     def run(self):
         while True:
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                sock.bind(('', 9000))
-                sock.listen(1)
-                dev, addr = sock.accept()
+                dev, addr = self.sock.accept()
                 if addr and addr[0] not in socket_devices:
                     iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
                     socket_devices[addr[0]] = iot_device
             except OSError as e:
-                _logger.error(_('Error in SocketManager: %s') % (e.strerror))
+                pass
 
 class MPDManager(Thread):
     def __init__(self):
