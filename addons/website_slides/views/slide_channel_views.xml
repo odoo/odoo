@@ -89,7 +89,6 @@
                             <page name="options" string="Options">
                                 <group>
                                     <group name="course" string="Course">
-                                        <field string="Type" name="channel_type" widget="radio"/>
                                         <field name="user_id" domain="[('share', '=', False)]"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
@@ -107,6 +106,7 @@
                                         <field name="completed_template_id"/>
                                     </group>
                                     <group name="display" string="Display">
+                                        <field string="Display" name="channel_type" widget="radio"/>
                                         <field name="visibility" widget="radio"/>
                                         <field name="promote_strategy" widget="radio"
                                         attrs="{'invisible': [('channel_type', '=', 'training')]}"/>

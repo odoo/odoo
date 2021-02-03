@@ -86,12 +86,8 @@ class WebsiteSlides(WebsiteProfile):
             most_viewed_slides = request.env['slide.slide'].search(base_domain, limit=self._slides_per_aside, order='total_views desc')
             related_domain = expression.AND([base_domain, [('category_id', '=', slide.category_id.id)]])
             related_slides = request.env['slide.slide'].search(related_domain, limit=self._slides_per_aside)
-            uncategorized_slides = request.env['slide.slide']
         else:
             most_viewed_slides, related_slides = request.env['slide.slide'], request.env['slide.slide']
-            # temporarily kept for fullscreen, to remove asap
-            uncategorized_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('category_id', '=', False)]])
-            uncategorized_slides = request.env['slide.slide'].search(uncategorized_domain)
 
         channel_slides_ids = slide.channel_id.slide_content_ids.ids
         slide_index = channel_slides_ids.index(slide.id)
@@ -106,7 +102,6 @@ class WebsiteSlides(WebsiteProfile):
             'related_slides': related_slides,
             'previous_slide': previous_slide,
             'next_slide': next_slide,
-            'uncategorized_slides': uncategorized_slides,
             'category_data': category_data,
             # user
             'user': request.env.user,
