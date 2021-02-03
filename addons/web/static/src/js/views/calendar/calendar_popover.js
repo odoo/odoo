@@ -114,6 +114,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 string: displayFieldInfo.attrs.string || fieldInfo.string,
                 value: self.event.extendedProps.record[fieldName],
                 type: fieldInfo.type,
+                invisible: displayFieldInfo.attrs.invisible,
             };
             if (field.type === 'selection') {
                 field.selection = fieldInfo.selection;
