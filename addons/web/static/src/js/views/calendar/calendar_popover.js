@@ -145,7 +145,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
             }
             if (field.type === 'monetary') {
                 var currencyField = field.currency_field || 'currency_id';
-                if (!fields.includes(currencyField) && _.has(self.event.record, currencyField)) {
+                if (!fields.includes(currencyField) && _.has(self.event.extendedProps.record, currencyField)) {
                     fields.push(currencyField);
                 }
             }
