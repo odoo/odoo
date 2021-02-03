@@ -151,6 +151,7 @@ var MediaDialog = Dialog.extend({
                     media: data,
                 });
             }
+            $(data).trigger('save')
             return _super.apply(self, args);
         });
     },
