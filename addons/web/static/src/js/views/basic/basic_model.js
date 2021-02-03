@@ -936,7 +936,11 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string[]>} list of changed fields
      */
     notifyChanges: function (record_id, changes, options) {
-        return this.mutex.exec(this._applyChange.bind(this, record_id, changes, options));
+        const notifyChanges = () => this._applyChange(record_id, changes, options);
+        if (this.urgent) {
+            notifyChanges();
+        }
+        return this.mutex.exec(notifyChanges);
     },
     /**
      * Reload all data for a given resource. At any time there is at most one
@@ -1182,7 +1186,7 @@ var BasicModel = AbstractModel.extend({
             });
             return prom;
         }
-        if (options.urgentSave) {
+        if (this.urgent) {
             return _save();
         } else {
             return this.mutex.exec(_save);

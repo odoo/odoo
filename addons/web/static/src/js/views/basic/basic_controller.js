@@ -263,10 +263,11 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @override
      */
     _applyChanges: function (dataPointID, changes, event) {
-        var _super = FieldManagerMixin._applyChanges.bind(this);
-        return this.mutex.exec(function () {
-            return _super(dataPointID, changes, event);
-        });
+        const applyChanges = FieldManagerMixin._applyChanges.bind(this, dataPointID, changes, event);
+        if (this.model.urgent) {
+            return applyChanges();
+        }
+        return this.mutex.exec(applyChanges);
     },
     /**
      * Archive the current selection
@@ -613,7 +614,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             stayInEdit: false,
             reload: true,
             savePoint: false,
-            urgentSave: false,
         });
 
         // Check if the view is in a valid state for saving
@@ -624,7 +624,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 reload: options.reload,
                 savePoint: options.savePoint,
                 viewType: options.viewType,
-                urgentSave: options.urgentSave,
             });
             if (!options.stayInEdit) {
                 saveDef = saveDef.then(function (fieldNames) {
@@ -767,15 +766,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _onBeforeUnload: function () {
+    _onBeforeUnload: async function () {
         // we can't wait for the returned promise (and thus for onchanges to be applied)
         // because the 'beforeunload' handler must be *almost* sync (< 10 ms setTimeout
-        // seems fine, but an rpc roundtrip is definitely to long
-        this.renderer.commitChanges();
+        // seems fine, but an rpc roundtrip is definitely to long)
+        this.model.urgent = true;
+        this.renderer.commitChanges(this.handle);
         if (this.isDirty()) {
-            this._saveRecord(this.handle, {
-                urgentSave: true,
-            });
+            this._saveRecord(this.handle, { stayInEdit: true });
         }
     },
     /**
