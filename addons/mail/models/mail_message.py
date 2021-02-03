@@ -1026,14 +1026,15 @@ class Message(models.Model):
             channels_dom_index = None
             channels_dom = []
             for i, sub_dom in enumerate(domain):
-                if 'channel_ids' in sub_dom:
+                if sub_dom[0] == 'channel_ids' and sub_dom[1] == 'in':
                     channels_dom_index = i
                     channels_dom = sub_dom
                     break
             if type(channels_dom_index) == int:
+                filtered_moderated_channel_ids = list(set(channels_dom[2]) & set(moderated_channel_ids))
                 domain = domain[:channels_dom_index] + expression.OR([[channels_dom], [
                     ('model', '=', 'mail.channel'),
-                    ('res_id', 'in', moderated_channel_ids),
+                    ('res_id', 'in', filtered_moderated_channel_ids),
                     '|',
                     ('author_id', '=', self.env.user.partner_id.id),
                     ('moderation_status', '=', 'pending_moderation'),
