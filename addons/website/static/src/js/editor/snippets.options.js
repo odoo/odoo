@@ -1383,6 +1383,21 @@ options.registry.Carousel = options.Class.extend({
         this.$indicators.find('li').removeClass('active').empty().first().addClass('active');
     },
 
+    /**
+     * @override
+     */
+    _computeWidgetState: async function (methodName, params) {
+         if (methodName === 'selectDataAttribute' && params.attributeName == 'interval') {
+            let attrValue = (this.$target[0].dataset[params.attributeName] || params.attributeDefaultValue).trim();
+            attrValue = attrValue.startsWith('-') ? '0' : attrValue;
+            if (params.saveUnit && !params.withUnit) {
+                attrValue = attrValue.split(/\s+/g).map(v => v + params.saveUnit).join(' ');
+            }
+            return attrValue || params.attributeDefaultValue || '';
+        }
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

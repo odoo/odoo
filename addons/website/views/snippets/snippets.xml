@@ -384,9 +384,13 @@
             <we-divider/>
             <we-button data-select-class="">None</we-button>
         </we-select>
-        <we-input string="Speed"
-                  data-select-data-attribute="0s" data-attribute-name="interval"
-                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+        <we-row string="Speed">
+            <we-input data-select-data-attribute="0s" data-attribute-name="interval" data-unit="s"
+                data-save-unit="ms" data-step="0.1" data-name="interval"/>
+            <we-checkbox string="Autoplay" class="o_we_row_title ml-2"
+                data-name="s_carousel_autoplay_opt" data-select-data-attribute="false|carousel"
+                data-dependencies="interval" data-attribute-name="ride" data-no-preview="true"/>
+        </we-row>
     </div>
 
     <div data-js="CarouselItem"
