@@ -142,7 +142,20 @@ var BasicView = AbstractView.extend({
                     // X2Many case: field is an x2many displayed as a list or
                     // kanban view, but the related fields haven't been loaded yet.
                     if ((fieldType === 'one2many' || fieldType === 'many2many')) {
+<<<<<<< HEAD
                         if (!('fieldsInfo' in record.data[name])) {
+=======
+                        var x2mFieldInfo = record.fieldsInfo[this.viewType][name];
+                        var viewType = x2mFieldInfo.viewType || x2mFieldInfo.mode;
+                        if (!record.data[name].fieldsInfo) {
+                            // we don't load the fieldsInfo for invisible x2many fields,
+                            // so at this point, it might happen that fieldsInfo is undefined
+                            return;
+                        }
+                        var knownFields = Object.keys(record.data[name].fieldsInfo[record.data[name].viewType] || {});
+                        var newFields = Object.keys(record.data[name].fieldsInfo[viewType]);
+                        if (_.difference(newFields, knownFields).length) {
+>>>>>>> 570751fadcc... temp
                             fieldNames.push(name);
                         } else {
                             var x2mFieldInfo = record.fieldsInfo[this.viewType][name];
