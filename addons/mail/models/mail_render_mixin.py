@@ -268,7 +268,7 @@ class MailRenderMixin(models.AbstractModel):
                 render_result = view._render(variables, engine='ir.qweb', minimal_qcontext=True)
             except Exception as e:
                 _logger.info("Failed to render template : %s (%d)" % (template_src, view.id), exc_info=True)
-                raise UserError(_("Failed to render template : %s (%d)") % (template_src, view.id))
+                raise UserError(_("Failed to render template : %s (%d)", template_src, view.id))
             results[record.id] = render_result
 
         return results
