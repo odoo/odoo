@@ -128,7 +128,8 @@ var FileWidget = SearchableMediaWidget.extend({
     }),
     existingAttachmentsTemplate: undefined,
 
-    IMAGE_MIMETYPES: ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/svg+xml'],
+    IMAGE_MIMETYPES: ['image/jpg', 'image/jpeg', 'image/jpe', 'image/png', 'image/svg+xml', 'image/gif'],
+    IMAGE_EXTENSIONS: ['.jpg', '.jpeg', '.jpe', '.png', '.svg', '.gif'],
     NUMBER_OF_ATTACHMENTS_TO_DISPLAY: 30,
     MAX_DB_ATTACHMENTS: 5,
 
@@ -641,7 +642,7 @@ var FileWidget = SearchableMediaWidget.extend({
         var emptyValue = (inputValue === '');
 
         var isURL = /^.+\..+$/.test(inputValue); // TODO improve
-        var isImage = _.any(['.gif', '.jpeg', '.jpe', '.jpg', '.png'], function (format) {
+        var isImage = _.any(this.IMAGE_EXTENSIONS, function (format) {
             return inputValue.endsWith(format);
         });
 
@@ -813,12 +814,10 @@ var ImageWidget = FileWidget.extend({
      */
     _updateAddUrlUi: function (emptyValue, isURL, isImage) {
         this._super.apply(this, arguments);
-        this.$addUrlButton.text((isURL && !isImage) ? _t("Add as document") : _t("Add image"));
         const warning = isURL && !isImage;
         this.$urlWarning.toggleClass('d-none', !warning);
-        if (warning) {
-            this.$urlSuccess.addClass('d-none');
-        }
+        this.$addUrlButton.prop('disabled', warning || !isURL);
+        this.$urlSuccess.toggleClass('d-none', warning || !isURL);
     },
     /**
      * @override
@@ -1007,18 +1006,6 @@ var DocumentWidget = FileWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _updateAddUrlUi: function (emptyValue, isURL, isImage) {
-        this._super.apply(this, arguments);
-        this.$addUrlButton.text((isURL && isImage) ? _t("Add as image") : _t("Add document"));
-        const warning = isURL && isImage;
-        this.$urlWarning.toggleClass('d-none', !warning);
-        if (warning) {
-            this.$urlSuccess.addClass('d-none');
-        }
-    },
     /**
      * @override
      */
