@@ -435,6 +435,7 @@
                                     <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
                                     <field name="display_type" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="id" invisible="1"/>
 
                                     <field name="product_updatable" invisible="1"/>
                                     <field
@@ -529,7 +530,7 @@
                                     <field
                                         name="customer_lead"
                                         optional="hide"
-                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent'])]}"
+                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent']), ('id', '!=', False)]}"
                                     />
                                     <field
                                         name="price_unit"
