@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.addons.event.models.event_registration import SYNC_PARTNER_FIELDS
 
 
 class EventRegistration(models.Model):
@@ -202,7 +203,7 @@ class EventRegistration(models.Model):
                 valid_partner = self.env['res.partner']
 
         if valid_partner:
-            contact_vals = self.env['crm.lead']._prepare_values_from_partner(valid_partner)
+            contact_vals = valid_partner.read(SYNC_PARTNER_FIELDS)[0]
             # force email_from / phone only if not set on partner because those fields are now synchronized automatically
             if not valid_partner.email:
                 contact_vals['email_from'] = self._find_first_notnull('email')

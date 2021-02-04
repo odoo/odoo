@@ -9,6 +9,9 @@ from odoo.exceptions import AccessError, ValidationError
 from dateutil.relativedelta import relativedelta
 
 
+SYNC_PARTNER_FIELDS = ['name', 'email', 'phone', 'mobile']
+
+
 class EventRegistration(models.Model):
     _name = 'event.registration'
     _description = 'Event Registration'
@@ -30,12 +33,10 @@ class EventRegistration(models.Model):
     partner_id = fields.Many2one(
         'res.partner', string='Booked by',
         states={'done': [('readonly', True)]})
-    name = fields.Char(
-        string='Attendee Name', index=True,
-        compute='_compute_contact_info', readonly=False, store=True, tracking=10)
-    email = fields.Char(string='Email', compute='_compute_contact_info', readonly=False, store=True, tracking=11)
-    phone = fields.Char(string='Phone', compute='_compute_contact_info', readonly=False, store=True, tracking=12)
-    mobile = fields.Char(string='Mobile', compute='_compute_contact_info', readonly=False, store=True, tracking=13)
+    name = fields.Char(string='Attendee Name', index=True, tracking=10)
+    email = fields.Char(string='Email', tracking=11)
+    phone = fields.Char(string='Phone', tracking=12)
+    mobile = fields.Char(string='Mobile', tracking=13)
     # organization
     date_open = fields.Datetime(string='Registration Date', readonly=True, default=lambda self: fields.Datetime.now())  # weird crash is directly now
     date_closed = fields.Datetime(
@@ -71,18 +72,6 @@ class EventRegistration(models.Model):
             if registration.partner_id:
                 registration.update(registration._synchronize_partner_values(registration.partner_id))
 
-    @api.depends('partner_id')
-    def _compute_contact_info(self):
-        for registration in self:
-            if registration.partner_id:
-                partner_vals = self._synchronize_partner_values(registration.partner_id)
-                registration.update(
-                    dict((fname, fvalue)
-                         for fname, fvalue in partner_vals.items()
-                         if fvalue and not (registration[fname] or registration._origin[fname])
-                         )
-                    )
-
     @api.depends('state')
     def _compute_date_closed(self):
         for registration in self:
@@ -115,6 +104,9 @@ class EventRegistration(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for values in vals_list:
+            self._compute_missing_partner_values(values)
+
         registrations = super(EventRegistration, self).create(vals_list)
         if registrations._check_auto_confirmation():
             registrations.sudo().action_confirm()
@@ -122,6 +114,7 @@ class EventRegistration(models.Model):
         return registrations
 
     def write(self, vals):
+        self._compute_missing_partner_values(vals)
         ret = super(EventRegistration, self).write(vals)
 
         if vals.get('state') == 'open':
@@ -158,13 +151,28 @@ class EventRegistration(models.Model):
             return False
         return True
 
-    def _synchronize_partner_values(self, partner):
+    def _synchronize_partner_values(self, partner, fields=None):
         if partner:
             contact_id = partner.address_get().get('contact', False)
             if contact_id:
+                fields = fields or SYNC_PARTNER_FIELDS
                 contact = self.env['res.partner'].browse(contact_id)
-                return dict((fname, contact[fname]) for fname in ['name', 'email', 'phone', 'mobile'] if contact[fname])
+                return dict((fname, contact[fname]) for fname in fields if contact[fname])
         return {}
+
+    def _compute_missing_partner_values(self, values):
+        # Not done in a computed method because we will need to split each fields in a
+        # different method, and so we will need to call "address_get" once for each field
+        # not set (which is computationally expensive)
+        current_values = self.read(SYNC_PARTNER_FIELDS)[0] if self else {}
+        sync_fields = [
+            field for field in SYNC_PARTNER_FIELDS
+            if not values.get(field) and not current_values.get(field)
+        ]
+        if sync_fields and values.get('partner_id'):
+            partner = self.env['res.partner'].browse(values.get('partner_id'))
+            new_values = self._synchronize_partner_values(partner, sync_fields)
+            values.update(new_values)
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS

@@ -62,6 +62,21 @@ class TestEventUI(TestEventCommon):
         self.assertEqual(registration.phone, self.event_customer2.phone)
         self.assertEqual(registration.mobile, self.event_customer2.mobile)
 
+    def test_event_registration_creation_from_backend(self):
+        """During a creation in the backend, the computed field should just fill the empty value."""
+        self.event_customer.mobile = 'Partner mobile'
+
+        registration = self.env['event.registration'].create({
+            'event_id': self.event_0.id,
+            'partner_id': self.event_customer.id,
+            'name': 'Custom name',
+            'phone': 'Custom phone',
+        })
+
+        self.assertEqual(registration.name, 'Custom name', 'Should not take the name of the partner')
+        self.assertEqual(registration.phone, 'Custom phone', 'Should not take the phone of the partner')
+        self.assertEqual(registration.mobile, 'Partner mobile', 'Should take the mobile of the partner')
+
 
 class TestEventFlow(TestEventCommon):
 
