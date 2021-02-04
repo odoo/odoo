@@ -124,7 +124,8 @@ class Track(models.Model):
         string='Always Wishlisted',
         help="""If set, the talk will be starred for each attendee registered to the event. The attendee won't be able to un-star this talk.""")
     # Call to action
-    website_cta = fields.Boolean('Magic Button')
+    website_cta = fields.Boolean('Magic Button',
+                                 help="Display a Call to Action button to your Attendees while they watch your Track.")
     website_cta_title = fields.Char('Button Title')
     website_cta_url = fields.Char('Button Target URL')
     website_cta_delay = fields.Integer('Button appears')
