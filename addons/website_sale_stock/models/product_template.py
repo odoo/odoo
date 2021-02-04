@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import math
 from odoo import fields, models, api
 
 
@@ -27,10 +28,15 @@ class ProductTemplate(models.Model):
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
-            virtual_available = product.with_context(warehouse=website.warehouse_id.id).virtual_available
+            virtual_available = product.with_context(warehouse=website.warehouse_id.id).virtual_available or 0.0
+            if virtual_available == int(virtual_available):
+                virtual_available = int(virtual_available)
+                precision = 0
+            else:
+                precision = int(math.ceil(math.log10(1 / product.uom_id.rounding))) if 0 < product.uom_id.rounding < 1 else 0
             combination_info.update({
                 'virtual_available': virtual_available,
-                'virtual_available_formatted': self.env['ir.qweb.field.float'].value_to_html(virtual_available, {'decimal_precision': 'Product Unit of Measure'}),
+                'virtual_available_formatted': self.env['ir.qweb.field.float'].value_to_html(virtual_available, {'precision': precision}),
                 'product_type': product.type,
                 'inventory_availability': product.inventory_availability,
                 'available_threshold': product.available_threshold,
