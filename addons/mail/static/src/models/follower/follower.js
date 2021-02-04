@@ -158,6 +158,10 @@ function factory(dependencies) {
                     args: [[this.followedThread.id]],
                     kwargs,
                 }));
+                this.env.services['notification'].notify({
+                    type: 'success',
+                    message: this.env._t("The subscription preferences were successfully applied."),
+                });
             }
             this.closeSubtypes();
         }
