@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_membership
+# 	* website_membership
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Martin Trigaux, 2020
+# Hamid Darabi, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,12 +23,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "All"
 msgstr "همه"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:83
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "تمام کشورها"
@@ -42,15 +53,33 @@ msgid "Close"
 msgstr "بستن"
 
 #. module: website_membership
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:website_membership.field_website__display_name
+msgid "Display Name"
+msgstr "نام نمایشی"
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Find a business partner"
 msgstr "یافتن همکار تجاری"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:126
+#: code:addons/website_membership/controllers/main.py:0
 #, python-format
 msgid "Free Members"
 msgstr "اعضای آزاد"
+
+#. module: website_membership
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:website_membership.field_website__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: website_membership
+#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line____last_update
+#: model:ir.model.fields,field_description:website_membership.field_website____last_update
+msgid "Last Modified on"
+msgstr "آخرین تغییر در"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
@@ -58,15 +87,16 @@ msgid "Location"
 msgstr "مکان"
 
 #. module: website_membership
+#: code:addons/website_membership/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_membership.index
-#: model:website.menu,name:website_membership.menu_members
+#, python-format
 msgid "Members"
 msgstr "اعضا"
 
 #. module: website_membership
 #: model:ir.model,name:website_membership.model_membership_membership_line
 msgid "Membership Line"
-msgstr ""
+msgstr "خط عضویت"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -79,11 +109,11 @@ msgid "Our Members Directory"
 msgstr "دایرکتوری اعضاء ما"
 
 #. module: website_membership
+#: model:ir.model,name:website_membership.model_website
+msgid "Website"
+msgstr "وبسایت"
+
+#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "World Map"
 msgstr "نقشه جهان"
-
-#. module: website_membership
-#: model_terms:ir.ui.view,arch_db:website_membership.index
-msgid "float-left"
-msgstr ""

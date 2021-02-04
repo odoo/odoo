@@ -37,15 +37,17 @@
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # fausthuang, 2020
 # Lei Xu <xulei8@qq.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# 希 杜 <dx19910707@qq.com>, 2021
+# Titan Li <lghbeta@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-04 08:58+0000\n"
+"POT-Creation-Date: 2021-01-25 13:06+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: Titan Li <lghbeta@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,13 +75,6 @@ msgstr "记录"
 #, python-format
 msgid "# Code editor"
 msgstr "# 代码编辑器"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr "${-diffDays} 天前"
 
 #. module: web
 #. openerp-web
@@ -122,6 +117,13 @@ msgstr "%d 年前"
 #, python-format
 msgid "%s Files"
 msgstr "%s 文件"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "%s days ago"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -177,7 +179,7 @@ msgstr "'%s' 无法转换为日期、日期时间或时间"
 #: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
 #, python-format
 msgid "(%s/%sMb)"
-msgstr ""
+msgstr "(%s/%sMb)"
 
 #. module: web
 #. openerp-web
@@ -217,12 +219,12 @@ msgstr "(无标签)"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "07/08/2020"
-msgstr ""
+msgstr "07/08/2020"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "08/07/2020"
-msgstr ""
+msgstr "08/07/2020"
 
 #. module: web
 #. openerp-web
@@ -256,12 +258,12 @@ msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone
 msgid ""
 "<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
 "name</span>"
-msgstr "版权 &amp;copy; 公司名称"
+msgstr "<span class=\"o_footer_copyright_name mr-2\">版权 &amp;copy; 公司名称</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 18,750.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">$ 18,750.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -269,6 +271,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       143,750.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
+"                                                       143,750.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -276,6 +280,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">117,500.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">117,500.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -283,16 +289,18 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">7,500.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">1,500.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">1,500.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">23,500.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">23,500.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -305,11 +313,13 @@ msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
 "                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">15.00%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -319,12 +329,12 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>$ <span class=\"oe_currency_value\">125,000.00</span></span>"
-msgstr ""
+msgstr "<span>$ <span class=\"oe_currency_value\">125,000.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>5.000</span>"
-msgstr ""
+msgstr "<span>5.000</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -342,11 +352,13 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2020/07/0003</span>"
 msgstr ""
+"<span>发票</span>\n"
+"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr ""
+msgstr "<span>付款条款：30 天</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -402,7 +414,7 @@ msgstr "<strong>总计</strong>"
 #: code:addons/web/static/src/js/control_panel/custom_favorite_item.js:0
 #, python-format
 msgid "A name for your favorite filter is required."
-msgstr ""
+msgstr "必须为你收藏的筛选输入一个名称。"
 
 #. module: web
 #. openerp-web
@@ -1195,14 +1207,14 @@ msgstr "确认"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Connection lost. Trying to reconnect..."
-msgstr ""
+msgstr "连接断开，尝试重新连接..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Connection restored. You are back online."
-msgstr ""
+msgstr "连接已恢复，您已回到在线状态。"
 
 #. module: web
 #. openerp-web
@@ -1278,14 +1290,14 @@ msgstr "未能连接至服务器"
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Could not display the selected image"
-msgstr ""
+msgstr "无法显示所选图像"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Could not display the specified image url."
-msgstr ""
+msgstr "无法显示指定的图片网址。"
 
 #. module: web
 #. openerp-web
@@ -1301,7 +1313,7 @@ msgstr "不能序列化 XML"
 msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
-msgstr ""
+msgstr "无法设置封面图像：视图中提供了错误的字段（“%s”）。"
 
 #. module: web
 #. openerp-web
@@ -1469,7 +1481,7 @@ msgstr "天"
 #: model_terms:ir.ui.view,arch_db:web.debug_icon
 msgid ""
 "Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
-msgstr ""
+msgstr "调试模式已激活#{debug_mode_help}。点击这里退出调试模式。"
 
 #. module: web
 #. openerp-web
@@ -1574,7 +1586,7 @@ msgstr "显示名称"
 #: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
 #, python-format
 msgid "Do you really want to cancel the upload of %s?"
-msgstr ""
+msgstr "您真的要取消上传 %s 吗？"
 
 #. module: web
 #. openerp-web
@@ -1623,14 +1635,14 @@ msgstr "域"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain node"
-msgstr ""
+msgstr "域节点"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not properly formed"
-msgstr ""
+msgstr "域格式不正确"
 
 #. module: web
 #. openerp-web
@@ -2134,7 +2146,7 @@ msgstr "图像"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
+msgid "In %s days"
 msgstr ""
 
 #. module: web
@@ -2890,7 +2902,7 @@ msgstr "一对多"
 #, python-format
 msgid ""
 "Only employees can access this database. Please contact the administrator."
-msgstr ""
+msgstr "只有员工可以访问此数据库，请与管理员联系。"
 
 #. module: web
 #. openerp-web
@@ -2927,7 +2939,7 @@ msgstr "仅用于你个人"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
-msgstr ""
+msgstr "打开开发工具#{widget.debug_mode_help}"
 
 #. module: web
 #. openerp-web
@@ -3131,7 +3143,7 @@ msgstr "请输入字段列表的名称"
 #: code:addons/web/static/src/js/widgets/attach_document.js:0
 #, python-format
 msgid "Please save before attaching a file"
-msgstr ""
+msgstr "附加文件前请先保存"
 
 #. module: web
 #. openerp-web
@@ -3823,7 +3835,7 @@ msgstr "堆叠"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Start typing..."
-msgstr ""
+msgstr "开始输入"
 
 #. module: web
 #. openerp-web
@@ -3880,7 +3892,7 @@ msgstr "支持"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Switch to this company"
-msgstr ""
+msgstr "切换到该公司"
 
 #. module: web
 #. openerp-web

@@ -3,19 +3,20 @@
 # 	* hr_maintenance
 # 
 # Translators:
-# Tamás Dombos, 2019
-# Martin Trigaux, 2019
-# krnkris, 2019
-# Kovács Tibor <kovika@gmail.com>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Tamás Dombos, 2021
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# Kovács Tibor <kovika@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,14 +25,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__assign_date
+msgid "Assigned Date"
+msgstr "Átadás napja"
+
+#. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__department_id
 msgid "Assigned Department"
-msgstr ""
+msgstr "Kijelölt részleg"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__employee_id
 msgid "Assigned Employee"
-msgstr ""
+msgstr "Kijelölt alkalmazott"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
+msgid "Assigned Equipments"
+msgstr "Kijelölt eszközök"
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
@@ -42,16 +53,23 @@ msgstr "Létrehozta"
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__owner_user_id
 msgid "Created by User"
-msgstr ""
+msgstr "Létrehozta"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__department_id
 #: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__department
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
 msgid "Department"
 msgstr "Részleg"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_hr_employee
@@ -64,20 +82,36 @@ msgid "Employee"
 msgstr "Alkalmazott"
 
 #. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
 msgid "Equipment"
-msgstr "Szerszám / Eszköz"
+msgstr "Eszköz"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
-#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
 msgid "Equipments"
 msgstr "Eszközök"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment____last_update
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request____last_update
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
+
+#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_equipment
 msgid "Maintenance Equipment"
-msgstr ""
+msgstr "Karbantartási berendezés"
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
@@ -85,9 +119,14 @@ msgid "Maintenance Request"
 msgstr "Karbantartási igény"
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
+msgid "Managed Equipments"
+msgstr "Kezelt eszközök"
+
+#. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "My Maintenances"
-msgstr ""
+msgstr "Karbantartásaim"
 
 #. module: hr_maintenance
 #: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__other

@@ -20,6 +20,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+
+#. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
 msgid "Companies"
 msgstr "公司"
@@ -48,13 +56,6 @@ msgstr "鎖定日期是不可刪除."
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr "新的鎖定日期必須與先前的鎖定日期後進行設定."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
 
@@ -68,22 +69,23 @@ msgstr ""
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
-msgstr "您無法在總帳模組上定義比使用者更嚴格的條件。請確保在使用者鎖定日期之前設定總帳模組上的鎖定日期。"
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
-msgstr "您不能鎖定未完成的會計期間。請確保所設定的鎖定日期早於上月的最後一天。"
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
 msgstr ""

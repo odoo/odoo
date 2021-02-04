@@ -16,9 +16,9 @@
 # Ants Peetsalu <ants@avalah.ee>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
-# Andre Roomet <andreroomet@gmail.com>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
 # atriine <triine@avalah.ee>, 2021
+# Piia Paurson <piia@avalah.ee>, 2021
+# Andre Roomet <andreroomet@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: atriine <triine@avalah.ee>, 2021\n"
+"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1224,9 +1224,9 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 
@@ -7798,7 +7798,7 @@ msgstr "Lisage oma veebisaidile ülesande soovituse vorm"
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_barcode
 msgid "Add barcode scanning facilities to Delivery."
-msgstr "Lisage saatmisele ribakoodi lugemise võimalus."
+msgstr "Lisage saatmisele triipkoodi lugemise võimalus."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode
@@ -12742,7 +12742,7 @@ msgstr "Üritusel triipkoodi lugemine mobiilist"
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode_mobile
 msgid "Event Barcode scan in Mobile"
-msgstr "Üritusel ribakoodi lugemine mobiili abil"
+msgstr "Üritusel triipkoodi lugemine mobiili abil"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm
@@ -15888,7 +15888,7 @@ msgstr "Lihtsalt aja planeerimises"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Just tehtud"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -20257,7 +20257,7 @@ msgstr "Ülemmenüü"
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Emaliin"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
@@ -25339,12 +25339,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_social_sale
 msgid "UTM and post on sale orders"
-msgstr ""
+msgstr "UTM ja postitused müügitellimustel"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_crm
 msgid "UTM and posts on crm"
-msgstr ""
+msgstr "UTM ja postitused CRM'is"
 
 #. module: base
 #: model:res.country,name:base.ug
@@ -26928,6 +26928,13 @@ msgid ""
 msgstr ""
 "Teil on võimalik määrata täiendavaid kasutusõigusi, kui muudate äsja loodud "
 "kasutajat menüü alt Sätted/Kasutajad."
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0

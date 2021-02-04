@@ -1,5 +1,7 @@
-odoo.define('web.OwlDialog', function () {
+odoo.define('web.OwlDialog', function (require) {
     "use strict";
+
+    const patchMixin = require('web.patchMixin');
 
     const { Component, hooks, misc } = owl;
     const { Portal } = misc;
@@ -269,5 +271,5 @@ odoo.define('web.OwlDialog', function () {
     };
     Dialog.template = 'web.OwlDialog';
 
-    return Dialog;
+    return patchMixin(Dialog);
 });

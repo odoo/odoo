@@ -7,7 +7,8 @@ feedparser==5.2.1
 freezegun==0.3.11; python_version < '3.8'
 freezegun==0.3.15; python_version >= '3.8'
 gevent==1.1.2 ; sys_platform != 'win32' and python_version < '3.7'
-gevent==1.5.0 ; python_version >= '3.7'
+gevent==1.5.0 ; python_version == '3.7'
+gevent==20.9.0 ; python_version >= '3.8'
 gevent==1.4.0 ; sys_platform == 'win32' and python_version < '3.7'
 greenlet==0.4.10 ; python_version < '3.7'
 greenlet==0.4.15 ; python_version == '3.7'
@@ -36,7 +37,6 @@ psycopg2==2.7.7; sys_platform != 'win32' and python_version < '3.8'
 psycopg2==2.8.5; sys_platform == 'win32' or python_version >= '3.8'
 pydot==1.4.1
 python-ldap==3.1.0; sys_platform != 'win32'
-pyparsing==2.2.0
 PyPDF2==1.26.0
 pyserial==3.4
 python-dateutil==2.7.3

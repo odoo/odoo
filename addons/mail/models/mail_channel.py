@@ -592,13 +592,7 @@ class Channel(models.Model):
         direct_channel_partners = all_partner_channel.filtered(lambda pc: channel_dict[pc.channel_id.id].channel_type == 'chat')
         direct_partners = direct_channel_partners.mapped('partner_id')
         partner_infos = self.partner_info(all_partners, direct_partners)
-
-        # add last message preview (only used in mobile)
-        addPreview = self._context.get('isMobile', False)
-        if addPreview:
-            channel_previews = {channel_preview['id']: channel_preview for channel_preview in self.channel_fetch_preview()}
-        else:
-            channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
+        channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
 
         for channel in self:
             info = {
@@ -619,14 +613,7 @@ class Channel(models.Model):
                 info['info'] = extra_info
 
             # add last message preview (only used in mobile)
-            if addPreview:
-                if channel in channel_previews:
-                    info['last_message'] = channel_previews[channel]
-                    info['last_message_id'] = channel_previews[channel]['last_message']['id']
-                else:
-                    info['last_message_id'] = False
-            else:
-                info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
+            info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
             # listeners of the channel
             channel_partners = all_partner_channel.filtered(lambda pc: channel.id == pc.channel_id.id)
 

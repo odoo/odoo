@@ -3,21 +3,20 @@
 # 	* sale_stock
 # 
 # Translators:
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Zoltán Csapó <csapoz@gmail.com>, 2019
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
-# Tamás Belinszky <tamasbelinszky@gmail.com>, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Martin Trigaux, 2019
-# krnkris, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Zsolt Godó <zsolttokio@gmail.com>, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:11+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: krnkris, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,11 +30,13 @@ msgid ""
 ".\n"
 "                Manual actions may be needed."
 msgstr ""
+".\n"
+"               Manuális akciók lehetnek szükségesek."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Előkészítés</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -45,7 +46,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-truck\"/><b>Szállítva</b>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -61,22 +62,22 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Értékesítések</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Értékesítve</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>Product</span>"
-msgstr ""
+msgstr "<span>Termék</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr ""
+msgstr "<span>Mennyiség</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
@@ -86,12 +87,12 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>Vásárló hivatkozása:</strong>"
+msgstr "<strong>Ügyfél hivatkozás:</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Delivery Orders</strong>"
-msgstr ""
+msgstr "<strong>Szállítási rendelések</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -99,9 +100,10 @@ msgid "<strong>Incoterm: </strong>"
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Incoterm:</strong>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
@@ -123,6 +125,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"A termék konfigurációjától függően a kiszállított mennyiség az alábbi módokon számítható:\n"
+"  - Manuális: a mennyiség kézi megadása a soron\n"
+"  - Analitikus kiadás: a mennyiség a könyvelésre küldött kiadások összesítéséből számítódik\n"
+"  - Időnyilvántartás: a mennyiség az értékesítési rendelés soraihoz kapcsolt feladatokra rögzített órák összege\n"
+"  - Készletmozgások: a mennyiség a jóváhagyott kiszedések mennyisége\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -131,7 +138,7 @@ msgstr "Értékesítés utáni"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "All planned operations included"
 msgstr ""
@@ -155,15 +162,22 @@ msgstr "Elérhetőség"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Available"
-msgstr "Rendelkezésre álló"
+msgstr "Elérhető"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Available in stock"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "Értékesítési rendelés sorain specifikus útvonal alkalmazása"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -173,12 +187,12 @@ msgstr "Vállalatok"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Az első szállítási rendelés elvégzésének dátuma"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurációs beállítások"
+msgstr "Beállítások módosítása"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -186,14 +200,24 @@ msgid "Date:"
 msgstr "Dátum:"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
+msgid "Default Warehouse"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr "Szállítás"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
+msgid "Delivery Alert"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "Szállítólevelek"
+msgstr "Szállítási rendelések"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -210,6 +234,29 @@ msgid "Display Lots & Serial Numbers on Invoices"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
 msgstr ""
@@ -222,12 +269,12 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr "Vásárlói megrendelések kapcsolódó számláin az Incoterms megjelenítése"
+msgstr "Értékesítési rendelésen és kapcsolódó számláin Incoterm megjelenítése"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Incoterm megjelenítése rendeléseken és számlákon"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -235,21 +282,33 @@ msgstr ""
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
+"Ne felejtse el megváltoztatni a partner a következő szállítási rendeléseken:"
+" %s"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Documentation"
+msgstr "Dokumentáció"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+msgid "Draft SO"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr "Teljesítés kelte"
+msgstr "Tényleges dátum"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr ""
+msgstr "Kivétel(ek) merült(ek) fel a kiszedés kapcsán:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Kivétel merült fel értékesítési rendelés kapcsán:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -260,26 +319,64 @@ msgstr "Kivétel(ek):"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr "Várható időpont"
+msgstr "Várható dátum"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Expected Delivery"
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+msgid "Expected:"
+msgstr "Várható:"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
+msgid "Forecast Expected Date"
+msgstr ""
+
+#. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Előrejelzett készlet"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
 msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
+msgid "Has late picking"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__id
+#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__id
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
+msgid "ID"
+msgstr "Azonosító"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -288,22 +385,25 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Ha minden terméket egyszerre szállít, akkor a szállítási rendelés a "
+"legnagyobb átfutási idejű termékhez lesz igazítva. Egyéb esetben a "
+"legrövidebbhez kerül igazításra."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Érintett transzfer(ek):"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
 msgid "Incoterm"
-msgstr "Nemzetközi Kereskedelmi Feltételek"
+msgstr "Nemzetközi Kereskedelmi Feltétel"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr "Nemzetközi Kereskedelmi Feltételek INCOTERMS"
+msgstr "Incoterm"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -311,13 +411,18 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Nemzetközi üzleti feltételek, olyan előredefiniált üzleti feltételek, "
-"melyeket nemzetközi ügyleteknél használnak."
+"A Nemzetközi Kereskedelmi Feltételek olyan előredefiniált üzleti feltételek,"
+" melyeket nemzetközi ügyleteknél használnak."
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
+msgid "Inventory"
+msgstr "Raktár"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Készletek útvonalai"
+msgstr "Készletútvonalak"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
@@ -330,19 +435,47 @@ msgid "Is Mto"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
+msgid "JSON data for the popover widget"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
-msgid "Journal Entries"
-msgstr "Könyvelési tételek"
+msgid "Journal Entry"
+msgstr "Könyvelési tétel"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Könyvelési napló tételsor"
+msgstr "Napló elem"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_move____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_res_company____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_res_users____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rule____last_update
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lot/Széria"
+msgstr "Lot/szériaszám"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -353,12 +486,12 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Gyártás megrendelésre"
+msgstr "Rendelésre készítés"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr "Kézi akciók lehetnek szükségesek"
+msgstr "Kézi műveletek lehetnek szükségesek"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -367,6 +500,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Vevőknek ígért határidőkkel kapcsolatos hiba határa. A termékek szállítási "
+"dátuma az ígért dátumnál ennyi nappal előbbre kerül ütemezésre, abból a "
+"célból, hogy kezeljük a beszállítási lánc előre nem látható késéseit."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -377,23 +513,38 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"Megígért határidő dátum hiba a Vevők felé. Termék beszerzési és szállítási "
-"ütemterv  a megígért dátumnál egy pár nappal előbbre, a beszállítási lánc "
-"előre nem látható késésével számítva."
+"Vevőknek ígért határidőkkel kapcsolatos hiba határa. A termékek beszerzési "
+"és szállítási dátuma az ígért dátumnál ennyi nappal előbbre kerül "
+"ütemezésre, abból a célból, hogy kezeljük a beszállítási lánc előre nem "
+"látható késéseit."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Kiszállított mennyiség frissítésének módszere"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
+msgstr "Várható szállítási dátumok előre mozgatása"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "No enough future availaibility"
 msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "No future availaibility"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "On"
 msgstr "Ekkor"
@@ -402,7 +553,7 @@ msgstr "Ekkor"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "Megrendelt mennyiség csökkent!"
+msgstr "Rendelt mennyiség csökkentve!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
@@ -412,7 +563,7 @@ msgstr "Csomag"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Kiszedési politika"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
@@ -438,7 +589,21 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
+msgstr "Szállítandó mennyiség"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Remaining demand available at"
 msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "Reserved"
+msgstr "Lefoglalt"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -448,6 +613,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Termékek lefoglalása kézzel a szállítási rendelésen vagy az ütemező "
+"futtatásával ajánlott a prioritások jobb kezeléséhez hosszú átfutási idejű "
+"vevői rendelések és/vagy gyakori készlethiányok esetén. Alapértelmezésben az"
+" ütemező automatikusan fut 24 óránként."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -457,58 +626,63 @@ msgstr "Útvonal"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Értékesítés sor"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
-msgstr "Értékesítési megrendelés"
+msgstr "Értékesítési rendelés"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
-msgstr "Vevői rendelések"
+msgstr "Értékesítési rendelések"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
-msgstr ""
+msgstr "Értékesítési rendelések száma"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "Értékesítési elemzés kimutatás"
+msgstr "Értékesítési elemzés riport"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "Vásárlói megrendelés"
+msgstr "Értékesítési rendelés"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Értékesítési megrendelés sor"
+msgstr "Értékesítési rendelés sor"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "Vevői megrendelési tételek"
+msgstr "Értékesítési rendelés sorok"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_ids
 msgid "Sales Orders"
-msgstr "Vevői megrendelések"
+msgstr "Értékesítési rendelések"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr "Értékesítések Biztonsági napszámok"
+msgstr "Értékesítés biztonsági nap"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Szállítások korábbi időzítése a csúszások elkerüléséhez"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -518,36 +692,43 @@ msgstr "Ütemezett dátum"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Biztonsági átfutási idő"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Biztonsági átfutási idő értékesítéshez"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Kiválasztható a vásárlói megrendelési soron"
+msgstr "Kiválasztható értékesítési rendelési soron"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Termékek szállítása egyszerre"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Szállítás amint lehetséges, visszamaradt rendelésekkel együtt"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr "Szállítási szabályok"
+msgstr "Szállítási politika"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "Sold in the last 365 days"
+msgstr "Elmúlt 365 napban értékesített"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
+msgid ""
+"Some products have already been delivered. Returns can be created from the "
+"Delivery Orders."
 msgstr ""
 
 #. module: sale_stock
@@ -562,19 +743,31 @@ msgid "Stock Moves"
 msgstr "Készletmozgások"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr "Készletfeltöltés kimutatás"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Készlet szabály"
+msgstr "Készletszabály"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr ""
+msgstr "Készletszabály riport"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Készletszabály riport"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "The delivery"
+msgstr ""
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -588,12 +781,14 @@ msgstr ""
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr "Ezt a terméket csomagolta %.2f %s. Értékesíteni kell %.2f %s."
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
+"%(quantity).2f %(unit)s."
+msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "This product is replenished on demand."
 msgstr ""
@@ -601,16 +796,21 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Átvitel"
+msgstr "Transzfer"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "Készletmozgások"
+msgstr "Transzferek"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_users
+msgid "Users"
+msgstr "Felhasználók"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "View Forecast"
 msgstr ""
@@ -642,17 +842,17 @@ msgstr "Figyelem!"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
 msgid "When all products are ready"
-msgstr ""
+msgstr "Amikor minden termék rendelkezésre áll"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Mikor kerüljenek lefoglalásra az értékesített termékek"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Mikor kezdődjön a kiszállítás"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -661,8 +861,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
-"Lecsökkenti a megrendelt mennyiséget! Ne felejtse el kézzel frissíteni  a "
-"szállítási megbízást, szállítólevelet ha szükséges."
+"Lecsökkenti a rendelt mennyiséget! Ne felejtse el kézzel frissíteni a "
+"szállítási rendelést, ha szükséges."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -671,11 +871,13 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
+"Nem lehet lecsökkenteni a rendelt mennyiséget a szállított mennyiség alá.\n"
+"Hozzon létre egy visszárut először."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "visszavont"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -691,9 +893,16 @@ msgstr "ebből"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "rendelt ehelyett:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
+msgstr "feldolgozott ehelyett: "
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#, python-format
+msgid "will be late."
 msgstr ""

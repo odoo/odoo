@@ -26,6 +26,8 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
             if (data.length) {
                 this.$target.get(0).dataset.filterId = data[0].id;
                 this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].id].limit;
+                this._refreshPublicWidgets();
+                // Refresh is needed because default values are obtained after start()
             }
         });
     },
@@ -81,6 +83,22 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         }
         const productCategoriesSelectorEl = uiFragment.querySelector('[data-name="product_category_opt"]');
         return this._renderSelectUserValueWidgetButtons(productCategoriesSelectorEl, this.productCategories);
+    },
+    /**
+     * Sets default options values.
+     * @override
+     * @private
+     */
+    _setOptionsDefaultValues: function () {
+        this._super.apply(this, arguments);
+        const templateKeys = this.$el.find("we-select[data-attribute-name='templateKey'] we-selection-items we-button");
+        if (templateKeys.length > 0) {
+            this._setOptionValue('templateKey', templateKeys.attr('data-select-data-attribute'));
+        }
+        const productCategories = this.$el.find("we-select[data-attribute-name='productCategoryId'] we-selection-items we-button");
+        if (productCategories.length > 0) {
+            this._setOptionValue('productCategoryId', productCategories.attr('data-select-data-attribute'));
+        }
     },
 
 });

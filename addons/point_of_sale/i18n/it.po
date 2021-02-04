@@ -14,7 +14,7 @@
 # Martin Trigaux, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -697,7 +697,7 @@ msgstr "Estratto conto bancario"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
 msgid "Bank Statement Cashbox"
-msgstr "Estratti conto bancari"
+msgstr "Estratto conto cassa contanti"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
@@ -888,7 +888,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
 msgid "Cashbox balance"
-msgstr "Saldo cassa"
+msgstr "Saldo cassa contanti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_cashdrawer
@@ -1000,6 +1000,8 @@ msgid ""
 "Check the internet connection then try to sync again by clicking on the red "
 "wifi button (upper right of the screen)."
 msgstr ""
+"Controllare la connessione internet e provare a sincronizzare di nuovo "
+"premendo il pulsante Wi-Fi rosso (in alto a destra nello schermo)."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_id
@@ -1740,7 +1742,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
-msgstr ""
+msgstr "Es. cliente: assistente di volo, data: 2020-05-09"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1771,7 +1773,7 @@ msgstr "E-mail"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "Email Receipt"
-msgstr ""
+msgstr "Ricevuta via e-mail"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2438,7 +2440,7 @@ msgstr "Saldo di chiusura ultima sessione"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cashbox
 msgid "Last Session Closing Cashbox"
-msgstr ""
+msgstr "Cassa contanti chiusura ultima sessione"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_date
@@ -2870,6 +2872,7 @@ msgstr ""
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
 msgstr ""
+"Sono supportati solo formati immagine compatibili web come .png o .jpeg."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2884,7 +2887,7 @@ msgstr "Apri"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Open Cashbox"
-msgstr "Apri cassa"
+msgstr "Apri cassa contanti"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
@@ -4072,7 +4075,7 @@ msgstr "Resi"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr "Richiesta di annullamento inviata al terminale"
+msgstr "Richiesta di storno inviata al terminale"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4329,7 +4332,7 @@ msgstr "ID sessione:"
 #: code:addons/point_of_sale/static/src/js/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Session is closed"
-msgstr ""
+msgstr "La sessione è chiusa"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -4720,6 +4723,8 @@ msgid ""
 "Technical field which is used to hide use_payment_terminal when no payment "
 "interfaces are installed."
 msgstr ""
+"Campo tecnico usato per nascondere use_payment_terminal quando non sono "
+"installate interfacce di pagamento."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4799,6 +4804,8 @@ msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
 "backend for the order: "
 msgstr ""
+"L'ordine è stato sincronizzato in precedenza. Creare la fattura per l'ordine"
+" dall'interfaccia amministrativa:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__cash_journal_id
@@ -4903,6 +4910,8 @@ msgid ""
 "The selected pricelists must belong to no company or the company of the "
 "point of sale."
 msgstr ""
+"Gli elenchi prezzi selezionati devono appartenere all''azienda del punto "
+"vendita oppure a nessuna."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5363,6 +5372,8 @@ msgid ""
 "Unable to modify this PoS Configuration because you can't modify %s while a "
 "session is open."
 msgstr ""
+"Impossibile modificare la configurazione POS, con una sessione aperta non è "
+"possibile cambiare %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5656,6 +5667,8 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a bank statement linked to Point of Sale session."
 msgstr ""
+"Impossibile eliminare un estratto conto collegato a una sessione punto "
+"vendita."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_category.py:0
@@ -5663,6 +5676,8 @@ msgstr ""
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
 msgstr ""
+"Impossibile eliminare una categoria del punto vendita mentre è ancora aperta"
+" una sessione."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5763,7 +5778,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You need a loss and profit account on your cash journal."
-msgstr ""
+msgstr "Nel registro cassa è necessario un conto profitti e perdite."
 
 #. module: point_of_sale
 #. openerp-web

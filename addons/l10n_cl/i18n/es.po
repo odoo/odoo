@@ -4,18 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-08 00:58+0000\n"
-"PO-Revision-Date: 2020-06-07 21:07-0400\n"
+"POT-Creation-Date: 2021-01-14 12:35+0000\n"
+"PO-Revision-Date: 2021-01-14 12:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 2.3.1\n"
 
 #. module: l10n_cl
 #: model:ir.model.fields,help:l10n_cl.field_res_partner__l10n_cl_sii_taxpayer_type
@@ -30,6 +28,67 @@ msgstr ""
 "2 - Emisor Boletas (aplica solo para proveedores emisores de boleta)\n"
 "3 - Consumidor Final (se le emitirán siempre boletas)\n"
 "4 - Extranjero"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
+"\n"
+"                <strong>Customer:</strong>"
+msgstr ""
+"<br/>\n"
+"\n"
+"                <strong>Cliente:</strong>"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
+msgid ""
+"<br/>\n"
+"                                            <span style=\"line-height: 180%;\">RUT:</span>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
+msgid ""
+"<br/>\n"
+"                                            <span>Nº:</span>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
+"                    <strong>Incoterm:</strong>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid ""
+"<br/>\n"
+"                <strong>Address:</strong>"
+msgstr ""
+"<br/>\n"
+"                <strong>Dirección:</strong>"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.report_invoice_document
+msgid "<span>Taxes</span>"
+msgstr "<span>Impuestos</span>"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "<strong>Due Date:</strong>"
+msgstr "<strong>Fecha de vencimiento:</strong>"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "<strong>GIRO:</strong>"
+msgstr ""
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>Plazos de pago:</strong>"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_account_chart_template
@@ -58,17 +117,19 @@ msgid "Amount Untaxed"
 msgstr "Monto sin impuestos"
 
 #. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_account_bank_statement_line__l10n_latam_internal_type
 #: model:ir.model.fields,help:l10n_cl.field_account_move__l10n_latam_internal_type
+#: model:ir.model.fields,help:l10n_cl.field_account_payment__l10n_latam_internal_type
 #: model:ir.model.fields,help:l10n_cl.field_l10n_latam_document_type__internal_type
 msgid ""
-"Analog to odoo account.move.type but with more options allowing to identify "
-"the kind of document we are working with. (not only related to account.move, "
-"could be for documents of other models like stock.picking)"
+"Analog to odoo account.move.move_type but with more options allowing to "
+"identify the kind of document we are working with. (not only related to "
+"account.move, could be for documents of other models like stock.picking)"
 msgstr ""
 "Análogo a account.move.type de Odoo pero con más opciones, permitiendo "
 "identificar el tipo de documento sobre el que estamos trabajando. (no "
-"solamente relativo a account.move, podría ser relativo a otros modelos, como "
-"por ejemplo stock.picking)"
+"solamente relativo a account.move, podría ser relativo a otros modelos, como"
+" por ejemplo stock.picking)"
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_bar
@@ -107,7 +168,9 @@ msgid "Cod. SBIF"
 msgstr ""
 
 #. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_account_bank_statement_line__l10n_latam_document_type_id_code
 #: model:ir.model.fields,help:l10n_cl.field_account_move__l10n_latam_document_type_id_code
+#: model:ir.model.fields,help:l10n_cl.field_account_payment__l10n_latam_document_type_id_code
 msgid "Code used by different localizations"
 msgstr "Código usado por diferentes localizaciones"
 
@@ -115,11 +178,6 @@ msgstr "Código usado por diferentes localizaciones"
 #: model:ir.model,name:l10n_cl.model_res_company
 msgid "Companies"
 msgstr "Compañías"
-
-#. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__3
-msgid "Consumidor final"
-msgstr ""
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_res_partner
@@ -130,11 +188,6 @@ msgstr "Contacto"
 #: model:ir.model,name:l10n_cl.model_res_country
 msgid "Country"
 msgstr "País"
-
-#. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.view_account_journal_form_inherit_l10n_cl
-msgid "Create New Sequences"
-msgstr "Crear nuevas secuencias"
 
 #. module: l10n_cl
 #: model:ir.model.fields.selection,name:l10n_cl.selection__l10n_latam_document_type__internal_type__credit_note
@@ -172,6 +225,11 @@ msgid "DNI"
 msgstr ""
 
 #. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.informations
+msgid "Date:"
+msgstr "Fecha:"
+
+#. module: l10n_cl
 #: model_terms:ir.ui.view,arch_db:l10n_cl.view_move_form
 msgid "Datos adic. dirección y Ciudad"
 msgstr ""
@@ -182,7 +240,26 @@ msgid "Debit Notes"
 msgstr "Notas de Débito"
 
 #. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_res_bank__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_res_country__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_res_currency__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_cl.field_uom_uom__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_line__l10n_latam_document_type_id_code
 #: model:ir.model.fields,field_description:l10n_cl.field_account_move__l10n_latam_document_type_id_code
+#: model:ir.model.fields,field_description:l10n_cl.field_account_payment__l10n_latam_document_type_id_code
 msgid "Doc Type"
 msgstr "Tipo documento"
 
@@ -191,18 +268,15 @@ msgstr "Tipo documento"
 #, python-format
 msgid ""
 "Document types for foreign customers must be export type (codes 110, 111 or "
-"112)"
-msgstr ""
-"Los tipos de documento para clientes extranjeros deben ser de exportación. "
-"(Códigos 110, 111 o 112)"
-
-#. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__2
-msgid "Emisor de boleta 2da categoría"
-msgstr ""
+"112) or you                             should define the customer as an end"
+" consumer and use receipts (codes 39 or 41)"
+msgstr "Los tipos de documento para clientes extranjeros deben ser de exportación. "
+"(Códigos 110, 111 o 112) o debe definir al cliente como consumidor final y utilizar "
+"recibos (códigos 39 o 41)"
 
 #. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__3
 #, python-format
 msgid "End Consumer"
 msgstr "Consumidor final"
@@ -213,23 +287,15 @@ msgid "Energía"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__4
-msgid "Extranjero"
-msgstr ""
-
-#. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__2
 #, python-format
 msgid "Fees Receipt Issuer (2nd category)"
 msgstr "Emisor de boleta 2da categoría"
 
 #. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.view_complete_invoice_refund_tree
-msgid "Folio"
-msgstr "Folio"
-
-#. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__4
 #, python-format
 msgid "Foreigner"
 msgstr "Extranjero"
@@ -238,6 +304,23 @@ msgstr "Extranjero"
 #: model:uom.uom,name:l10n_cl.product_uom_hl
 msgid "HL"
 msgstr ""
+
+#. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_cl.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_cl.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_cl.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template__id
+#: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence__id
+#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__id
+#: model:ir.model.fields,field_description:l10n_cl.field_res_bank__id
+#: model:ir.model.fields,field_description:l10n_cl.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_cl.field_res_country__id
+#: model:ir.model.fields,field_description:l10n_cl.field_res_currency__id
+#: model:ir.model.fields,field_description:l10n_cl.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_cl.field_uom_uom__id
+msgid "ID"
+msgstr "ID (identificación)"
 
 #. module: l10n_cl
 #: model:account.tax.group,name:l10n_cl.tax_group_ila
@@ -250,31 +333,16 @@ msgid "IVA 19%"
 msgstr ""
 
 #. module: l10n_cl
-#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__1
-#, fuzzy
-#| msgid "VAT Affected (1st Category)"
-msgid "IVA afecto 1ª categoría"
-msgstr "IVA afecto 1ª categoría"
-
-#. module: l10n_cl
+#: model:ir.model.fields,help:l10n_cl.field_account_bank_statement_line__partner_id_vat
 #: model:ir.model.fields,help:l10n_cl.field_account_move__partner_id_vat
+#: model:ir.model.fields,help:l10n_cl.field_account_payment__partner_id_vat
 msgid "Identification Number for selected type"
-msgstr "Número de Id para el tipo seleccionado"
+msgstr "Número de identificación para el tipo seleccionado"
 
 #. module: l10n_cl
 #: model:account.tax.group,name:l10n_cl.tax_group_impuestos_especificos
 msgid "Impuestos Específicos"
 msgstr ""
-
-#. module: l10n_cl
-#: code:addons/l10n_cl/models/account_move.py:0
-#, python-format
-msgid ""
-"In Chilean localization, you need to use documents in the sales journalin "
-"order to register your sales properly"
-msgstr ""
-"Para la localización chilena es necesario usar documentos en los diarios de "
-"venta para registrar adecuadamente sus ventas"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type__internal_type
@@ -298,8 +366,8 @@ msgstr "Diario"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_account_move
-msgid "Journal Entries"
-msgstr "Asientos contables"
+msgid "Journal Entry"
+msgstr "Asiento contable"
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence__l10n_cl_journal_ids
@@ -317,14 +385,38 @@ msgid "KWH"
 msgstr ""
 
 #. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_line__l10n_latam_internal_type
 #: model:ir.model.fields,field_description:l10n_cl.field_account_move__l10n_latam_internal_type
+#: model:ir.model.fields,field_description:l10n_cl.field_account_payment__l10n_latam_internal_type
 msgid "L10n Latam Internal Type"
 msgstr "L10n Tipo Interno (Latam)"
 
 #. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_chart_template____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_account_journal____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_account_move____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_account_tax____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_account_tax_template____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_ir_sequence____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_l10n_latam_document_type____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_res_bank____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_res_company____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_res_country____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_res_currency____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_res_partner____last_update
+#: model:ir.model.fields,field_description:l10n_cl.field_uom_uom____last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_l10n_latam_document_type
 msgid "Latam Document Type"
-msgstr "Tipo de Documento Latam"
+msgstr "Tipo Documento (LA)"
+
+#. module: l10n_cl
+#: model_terms:ir.ui.view,arch_db:l10n_cl.custom_header
+msgid "Logo"
+msgstr ""
 
 #. module: l10n_cl
 #: model:uom.uom,name:l10n_cl.product_uom_mm
@@ -345,11 +437,6 @@ msgstr ""
 #: model:uom.uom,name:l10n_cl.product_uom_mt2
 msgid "MT2"
 msgstr ""
-
-#. module: l10n_cl
-#: model_terms:ir.ui.view,arch_db:l10n_cl.view_account_journal_form_inherit_l10n_cl
-msgid "Next Number"
-msgstr "Próximo número"
 
 #. module: l10n_cl
 #: model:uom.category,name:l10n_cl.uom_categ_others
@@ -441,9 +528,14 @@ msgstr "Comercial"
 
 #. module: l10n_cl
 #: model:ir.model,name:l10n_cl.model_ir_sequence
-#: model_terms:ir.ui.view,arch_db:l10n_cl.view_account_journal_form_inherit_l10n_cl
 msgid "Sequence"
 msgstr "Secuencia"
+
+#. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_import_journal_creation__l10n_cl_sequence_ids
+#: model:ir.model.fields,field_description:l10n_cl.field_account_journal__l10n_cl_sequence_ids
+msgid "Sequences (cl)"
+msgstr ""
 
 #. module: l10n_cl
 #: model:ir.model.fields,field_description:l10n_cl.field_res_currency__l10n_cl_short_name
@@ -483,8 +575,8 @@ msgid ""
 "Tax payer type and vat number are mandatory for this type of document. "
 "Please set the current tax payer type of this customer"
 msgstr ""
-"El tipo de contribuyente y el número de RUT son requeridos para este tipo de "
-"documento. Por favor establezca un valor para el tipo de contribuyente de "
+"El tipo de contribuyente y el número de RUT son requeridos para este tipo de"
+" documento. Por favor establezca un valor para el tipo de contribuyente de "
 "este Cliente"
 
 #. module: l10n_cl
@@ -494,8 +586,8 @@ msgid ""
 "Tax payer type and vat number are mandatory for this type of document. "
 "Please set the current tax payer type of this supplier"
 msgstr ""
-"El tipo de contribuyente y el número de RUT son requeridos para este tipo de "
-"documento. Por favor establezca un valor para el tipo de contribuyente de "
+"El tipo de contribuyente y el número de RUT son requeridos para este tipo de"
+" documento. Por favor establezca un valor para el tipo de contribuyente de "
 "este Proveedor"
 
 #. module: l10n_cl
@@ -533,7 +625,8 @@ msgstr ""
 #: code:addons/l10n_cl/models/account_move.py:0
 #, python-format
 msgid ""
-"The tax payer type of this supplier is not entitled to deliver fees documents"
+"The tax payer type of this supplier is not entitled to deliver fees "
+"documents"
 msgstr ""
 "El tipo de contribuyente para este proveedor no puede emitir boletas de "
 "honorarios"
@@ -570,12 +663,15 @@ msgstr ""
 
 #. module: l10n_cl
 #: code:addons/l10n_cl/models/res_partner.py:0
+#: model:ir.model.fields.selection,name:l10n_cl.selection__res_partner__l10n_cl_sii_taxpayer_type__1
 #, python-format
 msgid "VAT Affected (1st Category)"
 msgstr "IVA afecto 1ª categoría"
 
 #. module: l10n_cl
+#: model:ir.model.fields,field_description:l10n_cl.field_account_bank_statement_line__partner_id_vat
 #: model:ir.model.fields,field_description:l10n_cl.field_account_move__partner_id_vat
+#: model:ir.model.fields,field_description:l10n_cl.field_account_payment__partner_id_vat
 msgid "VAT No"
 msgstr "RUT Nº"
 

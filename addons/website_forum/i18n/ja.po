@@ -9,21 +9,22 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # kent_ocean <ke.tanabe@gmail.com>, 2020
 # 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Manami Hashi <manami@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
-# Noma Yuki, 2020
+# Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
+# Noma Yuki, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Noma Yuki, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,58 +35,58 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
 msgid "# Answers"
-msgstr ""
+msgstr "＃お気に入り"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_favorites
 msgid "# Favorites"
-msgstr ""
+msgstr "＃お気に入り"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_posts
 msgid "# Posts"
-msgstr ""
+msgstr "＃投稿"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
 msgid "# Views"
-msgstr ""
+msgstr "＃ビュー"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to accept or refuse an answer."
-msgstr ""
+msgstr "答えを受け入れるか拒否するために必要な%dカルマ。"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to answer a question."
-msgstr ""
+msgstr "質問に答えるには%dカルマが必要です。"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to close or reopen a post."
-msgstr ""
+msgstr "投稿を閉じるか再開するには%dカルマが必要です。"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to comment."
-msgstr ""
+msgstr "コメントするには%dカルマが必要です。"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to convert a comment to an answer."
-msgstr ""
+msgstr "コメントを回答に変換するには、%dカルマが必要です。"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to convert an answer to a comment."
-msgstr ""
+msgstr "回答をコメントに変換するには、%dカルマが必要です。"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -487,7 +488,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-share-alt text-muted mr-1\"/>Share"
-msgstr ""
+msgstr "<i class=\"fa fa-share-alt text-muted mr-1\"/>共有"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -495,6 +496,8 @@ msgid ""
 "<i class=\"fa fa-share-alt text-muted\"/>\n"
 "                                Share"
 msgstr ""
+"<i class=\"fa fa-share-alt text-muted\"/>\n"
+"                                共有"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -553,6 +556,11 @@ msgstr ""
 "<small class=\"text-muted\">\n"
 "                    フラグ付\n"
 "                </small>"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr "<span aria-label=\"Close\">×</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -625,11 +633,6 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
 msgstr ""
 
 #. module: website_forum
@@ -1044,7 +1047,7 @@ msgstr "下げ投票可能"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_edit
 msgid "Can Edit"
-msgstr ""
+msgstr "編集することができます"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_flag
@@ -1588,7 +1591,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "Favourites"
-msgstr ""
+msgstr "お気に入り"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -1618,7 +1621,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Flag"
-msgstr ""
+msgstr "国旗"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
@@ -2862,7 +2865,7 @@ msgstr "校閲者"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO最適化"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_sms_error
@@ -2922,7 +2925,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Select All"
-msgstr ""
+msgstr "すべて選択"
 
 #. module: website_forum
 #. openerp-web
@@ -2944,7 +2947,7 @@ msgstr "自己学習者"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__seo_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo名"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
@@ -3553,7 +3556,7 @@ msgstr "ウェブサイトメタタイトル"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "ウェブサイトopengraph画像"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
@@ -3676,7 +3679,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "により"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma

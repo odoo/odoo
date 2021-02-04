@@ -423,7 +423,7 @@ class Project(models.Model):
         """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
         project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
-        task_subtypes = project_subtypes.mapped('parent_id').ids if project_subtypes else None
+        task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
         if not subtype_ids or task_subtypes:
             self.mapped('tasks').message_subscribe(
                 partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
@@ -741,7 +741,7 @@ class Task(models.Model):
             task.repeat_show_dow = task.recurring_task and task.repeat_unit == 'week'
             task.repeat_show_month = task.recurring_task and task.repeat_unit == 'year'
 
-    @api.depends('recurring_task', 'repeat_unit')
+    @api.depends('recurring_task')
     def _compute_repeat(self):
         rec_fields = self._get_recurrence_fields()
         defaults = self.default_get(rec_fields)

@@ -9,7 +9,7 @@ var _t = core._t;
 tour.register('crm_tour', {
     url: "/web",
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
-    sequence: 5,
+    sequence: 10,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.'),
@@ -36,11 +36,6 @@ tour.register('crm_tour', {
     trigger: ".ui-menu-item > a",
     auto: true,
     in_modal: false,
-}, {
-    trigger: '.o_kanban_quick_create .o_field_monetary[name="expected_revenue"] input',
-    content: _t("Define here the Expected Revenue of this Opportunity."),
-    position: 'right',
-    run: "text 12.3",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: _t("Now, <b>add your Opportunity</b> to your Pipeline."),

@@ -3,17 +3,19 @@
 # 	* website_profile
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,18 +51,13 @@ msgid ". Try another search."
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "40%"
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>All Badges"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right mr-1\"/>Check all available badges"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right\"/> Check available badges"
+msgid "<i class=\"fa fa-arrow-right\"/> All Badges"
 msgstr ""
 
 #. module: website_profile
@@ -99,13 +96,6 @@ msgid "<small class=\"font-weight-bold\">Joined</small>"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid ""
-"<span class=\"badge badge-danger font-weight-normal px-2 py-1 "
-"m-1\">Unpublished</span>"
-msgstr ""
-
-#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">Biography</span>"
 msgstr ""
@@ -127,12 +117,12 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Public profile</span>"
+msgid "<span class=\"font-weight-bold\">Name</span>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Real name</span>"
+msgid "<span class=\"font-weight-bold\">Public profile</span>"
 msgstr ""
 
 #. module: website_profile
@@ -165,6 +155,11 @@ msgstr ""
 msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "<strong class=\"form-group text-white mr-2\">Rank by :</strong>"
 msgstr ""
 
 #. module: website_profile
@@ -273,7 +268,14 @@ msgid "All Users"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "All time"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
 msgstr "Jelvények"
@@ -282,8 +284,8 @@ msgstr "Jelvények"
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
-"                    you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
-"                    appear on your profile page, and your posts."
+"                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
+"                        appear on your profile page, and your posts."
 msgstr ""
 
 #. module: website_profile
@@ -292,9 +294,19 @@ msgid "Biography"
 msgstr "Életrajz"
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
+msgid "Can Publish"
+msgstr "Publikálhat"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Clear"
 msgstr "Törlés"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "Click here to send a verification email."
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -305,6 +317,13 @@ msgstr "Bezárás"
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Country..."
 msgstr "Ország..."
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:website_profile.field_res_users__display_name
+#: model:ir.model.fields,field_description:website_profile.field_website__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -337,6 +356,18 @@ msgid "How do I score more points?"
 msgstr ""
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__id
+#: model:ir.model.fields,field_description:website_profile.field_res_users__id
+#: model:ir.model.fields,field_description:website_profile.field_website__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
+msgid "Is Published"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "It appears your email has not been verified.<br/>"
 msgstr ""
@@ -345,6 +376,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Keep learning with"
 msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge____last_update
+#: model:ir.model.fields,field_description:website_profile.field_res_users____last_update
+#: model:ir.model.fields,field_description:website_profile.field_website____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_website__karma_profile_min
@@ -373,7 +411,7 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "No badge yet"
+msgid "No badges yet!"
 msgstr ""
 
 #. module: website_profile
@@ -398,7 +436,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Ranks"
-msgstr ""
+msgstr "Rangok"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
@@ -421,14 +459,31 @@ msgid "Search users"
 msgstr ""
 
 #. module: website_profile
+#: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This month"
+msgstr "Ebben a hónapban"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "This profile is private!"
 msgstr "Ez a profil privát!"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This week"
+msgstr "Ezen a héten"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "Unpublished"
-msgstr ""
+msgstr "Nem közzétett"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -447,13 +502,29 @@ msgid "Users"
 msgstr "Felhasználók"
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_profile
 #: model:ir.model,name:website_profile.model_website
 msgid "Website"
-msgstr "Weboldal"
+msgstr "Honlap"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
+msgid "Website URL"
+msgstr "Honlap címe"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
+msgid "XP"
 msgstr ""
 
 #. module: website_profile
@@ -465,6 +536,7 @@ msgid ""
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
 msgstr ""
@@ -472,6 +544,16 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "point"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this month"
+msgstr "ebben a hónapban"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this week"
 msgstr ""
 
 #. module: website_profile

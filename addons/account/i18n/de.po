@@ -20,7 +20,6 @@
 # Jürgen Bereuter <jub@matchcut.at>, 2020
 # UteHaus, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2020
@@ -33,6 +32,8 @@
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2020
+# Martin Trigaux, 2021
+# Udo Hennig <info@udohennig.de>, 2021
 # 
 msgid ""
 msgstr ""
@@ -40,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2020\n"
+"Last-Translator: Udo Hennig <info@udohennig.de>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4992,7 +4993,7 @@ msgid ""
 "%s"
 msgstr ""
 "Doppelte Lieferantenreferenz entdeckt. Sie haben wahrscheinlich zweimal "
-"dieselbe Lieferantenrechnung/Gutschrift verwendet"
+"dieselbe Lieferantenrechnung/Gutschrift verwendet %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -5098,7 +5099,7 @@ msgstr "Buchungen sortiert nach"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Entries are hashed from %s (%s)"
-msgstr "Einträge werden von"
+msgstr "Einträge werden von %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6786,6 +6787,8 @@ msgid ""
 "It seems that the taxes have been modified since the creation of the journal"
 " entry. You should create the credit note manually instead."
 msgstr ""
+"Es sieht so aus als wären die Steuern seid der Erstellung des Eintrages "
+"geändert worden. Sie sollten eine manuelle Kostenbuchung erstellen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10552,7 +10555,7 @@ msgstr "Quittung per E-Mail senden"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr ""
+msgstr "Sende Quittung/Rechnung per e-Mail."
 
 #. module: account
 #. openerp-web
@@ -14228,6 +14231,8 @@ msgstr "Sie können einen einmal gebuchten Eintrag nicht löschen."
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
+"Sie können keinen Eintrag löschen der mit einem gebuchtem Eintrag verbunden "
+"ist."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -14359,8 +14364,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
-"already been used to make accounting entries. If you really need to do that,"
-" please contact tech support."
+"already been used to make accounting entries."
 msgstr ""
 
 #. module: account

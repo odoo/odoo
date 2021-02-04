@@ -10,8 +10,8 @@
 # 开阖软件 Jeff Wang <jeff@osbzr.com>, 2020
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
-# 卫安琪 <weianqi1991@gmail.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
+# 卫安琪 <weianqi1991@gmail.com>, 2020
 # Frank Liu <liuchunbo@gmail.com>, 2020
 # 飛行de魚 <cnpioneer@163.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
@@ -28,7 +28,6 @@
 # r <263737@qq.com>, 2020
 # Liping Wang <lynn.config@gmail.com>, 2020
 # Manga Tsang <mts@odoo.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # 226408 台北 <226408@so8d.com>, 2020
 # mao luo <dooms21day@163.com>, 2020
@@ -37,12 +36,12 @@
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2020
-# ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # shan wang <wangshan0901@gmail.com>, 2020
 # 晋 宋 <56457576@qq.com>, 2020
-# 稀饭~~ <wangwhai@qq.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2021
+# 稀饭~~ <wangwhai@qq.com>, 2021
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -50,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -397,7 +396,7 @@ msgid ""
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
 "<li>{amount} ({debit_credit}) "
-"从<strong>%s</strong>被转移到<strong>{account_target_name}</strong>由{link}</li>"
+"从<strong>%s</strong>被转账到<strong>{account_target_name}</strong>由{link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1914,12 +1913,12 @@ msgstr "允许的帐户"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows to tag analytic entries and to manage analytic distributions"
-msgstr "允许标记分析分录并管理分析分配"
+msgstr "允许标记辅助核算分录并管理核算分配"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
-msgstr "允许使用分析会计"
+msgstr "允许使用辅助核算"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -2114,7 +2113,7 @@ msgstr ""
 msgid ""
 "An analytic default requires at least an analytic account or an analytic "
 "tag."
-msgstr "分析默认值至少需要一个分析账户或分析标签。"
+msgstr "辅助核算默认值至少需要一个辅助核算账户或辅助核算标签。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -2127,7 +2126,7 @@ msgstr "当计算不变性是发生了错误。不能获取唯一的之前已经
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
-msgstr "分析"
+msgstr "辅助核算"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_account
@@ -2138,70 +2137,70 @@ msgstr "分析"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_form_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search_analytic_accounting
 msgid "Analytic Account"
-msgstr "分析账户"
+msgstr "辅助核算账户"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_group_menu
 msgid "Analytic Account Groups"
-msgstr "分析账户组"
+msgstr "辅助核算账户组"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_accounting
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "分析会计"
+msgstr "辅助核算会计"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "分析账户"
+msgstr "辅助核算账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__analytic
 msgid "Analytic Cost"
-msgstr "分析成本"
+msgstr "核算成本"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_form
 msgid "Analytic Default Rule"
-msgstr "分析默认规则"
+msgstr "核算默认规则"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "分析默认值"
+msgstr "核算默认值"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_analytic_default_list
 #: model:ir.ui.menu,name:account.menu_analytic_default_list
 msgid "Analytic Defaults Rules"
-msgstr "分析默认规则"
+msgstr "核算默认规则"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "分析分配"
+msgstr "核算分配"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr "分析项目"
+msgstr "核算项目"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "分析行"
+msgstr "核算行"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic Lines"
-msgstr "分析行"
+msgstr "核算行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.analytic_rule_action_user
 msgid "Analytic Rules"
-msgstr "分析规则"
+msgstr "核算规则"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_tag
@@ -2211,17 +2210,17 @@ msgstr "分析规则"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_tags
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Tags"
-msgstr "分析标签"
+msgstr "核算标签"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "分析明细行"
+msgstr "核算明细行"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytics"
-msgstr "分析"
+msgstr "辅助核算"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__no_auto_thread
@@ -3260,7 +3259,7 @@ msgstr "勾选此项, 如果您想用户对账这科目的分录。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr "检查单"
+msgstr "支票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__children_line_ids
@@ -4463,7 +4462,7 @@ msgstr "默认条款和条件"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
-msgstr "该分析账户的默认结束日期"
+msgstr "该核算账户的默认结束日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
@@ -4474,7 +4473,7 @@ msgstr "默认国际贸易术语"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
-msgstr "该分析账户的默认开始日期"
+msgstr "该核算账户的默认开始日期"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4901,7 +4900,7 @@ msgstr "供应商退款草稿"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 #, python-format
 msgid "Due"
-msgstr "应收金额"
+msgstr "截止"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -5536,7 +5535,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced from your "
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "从这个报表中，你可以得到一个总的供应商的结算单总额。搜索功能也能用来个性化你的结算单报表等，例如根据你的需要匹配分析."
+msgstr "从这个报表中，你可以得到一个总的供应商的结算单总额。搜索功能也能用来个性化你的结算单报表等，例如根据你的需要匹配辅助核算项."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -5544,7 +5543,7 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "从这个报表中，你可以得到一个总的客户的结算单总额。搜索功能也能用来个性化你的结算单报表等，例如根据你的需要匹配分析."
+msgstr "从这个报表中，你可以得到一个总的客户的结算单总额。搜索功能也能用来个性化你的结算单报表等，例如根据你的需要匹配辅助核算项."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -5633,7 +5632,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "给出显示分析分配明细行的序列顺序"
+msgstr "给出显示核算分配明细行的序列顺序"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__sequence
@@ -5922,7 +5921,7 @@ msgstr "如果设置，计算出来的将是价内税"
 msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
-msgstr "如果设置，根据这个税计算出来的总额将被赋给结算单行的同一个分析科目"
+msgstr "如果设置，根据这个税计算出来的总额将被赋给结算单行的同一个核算账户（如果有）"
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
@@ -6122,7 +6121,7 @@ msgstr "境内支付方式"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "包含在分析成本"
+msgstr "包含在核算成本"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -6282,7 +6281,7 @@ msgstr "内部备注"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
-msgstr "内部调拨"
+msgstr "内部转账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_transfer
@@ -6606,7 +6605,7 @@ msgstr "大于"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_internal_transfer
 msgid "Is Internal Transfer"
-msgstr "是内部转移"
+msgstr "是内部转账"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -7324,7 +7323,7 @@ msgstr "流动性"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Liquidity Transfer"
-msgstr "流动性转移"
+msgstr "流动性转账"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__tax_template_ids
@@ -8512,7 +8511,7 @@ msgstr "逾期结算单，超过付款日期"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
-msgstr "邮包"
+msgstr "会计包"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__paid
@@ -9385,7 +9384,7 @@ msgstr "二维码只能生成结算单分录。"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
-msgstr "购买量"
+msgstr "数量"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10224,7 +10223,7 @@ msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
-msgstr "选择一个公司用于默认分析指定的分析账户（例如：根据所选公司创建新客户单据或销售订单，系统将自动使用它作为分析账户）"
+msgstr "选择一个公司用于默认辅助核算指定的核算账户（例如：根据所选公司创建新客户单据或销售订单，系统将自动使用它作为核算账户）"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__partner_id
@@ -10232,7 +10231,7 @@ msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
-msgstr "选择一个伙伴用于默认分析指定的分析账户（例如：根据所选伙伴创建新客户单据或销售订单，系统将自动使用它作为分析账户）"
+msgstr "选择一个伙伴用于默认辅助核算指定的核算账户（例如：根据所选伙伴创建新客户单据或销售订单，系统将自动使用它作为核算账户）"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__product_id
@@ -10240,13 +10239,13 @@ msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
-msgstr "选择一个产品用于默认分析指定的分析账户（例如：根据所选产品创建新客户单据或销售订单，系统将自动使用它作为分析账户）"
+msgstr "选择一个产品用于默认辅助核算指定的核算账户（例如：根据所选产品创建新客户单据或销售订单，系统将自动使用它作为核算账户）"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr "选择一个用户用在分析账户指定的默认值"
+msgstr "选择一个用户用在核算账户指定的默认值"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__account_id
@@ -10254,7 +10253,7 @@ msgid ""
 "Select an accounting account which will use analytic account specified in "
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this account, it will automatically take this as an analytic account)"
-msgstr "选择将使用分析默认值中指定的分析账户的会计账户（例如，如果我们选择此账户，则创建新客户账单或销售订单，它将自动将其作为分析账户）"
+msgstr "选择将使用辅助核算默认值中指定的核算账户的会计账户（例如，如果我们选择此账户，则创建新客户账单或销售订单，它将自动将其作为核算账户）"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12396,7 +12395,7 @@ msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
-"所选目标帐户设置为使用特定币种。转移到它的每个条目将被转换成此货币，导致\n"
+"所选目标帐户设置为使用特定币种。转账到它的每个条目将被转换成此货币，导致\n"
 "                        任何预先存在的外币金额的损失。"
 
 #. module: account
@@ -12610,7 +12609,7 @@ msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the"
 " master budgets and the budgets are defined, the project managers can set "
 "the planned amount on each analytic account."
-msgstr "这使得会计师能够管理分析和交叉的预算。一旦主预算和预算被定义，项目经理可以在每个分析账户上设置计划的金额。"
+msgstr "这使会计师可以管理核算预算和交叉预算。 一旦确定了主预算和预算，项目经理就可以在每个核算帐户上设置计划金额。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -12641,7 +12640,7 @@ msgstr "这只能用于会计分录"
 msgid ""
 "This entry transfers the following amounts to "
 "<strong>%(destination)s</strong> <ul>"
-msgstr "此条目将以下金额转移至 <strong>%(destination)s</strong> <ul>"
+msgstr "此条目将以下金额转账至 <strong>%(destination)s</strong> <ul>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
@@ -12938,19 +12937,19 @@ msgstr "转账"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr "调拔日期"
+msgstr "转账日期"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer counterpart"
-msgstr "转让对方"
+msgstr "转账对方"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Transfer entry to %s"
-msgstr "将条目转移到 %s"
+msgstr "将条目转账到 %s"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13776,7 +13775,7 @@ msgstr "您无法为所有入站项目（所有出站）登记付款。"
 msgid ""
 "You can't set a different company on your analytic account since there are "
 "some journal items linked to it."
-msgstr "您不能在您的分析账户上设置一个不同的公司，因为有一些与之相关的会计分录。"
+msgstr "您不能在您的核算账户上设置一个不同的公司，因为有一些与之相关的会计分录。"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -13784,7 +13783,7 @@ msgstr "您不能在您的分析账户上设置一个不同的公司，因为有
 msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
-msgstr "您不能在您的分析标签上设置一个不同的公司，因为有一些与之相关的凭证明细。"
+msgstr "您不能在您的核算标签上设置一个不同的公司，因为有一些与之相关的凭证明细。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13945,9 +13944,8 @@ msgstr "你不能从从已经关闭的银行对账单中存/取款."
 #, python-format
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
-"already been used to make accounting entries. If you really need to do that,"
-" please contact tech support."
-msgstr "不能减少已用于进行记帐分录的货币的小数位数。如果您确实需要这样做，请联系技术支持。"
+"already been used to make accounting entries."
+msgstr "‎不能减少已用于进行记帐分录的货币的小数位数。‎"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0

@@ -479,7 +479,7 @@ class StockMove(models.Model):
             )
             lots_by_move_id_list.append({by_move['move_id'][0]: by_move['lot_ids'] for by_move in lots_by_move_id})
         for move in self:
-            move.lot_ids = lots_by_move_id_list[0 if move.picking_type_id.show_reserved else 1].get(move.id, [])
+            move.lot_ids = lots_by_move_id_list[0 if move.picking_type_id.show_reserved else 1].get(move._origin.id, [])
 
     def _set_lot_ids(self):
         for move in self:
@@ -490,7 +490,7 @@ class StockMove(models.Model):
                 mls = move.move_line_ids
             mls = mls.filtered(lambda ml: ml.lot_id)
             for ml in mls:
-                if ml.lot_id not in move.lot_ids:
+                if ml.qty_done and ml.lot_id not in move.lot_ids:
                     move_lines_commands.append((2, ml.id))
             ls = move.move_line_ids.lot_id
             for lot in move.lot_ids:
@@ -1263,8 +1263,9 @@ class StockMove(models.Model):
         equal to its `product_qty`. If it is less, the stock move is considered
         partially available.
         """
-        assigned_moves = self.env['stock.move']
-        partially_available_moves = self.env['stock.move']
+        StockMove = self.env['stock.move']
+        assigned_moves_ids = OrderedSet()
+        partially_available_moves_ids = OrderedSet()
         # Read the `reserved_availability` field of the moves out of the loop to prevent unwanted
         # cache invalidation when actually reserving the move.
         reserved_availability = {move: move.reserved_availability for move in self}
@@ -1291,17 +1292,17 @@ class StockMove(models.Model):
                         to_update[0].product_uom_qty += missing_reserved_uom_quantity
                     else:
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
-                assigned_moves |= move
+                assigned_moves_ids.add(move.id)
             else:
                 if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                    assigned_moves |= move
+                    assigned_moves_ids.add(move.id)
                 elif not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
                         continue
                     # If we don't need any quantity, consider the move assigned.
                     need = missing_reserved_quantity
                     if float_is_zero(need, precision_rounding=rounding):
-                        assigned_moves |= move
+                        assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
@@ -1312,9 +1313,9 @@ class StockMove(models.Model):
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     if float_compare(need, taken_quantity, precision_rounding=rounding) == 0:
-                        assigned_moves |= move
+                        assigned_moves_ids.add(move.id)
                     else:
-                        partially_available_moves |= move
+                        partially_available_moves_ids.add(move.id)
                 else:
                     # Check what our parents brought and what our siblings took in order to
                     # determine what we can distribute.
@@ -1339,7 +1340,7 @@ class StockMove(models.Model):
                     # As we defer the write on the stock.move's state at the end of the loop, there
                     # could be moves to consider in what our siblings already took.
                     moves_out_siblings = move.move_orig_ids.mapped('move_dest_ids') - move
-                    moves_out_siblings_to_consider = moves_out_siblings & (assigned_moves + partially_available_moves)
+                    moves_out_siblings_to_consider = moves_out_siblings & (StockMove.browse(assigned_moves_ids) + StockMove.browse(partially_available_moves_ids))
                     reserved_moves_out_siblings = moves_out_siblings.filtered(lambda m: m.state in ['partially_available', 'assigned'])
                     move_lines_out_reserved = (reserved_moves_out_siblings | moves_out_siblings_to_consider).mapped('move_line_ids')
                     keys_out_groupby = ['location_id', 'lot_id', 'package_id', 'owner_id']
@@ -1379,15 +1380,15 @@ class StockMove(models.Model):
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
                         if float_is_zero(need - taken_quantity, precision_rounding=rounding):
-                            assigned_moves |= move
+                            assigned_moves_ids.add(move.id)
                             break
-                        partially_available_moves |= move
+                        partially_available_moves_ids.add(move.id)
             if move.product_id.tracking == 'serial':
                 move.next_serial_count = move.product_uom_qty
 
         self.env['stock.move.line'].create(move_line_vals_list)
-        partially_available_moves.write({'state': 'partially_available'})
-        assigned_moves.write({'state': 'assigned'})
+        StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
+        StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()
 
     def _action_cancel(self):

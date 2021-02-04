@@ -160,6 +160,7 @@ function factory(dependencies) {
                 this.textInputContent.length
             );
             this.update({
+                isLastStateChangeProgrammatic: true,
                 textInputContent: partA + content + partB,
                 textInputCursorStart: this.textInputCursorStart + content.length,
                 textInputCursorEnd: this.textInputCursorStart + content.length,
@@ -208,6 +209,7 @@ function factory(dependencies) {
                     break;
             }
             this.update({
+                isLastStateChangeProgrammatic: true,
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
                 textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
                 textInputCursorStart: textLeft.length + recordReplacement.length + 1,
@@ -722,6 +724,7 @@ function factory(dependencies) {
             this.closeSuggestions();
             this.update({
                 attachments: [['unlink-all']],
+                isLastStateChangeProgrammatic: true,
                 mentionedChannels: [['unlink-all']],
                 mentionedPartners: [['unlink-all']],
                 subjectContent: "",
@@ -1010,6 +1013,16 @@ function factory(dependencies) {
          * into view.
          */
         hasToScrollToActiveSuggestion: attr({
+            default: false,
+        }),
+        /**
+         * Determines whether the last change (since the last render) was
+         * programmatic. Useful to avoid restoring the state when its change was
+         * from a user action, in particular to prevent the cursor from jumping
+         * to its previous position after the user clicked on the textarea while
+         * it didn't have the focus anymore.
+         */
+        isLastStateChangeProgrammatic: attr({
             default: false,
         }),
         /**
