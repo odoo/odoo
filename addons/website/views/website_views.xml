@@ -65,11 +65,12 @@
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
                     <footer>
-                        <button name="create_and_redirect_to_theme" type="object" string="Pick a Theme" class="btn btn-primary" icon="fa-paint-brush"/>
+                        <button name="create_and_redirect_configurator" type="object" string="Create" class="btn btn-primary"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
                 <xpath expr="//notebook" position="replace"/>
+                <xpath expr="//div[@name='logo']" position="replace"/>
             </field>
         </record>
 
@@ -519,31 +520,6 @@
             <field name="domain" model="ir.module.module" eval="obj().get_themes_domain()"/>
         </record>
 
-        <record id="theme_install_act_url" model="ir.actions.act_url">
-            <field name="name">Website</field>
-            <field name="url">/web?reload#action=website.theme_install_kanban_action</field>
-            <field name="target">self</field>
-        </record>
-
-        <record id="theme_install_todo" model="ir.actions.todo">
-            <field name="name">Go to theme</field>
-            <field name="action_id" ref="theme_install_act_url"/>
-            <field name="sequence">0</field>
-        </record>
-
-        <!-- ====== Onboarding =================================================
-        ==================================================================== -->
-        <template id="onboarding_website_theme_step">
-            <t t-call="base.onboarding_step">
-                <t t-set="title">Website Theme</t>
-                <t t-set="description">Select a theme for your website.</t>
-                <t t-set="btn_text">Let's start!</t>
-                <t t-set="method" t-value="'action_open_website_theme_selector'" />
-                <t t-set="model" t-value="'res.company'" />
-                <t t-set="done" t-value="company.website_theme_onboarding_done" />
-            </t>
-        </template>
-
         <!-- ====== Menu Items =================================================
         ==================================================================== -->
         <menuitem name="Website"
@@ -570,5 +546,17 @@
             sequence="20" name="Analytics"
             action="website.ir_actions_server_website_google_analytics"/>
 
+        <!-- Configurator actions -->
+        <record id="start_configurator_act_url" model="ir.actions.act_url">
+            <field name="name">Website Configurator</field>
+            <field name="url">/website/configurator/1</field>
+            <field name="target">self</field>
+        </record>
+
+        <record id="website_configurator_todo" model="ir.actions.todo">
+            <field name="name">Start Website Configurator</field>
+            <field name="action_id" ref="start_configurator_act_url"/>
+            <field name="sequence">0</field>
+        </record>
     </data>
 </odoo>

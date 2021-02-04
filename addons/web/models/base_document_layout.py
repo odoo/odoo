@@ -87,7 +87,7 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard_for_image = wizard.with_context(bin_size=False)
             else:
                 wizard_for_image = wizard
-            wizard.logo_primary_color, wizard.logo_secondary_color = wizard_for_image._parse_logo_colors()
+            wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
 
     @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer')
     def _compute_preview(self):
@@ -150,7 +150,8 @@ class BaseDocumentLayout(models.TransientModel):
             if wizard.logo_secondary_color:
                 wizard.secondary_color = wizard.logo_secondary_color
 
-    def _parse_logo_colors(self, logo=None, white_threshold=225):
+    @api.model
+    def extract_image_primary_secondary_colors(self, logo, white_threshold=225):
         """
         Identifies dominant colors
 
@@ -158,16 +159,13 @@ class BaseDocumentLayout(models.TransientModel):
         transparent colors and white-ish colors, then calls the averaging
         method twice to evaluate both primary and secondary colors.
 
-        :param logo: alternate logo to process
+        :param logo: logo to process
         :param white_threshold: arbitrary value defining the maximum value a color can reach
 
         :return colors: hex values of primary and secondary colors
         """
-        self.ensure_one()
-        logo = logo or self.logo
         if not logo:
             return False, False
-
         # The "===" gives different base64 encoding a correct padding
         logo += b'===' if type(logo) == bytes else '==='
         try:
