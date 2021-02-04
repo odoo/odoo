@@ -1948,7 +1948,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
         mockRPC(route, args) {
             if (args.method === 'message_fetch') {
                 // domain should be like [['channel_id', 'in', [X]]] with X the channel id
-                const channel_ids = args.kwargs.domain[0][2];
+                const channel_ids = args.kwargs.target_domain[0][2];
                 assert.strictEqual(channel_ids.length, 1, "messages should be fetched channel per channel");
                 assert.step(`rpc:message_fetch:${channel_ids[0]}`);
             }
