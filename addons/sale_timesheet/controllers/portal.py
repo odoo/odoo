@@ -54,7 +54,10 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_searchbar_groupby(self):
         searchbar_groupby = super()._get_searchbar_groupby()
-        searchbar_groupby.update(sol={'input': 'sol', 'label': _('Sales Order Item')})
+        searchbar_groupby.update(
+            sol={'input': 'sol', 'label': _('Sales Order Item')},
+            so={'input': 'so', 'label': _('Sales Order')},
+            invoice={'input': 'invoice', 'label': _('Invoice')})
         return searchbar_groupby
 
     def _get_search_domain(self, search_in, search):
@@ -71,7 +74,10 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_groupby_mapping(self):
         groupby_mapping = super()._get_groupby_mapping()
-        groupby_mapping.update(sol='so_line')
+        groupby_mapping.update(
+            sol='so_line',
+            so='order_id',
+            invoice='timesheet_invoice_id')
         return groupby_mapping
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
