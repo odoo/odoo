@@ -607,7 +607,7 @@ class Field(MetaField('DummyField', (object,), {})):
         Property._set_multi(self.name, self.model_name, values)
 
     def _search_company_dependent(self, records, operator, value):
-        Property = records.env['ir.property']
+        Property = records.env['ir.property'].sudo()
         return Property.search_multi(self.name, self.model_name, operator, value)
 
     #
