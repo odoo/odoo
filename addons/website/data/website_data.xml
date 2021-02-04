@@ -204,6 +204,7 @@
             <field name="url">/contactus</field>
             <field name="is_published">True</field>
             <field name="view_id" ref="contactus"/>
+            <field name="cache_key_expr">('cached' if not request.params else None,)</field>
             <field name="track">True</field>
         </record>
         <!-- Default Menu to store module menus for new website -->
