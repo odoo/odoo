@@ -501,6 +501,9 @@ class EventEvent(models.Model):
         return events
 
     def write(self, vals):
+        if 'stage_id' in vals and 'kanban_state' not in vals:
+            # reset kanban state when changing stage
+            vals['kanban_state'] = 'normal'
         res = super(EventEvent, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
