@@ -9,6 +9,7 @@ const CalendarRenderer = require('calendar.CalendarRenderer');
 const CalendarController = require('calendar.CalendarController');
 const CalendarModel = require('calendar.CalendarModel');
 const viewRegistry = require('web.view_registry');
+const session = require('web.session');
 
 var _t = core._t;
 
@@ -68,11 +69,21 @@ const MicrosoftCalendarModel = CalendarModel.include({
             return result
         });
     },
+
+    archiveRecords: function (ids, model) {
+        return this._rpc({
+            model: model,
+            method: 'action_archive',
+            args: [ids],
+            context: session.user_context,
+        });
+    },
 });
 
 const MicrosoftCalendarController = CalendarController.include({
     custom_events: _.extend({}, CalendarController.prototype.custom_events, {
         syncMicrosoftCalendar: '_onSyncMicrosoftCalendar',
+        archiveRecord: '_onArchiveRecord',
     }),
 
 
@@ -116,12 +127,26 @@ const MicrosoftCalendarController = CalendarController.include({
                 self.reload();
             }
         }).then(event.data.on_always, event.data.on_always);
-    }
+    },
+
+    _onArchiveRecord: function (ev) {
+        var self = this;
+        Dialog.confirm(this, _t("Are you sure you want to archive this record ?"), {
+            confirm_callback: function () {
+                self.model.archiveRecords([ev.data.id], self.modelName).then(function () {
+                    self.reload();
+                });
+            }
+        });
+    },
 });
 
 const MicrosoftCalendarRenderer = CalendarRenderer.include({
     events: _.extend({}, CalendarRenderer.prototype.events, {
         'click .o_microsoft_sync_button': '_onSyncMicrosoftCalendar',
+    }),
+    custom_events: _.extend({}, CalendarRenderer.prototype.custom_events, {
+        archive_event: '_onArchiveEvent',
     }),
 
     //--------------------------------------------------------------------------
@@ -169,6 +194,11 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
                 self.$microsoftButton.prop('disabled', false);
             },
         });
+    },
+
+    _onArchiveEvent: function (ev) {
+        this._unselectEvent();
+        this.trigger_up('archiveRecord', {id: parseInt(ev.data.id, 10)});
     },
 });
 
