@@ -226,9 +226,15 @@ QUnit.test('mailing channel composer: basic rendering', async function (assert) 
 QUnit.test('add an emoji', async function (assert) {
     assert.expect(1);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
@@ -249,9 +255,15 @@ QUnit.test('add an emoji', async function (assert) {
 QUnit.test('add an emoji after some text', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Blabla");
@@ -280,9 +292,15 @@ QUnit.test('add an emoji after some text', async function (assert) {
 QUnit.test('add emoji replaces (keyboard) text selection', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
     await afterNextRender(() => {
         composerTextInputTextArea.focus();
@@ -322,9 +340,15 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
         substitution: "Hello! How are you?",
     });
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -355,9 +379,15 @@ QUnit.test('use a canned response', async function (assert) {
         substitution: "Hello! How are you?",
     });
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -403,9 +433,15 @@ QUnit.test('use a canned response some text', async function (assert) {
         substitution: "Hello! How are you?",
     });
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -459,9 +495,15 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         substitution: "Hello! How are you?",
     });
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -521,9 +563,13 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
         name: "General",
         public: "groups",
     });
+
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -554,8 +600,11 @@ QUnit.test('mention a channel', async function (assert) {
         public: "groups",
     });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -601,8 +650,11 @@ QUnit.test('mention a channel after some text', async function (assert) {
         public: "groups",
     });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -656,8 +708,11 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         public: "groups",
     });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -976,9 +1031,15 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
         partner_id: 11,
     });
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1012,9 +1073,15 @@ QUnit.test('mention a partner', async function (assert) {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1066,9 +1133,15 @@ QUnit.test('mention a partner after some text', async function (assert) {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1129,9 +1202,15 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -1194,9 +1273,16 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
 QUnit.test('composer: add an attachment', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer, { attachmentsDetailsMode: 'card' });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, { attachmentsDetailsMode: 'card' });
+
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1221,9 +1307,15 @@ QUnit.test('composer: add an attachment', async function (assert) {
 QUnit.test('composer: drop attachments', async function (assert) {
     assert.expect(4);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const files = [
         await createFile({
             content: 'hello, world',
@@ -1282,9 +1374,15 @@ QUnit.test('composer: drop attachments', async function (assert) {
 QUnit.test('composer: paste attachments', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const files = [
         await createFile({
             content: 'hello, world',
@@ -1719,6 +1817,9 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     assert.expect(8);
 
     const attachmentUploadedPromise = makeTestPromise();
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
@@ -1728,8 +1829,11 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
             return res;
         }
     });
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1862,9 +1966,15 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
 QUnit.test('remove an attachment from composer does not need any confirmation', async function (assert) {
     assert.expect(3);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1900,6 +2010,9 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
 QUnit.test('remove an uploading attachment', async function (assert) {
     assert.expect(4);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
@@ -1910,8 +2023,11 @@ QUnit.test('remove an uploading attachment', async function (assert) {
             return res;
         }
     });
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1951,6 +2067,9 @@ QUnit.test('remove an uploading attachment', async function (assert) {
 QUnit.test('remove an uploading attachment aborts upload', async function (assert) {
     assert.expect(1);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
@@ -1961,8 +2080,11 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
             return res;
         }
     });
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -2161,6 +2283,9 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
 
     // Promise to block attachment uploading
     const uploadPromise = makeTestPromise();
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start({
         async mockFetch(resource) {
             const _super = this._super.bind(this, ...arguments);
@@ -2170,8 +2295,11 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
             return _super();
         },
     });
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const file1 = await createFile({
         name: 'text1.txt',
         content: 'hello, world',
