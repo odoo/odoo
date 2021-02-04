@@ -148,7 +148,6 @@ class IrModuleModule(models.Model):
                     continue
 
                 find = rec.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
-
                 # special case for attachment
                 # if module B override attachment from dependence A, we update it
                 if not find and model_name == 'ir.attachment':
@@ -164,6 +163,9 @@ class IrModuleModule(models.Model):
                             rec_data.pop('active')
                         if model_name == 'ir.ui.view' and (find.arch_updated or find.arch == rec_data['arch']):
                             rec_data.pop('arch')
+                        if model_name == 'ir.attachment' and find.no_theme_update:
+                            rec_data.pop('type')
+                            rec_data.pop('url')
                         find.update(rec_data)
                         self._post_copy(rec, find)
                 else:
@@ -337,7 +339,7 @@ class IrModuleModule(models.Model):
             theme._theme_unload(website)
         website.theme_id = False
 
-    def button_choose_theme(self):
+    def button_choose_theme(self, survey_data=None):
         """
             Remove any existing theme on the current website and install the theme ``self`` instead.
 
@@ -359,6 +361,10 @@ class IrModuleModule(models.Model):
 
         # this will install 'self' if it is not installed yet
         self._theme_upgrade_upstream()
+
+        if survey_data:
+            survey_data['theme_name'] = self.name
+            website.customize_website(survey_data)
 
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
         result = None

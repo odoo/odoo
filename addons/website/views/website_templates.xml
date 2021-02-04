@@ -2461,4 +2461,22 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </tr>
 </template>
 
+<template id="website_survey_assets" name="Website Survey Asset" inherit_id="web.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/survey.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.theme_install.scss"/>
+    </xpath>
+</template>
+
+<template id="website_survey" name="Website Survey" inherit_id="web.frontend_layout" primary="True">
+    <xpath expr="//head/t[@t-call-assets][last()]" position="after">
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"/>
+        <script type="text/javascript" src="/web/static/lib/owl/owl.js"/>
+        <script type="text/javascript" src="/website/static/src/js/components/survey/survey_data.js"/>
+        <script type="text/javascript" src="/website/static/src/js/components/survey/survey.js"/>
+    </xpath>
+    <xpath expr="//nav" position="replace"/>
+    <xpath expr="//div[@id='wrapwrap']" position="replace"/>
+</template>
+
 </odoo>

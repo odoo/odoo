@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <!-- MAIN MENU -->
+    <menuitem name="Website Service"
+        id="website_service_main_menu"
+        sequence="65"
+        groups="base.group_user"/>
+
+    <!-- HEADER: Customization -->
+    <menuitem name="Customizations"
+        id="menu_website_service_customization"
+        sequence="1"
+        parent="website_service.website_service_main_menu"
+        groups="base.group_user"/>
+
+    <!-- HEADER: Industry -->
+    <menuitem name="Industries"
+        id="menu_website_service_industry"
+        sequence="2"
+        parent="website_service.website_service_main_menu"
+        groups="base.group_user"/>
+
+    <record model="ir.ui.view" id="view_industry_image_tree">
+        <field name="name">website.industry.image.tree</field>
+        <field name="model">website.industry.image</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="industry_id"/>
+                <field name="name"/>
+                <field name="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="website_service_industry_image" model="ir.actions.act_window">
+        <field name="name">Industry Image</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website.industry.image</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Industry Images"
+        id="menu_industry_image"
+        sequence="1"
+        parent="menu_website_service_customization"
+        action="website_service.website_service_industry_image"/>
+
+    <record model="ir.ui.view" id="view_industry_theme_link_tree">
+        <field name="name">website.industry.theme.link.tree</field>
+        <field name="model">website.industry.theme.link</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence"/>
+                <field name="industry_id"/>
+                <field name="theme_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="website_service_industry" model="ir.actions.act_window">
+        <field name="name">Industries</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website.industry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="website_service_industry_theme_link" model="ir.actions.act_window">
+        <field name="name">Industry-Theme Links</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">website.industry.theme.link</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Industries"
+        id="menu_industries"
+        sequence="1"
+        parent="menu_website_service_industry"
+        action="website_service.website_service_industry"/>
+
+    <menuitem name="Industry-Theme Links"
+        id="menu_industry_theme_link"
+        sequence="2"
+        parent="menu_website_service_industry"
+        action="website_service.website_service_industry_theme_link"/>
+
+    </data>
+</odoo>

@@ -151,6 +151,14 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard.secondary_color = wizard.logo_secondary_color
 
     def _parse_logo_colors(self, logo=None, white_threshold=225):
+        self.ensure_one()
+        logo = logo or self.logo
+        if not logo:
+            return False, False
+        return self.extract_image_primary_secondary_colors(logo, white_threshold)
+        
+    @api.model
+    def extract_image_primary_secondary_colors(self, logo=None, white_threshold=225):
         """
         Identifies dominant colors
 
@@ -163,11 +171,6 @@ class BaseDocumentLayout(models.TransientModel):
 
         :return colors: hex values of primary and secondary colors
         """
-        self.ensure_one()
-        logo = logo or self.logo
-        if not logo:
-            return False, False
-
         # The "===" gives different base64 encoding a correct padding
         logo += b'===' if type(logo) == bytes else '==='
         try:

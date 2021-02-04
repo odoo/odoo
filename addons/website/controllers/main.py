@@ -223,6 +223,26 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
+    @http.route(['/website/survey/<int:step>', '/website/survey/<int:step>/<int:wid>'], type='http', auth="user", website=True)
+    def website_survey(self, step=1, wid=None, **kwargs):
+        # only website_designer should access the page survey
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise werkzeug.exceptions.NotFound()
+        if wid:
+            website_id = request.env['website'].sudo().browse(wid)
+            if website_id:
+                theme_counts = request.env['ir.module.module'].search_count([('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common'])])
+                if theme_counts < 10:
+                    theme_view_route = website_id.skip_survey()
+                    return request.redirect(theme_view_route)
+                elif website_id.survey_state == 'todo':
+                    return request.render('website.website_survey')
+        else:
+            website_id = request.env['website'].sudo().get_current_website()
+            if website_id.survey_state == 'todo':
+                return request.redirect('/website/survey/{}/{}'.format(step, website_id.id))
+        return request.redirect('/')
+
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
         url = getattr(request.website, 'social_%s' % social, False)

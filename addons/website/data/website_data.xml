@@ -65,6 +65,102 @@
                 </t>
             </field>
         </record>
+
+        <record id="aboutus" model="ir.ui.view">
+            <field name="name">About Us</field>
+            <field name="type">qweb</field>
+            <field name="key">website.aboutus</field>
+            <field name="arch" type="xml">
+                <t name="About Us" t-name="website.aboutus">
+                    <t t-call="website.layout">
+                        <div id="wrap">
+                            <div class="oe_structure">
+                                <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                                    <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                                    <div class="o_we_bg_filter bg-black-50"/>
+                                    <div class="container">
+                                        <h1>About us</h1>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
+        <record id="our_services" model="ir.ui.view">
+            <field name="name">Our Services</field>
+            <field name="type">qweb</field>
+            <field name="key">website.our_services</field>
+            <field name="arch" type="xml">
+                <t name="Our Services" t-name="website.our_services">
+                    <t t-call="website.layout">
+                        <div id="wrap">
+                            <div class="oe_structure">
+                                <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                                    <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                                    <div class="o_we_bg_filter bg-black-50"/>
+                                    <div class="container">
+                                        <h1>Our Services</h1>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
+        <record id="pricing" model="ir.ui.view">
+            <field name="name">Pricing</field>
+            <field name="type">qweb</field>
+            <field name="key">website.pricing</field>
+            <field name="arch" type="xml">
+                <t name="About Us" t-name="website.pricing">
+                    <t t-call="website.layout">
+                        <div id="wrap">
+                            <div class="oe_structure">
+                                <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                                    <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                                    <div class="o_we_bg_filter bg-black-50"/>
+                                    <div class="container">
+                                        <h1>Pricing</h1>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
+        <record id="privacy_policy" model="ir.ui.view">
+            <field name="name">Privacy Policy</field>
+            <field name="type">qweb</field>
+            <field name="key">website.privacy_policy</field>
+            <field name="arch" type="xml">
+                <t name="Privacy Policy" t-name="website.privacy_policy">
+                    <t t-call="website.layout">
+                        <div id="wrap">
+                            <div class="oe_structure">
+                                <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                                    <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                                    <div class="o_we_bg_filter bg-black-50"/>
+                                    <div class="container">
+                                        <h1>Privacy Policy</h1>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
     </data>
 
     <template id="cookie_policy" name="Cookie Policy">
@@ -193,6 +289,107 @@
         </t>
     </template>
 
+    <data>
+        <record id="page_about_us" model="website.survey.feature">
+            <field name="title">About Us</field>
+            <field name="description">Info and stats about your company</field>
+            <field name="code">about_us</field>
+            <field name="sequence">1</field>
+            <field name="page_view_id" ref="aboutus"/>
+            <field name="type">page</field>
+        </record>
+        <record id="page_our_services" model="website.survey.feature">
+            <field name="title">Our Services</field>
+            <field name="description">Description of your services offer</field>
+            <field name="code">our_services</field>
+            <field name="sequence">3</field>
+            <field name="page_view_id" ref="our_services"/>
+            <field name="type">page</field>
+        </record>
+        <record id="page_pricing" model="website.survey.feature">
+            <field name="title">Pricing</field>
+            <field name="description">Design to drive conversion</field>
+            <field name="code">pricing</field>
+            <field name="sequence">4</field>
+            <field name="page_view_id" ref="pricing"/>
+            <field name="type">page</field>
+        </record>
+        <record id="page_privacy_policy" model="website.survey.feature">
+            <field name="title">Privacy Policy</field>
+            <field name="description">Explain how you protect privacy</field>
+            <field name="code">privacy_policy</field>
+            <field name="sequence">5</field>
+            <field name="page_view_id" ref="privacy_policy"/>
+            <field name="type">page</field>
+        </record>
+        <record id="app_news" model="website.survey.feature">
+            <field name="title">News</field>
+            <field name="description">Perfect for news and useful content</field>
+            <field name="sequence">6</field>
+            <field name="website_type">blog</field>
+            <field name="module_id" ref="base.module_website_blog"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_success_stories" model="website.survey.feature">
+            <field name="title">Success Stories</field>
+            <field name="description">Share your best case studies</field>
+            <field name="sequence">7</field>
+            <field name="module_id" ref="base.module_website_blog"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_career" model="website.survey.feature">
+            <field name="title">Career</field>
+            <field name="description">Publish jobs offer and let people apply</field>
+            <field name="sequence">8</field>
+            <field name="module_id" ref="base.module_website_hr_recruitment"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_shop" model="website.survey.feature">
+            <field name="title">Shop</field>
+            <field name="description">Sell more with an eCommerce</field>
+            <field name="sequence">9</field>
+            <field name="website_type">online_store</field>
+            <field name="module_id" ref="base.module_website_sale"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_event" model="website.survey.feature">
+            <field name="title">Events</field>
+            <field name="description">Publish on-site and online events</field>
+            <field name="sequence">10</field>
+            <field name="website_type">event</field>
+            <field name="module_id" ref="base.module_website_event"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_forum" model="website.survey.feature">
+            <field name="title">Forum</field>
+            <field name="description">Give visitors the information they need</field>
+            <field name="sequence">11</field>
+            <field name="module_id" ref="base.module_website_forum"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_live_chat" model="website.survey.feature">
+            <field name="title">Live Chat</field>
+            <field name="description">Chat with visitors to improve traction</field>
+            <field name="sequence">12</field>
+            <field name="module_id" ref="base.module_website_livechat"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_elearning" model="website.survey.feature">
+            <field name="title">eLearning</field>
+            <field name="description">Share videos &#38; presentations, publicly or for a fee</field>
+            <field name="sequence">13</field>
+            <field name="website_type">elearning</field>
+            <field name="module_id" ref="base.module_website_slides"/>
+            <field name="type">app</field>
+        </record>
+        <record id="app_stores_locator" model="website.survey.feature">
+            <field name="title">Stores Locator</field>
+            <field name="description">A map and a listing of your stores</field>
+            <field name="sequence">15</field>
+            <field name="module_id" ref="base.module_website_google_map"/>
+            <field name="type">app</field>
+        </record>
+    </data>
     <data noupdate="1">
         <record id="homepage_page" model="website.page">
             <field name="is_published">True</field>

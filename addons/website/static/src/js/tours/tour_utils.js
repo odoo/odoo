@@ -5,7 +5,7 @@ const core = require("web.core");
 const _t = core._t;
 
 var tour = require("web_tour.tour");
-
+var rpc = require('web.rpc');
 /**
 
 const snippets = [
@@ -236,12 +236,12 @@ function selectHeader(position = "bottom") {
 }
 
 function selectSnippetColumn(snippet, index = 0, position = "bottom") {
-     return {
+    return {
         trigger: `#wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
         content: _t("<b>Click</b> on this column to access its options."),
-         position: position,
+        position: position,
         run: "click",
-     };
+    };
 }
 
 function prepend_trigger(steps, prepend_text='') {
@@ -253,15 +253,29 @@ function prepend_trigger(steps, prepend_text='') {
     return steps;
 }
 
-function registerThemeHomepageTour(name, steps) {
-    tour.register(name, {
-        url: "/?enable_editor=1",
-        sequence: 1010,
-        saveAs: "homepage",
-    }, prepend_trigger(
-        steps,
-        "html[data-view-xmlid='website.homepage'] "
-    ));
+// TODO: use a generic tour when survey has been completed
+function getSurveyTourSteps() {
+    return [
+        goBackToBlocks(),
+        goToOptions(),
+    ];
+}
+
+async function registerThemeHomepageTour(name, steps) {
+    await rpc.query({
+        model: 'website',
+        method: 'get_survey_state',
+    }).then((surveyState) => {
+        const tourSteps = surveyState === 'done' ? getSurveyTourSteps() : steps;
+        tour.register(name, {
+            url: "/?enable_editor=1",
+            sequence: 1010,
+            saveAs: "homepage",
+        }, prepend_trigger(
+            tourSteps,
+            "html[data-view-xmlid='website.homepage'] "
+        ));
+    });
 }
 
 

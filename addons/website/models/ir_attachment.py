@@ -16,7 +16,8 @@ class Attachment(models.Model):
     website_url = fields.Char(string="Website URL", related='local_url', deprecated=True, readonly=False)
     key = fields.Char(help='Technical field used to resolve multiple attachments in a multi-website environment.')
     website_id = fields.Many2one('website')
-
+    no_theme_update = fields.Boolean(default=False)
+    
     @api.model
     def create(self, vals):
         website = self.env['website'].get_current_website(fallback=False)
