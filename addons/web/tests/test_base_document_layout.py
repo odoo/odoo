@@ -54,8 +54,7 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
             if not fname_split[0] in _file_cache:
                 with Image.open(os.path.join(dir_path, fname), 'r') as img:
                     base64_img = image_to_base64(img, 'PNG')
-                    primary, secondary = self.env['base.document.layout'].create(
-                        {})._parse_logo_colors(base64_img)
+                    primary, secondary = self.env['base.document.layout'].extract_image_primary_secondary_colors(base64_img)
                     _img = frozendict({
                         'img': base64_img,
                         'colors': {

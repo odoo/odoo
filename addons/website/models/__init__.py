@@ -25,3 +25,4 @@ from . import res_lang
 from . import theme_models
 from . import website_visitor
 from . import website_snippet_filter
+from . import website_configurator_feature

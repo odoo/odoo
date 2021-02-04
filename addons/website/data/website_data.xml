@@ -1,72 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- split between ir_ui_view & website_page record to keep external_id on ir_ui_view -->
-        <record id="homepage" model="ir.ui.view">
-            <field name="name">Home</field>
-            <field name="type">qweb</field>
-            <field name="key">website.homepage</field>
-            <field name="arch" type="xml">
-                <t name="Home" priority="29" t-name="website.homepage">
-                    <t t-call="website.layout">
-                        <t t-set="pageName" t-value="'homepage'"/>
-                        <div id="wrap" class="oe_structure oe_empty"/>
-                    </t>
-                </t>
-            </field>
-        </record>
+    <!-- Group multi website -->
+    <record id="group_multi_website" model="res.groups">
+        <field name="name">Multi-website</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 
-        <record id="contactus" model="ir.ui.view">
-            <field name="name">Contact Us</field>
-            <field name="type">qweb</field>
-            <field name="key">website.contactus</field>
-            <field name="arch" type="xml">
-                <t name="Contact Us" t-name="website.contactus">
-                    <t t-call="website.layout">
-                        <div id="wrap">
+    <!-- Action Jump on website action -->
+    <record id="action_website" model="ir.actions.act_url">
+        <field name="name">Website</field>
+        <field name="url">/</field>
+        <field name="target">self</field>
+    </record>
+
+
+    <!-- Template for home and contactus -->
+    <template id="website.homepage" name="Home">
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'homepage'"/>
+            <div id="wrap" class="oe_structure oe_empty"/>
+        </t>
+    </template>
+    <template id="website.contactus" name="Contact Us">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>Contact us</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="container mt-4 mb-5">
+                    <div class="row">
+                        <div class="col-lg-7 col-xl-6 mr-lg-auto">
                             <div class="oe_structure">
-                                <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
-                                    <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
-                                    <div class="o_we_bg_filter bg-black-50"/>
+                                <section class="s_text_block" data-snippet="s_text_block">
                                     <div class="container">
-                                        <h1>Contact us</h1>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <p>
+                                                    Contact us about anything related to our company or services.<br/>
+                                                    We'll do our best to get back to you as soon as possible.
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </section>
                             </div>
-                            <div class="container mt-4 mb-5">
-                                <div class="row">
-                                    <div class="col-lg-7 col-xl-6 mr-lg-auto">
-                                        <div class="oe_structure">
-                                            <section class="s_text_block" data-snippet="s_text_block">
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <p>
-                                                                Contact us about anything related to our company or services.<br/>
-                                                                We'll do our best to get back to you as soon as possible.
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-                                        <div class="text-center my-3" name="mail_button">
-                                            <a role="button" t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 mt-4 mt-lg-0">
-                                        <t t-call="website.company_description"/>
-                                    </div>
-                                </div>
+                            <div class="text-center my-3" name="mail_button">
+                                <a role="button" t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
                             </div>
-                            <div class="oe_structure mt-2"/>
                         </div>
-                    </t>
-                </t>
-            </field>
-        </record>
-    </data>
+                        <div class="col-lg-4 mt-4 mt-lg-0">
+                            <t t-call="website.company_description"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure mt-2"/>
+            </div>
+        </t>
+    </template>
 
+    <!-- Template for cookie (optional) -->
     <template id="cookie_policy" name="Cookie Policy">
         <t t-call="website.layout">
             <div id="wrap" class="oe_structure">
@@ -193,7 +191,177 @@
         </t>
     </template>
 
+    <!-- Template configurator (optional) -->
+    <template id="website.aboutus" name="About Us">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>About us</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="website.our_services" name="Our Servicesw">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>Our Services</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="pricing" name="Pricing">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>Pricing</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="privacy_policy" name="Privacy Policy">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                        <div class="o_we_bg_filter bg-black-50"/>
+                        <div class="container">
+                            <h1>Privacy Policy</h1>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Configurator page features -->
+    <record id="feature_page_about_us" model="website.configurator.feature">
+        <field name="name">About Us</field>
+        <field name="description">Info and stats about your company</field>
+        <field name="iap_page_code">about_us</field>
+        <field name="sequence">1</field>
+        <field name="page_view_id" ref="aboutus"/>
+        <field name="icon">fa-building</field>
+    </record>
+    <record id="feature_page_our_services" model="website.configurator.feature">
+        <field name="name">Our Services</field>
+        <field name="description">Description of your services offer</field>
+        <field name="iap_page_code">our_services</field>
+        <field name="sequence">3</field>
+        <field name="page_view_id" ref="our_services"/>
+        <field name="icon">fa-handshake-o</field>
+    </record>
+    <record id="feature_page_pricing" model="website.configurator.feature">
+        <field name="name">Pricing</field>
+        <field name="description">Design to drive conversion</field>
+        <field name="iap_page_code">pricing</field>
+        <field name="sequence">4</field>
+        <field name="page_view_id" ref="pricing"/>
+        <field name="icon">fa-random</field>
+    </record>
+    <record id="feature_page_privacy_policy" model="website.configurator.feature">
+        <field name="name">Privacy Policy</field>
+        <field name="description">Explain how you protect privacy</field>
+        <field name="iap_page_code">privacy_policy</field>
+        <field name="sequence">5</field>
+        <field name="page_view_id" ref="privacy_policy"/>
+        <field name="icon">fa-gavel</field>
+    </record>
+
+    <!-- Configurator apps features -->
+    <record id="feature_module_news" model="website.configurator.feature">
+        <field name="name">News</field>
+        <field name="description">Perfect for news and useful content</field>
+        <field name="sequence">6</field>
+        <field name="website_types_preselection">blog</field>
+        <field name="module_id" ref="base.module_website_blog"/>
+        <field name="icon">fa-rss</field>
+    </record>
+    <record id="feature_module_success_stories" model="website.configurator.feature">
+        <field name="name">Success Stories</field>
+        <field name="description">Share your best case studies</field>
+        <field name="sequence">7</field>
+        <field name="module_id" ref="base.module_website_blog"/>
+        <field name="icon">fa-star</field>
+    </record>
+    <record id="feature_module_career" model="website.configurator.feature">
+        <field name="name">Career</field>
+        <field name="description">Publish jobs offer and let people apply</field>
+        <field name="sequence">8</field>
+        <field name="module_id" ref="base.module_website_hr_recruitment"/>
+        <field name="icon">fa-address-card</field>
+    </record>
+    <record id="feature_module_shop" model="website.configurator.feature">
+        <field name="name">Shop</field>
+        <field name="description">Sell more with an eCommerce</field>
+        <field name="sequence">9</field>
+        <field name="website_types_preselection">online_store</field>
+        <field name="module_id" ref="base.module_website_sale"/>
+        <field name="icon">fa-shopping-cart</field>
+    </record>
+    <record id="feature_module_event" model="website.configurator.feature">
+        <field name="name">Events</field>
+        <field name="description">Publish on-site and online events</field>
+        <field name="sequence">10</field>
+        <field name="website_types_preselection">event</field>
+        <field name="module_id" ref="base.module_website_event_sale"/>
+        <field name="icon">fa-ticket</field>
+    </record>
+    <record id="feature_module_forum" model="website.configurator.feature">
+        <field name="name">Forum</field>
+        <field name="description">Give visitors the information they need</field>
+        <field name="sequence">11</field>
+        <field name="module_id" ref="base.module_website_forum"/>
+        <field name="icon">fa-users</field>
+    </record>
+    <record id="feature_module_live_chat" model="website.configurator.feature">
+        <field name="name">Live Chat</field>
+        <field name="description">Chat with visitors to improve traction</field>
+        <field name="sequence">12</field>
+        <field name="module_id" ref="base.module_website_livechat"/>
+        <field name="icon">fa-comments</field>
+    </record>
+    <record id="feature_module_elearning" model="website.configurator.feature">
+        <field name="name">eLearning</field>
+        <field name="description">Share videos &#38; presentations, publicly or for a fee</field>
+        <field name="sequence">13</field>
+        <field name="website_types_preselection">elearning</field>
+        <field name="module_id" ref="base.module_website_slides"/>
+        <field name="icon">fa-graduation-cap</field>
+    </record>
+    <record id="feature_module_stores_locator" model="website.configurator.feature">
+        <field name="name">Stores Locator</field>
+        <field name="description">A map and a listing of your stores</field>
+        <field name="sequence">15</field>
+        <field name="module_id" ref="base.module_website_google_map"/>
+        <field name="icon">fa-map-marker</field>
+    </record>
+
     <data noupdate="1">
+        <!-- Default pagese -->
         <record id="homepage_page" model="website.page">
             <field name="is_published">True</field>
             <field name="url">/</field>
@@ -207,6 +375,7 @@
             <field name="cache_key_expr">('cached' if not request.params else None,)</field>
             <field name="track">True</field>
         </record>
+
         <!-- Default Menu to store module menus for new website -->
         <record id="main_menu" model="website.menu">
           <field name="name">Default Main Menu</field>
@@ -227,28 +396,13 @@
             <field name="sequence" type="int">60</field>
         </record>
 
+        <!-- Default Website -->
         <record id="default_website" model="website">
             <field name="name">My Website</field>
             <field name="domain"></field>
             <field name="company_id" ref="base.main_company"/>
             <field name="user_id" ref="base.public_user"/>
             <!-- Correct homepage will be set during bootstraping -->
-        </record>
-
-        <!-- Open website on install -->
-        <record id="action_website" model="ir.actions.act_url">
-            <field name="name">Website</field>
-            <field name="url">/</field>
-            <field name="target">self</field>
-        </record>
-        <record id="action_website_edit" model="ir.actions.act_url">
-            <field name="name">Website Edit Mode</field>
-            <field name="url">/?enable_editor=1</field>
-            <field name="target">self</field>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_website_edit"/>
-            <field name="state">open</field>
         </record>
 
         <!-- Pre loaded images -->
@@ -713,11 +867,5 @@
             <field name="url">/website/static/src/img/snippets_demo/s_popup.jpg</field>
         </record>
 
-    </data>
-    <data>
-        <record id="group_multi_website" model="res.groups">
-            <field name="name">Multi-website</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
-        </record>
     </data>
 </odoo>

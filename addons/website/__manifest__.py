@@ -201,6 +201,7 @@
             'website/static/src/xml/website.backend.xml',
             'website/static/src/xml/website_widget.xml',
             'website/static/src/xml/theme_preview.xml',
+            'website/static/src/components/configurator/configurator.xml',
         ],
         'website.test_bundle': [
             '/web/static/lib/qweb/qweb2.js',
@@ -211,5 +212,15 @@
             'http://test.external.link/javascript2.js',
             'http://test.external.link/style2.css',
         ],
+        'website.website_configurator_assets_js': [
+            '/web/static/lib/owl/owl.js',
+            '/website/static/src/components/configurator/configurator.js',
+        ],
+        'website.website_configurator_assets_scss': [
+            ('include', 'web.assets_frontend'),
+            '/website/static/src/scss/configurator.scss',
+            '/website/static/src/scss/website.theme_install.scss',
+            '/website/static/src/scss/website.wysiwyg.scss'
+        ]
     }
 }
