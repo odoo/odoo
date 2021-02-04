@@ -230,7 +230,7 @@
                                     <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                                 </div>
-                                <field name="date_tz"/>
+                                <field name="date_tz" required="True"/>
                                 <field name="event_type_id" string="Template" options="{'no_create':True}"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                             </group>
