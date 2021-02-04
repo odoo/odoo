@@ -53,15 +53,6 @@ var ReportAction = AbstractAction.extend({
         });
     },
 
-    do_show: function () {
-        this.updateControlPanel({
-            cp_content: {
-                $buttons: this.$buttons,
-            },
-        });
-        return this._super.apply(this, arguments);
-    },
-
     on_attach_callback: function () {
         // Register now the postMessage event handler. We only want to listen to ~trusted
         // messages and we can only filter them by their origin, so we chose to ignore the
