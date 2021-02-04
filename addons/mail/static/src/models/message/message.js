@@ -206,9 +206,10 @@ function factory(dependencies) {
          * @param {integer} [limit]
          * @param {integer[]} [moderated_channel_ids]
          * @param {Object} [context]
+         * @param {Array[]} [targetDomain]
          * @returns {mail.message[]}
          */
-        static async performRpcMessageFetch(domain, limit, moderated_channel_ids, context) {
+        static async performRpcMessageFetch(domain, limit, moderated_channel_ids, context, target_domain) {
             const messagesData = await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'message_fetch',
@@ -217,6 +218,7 @@ function factory(dependencies) {
                     domain,
                     limit,
                     moderated_channel_ids,
+                    target_domain,
                 },
             }, { shadow: true });
             const messages = this.env.models['mail.message'].insert(messagesData.map(

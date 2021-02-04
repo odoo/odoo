@@ -242,9 +242,7 @@ function factory(dependencies) {
          */
         _extendMessageDomain(domain) {
             const thread = this.thread;
-            if (thread.model === 'mail.channel') {
-                return domain.concat([['channel_ids', 'in', [thread.id]]]);
-            } else if (thread === this.env.messaging.inbox) {
+            if (thread === this.env.messaging.inbox) {
                 return domain.concat([['needaction', '=', true]]);
             } else if (thread === this.env.messaging.starred) {
                 return domain.concat([
@@ -274,15 +272,21 @@ function factory(dependencies) {
          */
         async _loadMessages({ extraDomain, limit = 30 } = {}) {
             this.update({ isLoading: true });
+            const thread = this.thread;
             const searchDomain = JSON.parse(this.stringifiedDomain);
             let domain = searchDomain.length ? searchDomain : [];
-            domain = this._extendMessageDomain(domain);
+            let target_domain;
+            if (thread.model === 'mail.channel') {
+                target_domain = [['channel_ids', 'in', [thread.id]]];
+            } else {
+                domain = this._extendMessageDomain(domain);
+            }
             if (extraDomain) {
                 domain = extraDomain.concat(domain);
             }
             const context = this.env.session.user_context;
             const moderated_channel_ids = this.thread.moderation
-                ? [this.thread.id]
+                ? [thread.id]
                 : undefined;
             const messages = await this.async(() =>
                 this.env.models['mail.message'].performRpcMessageFetch(
@@ -290,6 +294,7 @@ function factory(dependencies) {
                     limit,
                     moderated_channel_ids,
                     context,
+                    target_domain,
                 )
             );
             this.update({

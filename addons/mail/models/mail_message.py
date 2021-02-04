@@ -1009,7 +1009,7 @@ class Message(models.Model):
         return messages._message_notification_format()
 
     @api.model
-    def message_fetch(self, domain, limit=20, moderated_channel_ids=None):
+    def message_fetch(self, domain, limit=20, moderated_channel_ids=None, target_domain=None):
         """ Get a limited amount of formatted messages with provided domain.
             :param domain: the domain to filter messages;
             :param limit: the maximum amount of messages to get;
@@ -1018,9 +1018,10 @@ class Message(models.Model):
               moderation messages for moderators. If the current user is not
               moderator, it should still get self-authored messages that are
               pending moderation;
+            :param target_domain: the domain of the record targets
             :returns list(dict).
         """
-        messages = self.search(domain, limit=limit)
+        target_domain = target_domain or []
         if moderated_channel_ids:
             # Split load moderated and regular messages, as the ORed domain can
             # cause performance issues on large databases.
@@ -1031,9 +1032,9 @@ class Message(models.Model):
                 ('author_id', '=', self.env.user.partner_id.id),
                 ('moderation_status', '=', 'pending_moderation'),
             ]
-            messages |= self.search(moderated_messages_dom, limit=limit)
-            # Truncate the results to `limit`
-            messages = messages.sorted(key='id', reverse=True)[:limit]
+            target_domain = expression.OR([target_domain, moderated_messages_dom])
+        domain = expression.AND([target_domain, domain])
+        messages = self.search(domain, limit=limit)
         return messages.message_format()
 
     def message_format(self):
