@@ -57,10 +57,11 @@
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
 # Martin Trigaux, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -68,7 +69,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1139,6 +1140,11 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+" 受益于pain.001消息，我们建议按照SEPA规范生成付款单。 支持的pain版本（国家/地区）为pain.001.001.03（通用），pain.001.001.03.ch.02（瑞士）和pain.001.003.03（德国）。 然后可以将生成的XML文件上传到您的银行。\n"
+"\n"
+"该模块遵循欧洲支付委员会发布的实施指南。\n"
+"有关SEPA标准的更多信息，请访问：http://www.iso20022.org/和http://www.europeanpaymentscouncil.eu/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1599,18 +1605,17 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 "\n"
-"使锁定日期后不可逆转：\n"
+"使锁定日期不可逆：\n"
 "\n"
-" *您无法在总账模块上给顾问定义比用户更严格的条件。然后，必须在用户的锁定日期之前设置总账模块程序上的锁定日期\n"
-" *您无法锁定尚未完成的期间。所以，必须在上个月的最后一天之前设置顾问的锁定日期\n"
-" *必须在上一个锁定日期之后设置总账的新锁定日期\n"
-"    "
+"* 您不能对顾问设置比用户更严格的限制。 因此，所有用户锁定日期必须在发票/帐单锁定日期之前（或等于）。\n"
+"* 您无法锁定尚未结束的时间段。 因此，“所有用户锁定日期”必须在上个月的最后一天之前（或等于）。\n"
+"* 任何新的“所有用户锁定日期”必须在前一个之后（或等于）。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -3344,6 +3349,32 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"委内瑞拉会计科目表。\n"
+"===============================\n"
+"\n"
+"委内瑞拉依法没有任何会计科目表，但默认\n"
+"在Odoo中提出的建议应符合委内瑞拉一些公认的最佳做法，\n"
+"该计划符合此惯例。\n"
+"\n"
+"该模块已作为1000多家公司的基础进行了测试，因为\n"
+"它基于委内瑞拉市场上最常见的软件的混合体，这将确\n"
+"保会计师使用Odoo迈出的第一步更加舒适。\n"
+"\n"
+"该模块并不假装实现了委内瑞拉的全部本地化，\n"
+"但是它将帮助您在这个国家真正快速地开始使用Odoo。\n"
+"\n"
+"这个模块给你。\n"
+"---------------------\n"
+"\n"
+"-委内瑞拉的基本税。\n"
+"-具有基本数据以通过社区本地化来运行测试。\n"
+"-如果您的基本需求来自会计PoV，请从0开始创建公司。\n"
+"\n"
+"委内瑞拉没有发票的情况下，如果您想评估自己的库存价值，建议您使用 account_anglo_saxon。\n"
+"\n"
+"如果您安装此模块，然后选择“自定义科目表”，则会提供一个基本科目表，\n"
+"但您需要手动设置帐户默认税金。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3853,6 +3884,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI智利本地化\n"
+"========================\n"
+"此代码允许生成智利发票的DTE文档。\n"
+"- XML格式的DTE（电子应税文件）\n"
+"- 与SII（Servicio de Impuestos Internos）的直接通信，以发送与销售有关的发票和其他税务文件。\n"
+"- 与客户沟通以发送销售DTE。\n"
+"- 与供应商（供应商）进行沟通以接受来自他们的DTE。\n"
+"- 与SII的直接通信，通知接受或拒绝供应商票据或其他DTE。\n"
+"\n"
+" 为了查看发票上的条形码，您需要pdf417gen库。\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -8336,6 +8380,8 @@ msgid ""
 "\n"
 "This module is used for Online bank synchronization."
 msgstr ""
+"\n"
+"此模块用于在线银行同步。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -8997,6 +9043,12 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"使用此模块，用户将能够将银行日记帐链接到他们的\n"
+"在线银行帐户（适用于支持的银行机构），并进行配置\n"
+"定期定期自动同步其银行对帐单。\n"
+"该模块已在2020年底添加，目的是与\n"
+"最新的提供商。 应该在先前的account_online_sync模块上使用。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -9200,7 +9252,7 @@ msgstr "%s (副本)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Day of the week number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w - 星期天数 [0(周日),6].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9421,7 +9473,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
-msgstr ""
+msgstr "<code>用户错误</code>：可用的警告异常 <code>抛出</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9539,7 +9591,7 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">×</span>"
-msgstr ""
+msgstr "<span aria-label=\"Close\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -11046,7 +11098,7 @@ msgstr "收银POS的高级功能"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_enterprise
 msgid "Advanced features for Stock"
-msgstr "库存高级特性"
+msgstr "库存的高级特性"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account_enterprise
@@ -11056,7 +11108,7 @@ msgstr "库存会计高级特性"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
 msgid "Advantage Proration"
-msgstr ""
+msgstr "优势比例分摊"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
@@ -11067,7 +11119,7 @@ msgstr "Adyen付款"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_adyen_platforms
 msgid "Adyen for Platforms"
-msgstr ""
+msgstr "平台Adyen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -11165,7 +11217,7 @@ msgstr "启用从工单生成现场服务任务"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
 msgid "Allow payslip edition"
-msgstr ""
+msgstr "允许工资单版本"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
@@ -11744,7 +11796,7 @@ msgstr "Authorize.Net支付"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__auto_install_required
 msgid "Auto Install Required"
-msgstr "自动安装"
+msgstr "要求自动安装"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
@@ -14083,7 +14135,7 @@ msgstr "创建日期"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Creation details"
-msgstr "Log详情"
+msgstr "创建详情"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
@@ -14562,7 +14614,7 @@ msgstr "定义的报表"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_map
 msgid "Defines the map view for odoo enterprise"
-msgstr "定义地图视图(企业版)"
+msgstr "定义地图视图企业版"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__definition
@@ -17646,7 +17698,7 @@ msgstr "隐藏徽章"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide seconds"
-msgstr "隐藏秒钟"
+msgstr "隐藏秒数"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -17735,7 +17787,7 @@ msgstr "HR招聘面试表单"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Human Readable"
-msgstr "可读"
+msgstr "人类可读"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
@@ -18978,7 +19030,7 @@ msgstr "JIT即时调度"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__just_done
 msgid "Just done"
-msgstr "完成"
+msgstr "刚刚完成"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -19521,7 +19573,7 @@ msgstr "线索评分"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Lead to Tickets"
-msgstr "客服中心 - CRM"
+msgstr "线索到工单"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -19737,7 +19789,7 @@ msgstr "实时活动追踪"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
 msgid "Live chat enterprise"
-msgstr "在线聊天(企业版)"
+msgstr "在线聊天企业版"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -19776,7 +19828,7 @@ msgstr "日志"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Logging details"
-msgstr "Logging 视图"
+msgstr "日志详情"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login
@@ -20248,7 +20300,7 @@ msgstr "管理您的员工工资表记录"
 #. module: base
 #: model:ir.module.module,summary:base.module_planning
 msgid "Manage your employees' schedule"
-msgstr "管理员工日程"
+msgstr "管理员工排程"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
@@ -20462,7 +20514,7 @@ msgstr "菜单"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Menus Customization"
-msgstr "菜单定制"
+msgstr "菜单定制化"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_merge
@@ -21406,7 +21458,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "No module found!"
-msgstr "没有模块！"
+msgstr "找不到模块！"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
@@ -24575,7 +24627,7 @@ msgstr "工资表会计"
 #. module: base
 #: model:ir.module.category,name:base.module_category_payroll_localization
 msgid "Payroll Localization"
-msgstr "工资条本地化"
+msgstr "工资单本地化"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
@@ -25130,7 +25182,7 @@ msgstr "项目，任务，会计"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale
 msgid "Project, Tasks, After Sales"
-msgstr "项目，任务，客服中心"
+msgstr "项目，任务，售后"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_repair
@@ -25416,7 +25468,7 @@ msgstr "轨迹的测验"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr "报价单生成器"
+msgstr "报价单构建器"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -27175,7 +27227,7 @@ msgstr "社交媒体"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_push_notifications
 msgid "Social Push Notifications"
-msgstr "社交媒体推送"
+msgstr "社交媒体推送通知"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_twitter
@@ -31001,6 +31053,13 @@ msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
 msgstr "通过编辑在设置/用户菜单下的新建用户，你将能够定义额外的访问权。"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0

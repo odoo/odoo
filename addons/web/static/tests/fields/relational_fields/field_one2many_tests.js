@@ -16,6 +16,7 @@ var fieldUtils = require('web.field_utils');
 
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
+const { FieldOne2Many } = relationalFields;
 
 QUnit.module('fields', {}, function () {
 
@@ -1543,6 +1544,111 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
             assert.strictEqual($('.modal .o_data_row').length, 1,
                 "there should be one record in the one2many in the dialog");
+
+            form.destroy();
+        });
+
+        QUnit.test('onchange on one2many with x2many in list (no widget) and form view (list)', async function (assert) {
+            assert.expect(6);
+
+            this.data.turtle.fields.turtle_foo.default = "a default value";
+            this.data.partner.onchanges = {
+                foo: function (obj) {
+                  obj.p = [[0, false, { turtles: [[0, false, { turtle_foo: 'hello'}]] }]];
+                },
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="foo"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="turtles"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="turtles">' +
+                                    '<tree editable="top">' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</form>' +
+                        '</field>' +
+                    '</form>',
+            });
+
+
+            assert.containsOnce(form, '.o_data_row',
+                "the onchange should have created one record in the relation");
+
+            // open the created o2m record in a form view
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal', "should have opened a dialog");
+            assert.containsOnce(document.body, '.modal .o_data_row');
+            assert.strictEqual($('.modal .o_data_row').text(), 'hello');
+
+            // add a one2many subrecord and check if the default value is correctly applied
+            await testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
+
+            assert.containsN(document.body, '.modal .o_data_row', 2);
+            assert.strictEqual($('.modal .o_data_row:first .o_field_widget[name=turtle_foo]').val(),
+                'a default value');
+
+            form.destroy();
+        });
+
+        QUnit.test('onchange on one2many with x2many in list (many2many_tags) and form view (list)', async function (assert) {
+            assert.expect(6);
+
+            this.data.turtle.fields.turtle_foo.default = "a default value";
+            this.data.partner.onchanges = {
+                foo: function (obj) {
+                  obj.p = [[0, false, { turtles: [[0, false, { turtle_foo: 'hello'}]] }]];
+                },
+            };
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="foo"/>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="turtles" widget="many2many_tags"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="turtles">' +
+                                    '<tree editable="top">' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</form>' +
+                        '</field>' +
+                    '</form>',
+                debug: 1,
+            });
+
+
+            assert.containsOnce(form, '.o_data_row',
+                "the onchange should have created one record in the relation");
+
+            // open the created o2m record in a form view
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal', "should have opened a dialog");
+            assert.containsOnce(document.body, '.modal .o_data_row');
+            assert.strictEqual($('.modal .o_data_row').text(), 'hello');
+
+            // add a one2many subrecord and check if the default value is correctly applied
+            await testUtils.dom.click($('.modal .o_field_x2many_list_row_add a'));
+
+            assert.containsN(document.body, '.modal .o_data_row', 2);
+            assert.strictEqual($('.modal .o_data_row:first .o_field_widget[name=turtle_foo]').val(),
+                'a default value');
 
             form.destroy();
         });
@@ -9512,6 +9618,43 @@ QUnit.module('fields', {}, function () {
             form.destroy();
 
             assert.verifySteps(["willUnmount"]);
+        });
+
+        QUnit.test('one2many: internal state is updated after another field changes', async function (assert) {
+            // The FieldOne2Many is configured such that it is reset at any field change.
+            // The MatrixProductConfigurator feature relies on that, and requires that its
+            // internal state is correctly updated. This white-box test artificially checks that.
+            assert.expect(2);
+
+            let o2m;
+            testUtils.patch(FieldOne2Many, {
+                init() {
+                    this._super(...arguments);
+                    o2m = this;
+                },
+            });
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="p">
+                            <tree><field name="display_name"/></tree>
+                        </field>
+                    </form>`,
+            });
+
+            assert.strictEqual(o2m.recordData.display_name, false);
+
+            await testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'val');
+
+            assert.strictEqual(o2m.recordData.display_name, "val");
+
+            form.destroy();
+            testUtils.unpatch(FieldOne2Many);
         });
     });
 });

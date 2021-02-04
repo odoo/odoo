@@ -102,13 +102,13 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
+                                <field name="product_id" attrs="{'readonly':['|', ('mo_id','!=',False), ('state', '=', 'done')]}" force_save="1"/>
                                 <field name="mo_bom_id" invisible="1"/>
-                                <field name="bom_id" attrs="{'required': [('mo_id', '=', False)], 'readonly':[('mo_id','!=',False)], 'invisible': [('mo_id', '!=', False), ('mo_bom_id', '=', False)]}" force_save="1"/>
+                                <field name="bom_id" attrs="{'required': [('mo_id', '=', False)], 'readonly':['|', ('mo_id','!=',False), ('state', '=', 'done')], 'invisible': [('mo_id', '!=', False), ('mo_bom_id', '=', False)]}" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
-                                    <field name="product_qty" attrs="{'readonly': [('has_tracking', '=', 'serial')]}"/>
-                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('mo_id', '!=', False)]}" force_save="1"/>
+                                    <field name="product_qty" attrs="{'readonly': ['|', ('has_tracking', '=', 'serial'), ('state', '=', 'done')]}"/>
+                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': ['|', ('mo_id', '!=', False), ('state', '=', 'done')]}" force_save="1"/>
                                 </div>
                             </group>
                             <group>

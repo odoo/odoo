@@ -8,10 +8,10 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Martin Trigaux, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Jiří Podhorecký, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: Jiří Podhorecký, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -759,6 +759,16 @@ msgid ""
 "        * Account Tags.\n"
 "    "
 msgstr ""
+"\n"
+"Šablona účtové osnovy (COA) pro litevské účetnictví.\n"
+"\n"
+"Tento modul také obsahuje:\n"
+"\n"
+"* Seznam dostupných bank v Litvě.\n"
+"* Daňové skupiny.\n"
+"* Nejběžnější litevské daně.\n"
+"* Fiskální pozice.\n"
+"* Značky účtu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -1317,17 +1327,11 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
-"\n"
-"Nastavit nevratné datum zámku:\n"
-"\n"
-"* Nemůžete definovat přísnější podmínky pro poradce než pro uživatele. Poté musí být datum uzamčení pro poradce nastaveno před datem uzamčení pro uživatele.\n"
-"* Nemůžete zamknout období, které ještě není dokončeno. Poté musí být datum uzamčení pro poradce nastaveno před posledním dnem předchozího měsíce.\n"
-"* Nové datum uzamčení pro poradce musí být nastaveno po předchozím datu uzamčení."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -1622,6 +1626,87 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"Převod kreditu ABA\n"
+"====================\n"
+"\n"
+"Tento modul umožňuje generování platebních dávek jako textových souborů ABA (Australian Bankers Association). Vygenerovaný soubor 'aba' lze nahrát do mnoha australských bank.\n"
+"\n"
+"Založit\n"
+"-----\n"
+"\n"
+"- *Účet > Konfigurace > fakturace > Časopisy*\n"
+"\n"
+"V případě potřeby vytvořte nový deník nebo vyberte existující deník s **Typ** nastaveným na *“Bank”*.\n"
+"\n"
+"V části **Pokročilá nastavení** zkontrolujte, zda je zaškrtnuto políčko Převod kreditu ABA.\n"
+"\n"
+"Na kartě **Bankovní účet** zadejte **Číslo účtu**.\n"
+"\n"
+"Na stejné kartě zkontrolujte, zda jsou nastaveny informace o přenosu ABA.\n"
+"\n"
+"**BSB** - povinné, 6 číslic a bude automaticky formátováno.\n"
+"\n"
+"**Kód finanční instituce** - Povinný údaj (poskytnutý bankou nebo jej lze najít na Googlu). Jedná se o tři velká 3 znaky.\n"
+"\n"
+"**Zadání uživatelského jména** - Některé banky to povolují jako volné, některé banky mohou odmítnout soubor ABA, pokud zadané uživatelské jméno není podle očekávání. Nesmí být delší než 26 znaků.\n"
+"\n"
+"**Identifikační číslo APCA** - Identifikační číslo uživatele je banka\n"
+"přiděleno. Má 6 číslic.\n"
+"\n"
+"**Zahrnout samobalanční transakci** - Některé instituce vyžadují, aby poslední byla samobalanční transakce, která se použije jako ověření.\n"
+"\n"
+"- *Účetnictví > Konfigurace > Platby > Bankovní účty*\n"
+"\n"
+"Účet se zobrazí v seznamu jako název deníku.\n"
+"\n"
+"Při úpravách se zobrazí **číslo účtu**. To je důležité, protože se používá v procesu ABA.\n"
+"\n"
+"**Banka** je volitelná.\n"
+"\n"
+"- *Kontakty > Konfigurace > Bankovní účty > Bankovní účty*\n"
+"\n"
+"Platební účet se v seznamu zobrazí jako číslo účtu.\n"
+"\n"
+"**Jméno držitele účtu** - Zde lze zadat, pokud je požadováno. Banky obecně nejsou ověřeny při převodech souborů ABA, ale mohou se zobrazit na bankovním výpisu příjemce oproti platbě.\n"
+"\n"
+"- Bankovní účty dodavatele lze zřídit na stejném místě, ale je to tak\n"
+"obecně jednodušší je nastavit od partnera od pro dodavatele.\n"
+"\n"
+"- *Účetnictví > Prodejci > Prodejci*\n"
+"\n"
+"Na kartě **Účetnictví** klikněte na *„Zobrazit podrobnosti účtu“*, kde lze vytvořit nebo upravit bankovní účet dodavatele.\n"
+"\n"
+"**Číslo účtu** - Povinné, musí mít méně než 9 číslic.\n"
+"\n"
+"**BSB** - povinné, 6 číslic a bude automaticky formátováno.\n"
+"\n"
+"**Jméno držitele účtu** - Volitelné.\n"
+"\n"
+"Použití\n"
+"---\n"
+"\n"
+"- Vytvořte platbu dodavatele běžným způsobem.\n"
+"\n"
+"Ujistěte se, že **dodavatel** je ten, kdo má platný platební účet ABA.\n"
+"\n"
+"Vyberte správný **Deník plateb**, který je nastaven pro platby ABA.\n"
+"\n"
+"Vyberte přepínač **ABA Credit Transfer**.\n"
+"\n"
+"Pokud má prodejce více bankovních účtů, možná budete muset vybrat správný **bankovní účet příjemce**. Nebo pokud platí účet dodavatele, může potřebovat správný bankovní účet, který je s ním spojen.\n"
+"\n"
+"Zadejte částku platby atd.\n"
+"\n"
+"- *Prodejci > Platby*\n"
+"\n"
+"Po potvrzení platby (plateb) se zobrazí v seznamu plateb.\n"
+"\n"
+"Pomocí filtrů nebo třídění vyberte platby, které mají být zahrnuty. V části *Akce* vyberte *Vytvořit dávkovou platbu*.\n"
+"\n"
+"- *Prodejci > Dávkové platby*\n"
+"\n"
+"Při ověřování dávkové platby bude vygenerován soubor ABA. Může být regenerován. Tento soubor lze poté nahrát do banky.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -2539,6 +2624,27 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't\n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Základní modul pro brazilskou lokalizaci\n"
+"===========================================\n"
+"\n"
+"Tento modul se skládá z:\n"
+"\n"
+"- Obecná brazilská účtová osnova\n"
+"- brazilské daně, jako například:\n"
+"\n"
+"- IPI\n"
+"- ICMS\n"
+"- PIS\n"
+"- COFINY\n"
+"- ISS\n"
+"- IR\n"
+"- IRPJ\n"
+"- CSLL\n"
+"\n"
+"Pole tax_discount bylo také přidáno do objektů account.tax.template a account.tax, aby bylo možné provést správný výpočet některých brazilských DPH, jako je ICMS. Průvodce vytvořením účtu byl rozšířen, aby se tato nová data správně šířila.\n"
+"\n"
+"Je však důležité si uvědomit, že tomuto modulu chybí mnoho implementací pro správné používání Odoo v Brazílii. Tyto implementace (například elektronická fiskální fakturace, která je již funkční) přináší více než 15 dalších modulů brazilského lokalizačního projektu Launchpad https://launchpad.net/openerp.pt-br-localiz a jejich závislosti v dalších doplňcích větev. Tyto moduly mají za cíl neporušit pozoruhodnou modularitu Odoo, proto jsou četné, ale malé. Jedním z důvodů zachování těchto modulů odděleně je to, že vedoucí brazilských lokalizátorů potřebují k dokončení lokalizace agilitu v oblasti práv právníků, protože společnosti financují zbývající zákonné požadavky (jako jsou brzy fiskální knihy, účetní SPED, fiskální SPED a PAF ECF, které v září stále chybí. 2011). Tyto moduly jsou také přísně licencovány podle AGPL V3 a dnes nepřicházejí s žádným dalším placeným povolením pro online používání „soukromých modulů“.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -4034,6 +4140,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Zahrnuje následující data pro čínskou lokalizaci\n"
+"=======================================================\n"
+"\n"
+"Typ účtu\n"
+"\n"
+"Údaje o státu / provincii\n"
+"\n"
+"Typ účtu \\ Šablona schématu účtu \\ Daň z přidané hodnoty \\ Typ pomocného účetnictví \\ Doklad o vedení účetnictví \\ Doklad o finančním účetnictví\n"
+"\n"
+"Přidejte údaje o čínské provincii\n"
+"\n"
+"Přidejte malou účetní osnovu\n"
+"\n"
+"Upravte účetní osnovu pro malé firmy\n"
+"\n"
+"Upravte sazbu daně z účetnictví pro malé podniky"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -6427,6 +6550,11 @@ msgid ""
 "    - generic Indonesian chart of accounts\n"
 "    - tax structure"
 msgstr ""
+"\n"
+"Toto je nejnovější indonéská lokalizace Odoo nezbytná pro spuštění účetnictví Odoo pro malé a střední podniky s:\n"
+"================================================== ================================================\n"
+"- obecná indonéská účtová osnova\n"
+"- daňová struktura"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -6762,6 +6890,8 @@ msgid ""
 "This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul přidává integraci s průzkumem, který žádá o zpětné vazby od jakéhokoli zaměstnance na základě vyplněného průzkumu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -7006,6 +7136,11 @@ msgid ""
 "take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul umožňuje snadno přidat další náklady na výrobní zakázku\n"
+"a rozhodnout o rozdělení těchto nákladů mezi jejich pohyby akcií, aby\n"
+"vezměte je v úvahu při oceňování akcií.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -7955,7 +8090,7 @@ msgstr "%(action_name)s není platná akce na%(model_name)s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(attribute)r value must be an integer (%(value)s)"
-msgstr "Hodnota% (atribut) r musí být celé číslo (%(value)s)"
+msgstr "Hodnota %(atribute) musí být celé číslo (%(value)s)"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -10696,7 +10831,7 @@ msgstr "Čárový kód"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
 msgid "Barcode Quality bridge module"
-msgstr "Modul mostu kvality čárových kódů"
+msgstr "Modul propojení kvality čárových kódů"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_picking_batch
@@ -11094,7 +11229,7 @@ msgstr "Most mezi IAP a poštou"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
 msgid "Bridge between Sale and Accounting"
-msgstr "Most mezi prodejem a účetnictvím"
+msgstr "Propojení mezi prodejem a účetnictvím"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_accountant
@@ -11119,7 +11254,7 @@ msgstr "Mostový modul mezi časovým rozvrhem prodeje a nákupem"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot_hr
 msgid "Bridge module between hr and mailbot."
-msgstr "Bridge modul mezi hr a mailbot."
+msgstr "Bridge modul mezi HR a mailbot."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk
@@ -11140,7 +11275,7 @@ msgstr "Bridge modul pro konfiguraci twitter zdi na vaší události"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_social
 msgid "Bridge module to push notifications to event attendees"
-msgstr "Bridge modul pro zasílání oznámení účastníkům událostí"
+msgstr "Bridge modul pro zasílání oznámení účastníkům eventú"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
@@ -12158,7 +12293,7 @@ msgstr "Kongo"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
 msgid "Connect kitchen printers to your PoS"
-msgstr "Připojte kuchyňské tiskárny k vašemu PoS"
+msgstr "Připojte kuchyňské tiskárny k vašemu POS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_drivers
@@ -12309,7 +12444,7 @@ msgstr "Kontakty a adresy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
 msgid "Contacts Enterprise"
-msgstr "Kontakty podnik"
+msgstr "Kontakty"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_check_name
@@ -13062,7 +13197,7 @@ msgstr "Pomlčka"
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet_dashboard
 msgid "Dashboard for fleet"
-msgstr "Palubní deska pro vozový park"
+msgstr "Ovládací panel pro vozový park"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -13508,7 +13643,7 @@ msgstr "Klíče API vývojáře"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
 msgid "Digest Enterprise"
-msgstr "Digestujte podnik"
+msgstr "Digestujte "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_digital
@@ -23220,7 +23355,7 @@ msgstr "Nákupní smlouvy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_intrastat
 msgid "Purchase Intrastat"
-msgstr "Nákup intrastatu"
+msgstr "Nákup Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_product_matrix
@@ -23787,7 +23922,7 @@ msgstr "Správa skladových zásob"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting_sign
 msgid "Rental/Sign Bridge"
-msgstr "Půjčovna / značka mostu"
+msgstr "Propojení Půjčovna / Obchodní značka"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_repair
@@ -24256,7 +24391,7 @@ msgstr "Doručení prodejního kuponu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
 msgid "Sale Intrastat"
-msgstr "Prodej intrastat"
+msgstr "Prodej Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_product_matrix
@@ -24291,7 +24426,7 @@ msgstr "Prodej na základě outsourcingu služeb."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_enterprise
 msgid "Sale enterprise"
-msgstr "Prodej podniku"
+msgstr "Prodej "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_sale
@@ -24679,7 +24814,7 @@ msgstr "Prodávejte lístky na akce online"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_slides
 msgid "Sell your courses online"
-msgstr "Prodejte své kurzy online"
+msgstr "Prodávejte své kurzy online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_slides
@@ -25125,12 +25260,12 @@ msgstr "Sociální demo modul"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_facebook
 msgid "Social Facebook"
-msgstr "Sociální facebook"
+msgstr "Facebook"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_linkedin
 msgid "Social LinkedIn"
-msgstr "Sociální propojení"
+msgstr "LinkedIn"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
@@ -25151,7 +25286,7 @@ msgstr "Oznámení push na sociální síti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_twitter
 msgid "Social Twitter"
-msgstr "Sociální twitter"
+msgstr "Twitter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_media
@@ -26715,8 +26850,8 @@ msgid ""
 "This module adds the OdooBot state and notifications in the user form "
 "modified by hr."
 msgstr ""
-"Tento modul přidává stav OdooBot a oznámení v uživatelské podobě upravené o "
-"hr."
+"Tento modul přidává stav OdooBot a oznámení v uživatelské podobě upravené "
+"HR."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -29044,6 +29179,13 @@ msgstr ""
 "uživatele v nabídce Nastavení / Uživatelé."
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -29478,7 +29620,7 @@ msgstr "pos_sale"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
 msgid "predict the product from the expense description based on old ones"
-msgstr "předpovědět produkt z popisu výdajů na základě starých"
+msgstr "předpovědět produkt z popisu výdajů na základě starších"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__reference

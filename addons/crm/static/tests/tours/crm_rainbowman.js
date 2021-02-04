@@ -48,6 +48,9 @@ odoo.define('crm.tour_crm_rainbowman', function (require) {
             trigger: "button.o_kanban_add",
             content: "create lead",
         }, {
+            trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
+            run: function () {} // wait for the record to be properly created
+        }, {
             // move first test back to new stage to be able to test rainbowman a second time
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
             content: "move back to new stage",

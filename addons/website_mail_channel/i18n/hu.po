@@ -3,18 +3,20 @@
 # 	* website_mail_channel
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# Boltja Asztalosok <tilia2002@gmail.com>, 2019
-# Zsofia Biro <zsbiro1205@gmail.com>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Boltja Asztalosok <tilia2002@gmail.com>, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Zsofia Biro <zsbiro1205@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Zsofia Biro <zsbiro1205@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-11-17 06:09+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Zsofia Biro <zsbiro1205@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,17 +84,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-envelope-o\"/> send mail"
 msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-file-o\"/> archives"
 msgstr ""
 
@@ -105,14 +107,9 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "<i class=\"fa fa-times\"/> unsubscribe"
 msgstr ""
-
-#. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Megbeszélési csoport</span>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_subscribe
@@ -149,8 +146,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -232,8 +229,8 @@ msgid ""
 "                        <br/><br/>\n"
 "                        If this was a mistake or you did not requested this action, please ignore this message.\n"
 "                        % if user.signature:\n"
-"                        <br/>\n"
-"                        ${user.signature | safe}\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
 "                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -281,13 +278,6 @@ msgid ""
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:15
-#, python-format
-msgid "Add a Subscribe Button"
-msgstr "Hozzáad egy feliratkozási gombot"
-
-#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
 msgstr "Egyedül olyan keveset tudunk tenni, együtt sokkal többet"
@@ -321,11 +311,6 @@ msgid "By thread"
 msgstr "Szálíkként"
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
-msgid "Change Discussion List"
-msgstr "Hozzászólási lista váltása"
-
-#. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Confirm subscription to ${object.name}"
 msgstr ""
@@ -336,16 +321,21 @@ msgid "Confirm unsubscription to ${object.name}"
 msgstr ""
 
 #. module: website_mail_channel
-#: model:ir.model,name:website_mail_channel.model_mail_channel
-msgid "Discussion Channel"
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel_options
+msgid "Create a public discussion group in your backend"
 msgstr ""
 
 #. module: website_mail_channel
-#. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:16
-#, python-format
-msgid "Discussion List"
-msgstr "Hozzászólási lista"
+#: model:ir.model,name:website_mail_channel.model_mail_channel
+msgid "Discussion Channel"
+msgstr "Kommunikációs csatorna"
+
+#. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__display_name
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -358,22 +348,44 @@ msgid "Group"
 msgstr "Csoport"
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail__id
+#: model:ir.model.fields,field_description:website_mail_channel.field_website__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
 msgstr ""
 
 #. module: website_mail_channel
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_channel____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail____last_update
+#: model:ir.model.fields,field_description:website_mail_channel.field_website____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.group_messages
-#: model:website.menu,name:website_mail_channel.menu_mailing_list
+#, python-format
 msgid "Mailing Lists"
 msgstr "Levelezőlisták"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:20
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Mailing-List"
 msgstr "Levelezőlista"
+
+#. module: website_mail_channel
+#. openerp-web
+#: code:addons/website_mail_channel/static/src/snippets/s_channel/options.js:0
+#, python-format
+msgid "Name"
+msgstr "Név"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -383,12 +395,19 @@ msgid ""
 msgstr ""
 
 #. module: website_mail_channel
+#. openerp-web
+#: code:addons/website_mail_channel/static/src/snippets/s_channel/options.js:0
+#, python-format
+msgid "New Mail Channel"
+msgstr ""
+
+#. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
 msgid "Outgoing Mails"
 msgstr "Kimenő levelek"
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:21
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #, python-format
 msgid "Post to"
 msgstr "Ide küldi"
@@ -405,7 +424,7 @@ msgstr "Maradjon kapcsolatba a közösségünkkel"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "Subscribe"
 msgstr "Feliratkozás"
 
@@ -415,7 +434,7 @@ msgid "The address"
 msgstr ""
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/controllers/main.py:245
+#: code:addons/website_mail_channel/controllers/main.py:0
 #, python-format
 msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
@@ -423,11 +442,16 @@ msgid ""
 msgstr ""
 
 #. module: website_mail_channel
-#: code:addons/website_mail_channel/models/mail_mail.py:22
+#: code:addons/website_mail_channel/models/mail_mail.py:0
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "Leiratkozás"
+
+#. module: website_mail_channel
+#: model:ir.model,name:website_mail_channel.model_website
+msgid "Website"
+msgstr "Honlap"
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -435,7 +459,7 @@ msgid "You have been correctly"
 msgstr ""
 
 #. module: website_mail_channel
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "a confirmation email has been sent."
 msgstr ""
 
@@ -509,6 +533,6 @@ msgstr ""
 
 #. module: website_mail_channel
 #: model_terms:ir.ui.view,arch_db:website_mail_channel.mail_channels
-#: model_terms:ir.ui.view,arch_db:website_mail_channel.subscribe
+#: model_terms:ir.ui.view,arch_db:website_mail_channel.s_channel
 msgid "your email..."
 msgstr "emailje..."

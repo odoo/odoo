@@ -297,6 +297,8 @@ var SnippetEditor = Widget.extend({
     removeSnippet: async function () {
         this.toggleOverlay(false);
         this.toggleOptions(false);
+        // If it is an invisible element, we must close it before deleting it (e.g. modal)
+        await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
 
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
@@ -347,6 +349,11 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('snippet_removed');
         this.destroy();
         $parent.trigger('content_changed');
+
+        // TODO Page content changed, some elements may need to be adapted
+        // according to it. While waiting for a better way to handle that this
+        // window trigger will handle most cases.
+        $(window).trigger('resize');
 
         function isEmptyAndRemovable($el, editor) {
             editor = editor || $el.data('snippet-editor');
@@ -659,9 +666,14 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
+
+        // If a modal is open, the scroll target must be that modal
+        const $openModal = self.$editable.find('.modal:visible');
+        self.draggableComponent.$scrollTarget = $openModal.length ? $openModal : self.$scrollingElement;
+
         // Trigger a scroll on the draggable element so that jQuery updates
         // the position of the drop zones.
-        this.$scrollingElement.on('scroll.scrolling_element', function () {
+        self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
             self.$el.trigger('scroll');
         });
     },
@@ -724,7 +736,7 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('drag_and_drop_stop', {
             $snippet: this.$target,
         });
-        this.$scrollingElement.off('scroll.scrolling_element');
+        this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
     },
     /**
      * @private
@@ -1074,7 +1086,7 @@ var SnippetsMenu = Widget.extend({
         // Hide the active overlay when scrolling.
         // Show it again and recompute all the overlays after the scroll.
         this.$scrollingElement = $().getScrollingElement();
-        this.$scrollingElement.on('scroll.snippets_menu', _.throttle(() => {
+        this._onScrollingElementScroll = _.throttle(() => {
             for (const editor of this.snippetEditors) {
                 editor.toggleOverlayVisibility(false);
             }
@@ -1086,7 +1098,12 @@ var SnippetsMenu = Widget.extend({
                     editor.cover();
                 }
             }, 250);
-        }, 50));
+        }, 50)
+        // We use addEventListener instead of jQuery because we need 'capture'.
+        // Setting capture to true allows to take advantage of event bubbling
+        // for events that otherwise don’t support it. (e.g. useful when
+        // scrolling a modal)
+        this.$scrollingElement[0].addEventListener('scroll', this._onScrollingElementScroll, {capture: true});
 
         // Auto-selects text elements with a specific class and remove this
         // on text changes
@@ -1151,7 +1168,7 @@ var SnippetsMenu = Widget.extend({
             this.$snippetEditorArea.remove();
             this.$window.off('.snippets_menu');
             this.$document.off('.snippets_menu');
-            this.$scrollingElement.off('.snippets_menu');
+            this.$scrollingElement[0].removeEventListener('scroll', this._onScrollingElementScroll, {capture: true});
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         delete this.cacheSnippetTemplate[this.options.snippets];
@@ -1251,97 +1268,116 @@ var SnippetsMenu = Widget.extend({
     _activateInsertionZones: function ($selectorSiblings, $selectorChildren) {
         var self = this;
 
-        function isFullWidth($elem) {
-            return $elem.parent().width() === $elem.outerWidth(true);
+        // If a modal is open, the drop zones must be created only in this modal
+        const $openModal = self.getEditableArea().find('.modal:visible');
+        if ($openModal.length) {
+            $selectorSiblings = $openModal.find($selectorSiblings);
+            $selectorChildren = $openModal.find($selectorChildren);
+        }
+
+        // Check if the drop zone should be horizontal or vertical
+        function setDropZoneDirection($elem, $parent, $sibling) {
+            var vertical = false;
+            var style = {};
+            $sibling = $sibling || $elem;
+            var css = window.getComputedStyle($elem[0]);
+            var parentCss = window.getComputedStyle($parent[0]);
+            var float = css.float || css.cssFloat;
+            var display = parentCss.display;
+            var flex = parentCss.flexDirection;
+            if (float === 'left' || float === 'right' || (display === 'flex' && flex === 'row')) {
+                style['float'] = float;
+                if ($sibling.parent().width() !== $sibling.outerWidth(true)) {
+                    vertical = true;
+                    style['height'] = Math.max($sibling.outerHeight(), 30) + 'px';
+                }
+            }
+            return {
+                vertical: vertical,
+                style: style,
+            };
+        }
+
+        // If the previous sibling is a BR tag or a non-whitespace text, it
+        // should be a vertical dropzone.
+        function testPreviousSibling(node, $zone) {
+            if (!node || ((node.tagName || !node.textContent.match(/\S/)) && node.tagName !== 'BR')) {
+                return false;
+            }
+            return {
+                vertical: true,
+                style: {
+                    'float': 'none',
+                    'display': 'inline-block',
+                    'height': parseInt(self.window.getComputedStyle($zone[0]).lineHeight) + 'px',
+                },
+            };
+        }
+
+        // Firstly, add a dropzone after the clone
+        var $clone = $('.oe_drop_clone');
+        if ($clone.length) {
+            var $neighbor = $clone.prev();
+            if (!$neighbor.length) {
+                $neighbor = $clone.next();
+            }
+            var data;
+            if ($neighbor.length) {
+                data = setDropZoneDirection($neighbor, $neighbor.parent());
+            } else {
+                data = {
+                    vertical: false,
+                    style: {},
+                };
+            }
+            self._insertDropzone($('<we-hook/>').insertAfter($clone), data.vertical, data.style);
         }
 
         if ($selectorChildren) {
             $selectorChildren.each(function () {
+                var data;
                 var $zone = $(this);
-                var style;
-                var vertical;
-                var node;
-                var css = self.window.getComputedStyle(this);
-                var parentCss = self.window.getComputedStyle($zone.parent()[0]);
-                var float = css.float || css.cssFloat;
-                var parentDisplay = parentCss.display;
-                var parentFlex = parentCss.flexDirection;
+                var $children = $zone.find('> :not(.oe_drop_zone, .oe_drop_clone)');
 
-                style = {};
-                vertical = false;
-                node = $zone[0].lastChild;
-                var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
-                if (test) {
-                    vertical = true;
-                    style['float'] = 'none';
-                    style['height'] = parseInt(self.window.getComputedStyle($zone[0]).lineHeight) + 'px';
-                    style['display'] = 'inline-block';
-                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    style['float'] = float;
-                    if (!isFullWidth($zone) && !$zone.hasClass('oe_structure')) {
-                        vertical = true;
-                        style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
-                    }
+                if (!$zone.children().last().is('.oe_drop_zone')) {
+                    data = testPreviousSibling($zone[0].lastChild, $zone)
+                        || setDropZoneDirection($zone, $zone, $children.last());
+                    self._insertDropzone($('<we-hook/>').appendTo($zone), data.vertical, data.style);
                 }
-                self._insertDropzone($('<we-hook/>').appendTo($zone), vertical, style);
 
-                style = {};
-                vertical = false;
-                node = $zone[0].firstChild;
-                test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) || node.tagName === 'BR'));
-                if (test) {
-                    vertical = true;
-                    style['float'] = 'none';
-                    style['height'] = parseInt(self.window.getComputedStyle($zone[0]).lineHeight) + 'px';
-                    style['display'] = 'inline-block';
-                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    style['float'] = float;
-                    if (!isFullWidth($zone) && !$zone.hasClass('oe_structure')) {
-                        vertical = true;
-                        style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
-                    }
+                if (!$zone.children().first().is('.oe_drop_clone')) {
+                    data = testPreviousSibling($zone[0].firstChild, $zone)
+                        || setDropZoneDirection($zone, $zone, $children.first());
+                    self._insertDropzone($('<we-hook/>').prependTo($zone), data.vertical, data.style);
                 }
-                self._insertDropzone($('<we-hook/>').prependTo($zone), vertical, style);
             });
 
             // add children near drop zone
             $selectorSiblings = $(_.uniq(($selectorSiblings || $()).add($selectorChildren.children()).get()));
         }
 
+        var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible)';
         if ($selectorSiblings) {
-            $selectorSiblings.filter(':not(.oe_drop_zone):not(.oe_drop_clone)').each(function () {
+            $selectorSiblings.not(`.oe_drop_zone, .oe_drop_clone, ${noDropZonesSelector}`).each(function () {
+                var data;
                 var $zone = $(this);
-                var style;
-                var vertical;
-                var css = self.window.getComputedStyle(this);
-                var parentCss = self.window.getComputedStyle($zone.parent()[0]);
-                var float = css.float || css.cssFloat;
-                var parentDisplay = parentCss.display;
-                var parentFlex = parentCss.flexDirection;
+                var $zoneToCheck = $zone;
 
-                if ($zone.prev('.oe_drop_zone:visible').length === 0) {
-                    style = {};
-                    vertical = false;
-                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        style['float'] = float;
-                        if (!isFullWidth($zone)) {
-                            vertical = true;
-                            style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
-                        }
-                    }
-                    self._insertDropzone($('<we-hook/>').insertBefore($zone), vertical, style);
+                while ($zoneToCheck.prev(noDropZonesSelector).length) {
+                    $zoneToCheck = $zoneToCheck.prev();
                 }
-                if ($zone.next('.oe_drop_zone:visible').length === 0) {
-                    style = {};
-                    vertical = false;
-                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        style['float'] = float;
-                        if (!isFullWidth($zone)) {
-                            vertical = true;
-                            style['height'] = Math.max($zone.outerHeight(), 30) + 'px';
-                        }
-                    }
-                    self._insertDropzone($('<we-hook/>').insertAfter($zone), vertical, style);
+                if (!$zoneToCheck.prev('.oe_drop_zone:visible, .oe_drop_clone').length) {
+                    data = setDropZoneDirection($zone, $zone.parent());
+                    self._insertDropzone($('<we-hook/>').insertBefore($zone), data.vertical, data.style);
+                }
+
+                $zoneToCheck = $zone;
+                while ($zoneToCheck.next(noDropZonesSelector).length) {
+                    $zoneToCheck = $zoneToCheck.next();
+                }
+                if (!$zoneToCheck.next('.oe_drop_zone:visible, .oe_drop_clone').length) {
+                    data = setDropZoneDirection($zone, $zone.parent());
+                    self._insertDropzone($('<we-hook/>').insertAfter($zone), data.vertical, data.style);
                 }
             });
         }
@@ -1495,9 +1531,15 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * @private
+     * @param {jQuery|null|undefined} [$el]
+     *        The DOM element whose inside editors need to be destroyed.
+     *        If no element is given, all the editors are destroyed.
      */
-    _destroyEditors: async function () {
+    _destroyEditors: async function ($el) {
         const proms = _.map(this.snippetEditors, async function (snippetEditor) {
+            if ($el && !$el.has(snippetEditor.$target).length) {
+                return;
+            }
             await snippetEditor.cleanForSave();
             snippetEditor.destroy();
         });
@@ -1994,9 +2036,13 @@ var SnippetsMenu = Widget.extend({
                         },
                     });
 
+                    // If a modal is open, the scroll target must be that modal
+                    const $openModal = self.getEditableArea().find('.modal:visible');
+                    self.draggableComponent.$scrollTarget = $openModal.length ? $openModal : $scrollingElement;
+
                     // Trigger a scroll on the draggable element so that jQuery updates
                     // the position of the drop zones.
-                    $scrollingElement.on('scroll.scrolling_element', function () {
+                    self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
                         self.$el.trigger('scroll');
                     });
 
@@ -2005,7 +2051,7 @@ var SnippetsMenu = Widget.extend({
                 },
                 stop: async function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
-                    $scrollingElement.off('scroll.scrolling_element');
+                    self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
 
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
@@ -2261,7 +2307,11 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onDragAndDropStop: async function (ev) {
-        await this._destroyEditors();
+        const $modal = ev.data.$snippet.closest('.modal');
+        // If the snippet is in a modal, destroy editors only in that modal.
+        // This to prevent the modal from closing because of the cleanForSave
+        // on each editors.
+        await this._destroyEditors($modal.length ? $modal : null);
         await this._activateSnippet(ev.data.$snippet);
     },
     /**

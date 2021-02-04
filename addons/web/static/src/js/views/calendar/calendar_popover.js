@@ -114,13 +114,14 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 string: displayFieldInfo.attrs.string || fieldInfo.string,
                 value: self.event.extendedProps.record[fieldName],
                 type: fieldInfo.type,
+                invisible: displayFieldInfo.attrs.invisible,
             };
             if (field.type === 'selection') {
                 field.selection = fieldInfo.selection;
             }
             if (field.type === 'monetary') {
                 var currencyField = field.currency_field || 'currency_id';
-                if (!fields.includes(currencyField) && _.has(self.event.record, currencyField)) {
+                if (!fields.includes(currencyField) && _.has(self.event.extendedProps.record, currencyField)) {
                     fields.push(currencyField);
                 }
             }

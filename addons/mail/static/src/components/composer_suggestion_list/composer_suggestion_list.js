@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/composer_suggestion_list/composer_sugges
 const components = {
     ComposerSuggestion: require('mail/static/src/components/composer_suggestion/composer_suggestion.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -15,6 +16,7 @@ class ComposerSuggestionList extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
             const activeSuggestedRecord = composer
@@ -27,14 +29,11 @@ class ComposerSuggestionList extends Component {
                 ? composer.mainSuggestedRecordsList
                 : [];
             return {
-                activeSuggestedRecord: activeSuggestedRecord ? activeSuggestedRecord.__state : undefined,
-                composer: composer ? composer.__state : undefined,
-                extraSuggestedRecordsList: extraSuggestedRecordsList
-                    ? extraSuggestedRecordsList.map(record => record.__state)
-                    : [],
-                mainSuggestedRecordsList: mainSuggestedRecordsList
-                    ? mainSuggestedRecordsList.map(record => record.__state)
-                    : [],
+                activeSuggestedRecord,
+                composer,
+                composerSuggestionModelName: composer && composer.suggestionModelName,
+                extraSuggestedRecordsList: extraSuggestedRecordsList,
+                mainSuggestedRecordsList: mainSuggestedRecordsList,
             };
         }, {
             compareDepth: {

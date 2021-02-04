@@ -4673,7 +4673,7 @@ Fields:
         """
         ids, new_ids = [], []
         for i in self._ids:
-            (ids if isinstance(i, int) else new_ids).append(i)
+            (new_ids if isinstance(i, NewId) else ids).append(i)
         if not ids:
             return self
         query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
@@ -6213,16 +6213,10 @@ Fields:
         todo = list(unique(itertools.chain(names, nametree))) if first_call else list(names)
         done = set()
 
-        # dummy assignment: trigger invalidations on the record
-        for name in todo:
-            if name == 'id':
-                continue
-            value = record[name]
-            field = self._fields[name]
-            if field.type == 'many2one' and field.delegate and not value:
-                # do not nullify all fields of parent record for new records
-                continue
-            record[name] = value
+        # mark fields to do as modified to trigger recomputations
+        protected = [self._fields[name] for name in names]
+        with self.env.protecting(protected, record):
+            record.modified(todo)
 
         result = {'warnings': OrderedSet()}
 

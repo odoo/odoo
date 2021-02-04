@@ -42,7 +42,6 @@ setup(
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycopg2 >= 2.2',
         'pydot',
-        'pyparsing',
         'pypdf2',
         'pyserial',
         'python-dateutil',

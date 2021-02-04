@@ -28,15 +28,15 @@
 # Sergo S, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-04 08:58+0000\n"
+"POT-Creation-Date: 2021-01-25 13:06+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,13 +64,6 @@ msgstr " записи"
 #, python-format
 msgid "# Code editor"
 msgstr "# Редактор кода"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -112,6 +105,13 @@ msgstr "%d лет назад"
 #: code:addons/web/static/src/js/views/file_upload_mixin.js:0
 #, python-format
 msgid "%s Files"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
+#, python-format
+msgid "%s days ago"
 msgstr ""
 
 #. module: web
@@ -2142,7 +2142,7 @@ msgstr "Изображение"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
+msgid "In %s days"
 msgstr ""
 
 #. module: web
@@ -4989,7 +4989,7 @@ msgstr "меньше или равен"
 #: code:addons/web/static/src/js/views/file_upload_mixin.js:0
 #, python-format
 msgid "message: %s"
-msgstr "сообщение:% s"
+msgstr "сообщение: %s"
 
 #. module: web
 #. openerp-web

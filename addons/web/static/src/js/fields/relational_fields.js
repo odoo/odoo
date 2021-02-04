@@ -1192,6 +1192,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         if (!fieldChanged && !actionsChanged) {
             var newEval = this._evalColumnInvisibleFields();
             if (_.isEqual(this.currentColInvisibleFields, newEval)) {
+                this._reset(record, ev); // update the internal state, but do not re-render
                 return Promise.resolve();
             }
         } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
@@ -3045,22 +3046,6 @@ var FieldRadio = FieldSelection.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     * @returns {jQuery}
-     */
-    getFocusableElement: function () {
-        return this.mode === 'edit' && this.$input || this.$el;
-    },
-
-    /**
-     * @override
-     * @returns {boolean} always true
-     */
-    isSet: function () {
-        return true;
-    },
-
-    /**
      * Returns the currently-checked radio button, or the first one if no radio
      * button is checked.
      *
@@ -3069,6 +3054,14 @@ var FieldRadio = FieldSelection.extend({
     getFocusableElement: function () {
         var checked = this.$("[checked='true']");
         return checked.length ? checked : this.$("[data-index='0']");
+    },
+
+    /**
+     * @override
+     * @returns {boolean} always true
+     */
+    isSet: function () {
+        return true;
     },
 
     /**

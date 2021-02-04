@@ -9,7 +9,7 @@
 # David Minneci <david@numeko.it>, 2020
 # Luana Andronico <andronicoluana@gmail.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,7 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on cheapest product"
-msgstr "%s%% sconto sul prodotto più economico"
+msgstr "%s%% di sconto sul prodotto più economico"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -53,7 +53,7 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on total amount"
-msgstr "%s%% sconto sull'importo totale"
+msgstr "%s%% di sconto sull'importo totale"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -83,7 +83,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\">if 0, no limit</span>"
-msgstr "<span class=\"oe_grey\">se 0, illimitto</span>"
+msgstr "<span class=\"oe_grey\">se 0, nessun limite</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -534,7 +534,7 @@ msgstr "Sconto applicato su"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_max_amount
 msgid "Discount Max Amount"
-msgstr "Importo massimo di sconto"
+msgstr "Importo massimo sconto"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
@@ -745,13 +745,13 @@ msgstr "Quantità minima"
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum purchased amount should be greater than 0"
-msgstr "L'importo minimo d'acquisto deve essere superiore a 0"
+msgstr "L'importo minimo di acquisto deve essere maggiore di 0"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum quantity should be greater than 0"
-msgstr "La quantità minima deve essere superiore a 0"
+msgstr "La quantità minima deve essere maggiore di 0"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
@@ -763,7 +763,7 @@ msgstr "Importo minimo richiesto per ottenere il premio"
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_min_quantity
 msgid "Minimum required product quantity to get the reward"
-msgstr "Quantità minima di prodotti richiesta per ottenere il premio"
+msgstr "Quantità minima di prodotto richiesta per ottenere il premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__name
@@ -879,12 +879,12 @@ msgstr "Programma"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
 msgid "Program Type"
-msgstr "Tipo programma"
+msgstr "Tipo di programma"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
 msgid "Promo Code Usage"
-msgstr "Utilizzo del codice promozionale"
+msgstr "Utilizzo codice promozionale"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
@@ -928,7 +928,7 @@ msgstr "Premio"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_description
 msgid "Reward Description"
-msgstr "Descrizione del premio"
+msgstr "Descrizione premio"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__discount_line_product_id
@@ -947,13 +947,13 @@ msgstr "Prodotto premio"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr "Tipo premio"
+msgstr "Tipo di premio"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
 msgid "Reward product quantity"
-msgstr "Quantità di prodotto premio"
+msgstr "Quantità prodotto premio"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -1138,7 +1138,7 @@ msgstr "Durata validità di un buono sconto dopo la creazione"
 #: code:addons/coupon/models/coupon_program.py:0
 #, python-format
 msgid "You can not delete a program in active state"
-msgstr "Non è possibile cancellare un programma attivo"
+msgstr "Impossibile eliminare un programma con stato attivo"
 
 #. module: coupon
 #: model:mail.template,report_name:coupon.mail_template_sale_coupon

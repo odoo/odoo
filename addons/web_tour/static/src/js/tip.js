@@ -78,11 +78,19 @@ var Tip = Widget.extend({
         this.init_width = this.$el.outerWidth();
         this.init_height = this.$el.outerHeight();
         this.double_border_width = 0; // TODO remove me in master
-        this.content_width = this.$tooltip_content.outerWidth(true);
-        this.content_height = this.$tooltip_content.outerHeight(true);
+        this.$el.addClass('active');
+        this.el.style.setProperty('width', `${this.info.width}px`, 'important');
+        this.el.style.setProperty('height', 'auto', 'important');
+        this.el.style.setProperty('transition', 'none', 'important');
+        this.content_width = this.$el.outerWidth(true);
+        this.content_height = this.$el.outerHeight(true);
         this.$tooltip_content.html(this.info.scrollContent);
-        this.scrollContentWidth = this.$tooltip_content.outerWidth(true);
-        this.scrollContentHeight = this.$tooltip_content.outerHeight(true);
+        this.scrollContentWidth = this.$el.outerWidth(true);
+        this.scrollContentHeight = this.$el.outerHeight(true);
+        this.$el.removeClass('active');
+        this.el.style.removeProperty('width');
+        this.el.style.removeProperty('height');
+        this.el.style.removeProperty('transition');
         this.$tooltip_content.html(this.info.content);
         this.$window = $(window);
 

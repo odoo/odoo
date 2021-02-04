@@ -20,7 +20,7 @@ DESC=odoo
 CONFIG=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf
 LOGFILE=/var/log/odoo/odoo-server.log
 PIDFILE=/var/run/${NAME}.pid
-MODULES=$(ls /home/pi/odoo/addons/ -m | tr -d ' ')
+MODULES=$(ls /home/pi/odoo/addons/ -m -w0 | tr -d ' ')
 USER=pi
 
 test -x $DAEMON || exit 0

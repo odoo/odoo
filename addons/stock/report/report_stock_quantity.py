@@ -58,7 +58,7 @@ WITH forecast_qty AS (
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
         m.state NOT IN ('cancel', 'draft', 'done')
-    UNION
+    UNION ALL
     SELECT
         -q.id as id,
         q.product_id,
@@ -76,7 +76,7 @@ WITH forecast_qty AS (
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
         l.usage = 'transit'
-    UNION
+    UNION ALL
     SELECT
         m.id,
         m.product_id,

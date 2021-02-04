@@ -781,19 +781,6 @@ class AccountBankStatementLine(models.Model):
         for st_line in self:
             liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
 
-            # Compute is_reconciled
-            if not st_line.id:
-                # New record: The journal items are not yet there.
-                st_line.is_reconciled = False
-            elif suspense_lines:
-                # In case of the statement line comes from an older version, it could have a residual amount of zero.
-                st_line.is_reconciled = all(suspense_line.reconciled for suspense_line in suspense_lines)
-            elif st_line.currency_id.is_zero(st_line.amount):
-                st_line.is_reconciled = True
-            else:
-                # The journal entry seems reconciled.
-                st_line.is_reconciled = True
-
             # Compute residual amount
             if st_line.to_check:
                 st_line.amount_residual = -st_line.amount_currency if st_line.foreign_currency_id else -st_line.amount
@@ -802,6 +789,19 @@ class AccountBankStatementLine(models.Model):
             else:
                 st_line.amount_residual = sum(suspense_lines.mapped('amount_currency'))
 
+            # Compute is_reconciled
+            if not st_line.id:
+                # New record: The journal items are not yet there.
+                st_line.is_reconciled = False
+            elif suspense_lines:
+                # In case of the statement line comes from an older version, it could have a residual amount of zero.
+                st_line.is_reconciled = suspense_lines.currency_id.is_zero(st_line.amount_residual)
+            elif st_line.currency_id.is_zero(st_line.amount):
+                st_line.is_reconciled = True
+            else:
+                # The journal entry seems reconciled.
+                st_line.is_reconciled = True
+
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
@@ -809,18 +809,12 @@ class AccountBankStatementLine(models.Model):
     @api.constrains('amount', 'amount_currency', 'currency_id', 'foreign_currency_id', 'journal_id')
     def _check_amounts_currencies(self):
         ''' Ensure the consistency the specified amounts and the currencies. '''
-        if self._context.get('skip_check_amounts_currencies'):
-            return
 
         for st_line in self:
             if st_line.journal_id != st_line.statement_id.journal_id:
                 raise ValidationError(_('The journal of a statement line must always be the same as the bank statement one.'))
-            if st_line.currency_id.is_zero(st_line.amount):
-                raise ValidationError(_("The amount of a statement line can't be equal to zero."))
             if st_line.foreign_currency_id == st_line.currency_id:
                 raise ValidationError(_("The foreign currency must be different than the journal one: %s", st_line.currency_id.name))
-            if st_line.foreign_currency_id and st_line.foreign_currency_id.is_zero(st_line.amount_currency):
-                raise ValidationError(_("The amount in foreign currency must be set if the amount is not equal to zero."))
             if not st_line.foreign_currency_id and st_line.amount_currency:
                 raise ValidationError(_("You can't provide an amount in foreign currency without specifying a foreign currency."))
 
@@ -1024,6 +1018,9 @@ class AccountBankStatementLine(models.Model):
         '''
 
         self.ensure_one()
+        journal = self.journal_id
+        company_currency = journal.company_id.currency_id
+        foreign_currency = self.foreign_currency_id or journal.currency_id or company_currency
 
         liquidity_lines, suspense_lines, other_lines = self._seek_for_lines()
 
@@ -1040,6 +1037,7 @@ class AccountBankStatementLine(models.Model):
         reconciliation_overview = []
 
         total_balance = liquidity_lines.balance
+        total_amount_currency = liquidity_lines.amount_currency
 
         # Step 1: Split 'lines_vals_list' into two batches:
         # - The existing account.move.lines that need to be reconciled with the statement line.
@@ -1061,6 +1059,7 @@ class AccountBankStatementLine(models.Model):
                 # Newly created account.move.line from scratch.
                 line_vals = self._prepare_counterpart_move_line_vals(vals)
                 total_balance += line_vals['debit'] - line_vals['credit']
+                total_amount_currency += line_vals['amount_currency']
 
                 reconciliation_overview.append({
                     'line_vals': line_vals,
@@ -1072,6 +1071,7 @@ class AccountBankStatementLine(models.Model):
         for line, counterpart_vals in zip(existing_lines, to_process_vals):
             line_vals = self._prepare_counterpart_move_line_vals(counterpart_vals, move_line=line)
             balance = line_vals['debit'] - line_vals['credit']
+            amount_currency = line_vals['amount_currency']
 
             reconciliation_vals = {
                 'line_vals': line_vals,
@@ -1084,7 +1084,7 @@ class AccountBankStatementLine(models.Model):
                 payment_vals = self.env['account.payment.register']\
                     .with_context(active_model='account.move.line', active_ids=line.ids)\
                     .create({
-                        'amount': abs(line_vals['amount_currency']) if line_vals['currency_id'] else abs(balance),
+                        'amount': abs(amount_currency) if line_vals['currency_id'] else abs(balance),
                         'payment_date': self.date,
                         'payment_type': 'inbound' if balance < 0.0 else 'outbound',
                         'journal_id': self.journal_id.id,
@@ -1127,8 +1127,21 @@ class AccountBankStatementLine(models.Model):
             reconciliation_overview.append(reconciliation_vals)
 
             total_balance += balance
+            total_amount_currency += amount_currency
 
-        # Step 3: If the journal entry is not yet balanced, create an open balance.
+        # Step 3: Fix rounding issue due to currency conversions.
+        # Add the remaining balance on the first encountered line starting with the custom ones.
+
+        if foreign_currency.is_zero(total_amount_currency) and not company_currency.is_zero(total_balance):
+            vals = reconciliation_overview[0]['line_vals']
+            new_balance = vals['debit'] - vals['credit'] - total_balance
+            vals.update({
+                'debit': new_balance if new_balance > 0.0 else 0.0,
+                'credit': -new_balance if new_balance < 0.0 else 0.0,
+            })
+            total_balance = 0.0
+
+        # Step 4: If the journal entry is not yet balanced, create an open balance.
 
         if self.company_currency_id.round(total_balance):
             counterpart_vals = {

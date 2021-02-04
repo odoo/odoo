@@ -54,7 +54,7 @@ registerInstancePatchModel('mail.notification_group', 'sms/static/src/models/not
         if (this.env.messaging.device.isMobile) {
             // messaging menu has a higher z-index than views so it must
             // be closed to ensure the visibility of the view
-            this.messagingMenu.close();
+            this.env.messaging.messagingMenu.close();
         }
     },
 });

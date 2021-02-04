@@ -11,7 +11,7 @@
 # Martin Trigaux, 2020
 # Arnau Ros, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
-# jabelchi <jabelchi@gmail.com>, 2020
+# jabelchi <jabelchi@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: jabelchi <jabelchi@gmail.com>, 2020\n"
+"Last-Translator: jabelchi <jabelchi@gmail.com>, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1055,9 +1055,9 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 
@@ -5213,7 +5213,7 @@ msgstr ""
 "Aquest mòdul té com a objectiu gestionar l'assistència dels treballadors.\n"
 "==================================================\n"
 "\n"
-"Manté el compte de les assistències dels treballadors sobre la base de les accions (Check in / Check out) realitzats per ells."
+"Porta el control de les assistències dels treballadors sobre la base de les accions (fitxatges d'entrada-sortida) realitzats per ells."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr
@@ -8479,7 +8479,7 @@ msgstr "Llista d'arxius adjunts i indexació de documents"
 #: model:ir.module.category,name:base.module_category_human_resources_attendances
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
 msgid "Attendances"
-msgstr "Serveis"
+msgstr "Assistències"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_mobile
@@ -14116,7 +14116,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
 msgid "HR Attendance Holidays"
-msgstr ""
+msgstr "RRHH assistència festius"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gamification
@@ -24983,7 +24983,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
 msgid "Track employee attendance"
-msgstr ""
+msgstr "Seguiment de l'assistència de l'empleat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
@@ -26903,6 +26903,13 @@ msgid ""
 msgstr ""
 "Podrà definir regles d'accés addicionals editant el recentment creat usuari "
 "sota el menú Configuració / Usuaris."
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
