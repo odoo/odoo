@@ -138,28 +138,32 @@ var BasicView = AbstractView.extend({
                     // X2Many case: field is an x2many displayed as a list or
                     // kanban view, but the related fields haven't been loaded yet.
                     if ((fieldType === 'one2many' || fieldType === 'many2many')) {
-                        var x2mFieldInfo = record.fieldsInfo[this.viewType][name];
-                        var viewType = x2mFieldInfo.viewType || x2mFieldInfo.mode;
-                        var knownFields = Object.keys(record.data[name].fieldsInfo[record.data[name].viewType] || {});
-                        var newFields = Object.keys(record.data[name].fieldsInfo[viewType]);
-                        if (_.difference(newFields, knownFields).length) {
+                        if (!('fieldsInfo' in record.data[name])) {
                             fieldNames.push(name);
-                        }
+                        } else {
+                            var x2mFieldInfo = record.fieldsInfo[this.viewType][name];
+                            var viewType = x2mFieldInfo.viewType || x2mFieldInfo.mode;
+                            var knownFields = Object.keys(record.data[name].fieldsInfo[record.data[name].viewType] || {});
+                            var newFields = Object.keys(record.data[name].fieldsInfo[viewType]);
+                            if (_.difference(newFields, knownFields).length) {
+                                fieldNames.push(name);
+                            }
 
-                        if (record.data[name].viewType === 'default') {
-                            // Use case: x2many (tags) in x2many list views
-                            // When opening the x2many record form view, the
-                            // x2many will be reloaded but it may not have
-                            // the same fields (ex: tags in list and list in
-                            // form) so we need to merge the fieldsInfo to
-                            // avoid losing the initial fields (display_name)
-                            var fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
-                            var defaultFieldInfo = record.data[name].fieldsInfo.default;
-                            _.each(fieldViews, function (fieldView) {
-                                _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
-                                    _.defaults(x2mFieldInfo, defaultFieldInfo);
+                            if (record.data[name].viewType === 'default') {
+                                // Use case: x2many (tags) in x2many list views
+                                // When opening the x2many record form view, the
+                                // x2many will be reloaded but it may not have
+                                // the same fields (ex: tags in list and list in
+                                // form) so we need to merge the fieldsInfo to
+                                // avoid losing the initial fields (display_name)
+                                var fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
+                                var defaultFieldInfo = record.data[name].fieldsInfo.default;
+                                _.each(fieldViews, function (fieldView) {
+                                    _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
+                                        _.defaults(x2mFieldInfo, defaultFieldInfo);
+                                    });
                                 });
-                            });
+                            }
                         }
                     }
                     // Many2one: context is not the same between the different views
