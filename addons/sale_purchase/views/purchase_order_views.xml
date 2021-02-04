@@ -13,6 +13,9 @@
                     </div>
                 </button>
             </xpath>
+            <xpath expr="//field[@name='order_line']//field[@name='account_analytic_id']" position="attributes">
+                <attribute name="groups">sale.group_re_invoice_sale</attribute>
+            </xpath>
         </field>
     </record>
 </data></odoo>

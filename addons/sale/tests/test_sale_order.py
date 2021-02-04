@@ -254,7 +254,7 @@ class TestSaleOrder(TestSaleCommon):
         inv.action_post()
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
-        self.assertEqual((sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced), (160, 2, 0, 0), 'Sale: line is wrong after confirming vendor invoice')
+        self.assertEqual((sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced), (160, 2, 2, 0), 'Sale: line is wrong after confirming vendor invoice')
 
     def test_sale_with_taxes(self):
         """ Test SO with taxes applied on its lines and check subtotal applied on its lines and total applied on the SO """

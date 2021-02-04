@@ -137,13 +137,17 @@ class AccountMoveLine(models.Model):
                 map_move_sale_line[move_line.id] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
 
         # create the sale lines in batch
-        new_sale_lines = self.env['sale.order.line'].create(sale_line_values_to_create)
+        new_sale_lines = self.env['sale.order.line'].with_context(is_reinvoice=True).create(sale_line_values_to_create)
         new_sale_lines._onchange_discount()
 
         # build result map by replacing index with newly created record of sale.order.line
         result = {}
         for move_line_id, unknown_sale_line in map_move_sale_line.items():
             if isinstance(unknown_sale_line, int):  # index of newly created sale line
+                order_line = new_sale_lines[unknown_sale_line]
+                invoice = self.filtered(lambda x: x.id == move_line_id).move_id
+                msg = _("Extra line with %s added from <a href=# data-oe-model=account.move data-oe-id=%d>Vendor Bill</a>") % (order_line.product_id.display_name, invoice.id)
+                order_line.order_id.message_post(body=msg)
                 result[move_line_id] = new_sale_lines[unknown_sale_line]
             elif isinstance(unknown_sale_line, models.BaseModel):  # already record of sale.order.line
                 result[move_line_id] = unknown_sale_line
@@ -189,7 +193,7 @@ class AccountMoveLine(models.Model):
             'discount': 0.0,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
-            'product_uom_qty': 0.0,
+            'product_uom_qty': self.quantity,
             'is_expense': True,
         }
 
@@ -209,6 +213,8 @@ class AccountMoveLine(models.Model):
                 pricelist=order.pricelist_id.id,
                 uom=self.product_uom_id.id
             ).price
+        elif self.product_id.expense_policy == 'cost' and self.product_id.reinvoice_margin and amount:
+            amount = amount + (amount * self.product_id.reinvoice_margin)
 
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):

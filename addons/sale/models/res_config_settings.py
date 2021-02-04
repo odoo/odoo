@@ -62,6 +62,7 @@ class ResConfigSettings(models.TransientModel):
                                                domain="[('model', '=', 'sale.order')]",
                                                config_parameter='sale.default_confirmation_template',
                                                help="Email sent to the customer once the order is paid.")
+    group_re_invoice_sale = fields.Boolean("Re-invoice Products", implied_group="sale.group_re_invoice_sale")
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()

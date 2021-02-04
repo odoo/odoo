@@ -26,11 +26,12 @@ class ProductTemplate(models.Model):
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
-        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
-        string='Re-Invoice Expenses',
+        [('no', 'No'), ('cost', 'Billed/Expensed price'), ('sales_price', 'Sales price')],
+        string='Re-Invoice From Bills/Expenses',
         default='no',
-        help="Expenses and vendor bills can be re-invoiced to a customer."
-             "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
+        help="If enabled, You can re-invoice products by selecting a customer sales order on the expense line "
+             "or by matching the analytic account of the vendor bills line and analytic account of the customer sales order.")
+    reinvoice_margin = fields.Float(string="Re-invoice Margin", help="You can add a specific margin on billed/expense price. For sales order, you should use pricelist.")
     visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy', default=lambda self: self._default_visible_expense_policy())
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
     visible_qty_configurator = fields.Boolean("Quantity visible in configurator", compute='_compute_visible_qty_configurator')
@@ -47,10 +48,9 @@ class ProductTemplate(models.Model):
 
     @api.depends('name')
     def _compute_visible_expense_policy(self):
-        visibility = self.user_has_groups('analytic.group_analytic_accounting')
+        visibility = self.user_has_groups('sale.group_re_invoice_sale')
         for product_template in self:
             product_template.visible_expense_policy = visibility
-
 
     @api.onchange('sale_ok')
     def _change_sale_ok(self):

@@ -662,7 +662,7 @@
                                 </group>
                                 <group name="sale_info" string="Invoicing">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
-                                    <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
+                                    <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="sale.group_re_invoice_sale" force_save="1"/>
                                     <field name="invoice_status" states="sale,done" groups="base.group_no_one"/>
                                 </group>
                             </group>
@@ -1177,6 +1177,7 @@
                         <field name="service_type" widget="radio" invisible="True"/>
                         <field name="visible_expense_policy" invisible="1"/>
                         <field name="expense_policy" widget="radio" attrs="{'invisible': [('visible_expense_policy', '=', False)]}"/>
+                        <field name="reinvoice_margin" widget="percentage" attrs="{'invisible': ['|', ('expense_policy', '!=', 'cost'), ('visible_expense_policy', '=', False)]}"/>
                     </group>
                 </xpath>
             </field>
@@ -1222,6 +1223,9 @@
                    </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='invoice_line_ids']//field[@name='analytic_account_id']" position="attributes">
+                        <attribute name="groups">sale.group_re_invoice_sale</attribute>
                     </xpath>
                     <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                         <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>

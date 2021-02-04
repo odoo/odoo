@@ -448,6 +448,27 @@
         </field>
     </record>
 
+    <record id="res_config_settings_view_form_invoice" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.invoice</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="group_re_invoice_sale"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="group_re_invoice_sale"/>
+                        <div class="text-muted">
+                            Enable product re-invoicing on product configuration
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <record id="action_sale_config_settings" model="ir.actions.act_window">
         <field name="name">Settings</field>
         <field name="type">ir.actions.act_window</field>
