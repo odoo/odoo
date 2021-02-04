@@ -216,37 +216,16 @@ class AccountMove(models.Model):
     # Import Electronic Document
     ####################################################
 
-    @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, **kwargs):
+    def _get_create_invoice_from_attachment_decoders(self):
         # OVERRIDE
-        # When posting a message, analyse the attachment to check if it is an EDI document and update the invoice
-        # with the imported data.
-        res = super().message_post(**kwargs)
+        res = super()._get_create_invoice_from_attachment_decoders()
+        res.append((10, self.env['account.edi.format'].search([])._create_invoice_from_attachment))
+        return res
 
-        if len(self) != 1 or self.env.context.get('no_new_invoice') or not self.is_invoice(include_receipts=True):
-            return res
-
-        attachments = self.env['ir.attachment'].browse(kwargs.get('attachment_ids', []))
-        odoobot = self.env.ref('base.partner_root')
-        if attachments and self.state != 'draft':
-            self.message_post(body='The invoice is not a draft, it was not updated from the attachment.',
-                              message_type='comment',
-                              subtype_xmlid='mail.mt_note',
-                              author_id=odoobot.id)
-            return res
-        if attachments and self.line_ids:
-            self.message_post(body='The invoice already contains lines, it was not updated from the attachment.',
-                              message_type='comment',
-                              subtype_xmlid='mail.mt_note',
-                              author_id=odoobot.id)
-            return res
-
-        edi_formats = self.env['account.edi.format'].search([])
-        for attachment in attachments:
-            invoice = edi_formats._update_invoice_from_attachment(attachment, self)
-            if invoice:
-                break
-
+    def _get_update_invoice_from_attachment_decoders(self, invoice):
+        # OVERRIDE
+        res = super()._get_update_invoice_from_attachment_decoders(invoice)
+        res.append((10, self.env['account.edi.format'].search([])._update_invoice_from_attachment))
         return res
 
     ####################################################
