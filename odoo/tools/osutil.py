@@ -13,8 +13,6 @@ import zipfile
 from contextlib import contextmanager
 from os.path import join as opj
 
-from .translate import _
-
 _logger = logging.getLogger(__name__)
 
 WINDOWS_RESERVED = re.compile(r'''
@@ -53,8 +51,8 @@ def clean_filename(name, replacement=''):
     :rtype: str
     """
     if WINDOWS_RESERVED.match(name):
-        return _("Untitled")
-    return re.sub(r'[^\w_.()\[\] -]+', replacement, name).lstrip('.-') or _("Untitled")
+        return "Untitled"
+    return re.sub(r'[^\w_.()\[\] -]+', replacement, name).lstrip('.-') or "Untitled"
 
 def listdir(dir, recursive=False):
     """Allow to recursively get the file listing following symlinks, returns
