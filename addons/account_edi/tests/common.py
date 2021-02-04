@@ -67,7 +67,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         })
 
         journal_id = self.company_data['default_journal_sale']
-        journal_id.with_context(default_move_type='in_invoice')._create_invoice_from_single_attachment(attachment)
+        journal_id.with_context(default_move_type='in_invoice').create_invoice_from_attachment(attachment.ids)
 
     def assert_generated_file_equal(self, invoice, expected_values, applied_xpath=None):
         invoice.action_post()
