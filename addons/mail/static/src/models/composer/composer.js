@@ -1121,6 +1121,7 @@ function factory(dependencies) {
         }),
         thread: one2one('mail.thread', {
             inverse: 'composer',
+            required: true,
         }),
     };
 
