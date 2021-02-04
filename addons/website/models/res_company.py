@@ -22,19 +22,6 @@ class Company(models.Model):
         partner = self.sudo().partner_id
         return partner and partner.google_map_link(zoom) or None
 
-    def _compute_website_theme_onboarding_done(self):
-        """ The step is marked as done if one theme is installed. """
-        # we need the same domain as the existing action
-        action = self.env["ir.actions.actions"]._for_xml_id("website.theme_install_kanban_action")
-        domain = literal_eval(action['domain'])
-        domain.append(('state', '=', 'installed'))
-        installed_themes_count = self.env['ir.module.module'].sudo().search_count(domain)
-        for record in self:
-            record.website_theme_onboarding_done = (installed_themes_count > 0)
-
-    website_theme_onboarding_done = fields.Boolean("Onboarding website theme step done",
-                                                   compute='_compute_website_theme_onboarding_done')
-
     def _get_public_user(self):
         self.ensure_one()
         # We need sudo to be able to see public users from others companies too

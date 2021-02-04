@@ -223,6 +223,16 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
+    @http.route(['/website/configurator/<int:step>'], type='http', auth="user", website=True)
+    def website_configurator(self, step=1, **kwargs):
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise werkzeug.exceptions.NotFound()
+        website_id = request.env['website'].get_current_website()
+        if website_id.configurator_done is False:
+            return request.render('website.website_configurator', {'lang': request.env.user.lang})
+        else:
+            return request.redirect('/')
+
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
         url = getattr(request.website, 'social_%s' % social, False)

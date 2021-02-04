@@ -5,6 +5,7 @@ import base64
 import inspect
 import logging
 import hashlib
+import requests
 import re
 
 
@@ -16,11 +17,13 @@ from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
+from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.osv.expression import FALSE_DOMAIN
 from odoo.tools.translate import _
+from odoo.tools import pycompat
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +38,7 @@ DEFAULT_CDN_FILTERS = [
     "^/website/image/",
 ]
 
+DEFAULT_ENDPOINT = 'https://website.api.odoo.com'
 
 class Website(models.Model):
 
@@ -63,6 +67,7 @@ class Website(models.Model):
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
     cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
+    configurator_done = fields.Boolean(help='True if configurator has been completed or ignored')
 
     def _default_social_facebook(self):
         return self.env.ref('base.main_company').social_facebook
@@ -241,10 +246,138 @@ class Website(models.Model):
         attachments_to_unlink.unlink()
         return super(Website, self).unlink()
 
-    def create_and_redirect_to_theme(self):
+    def create_and_redirect_configurator(self):
         self._force()
-        action = self.env.ref('website.theme_install_kanban_action')
-        return action.read()[0]
+        action = self.env['ir.actions.actions']._for_xml_id('website.start_configurator_act_url')
+        return action
+
+    # ----------------------------------------------------------
+    # Configurator
+    # ----------------------------------------------------------
+    def _website_api_rpc(self, route, params):
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+        website_api_endpoint = IrConfigParameter.get_param('website.website_api_endpoint', DEFAULT_ENDPOINT)
+        endpoint = website_api_endpoint + route
+        return iap_tools.iap_jsonrpc(endpoint, params=params)
+
+    @api.model
+    def configurator_init(self):
+        r = dict()
+        company_id = self.get_current_website().company_id
+        r['features'] = self.env['website.configurator.feature'].search_read([], ['name', 'description', 'type', 'icon', 'website_types_preselection'])
+        r['logo'] = False
+        if company_id.logo and company_id.logo != company_id._get_logo():
+            r['logo'] = company_id.logo.decode('utf-8')
+        r['industries'] = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.user.lang})['industries']
+        return r
+
+    @api.model
+    def configurator_recommended_themes(self, industry_name, palette):
+        domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common'])]
+        client_themes = request.env['ir.module.module'].search(domain).mapped('name')
+        params = {
+            'industry_name': industry_name,
+            'palette': palette,
+            'client_themes': client_themes,
+        }
+        return self._website_api_rpc('/api/website/1/configurator/recommended_themes', params)
+
+    @api.model
+    def configurator_skip(self):
+        self.configurator_done = True
+
+    @api.model
+    def configurator_apply(self, **kwargs):
+        def set_colors(selected_palette):
+            url = '/website/static/src/scss/options/user_values.scss'
+            custo = {'color-palettes-name': "'%s'" % selected_palette}
+            self.env['web_editor.assets'].make_scss_customization(url, custo)
+
+        def set_features(selected_features):
+            feature_ids = self.env['website.configurator.feature'].browse(selected_features)
+            pages_views = {}
+            modules = self.env['ir.module.module']
+            for feature_id in feature_ids:
+                if feature_id.type == 'app' and feature_id.module_id and feature_id.module_id.state != 'installed':
+                    modules += feature_id.module_id
+                if feature_id.type == 'page' and feature_id.page_view_id:
+                    result = self.env['website'].new_page(name=feature_id.name, add_menu=True, template=feature_id.page_view_id.key)
+                    pages_views[feature_id.iap_page_code] = result['view_id']
+
+            modules._button_immediate_function(lambda self: self.button_install())
+            return pages_views
+
+        def configure_page(page_code, snippet_list, pages_views):
+            if page_code == 'homepage':
+                page_view_id = website.homepage_id.view_id
+            else:
+                page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
+            rendered_snippets = []
+            for snippet in snippet_list:
+                try:
+                    view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
+                    if view_id:
+                        rendered_snippet = pycompat.to_text(view_id._render())
+                        rendered_snippets.append(rendered_snippet)
+                except ValueError as e:
+                    logger.warning(e)
+            page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
+
+        def set_images(images):
+            for image in images:
+                try:
+                    response = requests.get(image['url'], timeout=3)
+                    response.raise_for_status()
+                    self.env['ir.attachment'].create({
+                        'name': image['name'],
+                        'website_id': website.id,
+                        'key': image['name'],
+                        'type': 'binary',
+                        'raw': response.content,
+                    })
+                except requests.HTTPError:
+                    logger.warning("Failed to download image '%s'", image['url'])
+
+        website = self.get_current_website()
+
+        url = self.env['ir.module.module'].search([('name', '=', kwargs['theme_name'])]).button_choose_theme()
+
+        website.configurator_done = True
+
+        # Enable tour
+        tour_asset_id = self.env['ir.asset']._get_related_assets([('name', '=', 'website.configurator_tour')])
+        tour_asset_id.sudo().write({'active': True})
+
+        # logo was generated as base64 url
+        logo = kwargs.get('logo')
+        if logo:
+            website.logo = logo.split(',', 1)[1]
+
+        # palette
+        palette = kwargs.get('selected_palette')
+        if palette:
+            set_colors(palette)
+
+        # modules
+        pages_views = set_features(kwargs.get('selected_features'))
+
+        # Load suggestion from iap for selected pages
+        params = {
+            'theme': kwargs.get('theme_name'),
+            'industry': kwargs.get('industry'),
+            'pages': list(pages_views.keys()),
+        }
+        custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources', params)
+
+        # Update pages
+        pages = custom_resources.get('pages', {})
+        for page_code, snippet_list in pages.items():
+            configure_page(page_code, snippet_list, pages_views)
+
+        images = custom_resources.get('images', [])
+        set_images(images)
+
+        return url
 
     # ----------------------------------------------------------
     # Page Management
