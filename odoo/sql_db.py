@@ -290,8 +290,9 @@ class Cursor(BaseCursor):
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
+            cur_sql_counter = sql_counter
             encoding = psycopg2.extensions.encodings[self.connection.encoding]
-            _logger.debug("query: %s", self._obj.mogrify(query, params).decode(encoding, 'replace'))
+            _logger.debug("query #%s-%s started: %s", self.sql_log_count + 1, cur_sql_counter, self._obj.mogrify(query, params).decode(encoding, 'replace'))
         now = time.time()
         try:
             params = params or None
@@ -311,6 +312,7 @@ class Cursor(BaseCursor):
         # advanced stats only if sql_log is enabled
         if self.sql_log:
             delay *= 1E6
+            _logger.debug("query #%s-%s ended: %s", self.sql_log_count, cur_sql_counter, timedelta(microseconds=delay))
 
             query_lower = self._obj.query.decode().lower()
             res_from = re_from.match(query_lower)
