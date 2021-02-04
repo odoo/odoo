@@ -326,8 +326,8 @@ class MailActivity(models.Model):
                 model.check_access_rights('read')
             except exceptions.AccessError:
                 raise exceptions.UserError(
-                    _('Assigned user %s has no access to the document and is not able to handle this activity.') %
-                    activity.user_id.display_name)
+                    _('Assigned user %s has no access to the document and is not able to handle this activity.',
+                      activity.user_id.display_name))
             else:
                 try:
                     target_user = activity.user_id
@@ -339,8 +339,8 @@ class MailActivity(models.Model):
                     model.browse(activity.res_id).check_access_rule('read')
                 except exceptions.AccessError:
                     raise exceptions.UserError(
-                        _('Assigned user %s has no access to the document and is not able to handle this activity.') %
-                        activity.user_id.display_name)
+                        _('Assigned user %s has no access to the document and is not able to handle this activity.',
+                          activity.user_id.display_name))
 
     # ------------------------------------------------------
     # ORM overrides
