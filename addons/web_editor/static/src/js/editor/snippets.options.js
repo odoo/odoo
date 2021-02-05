@@ -1400,7 +1400,7 @@ registry.many2one = SnippetOption.extend({
                     });
                 });
         } else {
-            self.$target.html($li.data('name'));
+            self.$target.text($li.data('name'));
         }
 
         this._clear();
