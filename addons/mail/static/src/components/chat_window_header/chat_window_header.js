@@ -29,6 +29,7 @@ class ChatWindowHeader extends Component {
                 thread,
                 threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
                 threadMassMailing: thread && thread.mass_mailing,
+                threadModel: thread && thread.model,
             };
         });
     }
