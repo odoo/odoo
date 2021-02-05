@@ -127,7 +127,7 @@ class Meeting(models.Model):
         return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
-            'count', 'rrule', 'recurrence_id', 'show_as'}
+            'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}
 
     @api.model
     def _get_display_time(self, start, stop, zduration, zallday):
@@ -217,15 +217,21 @@ class Meeting(models.Model):
     duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     description = fields.Text('Description')
     privacy = fields.Selection(
-        [('public', 'Everyone'),
-         ('private', 'Only me'),
+        [('public', 'Public'),
+         ('private', 'Private'),
          ('confidential', 'Only internal users')],
-        'Privacy', default='public', required=True)
+        'Privacy', default='public', required=True,
+        help="People to whom this event will be visible.")
     location = fields.Char('Location', tracking=True, help="Location of Event")
     videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
     show_as = fields.Selection(
         [('free', 'Available'),
-         ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
+         ('busy', 'Busy')], 'Show as', default='busy', required=True,
+        help="If the time is shown as 'busy', this event will be visible to other people with either the full \
+        information or simply 'busy' written depending on its privacy. Use this option to let other people know \
+        that you are unavailable during that period of time. \n If the time is shown as 'free', this event won't \
+        be visible to other people at all. Use this option to let other people know that you are available during \
+        that period of time.")
 
     # linked document
     # LUL TODO use fields.Reference ?
@@ -253,12 +259,13 @@ class Meeting(models.Model):
         string='Attendees', default=_default_partners)
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
-        string='Reminders', ondelete="restrict")
+        string='Reminders', ondelete="restrict",
+        help="Notifications sent to all attendees to remind of the meeting.")
     is_highlighted = fields.Boolean(
         compute='_compute_is_highlighted', string='Is the Event Highlighted')
 
     # RECURRENCE FIELD
-    recurrency = fields.Boolean('Recurrent', help="Recurrent Event")
+    recurrency = fields.Boolean('Recurrent')
     recurrence_id = fields.Many2one(
         'calendar.recurrence', string="Recurrence Rule", index=True)
     follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
@@ -555,6 +562,29 @@ class Meeting(models.Model):
             for meeting in self:
                 meeting.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         return True
+
+    def action_mass_mailing(self):
+        partners_ids = self.mapped('partner_ids')
+        if not partners_ids:
+            raise UserError(_("There are no attendees on these events"))
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        default_partners = partners_ids and partners_ids.ids
+        compose_ctx = dict(
+            default_use_template=False,
+            default_composition_mode='mass_mail',
+            default_partner_ids=default_partners,
+            default_subject=_("Event update")
+        )
+        return {
+            'name': _('Contact Attendees'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': compose_ctx,
+        }
 
     def _apply_recurrence_values(self, values, future=True):
         """Apply the new recurrence rules in `values`. Create a recurrence if it does not exist

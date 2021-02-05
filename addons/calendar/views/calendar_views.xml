@@ -6,7 +6,7 @@
         <field name="name">calendar.event.type</field>
         <field name="model">calendar.event.type</field>
         <field name="arch" type="xml">
-            <tree string="Meeting Types" editable="bottom">
+            <tree string="Meeting Types" sample="1" editable="bottom">
                 <field name="name"/>
             </tree>
         </field>
@@ -23,7 +23,7 @@
         <field name="name">calendar.alarm.tree</field>
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
-            <tree string="Calendar Alarm" editable="bottom">
+            <tree string="Calendar Alarm" sample="1" editable="bottom">
                 <field name="name" invisible="1"/>
                 <field name="alarm_type"/>
                 <field name="duration"/>
@@ -65,14 +65,25 @@
         <field name="name">calendar.event.tree</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" multi_edit="1">
-                <field name="name" string="Subject" readonly="1"/>
-                <field name="allday" invisible="True"/>
-                <field name="start" string="Start Date"/>
-                <field name="stop" string="End Date"/>
-                <field name="partner_ids" readonly="1"/>
-                <field name="location"/>
+            <tree string="Meetings" sample="1" multi_edit="1">
+                <header>
+                    <button name="action_mass_mailing" type="object"
+                            string="Send Mail"/>
+                </header>
+                <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="start" string="Start Date" readonly="1"/>
+                <field name="stop" string="End Date" readonly="1"/>
+                <field name="user_id" widget="many2one_avatar_user" attrs="{'readonly':[('recurrency','=',True)]}" optional="hide"/>
+                <field name="partner_ids" widget="many2many_tags" attrs="{'readonly':[('recurrency','=',True)]}" optional="show"/>
+                <field name="alarm_ids" widget="many2many_tags" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="categ_ids" widget="many2many_tags" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="recurrency" optional="hide" readonly="1"/>
+                <field name="privacy" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="show_as" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="location" optional="show" attrs="{'readonly':[('recurrency','=',True)]}"/>
                 <field name="duration" widget="float_time" readonly="1"/>
+                <field name="description" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="allday" invisible="1"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
         </field>
@@ -104,12 +115,16 @@
                         <h1>
                             <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
-                        <h2>
+                        <div class="d-flex">
                             <field name="partner_ids" widget="many2manyattendee"
                                 placeholder="Select attendees..."
                                 context="{'force_email':True}"
-                                class="oe_inline"/>
-                        </h2>
+                                class="oe_inline o_calendar_attendees"
+                            />
+                            <div name="send_buttons">
+                                <button name="action_mass_mailing" help="Send Email to attendees" type="object" string=" EMAIl" icon="fa-envelope"/>
+                            </div>
+                        </div>
                     </div>
                     <group>
                         <group>
@@ -125,20 +140,19 @@
                                     <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}" force_save="1"/>
 
                                     <field name="start" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
-                                    <field name="stop" invisible="1"/>
+                                    <field name="stop" string="Ending At" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
                                         <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                         <span> hours</span>
                                     </div>
+                                     <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
                                     <field name="allday" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}" force_save="1"/>
                                 </group>
                                 <group>
-                                    <field name="categ_ids" widget="many2many_tags" options="
-                                    {'no_create_edit': True}"/>
-                                    <field name="alarm_ids" widget="many2many_tags" />
+                                    <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                                     <field name="location" />
-                                    <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
+                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
 
                             </group>
@@ -200,12 +214,13 @@
                         </page>
 
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one">
-                            <button name="action_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
+                            <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="tree,kanban">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
                                     <field name="partner_id" />
-                                    <field name="state" />
                                     <field name="email" widget="email"/>
+                                    <field name="phone" widget="phone"/>
+                                    <field name="state" />
 
                                     <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="fa-asterisk" />
                                     <button name="do_accept" string="Accept" states="needsAction,tentative,declined" type="object" icon="fa-check text-success"/>
@@ -259,13 +274,17 @@
                 event_open_popup="true"
                 event_limit="5"
                 color="user_id">
+                <field name="location" attrs="{'invisible': [('location', '=', False)]}"/>
                 <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" />
-                <field name="attendee_status"/>
+                <field name="attendee_status" invisible="1"/>
                 <field name="user_id" string="Responsible" filters="1" widget="many2one_avatar_user"/>
                 <field name="partner_ids" widget="many2manyattendee" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
                 <field name="is_highlighted" invisible="1"/>
-                <field name="description"/>
+                <field name="description" attrs="{'invisible': [('description', '=', False)]}"/>
                 <field name="privacy"/>
+                <field name="show_as"/>
+                <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}"/>
+                <field name="categ_ids" attrs="{'invisible': [('categ_ids', '=', [])]}"/>
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>
@@ -280,12 +299,23 @@
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="partner_ids"/>
-                <field name="categ_ids"/>
                 <field name="user_id"/>
+                <field name="location"/>
                 <field name="show_as"/>
+                <field name="categ_ids"/>
+                <field name="description"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" domain="[('partner_ids.user_ids', 'in', [uid])]"/>
                 <separator/>
                 <filter string="Date" name="filter_start_date" date="start"/>
+                <separator/>
+                <filter string="Busy" name="busy" domain="[('show_as', '=', 'busy')]"/>
+                <filter string="Free" name="free" domain="[('show_as', '=', 'free')]"/>
+                <separator/>
+                <filter string="Public" name="public" domain="[('privacy', '=', 'public')]"/>
+                <filter string="Private" name="private" domain="[('privacy', '=', 'private')]"/>
+                <filter string="Only Internal Users" name="confidential" domain="[('privacy', '=', 'confidential')]"/>
+                <separator/>
+                <filter string="Recurrent" name="recurrent" domain="[('recurrency', '=', True)]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
@@ -304,7 +334,7 @@
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Schedule a new meeting
+            No meetings found. Let's schedule one!
           </p><p>
             The calendar is shared between employees and fully integrated with
             other applications such as the employee leaves or the business
@@ -356,6 +386,21 @@
         action="action_calendar_event"
         web_icon="calendar,static/description/icon.png"
         groups="base.group_user"/>
+
+    <menuitem
+        id="calendar_menu_config"
+        parent="calendar.mail_menu_calendar"
+        name="Configuration"
+        sequence="40"
+        action="calendar.action_calendar_event"
+        groups="base.group_no_one"/>
+
+    <menuitem
+        id="calendar_submenu_reminders"
+        parent="calendar_menu_config"
+        name="Reminders"
+        action="action_calendar_alarm"
+        groups="base.group_no_one"/>
 
     <menuitem
         id="menu_calendar_configuration"
