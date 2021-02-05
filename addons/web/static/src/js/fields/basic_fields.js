@@ -3034,34 +3034,42 @@ var FieldProgressBar = AbstractField.extend({
  * - title: title of the bar, displayed on top of the bar options
  * - step: Round the clicked value on the progressbar to the nearest multiple of step (default: 5, min: 1)
  * - percentage: boolean option : If set, the value should be presented as a percentage.
+ * - drag_and_drop : If set, the progress bar can be edited with the mouse.
+ * - edit_text : If set or absent, the text value can be edited.
  */
-var FieldBasicProgressBar = AbstractField.extend({
+var FieldBasicProgressBar = FieldInteger.extend({
     description: _lt("Basic Progress Bar"),
     template: "BasicProgressBar",
-    events: {
-        'click .o_progress': '_onClick',
-        'keydown .o_progress_keydown': '_onKeydown',
-        'mousedown .o_progress': '_onMousedown',
-        'mousemove .o_progress': '_onMousemove',
-        'mouseleave .o_progress': '_onMouseleave',
-    },
-    supportedFieldTypes: ['integer', 'float'],
+    events: _.extend({}, FieldInteger.prototype.events, {
+        'click .o_basic_progress': '_onClick',
+        'keydown .o_progress_keydown': '_onProgressKeydown',
+        'mousedown .o_basic_progress': '_onMousedown',
+        'mousemove .o_basic_progress': '_onMousemove',
+        'mouseleave .o_basic_progress': '_onMouseleave',
+    }),
+    supportedFieldTypes: ['integer'],
     init: function () {
         this._super.apply(this, arguments);
         this.canWrite = !this.nodeOptions.readonly && this.mode === 'edit';
+        this.enable_drag_and_drop = this.canWrite && (this.nodeOptions.drag_and_drop || false);
+        this.enable_edit_text = this.canWrite && (this.nodeOptions.edit_text !== undefined ? this.nodeOptions.edit_text : true);
         this.max_value = this.recordData[this.nodeOptions.max_field] || this.nodeOptions.max_num || 100;
-        this.percentage = this.nodeOptions.percentage || false;
+        this.percentage = this.nodeOptions.percentage !== undefined ? this.nodeOptions.percentage : this.max_value === 100;
         this.step = this.nodeOptions.step !== undefined ? this.nodeOptions.step : 5;
         this.title = _t(this.attrs.title || this.nodeOptions.title) || '';
         this.moused_down = false;
     },
-    _render: function () {
+    _renderEdit: function () {
         this._render_value();
-        if(!this.canWrite) {
-            this.$('.o_progressbar_thumb').addClass("o_progressbar_thumb_readonly");
-            this.$('.o_progressbar_complete').addClass("o_progressbar_complete_readonly");
+        
+        if (this.enable_edit_text) {        
+            this._prepareInput(this.$input).appendTo(this.$('.o_basic_progressbar_value'));
         }
-        return this._super();
+    },
+    _renderReadonly: function () {
+        this._render_value();
+        this.$('.o_progressbar_thumb').addClass("o_progressbar_thumb_readonly");
+        this.$('.o_progressbar_complete').addClass("o_progressbar_complete_readonly");
     },
     /**
      * Updates the widget with value
@@ -3072,6 +3080,9 @@ var FieldBasicProgressBar = AbstractField.extend({
         // _setValues accepts string and will parse it
         var formattedValue = this._formatValue(value);
         this._setValue(formattedValue);
+        if (this.enable_edit_text) {
+            this.$input.val(value);
+        }
     },
     /**
      * Get the value of the click on the progress bar
@@ -3081,8 +3092,8 @@ var FieldBasicProgressBar = AbstractField.extend({
     get_progress_value: function (event) {
         var $target = $(event.currentTarget);
         var numValue = Math.floor((event.pageX - $target.offset().left) / $target.outerWidth() * this.max_value);
-        if(this.step > 0){
-            numValue = Math.round(numValue/this.step)*this.step;
+        if (this.step > 0) {
+            numValue = Math.round(numValue / this.step) * this.step;
         }
         return numValue;
     },
@@ -3092,63 +3103,89 @@ var FieldBasicProgressBar = AbstractField.extend({
      * @private
      * @param {Number} v
      */
-    _render_value: function (v) {
+    _render_value: function (v, fromMouse) {
         var value = this.value;
-        var max_value = this.max_value;
+        var maxValue = this.max_value;
         if (!isNaN(v)) {
             value = v;
         }
         value = value || 0;
-        max_value = max_value || 0;
+        maxValue = maxValue || 0;
 
         var widthComplete;
-        if (value <= max_value) {
-            widthComplete = value/max_value * 100;
+        if (value <= maxValue) {
+            widthComplete = value / maxValue * 100;
         } else {
             widthComplete = 100;
         }
 
-        this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value)
+        this.$('.o_basic_progress').toggleClass('o_progress_overflow', value > maxValue)
             .attr('aria-valuemin', '0')
-            .attr('aria-valuemax', max_value)
+            .attr('aria-valuemax', maxValue)
             .attr('aria-valuenow', value);
         this.$('.o_progressbar_complete').css('width', widthComplete + '%');
 
-        if (this.percentage) {
-            this.$('.o_progressbar_value').text(utils.human_number(value) + "%");
-        } else {
-            this.$('.o_progressbar_value').text(utils.human_number(value) + " / " + utils.human_number(max_value));
+        if (!this.enable_edit_text) {
+            this.$('.o_basic_progressbar_value').text(this._formatValue(value));   
+        } else if (fromMouse) {
+            this.$input.val(value);
         }
+        
+        if (this.percentage) {
+            this.$('.o_progressbar_unit').text(" %");
+        } else {
+            this.$('.o_progressbar_unit').text(" / " + this._formatValue(maxValue));
+        }
+
+        if (!this.enable_drag_and_drop) {
+            this.$('.o_progressbar_thumb').addClass("o_progressbar_thumb_readonly");
+            this.$('.o_progressbar_complete').addClass("o_progressbar_complete_readonly");
+        }
+    },
+    /**
+     * Called when the user is typing text
+     * @see _notifyChanges
+     *
+     * @private
+     */
+    _onInput() {
+        this._super.apply(this, arguments);
+        this._render_value(this._getValue());
     },
     _onClick: function (event) {
         this.moused_down = false;
-        if (this.canWrite) {
+        if (this.enable_drag_and_drop) {
             this.on_update(this.get_progress_value(event));
             this.$('.o_progress_keydown').focus();
         }
     },
-    _onKeydown: function (event){
-        if (this.canWrite) {
+    _onProgressKeydown: function (event) {
+        if (this.enable_drag_and_drop) {
             var increment = (this.step > 0 ? this.step : 1);
-            if(event.keyCode === $.ui.keyCode.UP || event.keyCode === $.ui.keyCode.RIGHT){
-                this.on_update(this.value + increment);
+            var value = null;
+            if (event.keyCode === $.ui.keyCode.UP || event.keyCode === $.ui.keyCode.RIGHT) {
+                value = this.value + increment;
             } else if (event.keyCode === $.ui.keyCode.DOWN || event.keyCode === $.ui.keyCode.LEFT) {
-                this.on_update(this.value - increment);
+                value = this.value - increment;
+            }
+            if (value !== null) {
+                this.on_update(value);
+                this._render_value(value);
             }
         }
     },
-    _onMousedown:function(event) {
-        if (this.canWrite) {
+    _onMousedown: function (event) {
+        if (this.enable_drag_and_drop) {
             this.moused_down = true;
-            this._render_value(this.get_progress_value(event));
+            this._render_value(this.get_progress_value(event), true);
         }
     },
-    _onMousemove:function(event) {
+    _onMousemove: function (event) {
         if (this.moused_down) {
-            this._render_value(this.get_progress_value(event));
+            this._render_value(this.get_progress_value(event), true);
         }
     },
-    _onMouseleave:function(event) {
+    _onMouseleave: function (event) {
         if (this.moused_down) {
             // Update the value of the field before going out of the progress bar.
             this.on_update(this.get_progress_value(event));
