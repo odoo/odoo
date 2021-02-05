@@ -502,8 +502,9 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         final_lot_quantity = self._get_real_uom_qty(self.qty_production)
         rounding = self.product_uom_id.rounding
-        # Get the max quantity possible for current lot in other workorders
-        for workorder in (self.production_id.workorder_ids - self):
+        # Get the max quantity possible for current lot in other workorders, avoid
+        # considering already completed steps up to the current one
+        for workorder in (self.production_id.workorder_ids.filtered(lambda wo: not (wo.id < self.id and wo.state in ('done','cancel'))) - self):
             # We add the remaining quantity to the produced quantity for the
             # current lot. For 5 finished products: if in the first wo it
             # creates 4 lot A and 1 lot B and in the second it create 3 lot A
@@ -518,12 +519,6 @@ class MrpWorkorder(models.Model):
                 final_lot_quantity = quantity
             elif float_compare(quantity_remaining, final_lot_quantity, precision_rounding=rounding) < 0:
                 final_lot_quantity = quantity_remaining
-
-        if not final_lot_quantity and self.production_id.workorder_ids and not self.production_id.workorder_ids.finished_workorder_line_ids and self.production_id.move_finished_ids.filtered(lambda m: m.state == 'done'):
-            # Posted Inventory before workorders completion
-            # this may result in missing workorder lines and blocked MO because
-            # final_lot_quantity is set to 0 while there are still workorders left to finish
-            final_lot_quantity = self.qty_remaining
 
         # final lot line for this lot on this workorder.
         current_lot_lines = self.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.finished_lot_id)
