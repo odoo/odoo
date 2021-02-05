@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="ir_exports_form_view">
+        <field name="name">ir.exports.form</field>
+        <field name="model">ir.exports</field>
+        <field name="arch" type="xml">
+            <form string="Exports">
+                <group>
+                    <field name="id" invisible="1" />
+                    <field name="name" />
+                    <field name="resource" />
+                    <field name="export_fields">
+                        <form string="Export Fields">
+                            <group>
+                                <field name="name" />
+                            </group>
+                        </form>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="_logs_tree_view" model="ir.ui.view">
+        <field name="name">logs.tree.view</field>
+        <field name="model">openapi.log</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="create_date" />
+                <field name="create_uid" />
+                <field name="request" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id='openapi_log_model_view_form'>
+        <field name="name">openapi.log.form</field>
+        <field name="model">openapi.log</field>
+        <field name="arch" type="xml">
+            <form string="Log">
+                <group>
+                    <field name="namespace_id" readonly="1" />
+                    <field name="create_uid" readonly="1" />
+                    <field name="create_date" readonly="1" />
+                    <field name="request" readonly="1" />
+                    <field name="request_data" readonly="1" />
+                    <field name="response_data" readonly="1" />
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="access_form_view">
+        <field name="name">openapi.access.form</field>
+        <field name="model">openapi.access</field>
+        <field name="arch" type="xml">
+            <form string="Access">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <div class="oe_title">
+                        <group>
+                            <field name="id" invisible="1" />
+                            <field name="model" invisible="1" />
+                            <field name="model_id" options="{'no_create': True}" />
+                            <field name="active" />
+                            <field name="api_create" />
+                            <field name="api_read" />
+                            <field name="api_update" />
+                            <field name="api_delete" />
+                            <field name="api_public_methods" />
+                            <field
+                                name="public_methods"
+                                attrs="{'invisible': [('api_public_methods', '=', False)]}"
+                            />
+                            <field name="private_methods" />
+                            <field
+                                name="read_one_id"
+                                attrs="{'readonly': [('model_id', '=', False)]}"
+                                context="{'default_resource': model, 'default_name': context.get('parent_name', '&lt;parent_namespace_name&gt;') + ' / ' + model + ' / read_one'}"
+                            >
+                                <form string="Read One Fields">
+                                    <group>
+                                        <field name="name" />
+                                        <field name="resource" />
+                                        <field name="export_fields">
+                                            <form string="Export Fields">
+                                                <group>
+                                                    <field name="name" />
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </form>
+                            </field>
+                            <field
+                                name="read_many_id"
+                                attrs="{'readonly': [('model_id', '=', False)], 'invisible': [('api_read', '=', False)]}"
+                                context="{'default_resource': model, 'default_name': context.get('parent_name', '&lt;parent_namespace_name&gt;') + ' / ' + model + ' / read_many'}"
+                            >
+                                <form string="Read Many Fields">
+                                    <group>
+                                        <field name="name" />
+                                        <field name="resource" />
+                                        <field name="export_fields">
+                                            <form string="Export Fields">
+                                                <group>
+                                                    <field name="name" />
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                    </div>
+                    <notebook attrs="{'invisible': [('api_create', '=', False)]}">
+                        <page string="Creation Context Presets">
+                            <field
+                                name="create_context_ids"
+                                attrs="{'readonly': [('model_id', '=', False)]}"
+                                context="{'default_model_id': model_id}"
+                            >
+                                <form string="Creation Context Presets">
+                                    <group>
+                                        <field name="name" />
+                                        <field name="description" />
+                                        <field name="context" />
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="namespace_form_view">
+        <field name="name">openapi.namespace.form</field>
+        <field name="model">openapi.namespace</field>
+        <field name="arch" type="xml">
+            <form string="Intergration">
+                <header position="inside">
+                    <button
+                        name="reset_token"
+                        string="Reset Token"
+                        confirm="Do you want to proceed reset token?"
+                        type="object"
+                        attrs="{'invisible': [('id', '=', False)]}"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_show_logs"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-list-ul"
+                        >
+                            <field string="Logs" name="log_count" widget="statinfo" />
+                        </button>
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" class="oe_inline" />
+                            <field name="active" invisible="1" />
+                        </h1>
+                        <label for="description" class="oe_edit_only" />
+                        <h3>
+                            <field name="description" />
+                        </h3>
+                        <field name="id" invisible="1" />
+                        <group>
+                            <field name="create_uid" readonly="1" />
+                            <field name="log_request" />
+                            <field name="log_response" />
+                            <field name="last_log_date" readonly="1" />
+                            <field name="token" />
+                            <field name="spec_url" widget="url" readonly="1" />
+                        </group>
+                    </div>
+                    <notebook>
+                        <page string="Accessable Models">
+                            <field
+                                name="access_ids"
+                                mode="tree"
+                                context="{'parent_name': name, 'active_test': False}"
+                            >
+                                <tree>
+                                    <field name="active" />
+                                    <field name="model_id" />
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Allowed Users">
+                            <field name="user_ids">
+                                <tree>
+                                    <field name="name" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id='openapi_namespace_model_view_tree' model='ir.ui.view'>
+        <field name="name">openapi.namespace.tree</field>
+        <field name="model">openapi.namespace</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record id='openapi_access_model_view_tree' model='ir.ui.view'>
+        <field name="name">openapi.access.tree</field>
+        <field name="model">openapi.access</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="namespace_id" />
+                <field name="model" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="namespace_list_action">
+        <field name="name">Intergrations</field>
+        <field name="res_model">openapi.namespace</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help">Create and manage the namespaces.</field>
+    </record>
+    <record model="ir.actions.act_window" id="ir_model_accesses_list_action">
+        <field name="name">Accesses</field>
+        <field name="res_model">openapi.access</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('model_id', '=', active_id)]</field>
+        <field name="context">{'default_model_id': active_id}</field>
+    </record>
+    <menuitem id="main_openapi_menu" name="OpenAPI" />
+    <menuitem id="openapi_menu" name="OpenAPI" parent="main_openapi_menu" />
+    <menuitem
+        id="namespaces_menu"
+        name="Intergrations"
+        parent="openapi_menu"
+        action="namespace_list_action"
+    />
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record id="view_partner_ru_form" model="ir.ui.view">
+        <field name="name">res.partner.ru.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="inn" attrs="{'invisible': [('is_company','=', False)]}"/>
+                <field name="kpp" attrs="{'invisible': [('is_company','=', False)]}"/>
+                <field name="okpo" attrs="{'invisible': [('is_company','=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    </data>
+</openerp>

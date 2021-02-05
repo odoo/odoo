@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_act">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <!-- Multicompany -->
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <t t-set="context" t-value="o._context"></t>
+
+            <div class="page">
+
+<STYLE TYPE="text/css">
+body { background: #ffffff; margin: 0; font-family: Arial; font-size: 8pt; font-style: normal; }
+tr.R0{ height: 15px; }
+tr.R0 td.R11C1{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: medium; border-left: #000000 2px solid; border-top: #000000 2px solid; }
+tr.R0 td.R11C29{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 2px solid; border-right: #000000 2px solid; }
+tr.R0 td.R11C3{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 2px solid; }
+tr.R0 td.R14C1{ text-align: center; vertical-align: top; border-left: #000000 2px solid; border-top: #000000 1px solid; }
+tr.R0 td.R14C20{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; }
+tr.R0 td.R14C23{ vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; }
+tr.R0 td.R14C29{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-right: #000000 2px solid; }
+tr.R0 td.R14C3{ vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; }
+tr.R0 td.R31C1{ font-family: Arial; font-size: 9pt; font-style: normal; }
+tr.R17{ height: 20px; }
+tr.R2{ height: 1px; }
+tr.R3{ height: 28px; }
+tr.R3 td.R3C1{ font-family: Arial; font-size: 14pt; font-style: normal; font-weight: bold; vertical-align: medium; border-bottom: #000000 2px solid; }
+tr.R32{ height: 19px; }
+tr.R37{ height: 25px; }
+tr.R37 td.R37C1{ border-bottom: #000000 1px solid; }
+tr.R37 td.R37C17{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; }
+tr.R37 td.R37C4{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: right; border-bottom: #000000 1px solid; }
+tr.R37 td.R37C5, tr.R37 td.R37C5I, tr.R37 td.R37C5S{ font-family: Arial; font-size: 7pt; font-style: normal; text-align: right; border-bottom: #000000 1px solid; }
+tr.R37 td.R37C5I,tr.R37 td.R37C5S { overflow: visible; }
+tr.R37 td.R37C5I span,tr.R37 td.R37C5S span { position: relative; }
+tr.R37 td.R37C5I span img { position: absolute; width: 100px; top: -30px; }
+tr.R37 td.R37C5S span img { position: absolute; width: 140px; top: 0px; left: -60px; }
+tr.R5{ height: 17px; }
+tr.R5 td.R22C28{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: right; vertical-align: top; }
+tr.R5 td.R35C1{ font-family: Arial; font-size: 10pt; font-style: normal; font-weight: bold; }
+tr.R5 td.R35C17{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; }
+tr.R5 td.R35C20{ font-family: Arial; font-size: 10pt; font-style: normal; font-weight: bold; border-bottom: #ffffff 1px none; }
+tr.R5 td.R36C1{ }
+tr.R5 td.R36C20{ border-bottom: #ffffff 1px none; }
+tr.R5 td.R38C1{ text-align: center; }
+tr.R5 td.R5C1{ font-family: Arial; font-size: 9pt; font-style: normal; vertical-align: medium; }
+tr.R5 td.R5C5{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; vertical-align: top; }
+tr.R6{ height: 9px; }
+tr.R6 td.R21C1{ border-top: #000000 2px solid; }
+tr.R6 td.R33C1{ border-bottom: #000000 2px solid; }
+table {table-layout: fixed; padding: 0px; padding-left: 2px; vertical-align:bottom; border-collapse:collapse;width: 100%; font-family: Arial; font-size: 8pt; font-style: normal; }
+td { padding: 0px; padding-left: 2px; overflow:hidden; }
+.cu_wspace { white-space:nowrap; }
+.cu_space1 { width:100%;height:1px;overflow:hidden; }
+.cu_space28 { width:100%;height:28px;overflow:hidden; }
+.cu_space9 { width:100%;height:9px;overflow:hidden; }
+.cu_space29 { width:100%;height:29px;overflow:hidden; }
+.cu_space34 { width:100%;height:34px;overflow:hidden; }
+.cu_space20 { width:100%;height:20px;overflow:hidden; }
+.cu_space19 { width:100%;height:19px;overflow:hidden; }
+.cu_space33 { width:100%;height:33px;overflow:hidden; }
+.cu_space25 { width:100%;height:25px;overflow:hidden; }
+</STYLE>
+
+<!-- start header -->
+<TABLE CELLSPACING="0">
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="25"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<COL WIDTH="21"/>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R2">
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space1"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD><DIV class="cu_space28"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R3C1" COLSPAN="31"><DIV class="cu_space28"><SPAN class="cu_wspace">Акт № <t t-esc="helper.numer(o.name)"/> от <span t-field="o.invoice_date"/></SPAN></DIV></TD>
+<TD><DIV class="cu_space28"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space28"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space28"></DIV></TD>
+</TR>
+<TR>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R5">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R5C1" COLSPAN="4"><SPAN class="cu_wspace">Исполнитель:</SPAN></TD>
+<TD CLASS="R5C5" COLSPAN="28"><t t-esc="helper.full_representation(company.partner_id)"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R6">
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R5">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R5C1" COLSPAN="4"><SPAN class="cu_wspace">Заказчик:</SPAN></TD>
+<TD CLASS="R5C5" COLSPAN="28"><t t-esc="helper.full_representation(o.partner_id)"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R6">
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<!-- end header -->
+<t t-if="True">
+<!-- TO DO: flag of discount -->
+    <!-- start items header -->
+    <TR>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+
+    <TR CLASS="R0">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R11C1" COLSPAN="2" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">№</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="17" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Наименование<![CDATA[&nbsp;]]>работ,<![CDATA[&nbsp;]]>услуг</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="3" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Кол-во</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="2" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Ед.</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="4" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Цена</SPAN></DIV></TD>
+    <TD CLASS="R11C29" COLSPAN="4" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Сумма</SPAN></DIV></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <!-- end items header -->
+    <!-- start items -->
+    <TR CLASS="R0">
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+    <tr  CLASS="R0" t-foreach="o.invoice_line_ids" t-as="line">
+        <TD><SPAN></SPAN></TD>
+        <TD CLASS="R14C1" COLSPAN="2"><SPAN class="cu_wspace"><t t-esc="line_index+1"/></SPAN></TD>
+        <TD CLASS="R14C3" COLSPAN="17"><t t-esc="line.product_id.name or ''"/></TD>
+        <TD CLASS="R14C20" COLSPAN="3"><SPAN class="cu_wspace"><t t-esc="line.quantity or ''"/></SPAN></TD>
+        <TD CLASS="R14C23" COLSPAN="2"><SPAN class="cu_wspace"><t t-esc="line.product_uom_id.name or ''"/></SPAN></TD>
+        <TD CLASS="R14C20" COLSPAN="4"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(line.price_subtotal/line.quantity)).replace('.',',') or ''"/></SPAN></TD>
+        <TD CLASS="R14C29" COLSPAN="4"><SPAN class="cu_wspace"><t t-esc="line.price_subtotal or ''"/></SPAN></TD>
+        <TD><SPAN></SPAN></TD>
+        <TD></TD>
+    </tr>
+    <!-- end items -->
+</t><t t-if="False">
+<!-- TO DO: flag of discount -->
+    <!-- start items header -->
+    <TR>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+    <TR CLASS="R0">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R11C1" COLSPAN="2" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">№</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="11" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">Наименование<![CDATA[&nbsp;]]>работ,<![CDATA[&nbsp;]]>услуг</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="3" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">Кол-во</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="2" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">Ед.</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="3" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">Цена</SPAN></DIV></TD>
+    <TD CLASS="R11C29" COLSPAN="4" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">Сумма<BR/>без<![CDATA[&nbsp;]]>скидки</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="3" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">Скидка</SPAN></DIV></TD>
+    <TD CLASS="R11C29" COLSPAN="4" ROWSPAN="2"><DIV class="cu_space34"><SPAN class="cu_wspace">Сумма</SPAN></DIV></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <!-- end items header -->
+    <!-- start items -->
+    <TR CLASS="R17">
+    <TD><DIV class="cu_space20"><SPAN></SPAN></DIV></TD>
+    <TD><DIV class="cu_space20"><SPAN></SPAN></DIV></TD>
+    <TD><DIV class="cu_space20"><![CDATA[&nbsp;]]></DIV></TD>
+    </TR>
+    <tr  CLASS="R0" t-foreach="o.invoice_line_ids" t-as="line">
+        <TD><SPAN></SPAN></TD>
+        <TD CLASS="R14C1" COLSPAN="2"><SPAN class="cu_wspace"><t t-esc="line_index+1"/></SPAN></TD>
+        <TD CLASS="R14C3" COLSPAN="11"><t t-esc="line.name or ''"/></TD>
+        <TD CLASS="R14C20" COLSPAN="3"><SPAN class="cu_wspace"><t t-esc="line.quantity or ''"/></SPAN></TD>
+        <TD CLASS="R14C23" COLSPAN="2"><SPAN class="cu_wspace"><t t-esc="line.product_uom_id.name or ''"/></SPAN></TD>
+        <TD CLASS="R14C20" COLSPAN="3"><SPAN class="cu_wspace"><t t-esc="line.price_unit or ''"/></SPAN></TD>
+        <TD CLASS="R14C29" COLSPAN="4"><SPAN class="cu_wspace"><!-- TO DO: СуммаБезСкидки --></SPAN></TD>
+        <TD CLASS="R14C20" COLSPAN="3"><SPAN class="cu_wspace"><!-- TO DO: Скидка --></SPAN></TD>
+        <TD CLASS="R14C29" COLSPAN="4"><SPAN class="cu_wspace"><t t-esc="line.price_subtotal or ''"/></SPAN></TD>
+        <TD><SPAN></SPAN></TD>
+        <TD></TD>
+    </tr>
+    <!-- end items -->
+</t>
+<!-- start total -->
+<TR CLASS="R6">
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR CLASS="R5">
+<TD CLASS="R22C28" COLSPAN="29"><SPAN class="cu_wspace">Итого:</SPAN></TD>
+<TD CLASS="R22C28" COLSPAN="4"><SPAN class="cu_wspace"><t t-esc="o.amount_untaxed or '0,00'"/></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R5">
+<TD CLASS="R22C28" COLSPAN="29"><SPAN class="cu_wspace">Сумма НДС: <!-- TO DO: [НДС]: --></SPAN></TD>
+<TD CLASS="R22C28" COLSPAN="4"><SPAN class="cu_wspace"><t t-esc="o.amount_tax or '0,00'"/></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R6">
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD COLSPAN="32"><SPAN class="cu_wspace">Всего оказано услуг <t t-esc="o.invoice_line_ids and len(o.invoice_line_ids) or 0"/>, на сумму <t t-esc="o.amount_total or '0,00'"/> руб.</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R5C5" COLSPAN="31"><t t-esc="helper.rubles(o.amount_total).capitalize()"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<!-- end total -->
+<!-- start footer -->
+<TR>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R31C1" COLSPAN="32" ROWSPAN="2"><DIV class="cu_space33">Вышеперечисленные услуги выполнены полностью и в срок. Заказчик претензий по объему, качеству и срокам оказания услуг не имеет.</DIV></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R32">
+<TD><DIV class="cu_space19"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space19"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space19"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR CLASS="R6">
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C1"><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space9"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><![CDATA[&nbsp;]]></TD>
+</TR>
+<TR CLASS="R5">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R35C1" COLSPAN="16"><SPAN class="cu_wspace">ИСПОЛНИТЕЛЬ</SPAN></TD>
+<TD CLASS="R35C17"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R35C20" COLSPAN="13"><SPAN class="cu_wspace">ЗАКАЗЧИК</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C1" COLSPAN="16">Директор <t t-esc="company.name or ''"/><!-- TO DO: ДолжностьИНазваниеОрганизации --></TD>
+<TD CLASS="R35C17"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R37">
+<TD><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5S"><SPAN><t t-raw="company.print_stamp and (company.print_anywhere or context.get('mark_invoice_as_sent', False)) and helper.img(company.stamp) or ''"/></SPAN></TD>
+<TD CLASS="R37C5I"><SPAN><t t-raw="company.print_facsimile and (company.print_anywhere or context.get('mark_invoice_as_sent', False)) and helper.img(company.chief_id.facsimile) or ''"/></SPAN></TD>
+<TD CLASS="R37C4"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C5"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C17"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R37C1"><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space25"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space25"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR CLASS="R5">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R38C1" COLSPAN="16"><t t-esc="helper.initials(company.chief_id.name)"/></TD>
+<TD CLASS="R35C17"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD CLASS="R36C20"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<!-- end footer -->
+<t t-if="False">
+<!-- TO DO: flag of article -->
+    <!-- start item with article -->
+    <TR>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+    <TR CLASS="R0">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R11C1" COLSPAN="2" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">№</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="3" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">ИмяКодАртикул</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="14" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Наименование<![CDATA[&nbsp;]]>работ,<![CDATA[&nbsp;]]>услуг</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="3" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Кол-во</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="2" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Ед.</SPAN></DIV></TD>
+    <TD CLASS="R11C3" COLSPAN="4" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Цена</SPAN></DIV></TD>
+    <TD CLASS="R11C29" COLSPAN="4" ROWSPAN="2"><DIV class="cu_space29"><SPAN class="cu_wspace">Сумма</SPAN></DIV></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <TR CLASS="R0">
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+    <TR CLASS="R0">
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+    <TR CLASS="R0">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R14C1" COLSPAN="2"><SPAN class="cu_wspace">НомерСтроки</SPAN></TD>
+    <TD CLASS="R14C3" COLSPAN="3">КодАртикул</TD>
+    <TD CLASS="R14C3" COLSPAN="14">Товар</TD>
+    <TD CLASS="R14C20" COLSPAN="3"><SPAN class="cu_wspace">Количество</SPAN></TD>
+    <TD CLASS="R14C23" COLSPAN="2"><SPAN class="cu_wspace">ЕдиницаИзмерения</SPAN></TD>
+    <TD CLASS="R14C20" COLSPAN="4"><SPAN class="cu_wspace">Цена</SPAN></TD>
+    <TD CLASS="R14C29" COLSPAN="4"><SPAN class="cu_wspace">Сумма</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <!-- end item with article -->
+</t>
+</TABLE>
+
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

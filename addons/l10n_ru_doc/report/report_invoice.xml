@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_invoice">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <!-- Multicompany -->
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <t t-set="context" t-value="o._context"></t>
+
+            <div class="article o_report_layout_standard"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                <div class="page">
+
+<STYLE TYPE="text/css">
+body { background: #ffffff; margin: 0; font-family: Arial; font-size: 8pt; font-style: normal; }
+tr.R0{ font-family: Arial; font-size: 8pt; font-style: normal; height: 31px; }
+tr.R0 td.R0C14{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: right; overflow: hidden;}
+tr.R1{ font-family: Arial; font-size: 8pt; font-style: normal; height: 25px; }
+tr.R1 td.R1C1{ font-family: Arial; font-size: 14pt; font-style: normal; font-weight: bold; vertical-align: top; overflow: hidden;}
+tr.R1 td.R2C1{ font-family: Arial; font-size: 14pt; font-style: normal; font-weight: bold; overflow: hidden;}
+tr.R12{ height: 15px; }
+tr.R12 td.R12C1{ vertical-align: top; overflow: hidden;}
+tr.R12 td.R14C1{ vertical-align: top; }
+tr.R12 td.R16C14{ text-align: right; }
+tr.R18{ font-family: Arial; font-size: 8pt; font-style: normal; height: 43px; }
+tr.R18 td.R18C1{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R18 td.R18C10{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R18 td.R18C4{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R18 td.R19C11{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R27{ font-family: Arial; font-size: 8pt; font-style: normal; height: 29px; }
+tr.R27 td.R27C1{ overflow: hidden;}
+tr.R27 td.R27C2, tr.R27 td.R27C2I{ overflow: hidden;border-bottom: #ffffff 1px none; }
+
+tr.R27 td.R27C2I{ overflow: visible; }
+tr.R27 td.R27C2I span{ position: relative; }
+tr.R27 td.R27C2I span img { position: absolute; width: 100px; top: -30px; }
+
+tr.R27 td.R27C5{ border-bottom: #ffffff 1px none; }
+tr.R27 td.R30C8{ text-align: center; overflow: hidden;border-bottom: #ffffff 1px none; }
+tr.R3{ font-family: Arial; font-size: 8pt; font-style: normal; height: 15px; }
+tr.R3 td.R20C1{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R3 td.R20C10{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R22C1{ vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R22C14{ font-family: Arial; font-size: 8pt; font-style: normal; vertical-align: top; }
+tr.R3 td.R22C2{ vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R22C4{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R22C7{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R24C1{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; border-left: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R3 td.R24C2{ border-bottom: #000000 1px solid; }
+tr.R3 td.R24C6{ text-align: right; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R24C7{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; text-align: center; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R3 td.R24C8{ text-align: center; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R28C11{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; }
+tr.R3 td.R28C2{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; overflow: hidden;border-top: #000000 1px solid; }
+tr.R3 td.R29C1{ vertical-align: top; }
+tr.R3 td.R3C1{ }
+tr.R31{ font-family: Arial; font-size: 8pt; font-style: normal; height: 21px; }
+tr.R31 td.R31C2{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; overflow: hidden;border-top: #000000 1px solid; }
+tr.R31 td.R31C8{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; overflow: hidden;border-top: #000000 1px solid; }
+table {table-layout: fixed; padding: 0px; padding-left: 2px; vertical-align:bottom; border-collapse:collapse;width: 100%; font-family: Arial; font-size: 8pt; font-style: normal; }
+td { padding: 0px; padding-left: 2px; overflow:hidden; }
+
+.cu_wspace { white-space:nowrap; }
+.cu_space43 { width:100%;height:43px;overflow:hidden; }
+.cu_space85 { width:100%;height:85px;overflow:hidden; }
+</STYLE>
+
+<TABLE CELLSPACING="0">
+<COL WIDTH="7"/>
+<COL WIDTH="202"/>
+<COL WIDTH="52"/>
+<COL WIDTH="60"/>
+<COL WIDTH="8"/>
+<COL WIDTH="63"/>
+<COL WIDTH="97"/>
+<COL WIDTH="57"/>
+<COL WIDTH="62"/>
+<COL WIDTH="63"/>
+<COL WIDTH="44"/>
+<COL WIDTH="14"/>
+<COL WIDTH="63"/>
+<COL WIDTH="90"/>
+<COL WIDTH="296"/>
+<COL WIDTH="60"/>
+<COL WIDTH="5"/>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R0C14"><SPAN class="cu_wspace">Приложение<![CDATA[&nbsp;]]>№<![CDATA[&nbsp;]]>1<BR/>к<![CDATA[&nbsp;]]>постановлению<![CDATA[&nbsp;]]>Правительства<![CDATA[&nbsp;]]>Российской<![CDATA[&nbsp;]]>Федерации<BR/>от<![CDATA[&nbsp;]]>26<![CDATA[&nbsp;]]>декабря<![CDATA[&nbsp;]]>2011<![CDATA[&nbsp;]]>г.<![CDATA[&nbsp;]]>№<![CDATA[&nbsp;]]>1137</SPAN></TD>
+<TD COLSPAN="2"><SPAN></SPAN></TD>
+</TR>
+<TR CLASS="R1">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R1C1" COLSPAN="14"><SPAN class="cu_wspace">Счет-фактура № <t t-esc="helper.numer(o.name)"/> от <span t-field="o.invoice_date"/></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R1">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R2C1" COLSPAN="14"><SPAN class="cu_wspace"><!-- TO DO: НомерИсправления --></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">Продавец: <t t-esc="company.name or ''"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">Адрес: <t t-esc="helper.address(company)"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">ИНН/КПП продавца: <t t-esc="company.inn or ''"/><t t-esc="company.kpp and '/'+company.kpp or ''"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">Грузоотправитель и его адрес: он же <!-- TO DO: ПредставлениеГрузоотправителя --></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">Грузополучатель и его адрес: <t t-esc="helper.representation(o.partner_id)"/><!-- TO DO: ПредставлениеГрузополучателя --></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">К платежно-расчетному документу № от <!-- TO DO: ПоДокументу --></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">Покупатель: <t t-esc="o.partner_id.name or ''"/><!-- TO DO: ПредставлениеПокупателя --></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">Адрес: <t t-esc="helper.address(o.partner_id)"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="14">ИНН/КПП покупателя: <t t-esc="o.partner_id.inn or ''"/><t t-esc="o.partner_id.kpp and '/'+o.partner_id.kpp or ''"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R12">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R12C1" COLSPAN="14"><SPAN class="cu_wspace">Валюта: наименование, код Российский рубль, 643</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR  t-if="False" CLASS="R12">
+<!-- TO DO: flag of commissioner -->
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R14C1" COLSPAN="14"><!-- TO DO: ПредставлениеКомиссионера --></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+</TR>
+<TR t-if="False" CLASS="R12">
+<!-- TO DO: flag of pagination -->
+    <TD><SPAN></SPAN></TD>
+    <TD COLSPAN="13"><SPAN class="cu_wspace">Номер</SPAN></TD>
+    <TD CLASS="R16C14"><SPAN class="cu_wspace">Лист<![CDATA[&nbsp;]]>[НомерЛиста]</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+</TR>
+</TABLE>
+<!-- end header -->
+<!-- start items header -->
+<TABLE CELLSPACING="0">
+<COL WIDTH="7"/>
+<COL WIDTH="239"/>
+<COL WIDTH="47"/>
+<COL WIDTH="86"/>
+<COL WIDTH="68"/>
+<COL WIDTH="78"/>
+<COL WIDTH="97"/>
+<COL WIDTH="62"/>
+<COL WIDTH="90"/>
+<COL WIDTH="92"/>
+<COL WIDTH="104"/>
+<COL WIDTH="60"/>
+<COL WIDTH="80"/>
+<COL WIDTH="128"/>
+<COL WIDTH="5"/>
+<TR CLASS="R18">
+<TD><DIV class="cu_space43"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R18C1" ROWSPAN="2"><DIV class="cu_space85">Наименование товара (описание выполненных работ, оказанных услуг), имущественного права</DIV></TD>
+<TD CLASS="R18C1" COLSPAN="2"><DIV class="cu_space43">Единица<BR/>измерения</DIV></TD>
+<TD CLASS="R18C4" ROWSPAN="2"><DIV class="cu_space85"><SPAN class="cu_wspace">Коли-<BR/>чество<![CDATA[&nbsp;]]><BR/>(объем)</SPAN></DIV></TD>
+<TD CLASS="R18C1" ROWSPAN="2"><DIV class="cu_space85">Цена (тариф) за единицу измерения</DIV></TD>
+<TD CLASS="R18C1" ROWSPAN="2"><DIV class="cu_space85">Стоимость товаров (работ, услуг), имущественных прав без налога - всего</DIV></TD>
+<TD CLASS="R18C4" ROWSPAN="2"><DIV class="cu_space85"><SPAN class="cu_wspace">В<![CDATA[&nbsp;]]>том<BR/>числе<BR/>сумма<![CDATA[&nbsp;]]><BR/>акциза</SPAN></DIV></TD>
+<TD CLASS="R18C1" ROWSPAN="2"><DIV class="cu_space85">Налоговая ставка</DIV></TD>
+<TD CLASS="R18C1" ROWSPAN="2"><DIV class="cu_space85">Сумма налога, предъявляемая покупателю</DIV></TD>
+<TD CLASS="R18C10" ROWSPAN="2"><DIV class="cu_space85">Стоимость товаров (работ, услуг), имущественных прав с налогом - всего</DIV></TD>
+<TD CLASS="R18C10" COLSPAN="2"><DIV class="cu_space43">Страна<BR/>происхождения товара</DIV></TD>
+<TD CLASS="R18C10" ROWSPAN="2"><DIV class="cu_space85">Номер<BR/>таможенной<BR/>декларации</DIV></TD>
+<TD><DIV class="cu_space43"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space43"></DIV></TD>
+</TR>
+<TR CLASS="R18">
+<TD><DIV class="cu_space43"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R18C4"><DIV class="cu_space43"><SPAN class="cu_wspace">код</SPAN></DIV></TD>
+<TD CLASS="R18C1"><DIV class="cu_space43">условное обозначение (национальное)</DIV></TD>
+<TD CLASS="R19C11"><DIV class="cu_space43">цифровой код</DIV></TD>
+<TD CLASS="R19C11"><DIV class="cu_space43">краткое наименование</DIV></TD>
+<TD COLSPAN="2"><DIV class="cu_space43"><SPAN></SPAN></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">1</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">2</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">2а</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">3</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">4</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">5</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">6</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">7</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">8</SPAN></TD>
+<TD CLASS="R20C10"><SPAN class="cu_wspace">9</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">10</SPAN></TD>
+<TD CLASS="R20C1"><SPAN class="cu_wspace">10а</SPAN></TD>
+<TD CLASS="R20C10"><SPAN class="cu_wspace">11</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<!-- end items header -->
+<!-- start items -->
+<tr  CLASS="R3" t-foreach="o.invoice_line_ids" t-as="line">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R22C1"><t t-esc="line.name or ''"/></TD>
+    <TD CLASS="R22C2"><SPAN class="cu_wspace"><!-- TO DO: ЕдиницаИзмеренияКод --></SPAN></TD>
+    <TD CLASS="R22C2"><SPAN class="cu_wspace"><t t-esc="line.product_uom_id.name or ''"/></SPAN></TD>
+    <TD CLASS="R22C4"><SPAN class="cu_wspace"><t t-esc="line.quantity or ''"/></SPAN></TD>
+    <TD CLASS="R22C4"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(line.price_subtotal/line.quantity)).replace('.',',') or ''"/></SPAN></TD>
+    <TD CLASS="R22C4"><SPAN class="cu_wspace"><t t-esc="line.price_subtotal or ''"/></SPAN></TD>
+    <TD CLASS="R22C7">без акциза <!-- TO DO: Акциз --></TD>
+    <TD CLASS="R22C2"><SPAN class="cu_wspace">18% <!-- TO DO: СтавкаНДС --></SPAN></TD>
+    <TD CLASS="R22C4"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(line.price_unit*line.quantity - line.price_subtotal)).replace('.',',') or ''"/></SPAN></TD>
+    <TD CLASS="R22C4"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(line.price_unit*line.quantity)).replace('.',',') or ''"/></SPAN></TD>
+    <TD CLASS="R22C1">-- <!-- TO DO: СтранаПроисхожденияКод --></TD>
+    <TD CLASS="R22C1">-- <!-- TO DO: ПредставлениеСтраны --></TD>
+    <TD CLASS="R22C1">-- <!-- TO DO: ПредставлениеГТД --></TD>
+    <TD CLASS="R22C14"><SPAN></SPAN></TD>
+    <TD></TD>
+</tr>
+<!-- end items -->
+<!-- start total -->
+<TR CLASS="R3">
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R24C1" COLSPAN="5"><SPAN class="cu_wspace">Всего<![CDATA[&nbsp;]]>к<![CDATA[&nbsp;]]>оплате</SPAN></TD>
+<TD CLASS="R24C6"><SPAN class="cu_wspace"><t t-esc="o.amount_untaxed or ''"/></SPAN></TD>
+<TD CLASS="R24C7" COLSPAN="2" STYLE="border-right: #000000 1px solid; "><SPAN class="cu_wspace">Х</SPAN></TD>
+<TD CLASS="R24C6"><SPAN class="cu_wspace"><t t-esc="o.amount_tax or ''"/></SPAN></TD>
+<TD CLASS="R24C6"><SPAN class="cu_wspace"><t t-esc="o.amount_total or ''"/></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+</TABLE>
+<!-- end total -->
+<!-- start footer -->
+<TABLE CELLSPACING="0">
+<COL WIDTH="7"/>
+<COL WIDTH="202"/>
+<COL WIDTH="52"/>
+<COL WIDTH="60"/>
+<COL WIDTH="8"/>
+<COL WIDTH="63"/>
+<COL WIDTH="97"/>
+<COL WIDTH="57"/>
+<COL WIDTH="62"/>
+<COL WIDTH="63"/>
+<COL WIDTH="103"/>
+<COL WIDTH="14"/>
+<COL WIDTH="63"/>
+<COL WIDTH="91"/>
+<COL WIDTH="296"/>
+<COL WIDTH="6"/>
+<TR CLASS="R12">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD COLSPAN="2"><SPAN></SPAN></TD>
+</TR>
+<t t-if="True">
+    <!-- TO DO: flag of order type -->
+    <!-- start company sign -->
+    <TR>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+    <TR CLASS="R27">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R27C1"><SPAN class="cu_wspace">Руководитель<![CDATA[&nbsp;]]>организации<BR/>или<![CDATA[&nbsp;]]>иное<![CDATA[&nbsp;]]>уполномоченное<![CDATA[&nbsp;]]>лицо</SPAN></TD>
+    <TD CLASS="R27C2I" COLSPAN="2"><SPAN><t t-raw="company.print_facsimile and (company.print_anywhere or context.get('mark_invoice_as_sent', False)) and helper.img(company.chief_id.facsimile) or ''"/></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R27C5" COLSPAN="2"><t t-esc="helper.initials(company.chief_id.name)"/></TD>
+    <TD CLASS="R27C1" COLSPAN="3"><SPAN class="cu_wspace">Главный<![CDATA[&nbsp;]]>бухгалтер<BR/>или<![CDATA[&nbsp;]]>иное<![CDATA[&nbsp;]]>уполномоченное<![CDATA[&nbsp;]]>лицо</SPAN></TD>
+    <TD CLASS="R27C2I"><SPAN><t t-raw="company.print_facsimile and (company.print_anywhere or context.get('mark_invoice_as_sent', False)) and helper.img(company.accountant_id.facsimile) or ''"/></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R27C5" COLSPAN="2"><t t-esc="helper.initials(company.accountant_id.name)"/></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <TR CLASS="R3">
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R28C2" COLSPAN="2"><SPAN class="cu_wspace">(подпись)</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R28C2" COLSPAN="2"><SPAN class="cu_wspace">(ф.и.о.)</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R28C2"><SPAN class="cu_wspace">(подпись)</SPAN></TD>
+    <TD CLASS="R28C11"><SPAN></SPAN></TD>
+    <TD CLASS="R28C2" COLSPAN="2"><SPAN class="cu_wspace">(ф.и.о.)</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <!-- end company sign -->
+</t><t t-if="False">
+    <!-- TO DO: flag of order type -->
+    <!-- start entrepreneur sign -->
+    <TR CLASS="R3">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R29C1"><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><![CDATA[&nbsp;]]></TD>
+    </TR>
+    <TR CLASS="R27">
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R27C1"><SPAN class="cu_wspace"><BR/>Индивидуальный<![CDATA[&nbsp;]]>предприниматель</SPAN></TD>
+    <TD CLASS="R27C2" COLSPAN="2"><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R27C5" COLSPAN="2">ФИОПБОЮЛ</TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R30C8" COLSPAN="6"><SPAN class="cu_wspace">Свидетельство</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <TR CLASS="R31">
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R31C2" COLSPAN="2"><SPAN class="cu_wspace">(подпись)</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R31C2" COLSPAN="2"><SPAN class="cu_wspace">(ф.и.о.)</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD CLASS="R31C8" COLSPAN="6"><SPAN class="cu_wspace">(реквизиты<![CDATA[&nbsp;]]>свидетельства<![CDATA[&nbsp;]]>о<![CDATA[&nbsp;]]>государственной<![CDATA[&nbsp;]]><BR/>регистрации<![CDATA[&nbsp;]]>индивидуального<![CDATA[&nbsp;]]>предпринимателя)</SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD><SPAN></SPAN></TD>
+    <TD></TD>
+    </TR>
+    <!-- end entrepreneur sign -->
+</t>
+</TABLE>
+<!-- end footer -->
+
+                </div>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

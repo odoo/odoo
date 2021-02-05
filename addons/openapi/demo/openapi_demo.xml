@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2018 Ivan Yelizariev <https://it-projects.info/team/yelizariev>
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html). -->
+<odoo noupdate="1">
+    <record id="namespace_demo" model="openapi.namespace">
+        <field name="name">demo</field>
+        <field name="log_request">debug</field>
+        <field name="log_response">debug</field>
+        <field name="token">demo_token</field>
+        <field name="user_ids" eval="[(4, ref('base.user_demo'))]" />
+    </record>
+    <record id="ir_exports_res_partner_one_demo" model="ir.exports">
+        <field name="name">demo / res.partner / read_one</field>
+        <field name="resource">res.partner</field>
+        <field
+            name="export_fields"
+            eval="[
+(0, 0, {'name': 'id'}),
+(0, 0, {'name': 'name'}),
+(0, 0, {'name': 'email'}),
+(0, 0, {'name': 'phone'}),
+(0, 0, {'name': 'website'}),
+(0, 0, {'name': 'function'}),
+(0, 0, {'name': 'company_id'}),
+(0, 0, {'name': 'contact_address'}),
+(0, 0, {'name': 'user_ids'}),
+(0, 0, {'name': 'active'}),
+]"
+        />
+    </record>
+    <record id="ir_exports_res_partner_many_demo" model="ir.exports">
+        <field name="name">demo / res.partner / read_many</field>
+        <field name="resource">res.partner</field>
+        <field
+            name="export_fields"
+            eval="[
+(0, 0, {'name': 'id'}),
+(0, 0, {'name': 'name'}),
+(0, 0, {'name': 'email'}),
+(0, 0, {'name': 'company_id'}),
+]"
+        />
+    </record>
+    <record id="context_res_partner_demo" model="openapi.access.create.context">
+        <field name="name">default</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="context">{"default_function": "CEO"}</field>
+    </record>
+    <record id="access_res_partner_demo" model="openapi.access">
+        <field name="namespace_id" ref="namespace_demo" />
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="api_create" eval="True" />
+        <field name="api_read" eval="True" />
+        <field name="api_update" eval="True" />
+        <field name="api_delete" eval="True" />
+        <field name="api_public_methods" eval="True" />
+        <field name="private_methods">_email_send</field>
+        <field name="read_one_id" ref="ir_exports_res_partner_one_demo" />
+        <field name="read_many_id" ref="ir_exports_res_partner_many_demo" />
+        <field
+            name="create_context_ids"
+            eval="[(4, ref('context_res_partner_demo'))]"
+        />
+    </record>
+</odoo>

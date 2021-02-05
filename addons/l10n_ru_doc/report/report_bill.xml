@@ -1,0 +1,801 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_bill">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <!-- Multicompany -->
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <t t-set="context" t-value="o._context"></t>
+
+            <div class="page">
+
+<STYLE TYPE="text/css">
+body { background: #ffffff; margin: 0; font-family: Arial; font-size: 8pt; font-style: normal; }
+tr.R0{ height: 15px; }
+tr.R0 td.R0C0{ color: #413003; }
+tr.R0 td.R0C5{ font-family: Arial; font-size: 6pt; font-style: normal; vertical-align: top; }
+tr.R0 td.R0C8{ font-family: Arial; font-size: 7pt; font-style: normal; text-align: right; }
+tr.R0 td.R19C15{ font-family: Arial; font-size: 8pt; font-style: normal; text-align: right; vertical-align: medium; }
+tr.R0 td.R20C0{ vertical-align: top; }
+tr.R0 td.R20C15{ font-family: Arial; font-size: 8pt; font-style: italic; text-align: right; vertical-align: top; }
+tr.R0 td.R20C3{ text-align: center; vertical-align: top; }
+tr.R0 td.R20C7{ text-align: right; vertical-align: top; }
+tr.R0 td.R21C0{ vertical-align: top; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; border-right: #ffffff 1px none; }
+tr.R0 td.R21C1{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R21C2{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R23C0{ vertical-align: medium; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; border-right: #ffffff 1px none; }
+tr.R0 td.R23C1{ font-family: Arial; font-size: 7pt; font-style: normal; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R23C3{ font-family: Arial; font-size: 7pt; font-style: normal; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 2px solid; border-right: #000000 1px solid; }
+tr.R0 td.R25C1{ vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R25C10{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R25C12{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R25C13{ text-align: center; vertical-align: top; border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R25C14{ text-align: right; vertical-align: top; border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R25C15{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 2px solid; }
+tr.R0 td.R25C2{ vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R0 td.R25C3{ text-align: left; vertical-align: top; border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R0 td.R25C4{ text-align: center; vertical-align: top; border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R0 td.R25C5{ text-align: center; vertical-align: top; border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R25C6{ text-align: center; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R25C7{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R25C8{ vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R27C0{ border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; border-right: #ffffff 1px none; }
+tr.R0 td.R27C1{ border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; }
+tr.R0 td.R27C11{ text-align: center; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 2px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R27C12{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 2px solid; border-bottom: #000000 1px solid; border-right: #ffffff 1px none; }
+tr.R0 td.R27C13{ text-align: center; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R27C14{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 2px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R27C15{ text-align: right; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 2px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R27C2{ border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; border-right: #ffffff 1px none; }
+tr.R0 td.R27C3{ border-top: #000000 2px solid; }
+tr.R0 td.R27C7{ text-align: right; border-top: #000000 2px solid; }
+tr.R0 td.R27C8{ text-align: right; border-left: #000000 1px solid; border-top: #000000 2px solid; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R29C11{ text-align: center; vertical-align: top; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R29C7, tr.R0 td.R29C7S{ text-align: right; }
+tr.R0 td.R29C8{ text-align: right; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R32C3{ border-top: #ffffff 1px none; border-bottom: #000000 1px solid; }
+tr.R0 td.R32C7{ border-top: #000000 1px solid; border-bottom: #000000 1px solid; }
+tr.R0 td.R32C8, tr.R0 td.R32C8I{ border-bottom: #000000 1px solid; }
+
+tr.R0 td.R32C8I,tr.R0 td.R29C7S { overflow: visible; }
+tr.R0 td.R32C8I span,tr.R0 td.R29C7S span { position: relative; }
+tr.R0 td.R32C8I span img { position: absolute; width: 100px; top: -30px; }
+tr.R0 td.R29C7S span img { position: absolute; width: 140px; top: -110px; left: 50px; }
+
+tr.R0 td.R34C8{ border-left: #ffffff 0px none; border-top: #ffffff 0px none; border-bottom: #000000 1px solid; border-right: #ffffff 0px none; }
+tr.R0 td.R36C16{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; }
+tr.R0 td.R36C9{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; border-bottom: #000000 1px solid; }
+tr.R0 td.R42C0{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; vertical-align: bottom; }
+tr.R0 td.R42C1{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; vertical-align: bottom; border-bottom: #000000 1px solid; }
+tr.R0 td.R42C2{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; vertical-align: top; border-bottom: #000000 1px solid; }
+tr.R0 td.R42C7{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; vertical-align: top; border-right: #000000 1px solid; }
+tr.R0 td.R44C2{ border-bottom: #000000 1px solid; }
+tr.R0 td.R44C3{ border-bottom: #ffffff 1px none; }
+tr.R0 td.R44C6{ border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R0 td.R46C0{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; }
+tr.R0 td.R47C17{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; overflow: hidden;border-top: #ffffff 1px none; }
+tr.R0 td.R47C2{ font-family: Arial; font-size: 8pt; font-style: normal; text-align: left; vertical-align: bottom; border-top: #ffffff 1px none; }
+tr.R0 td.R47C6{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; border-right: #000000 1px solid; }
+tr.R0 td.R48C2{ font-family: Arial; font-size: 8pt; font-style: normal; text-align: left; vertical-align: bottom; border-bottom: #000000 1px solid; }
+tr.R0 td.R48C3{ font-family: Arial; font-size: 8pt; font-style: normal; text-align: left; vertical-align: bottom; border-bottom: #ffffff 1px none; }
+tr.R0 td.R51C10{ text-align: center; }
+tr.R0 td.R51C7{ border-right: #000000 1px solid; }
+tr.R1{ height: 21px; }
+tr.R1 td.R1C5{ font-family: Arial; font-size: 6pt; font-style: normal; vertical-align: top; }
+tr.R1 td.R1C9{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: right; }
+tr.R2{ height: 17px; }
+tr.R2 td.R2C0{ font-family: Arial; font-size: 8pt; font-style: normal; vertical-align: top; }
+tr.R2 td.R2C7{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; vertical-align: medium; }
+tr.R2 td.R2C9{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R22{ height: 56px; }
+tr.R22 td.R22C0{ vertical-align: top; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; border-right: #ffffff 1px none; }
+tr.R22 td.R22C2{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R22 td.R22C3{ text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3{ height: 16px; }
+tr.R3 td.R14C2{ vertical-align: bottom; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #000000 1px solid; }
+tr.R3 td.R15C1{ font-family: Arial; font-size: 8pt; font-style: normal; }
+tr.R3 td.R15C2{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; }
+tr.R3 td.R15C8{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; vertical-align: bottom; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R16C3{ font-family: Arial; font-size: 8pt; font-style: normal; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R3 td.R17C2{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: right; vertical-align: medium; border-right: #000000 1px solid; }
+tr.R3 td.R17C3{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: center; vertical-align: medium; border-left: #000000 2px solid; border-top: #000000 2px solid; border-bottom: #000000 2px solid; border-right: #000000 1px solid; }
+tr.R3 td.R17C4{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: center; vertical-align: medium; border-left: #000000 1px solid; border-top: #000000 2px solid; border-bottom: #000000 2px solid; border-right: #000000 2px solid; }
+tr.R3 td.R18C3{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: center; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; border-right: #ffffff 1px none; }
+tr.R3 td.R18C7{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; vertical-align: bottom; }
+tr.R3 td.R18C9{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: bottom; overflow: hidden;border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 2px solid; border-right: #000000 2px solid; }
+tr.R3 td.R31C5{ border-bottom: #ffffff 1px none; }
+tr.R3 td.R31C6{ border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #000000 1px solid; }
+tr.R3 td.R3C0{ font-family: Arial; font-size: 8pt; font-style: normal; vertical-align: top; }
+tr.R3 td.R3C1{ font-family: Arial; font-size: 8pt; font-style: normal; vertical-align: bottom; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #000000 1px solid; }
+tr.R3 td.R3C7{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; vertical-align: medium; }
+tr.R3 td.R3C9{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: medium; border-left: #000000 2px solid; border-top: #000000 2px solid; border-right: #000000 2px solid; }
+tr.R3 td.R4C0{ text-align: right; }
+tr.R3 td.R4C6{ border-bottom: #000000 1px solid; }
+tr.R3 td.R4C7{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; }
+tr.R3 td.R4C9{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: bottom; overflow: hidden;border-left: #000000 2px solid; border-top: #000000 1px solid; border-right: #000000 2px solid; }
+tr.R3 td.R6C1{ font-family: Arial; font-size: 8pt; font-style: normal; vertical-align: bottom; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #000000 1px solid; }
+tr.R3 td.R6C7{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; }
+tr.R3 td.R8C1{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; }
+tr.R3 td.R8C9{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: bottom; overflow: hidden;border-left: #000000 2px solid; border-right: #000000 2px solid; }
+tr.R38{ height: 7px; }
+tr.R38 td.R50C7{ border-right: #000000 1px solid; }
+tr.R39{ height: 13px; }
+tr.R39 td.R39C10{ text-align: right; }
+tr.R39 td.R39C14{ text-align: center; }
+tr.R39 td.R39C4{ border-bottom: #000000 1px solid; }
+tr.R39 td.R39C7{ border-right: #000000 1px solid; }
+tr.R39 td.R41C0{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; }
+tr.R39 td.R41C11{ border-top: #ffffff 1px none; border-bottom: #000000 1px solid; }
+tr.R39 td.R41C2{ font-family: Arial; font-size: 8pt; font-style: normal; font-weight: bold; }
+tr.R40{ height: 14px; }
+tr.R40 td.R40C4{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; }
+tr.R40 td.R40C7{ border-right: #000000 1px solid; }
+tr.R45{ height: 12px; }
+tr.R45 td.R45C10{ border-left: #ffffff 0px none; border-top: #ffffff 1px none; }
+tr.R45 td.R45C11{ border-top: #ffffff 1px none; }
+tr.R45 td.R45C2{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; }
+tr.R45 td.R45C6{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; border-right: #000000 1px solid; }
+tr.R5{ height: 11px; }
+tr.R5 td.R11C3{ font-family: Arial; font-size: 8pt; font-style: normal; vertical-align: bottom; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; }
+tr.R5 td.R13C8{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; vertical-align: bottom; border-left: #000000 1px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 1px solid; }
+tr.R5 td.R33C17{ border-left: #000000 2px solid; border-top: #000000 2px solid; border-bottom: #000000 2px solid; border-right: #000000 2px solid; }
+tr.R5 td.R35C10{ border-top: #ffffff 1px none; }
+tr.R5 td.R35C9{ font-family: Arial; font-size: 6pt; font-style: normal; border-top: #ffffff 1px none; }
+tr.R5 td.R43C1{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; }
+tr.R5 td.R43C11{ border-bottom: #000000 1px solid; }
+tr.R5 td.R43C7{ border-right: #000000 1px solid; }
+tr.R5 td.R5C0{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-top: #ffffff 1px none; }
+tr.R5 td.R5C2{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; }
+tr.R5 td.R5C7{ font-family: Arial; font-size: 8pt; font-style: normal; }
+tr.R5 td.R5C9{ font-family: Arial; font-size: 9pt; font-style: normal; vertical-align: bottom; overflow: hidden;border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 2px solid; }
+tr.R5 td.R9C0{ text-align: right; }
+tr.R5 td.R9C1{ font-family: Arial; font-size: 8pt; font-style: normal; text-align: right; }
+tr.R5 td.R9C3{ font-family: Arial; font-size: 8pt; font-style: normal; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; }
+tr.R5 td.R9C7{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; }
+tr.R5 td.R9C9{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: bottom; overflow: hidden;border-left: #000000 2px solid; border-top: #000000 1px solid; border-right: #000000 2px solid; }
+tr.R7{ height: 19px; }
+tr.R7 td.R7C0{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-left: #ffffff 0px none; border-top: #ffffff 1px none; }
+tr.R7 td.R7C2{ font-family: Arial; font-size: 6pt; font-style: normal; text-align: center; vertical-align: top; border-left: #ffffff 1px none; border-top: #ffffff 1px none; border-bottom: #ffffff 1px none; }
+tr.R7 td.R7C7{ font-family: Arial; font-size: 9pt; font-style: normal; text-align: right; }
+tr.R7 td.R7C9{ font-family: Arial; font-size: 9pt; font-style: normal; font-weight: bold; text-align: center; vertical-align: bottom; overflow: hidden;border-left: #000000 2px solid; border-top: #000000 1px solid; border-bottom: #000000 1px solid; border-right: #000000 2px solid; }
+table {table-layout: fixed; padding: 0px; padding-left: 2px; vertical-align:bottom; border-collapse:collapse;width: 100%; font-family: Arial; font-size: 8pt; font-style: normal; }
+td { padding: 0px; padding-left: 2px; overflow:hidden; }
+
+.cu_wspace { white-space:nowrap; }
+.cu_space21 { width:100%;height:21px;overflow:hidden; }
+.cu_space31 { width:100%;height:31px;overflow:hidden; }
+.cu_space11 { width:100%;height:11px;overflow:hidden; }
+.cu_space16 { width:100%;height:16px;overflow:hidden; }
+.cu_space19 { width:100%;height:19px;overflow:hidden; }
+.cu_space26 { width:100%;height:26px;overflow:hidden; }
+.cu_left { border-left: #ffffff 0px none; }
+.cu_space15 { width:100%;height:15px;overflow:hidden; }
+.cu_space70 { width:100%;height:70px;overflow:hidden; }
+.cu_space40 { width:100%;height:40px;overflow:hidden; }
+.cu_space7 { width:100%;height:7px;overflow:hidden; }
+.cu_space13 { width:100%;height:13px;overflow:hidden; }
+.cu_right { border-right: #000000 1px solid; }
+.cu_space14 { width:100%;height:14px;overflow:hidden; }
+.cu_space12 { width:100%;height:12px;overflow:hidden; }
+</STYLE>
+<!-- start header -->
+<TABLE CELLSPACING="0">
+<COL WIDTH="7"/>
+<COL WIDTH="111"/>
+<COL WIDTH="264"/>
+<COL WIDTH="98"/>
+<COL WIDTH="98"/>
+<COL WIDTH="266"/>
+<COL WIDTH="98"/>
+<COL WIDTH="17"/>
+<COL WIDTH="49"/>
+<COL WIDTH="78"/>
+<TR CLASS="R1">
+<TD CLASS="R1C9" COLSPAN="10"><DIV class="cu_space21"><SPAN class="cu_wspace">Унифицированная<![CDATA[&nbsp;]]>форма<![CDATA[&nbsp;]]>№<![CDATA[&nbsp;]]>ТОРГ-12<BR/>Утверждена<![CDATA[&nbsp;]]>постановлением<![CDATA[&nbsp;]]>Госкомстата<![CDATA[&nbsp;]]>России<![CDATA[&nbsp;]]>от<![CDATA[&nbsp;]]>25.12.98<![CDATA[&nbsp;]]>№<![CDATA[&nbsp;]]>132</SPAN></DIV></TD>
+<TD><DIV class="cu_space21"></DIV></TD>
+</TR>
+<TR CLASS="R2">
+<TD CLASS="R2C0"><SPAN></SPAN></TD>
+<TD CLASS="R2C0"><SPAN></SPAN></TD>
+<TD CLASS="R2C0"><SPAN></SPAN></TD>
+<TD CLASS="R2C0"><SPAN></SPAN></TD>
+<TD CLASS="R2C0"><SPAN></SPAN></TD>
+<TD CLASS="R2C0"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R2C7"><SPAN></SPAN></TD>
+<TD CLASS="R2C7"><SPAN></SPAN></TD>
+<TD CLASS="R2C9"><SPAN class="cu_wspace">Коды</SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R3C0"><SPAN></SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="5" ROWSPAN="2"><DIV class="cu_space31"><t t-esc="helper.full_representation(company.partner_id)"/></DIV></TD>
+<TD CLASS="R3C7" COLSPAN="3"><SPAN class="cu_wspace">Форма<![CDATA[&nbsp;]]>по<![CDATA[&nbsp;]]>ОКУД<![CDATA[&nbsp;]]></SPAN></TD>
+<TD CLASS="R3C9"><SPAN class="cu_wspace">0330212</SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R4C0"><SPAN></SPAN></TD>
+<TD CLASS="R4C6"><SPAN></SPAN></TD>
+<TD CLASS="R4C7" COLSPAN="2"><SPAN class="cu_wspace">по<![CDATA[&nbsp;]]>ОКПО</SPAN></TD>
+<TD CLASS="R4C9"><SPAN class="cu_wspace"><t t-esc="company.okpo or ''"/></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD CLASS="R5C0" COLSPAN="2"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C2" COLSPAN="4"><DIV class="cu_space11"><SPAN class="cu_wspace">организация-грузоотправитель,<![CDATA[&nbsp;]]>адрес,<![CDATA[&nbsp;]]>телефон,<![CDATA[&nbsp;]]>факс,<![CDATA[&nbsp;]]>банковские<![CDATA[&nbsp;]]>реквизиты</SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C7"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C7"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C9" ROWSPAN="2"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R4C0"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R6C1" COLSPAN="6"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: ПредставлениеПодразделения --></SPAN></DIV></TD>
+<TD CLASS="R6C7"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R6C7"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"></DIV></TD>
+</TR>
+<TR CLASS="R7">
+<TD CLASS="R7C0" COLSPAN="2" class="cu_left"><DIV class="cu_space19"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R7C2" COLSPAN="4"><DIV class="cu_space19"><SPAN class="cu_wspace">структурное<![CDATA[&nbsp;]]>подразделение</SPAN></DIV></TD>
+<TD CLASS="R7C7" COLSPAN="3"><DIV class="cu_space19"><SPAN class="cu_wspace">Вид<![CDATA[&nbsp;]]>деятельности<![CDATA[&nbsp;]]>по<![CDATA[&nbsp;]]>ОКДП</SPAN></DIV></TD>
+<TD CLASS="R7C9"><DIV class="cu_space19"><SPAN class="cu_wspace"><!-- TO DO: ВидДеятельностиПоОКДП --></SPAN></DIV></TD>
+<TD><DIV class="cu_space19"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R4C0"><SPAN></SPAN></TD>
+<TD CLASS="R8C1">Грузополучатель</TD>
+<TD CLASS="R3C1" COLSPAN="5"><t t-esc="helper.full_representation(o.partner_id)"/></TD>
+<TD CLASS="R4C7" COLSPAN="2"><SPAN class="cu_wspace">по<![CDATA[&nbsp;]]>ОКПО</SPAN></TD>
+<TD CLASS="R8C9"><SPAN class="cu_wspace"><t t-esc="o.partner_id.okpo or ''"/></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD CLASS="R9C0"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C1"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C2" COLSPAN="4"><DIV class="cu_space11"><SPAN class="cu_wspace">организация,<![CDATA[&nbsp;]]>адрес,<![CDATA[&nbsp;]]>телефон,<![CDATA[&nbsp;]]>факс,<![CDATA[&nbsp;]]>банковские<![CDATA[&nbsp;]]>реквизиты</SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C7"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C7"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C9" ROWSPAN="2"><DIV class="cu_space26"><SPAN class="cu_wspace"><t t-esc="company.okpo or ''"/></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R4C7" COLSPAN="2"><SPAN class="cu_wspace">Поставщик</SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="5"><t t-esc="helper.full_representation(company.partner_id)"/></TD>
+<TD CLASS="R4C7" COLSPAN="2"><SPAN class="cu_wspace">по<![CDATA[&nbsp;]]>ОКПО</SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD CLASS="R9C0"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C1"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C2" COLSPAN="4"><DIV class="cu_space11"><SPAN class="cu_wspace">организация,<![CDATA[&nbsp;]]>адрес,<![CDATA[&nbsp;]]>телефон,<![CDATA[&nbsp;]]>факс,<![CDATA[&nbsp;]]>банковские<![CDATA[&nbsp;]]>реквизиты</SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C7"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C7"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C9" ROWSPAN="2"><DIV class="cu_space26"><SPAN class="cu_wspace"><t t-esc="o.partner_id.okpo or ''"/></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R4C7" COLSPAN="2"><SPAN class="cu_wspace">Плательщик</SPAN></TD>
+<TD CLASS="R3C1" COLSPAN="5"><t t-esc="helper.full_representation(o.partner_id.parent_id or o.partner_id)"/></TD>
+<TD CLASS="R4C7" COLSPAN="2"><SPAN class="cu_wspace">по<![CDATA[&nbsp;]]>ОКПО</SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD CLASS="R9C0"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R9C1"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C2" COLSPAN="4"><DIV class="cu_space11"><SPAN class="cu_wspace">организация,<![CDATA[&nbsp;]]>адрес,<![CDATA[&nbsp;]]>телефон,<![CDATA[&nbsp;]]>факс,<![CDATA[&nbsp;]]>банковские<![CDATA[&nbsp;]]>реквизиты</SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R13C8" ROWSPAN="2"><DIV class="cu_space26"><SPAN class="cu_wspace">номер</SPAN></DIV></TD>
+<TD CLASS="R9C9" ROWSPAN="2"><DIV class="cu_space26"><SPAN class="cu_wspace"><!-- TO DO: ОснованиеНомер --></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R4C7" COLSPAN="2"><DIV class="cu_space16"><SPAN class="cu_wspace">Основание</SPAN></DIV></TD>
+<TD CLASS="R14C2" COLSPAN="5"><DIV class="cu_space16"><SPAN class="cu_wspace"><t t-esc="o.name or ''"/></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R15C1"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R15C2" COLSPAN="4"><DIV class="cu_space16"><SPAN class="cu_wspace">договор,<![CDATA[&nbsp;]]>заказ-наряд</SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R15C8"><DIV class="cu_space16"><SPAN class="cu_wspace">дата</SPAN></DIV></TD>
+<TD CLASS="R4C9"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: ОснованиеДата --></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R16C3"><DIV class="cu_space16"><SPAN class="cu_wspace">Номер<![CDATA[&nbsp;]]>документа</SPAN></DIV></TD>
+<TD CLASS="R16C3"><DIV class="cu_space16"><SPAN class="cu_wspace">Дата<![CDATA[&nbsp;]]>составления</SPAN></DIV></TD>
+<TD CLASS="R6C7" COLSPAN="2"><DIV class="cu_space16"><SPAN class="cu_wspace">Транспортная<![CDATA[&nbsp;]]>накладная</SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R15C8"><DIV class="cu_space16"><SPAN class="cu_wspace">номер</SPAN></DIV></TD>
+<TD CLASS="R4C9"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: ТранспортнаяНакладнаяНомер --></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R17C2" COLSPAN="3"><DIV class="cu_space16"><SPAN class="cu_wspace">ТОВАРНАЯ<![CDATA[&nbsp;]]>НАКЛАДНАЯ<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]></SPAN></DIV></TD>
+<TD CLASS="R17C3"><DIV class="cu_space16"><SPAN class="cu_wspace"><t t-esc="helper.numer(o.name)"/></SPAN></DIV></TD>
+<TD CLASS="R17C4"><DIV class="cu_space16"><span class="cu_wspace" t-field="o.invoice_date"/></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R15C8"><DIV class="cu_space16"><SPAN class="cu_wspace">дата</SPAN></DIV></TD>
+<TD CLASS="R4C9"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: ТранспортнаяНакладнаяДата --></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"></DIV></TD>
+</TR>
+<TR CLASS="R3">
+<TD CLASS="R4C7" COLSPAN="3"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: ТекстИсправления --></SPAN></DIV></TD>
+<TD CLASS="R18C3"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: НомерИсправления --></SPAN></DIV></TD>
+<TD CLASS="R18C3"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: ДатаИсправления --></SPAN></DIV></TD>
+<TD CLASS="R18C7" COLSPAN="4"><DIV class="cu_space16"><SPAN class="cu_wspace">Вид<![CDATA[&nbsp;]]>операции</SPAN></DIV></TD>
+<TD CLASS="R18C9"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: ВидОперации --></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"></DIV></TD>
+</TR>
+</TABLE>
+<!-- end header -->
+<!-- start items header -->
+<TABLE CELLSPACING="0">
+<COL WIDTH="7"/>
+<COL WIDTH="35"/>
+<COL WIDTH="214"/>
+<COL WIDTH="73"/>
+<COL WIDTH="56"/>
+<COL WIDTH="45"/>
+<COL WIDTH="42"/>
+<COL WIDTH="42"/>
+<COL WIDTH="56"/>
+<COL WIDTH="49"/>
+<COL WIDTH="63"/>
+<COL WIDTH="80"/>
+<COL WIDTH="91"/>
+<COL WIDTH="62"/>
+<COL WIDTH="81"/>
+<COL WIDTH="91"/>
+<TR CLASS="R0">
+<TD CLASS="R20C15" COLSPAN="16"><SPAN class="cu_wspace">Страница 1<!-- TO DO: НомерСтраницы --></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R0">
+<TD CLASS="R21C0"><DIV class="cu_space15"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R21C1" ROWSPAN="2"><DIV class="cu_space70">Но-<BR/>мер<BR/>по по-<BR/>рядку </DIV></TD>
+<TD CLASS="R21C2" COLSPAN="2"><DIV class="cu_space15"><SPAN class="cu_wspace">Товар</SPAN></DIV></TD>
+<TD CLASS="R21C2" COLSPAN="2"><DIV class="cu_space15"><SPAN class="cu_wspace">Единица<![CDATA[&nbsp;]]>измерения</SPAN></DIV></TD>
+<TD CLASS="R21C1" ROWSPAN="2"><DIV class="cu_space70">Вид упаков<BR/>ки</DIV></TD>
+<TD CLASS="R21C2" COLSPAN="2"><DIV class="cu_space15"><SPAN class="cu_wspace">Количество</SPAN></DIV></TD>
+<TD CLASS="R21C1" ROWSPAN="2"><DIV class="cu_space70">Масса брутто</DIV></TD>
+<TD CLASS="R21C2" ROWSPAN="2"><DIV class="cu_space70"><SPAN class="cu_wspace">Коли-<BR/>чество<![CDATA[&nbsp;]]><BR/>(масса<![CDATA[&nbsp;]]><BR/>нетто)</SPAN></DIV></TD>
+<TD CLASS="R21C2" ROWSPAN="2"><DIV class="cu_space70"><SPAN class="cu_wspace">Цена,<BR/>руб.<![CDATA[&nbsp;]]>коп.</SPAN></DIV></TD>
+<TD CLASS="R21C2" ROWSPAN="2"><DIV class="cu_space70"><SPAN class="cu_wspace">Сумма<![CDATA[&nbsp;]]>без<BR/>учета<![CDATA[&nbsp;]]>НДС,<BR/>руб.<![CDATA[&nbsp;]]>коп.</SPAN></DIV></TD>
+<TD CLASS="R21C2" COLSPAN="2"><DIV class="cu_space15"><SPAN class="cu_wspace">НДС</SPAN></DIV></TD>
+<TD CLASS="R21C2" ROWSPAN="2"><DIV class="cu_space70"><SPAN class="cu_wspace">Сумма<![CDATA[&nbsp;]]>с<BR/>учетом<![CDATA[&nbsp;]]><BR/>НДС,<![CDATA[&nbsp;]]><BR/>руб.<![CDATA[&nbsp;]]>коп.</SPAN></DIV></TD>
+<TD><DIV class="cu_space15"></DIV></TD>
+</TR>
+<TR CLASS="R22">
+<TD CLASS="R22C0"><SPAN></SPAN></TD>
+<TD CLASS="R22C2">наименование, характеристика, сорт, артикул товара</TD>
+<TD CLASS="R22C3"><SPAN class="cu_wspace">код</SPAN></TD>
+<TD CLASS="R22C2">наиме- нование</TD>
+<TD CLASS="R22C2">код по ОКЕИ</TD>
+<TD CLASS="R22C2">в одном месте</TD>
+<TD CLASS="R22C2">мест,<BR/>штук</TD>
+<TD CLASS="R22C2">ставка, %</TD>
+<TD CLASS="R22C2">сумма, <BR/>руб. коп.</TD>
+<TD></TD>
+</TR>
+<TR CLASS="R0">
+<TD CLASS="R23C0"><SPAN></SPAN></TD>
+<TD CLASS="R23C1"><SPAN class="cu_wspace">1</SPAN></TD>
+<TD CLASS="R23C1"><SPAN class="cu_wspace">2</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">3</SPAN></TD>
+<TD CLASS="R23C1"><SPAN class="cu_wspace">4</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">5</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">6</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">7</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">8</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">9</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">10</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">11</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">12</SPAN></TD>
+<TD CLASS="R23C1"><SPAN class="cu_wspace">13</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">14</SPAN></TD>
+<TD CLASS="R23C3"><SPAN class="cu_wspace">15</SPAN></TD>
+<TD></TD>
+</TR>
+<!-- end items header -->
+<!-- start items -->
+<t t-set="page_quantity" t-value="sum([line.quantity for line in o.invoice_line_ids])" />
+<t t-set="total_quantity" t-value="sum([line.quantity for line in o.invoice_line_ids])"/>
+<t t-set="page_price_subtotal" t-value="sum([line.price_subtotal for line in o.invoice_line_ids])"/>
+<t t-set="total_price_subtotal" t-value="sum([line.price_subtotal for line in o.invoice_line_ids])"/>
+<t t-set="page_tax" t-value="sum([line.price_unit*line.quantity - line.price_subtotal for line in o.invoice_line_ids])"/>
+<t t-set="total_tax" t-value="sum([line.price_unit*line.quantity - line.price_subtotal for line in o.invoice_line_ids])"/>
+<t t-set="page_price_tax_subtotal" t-value="sum([line.price_unit*line.quantity for line in o.invoice_line_ids])"/>
+<t t-set="total_price_tax_subtotal" t-value="sum([line.price_unit*line.quantity for line in o.invoice_line_ids])"/>
+<tr  CLASS="R0" t-foreach="o.invoice_line_ids" t-as="line">
+    <TD CLASS="R21C0"><SPAN></SPAN></TD>
+    <TD CLASS="R25C1"><SPAN class="cu_wspace"><t t-esc="line_index+1"/></SPAN></TD>
+    <TD CLASS="R25C2"><t t-esc="line.name or ''"/></TD>
+    <TD CLASS="R25C3"><!-- TO DO: ТоварКод --></TD>
+    <TD CLASS="R25C4"><SPAN class="cu_wspace"><t t-esc="line.product_uom_id.name or ''"/></SPAN></TD>
+    <TD CLASS="R25C5">796<!-- TO DO: БазоваяЕдиницаКодПоОКЕИ --></TD>
+    <TD CLASS="R25C6"><SPAN class="cu_wspace"><!-- TO DO: ВидУпаковки --></SPAN></TD>
+    <TD CLASS="R25C7"><SPAN class="cu_wspace"><!-- TO DO: КоличествоВОдномМесте --></SPAN></TD>
+    <TD CLASS="R25C8"><SPAN class="cu_wspace"><!-- TO DO: КоличествоМест --></SPAN></TD>
+    <TD CLASS="R25C7"><SPAN class="cu_wspace"><!-- TO DO: МассаБрутто --></SPAN></TD>
+    <TD CLASS="R25C10"><SPAN class="cu_wspace"><t t-esc="line.quantity or ''"/></SPAN></TD>
+    <TD CLASS="R25C10"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(line.price_subtotal/line.quantity)).replace('.',',') or ''"/></SPAN></TD>
+    <TD CLASS="R25C12"><SPAN class="cu_wspace"><t t-esc="line.price_subtotal or ''"/></SPAN></TD>
+    <TD CLASS="R25C13"><SPAN class="cu_wspace">18% <!-- TO DO: СтавкаНДС --></SPAN></TD>
+    <TD CLASS="R25C14"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(line.price_unit*line.quantity - line.price_subtotal)).replace('.',',') or ''"/></SPAN></TD>
+    <TD CLASS="R25C15"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(line.price_unit*line.quantity)).replace('.',',') or ''"/></SPAN></TD>
+    <TD></TD>
+</tr>
+<!-- end items -->
+<!-- start total -->
+<TR CLASS="R0">
+<TD CLASS="R27C0"><SPAN></SPAN></TD>
+<TD CLASS="R27C1"><SPAN></SPAN></TD>
+<TD CLASS="R27C2"><SPAN></SPAN></TD>
+<TD CLASS="R27C3"><SPAN></SPAN></TD>
+<TD CLASS="R27C0"><SPAN></SPAN></TD>
+<TD CLASS="R27C7" COLSPAN="3"><SPAN class="cu_wspace">Итого<![CDATA[&nbsp;]]></SPAN></TD>
+<TD CLASS="R27C8"><SPAN class="cu_wspace"><!-- TO DO: ИтогоКоличествоМест --></SPAN></TD>
+<TD CLASS="R27C8"><SPAN class="cu_wspace"><!-- TO DO: ИтогоМассаБрутто --></SPAN></TD>
+<TD CLASS="R27C8"><SPAN class="cu_wspace"><t t-esc="(('%.3f')%(page_quantity)).replace('.',',') or ''"/></SPAN></TD>
+<TD CLASS="R27C11"><SPAN class="cu_wspace">Х</SPAN></TD>
+<TD CLASS="R27C12"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(page_price_subtotal)).replace('.',',') or ''"/></SPAN></TD>
+<TD CLASS="R27C13"><SPAN class="cu_wspace">Х</SPAN></TD>
+<TD CLASS="R27C14"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(page_tax)).replace('.',',') or ''"/></SPAN></TD>
+<TD CLASS="R27C15"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(page_price_tax_subtotal)).replace('.',',') or ''"/></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R0">
+<TD CLASS="R27C0"><SPAN></SPAN></TD>
+<TD CLASS="R29C7" COLSPAN="7"><SPAN class="cu_wspace">Всего<![CDATA[&nbsp;]]>по<![CDATA[&nbsp;]]>накладной<![CDATA[&nbsp;]]></SPAN></TD>
+<TD CLASS="R29C8"><SPAN class="cu_wspace"><!-- TO DO: ИтогМест --></SPAN></TD>
+<TD CLASS="R29C8"><SPAN class="cu_wspace"><!-- TO DO: ИтогМассаБрутто --></SPAN></TD>
+<TD CLASS="R29C8"><SPAN class="cu_wspace"><t t-esc="(('%.3f')%(total_quantity)).replace('.',',') or ''"/></SPAN></TD>
+<TD CLASS="R29C11"><SPAN class="cu_wspace">Х</SPAN></TD>
+<TD CLASS="R25C10"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(total_price_subtotal)).replace('.',',') or ''"/></SPAN></TD>
+<TD CLASS="R29C11"><SPAN class="cu_wspace">Х</SPAN></TD>
+<TD CLASS="R25C10"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(total_tax)).replace('.',',') or ''"/></SPAN></TD>
+<TD CLASS="R25C10"><SPAN class="cu_wspace"><t t-esc="(('%.2f')%(total_price_tax_subtotal)).replace('.',',') or ''"/></SPAN></TD>
+<TD></TD>
+</TR>
+</TABLE>
+<!-- end total -->
+<!-- start footer -->
+<TABLE CELLSPACING="0">
+<COL WIDTH="7"/>
+<COL WIDTH="125"/>
+<COL WIDTH="112"/>
+<COL WIDTH="12"/>
+<COL WIDTH="104"/>
+<COL WIDTH="13"/>
+<COL WIDTH="138"/>
+<COL WIDTH="83"/>
+<COL WIDTH="16"/>
+<COL WIDTH="56"/>
+<COL WIDTH="42"/>
+<COL WIDTH="92"/>
+<COL WIDTH="11"/>
+<COL WIDTH="28"/>
+<COL WIDTH="21"/>
+<COL WIDTH="43"/>
+<COL WIDTH="12"/>
+<COL WIDTH="174"/>
+<TR CLASS="R3">
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space16"><SPAN class="cu_wspace">Товарная<![CDATA[&nbsp;]]>накладная<![CDATA[&nbsp;]]>имеет<![CDATA[&nbsp;]]>приложение<![CDATA[&nbsp;]]>на</SPAN></DIV></TD>
+<TD CLASS="R31C5"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R31C6"><DIV class="cu_space16"><SPAN class="cu_wspace"><!-- TO DO: КоличествоЛистовВПриложении --></SPAN></DIV></TD>
+<TD CLASS="R4C6"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R4C6"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R4C6"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space16"></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD><DIV class="cu_space15"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space15"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space15"><SPAN class="cu_wspace">и<![CDATA[&nbsp;]]>содержит</SPAN></DIV></TD>
+<TD CLASS="R32C3" COLSPAN="4"><DIV class="cu_space15"><SPAN class="cu_wspace"><t t-esc="helper.in_words(o.invoice_line_ids and len(o.invoice_line_ids) or 0).capitalize()"/></SPAN></DIV></TD>
+<TD CLASS="R32C7"><DIV class="cu_space15"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R32C8"><DIV class="cu_space15"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R32C8"><DIV class="cu_space15"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R32C8"><DIV class="cu_space15"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="8"><DIV class="cu_space15"><SPAN class="cu_wspace">порядковых<![CDATA[&nbsp;]]>номеров<![CDATA[&nbsp;]]>записей</SPAN></DIV></TD>
+</TR>
+<TR CLASS="R5">
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C0" COLSPAN="8"><DIV class="cu_space11"><SPAN class="cu_wspace">прописью</SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C17" ROWSPAN="2"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R32C3" COLSPAN="2" ROWSPAN="3"><DIV class="cu_space40"><SPAN class="cu_wspace"><!-- TO DO: ВсегоМестПрописью --></SPAN></DIV></TD>
+<TD><SPAN></SPAN></TD>
+<TD COLSPAN="2"><SPAN class="cu_wspace"><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>Масса<![CDATA[&nbsp;]]>груза<![CDATA[&nbsp;]]>(нетто)</SPAN></TD>
+<TD CLASS="R34C8"><SPAN></SPAN></TD>
+<TD CLASS="R34C8"><SPAN></SPAN></TD>
+<TD CLASS="R34C8"><SPAN></SPAN></TD>
+<TD CLASS="R34C8"><SPAN></SPAN></TD>
+<TD CLASS="R34C8"><SPAN></SPAN></TD>
+<TD CLASS="R34C8" COLSPAN="3"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C0" COLSPAN="8"><DIV class="cu_space11"><SPAN class="cu_wspace">прописью</SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R33C17" ROWSPAN="2"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN class="cu_wspace">Всего<![CDATA[&nbsp;]]>мест</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD COLSPAN="2"><SPAN class="cu_wspace"><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>Масса<![CDATA[&nbsp;]]>груза<![CDATA[&nbsp;]]>(брутто)</SPAN></TD>
+<TD CLASS="R32C3" COLSPAN="8"><SPAN class="cu_wspace"><!-- TO DO: МассаГрузаПрописью --></SPAN></TD>
+<TD></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C0" COLSPAN="2"><DIV class="cu_space11"><SPAN class="cu_wspace">прописью</SPAN></DIV></TD>
+<TD CLASS="R5C0"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R5C0" COLSPAN="8"><DIV class="cu_space11"><SPAN class="cu_wspace">прописью</SPAN></DIV></TD>
+<TD CLASS="R5C0"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R38">
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR CLASS="R39">
+<TD><DIV class="cu_space13"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space13"><SPAN class="cu_wspace">Приложение<![CDATA[&nbsp;]]>(паспорта,<![CDATA[&nbsp;]]>сертификаты<![CDATA[&nbsp;]]>и<![CDATA[&nbsp;]]>т.п.)<![CDATA[&nbsp;]]>на<![CDATA[&nbsp;]]></SPAN></DIV></TD>
+<TD CLASS="R39C4"><DIV class="cu_space13"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space13"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="2" class="cu_right"><DIV class="cu_space13"><SPAN class="cu_wspace">листах</SPAN></DIV></TD>
+<TD CLASS="R39C10" COLSPAN="3"><DIV class="cu_space13"><SPAN class="cu_wspace">По<![CDATA[&nbsp;]]>доверенности<![CDATA[&nbsp;]]>№</SPAN></DIV></TD>
+<TD CLASS="R39C4" COLSPAN="3"><DIV class="cu_space13"><SPAN class="cu_wspace"><!-- TO DO: ДоверенностьНомер --></SPAN></DIV></TD>
+<TD CLASS="R39C14"><DIV class="cu_space13"><SPAN class="cu_wspace">от</SPAN></DIV></TD>
+<TD CLASS="R39C4" COLSPAN="3"><DIV class="cu_space13"><SPAN class="cu_wspace"><!-- TO DO: ДоверенностьДата --></SPAN></DIV></TD>
+</TR>
+<TR CLASS="R40">
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R40C4" COLSPAN="2"><DIV class="cu_space14"><SPAN class="cu_wspace">прописью</SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R40C7"><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space14"></DIV></TD>
+</TR>
+<TR CLASS="R39">
+<TD CLASS="R41C0"><DIV class="cu_space13"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R41C0" COLSPAN="2"><DIV class="cu_space13"><SPAN class="cu_wspace">Всего<![CDATA[&nbsp;]]>отпущено<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>на<![CDATA[&nbsp;]]>сумму</SPAN></DIV></TD>
+<TD COLSPAN="5" class="cu_right"><DIV class="cu_space13"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space13"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="2"><DIV class="cu_space13"><SPAN class="cu_wspace">выданной</SPAN></DIV></TD>
+<TD CLASS="R41C11" COLSPAN="7"><DIV class="cu_space13"><SPAN class="cu_wspace"><!-- TO DO: ДоверенностьВыдана --></SPAN></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD CLASS="R42C0"><SPAN></SPAN></TD>
+<TD CLASS="R42C1" COLSPAN="7" class="cu_right"><t t-esc="helper.rubles(o.amount_total).capitalize()"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C16" COLSPAN="7"><SPAN class="cu_wspace">кем,<![CDATA[&nbsp;]]>кому<![CDATA[&nbsp;]]>(организация,<![CDATA[&nbsp;]]>должность,<![CDATA[&nbsp;]]>фамилия,<![CDATA[&nbsp;]]>и.<![CDATA[&nbsp;]]>о.)</SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R5">
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R43C1" COLSPAN="6"><DIV class="cu_space11"><SPAN class="cu_wspace">прописью</SPAN></DIV></TD>
+<TD CLASS="R43C7"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R43C11"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R43C11"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R43C11" COLSPAN="3"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R43C11"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R43C11"><DIV class="cu_space11"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space11"></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN class="cu_wspace">Отпуск<![CDATA[&nbsp;]]>груза<![CDATA[&nbsp;]]>разрешил</SPAN></TD>
+<TD CLASS="R44C2">Директор<!-- TO DO: ДолжностьРуководителя --></TD>
+<TD CLASS="R44C3"><SPAN></SPAN></TD>
+<TD CLASS="R32C8I"><SPAN><t t-raw="company.print_facsimile and (company.print_anywhere or context.get('mark_invoice_as_sent', False)) and helper.img(company.chief_id.facsimile) or ''"/></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R44C6" COLSPAN="2"><t t-esc="helper.initials(company.chief_id.name)"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R32C8" COLSPAN="7"><SPAN class="cu_wspace"><!-- TO DO: ДоверенностьЧерезКого --></SPAN></TD>
+</TR>
+<TR CLASS="R45">
+<TD><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C2"><DIV class="cu_space12"><SPAN class="cu_wspace">должность</SPAN></DIV></TD>
+<TD><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C2"><DIV class="cu_space12"><SPAN class="cu_wspace">подпись</SPAN></DIV></TD>
+<TD><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C6" COLSPAN="2"><DIV class="cu_space12"><SPAN class="cu_wspace">расшифровка<![CDATA[&nbsp;]]>подписи</SPAN></DIV></TD>
+<TD><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C10"><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C11"><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C11"><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C11" COLSPAN="3"><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C11"><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R45C11"><DIV class="cu_space12"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space12"></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD CLASS="R46C0"><SPAN></SPAN></TD>
+<TD CLASS="R46C0" COLSPAN="3"><SPAN class="cu_wspace">Главный<![CDATA[&nbsp;]]>(старший)<![CDATA[&nbsp;]]>бухгалтер</SPAN></TD>
+<TD CLASS="R32C8I"><SPAN><t t-raw="company.print_facsimile and (company.print_anywhere or context.get('mark_invoice_as_sent', False)) and helper.img(company.accountant_id.facsimile) or ''"/></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R44C6" COLSPAN="2"><t t-esc="helper.initials(company.accountant_id.name)"/></TD>
+<TD><SPAN></SPAN></TD>
+<TD COLSPAN="2"><SPAN class="cu_wspace">Груз<![CDATA[&nbsp;]]>принял</SPAN></TD>
+<TD CLASS="R32C8"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R32C8" COLSPAN="3"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R32C8"><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R0">
+<TD></TD>
+<TD COLSPAN="3"></TD>
+<TD CLASS="R36C16">подпись</TD>
+<TD></TD>
+<TD CLASS="R47C6" COLSPAN="2"><SPAN class="cu_wspace">расшифровка<![CDATA[&nbsp;]]>подписи</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C16"><SPAN class="cu_wspace">должность</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C16" COLSPAN="3"><SPAN class="cu_wspace">подпись</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R47C17"><SPAN class="cu_wspace">расшифровка<![CDATA[&nbsp;]]>подписи</SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN class="cu_wspace">Отпуск<![CDATA[&nbsp;]]>груза<![CDATA[&nbsp;]]>произвел</SPAN></TD>
+<TD CLASS="R48C2"><!-- TO DO: ДолжностьКладовщика --></TD>
+<TD CLASS="R48C3"><SPAN></SPAN></TD>
+<TD CLASS="R32C8"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R44C6" COLSPAN="2"><!-- TO DO: ФИОКладовщика --></TD>
+<TD><SPAN></SPAN></TD>
+<TD COLSPAN="2"><SPAN class="cu_wspace">Груз<![CDATA[&nbsp;]]>получил<![CDATA[&nbsp;]]></SPAN></TD>
+<TD CLASS="R32C8"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R32C8" COLSPAN="3"><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R32C8"><SPAN></SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R0">
+<TD><SPAN></SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C16"><SPAN class="cu_wspace">должность</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C16"><SPAN class="cu_wspace">подпись</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R47C6" COLSPAN="2"><SPAN class="cu_wspace">расшифровка<![CDATA[&nbsp;]]>подписи</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R20C0" COLSPAN="2"><SPAN class="cu_wspace">грузополучатель</SPAN></TD>
+<TD CLASS="R36C16"><SPAN class="cu_wspace">должность</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R36C16" COLSPAN="3"><SPAN class="cu_wspace">подпись</SPAN></TD>
+<TD><SPAN></SPAN></TD>
+<TD CLASS="R47C17"><SPAN class="cu_wspace">расшифровка<![CDATA[&nbsp;]]>подписи</SPAN></TD>
+<TD></TD>
+</TR>
+<TR CLASS="R38">
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD CLASS="R50C7"><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD COLSPAN="3"><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><SPAN></SPAN></DIV></TD>
+<TD><DIV class="cu_space7"><![CDATA[&nbsp;]]></DIV></TD>
+</TR>
+<TR CLASS="R0">
+<TD CLASS="R29C7S"><SPAN><t t-raw="company.print_stamp and (company.print_anywhere or context.get('mark_invoice_as_sent', False)) and helper.img(company.stamp) or ''"/></SPAN></TD>
+<TD CLASS="R29C7"><DIV class="cu_space15"><SPAN class="cu_wspace">М.П.</SPAN></DIV></TD>
+<TD CLASS="R29C7" COLSPAN="3"><DIV class="cu_space15"><SPAN class="cu_wspace"><t t-esc="helper.ru_date(o.invoice_date)"/><!-- TO DO: ДатаДокументаДень --></SPAN></DIV></TD>
+<TD COLSPAN="3" class="cu_right"><DIV class="cu_space15"><SPAN class="cu_wspace"><!-- TO DO: ДатаДокументаГод --></SPAN></DIV></TD>
+<TD CLASS="R51C10" COLSPAN="4"><DIV class="cu_space15"><SPAN class="cu_wspace">М.П.</SPAN></DIV></TD>
+<TD COLSPAN="7"><DIV class="cu_space15"><SPAN class="cu_wspace">"<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>"<![CDATA[&nbsp;]]>_____________<![CDATA[&nbsp;]]>20<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]>года</SPAN></DIV></TD>
+</TR>
+</TABLE>
+
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

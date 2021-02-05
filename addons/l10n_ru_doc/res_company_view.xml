@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record id="view_company_ru_form" model="ir.ui.view">
+        <field name="name">res.company.ru.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="email" position="after">
+                    <field name="inn"/>
+                    <field name="kpp"/>
+                    <field name="okpo"/>
+                </field>
+                <xpath expr="//page" position="after">
+                    <page string="Configuration">
+                        <group string="Responsible Persons">
+                            <field name="chief_id"/>
+                            <field name="accountant_id"/>
+                        </group>
+                        <group string="Documents">
+                            <field name="print_facsimile"/>
+                            <field name="print_stamp"/>
+                            <field name="print_anywhere"/>
+                            <field name="stamp" widget="image" class="oe_avatar codup_stamp" attrs="{'invisible': [('print_stamp','=', False)]}"/>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    </data>
+</openerp>

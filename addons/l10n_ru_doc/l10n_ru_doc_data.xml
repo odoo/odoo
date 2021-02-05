@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="base.language.install" id="install_russian">
+            <field name="lang">ru_RU</field>
+            <field name="overwrite">1</field>
+        </record>
+        <function model="base.language.install" name="lang_install">
+            <value eval="[ref('l10n_ru_doc.install_russian')]"/>
+        </function>
+
+    </data>
+</openerp>

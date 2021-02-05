@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="priority">120</field>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button
+                    name="reset_openapi_token"
+                    string="Reset OpenAPI Token"
+                    confirm="Do you want to proceed reset token?"
+                    type="object"
+                    attrs="{'invisible': [('id', '=', False)]}"
+                />
+            </header>
+            <notebook position="inside">
+                <page string="Allowed Intergrations">
+                    <group>
+                        <field name="openapi_token" />
+                    </group>
+                    <field name="namespace_ids" />
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

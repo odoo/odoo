@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record id="view_res_bank_ru_form" model="ir.ui.view">
+        <field name="name">res.bank.ru.form</field>
+        <field name="model">res.bank</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_res_bank_form"/>
+        <field name="arch" type="xml">
+            <field name="bic" position="after">
+                <field name="corr_acc"/>
+            </field>
+        </field>
+    </record>
+
+    </data>
+</openerp>
