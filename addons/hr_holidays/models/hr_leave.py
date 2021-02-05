@@ -919,6 +919,7 @@ class HolidaysRequest(models.Model):
                 'privacy': 'confidential',
                 'event_tz': user.tz,
                 'activity_ids': [(5, 0, 0)],
+                'res_id': holiday.id,
             }
             # Add the partner_id (if exist) as an attendee
             if user and user.partner_id:
