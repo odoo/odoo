@@ -1214,7 +1214,7 @@ QUnit.test('load single message from channel initially', async function (assert)
                     "should fetch up to 30 messages"
                 );
                 assert.deepEqual(
-                    args.kwargs.domain,
+                    args.kwargs.target_domain,
                     [["channel_ids", "in", [20]]],
                     "should fetch messages from channel"
                 );
