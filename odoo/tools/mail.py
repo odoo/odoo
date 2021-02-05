@@ -513,7 +513,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     return res
 
 def email_split_tuples(text):
-    """ Return a list of (name, email) addresse tuples found in ``text``"""
+    """ Return a list of (name, email) address tuples found in ``text``"""
     if not text:
         return []
     return [(addr[0], addr[1]) for addr in getaddresses([text])

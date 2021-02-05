@@ -46,7 +46,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     for decoding `value`, and defaults to 'utf-8' first.
 
     :param value: the value to convert
-    :param hint_encoding: an optional encoding that was detecte
+    :param hint_encoding: an optional encoding that was detected
         upstream and should be tried first to decode ``value``.
     :param str errors: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be

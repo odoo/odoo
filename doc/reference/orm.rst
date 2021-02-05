@@ -192,7 +192,7 @@ Date / Datetime comparison best practices:
              date string, therefore this practice is **heavily**
              discouraged.
 
-Common operations with dates and datetimes such as addition, substraction or
+Common operations with dates and datetimes such as addition, subtraction or
 fetching the start/end of a period are exposed through both
 :class:`~odoo.fields.Date` and :class:`~odoo.fields.Datetime`.
 These helpers are also available by importing `odoo.tools.date_utils`.

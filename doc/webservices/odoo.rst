@@ -13,7 +13,7 @@ all of its data are also available from the outside for external analysis or
 integration with various tools. Part of the :ref:`reference/orm/model` API is
 easily available over XML-RPC_ and accessible from a variety of languages.
 
-.. Odoo XML-RPC idiosyncracies:
+.. Odoo XML-RPC idiosyncrasies:
    * uses multiple endpoint and a nested call syntax instead of a
      "hierarchical" server structure (e.g. ``odoo.res.partner.read()``)
    * uses its own own manual auth system instead of basic auth or sessions
@@ -889,7 +889,7 @@ Records can be updated using :meth:`~odoo.models.Model.write`, it takes
 a list of records to update and a mapping of updated fields to values similar
 to :meth:`~odoo.models.Model.create`.
 
-Multiple records can be updated simultanously, but they will all get the same
+Multiple records can be updated simultaneously, but they will all get the same
 values for the fields being set. It is not currently possible to perform
 "computed" updates (where the value being set depends on an existing value of
 a record).

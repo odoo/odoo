@@ -178,7 +178,7 @@ to add a file from that addon.  In that case, it should be done in three steps:
 
     Note that the files in a bundle are all loaded immediately when the user loads the
     odoo web client.  This means that the files are transferred through the network
-    everytime (except when the browser cache is active).  In some cases, it may be
+    every time (except when the browser cache is active).  In some cases, it may be
     better to lazyload some assets.  For example, if a widget requires a large
     library, and that widget is not a core part of the experience, then it may be
     a good idea to only load the library when the widget is actually created. The
@@ -1784,7 +1784,7 @@ integer (FieldInteger)
     - type: setting the input type (*text* by default, can be set on *number*)
 
     On edit mode, the field is rendered as an input with the HTML attribute type
-    setted on *number* (so user can benefit the native support, especially on
+    set on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
@@ -1825,7 +1825,7 @@ float (FieldFloat)
   - type: setting the input type (*text* by default, can be set on *number*)
 
   On edit mode, the field is rendered as an input with the HTML attribute type
-  setted on *number* (so user can benefit the native support, especially on
+  set on *number* (so user can benefit the native support, especially on
   mobile). In this case, the default formatting is disabled to avoid incompability.
 
   .. code-block:: xml

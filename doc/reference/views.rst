@@ -987,7 +987,7 @@ take the following attributes:
 ``consolidation``
   field name to display consolidation value in record cell
 ``consolidation_max``
-  dictionnary with the "group by" field as key and the maximum consolidation
+  dictionary with the "group by" field as key and the maximum consolidation
   value that can be reached before displaying the cell in red
   (e.g. ``{"user_id": 100}``)
 ``consolidation_exclude``
@@ -2187,7 +2187,7 @@ Possible children elements of the search view are:
             2018
             2017
 
-        Muti selection of options is allowed.
+        Multi selection of options is allowed.
 
     ``default_period`` (optional)
         only makes sense for a filter with non empty ``date`` attribute.

@@ -110,7 +110,7 @@ to manage followers on your record:
     Helper method to send a mail with a template
 
     :param template_id: the id of the template to render to create the body of the message
-    :param `\**kwargs`: parameter to create a mail.compose.message wizzard (which inherit from mail.message)
+    :param `\**kwargs`: parameter to create a mail.compose.message wizard (which inherit from mail.message)
 
 .. rubric:: Receiving messages
 
@@ -252,11 +252,11 @@ Subtypes are created as data in your module; the model has the following fields:
 ``res_model`` - :class:`~odoo.fields.Char`
     model the subtype applies to; if False, this subtype applies to all models
 ``default`` - :class:`~odoo.fields.Boolean`
-    wether the subtype is activated by default when subscribing
+    whether the subtype is activated by default when subscribing
 ``sequence`` - :class:`~odoo.fields.Integer`
     used to order subtypes in the notification customization popup
 ``hidden`` - :class:`~odoo.fields.Boolean`
-    wether the subtype is hidden in the notification customization popup
+    whether the subtype is hidden in the notification customization popup
 
 
 Interfacing subtypes with field tracking allows to subscribe to different kind
@@ -379,7 +379,7 @@ yourself by overriding the function ``_notification_recipients``.
               following the thread). True by default for new groups, False for
               portal / customer.
           - button_follow
-              dict with url adn title of the button
+              dict with url and title of the button
           - has_button_unfollow
               whether to display Unfollow in email (if recipient is currently following the thread).
               True by default for new groups, False for portal / customer.
@@ -576,7 +576,7 @@ some default values these records may have depending on the parent object:
     tasks getting created in the right project) by setting a dictionary of
     default values in the alias' ``alias_defaults`` field.
 
-    :return: dictionnary of values that will be written to the new alias
+    :return: dictionary of values that will be written to the new alias
     :rtype: dict
 
 The ``_get_alias_values()`` override is particularly interesting as it allows you
@@ -639,7 +639,7 @@ you to make your alias easily configurable from the record's form view.
             def _get_alias_values(self):
             """ Specify some default values that will be set in the alias at its creation """
                 values = super(BusinessTrip, self)._get_alias_values()
-                # alias_defaults holds a dictionnary that will be written
+                # alias_defaults holds a dictionary that will be written
                 # to all records created by this alias
                 #
                 # in this case, we want all expense records sent to a trip alias
@@ -704,7 +704,7 @@ you to make your alias easily configurable from the record's form view.
                 of the expense, try to find a partner with this email address and
                 do a regex match to find the amount of the expense."""
                 name = msg_dict.get('subject', 'New Expense')
-                # Match the last occurence of a float in the string
+                # Match the last occurrence of a float in the string
                 # Example: '50.3 bar 34.5' becomes '34.5'. This is potentially the price
                 # to encode on the expense. If not, take 1.0 instead
                 amount_pattern = '(\d+(\.\d*)?|\.\d+)'
@@ -756,7 +756,7 @@ widgets, respectively).
             name = fields.Char()
             # [...]
 
-    We modify the form view of our trips to display their next activites:
+    We modify the form view of our trips to display their next activities:
 
     .. code-block:: xml
 
@@ -779,7 +779,7 @@ You can find concrete examples of integration in the following models:
 
 * ``crm.lead`` in the CRM (*crm*) Application
 * ``sale.order`` in the Sales (*sale*) Application
-* ``project.task`` in the Project (*poject*) Application
+* ``project.task`` in the Project (*project*) Application
 
 
 .. _reference/mixins/website:
@@ -869,7 +869,7 @@ case for this mixin is any object that has a frontend-page; being able to contro
 the visibility of the page allows you to take your time while editing the page
 and only publish it when you're satisfied.
 
-To include the functionnality, you only need to inherit ``website.published.mixin``:
+To include the functionality, you only need to inherit ``website.published.mixin``:
 
 .. code-block:: python
 

@@ -19,7 +19,7 @@ def format_str(val, counter, values):
 
 
 def chain_factories(field_factories, model_name):
-    """ Instanciate a generator by calling all the field factories. """
+    """ Instantiate a generator by calling all the field factories. """
     generator = root_factory()
     for (fname, field_factory) in field_factories:
         generator = field_factory(generator, fname, model_name)
