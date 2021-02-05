@@ -129,7 +129,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
-    given by the environement, this is used by autoreload to keep the listen
+    given by the environment, this is used by autoreload to keep the listen
     socket open when a reload happens.
     """
     def __init__(self, host, port, app):
@@ -498,11 +498,11 @@ class ThreadedServer(CommonServer):
 
         test_mode = config['test_enable'] or config['test_file']
         if test_mode or (config['http_enable'] and not stop):
-            # some tests need the http deamon to be available...
+            # some tests need the http daemon to be available...
             self.http_spawn()
 
     def stop(self):
-        """ Shutdown the WSGI server. Wait for non deamon threads.
+        """ Shutdown the WSGI server. Wait for non daemon threads.
         """
         if getattr(odoo, 'phoenix', None):
             _logger.info("Initiating server reload")
@@ -845,7 +845,7 @@ class PreforkServer(CommonServer):
                 raise
 
     def start(self):
-        # wakeup pipe, python doesnt throw EINTR when a syscall is interrupted
+        # wakeup pipe, python doesn't throw EINTR when a syscall is interrupted
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
         self.pipe = self.pipe_new()
@@ -970,7 +970,7 @@ class Worker(object):
                 raise
 
     def check_limits(self):
-        # If our parent changed sucide
+        # If our parent changed suicide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
             self.alive = False
@@ -1034,7 +1034,7 @@ class Worker(object):
                          len(odoo.modules.registry.Registry.registries))
             self.stop()
         except Exception:
-            _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
+            _logger.exception("Worker (%s) Exception occurred, exiting...", self.pid)
             # should we use 3 to abort everything ?
             sys.exit(1)
 
@@ -1052,7 +1052,7 @@ class Worker(object):
                     break
                 self.process_work()
         except:
-            _logger.exception("Worker %s (%s) Exception occured, exiting...", self.__class__.__name__, self.pid)
+            _logger.exception("Worker %s (%s) Exception occurred, exiting...", self.__class__.__name__, self.pid)
             sys.exit(1)
 
 class WorkerHTTP(Worker):
@@ -1062,7 +1062,7 @@ class WorkerHTTP(Worker):
 
         # The ODOO_HTTP_SOCKET_TIMEOUT environment variable allows to control socket timeout for
         # extreme latency situations. It's generally better to use a good buffering reverse proxy
-        # to quickly free workers rather than increasing this timeout to accomodate high network
+        # to quickly free workers rather than increasing this timeout to accommodate high network
         # latencies & b/w saturation. This timeout is also essential to protect against accidental
         # DoS due to idle HTTP connections.
         sock_timeout = os.environ.get("ODOO_HTTP_SOCKET_TIMEOUT")
@@ -1311,7 +1311,7 @@ def start(preload=None, stop=False):
             # On 32bit systems the default size of an arena is 512K while on 64bit systems it's 64M [3],
             # hence a threaded worker will quickly reach it's default memory soft limit upon concurrent requests.
             # We therefore set the maximum arenas allowed to 2 unless the MALLOC_ARENA_MAX env variable is set.
-            # Note: Setting MALLOC_ARENA_MAX=0 allow to explicitely set the default glibs's malloc() behaviour.
+            # Note: Setting MALLOC_ARENA_MAX=0 allow to explicitly set the default glibs's malloc() behaviour.
             #
             # [1] https://sourceware.org/glibc/wiki/MallocInternals#Arenas_and_Heaps
             # [2] https://www.gnu.org/software/libc/manual/html_node/The-GNU-Allocator.html

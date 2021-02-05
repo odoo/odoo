@@ -30,8 +30,8 @@ class MigrationManager(object):
     """
         This class manage the migration of modules
         Migrations files must be python files containing a `migrate(cr, installed_version)`
-        function. Theses files must respect a directory tree structure: A 'migrations' folder
-        which containt a folder by version. Version can be 'module' version or 'server.module'
+        function. These files must respect a directory tree structure: A 'migrations' folder
+        which contains a folder by version. Version can be 'module' version or 'server.module'
         version (in this case, the files will only be processed by this version of the server).
         Python file names must start by `pre-` or `post-` and will be executed, respectively,
         before and after the module initialisation. `end-` scripts are run after all modules have
@@ -103,7 +103,7 @@ class MigrationManager(object):
 
         def convert_version(version):
             if version.count('.') >= 2:
-                return version  # the version number already containt the server version
+                return version  # the version number already contains the server version
             return "%s.%s" % (release.major_version, version)
 
         def _get_migration_versions(pkg, stage):

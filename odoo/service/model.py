@@ -50,7 +50,7 @@ def check(f):
 
         def tr(src, ttype):
             # We try to do the same as the _(), but without the frame
-            # inspection, since we aready are wrapping an osv function
+            # inspection, since we already are wrapping an osv function
             # trans_obj = self.get('ir.translation') cannot work yet :(
             ctx = {}
             if not kwargs:
