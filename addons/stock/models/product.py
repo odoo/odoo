@@ -287,7 +287,7 @@ class Product(models.Model):
         # to use the quants, not the stock moves. Therefore, we bypass the usual
         # '_search_product_quantity' method and call '_search_qty_available_new' instead. This
         # allows better performances.
-        if value == 0.0 and operator == '>' and not ({'from_date', 'to_date'} & set(self.env.context.keys())):
+        if not ({'from_date', 'to_date'} & set(self.env.context.keys())):
             product_ids = self._search_qty_available_new(
                 operator, value, self.env.context.get('lot_id'), self.env.context.get('owner_id'),
                 self.env.context.get('package_id')
