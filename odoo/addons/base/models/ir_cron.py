@@ -10,7 +10,6 @@ from dateutil.relativedelta import relativedelta
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import unique
 
 _logger = logging.getLogger(__name__)
 
@@ -432,10 +431,7 @@ class ir_cron(models.Model):
             return
 
         self.ensure_one()
-        now = datetime.utcnow().replace(second=0, microsecond=0)
-
-        # compress the list to insert at most one trigger per minute
-        at_list = list(unique(at.replace(second=0, microsecond=0) for at in at_list))
+        now = fields.Datetime.now()
 
         self.env['ir.cron.trigger'].sudo().create([
             {'cron_id': self.id, 'call_at': at}
