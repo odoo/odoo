@@ -759,14 +759,15 @@ class ModelField {
                     // these related fields.
                     continue;
                 }
-                this.env.modelManager._update(
-                    recordToUnlink,
-                    { [this.inverse]: [['unlink', record]] },
-                    { allowWriteReadonly: true, hasToUpdateInverse: false }
-                );
                 // apply causality
                 if (this.isCausal) {
                     this.env.modelManager._delete(recordToUnlink);
+                } else {
+                    this.env.modelManager._update(
+                        recordToUnlink,
+                        { [this.inverse]: [['unlink', record]] },
+                        { allowWriteReadonly: true, hasToUpdateInverse: false }
+                    );
                 }
             }
         }
@@ -802,14 +803,15 @@ class ModelField {
                 // these related fields.
                 return;
             }
-            this.env.modelManager._update(
-                otherRecord,
-                { [this.inverse]: [['unlink', record]] },
-                { allowWriteReadonly: true, hasToUpdateInverse: false }
-            );
             // apply causality
             if (this.isCausal) {
                 this.env.modelManager._delete(otherRecord);
+            } else {
+                this.env.modelManager._update(
+                    otherRecord,
+                    { [this.inverse]: [['unlink', record]] },
+                    { allowWriteReadonly: true, hasToUpdateInverse: false }
+                );
             }
         }
         return true;
