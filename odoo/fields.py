@@ -927,6 +927,8 @@ class Field(MetaField('DummyField', (object,), {})):
             not column
             and len(self.related or ()) == 2
             and self.related_field.store and not self.related_field.compute
+            and not (self.related_field.type == 'binary' and self.related_field.attachment)
+            and self.related_field.type not in ('one2many', 'many2many')
         ):
             join_field = model._fields[self.related[0]]
             if (
