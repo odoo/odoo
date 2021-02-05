@@ -36,11 +36,11 @@ export class NavBar extends Component {
   get currentApp() {
     return this.menuRepo.getCurrentApp();
   }
-  
+
   get currentAppSections() {
     return (this.currentApp && this.menuRepo.getMenuAsTree(this.currentApp.id).childrenTree) || [];
   }
-  
+
   get systrayItems() {
     return odoo.systrayRegistry.getAll().sort((x, y) => {
       const xSeq = x.sequence !== undefined ? x.sequence : 50;
@@ -48,7 +48,15 @@ export class NavBar extends Component {
       return ySeq - xSeq;
     });
   }
-  
+
+  /**
+   * Adapt will check the available width for the app sections to get displayed.
+   * If not enough space is available, it will replace by a "more" menu
+   * the least amount of app sections needed trying to fit the width.
+   *
+   * NB: To compute the widths of the actual app sections, a render needs to be done upfront.
+   *     By the end of this method another render may occur depending on the adaptation result.
+   */
   async adapt() {
     if (!this.el) {
       // currently, the promise returned by 'render' is resolved at the end of
@@ -56,10 +64,14 @@ export class NavBar extends Component {
       // may get here and have this.el unset
       return;
     }
+
     // ------- Initialize -------
     // Check actual "more" dropdown state
     const moreDropdown = this.el.querySelector(".o_menu_sections_more");
     const initialAppSectionsExtra = this.currentAppSectionsExtra;
+    const firstInitialAppSectionExtra = [...initialAppSectionsExtra].shift();
+    const initialAppId = firstInitialAppSectionExtra && firstInitialAppSectionExtra.appID;
+
     // Restore (needed to get offset widths)
     const sections = [
       ...this.el.querySelectorAll(".o_menu_sections > *:not(.o_menu_sections_more)"),
@@ -67,6 +79,7 @@ export class NavBar extends Component {
     sections.forEach((s) => s.classList.remove("d-none"));
     this.currentAppSectionsExtra = [];
     moreDropdown.classList.add("d-none");
+
     // ------- Check overflowing sections -------
     const sectionsMenu = this.el.querySelector(".o_menu_sections");
     const sectionsAvailableWidth = sectionsMenu.offsetWidth;
@@ -94,14 +107,20 @@ export class NavBar extends Component {
         width += section.offsetWidth;
       }
     }
+
     // ------- Final rendering -------
-    if (initialAppSectionsExtra.length === this.currentAppSectionsExtra.length) {
+    const firstCurrentAppSectionExtra = [...this.currentAppSectionsExtra].shift();
+    const currentAppId = firstCurrentAppSectionExtra && firstCurrentAppSectionExtra.appID;
+    if (
+      initialAppSectionsExtra.length === this.currentAppSectionsExtra.length &&
+      initialAppId === currentAppId
+    ) {
       // Do not render if more menu items stayed the same.
       return;
     }
     return this.render();
   }
-  
+
   onNavBarDropdownItemSelection(ev) {
     const { payload: menu } = ev.detail;
     if (menu) {

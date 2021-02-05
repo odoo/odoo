@@ -179,3 +179,69 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
   ]);
   navbar.destroy();
 });
+
+QUnit.test("'more' menu sections properly updated on app change", async (assert) => {
+  const newMenus = {
+    root: { id: "root", children: [1, 2], name: "root", appID: "root" },
+    // First App
+    1: { id: 1, children: [10, 11, 12], name: "App1", appID: 1 },
+    10: { id: 10, children: [], name: "Section 10", appID: 1 },
+    11: { id: 11, children: [], name: "Section 11", appID: 1 },
+    12: { id: 12, children: [120, 121, 122], name: "Section 12", appID: 1 },
+    120: { id: 120, children: [], name: "Section 120", appID: 1 },
+    121: { id: 121, children: [], name: "Section 121", appID: 1 },
+    122: { id: 122, children: [], name: "Section 122", appID: 1 },
+    // Second App
+    2: { id: 2, children: [20, 21, 22], name: "App2", appID: 2 },
+    20: { id: 20, children: [], name: "Section 20", appID: 2 },
+    21: { id: 21, children: [], name: "Section 21", appID: 2 },
+    22: { id: 22, children: [220, 221, 222], name: "Section 22", appID: 2 },
+    220: { id: 220, children: [], name: "Section 220", appID: 2 },
+    221: { id: 221, children: [], name: "Section 221", appID: 2 },
+    222: { id: 222, children: [], name: "Section 222", appID: 2 },
+  };
+  baseConfig.serverData.menus = newMenus;
+  const env = await makeTestEnv(baseConfig);
+
+  // Set App1 menu and mount
+  env.services.menus.setCurrentMenu(1);
+  const navbar = await mount(NavBar, { env });
+
+  // Force minimal width and dispatch window resize event
+  navbar.el.style.width = "0%";
+  window.dispatchEvent(new Event("resize"));
+  await nextTick();
+  assert.containsOnce(
+    navbar.el,
+    ".o_menu_sections > *:not(.d-none)",
+    "only one menu section should be displayed"
+  );
+  assert.containsOnce(
+    navbar.el,
+    ".o_menu_sections_more:not(.d-none)",
+    "the displayed menu section should be the 'more' menu"
+  );
+
+  // Open the more menu
+  await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
+  assert.deepEqual(
+    [...navbar.el.querySelectorAll(".o_dropdown_menu > *")].map((el) => el.textContent),
+    ["Section 10", "Section 11", "Section 12", "Section 120", "Section 121", "Section 122"],
+    "'more' menu should contain App1 sections"
+  );
+  // Close the more menu
+  await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
+
+  // Set App2 menu
+  env.services.menus.setCurrentMenu(2);
+  await nextTick();
+
+  // Open the more menu
+  await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
+  assert.deepEqual(
+    [...navbar.el.querySelectorAll(".o_dropdown_menu > *")].map((el) => el.textContent),
+    ["Section 20", "Section 21", "Section 22", "Section 220", "Section 221", "Section 222"],
+    "'more' menu should contain App2 sections"
+  );
+  navbar.destroy();
+});
