@@ -46,7 +46,7 @@ var DateWidget = Widget.extend({
             calendarWeeks: true,
             buttons: {
                 showToday: true,
-                showClear: false,
+                showClear: true,
                 showClose: true,
             },
             widgetParent: 'body',
@@ -296,8 +296,8 @@ var DateTimeWidget = DateWidget.extend({
     init: function (parent, options) {
         this._super(parent, _.extend({
             buttons: {
-                showToday: false,
-                showClear: false,
+                showToday: true,
+                showClear: true,
                 showClose: true,
             },
         }, options || {}));
