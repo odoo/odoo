@@ -378,6 +378,61 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     );
 });
 
+QUnit.test('new message chat window should close on selecting the user if chat with the user is already open', async function (assert) {
+    assert.expect(2);
+
+    this.data['res.partner'].records.push({ id: 131, name: "Partner 131"});
+    this.data['res.users'].records.push({ id: 12, partner_id: 131 });
+    this.data['mail.channel'].records.push({
+        channel_type: "chat",
+        id: 20,
+        is_minimized: true,
+        members: [this.data.currentPartnerId, 131],
+        name: "Partner 131",
+        public: 'private',
+        state: 'open',
+    });
+    const imSearchDef = makeDeferred();
+    await this.start({
+        async mockRPC(route, args) {
+            const res = await this._super(...arguments);
+            if (args.method === 'im_search') {
+                imSearchDef.resolve();
+            }
+            return res;
+        },
+    });
+
+    // open "new message" chat window
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_newMessageButton`).click());
+
+    // search for a user in "new message" autocomplete
+    document.execCommand('insertText', false, "131");
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keydown'));
+    document.querySelector(`.o_ChatWindow_newMessageFormInput`)
+        .dispatchEvent(new window.KeyboardEvent('keyup'));
+    // Wait for search RPC to be resolved. The following await lines are
+    // necessary because autocomplete is an external lib therefore it is not
+    // possible to use `afterNextRender`.
+    await imSearchDef;
+    await nextAnimationFrame();
+    const link = document.querySelector('.ui-autocomplete .ui-menu-item a');
+
+    await afterNextRender(() => link.click());
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow_newMessageFormInput',
+        "'new message' chat window should not be there"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have only one chat window after selecting user whose chat is already open",
+    );
+});
+
 QUnit.test('new message autocomplete should automatically select first result', async function (assert) {
     assert.expect(1);
 
