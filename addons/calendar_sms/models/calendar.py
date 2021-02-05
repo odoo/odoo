@@ -27,6 +27,19 @@ class CalendarEvent(models.Model):
                 put_in_queue=False
             )
 
+    def action_send_sms(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sms.composer',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_composition_mode': 'mass',
+                'default_res_model': 'res.partner',
+                'default_res_ids': self.partner_ids.ids,
+            },
+        }
+
     def _get_trigger_alarm_types(self):
         return super()._get_trigger_alarm_types() + ['sms']
 
