@@ -455,7 +455,10 @@ function factory(dependencies) {
         }),
         newMessageChatWindow: one2one('mail.chat_window', {
             compute: '_computeNewMessageChatWindow',
-            dependencies: ['allOrderedThread'],
+            dependencies: [
+                'allOrdered',
+                'allOrderedThread',
+            ],
         }),
         unreadHiddenConversationAmount: attr({
             compute: '_computeUnreadHiddenConversationAmount',
