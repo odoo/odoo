@@ -69,7 +69,7 @@ kanbanExamplesRegistry.add('project', {
         bullets: [greenBullet, redBullet],
     }, {
         name: _lt('Getting Things Done (GTD)'),
-        columns: [_lt('Inbox'), _lt('Today'), _lt('This Week'), _lt('This Month'), _lt('Long Term')],
+        columns: [_lt('Inbox'), _lt('Today'), _lt('This Week'), _lt('This Month'), _lt('Long Term'), _lt('Done')],
         description: escFormat(_lt('Fill your Inbox easily with the email gateway. Periodically review your ' +
             'Inbox and schedule tasks by moving them to others columns. Every day, you review the ' +
             '%s column to move important tasks %s. Every Monday, you review the %s column. %s'), _lt('"This Week"'), _lt('"Today"'), _lt('"This Month"'), description_activities),
