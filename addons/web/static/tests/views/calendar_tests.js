@@ -198,6 +198,11 @@ QUnit.module('Views', {
         var $sidebar = calendar.$('.o_calendar_sidebar');
 
         // test view scales
+        assert.containsN(calendar, '.fc-event', 0,
+            "By default, only the events of the current user are displayed (0 in this case)");
+
+        // display all events
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=all] input'));
         assert.containsN(calendar, '.fc-event', 9,
             "should display 9 events on the week (4 event + 5 days event)");
         assert.containsN($sidebar, 'tr:has(.ui-state-active) td', 7,
@@ -209,6 +214,11 @@ QUnit.module('Views', {
             "should highlight the target day in mini calendar");
 
         await testUtils.dom.click(calendar.$buttons.find('.o_calendar_button_month')); // display all the month
+
+        // We display the events or partner 1 2 and 4. Partner 2 has nothing and Event 6 is for partner 6 (not displayed)
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=all] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter .o_calendar_filter_item[data-value=1] input')[0]);
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
         assert.containsN(calendar, '.fc-event', 7,
             "should display 7 events on the month (5 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')");
         assert.containsN($sidebar, 'td a', 31,
@@ -246,8 +256,6 @@ QUnit.module('Views', {
         await testUtils.dom.click($sidebar.find('input[type="text"]'));
         assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
         await testUtils.dom.click($sidebar.find('.o_calendar_filter_item .o_remove').first(), {allowInvisible: true});
-        assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
-        await testUtils.dom.click($('.modal-footer button.btn:contains(Ok)'));
         assert.containsN($sidebar, '.o_calendar_filter:has(h5:contains(attendees)) .o_calendar_filter_item', 3, "click on remove then should display 3 filter items for 'attendees'");
         calendar.destroy();
     });
@@ -430,7 +438,7 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal-footer button.btn:contains(Edit)'));
 
         assert.strictEqual($('.modal-lg .o_form_view').length, 1, "should open the slow create dialog");
-        assert.strictEqual($('.modal-lg .modal-title').text(), "Create: Events",
+        assert.strictEqual($('.modal-lg .modal-title').text(), "New Event",
             "should use the string attribute as modal title");
         assert.strictEqual($('.modal-lg .o_form_view input[name="name"]').val(), "coucou",
             "should have set the name from the quick create dialog");
@@ -544,7 +552,7 @@ QUnit.module('Views', {
         testUtils.dom.triggerMouseEvent($cell, "mouseup");
         await testUtils.nextTick();
 
-        assert.strictEqual($('.modal-sm .modal-title').text(), 'Create: Custom Events',
+        assert.strictEqual($('.modal-sm .modal-title').text(), 'New Event',
             "should open the quick create dialog");
 
         await testUtils.fields.editInput($('.modal-body input:first'), 'custom event in quick create');
@@ -597,7 +605,7 @@ QUnit.module('Views', {
         testUtils.dom.triggerMouseEvent($cell, "mouseup");
         await testUtils.nextTick();
 
-        assert.strictEqual($('.modal-sm .modal-title').text(), 'Create: Events',
+        assert.strictEqual($('.modal-sm .modal-title').text(), 'New Event',
             "should open the quick create dialog");
 
         await testUtils.fields.editInput($('.modal-body input:first'), 'new event in quick create');
@@ -607,7 +615,7 @@ QUnit.module('Views', {
         // If the event is not default-prevented, a traceback will be raised, which we do not want
         assert.ok(event.isDefaultPrevented(), "fail deferred event should have been default-prevented");
 
-        assert.strictEqual($('.modal-lg .modal-title').text(), 'Create: Events',
+        assert.strictEqual($('.modal-lg .modal-title').text(), 'New Event',
             "should have switched to a bigger modal for an actual create rather than quickcreate");
         assert.strictEqual($('.modal-lg main .o_form_view.o_form_editable').length, 1,
             "should open the full event form view in a dialog");
@@ -1807,6 +1815,8 @@ QUnit.module('Views', {
         assert.containsN(calendar, '.o_calendar_filter_items .o_cw_filter_avatar', 3,
             "should have 3 avatars in the side bar");
 
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=all] input'));
+
         // Event 1
         await testUtils.dom.click(calendar.$('.fc-event:first'));
         assert.ok(calendar.$('.o_cw_popover').length, "should open a popover clicking on event");
@@ -2130,7 +2140,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('"all" filter', async function (assert) {
-        assert.expect(6);
+        assert.expect(8);
 
         var interval = [
             ["start", "<=", "2016-12-17 23:59:59"],
@@ -2138,8 +2148,9 @@ QUnit.module('Views', {
         ];
 
         var domains = [
-            interval.concat([["partner_ids", "in", [2,1]]]),
+            interval.concat([["partner_ids", "in", []]]),
             interval.concat([["partner_ids", "in", [1]]]),
+            interval.concat([["partner_ids", "in", [2,1]]]),
             interval,
         ];
 
@@ -2172,15 +2183,17 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-
-        assert.containsN(calendar, '.fc-event', 9,
-            "should display 9 events on the week");
+        // By default, no user is selected
+        assert.containsN(calendar, '.fc-event', 0,
+            "should display 0 events on the week");
 
         // Select the events only associated with partner 2
-        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-id=2] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-id=1] input'));
         assert.containsN(calendar, '.fc-event', 4,
             "should display 4 events on the week");
-
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
+        assert.containsN(calendar, '.fc-event', 9,
+            "should display 9 events on the week");
         // Click on the 'all' filter to reload all events
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=all] input'));
         assert.containsN(calendar, '.fc-event', 9,
@@ -2216,6 +2229,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         });
+        // By default no filter is selected. We check before continuing.
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
 
         assert.containsN(calendar, '.o_calendar_filter', 2, "should display 2 filters");
 
@@ -2260,10 +2276,10 @@ QUnit.module('Views', {
             },
         }, {positionalClicks: true});
 
-        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=4] input'));
-
+        // By default only
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
         assert.containsN(calendar, '.o_calendar_filter_item', 5, "should display 5 filter items");
-        assert.containsN(calendar, '.fc-event', 3, "should display 3 events");
+        assert.containsN(calendar, '.fc-event', 4, "should display 4 events");
 
         // quick create a record
         var left = calendar.$('.fc-bg td:eq(4)').offset().left+15;
@@ -2282,13 +2298,14 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal-footer button.btn:contains(Create)'));
 
         assert.containsN(calendar, '.o_calendar_filter_item', 6, "should add the missing filter (active)");
-        assert.containsN(calendar, '.fc-event', 4, "should display the created item");
+        assert.containsN(calendar, '.fc-event', 5, "should display the created item");
         await testUtils.nextTick();
 
         // change default value for quick create an hide record
         this.data.event.fields.user_id.default = 4;
         this.data.event.fields.partner_id.default = 4;
-
+        // Disable our filter to create a record without displaying it
+         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=4] input'));
         // quick create and other record
         left = calendar.$('.fc-bg td:eq(3)').offset().left+15;
         top = calendar.$('.fc-slats tr:eq(12) td:first').offset().top+15;
@@ -2304,6 +2321,7 @@ QUnit.module('Views', {
         assert.containsN(calendar, '.fc-event', 4, "should not display the created item");
 
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=4] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
 
         assert.containsN(calendar, '.fc-event', 11, "should display all records");
 
@@ -2354,7 +2372,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         }, {positionalClicks: true});
-
+        // dislay all attendee calendars
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=4] input'));
 
         assert.containsN(calendar, '.o_calendar_filter_item', 5, "should display 5 filter items");
@@ -2434,7 +2454,8 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         });
-
+        // select needed partner filters
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=4] input'));
 
         assert.containsN(calendar, '.o_calendar_filter_item', 5, "should display 5 filter items");
@@ -2515,8 +2536,11 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         });
-
+        // select filter for partner 1, 2 and 4
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input')[0]);
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=4] input'));
+
         await testUtils.dom.click($('.o_calendar_button_prev'));
 
         assert.containsN(calendar, '.o_calendar_filter_item', 6, "should display 6 filter items");
@@ -2541,7 +2565,8 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         });
-
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
         assert.containsN(calendar, '.fc-event', 5,
             "should display 5 events");
         await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=all] input[type=checkbox]'));
@@ -2625,6 +2650,7 @@ QUnit.module('Views', {
                 }
             },
         });
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
         assert.containsOnce(calendar, '.fc-day-grid .fc-event-container',
             "should be one event in the all day row");
         assert.strictEqual(moment(calendar.model.data.data[0].r_start).date(), 14,
@@ -3677,8 +3703,6 @@ QUnit.module('Views', {
         await testUtils.nextTick();
         assert.equal($('.o_field_boolean.o_field_widget[name=allday] input').is(':checked'), false,
             "The event must not have the all_day active");
-        await testUtils.dom.click($('.modal button.btn:contains(Discard)'));
-
         calendar.destroy();
     });
 
@@ -3709,6 +3733,10 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         }, {positionalClicks: true});
+
+        // select all partner filters
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
 
         // Check view
         assert.containsN(calendar, '.fc-month', 12);
@@ -3821,6 +3849,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
         });
+        // activate partner filter
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=1] input'));
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-value=2] input'));
 
         function checkEvents(countMap) {
             for (const [id, count] of Object.entries(countMap)) {

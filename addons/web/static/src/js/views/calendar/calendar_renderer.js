@@ -141,23 +141,19 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     _onFilterRemove: function (e) {
         var self = this;
         var $filter = $(e.currentTarget).closest('.o_calendar_filter_item');
-        Dialog.confirm(this, _t("Do you really want to delete this filter from favorites ?"), {
-            confirm_callback: function () {
-                self._rpc({
-                        model: self.write_model,
-                        method: 'unlink',
-                        args: [[$filter.data('id')]],
-                    })
-                    .then(function () {
-                        self.trigger_up('changeFilter', {
-                            'fieldName': self.fieldName,
-                            'id': $filter.data('id'),
-                            'active': false,
-                            'value': $filter.data('value'),
-                        });
-                    });
-            },
-        });
+        self._rpc({
+                model: self.write_model,
+                method: 'unlink',
+                args: [[$filter.data('id')]],
+            })
+            .then(function () {
+                self.trigger_up('changeFilter', {
+                    'fieldName': self.fieldName,
+                    'id': $filter.data('id'),
+                    'active': false,
+                    'value': $filter.data('value'),
+                });
+            });
     },
 });
 
@@ -354,6 +350,7 @@ return AbstractRenderer.extend({
             record: event.extendedProps.record,
             color: this.getColor(event.extendedProps.color_index),
             showTime: !self.hideTime && event.extendedProps.showTime,
+            showLocation: this.state.scale !== 'month'
         };
         this.qweb_context = qweb_context;
         if (_.isEmpty(qweb_context.record)) {
@@ -422,6 +419,11 @@ return AbstractRenderer.extend({
                 self._unselectEvent();
                 $(self.calendarElement).find(`[data-event-id=${eventData.id}]`).addClass('o_cw_custom_highlight');
                 self._renderEventPopover(eventData, $(eventClickInfo.el));
+            },
+            selectAllow: function (event) {
+               if (event.end.getDate() === event.start.getDate() || event.allDay) {
+                   return true;
+               }
             },
             yearDateClick: function (info) {
                 self._unselectEvent();

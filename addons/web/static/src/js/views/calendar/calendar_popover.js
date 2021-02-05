@@ -197,8 +197,14 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                     fieldWidget.attrs.modifiers = fieldWidget.attrs.modifiers ? JSON.parse(fieldWidget.attrs.modifiers) : {};
                 }
                 self._registerWidget(recordID, field.name, fieldWidget);
+                // Only display the fields whose attributes does not make them invisible
+                let fieldClass = "list-group-item flex-shrink-0 d-flex flex-wrap";
+                if (fieldWidget.attrs && fieldWidget.attrs.modifiers) {
+                    const fieldModifier = record.evalModifiers(fieldWidget.attrs.modifiers);
+                    fieldClass += fieldModifier.invisible ? ' o_invisible_modifier' : '';
+                }
 
-                var $field = $('<li>', {class: 'list-group-item flex-shrink-0 d-flex flex-wrap'});
+                var $field = $('<li>', {class: fieldClass});
                 var $fieldLabel = $('<strong>', {class: 'mr-2', text: _.str.sprintf('%s : ', field.string)});
                 $fieldLabel.appendTo($field);
                 var $fieldContainer = $('<div>', {class: 'flex-grow-1'});

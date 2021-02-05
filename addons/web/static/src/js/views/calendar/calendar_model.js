@@ -489,7 +489,6 @@ return AbstractModel.extend({
     _loadCalendar: function () {
         var self = this;
         this.data.fc_options = this._getFullCalendarOptions();
-
         var defs = _.map(this.data.filters, this._loadFilter.bind(this));
 
         return Promise.all(defs).then(function () {
@@ -550,11 +549,12 @@ return AbstractModel.extend({
                     var value = _.isArray(_value) ? _value[0] : _value;
                     var f = _.find(filter.filters, function (f) {return f.value === value;});
                     var formater = fieldUtils.format[_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type];
+                    // By default, only current user partner is checked.
                     return {
                         'id': record.id,
                         'value': value,
                         'label': formater(_value, field),
-                        'active': !f || f.active,
+                        'active': f && f.active,
                     };
                 });
                 records.sort(function (f1,f2) {
@@ -573,7 +573,7 @@ return AbstractModel.extend({
                         var f = _.find(filter.filters, function (f) {return f.value === value;});
                         me = {
                             'value': value,
-                            'label': session.name + _t(" [Me]"),
+                            'label': session.name,
                             'active': !f || f.active,
                         };
                     }

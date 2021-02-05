@@ -242,6 +242,16 @@ $o-cw-filter-avatar-size: 20px;
 
             .fc-week-number {
                 background: none;
+                font-size: 1.2rem;
+                padding: 0.1rem 0.3rem 0.1rem 0 !important;
+                line-height: 1;
+            }
+            .fc-day-top {
+                    text-align: center;
+                    padding-top: 3px;
+                    .fc-day-number {
+                        float: none !important;
+                    }
             }
 
             .fc-day-number {
@@ -251,6 +261,7 @@ $o-cw-filter-avatar-size: 20px;
                 color: gray('900');
                 font-weight: 400;
                 line-height: 1;
+                float: none !important;
             }
 
             .fc-day-top.fc-other-month {
@@ -682,6 +693,10 @@ $o-cw-filter-avatar-size: 20px;
         background: none;
     }
 
+    .o_footer_shrink {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
     .o_cw_popover_close {
         cursor: pointer;
     }
@@ -703,7 +718,7 @@ $o-cw-filter-avatar-size: 20px;
 
     .o_cw_popover_fields_secondary {
         max-height: 170px; // Fallback for old browsers
-        max-height: 25vh;
+        max-height: 75vh;
         overflow: auto;
         padding-bottom: 1px; // prevents the scrollbar to show when not needed
 
