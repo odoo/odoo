@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tools.float_utils import float_repr
+from odoo.tools.float_utils import float_is_zero, float_repr
 
 
 class ReplenishmentReport(models.AbstractModel):
@@ -15,9 +15,10 @@ class ReplenishmentReport(models.AbstractModel):
         company = self.env['stock.location'].browse(wh_location_ids).mapped('company_id')
         svl = self.env['stock.valuation.layer'].search(domain + [('company_id', '=', company.id)])
         currency = svl.currency_id or self.env.company.currency_id
-        quantity = sum(svl.filtered(lambda layer: layer.stock_move_id.location_dest_id.id in wh_location_ids).mapped('quantity'))
-        if quantity:
-            total_quantity = sum(svl.mapped('quantity'))
+        total_quantity = sum(svl.mapped('quantity'))
+        # Because we can have negative quantities, `total_quantity` may be equal to zero even if the warehouse's `quantity` is positive.
+        if svl and not float_is_zero(total_quantity, precision_rounding=svl.product_id.uom_id.rounding):
+            quantity = sum(svl.filtered(lambda layer: layer.stock_move_id.location_dest_id.id in wh_location_ids).mapped('quantity'))
             value = sum(svl.mapped('value')) * (quantity / total_quantity)
         else:
             value = 0
