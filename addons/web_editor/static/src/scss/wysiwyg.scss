@@ -125,8 +125,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         outline: none !important;
     }
     .dropdown-menu {
+        transform: none !important;
         margin-top: $o-we-dropdown-spacing;
         padding: 0;
+        margin-top: $o-we-toolbar-height;
         border: $o-we-dropdown-border-width solid $o-we-dropdown-border-color;
         background-color: $o-we-dropdown-bg;
         box-shadow: $o-we-dropdown-shadow;
