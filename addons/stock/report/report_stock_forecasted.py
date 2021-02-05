@@ -164,10 +164,16 @@ class ReplenishmentReport(models.AbstractModel):
         in_domain, out_domain = self._move_confirmed_domain(
             product_template_ids, product_variant_ids, wh_location_ids
         )
-        outs = self.env['stock.move'].search(out_domain, order='priority desc, date, id')
+        outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
+        reserved_outs = self.env['stock.move'].search(
+            out_domain + [('state', 'in', ('partially_available', 'assigned'))],
+            order='priority desc, date, id')
         outs_per_product = defaultdict(lambda: [])
+        reserved_outs_per_product = defaultdict(lambda: [])
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
+        for out in reserved_outs:
+            reserved_outs_per_product[out.product_id.id].append(out)
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(lambda: [])
         for in_ in ins:
@@ -180,9 +186,7 @@ class ReplenishmentReport(models.AbstractModel):
 
         lines = []
         for product in (ins | outs).product_id:
-            for out in outs_per_product[product.id]:
-                if out.state not in ('partially_available', 'assigned'):
-                    continue
+            for out in reserved_outs_per_product[product.id]:
                 current = currents[out.product_id.id]
                 reserved = out.product_uom._compute_quantity(out.reserved_availability, product.uom_id)
                 currents[product.id] -= reserved
