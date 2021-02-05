@@ -55,6 +55,7 @@ class Survey(models.Model):
         help="This message will be displayed when survey is completed")
     background_image = fields.Binary("Background Image")
     active = fields.Boolean("Active", default=True)
+    user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
