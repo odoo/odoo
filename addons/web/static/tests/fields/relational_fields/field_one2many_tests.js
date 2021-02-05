@@ -5076,7 +5076,7 @@ QUnit.module('fields', {}, function () {
                 "should correctly display the m2o");
             assert.strictEqual(form.$('.o_data_row:first td:nth(2) .badge').length, 2,
                 "m2m should contain two tags");
-            assert.strictEqual(form.$('.o_data_row:first td:nth(2) .badge:first span').text(),
+            assert.strictEqual(form.$('.o_data_row:first td:nth(2) .badge:first span .o_tag_badge_text').text(),
                 'second record', "m2m values should have been correctly fetched");
 
             await testUtils.dom.click(form.$('.o_data_row:first'));
