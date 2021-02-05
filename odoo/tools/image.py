@@ -378,15 +378,16 @@ def image_fix_orientation(image):
         or the source image if no operation was applied
     :rtype: PIL.Image
     """
-    # `exif_transpose` was added in Pillow 6.0
-    if hasattr(ImageOps, 'exif_transpose'):
-        return ImageOps.exif_transpose(image)
     if (image.format or '').upper() == 'JPEG' and hasattr(image, '_getexif'):
         exif = image._getexif()
         if exif:
             orientation = exif.get(EXIF_TAG_ORIENTATION, 0)
             for method in EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS.get(orientation, []):
                 image = image.transpose(method)
+            return image
+    # `exif_transpose` was added in Pillow 6.0
+    if hasattr(ImageOps, 'exif_transpose'):
+        return ImageOps.exif_transpose(image)
     return image
 
 
