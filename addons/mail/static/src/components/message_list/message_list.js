@@ -29,6 +29,7 @@ class MessageList extends Component {
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
                 threadCache,
+                threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
                 threadCacheIsAllHistoryLoaded: threadCache && threadCache.isAllHistoryLoaded,
                 threadCacheIsLoaded: threadCache && threadCache.isLoaded,
                 threadCacheIsLoadingMore: threadCache && threadCache.isLoadingMore,
