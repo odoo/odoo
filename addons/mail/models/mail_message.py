@@ -1031,14 +1031,16 @@ class Message(models.Model):
                     channels_dom = sub_dom
                     break
             if type(channels_dom_index) == int:
+                domain.pop(channels_dom_index)
                 filtered_moderated_channel_ids = list(set(channels_dom[2]) & set(moderated_channel_ids))
-                domain = domain[:channels_dom_index] + expression.OR([[channels_dom], [
+                target_domain = expression.OR([[channels_dom], [
                     ('model', '=', 'mail.channel'),
                     ('res_id', 'in', filtered_moderated_channel_ids),
                     '|',
                     ('author_id', '=', self.env.user.partner_id.id),
                     ('moderation_status', '=', 'pending_moderation'),
-                ]]) + domain[channels_dom_index+1:]
+                ]])
+                domain = expression.AND([target_domain, domain])
         messages = self.search(domain, limit=limit)
         return messages.message_format()
 
