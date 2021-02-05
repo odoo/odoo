@@ -3428,11 +3428,14 @@ class One2many(_RelationalMulti):
                         browse([command[1]])[inverse] = False
                     elif command[0] == Command.LINK:
                         browse([command[1]])[inverse] = recs[-1]
-                    elif command[0] in (Command.CLEAR, Command.SET):
+                    elif command[0] == Command.CLEAR:
+                        cache.update(recs, self, itertools.repeat(()))
+                    elif command[0] == Command.SET:
                         # assign the given lines to the last record only
-                        cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
-                        cache.set(recs[-1], self, lines._ids)
+                        cache.update(recs, self, itertools.repeat(()))
+                        last, lines = recs[-1], browse(command[2])
+                        cache.set(last, self, lines._ids)
+                        cache.update(lines, inverse_field, itertools.repeat(last.id))
 
         else:
             def link(record, lines):
