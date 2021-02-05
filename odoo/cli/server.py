@@ -162,7 +162,7 @@ def main(args):
         sys.exit(0)
 
     # This needs to be done now to ensure the use of the multiprocessing
-    # signaling mecanism for registries loaded with -d
+    # signaling mechanism for registries loaded with -d
     if config['workers']:
         odoo.multi_process = True
 

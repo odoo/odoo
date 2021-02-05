@@ -10,7 +10,7 @@ Profiling Odoo code
 Graph a method
 ==============
 
-Odoo embeds a profiler of code. This embeded profiler output can be used to
+Odoo embeds a profiler of code. This embedded profiler output can be used to
 generate a graph of calls triggered by the method, number of queries, percentage
 of time taken in the method itself as well as the time that the method took and
 its sub-called methods.
@@ -84,7 +84,7 @@ Dump stack
 
 Sending the SIGQUIT signal to an Odoo process (only available on POSIX) makes
 this process output the current stack trace to log, with info level. When an
-odoo process seems stucked, sending this signal to the process permit to know
+odoo process seems stuck, sending this signal to the process permit to know
 what the process is doing, and letting the process continue his job.
 
 Tracing code execution

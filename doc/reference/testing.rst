@@ -152,7 +152,7 @@ default you can remove the ``standard`` tag:
         ...
 
 This test will not be selected by default, to run it the relevant tag will
-have to be selected explicitely:
+have to be selected explicitly:
 
 .. code-block:: console
 
@@ -180,7 +180,7 @@ ones:
 
 When you write a test that does not inherit from the
 :class:`~odoo.tests.common.BaseCase`, this test will not have the default tags,
-you have to add them explicitely to have the test included in the default test
+you have to add them explicitly to have the test included in the default test
 suite.  This is a common issue when using a simple ``unittest.TestCase`` as
 they're not going to get run:
 
@@ -197,7 +197,7 @@ Special tags
 ^^^^^^^^^^^^
 
 - ``standard``: All Odoo tests that inherit from
-  :class:`~odoo.tests.common.BaseCase` are implicitely tagged standard.
+  :class:`~odoo.tests.common.BaseCase` are implicitly tagged standard.
   :option:`--test-tags <odoo-bin --test-tags>` also defaults to ``standard``.
 
   That means untagged test will be executed by default when tests are enabled.
@@ -211,7 +211,7 @@ Special tags
   will generally not want both ``post_install`` is usually paired with
   ``-at_install`` when tagging a test class.
 - *module_name*: Odoo tests classes extending
-  :class:`~odoo.tests.common.BaseCase` are implicitely tagged with the
+  :class:`~odoo.tests.common.BaseCase` are implicitly tagged with the
   technical name of their module. This allows easily selecting or excluding
   specific modules when testing e.g. if you want to only run tests from
   ``stock_account``:
@@ -341,7 +341,7 @@ testing system, since this means that a test in the addon web will fail whenever
 the voip addon is installed (note that the runbot runs the tests with all addons
 installed).
 
-At the same time, our testing sytem is good, because it can detect whenever
+At the same time, our testing system is good, because it can detect whenever
 another module breaks some core functionality.  There is no complete solution to
 this issue.  For now, we solve this on a case by case basis.
 

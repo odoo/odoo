@@ -213,7 +213,7 @@ class Registry(Mapping):
 
         At the Python level, the modules are already loaded, but not yet on a
         per-registry level. This method populates a registry with the given
-        modules, i.e. it instanciates all the classes of a the given module
+        modules, i.e. it instantiates all the classes of a the given module
         and registers them in the registry.
 
         """

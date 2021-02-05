@@ -109,7 +109,7 @@ library:
 
   Since `requests`_ and `werkzeug`_ are already hard dependencies of Odoo,
   replace ``urllib[2].urlopen``/``urllib2.Request`` uses by `requests`_, and
-  ``urlparse`` and a few utilty functions (``urllib.quote``,
+  ``urlparse`` and a few utility functions (``urllib.quote``,
   ``urllib.urlencode``) are available through ``werkzeug.urls``, a backport
   of Python 3's ``urllib.parse``.
 
@@ -138,7 +138,7 @@ next to it before checking if there is a package called that on the
 PYTHONPATH.
 
 Furthermore if a sibling file is named the same as top-level package, the
-library becomes inaccessible to both the file itself ans siblings, this has
+library becomes inaccessible to both the file itself and siblings, this has
 actually happened in Odoo with :mod:`odoo.tools.mimetypes`.
 
 Additionally, relative imports allow navigating "up" the tree by using

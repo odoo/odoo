@@ -93,7 +93,7 @@ _global_seq = iter(itertools.count())
 class Field(MetaField('DummyField', (object,), {})):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
-    attributes may be provided when instanciating a field:
+    attributes may be provided when instantiating a field:
 
     :param str string: the label of the field seen by users; if not
         set, the ORM takes the field name in the class (capitalized).
@@ -1280,11 +1280,11 @@ class Float(Field):
 
     .. admonition:: Example
 
-        To round a quantity with the precision of the unit of mesure::
+        To round a quantity with the precision of the unit of measure::
 
             fields.Float.round(self.product_uom_qty, precision_rounding=self.product_uom_id.rounding)
 
-        To check if the quantity is zero with the precision of the unit of mesure::
+        To check if the quantity is zero with the precision of the unit of measure::
 
             fields.Float.is_zero(self.product_uom_qty, precision_rounding=self.product_uom_id.rounding)
 

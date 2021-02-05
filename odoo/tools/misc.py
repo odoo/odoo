@@ -1530,7 +1530,7 @@ def get_diff(data_from, data_to, custom_style=False):
     :return: a string containing the diff in an HTML table format.
     """
     def handle_style(html_diff, custom_style):
-        """ The HtmlDiff lib will add some usefull classes on the DOM to
+        """ The HtmlDiff lib will add some useful classes on the DOM to
         identify elements. Simply append to those classes some BS4 ones.
         For the table to fit the modal width, some custom style is needed.
         """

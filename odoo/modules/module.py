@@ -208,7 +208,7 @@ def get_resource_from_path(path):
     """Tries to extract the module name and the resource's relative path
     out of an absolute resource path.
 
-    If operation is successfull, returns a tuple containing the module name, the relative path
+    If operation is successful, returns a tuple containing the module name, the relative path
     to the resource using '/' as filesystem seperator[1] and the same relative path using
     os.path.sep seperators.
 

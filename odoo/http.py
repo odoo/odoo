@@ -334,7 +334,7 @@ class WebRequest(object):
 
         first_time = True
 
-        # Correct exception handling and concurency retry
+        # Correct exception handling and concurrency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
             nonlocal first_time
@@ -560,7 +560,7 @@ class JsonRequest(WebRequest):
       wrapped in the `JSON-RPC Response
       <http://www.jsonrpc.org/specification#response_object>`_
 
-    Sucessful request::
+    Successful request::
 
       --> {"jsonrpc": "2.0",
            "method": "call",
@@ -1459,7 +1459,7 @@ class Root(object):
                         # the registry. That means either
                         # - the database probably does not exists anymore
                         # - the database is corrupted
-                        # - the database version doesnt match the server version
+                        # - the database version doesn't match the server version
                         # Log the user out and fall back to nodb
                         request.session.logout()
                         if request.httprequest.path == '/web':
@@ -1500,7 +1500,7 @@ def db_filter(dbs, httprequest=None):
         dbs = [i for i in dbs if re.match(r, i)]
     elif odoo.tools.config['db_name']:
         # In case --db-filter is not provided and --database is passed, Odoo will
-        # use the value of --database as a comma seperated list of exposed databases.
+        # use the value of --database as a comma separated list of exposed databases.
         exposed_dbs = set(db.strip() for db in odoo.tools.config['db_name'].split(','))
         dbs = sorted(exposed_dbs.intersection(dbs))
     return dbs

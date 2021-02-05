@@ -401,7 +401,7 @@ class Cursor(BaseCursor):
         else:
             # If a serializable cursor was requested, we
             # use the appropriate PotsgreSQL isolation level
-            # that maps to snaphsot isolation.
+            # that maps to snapshot isolation.
             # For all supported PostgreSQL versions (8.3-9.x),
             # this is currently the ISOLATION_REPEATABLE_READ.
             # See also the docstring of this class.

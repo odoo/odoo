@@ -166,7 +166,7 @@ Database
 .. option:: --db_sslmode
 
     Control the SSL security of the connection between Odoo and PostgreSQL.
-    Value should bve one of 'disable', 'allow', 'prefer', 'require',
+    Value should be one of 'disable', 'allow', 'prefer', 'require',
     'verify-ca' or 'verify-full'
     Default value is 'prefer'
 

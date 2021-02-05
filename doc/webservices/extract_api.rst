@@ -65,7 +65,7 @@ Request Body
         corresponding to a pdf will be processed. If no pdf is found, the first string will be processed. This field is a list only for legacy reasons. The supported extensions 
         are *pdf*, *png*, *jpg* and *bmp*.
     ``user_infos`` (required)
-        Information concerning the person to whom the invoice is intended. This informations is not required in order for the service to work but it greatly improves the quality of the result.
+        Information concerning the person to whom the invoice is intended. This information is not required in order for the service to work but it greatly improves the quality of the result.
         
         ``user_company_vat`` (optional)
             VAT number of the client.
@@ -123,7 +123,7 @@ Response
  status_code       status_msg
 =============  ==============================================================
 0              Success
-2              An error occured
+2              An error occurred
 3              You don't have enough credit
 6              Unsupported file format
 9              Server is currently under maintenance. Please try again later.
@@ -211,7 +211,7 @@ Response
 =============  ==============================================================
 0              Success
 1              Not ready
-2              An error occured
+2              An error occurred
 9              Server is currently under maintenance. Please try again later.
 =============  ==============================================================
 

@@ -168,7 +168,7 @@ class MetaModel(api.Meta):
                 "Invalid import of %s.%s, it should start with 'odoo.addons'." % (self.__module__, name)
             self._module = self.__module__.split('.')[2]
 
-        # Remember which models to instanciate for this module.
+        # Remember which models to instantiate for this module.
         if self._module:
             self.module_to_models[self._module].append(self)
 
@@ -1557,7 +1557,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # try to find a view_id if none provided
         if not view_id:
-            # <view_type>_view_ref in context can be used to overrride the default view
+            # <view_type>_view_ref in context can be used to override the default view
             view_ref_key = view_type + '_view_ref'
             view_ref = self._context.get(view_ref_key)
             if view_ref:
@@ -1629,7 +1629,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         result['arch'] = xarch
         result['fields'] = xfields
 
-        # Add related action information if aksed
+        # Add related action information if asked
         if toolbar:
             vt = 'list' if view_type == 'tree' else view_type
             bindings = self.env['ir.actions.actions'].get_bindings(self._name)
@@ -1883,7 +1883,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _read_group_expand_full(self, groups, domain, order):
-        """Extend the group to include all targer records by default."""
+        """Extend the group to include all target records by default."""
         return groups.search([], order=order)
 
     @api.model
@@ -3232,7 +3232,7 @@ Fields:
         Returns rooturl for a specific given record.
 
         By default, it return the ir.config.parameter of base_url
-        but it can be overidden by model.
+        but it can be overridden by model.
 
         :return: the base url for this record
         :rtype: string
@@ -3397,7 +3397,7 @@ Fields:
         if not query.where_clause:
             return self
 
-        # detemine ids in database that satisfy ir.rules
+        # determine ids in database that satisfy ir.rules
         valid_ids = set()
         query.add_where(f'"{self._table}".id IN %s')
         query_str, params = query.select()
@@ -3960,7 +3960,7 @@ Fields:
             # The problem then becomes: how to "estimate" the right size of the batch to have
             # good performance?
             #
-            # This requires extensive testing, and it was prefered not to introduce INSERTs in
+            # This requires extensive testing, and it was preferred not to introduce INSERTs in
             # batch, to avoid regressions as much as possible.
             #
             # That said, we haven't closed the door completely.
@@ -4238,7 +4238,7 @@ Fields:
         :rtype: osv.query.Query
         """
         # if the object has an active field ('active', 'x_active'), filter out all
-        # inactive records unless they were explicitely asked for
+        # inactive records unless they were explicitly asked for
         if self._active_name and active_test and self._context.get('active_test', True):
             # the item[0] trick below works for domain items and '&'/'|'/'!'
             # operators too

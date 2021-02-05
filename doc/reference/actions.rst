@@ -237,7 +237,7 @@ corresponding behaviors) are shared between states:
 
 * ``object_write``: Updates the current record(s) following ``fields_lines`` specifications
 
-* ``multi``: Executes serveral actions given through the ``child_ids`` argument.
+* ``multi``: Executes several actions given through the ``child_ids`` argument.
 
 State fields
 ------------

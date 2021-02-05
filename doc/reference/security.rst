@@ -11,7 +11,7 @@ data-driven mechanisms to manage or restrict access to data.
 
 Both mechanisms are linked to specific users through *groups*: a user belongs
 to any number of groups, and security mechanisms are associated to groups,
-thus applying security mechamisms to users.
+thus applying security mechanisms to users.
 
 .. _reference/security/acl:
 

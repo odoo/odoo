@@ -136,7 +136,7 @@ Here are 2 examples of database upgrade request creation using:
 
 * one in the python programming language using the requests library
 * one in the bash programming language using `curl <https://curl.haxx.se>`_ (tool
-  for transfering data using http) and `jq <https://stedolan.github.io/jq>`_ (JSON processor):
+  for transferring data using http) and `jq <https://stedolan.github.io/jq>`_ (JSON processor):
 
 .. rst-class:: setup doc-aside
 
@@ -248,7 +248,7 @@ should be empty if everything went fine.
 The ``request_sftp_access`` method
 ----------------------------------
 
-This method is recommanded for big database dumps.
+This method is recommended for big database dumps.
 It uses the SFTP protocol and supports resuming.
 
 It will create a temporary SFTP server where you can connect to and allow you
@@ -324,7 +324,7 @@ explanation about the JSON dictionary returned in case of failure.
 '''''''''''
 
 If the call is successful, the value associated to the *request* key
-will be a dictionary containing your SFTP connexion parameters:
+will be a dictionary containing your SFTP connection parameters:
 
 * ``hostname``: the host address to connect to
 * ``sftp_port``: the port to connect to
@@ -642,7 +642,7 @@ Beside downloading your migrated database using the URL provided by the
 protocol as described in the :ref:`request_sftp_access method
 <upgrade-api-request-sftp-access-method>`
 
-The diffence is that you'll only be able to download the migrated database. No
+The difference is that you'll only be able to download the migrated database. No
 uploading will be possible.
 
 Your database upgrade request should be in the ``done`` state.

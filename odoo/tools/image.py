@@ -42,7 +42,7 @@ EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS = {  # Initial side on 1st row/col:
     8: [Image.ROTATE_90],                           # left/bottom
 }
 
-# Arbitraty limit to fit most resolutions, including Nokia Lumia 1020 photo,
+# Arbitrary limit to fit most resolutions, including Nokia Lumia 1020 photo,
 # 8K with a ratio up to 16:10, and almost all variants of 4320p
 IMAGE_MAX_RESOLUTION = 45e6
 

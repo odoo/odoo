@@ -121,7 +121,7 @@ class ValidationError(UserError):
 
 
 # Deprecated exceptions, only kept for backward compatibility, may be
-# removed in the future *without* any futher notice than the Deprecation
+# removed in the future *without* any further notice than the Deprecation
 # Warning.
 
 class except_orm(UserError):
