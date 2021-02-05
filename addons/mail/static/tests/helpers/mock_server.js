@@ -213,7 +213,8 @@ MockServer.include({
             const domain = args.args[0] || args.kwargs.domain;
             const limit = args.args[1] || args.kwargs.limit;
             const moderated_channel_ids = args.args[2] || args.kwargs.moderated_channel_ids;
-            return this._mockMailMessageMessageFetch(domain, limit, moderated_channel_ids);
+            const target_domain = args.args[3] || args.kwargs.target_domain;
+            return this._mockMailMessageMessageFetch(domain, limit, moderated_channel_ids, target_domain);
         }
         if (args.model === 'mail.message' && args.method === 'message_format') {
             const ids = args.args[0];
@@ -1116,20 +1117,23 @@ MockServer.include({
      * @param {Array[]} domain
      * @param {string} [limit=20]
      * @param {Object} [moderated_channel_ids]
+     * @param {Array[]} [taget_domain]
      * @returns {Object[]}
      */
-    _mockMailMessageMessageFetch(domain, limit = 20, moderated_channel_ids) {
-        let messages = this._getRecords('mail.message', domain);
+    _mockMailMessageMessageFetch(domain, limit = 20, moderated_channel_ids, target_domain = []) {
         if (moderated_channel_ids) {
-            const mod_messages = this._getRecords('mail.message', [
-                ['model', '=', 'mail.channel'],
-                ['res_id', 'in', moderated_channel_ids],
+            target_domain = [
                 '|',
-                ['author_id', '=', this.currentPartnerId],
-                ['moderation_status', '=', 'pending_moderation'],
-            ]);
-            messages = [...new Set([...messages, ...mod_messages])];
+                ...target_domain,
+                '&', '&',
+                    ['model', '=', 'mail.channel'],
+                    ['res_id', 'in', moderated_channel_ids],
+                    '|',
+                        ['author_id', '=', this.currentPartnerId],
+                        ['moderation_status', '=', 'pending_moderation'],
+            ];
         }
+        const messages = this._getRecords('mail.message', domain.concat(target_domain));
         // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
         messages.sort(function (m1, m2) {
             return m1.id < m2.id ? 1 : -1;
