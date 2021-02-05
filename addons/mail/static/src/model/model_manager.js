@@ -638,7 +638,7 @@ class ModelManager {
         for (const field of Model.__fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
-                field.parseAndExecuteCommands(record, [['unlink-all']]);
+                field.parseAndExecuteCommands(record, [['unlink-all']], { allowWriteReadonly: true });
             }
         }
         this._hasAnyChangeDuringCycle = true;
