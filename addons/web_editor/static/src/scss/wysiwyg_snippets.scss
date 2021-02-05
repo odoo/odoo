@@ -46,8 +46,12 @@ body.editor_enable.editor_has_snippets {
     $-text-tools-header-height: 35px;
 
     padding: $-text-tools-header-height $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
+    margin-bottom: $o-we-sidebar-content-padding-base;
     box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
     z-index: $o-we-zindex;
+    display: flex;
+    flex: 1;
+    overflow-y: auto;
 
     .popover {
         position: static !important;
@@ -132,10 +136,7 @@ body.editor_enable.editor_has_snippets {
             position: static;
         }
         .dropdown-menu { // Drop up
-          top: auto;
-          bottom: 100%;
-          margin-top: 0;
-          margin-bottom: $dropdown-spacer;
+            margin-top: $o-we-dropdown-spacing;
         }
     }
     .note-popover ~ .note-popover,
