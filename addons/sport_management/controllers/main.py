@@ -92,7 +92,7 @@ class SalonBookingWeb(http.Controller):
                                                        ('stage_id', 'in', [1, 2, 3]), 
                                                        ('start_time', '>=',date_check_obj_minus_7),
                                                        ('start_time','<',date_check_obj_add_17) 
-                                                       ])
+                                                       ]).sorted('start_time')
         order_details = {}
         for orders in order_obj_17:
             # This block of function might not included if timzone configuration is right when deployed 
@@ -119,22 +119,25 @@ class SalonBookingWeb(http.Controller):
         date_check_obj_add_17 = datetime.strptime(date_check_str,'%Y-%m-%d') + timedelta(hours=17,minutes=0,seconds=0)    
         date_check_obj_minus_7 = date_check_obj - timedelta (hours=7,minutes=0,seconds=0)
         # FIXED THE TIMING DIFFERENT +7 HOURS BASE >
-        order_obj_17 = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
+        order_obj_17_sorted = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
                                                        ('stage_id', 'in', [1, 2, 3]), 
                                                        ('start_time', '>=',date_check_obj_minus_7),
                                                        ('start_time','<',date_check_obj_add_17) 
-                                                       ])
+                                                       ]).sorted('start_time')
+                                                       
         order_details = {}
-        for orders in order_obj_17:
+        for orders in order_obj_17_sorted:
             # This block of function might not included if timzone configuration is right when deployed 
             time_start_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
             time_end_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
             # This block of function might not included if timzone configuration is right when deployed 
+
             data = {
                 'number': orders.id,
                 'start_time_only': time_start_local_pp,
                 'end_time_only': time_end_local_pp
             }
+            
             if orders.chair_id.id not in order_details:
                 order_details[orders.chair_id.id] = {'name': orders.chair_id.name, 'orders': [data]}
             else:
@@ -161,7 +164,7 @@ class SalonBookingWeb(http.Controller):
                                                        ('stage_id', 'in', [1, 2, 3]), 
                                                        ('start_time', '>=',date_check_obj_minus_7),
                                                        ('start_time','<',date_check_obj_add_17) 
-                                                       ])
+                                                       ]).sorted('start_time')
         start_time_only_local_pp = {}
         end_time_only_local_pp = {}
         for orders in order_obj:
