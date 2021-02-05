@@ -15,6 +15,7 @@
         <div t-att-style="typeof color === 'string' ? ('background-color:' + color) + ';' : ''" t-attf-class="#{record.is_highlighted ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : 'o_calendar_color_1'} #{record.is_hatched ? 'o_calendar_hatched o_calendar_hatched_' + (typeof color === 'number' ? color : 1): ''}">
             <span t-if="showTime" class="fc-time"/>
             <div class="o_event_title" t-esc="record.display_name"/>
+            <div t-if="showLocation and record.location" t-esc="record.location"/>
         </div>
     </t>
 
@@ -43,7 +44,7 @@
                 </li>
             </ul>
             <ul t-if="widget.isEventDetailsVisible()" class="list-group list-group-flush o_cw_popover_fields_secondary"/>
-            <div class="card-footer border-top">
+            <div t-attf-class="card-footer border-top #{ !widget.isEventEditable() &amp;&amp;!widget.isEventDeletable() ? 'o_footer_shrink' : '' }">
                 <a t-if="widget.isEventEditable()" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
                 <a t-if="widget.isEventDeletable()" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
             </div>
@@ -120,7 +121,7 @@
 
     <main t-name="CalendarView.quick_create" class="o_calendar_quick_create">
         <div class="form-group">
-            <label for='name' class='col-form-label o_form_label'>Summary:</label>
+            <label for='name' class='col-form-label o_form_label'>Meeting Subject:</label>
             <input type='text' name='name' class="o_input o_required_modifier" t-att-value="widget.dataTemplate.name or None"/>
         </div>
     </main>
