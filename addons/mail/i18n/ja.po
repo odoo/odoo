@@ -14,12 +14,12 @@
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2020
 # Kawakami Taro <ratorin@gmail.com>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
-# Martin Trigaux, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
 # Noma Yuki, 2020
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,7 +190,7 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
-"<b attrs=\"{'invisible': '('no_record', '=', False)'}\" class=\"text-"
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">このモデルの記録はありません</b>"
 
 #. module: mail
@@ -203,10 +203,10 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
-"<br><br><b>@username</b>と入力して誰かに言及し、メンションします。<br> "
-"<b>#channel</b>と入力して、チャネルにメンションします。<br> "
-"<b>/command</b>と<b>入力</b>して、<b>コマンド</b>を実行します。<br> "
-"<b>:shortcut</b>と入力して、返信定型文をメッセージに挿入します。<br>"
+"<br><br>\n"
+"<b>@username</b>と入力して誰かに言及し、メンションします。<br> \n"
+"<b>#channel</b>と入力して、チャネルにメンションします。<br> \n"
+"<b>/command</b>と<b>入力</b>して、<b>コマンド</b>を実行します。<br> <b>:shortcut</b>と入力して、返信定型文をメッセージに挿入します。<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -1498,7 +1498,7 @@ msgstr "Uidを作成する"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr "新しい%(ドキュメント)を作成する"
+msgstr "新しい%(document)sを作成しましょう"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
