@@ -14,8 +14,8 @@
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "# Prečítajte si pracovné príkazy"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_count
 msgid "# Work Orders"
-msgstr "# Pracovné príkazy"
+msgstr "# Pracovné objednávky"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
@@ -97,7 +97,7 @@ msgstr "# BoM Kde sa používa"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr "%s Detské MO"
+msgstr "%s podriadené MO"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -133,7 +133,7 @@ msgstr ""
 #: model:product.product,description:mrp.product_product_computer_desk_leg
 #: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
-msgstr "18″ x 2½″ Štvorcová noha"
+msgstr "18″ x 2½″ štvorcová noha"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -202,7 +202,7 @@ msgstr "<span class=\"o_stat_text\">Načítať</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Lost</span>"
-msgstr "<span class=\"o_stat_text\">Stratený</span>"
+msgstr "<span class=\"o_stat_text\">Strata</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -223,7 +223,7 @@ msgstr "<span class=\"o_stat_text\">Výkon</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Routing<br/>Performance</span>"
-msgstr "<span class=\"o_stat_text\">Smerovanie<br/>Výkon</span>"
+msgstr "<span class=\"o_stat_text\">Smerovanie<br/>výkon</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -568,7 +568,7 @@ msgstr "Použiť"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "Apply on Variants"
-msgstr "Aplikujte na Varianty"
+msgstr "Aplikujte na varianty"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -686,13 +686,13 @@ msgstr "Riadok potvrdenia doobjednania"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Riadky potvrdenia doobjednania"
+msgstr "Riadky potvrdenia predobjednávky"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "Backorder MO"
+msgstr "Predobjednávka MO"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -710,8 +710,8 @@ msgstr "Postupnosť objednávok"
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
-"Sekvencia doobjednávky, ak sa rovná 0, znamená to, že neexistuje súvisiaca "
-"doobjednávka"
+"Sekvencia predobjednávky, ak sa rovná 0, znamená to, že neexistuje súvisiaca"
+" doobjednávka"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -776,7 +776,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr "Kusovky"
+msgstr "Kusovníky"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -839,12 +839,12 @@ msgstr "Komponenty BoM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Cost"
-msgstr "BoM Náklady"
+msgstr "BoM náklady"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr "BoM Riadok"
+msgstr "BoM riadok"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
@@ -870,7 +870,7 @@ msgstr "Štruktúra a náklady BoM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Structure &amp; Cost"
-msgstr "Štruktúra BoM & amp; Náklady"
+msgstr "Štruktúra BoM & amp; náklady"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1096,7 +1096,7 @@ msgstr "Potvrdiť"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__confirm_cancel
 msgid "Confirm Cancel"
-msgstr "Potvrďte Zrušiť"
+msgstr "Potvrďte ukončenie"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
@@ -1187,7 +1187,7 @@ msgstr "Vytvorte nové dávky / sériové čísla pre komponenty"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr "Vytvorte backorder"
+msgstr "Vytvorte predobjednávky"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1366,7 +1366,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet_type
 msgid "Defines if you want to use a PDF or a Google Slide as work sheet."
 msgstr ""
-"Definuje, či chcete ako pracovný list použiť PDF alebo Prezentáciu Google."
+"Definuje, či chcete ako pracovný list použiť PDF alebo prezentáciu Google."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__ready_to_produce
@@ -1630,7 +1630,7 @@ msgstr "Očakávané"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
 msgid "Expected Duration"
-msgstr "Očakávané trvanie"
+msgstr "Predpokladané trvanie"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__duration_expected
@@ -1804,7 +1804,7 @@ msgstr "Google slajdy"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
-msgstr "Odkaz Google Slide"
+msgstr "Odkaz Google prezentácia"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2245,7 +2245,7 @@ msgstr "Omeškané aktivity"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late MO or Late delivery of components"
-msgstr "Neskoré MO alebo Neskoré dodanie komponentov"
+msgstr "Neskoré MO alebo neskoré dodanie komponentov"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_wood_ply
