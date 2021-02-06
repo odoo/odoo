@@ -77,7 +77,7 @@ class AccountMove(models.Model):
         """ Indicates if this document type uses a sequence or if the numbering is made manually """
         recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.journal_id.l10n_latam_use_documents)
         for rec in recs_with_journal_id:
-            rec.l10n_latam_manual_document_number = self._is_manual_document_number(rec.journal_id)
+            rec.l10n_latam_manual_document_number = rec._is_manual_document_number(rec.journal_id)
         remaining = self - recs_with_journal_id
         remaining.l10n_latam_manual_document_number = False
 
