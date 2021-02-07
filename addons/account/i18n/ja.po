@@ -3,7 +3,7 @@
 # * account
 # 
 # Translators:
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2018
 # Takuya Sawada <takuya@tuntunkun.com>, 2018
 # 前園義博 <yoshihiro.maezono@pro-spire.co.jp>, 2018
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
@@ -10101,8 +10101,11 @@ msgstr "顧客が電子メールアドレスを持っていないので、次の
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "ジャーナルの銀行口座の保有者は、会社(%s)でなければなりません。"
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id

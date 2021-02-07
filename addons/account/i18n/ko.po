@@ -10230,8 +10230,11 @@ msgstr "고객에게 이메일 주소가 없으므로 다음 송장을 이메일
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "분개장의 은행 계정를 보유한 대상은 회사여야 합니다(%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id

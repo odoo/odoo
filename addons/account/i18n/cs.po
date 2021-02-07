@@ -14,7 +14,7 @@
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Martin Trigaux, 2019
-# trendspotter, 2020
+# Jiří Podhorecký, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # 
@@ -10321,8 +10321,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Držitelem bankovního účtu deníku musí být společnost (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id

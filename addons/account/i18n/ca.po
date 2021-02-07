@@ -16,7 +16,7 @@
 # César López Ramírez <cesar.lopez@coopdevs.org>, 2020
 # Josep Sànchez <papapep@gmx.com>, 2020
 # Susanna Pujol, 2020
-# Eugeni Chafert <eugeni@chafer.cat>, 2020
+# Eugeni Chafer <eugeni@chafer.cat>, 2020
 # jabelchi <jabelchi@gmail.com>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
 # 
@@ -10320,9 +10320,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
 msgstr ""
-"El posseïdor d'un compte bancari en un diari te que ser la companyia (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
