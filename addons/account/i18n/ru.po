@@ -22,7 +22,7 @@
 # sorin Rusu <to.rusu.sorin@gmail.com>, 2019
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
 # Алексей Хомяков <alexey.homyakov@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # jerome hanke <jhk@odoo.com>, 2020
 # Ye Ye <vrio.ua@gmail.com>, 2020
 # 
@@ -10555,8 +10555,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Владелец журнала банковский счет должен быть компанией (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
