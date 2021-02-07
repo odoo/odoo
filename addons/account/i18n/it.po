@@ -7953,6 +7953,12 @@ msgid "Original Bills"
 msgstr "Fatture fornitore originali"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Creata dal pagamento"
@@ -9847,8 +9853,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
-"Impostare «Attivo» a falso per nascondere l'etichetta del conto senza "
-"rimuoverla."
+"Per nascondere l'etichetta del conto senza rimuoverla, impostare Attivo a "
+"falso."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
@@ -9860,7 +9866,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
-msgstr "Impostare «Attivo» a falso per nascondere l'imposta senza rimuoverla."
+msgstr "Per nascondere l'imposta senza rimuoverla, impostare Attivo a falso."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
@@ -11255,9 +11261,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
 msgstr ""
-"L'intestatario del conto bancario in un registro deve essere l'azienda (%s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
