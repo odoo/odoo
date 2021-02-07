@@ -217,6 +217,23 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний/а ${object.partner_id.name}<br/><br/>\n"
+"        Дякуємо за оплату.\n"
+"        Це ваша квитанція про оплату <strong>${(object.name or '').replace('/','-')}</strong> у сумі\n"
+"         <strong>${format_amount(object.amount, object.currency_id)}</strong> від ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Не соромтеся зв'язатися з нами, якщо у вас виникли запитання.\n"
+"        <br/><br/>\n"
+"        З найкращими побажаннями,\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -338,6 +355,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) від <strong>%s</strong> було переміщено до "
+"<strong>{account_target_name}</strong> by {link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -6812,17 +6831,17 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "JRNL/2016/00001"
-msgstr ""
+msgstr "JRNL/2016/00001"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__preview_move_data
 msgid "JSON value of the data to be displayed in the previewer"
-msgstr ""
+msgstr "Значення даних JSON для відображення у попередньому перегляді"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__move_data
 msgid "JSON value of the moves to be created"
-msgstr ""
+msgstr "JSON value of the moves to be created"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -6856,7 +6875,7 @@ msgstr "Журнал"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
 msgid "Journal Currency"
-msgstr ""
+msgstr "Валюта журналу"
 
 #. module: account
 #. openerp-web
@@ -6896,7 +6915,7 @@ msgstr "Запис в журналі"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__entry
 msgid "Journal Entry Date"
-msgstr ""
+msgstr "Дата запису журналу"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -6961,7 +6980,7 @@ msgstr "Назва журналу"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr ""
+msgstr "Тимчасовий рахунок журналу"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
@@ -7001,7 +7020,7 @@ msgstr "Журнал, де розміщений відкритий запис б
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
-msgstr ""
+msgstr "Журнал для створення запису."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -7066,7 +7085,7 @@ msgstr "Графік робочого столу канбану"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
 msgid "Keep current order"
-msgstr ""
+msgstr "Тримайте поточне замовлення"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
