@@ -94,6 +94,9 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <tree string="Mailing List Contacts" sample="1">
+                <header>
+                    <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
+                </header>
                 <field name="create_date"/>
                 <field name="name"/>
                 <field name="company_name"/>
