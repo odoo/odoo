@@ -404,8 +404,9 @@ class AccountJournal(models.Model):
         result = super(AccountJournal, self).write(vals)
 
         # Ensure the liquidity accounts are sharing the same foreign currency.
-        for journal in self.filtered(lambda journal: journal.type in ('bank', 'cash')):
-            journal.default_account_id.currency_id = journal.currency_id
+        if 'currency_id' in vals:
+            for journal in self.filtered(lambda journal: journal.type in ('bank', 'cash')):
+                journal.default_account_id.currency_id = journal.currency_id
 
         # Create the bank_account_id if necessary
         if 'bank_acc_number' in vals:
