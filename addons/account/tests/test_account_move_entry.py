@@ -582,6 +582,36 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(move.sequence_prefix, 'FA2020')
         self.assertEqual(move.sequence_number, 10000)
 
+    def test_journal_override_sequence_no_reset_change_of_period(self):
+        """
+        Simple test to ensure that the no reset is taking place
+        """
+        other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
+        other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
+
+        moves = []
+        for date, name in [
+            ('2020-12-23', 'PREF/2020/3333'),
+            ('2021-01-02', '/'),
+        ]:
+            move = self.test_move.copy({'name': name, 'date': date})
+            if name != '/':
+                move.action_post()
+            moves.append(move)
+
+        move = moves[1]
+        move.journal_id.sequence_override_regex = r'^(?P<prefix1>(?:PREF/)?)(?P<year>(?:\d{4})?)(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'  # set to custom regex
+        move.action_post()
+        self.assertEqual(move.name, 'PREF/2021/0001')  # ok, it was reset
+
+        move.journal_id.sequence_override_regex = r'^(?P<prefix1>(?:PREF/)?)(?P<year>(?:\d{4})?)(?P<prefix2>\D+?)(?P<seq>(?P<no_reset>)\d*)(?P<suffix>\D*?)$'  # set to not reset
+        move.name = '/'
+        move.state = 'draft'
+        move.action_post()
+        self.assertEqual(move.name, 'PREF/2021/3334')
+        self.assertEqual(move.sequence_prefix, 'PREF/2021/')
+        self.assertEqual(move.sequence_number, 3334)
+
     def test_journal_sequence_ordering(self):
         self.test_move.name = 'XMISC/2016/00001'
         copies = reduce((lambda x, y: x+y), [self.test_move.copy({'date': self.test_move.date}) for i in range(6)])

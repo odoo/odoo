@@ -21,6 +21,7 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
+    # (?P<no_reset>) can be used on the regex below to NOT reset the sequence on change of period
     _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))(\d{4}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))(\d{4}|\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
@@ -169,11 +170,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
             raise ValidationError(_('%s is not a stored field', self._sequence_field))
-        # (?P<no_reset>) can be used on the journal regex override to not reset the
-        # sequence on change of period, in that case all the sequences point to the
-        # journal override, so it's OK to only check with the monthly one
-        no_reset = "(?P<no_reset>)" in self._sequence_monthly_regex
-        where_string, param = self._get_last_sequence_domain(relaxed=(no_reset or relaxed))
+        where_string, param = self._get_last_sequence_domain(relaxed)
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin
@@ -243,7 +240,12 @@ class SequenceMixin(models.AbstractModel):
         :param field_name: the field that contains the sequence.
         """
         self.ensure_one()
-        last_sequence = self._get_last_sequence()
+        # if (?P<no_reset>) is on the regex then do NOT reset the sequence on change of
+        # period
+        # check the monthly regex since it is the first one being checked on
+        # _deduce_sequence_number_reset
+        no_reset = "(?P<no_reset>)" in self._sequence_monthly_regex
+        last_sequence = self._get_last_sequence(relaxed=no_reset)
         new = not last_sequence
         if new:
             last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
@@ -251,6 +253,7 @@ class SequenceMixin(models.AbstractModel):
         format, format_values = self._get_sequence_format_param(last_sequence)
         if new:
             format_values['seq'] = 0
+        if new or no_reset:
             format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
             format_values['month'] = self[self._sequence_date_field].month
         format_values['seq'] = format_values['seq'] + 1
