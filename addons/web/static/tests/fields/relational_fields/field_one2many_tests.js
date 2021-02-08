@@ -7278,7 +7278,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('nested one2manys with no widget in list and as invisible list in form', async function (assert) {
-            assert.expect(4);
+            assert.expect(6);
 
             this.data.partner.records[0].p = [1];
 
@@ -7299,6 +7299,13 @@ QUnit.module('fields', {}, function () {
             assert.containsOnce(form, '.o_data_row');
             assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), '1 record');
 
+            await testUtils.dom.click(form.$('.o_data_row'));
+
+            assert.containsOnce(document.body, '.modal .o_form_view');
+            assert.containsNone(document.body, '.modal .o_form_view .o_field_one2many');
+
+            // Test possible caching issues
+            await testUtils.dom.click($('.modal .o_form_button_cancel'));
             await testUtils.dom.click(form.$('.o_data_row'));
 
             assert.containsOnce(document.body, '.modal .o_form_view');
