@@ -262,6 +262,38 @@ class TestBoM(TestMrpCommon):
             # Check consumed materials in production order.
             self.assertEqual(mrp_order.move_raw_ids.product_id, consumed_products)
 
+    def test_13_bom_kit_qty(self):
+        self.env['mrp.bom'].create({
+            'product_id': self.product_7_3.id,
+            'product_tmpl_id': self.product_7_template.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 4.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                }),
+                (0, 0, {
+                    'product_id': self.product_3.id,
+                    'product_qty': 2,
+                })
+            ]
+        })
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.product_2, location, 4.0)
+        self.env['stock.quant']._update_available_quantity(self.product_3, location, 8.0)
+        # Force the kit product available qty to be computed at the same time than its component quantities
+        # Because `qty_available` of a bom kit "recurse" on `qty_available` of its component,
+        # and this is a tricky thing for the ORM:
+        # `qty_available` gets called for `product_7_3`, `product_2` and `product_3`
+        # which then recurse on calling `qty_available` for `product_2` and `product_3` to compute the quantity of
+        # the kit `product_7_3`. `product_2` and `product_3` gets protected at the first call of the compute method,
+        # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
+        # for the components available qty.
+        kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
+        self.assertEqual(kit_product_qty, 2)
+
     def test_20_bom_report(self):
         """ Simulate a crumble receipt with mrp and open the bom structure
         report and check that data insde are correct.
