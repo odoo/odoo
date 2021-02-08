@@ -28,8 +28,8 @@ class SurveyInvite(models.TransientModel):
         return self.env.user.partner_id
 
     # composer content
-    subject = fields.Char('Subject', compute='_compute_template_values', readonly=False, store=True)
-    body = fields.Html('Contents', sanitize_style=True, compute='_compute_template_values', readonly=False, store=True)
+    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
+    body = fields.Html('Contents', sanitize_style=True, compute='_compute_body', readonly=False, store=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
         string='Attachments')
@@ -139,15 +139,20 @@ class SurveyInvite(models.TransientModel):
                     ))
 
     @api.depends('template_id')
-    def _compute_template_values(self):
+    def _compute_subject(self):
         for invite in self:
-            if not invite.subject:
-                invite.subject = ''
-            if not invite.body:
-                invite.body = ''
             if invite.template_id:
                 invite.subject = invite.template_id.subject
+            elif not invite.subject:
+                invite.subject = False
+
+    @api.depends('template_id')
+    def _compute_body(self):
+        for invite in self:
+            if invite.template_id:
                 invite.body = invite.template_id.body_html
+            elif not invite.body:
+                invite.body = False
 
     @api.model
     def create(self, values):
