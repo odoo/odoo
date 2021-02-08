@@ -12,7 +12,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import email_re, email_split
+from odoo.tools import date_utils, email_re, email_split
 
 from . import crm_stage
 
@@ -867,42 +867,58 @@ class Lead(models.Model):
         return False
 
     def _get_rainbowman_message(self):
-        message = False
-        if self.user_id and self.team_id and self.expected_revenue:
-            self.flush()  # flush fields to make sure DB is up to date
-            query = """
-                SELECT
-                    SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_7,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7
-                FROM crm_lead
-                WHERE
-                    type = 'opportunity'
-                AND
-                    active = True
-                AND
-                    probability = 100
-                AND
-                    DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
-                AND
-                    (user_id = %(user_id)s OR team_id = %(team_id)s)
-            """
-            self.env.cr.execute(query, {'user_id': self.user_id.id,
-                                        'team_id': self.team_id.id})
-            query_result = self.env.cr.dictfetchone()
+        if not self.user_id or not self.team_id:
+            return False
+        if not self.expected_revenue:
+            # Show rainbow man for the first won lead of a salesman, even if expected revenue is not set. It is not
+            # very often that leads without revenues are marked won, so simply get count using ORM instead of query
+            today = fields.Datetime.today()
+            user_won_leads_count = self.search_count([
+                ('type', '=', 'opportunity'),
+                ('user_id', '=', self.user_id.id),
+                ('probability', '=', 100),
+                ('date_closed', '>=', date_utils.start_of(today, 'year')),
+                ('date_closed', '<', date_utils.end_of(today, 'year')),
+            ])
+            if user_won_leads_count == 1:
+                return _('Go, go, go! Congrats for your first deal.')
+            return False
 
-            if query_result['total_won'] == 1:
-                message = _('Go, go, go! Congrats for your first deal.')
-            elif query_result['max_team_30'] == self.expected_revenue:
-                message = _('Boom! Team record for the past 30 days.')
-            elif query_result['max_team_7'] == self.expected_revenue:
-                message = _('Yeah! Deal of the last 7 days for the team.')
-            elif query_result['max_user_30'] == self.expected_revenue:
-                message = _('You just beat your personal record for the past 30 days.')
-            elif query_result['max_user_7'] == self.expected_revenue:
-                message = _('You just beat your personal record for the past 7 days.')
+        self.flush()  # flush fields to make sure DB is up to date
+        query = """
+            SELECT
+                SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
+                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_30,
+                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_7,
+                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_30,
+                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7
+            FROM crm_lead
+            WHERE
+                type = 'opportunity'
+            AND
+                active = True
+            AND
+                probability = 100
+            AND
+                DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
+            AND
+                (user_id = %(user_id)s OR team_id = %(team_id)s)
+        """
+        self.env.cr.execute(query, {'user_id': self.user_id.id,
+                                    'team_id': self.team_id.id})
+        query_result = self.env.cr.dictfetchone()
+
+        message = False
+        if query_result['total_won'] == 1:
+            message = _('Go, go, go! Congrats for your first deal.')
+        elif query_result['max_team_30'] == self.expected_revenue:
+            message = _('Boom! Team record for the past 30 days.')
+        elif query_result['max_team_7'] == self.expected_revenue:
+            message = _('Yeah! Deal of the last 7 days for the team.')
+        elif query_result['max_user_30'] == self.expected_revenue:
+            message = _('You just beat your personal record for the past 30 days.')
+        elif query_result['max_user_7'] == self.expected_revenue:
+            message = _('You just beat your personal record for the past 7 days.')
         return message
 
     def action_schedule_meeting(self):
