@@ -1241,8 +1241,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         const _super = this._super.bind(this);
         const args = arguments;
 
-        // Pre-instanciate the color palette widget
-        await this._renderColorPalette();
+        // TODO review in master, this was done in stable to keep the speed fix
+        // as stable as possible (to have a reference to a widget even if not a
+        // colorPalette widget).
+        this.colorPalette = new Widget(this);
+        this.colorPalette.getColorNames = () => [];
+        await this.colorPalette.appendTo(document.createDocumentFragment());
 
         // Build the select element with a custom span to hold the color preview
         this.colorPreviewEl = document.createElement('span');
@@ -1257,6 +1261,22 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    open: function () {
+        if (this.colorPalette.setSelectedColor) {
+            this.colorPalette.setSelectedColor(this._value);
+        } else {
+            // TODO review in master, this does async stuff. Maybe the open
+            // method should now be async. This is not really robust as the
+            // colorPalette can be used without it to be fully rendered but
+            // the use of the saved promise where we can should mitigate that
+            // issue.
+            this._colorPaletteRenderPromise = this._renderColorPalette();
+        }
+        this._super(...arguments);
+    },
     /**
      * @override
      */
@@ -1320,7 +1340,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     async setValue(color) {
         await this._super(...arguments);
 
-        this.colorPalette.setSelectedColor(this._value);
+        await this._colorPaletteRenderPromise;
 
         const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
         this.colorPreviewEl.classList.remove(...classes);
