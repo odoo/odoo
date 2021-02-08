@@ -54,5 +54,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt._action_done()
 
         mo = picking_receipt._get_subcontracted_productions()
-        self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 60)
-        self.assertEqual(mo.move_finished_ids.product_id.value_svl, 60)
+        self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 0)
+        self.assertEqual(mo.move_finished_ids.product_id.value_svl, 30)
+        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 30)
+        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 30)
