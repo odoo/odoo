@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 import base64
+import logging
 import re
 from collections import OrderedDict
 from io import BytesIO
-from odoo import api, fields, models, _, _lt
-from PIL import Image
+
 import babel
 import babel.dates
+from PIL import Image
 from lxml import etree
-import math
 
-from odoo.tools import html_escape as escape, posix_to_ldml, float_utils, format_date, format_duration, pycompat
+from odoo import api, fields, models, _, _lt
+from odoo.tools import html_escape, posix_to_ldml, float_utils, format_date, format_duration, pycompat
 from odoo.tools.misc import get_lang, babel_locale_parse
 
-import logging
 _logger = logging.getLogger(__name__)
 
 
@@ -25,15 +25,6 @@ def nl2br(string):
     :rtype: unicode
     """
     return pycompat.to_text(string).replace(u'\n', u'<br>\n')
-
-def html_escape(string, options):
-    """ Automatically escapes content unless options['html-escape']
-    is set to False
-
-    :param str string:
-    :param dict options:
-    """
-    return escape(string) if not options or options.get('html-escape', True) else string
 
 #--------------------------------------------------------------------
 # QWeb Fields converters
@@ -112,7 +103,7 @@ class FieldConverter(models.AbstractModel):
         Converts a single value to its HTML version/output
         :rtype: unicode
         """
-        return html_escape(pycompat.to_text(value), options)
+        return html_escape(pycompat.to_text(value))
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -283,7 +274,7 @@ class TextConverter(models.AbstractModel):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
-        return nl2br(html_escape(value, options)) if value else ''
+        return nl2br(html_escape(value)) if value else ''
 
 
 class SelectionConverter(models.AbstractModel):
@@ -303,7 +294,7 @@ class SelectionConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
-        return html_escape(pycompat.to_text(options['selection'][value]) or u'', options)
+        return html_escape(pycompat.to_text(options['selection'][value]) or u'')
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -324,7 +315,7 @@ class ManyToOneConverter(models.AbstractModel):
         value = value.sudo().display_name
         if not value:
             return False
-        return nl2br(html_escape(value, options)) if value else ''
+        return nl2br(html_escape(value))
 
 
 class ManyToManyConverter(models.AbstractModel):
@@ -337,7 +328,7 @@ class ManyToManyConverter(models.AbstractModel):
         if not value:
             return False
         text = ', '.join(value.sudo().mapped('display_name'))
-        return nl2br(html_escape(text, options))
+        return nl2br(html_escape(text))
 
 
 class HTMLConverter(models.AbstractModel):
@@ -715,7 +706,7 @@ class Contact(models.AbstractModel):
 
         val = {
             'name': name_get.split("\n")[0],
-            'address': escape(opsep.join(name_get.split("\n")[1:])).strip(),
+            'address': html_escape(opsep.join(name_get.split("\n")[1:])).strip(),
             'phone': value.phone,
             'mobile': value.mobile,
             'city': value.city,
