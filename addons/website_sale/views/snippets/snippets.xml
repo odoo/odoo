@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_products_recently_viewed" name="Viewed Products">
-    <section class="s_wsale_products_recently_viewed o_snippet_invisible pt24 pb24 d-none" style="min-height: 400px;">
-        <div class="container">
-            <h3 class="text-center mb32">Recently Viewed Products</h3>
-            <div class="slider o_not_editable"/>
-        </div>
-    </section>
-</template>
-
 <template id="snippets" inherit_id="website.snippets" name="e-commerce snippets">
     <xpath expr="//t[@id='sale_products_hook']" position="replace">
         <t t-snippet="website_sale.s_dynamic_snippet_products" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_products_recently_viewed.svg"/>
-    </xpath>
-    <xpath expr="//t[@id='sale_recently_viewed_product_hook']" position="replace">
-        <t t-snippet="website_sale.s_products_recently_viewed" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_products_recently_viewed.svg"/>
     </xpath>
     <xpath expr="//t[@id='sale_product_search_section_hook']" position="replace">
         <t t-snippet="website_sale.s_products_searchbar" t-thumbnail="/website_sale/static/src/img/snippets_thumbs/s_products_searchbar.svg"/>
