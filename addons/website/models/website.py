@@ -83,7 +83,7 @@ class Website(models.Model):
         return self.env.ref('base.main_company').social_twitter
 
     def _default_logo(self):
-        image_path = get_resource_path('website', 'static/src/img', 'website_logo.png')
+        image_path = get_resource_path('website', 'static/src/img', 'website_logo.svg')
         with tools.file_open(image_path, 'rb') as f:
             return base64.b64encode(f.read())
 
