@@ -169,7 +169,11 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
             raise ValidationError(_('%s is not a stored field', self._sequence_field))
-        where_string, param = self._get_last_sequence_domain(relaxed)
+        # (?P<no_reset>) can be used on the journal regex override to not reset the
+        # sequence on change of period, in that case all the sequences point to the
+        # journal override, so it's OK to only check with the monthly one
+        no_reset = "(?P<no_reset>)" in self._sequence_monthly_regex
+        where_string, param = self._get_last_sequence_domain(relaxed=(no_reset or relaxed))
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin

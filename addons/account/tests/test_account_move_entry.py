@@ -494,6 +494,94 @@ class TestAccountMove(AccountTestInvoicingCommon):
         next.action_post()
         self.assertEqual(next.name, '00000001-G 0002/2017')
 
+
+    def test_journal_override_sequence_draft_move(self):
+        other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
+        other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
+
+        self.test_move.date = '2021-01-05'
+        self.test_move.name = 'FA20213333'
+
+        new = self.test_move.copy({'date': self.test_move.date})
+
+        new.journal_id.sequence_override_regex = r'^(?P<prefix1>(?:R?FA)?)(?P<year>(?:\d{4})?)(?P<seq>\d*)(?P<suffix1>\D*?)$'
+        new.name = '/'
+        self.assertEqual(new.state, 'draft')
+        new._compute_name()
+        self.assertEqual(new.name, '/')  # ensure compute_name isn't broken for draft moves
+
+        new.action_post()
+        new._compute_name()
+        self.assertEqual(new.name, 'FA20213334')
+        self.assertEqual(new.sequence_prefix, 'FA2021')
+        self.assertEqual(new.sequence_number, 3334)
+
+    def test_journal_override_sequence_no_reset(self):
+        """
+        Sequence number does not reset on new period, and the period is 'year'
+        In 13.0 it is possible to have a sequence with prefix 2021 and date in 2020
+        When posting there is a sequence clash
+        """
+        other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
+        other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
+
+        moves = []
+        for date, name in [
+            ('2021-01-01', 'FA20213333'),
+            ('2020-12-30', 'FA20213334'),
+            ('2021-01-03', '/'),
+        ]:
+            move = self.test_move.copy({'name': name, 'date': date})
+            if name != '/':
+                move.action_post()
+            moves.append(move)
+
+        move = moves[2]
+        move.journal_id.sequence_override_regex = r'^(?P<prefix1>(?:R?FA)?)(?P<year>(?:\d{4})?)(?P<seq>\d*)(?P<suffix1>\D*?)$'
+
+        self.assertRaises(ValidationError, move.action_post)  # expected sequence clash
+        self.assertEqual(move.name, 'FA20213334')  # this names clashes with moves[1]
+
+        move.name = '/'  # reset name
+        move.state = 'draft'
+        move.journal_id.sequence_override_regex = r'^(?P<prefix1>(?:R?FA)?)(?P<year>(?:\d{4})?)(?P<seq>(?P<no_reset>)\d*)(?P<suffix1>\D*?)$'  # set to no_reset regex
+        move.action_post()  # now we are fine
+
+        # move._compute_name()
+        self.assertEqual(move.name, 'FA20213335')
+        self.assertEqual(move.sequence_prefix, 'FA2021')
+        self.assertEqual(move.sequence_number, 3335)
+
+    def test_journal_override_sequence_no_reset2(self):
+        """
+        The default regex matches many cases but fails to update the fields
+        """
+        other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
+        other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
+
+        moves = []
+        for date, name in [
+            ('2020-12-23', 'FA20209999'),
+            ('2020-12-30', '/'),
+        ]:
+            move = self.test_move.copy({'name': name, 'date': date})
+            if name != '/':
+                move.action_post()
+            moves.append(move)
+
+        move = moves[1]
+        move.action_post()
+        self.assertEqual(move.name, 'FA20210000')  # not what we expected
+
+        move.name = '/'
+        move.state = 'draft'
+        move.journal_id.sequence_override_regex = r'^(?P<prefix1>(?:R?FA)?)(?P<year>(?:\d{4})?)(?P<seq>\d*)(?P<suffix1>\D*?)$'  # set to custom regex
+        move.action_post()
+
+        self.assertEqual(move.name, 'FA202010000')  # good!
+        self.assertEqual(move.sequence_prefix, 'FA2020')
+        self.assertEqual(move.sequence_number, 10000)
+
     def test_journal_sequence_ordering(self):
         self.test_move.name = 'XMISC/2016/00001'
         copies = reduce((lambda x, y: x+y), [self.test_move.copy({'date': self.test_move.date}) for i in range(6)])
