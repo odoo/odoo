@@ -163,7 +163,7 @@ Common Attributes
 Much like the model itself, its fields can be configured, by passing
 configuration attributes as parameters::
 
-    name = field.Char(required=True)
+    name = fields.Char(required=True)
 
 Some attributes are available on all fields, here are the most common ones:
 
