@@ -13,7 +13,7 @@ class HrWorkEntry(models.Model):
     _description = 'HR Work Entry'
     _order = 'conflict desc,state,date_start'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, compute='_compute_name', store=True, readonly=False)
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     date_start = fields.Datetime(required=True, string='From')
@@ -57,6 +57,11 @@ class HrWorkEntry(models.Model):
             'Validated work entries cannot overlap'
         ),
     ]
+
+    @api.depends('work_entry_type_id', 'employee_id')
+    def _compute_name(self):
+        for work_entry in self:
+            work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name, work_entry.employee_id.name)
 
     @api.depends('state')
     def _compute_conflict(self):
