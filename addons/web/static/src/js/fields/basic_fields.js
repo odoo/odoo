@@ -1725,6 +1725,9 @@ var UrlWidget = InputField.extend({
 });
 
 var CopyClipboard = {
+    quickEditExclusion: [
+        '.o_clipboard_button',
+    ],
 
     /**
      * @override

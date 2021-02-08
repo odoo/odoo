@@ -10854,6 +10854,60 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Quick Edition: CopyToClipboard click on value', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo" widget="CopyClipboardChar"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsOnce(form, '.o_clipboard_button');
+
+        await testUtils.dom.click(form.$('.o_field_copy'));
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable');
+        assert.containsNone(form, '.o_clipboard_button');
+
+        form.destroy();
+    });
+
+    QUnit.test('Quick Edition: CopyToClipboard click on copy button', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo" widget="CopyClipboardChar"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsOnce(form, '.o_clipboard_button');
+
+        await testUtils.dom.click(form.$('.o_field_copy .o_clipboard_button'));
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsOnce(form, '.o_clipboard_button');
+
+        form.destroy();
+    });
+
     QUnit.test("attach callbacks with long processing in __renderView", async function (assert) {
         /**
          * The main use case of this test is discuss, in which the FormRenderer
