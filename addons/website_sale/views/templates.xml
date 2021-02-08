@@ -729,12 +729,6 @@
         </xpath>
     </template>
 
-    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="False" customize_show="True" name="Recently Viewed Products" priority="16">
-        <xpath expr="//div[@t-field='product.website_description']" position="after">
-            <t t-snippet-call="website_sale.s_products_recently_viewed"/>
-        </xpath>
-    </template>
-
     <!-- Product options: OpenChatter -->
     <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating" priority="15">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
