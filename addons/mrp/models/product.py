@@ -135,11 +135,18 @@ class ProductProduct(models.Model):
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
-                ratios_virtual_available.append(component.virtual_available / qty_per_kit)
-                ratios_qty_available.append(component.qty_available / qty_per_kit)
-                ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
-                ratios_outgoing_qty.append(component.outgoing_qty / qty_per_kit)
-                ratios_free_qty.append(component.free_qty / qty_per_kit)
+                component_res = res.get(component.id, {
+                    "virtual_available": component.virtual_available,
+                    "qty_available": component.qty_available,
+                    "incoming_qty": component.incoming_qty,
+                    "outgoing_qty": component.outgoing_qty,
+                    "free_qty": component.free_qty,
+                })
+                ratios_virtual_available.append(component_res["virtual_available"] / qty_per_kit)
+                ratios_qty_available.append(component_res["qty_available"] / qty_per_kit)
+                ratios_incoming_qty.append(component_res["incoming_qty"] / qty_per_kit)
+                ratios_outgoing_qty.append(component_res["outgoing_qty"] / qty_per_kit)
+                ratios_free_qty.append(component_res["free_qty"] / qty_per_kit)
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
                     'virtual_available': min(ratios_virtual_available) // 1,
