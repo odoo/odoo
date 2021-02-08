@@ -351,9 +351,9 @@ class TestEventRegistrationData(TestEventCommon):
         self.assertEqual(
             new_reg.email, test_email,
             'Registration should take user input over computed partner value')
-        # self.assertEqual(
-        #     new_reg.phone, customer.phone,
-        #     'Registration should take partner value if not user input')
+        self.assertEqual(
+            new_reg.phone, customer.phone,
+            'Registration should take partner value if not user input')
 
         # already filled information should not be updated
         event.write({
