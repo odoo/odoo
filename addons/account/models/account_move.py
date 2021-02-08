@@ -2881,7 +2881,7 @@ class AccountMove(models.Model):
             for attachment in attachments.sorted(lambda x: x != self.message_main_attachment_id):
                 invoice = decoder[1](attachment, self)
                 if invoice:
-                    break
+                    return res
 
         return res
 
