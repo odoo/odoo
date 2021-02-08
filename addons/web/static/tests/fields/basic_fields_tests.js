@@ -7677,6 +7677,633 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldBasicProgressBar');
+
+    QUnit.test('Field BasicProgressBar: basic use of max_value_field. Field should be updated on max_value_field change.', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records = this.data.partner.records.slice(0, 1);
+        this.data.partner.records[0].qux = 2;
+
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.int_field = 999;
+                obj.qux = 5;
+            }
+        };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="display_name" />' +
+                    '<field name="qux" invisible="1" />' +
+                    '<field name="int_field" widget="basic_progressbar" options="{\'max_value_field\': \'qux\'}" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(
+                        args.args[1],
+                        {int_field: 999, qux: 5, display_name: 'new name'},
+                        'New value of progress bar saved');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), '10',
+            'The initial value of the progress bar should be correct');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 2',
+        'The initial value of the progress bar should be correct');
+
+        // trigger the onchange
+        await testUtils.fields.editInput(form.$('.o_input[name=display_name]'), 'new name');
+        await testUtils.nextTick();
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), '999',
+            'The value of the progress bar should be correct after the update');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 5',
+        'The value of the progress bar should be correct after the update');
+
+        await testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: No drag and drop in readonly mode', async function (assert) {
+        assert.expect(4);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" widget="basic_progressbar" options="{\'drag_and_drop\': true}"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            }
+        });
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99',
+            'Initial value should be correct');
+
+        var $progressBarEl = form.$('.o_basic_progress');
+        var top = $progressBarEl.offset().top + 5;
+        var left = $progressBarEl.offset().left + 5;
+        try {
+            testUtils.triggerPositionalMouseEvent(left, top, "click");
+        } catch (e) {
+            form.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99',
+            'New value should be different than initial after click');
+
+        assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
+
+        form.destroy();
+        $view.remove();
+    });
+
+    QUnit.test('Field BasicProgressBar: allow drag and drop on edit mode', async function (assert) {
+        assert.expect(12);
+        this.data.partner.records[0].int_field = 99;
+        // Warning : Different behaviour than the one in ProgressBar
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" widget="basic_progressbar" options="{\'drag_and_drop\': true}"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            }
+        });
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), '99',
+            'Initial value should be correct');
+
+        var $progressBarEl = form.$('.o_basic_progress');
+        var top = $progressBarEl.offset().top + 5;
+        var left = $progressBarEl.offset().left + 5;
+        try {
+            testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
+        } catch (e) {
+            form.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+        // Warning : behaviour different than the ProgressBar.
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), "5",
+            'Value of input is changed');
+        await testUtils.dom.triggerEvent(document.activeElement, "keydown",
+                {which: $.ui.keyCode.RIGHT});
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), "10",
+                    'Value of input is changed');
+        await testUtils.dom.triggerEvent(document.activeElement, "keydown",
+                {which: $.ui.keyCode.UP});
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), "15",
+            'Value of input is changed');
+        await testUtils.dom.triggerEvent(document.activeElement, "keydown",
+                {which: $.ui.keyCode.DOWN});
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), "10",
+                    'Value of input is changed');
+        await testUtils.dom.triggerEvent(document.activeElement, "keydown",
+                {which: $.ui.keyCode.LEFT});
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), "5",
+            'Value of input is changed');
+        
+        await testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '5',
+            'New value should be different than initial after click');
+
+        assert.verifySteps([
+            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/partner/write",
+            "/web/dataset/call_kw/partner/read",
+        ]);
+
+        form.destroy();
+        $view.remove();
+    });
+
+    QUnit.test('Field BasicProgressBar: change value in the input.', async function (assert) {
+        assert.expect(5);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" widget="basic_progressbar"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].int_field, 69,
+                        'New value of progress bar saved');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), '99',
+            'Initial value should be correct');
+
+        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        assert.strictEqual($valInput.val(), '99', 'Initial value in input is correct');
+        $valInput.focus();
+        $valInput.val("");
+        document.execCommand('insertText', false, '69');
+
+        await testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '69',
+            'New value should be different than initial after click');
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: use max_value_num with string param', async function (assert) {
+        assert.expect(2);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" widget="basic_progressbar" options="{\'max_value_num\': \'10000\'}"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99',
+            'Initial value should be correct');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 10000',
+            'Initial value should be correct');
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: use max_value_num with int param', async function (assert) {
+        assert.expect(2);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" widget="basic_progressbar" options="{\'max_value_num\': 10000}"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99',
+            'Initial value should be correct');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 10000',
+            'Initial value should be correct');
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: percentage is false', async function (assert) {
+        assert.expect(2);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" widget="basic_progressbar" options="{\'percentage\': false}"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99',
+            'Initial value should be correct');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 100',
+            'Initial value should be correct');
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: Editing value does not affect max value field', async function (assert) {
+        assert.expect(6);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="qux" invisible="1" />' +
+                    '<field name="int_field" widget="basic_progressbar" options="{\'max_value_field\': \'qux\'}" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].int_field, 69,
+                        'New value of progress bar saved');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+
+        // Warning : Behaviour different from the progressbar : you don't have to click on it to edit it.
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 0',
+            'Initial value should be correct');
+
+        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        assert.strictEqual($valInput.val(), '99', 'Initial value in input is correct');
+        $valInput.focus();
+        $valInput.val("");
+        document.execCommand('insertText', false, '69');
+
+        await testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '69',
+            'New value should be different than initial after edit');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 0',
+            'Initial value should be correct');
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: max value should update in edit mode when typing in input with field max value', async function (assert) {
+        assert.expect(7);
+        this.data.partner.records[0].int_field = 99;
+
+        // Warning : Different behaviour than the ProgressBar : If you want to edit a value as a max value, the widget must be used in this "max value" field.
+        //           And, thus, use the "value" field as an option. This field must be present in the view, indeed.
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" invisible="1" />' +
+                    '<field name="qux" widget="basic_progressbar" options="{\'edit_max_value\': true, \'progress_value_field\': \'int_field\'}" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].qux, 69,
+                        'New value of progress bar saved');
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99.0 /',
+            'Initial value should be correct');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit .o_input').val(), '0.4',
+            'Initial value should be correct');
+
+        var $valInput = form.$('.o_basic_progressbar_unit .o_input');
+        assert.strictEqual($valInput.val(), "0.4", 'Initial value in input is correct');
+        $valInput.focus();
+        $valInput.val("");
+        document.execCommand('insertText', false, '69');
+
+        await testUtilsDom.click(form.$buttons.find('.o_form_button_save'));
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99.0 /',
+            'Initial value should be correct');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), '69.0',
+            'Initial value should be correct');
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: Standard readonly mode is readonly and quick edit', async function (assert) {
+        assert.expect(7);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" invisible="1" />' +
+                    '<field name="qux" widget="basic_progressbar" options="{\'edit_max_value\': true, \'progress_value_field\': \'int_field\'}" />' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(route);
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_readonly'), 'Form in readonly mode');
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99.0 /',
+            'Initial value should be correct');
+        assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), '0.4',
+            'Initial value should be correct');
+
+        assert.containsNone(form, '.o_basic_progressbar_unit .o_input', 'no input in readonly mode');
+        await testUtilsDom.click(form.$('.o_basic_progress'));
+        assert.containsOnce(form, '.o_basic_progressbar_unit .o_input', 'input appears after click');
+
+        assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: write gibberish instead of int shows invalid field', async function (assert) {
+        assert.expect(5);
+        this.data.partner.records[0].int_field = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field" widget="basic_progressbar"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            interceptsPropagate: {
+                call_service: function (ev) {
+                    if (ev.data.service === 'notification') {
+                        assert.strictEqual(ev.data.method, 'notify');
+                        assert.strictEqual(
+                            ev.data.args[0].message,
+                            "<ul><li>int_field</li></ul>"
+                        );
+                    }
+                }
+            },
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+
+        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        assert.strictEqual($valInput.val(), '99', 'Initial value in input is correct');
+        document.execCommand('insertText', false, 'ninety nine');
+        await testUtils.form.clickSave(form);
+        
+        assert.hasClass($(".o_progressbar"), "o_field_invalid",
+            "The field should be invalid when writing non numbers");
+
+        form.destroy();
+    });
+
+    QUnit.test('Field BasicProgressBar: write float works on float fields, in locale', async function (assert) {
+        assert.expect(4);
+        this.data.partner.records[0].qux = 99;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="qux" widget="basic_progressbar"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            translateParameters: {
+                thousands_sep: "#",
+                decimal_point: ":",
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].qux, 1037.9,
+                        'New value of progress bar saved');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
+
+        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        assert.strictEqual($valInput.val(), '99:0', 'Initial value in input is correct');
+        $valInput.val("");
+        $valInput.focus();
+        document.execCommand('insertText', false, '1#037:9');
+        await testUtils.form.clickSave(form);
+
+        assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '1037:9',
+            'New value should be different than initial after click');
+
+        form.destroy();
+    });
+
+    QUnit.module('Field QuickEditBasicProgressBar');
+
+    QUnit.test('Field QuickEditBasicProgressBar: Edit max value in kanbanview', async function (assert) {
+        assert.expect(6);
+        this.data.partner.records[0].int_field = 99;
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="int_field" invisible="1" />' +
+                                '<field name="qux" widget="quick_edit_progressbar" options="{\'progress_value_field\': \'int_field\', \'edit_max_value\': true}" />' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                  '</kanban>',
+            domain: [['id', '=', 1]],
+        });
+        assert.strictEqual(kanban.$('.o_basic_progressbar_value').text(), '99.0 /',
+            'Initial value should be correct');
+        assert.strictEqual(kanban.$('.o_basic_progressbar_unit').text(), '0.4',
+            'Initial value should be correct');
+
+        await testUtilsDom.click(kanban.$('.o_progressbar'));
+
+        var $valInput = kanban.$('.o_basic_progressbar_unit .o_input');
+        assert.strictEqual($valInput.val(), "0.4", 'Initial value in input is correct');
+        await testUtils.fields.editAndTrigger($valInput, '69', ['input', 'blur']);
+
+        assert.containsNone(kanban, '.o_basic_progressbar_unit .o_input', 'no input after click outside');
+
+        assert.strictEqual(kanban.$('.o_basic_progressbar_value').text(), '99.0 /',
+            'Value not changed');
+        assert.strictEqual(kanban.$('.o_basic_progressbar_unit').text(), '69.0',
+            'New max value should be different than initial after changing it');
+
+        kanban.destroy();
+    });
+
+    QUnit.test('Field QuickEditBasicProgressBar: Edit value in kanban view', async function (assert) {
+        assert.expect(3);
+        this.data.partner.records[0].int_field = 99;
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="int_field" widget="quick_edit_progressbar"/>' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                  '</kanban>',
+            domain: [['id', '=', 1]],
+        });
+
+        assert.strictEqual(kanban.$('.o_basic_progressbar_value').text(), '99',
+            'Initial value should be correct');
+
+        await testUtilsDom.click(kanban.$('.o_progressbar'));
+
+        var $valInput = kanban.$('.o_basic_progressbar_value .o_input');
+        assert.strictEqual($valInput.val(), "99", 'Initial value in input is correct');
+        await testUtils.fields.editAndTrigger($valInput, '42', ['input', 'blur']);
+
+        assert.strictEqual(kanban.$('.o_basic_progressbar_value').text(), '42',
+            'New value should be different than initial after changing it');
+
+        kanban.destroy();
+    });
+
+    QUnit.test('Field QuickEditBasicProgressBar: Edit drag and drop value in kanban view', async function (assert) {
+        assert.expect(3);
+        this.data.partner.records[0].int_field = 99;
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<div class="test_click_outside_progressbar">test</div>' +
+                                '<field name="int_field" widget="quick_edit_progressbar" options="{\'drag_and_drop\': true}"/>' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                  '</kanban>',
+            domain: [['id', '=', 1]],
+        });
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+        assert.strictEqual(kanban.$('.o_basic_progressbar_value').text(), '99',
+            'Initial value should be correct');
+
+        await testUtilsDom.click(kanban.$('.o_progressbar'));
+
+        var $valInput = kanban.$('.o_basic_progressbar_value .o_input');
+        assert.strictEqual($valInput.val(), "99", 'Initial value in input is correct');
+        var $progressBarEl = kanban.$('.o_basic_progress');
+        var top = $progressBarEl.offset().top + 5;
+        var left = $progressBarEl.offset().left + 1;
+        try {
+            testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
+        } catch (e) {
+            kanban.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+
+        await testUtilsDom.click(kanban.$('.test_click_outside_progressbar'));
+
+        assert.strictEqual(kanban.$('.o_basic_progressbar_value').text(), '0',
+            'New value should be different than initial after changing it');
+
+        kanban.destroy();
+        $view.remove();
+    });
+
     QUnit.module('FieldColor', {
         before: function () {
             return ajax.loadXML('/web/static/src/xml/colorpicker.xml', core.qweb);

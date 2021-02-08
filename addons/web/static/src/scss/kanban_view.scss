@@ -348,7 +348,7 @@
             .o_progressbar_title {
                 flex: 0 0 auto;
             }
-            .o_progress {
+            .o_progress, .o_basic_progress {
                 flex: 1 1 auto;
                 margin-top: 3px;
             }
@@ -361,6 +361,17 @@
             input.o_progressbar_value {
                 width: 15%;
                 margin-left: 8px;
+            }
+            .o_basic_progressbar_value, .o_basic_progressbar_unit {
+                flex: 0 0 auto;
+                width: auto;
+                height: 100%;
+                text-align: right;
+                input {
+                    vertical-align: middle;
+                    width: 6rem;
+                    height: 100%;                
+                }
             }
         }
 

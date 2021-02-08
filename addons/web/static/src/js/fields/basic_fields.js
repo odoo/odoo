@@ -3028,74 +3028,85 @@ var FieldProgressBar = AbstractField.extend({
 
 /**
  * Node options:
- *
- * - max_field: get the max_value for the widget from a field which must be present in the view
- * - max_num: A numeric max_value for the widget if the max_field is not found or set (default: 100)
- * - title: title of the bar, displayed on top of the bar options
- * - step: Round the clicked value on the progressbar to the nearest multiple of step (default: 5, min: 1)
- * - percentage: boolean option : If set, the value should be presented as a percentage.
- * - drag_and_drop : If set, the progress bar can be edited with the mouse.
+ * 
+ * Global :
  * - edit_text : If set or absent, the text value can be edited.
+ *
+ * Edition of the progress value :
+ * - max_value_field: get the max_value for the widget from a field which must be present in the view.
+ * - max_value_num: A numeric max_value for the widget if the max_field is not found or set (default: 100).
+ * - percentage: boolean option : If set to false, the quotient with numerator 100 should be spelled out instead of exprimed as %.
+ * - drag_and_drop : If set, the progress bar can be edited with the mouse.
+ * - step: Round the clicked value on the progressbar to the nearest multiple of step (default: 5, min: 1)
+ * 
+ * Edition of the max value :
+ * - edit_max_value : The field to edit is the max value. In this case only the value_field option is valid,
+ *                    max_field, max_num, percentage, drag_and_drop option's are overidden.
+ *                    If this option is set, the use of value_field option is highly recommended but not mandatory
+ * - progress_value_field : The field used as the value to show in the progressbar. Only used with edit_max_value option.
+ *                          The field must be present in the view. (Default progress value if not set : 0)
+ * 
+ * Formatting options :
+ * - human_number : If set, the numbers are shown using human_numbers in readonly rendering, default : formatValue is used.
+ * - format_type : If set, overrides the formatType of the field used in the formatValue.
  */
 var FieldBasicProgressBar = FieldInteger.extend({
     description: _lt("Basic Progress Bar"),
     template: "BasicProgressBar",
     events: _.extend({}, FieldInteger.prototype.events, {
-        'click .o_basic_progress': '_onClick',
+        'click .o_basic_progress': '_onProgressClick',
         'keydown .o_progress_keydown': '_onProgressKeydown',
         'mousedown .o_basic_progress': '_onMousedown',
         'mousemove .o_basic_progress': '_onMousemove',
         'mouseleave .o_basic_progress': '_onMouseleave',
     }),
-    supportedFieldTypes: ['integer'],
+    supportedFieldTypes: ['integer', 'float'],
     init: function () {
         this._super.apply(this, arguments);
-        this.canWrite = !this.nodeOptions.readonly && this.mode === 'edit';
-        this.enable_drag_and_drop = this.canWrite && (this.nodeOptions.drag_and_drop || false);
+        this.canWrite = !this.nodeOptions.readonly && (this.mode === 'edit' || this._allowEdit());
         this.enable_edit_text = this.canWrite && (this.nodeOptions.edit_text !== undefined ? this.nodeOptions.edit_text : true);
-        this.max_value = this.recordData[this.nodeOptions.max_field] || this.nodeOptions.max_num || 100;
-        this.percentage = this.nodeOptions.percentage !== undefined ? this.nodeOptions.percentage : this.max_value === 100;
-        this.step = this.nodeOptions.step !== undefined ? this.nodeOptions.step : 5;
-        this.title = _t(this.attrs.title || this.nodeOptions.title) || '';
+        this.edit_max_value = this.nodeOptions.edit_max_value !== undefined ? this.nodeOptions.edit_max_value : false;
+        if (this.edit_max_value) {
+            this.enable_drag_and_drop = false;
+            this.percentage = false;
+            this.step = 0;
+            this.progress_value = this.recordData[this.nodeOptions.progress_value_field] || 0;
+        } else {
+            this.enable_drag_and_drop = this.canWrite && (this.nodeOptions.drag_and_drop || false);
+            this.max_value = this.recordData[this.nodeOptions.max_value_field] !== undefined ?
+                             this.recordData[this.nodeOptions.max_value_field] : this.nodeOptions.max_value_num || 100;
+            this.percentage = this.nodeOptions.percentage !== undefined ? this.nodeOptions.percentage : this.max_value === 100;
+            this.step = this.nodeOptions.step !== undefined ? this.nodeOptions.step * 1 : 5;
+        }
         this.moused_down = false;
+
+        this.title = _t(this.attrs.title) || '';
+        this.formatValue = this.nodeOptions.human_number ? utils.human_number : this._formatValue;
+        this.formatType = this.nodeOptions.format_type || this.formatType;
+
+        // Handle drawback of inheriting from FieldInteger and not FieldFloat.
+        if (this.formatType === "float" && this.attrs.digits) {
+            this.nodeOptions.digits = JSON.parse(this.attrs.digits);
+        }
     },
+    /**
+     * @override
+     */
     _renderEdit: function () {
         this._render_value();
-        
-        if (this.enable_edit_text) {        
-            this._prepareInput(this.$input).appendTo(this.$('.o_basic_progressbar_value'));
+        if (this.enable_edit_text) {    
+            if (this.edit_max_value) {
+                this._prepareInput(this.$input).appendTo(this.$('.o_basic_progressbar_unit'));
+            } else {
+                this._prepareInput(this.$input).appendTo(this.$('.o_basic_progressbar_value'));
+            }
         }
     },
+    /**
+     * @override
+     */
     _renderReadonly: function () {
         this._render_value();
-        this.$('.o_progressbar_thumb').addClass("o_progressbar_thumb_readonly");
-        this.$('.o_progressbar_complete').addClass("o_progressbar_complete_readonly");
-    },
-    /**
-     * Updates the widget with value
-     *
-     * @param {Number} value
-     */
-    on_update: function (value) {
-        // _setValues accepts string and will parse it
-        var formattedValue = this._formatValue(value);
-        this._setValue(formattedValue);
-        if (this.enable_edit_text) {
-            this.$input.val(value);
-        }
-    },
-    /**
-     * Get the value of the click on the progress bar
-     * 
-     * @param {Event} event 
-     */
-    get_progress_value: function (event) {
-        var $target = $(event.currentTarget);
-        var numValue = Math.floor((event.pageX - $target.offset().left) / $target.outerWidth() * this.max_value);
-        if (this.step > 0) {
-            numValue = Math.round(numValue / this.step) * this.step;
-        }
-        return numValue;
     },
     /**
      * Renders the value
@@ -3103,11 +3114,16 @@ var FieldBasicProgressBar = FieldInteger.extend({
      * @private
      * @param {Number} v
      */
-    _render_value: function (v, fromMouse) {
-        var value = this.value;
-        var maxValue = this.max_value;
-        if (!isNaN(v)) {
-            value = v;
+    _render_value: function (v, fromDragAndDrop) {
+        var value = this.edit_max_value ? (this.recordData[this.nodeOptions.progress_value_field] || this.progress_value) : this.value;
+        var maxValue = this.edit_max_value ? this.value : (this.recordData[this.nodeOptions.max_value_field] || this.max_value);
+        var parsed = this._parseInput(v);
+        if (parsed !== null) {
+            if (this.edit_max_value) {
+                maxValue = parsed;
+            } else {
+                value = parsed;
+            }
         }
         value = value || 0;
         maxValue = maxValue || 0;
@@ -3119,32 +3135,63 @@ var FieldBasicProgressBar = FieldInteger.extend({
             widthComplete = 100;
         }
 
+        if (!this.enable_drag_and_drop) {
+            this.$('.o_progressbar_thumb').addClass("o_progressbar_thumb_readonly");
+            this.$('.o_progressbar_complete').addClass("o_progressbar_complete_readonly");
+            this.$el.addClass("o_progressbar_readonly");
+        } else {
+            this.$('.o_progressbar_thumb').removeClass("o_progressbar_thumb_readonly");
+            this.$('.o_progressbar_complete').removeClass("o_progressbar_complete_readonly");
+            this.$el.removeClass("o_progressbar_readonly");
+        }
+
         this.$('.o_basic_progress').toggleClass('o_progress_overflow', value > maxValue)
             .attr('aria-valuemin', '0')
             .attr('aria-valuemax', maxValue)
             .attr('aria-valuenow', value);
         this.$('.o_progressbar_complete').css('width', widthComplete + '%');
 
-        if (!this.enable_edit_text) {
-            this.$('.o_basic_progressbar_value').text(this._formatValue(value));   
-        } else if (fromMouse) {
-            this.$input.val(value);
+        if (!this.enable_edit_text || this.edit_max_value) {
+            this.$('.o_basic_progressbar_value').text(this.formatValue(value * 1) + (this.edit_max_value ? " /" : "")); // * 1 : get rid of FieldInteger _formatValue implementation for type str.
+        } else if (fromDragAndDrop) {
+            this.$input.val(this._formatValue(value * 1));
         }
         
-        if (this.percentage) {
-            this.$('.o_progressbar_unit').text(" %");
+        if (this.edit_max_value) {
+            if (!this.enable_edit_text) {
+                this.$('.o_basic_progressbar_unit').text(this.formatValue(maxValue * 1)); // * 1 : get rid of FieldInteger _formatValue implementation for type str.
+            }
         } else {
-            this.$('.o_progressbar_unit').text(" / " + this._formatValue(maxValue));
+            if (this.percentage) {
+                this.$('.o_basic_progressbar_unit').text(" %");
+            } else {
+                this.$('.o_basic_progressbar_unit').text(" / " + this.formatValue(maxValue * 1)); // * 1 : get rid of FieldInteger _formatValue implementation for type str.
+            }
         }
-
-        if (!this.enable_drag_and_drop) {
-            this.$('.o_progressbar_thumb').addClass("o_progressbar_thumb_readonly");
-            this.$('.o_progressbar_complete').addClass("o_progressbar_complete_readonly");
+    },
+    _getValue: function () {
+        if (this.enable_edit_text) {
+            return this._super.apply(this, arguments);
+        }
+        if (this.edit_max_value) {
+            return this.$('.o_basic_progressbar_unit').text();
+        }
+        return this.$('.o_basic_progressbar_value').text();
+    },
+    /**
+     * Override method to manage keydown event done elsewhere than in the input field. 
+     * 
+     * @override
+     */
+    _onKeydown: function (event) {
+        if (!this.enable_edit_text || document.activeElement.classList.contains("o_progress_keydown")) {
+            event.stopPropagation();
+        } else {
+            this._super.apply(this, arguments);
         }
     },
     /**
-     * Called when the user is typing text
-     * @see _notifyChanges
+     * Called when the user is typing text re-render the progressbar
      *
      * @private
      */
@@ -3152,49 +3199,247 @@ var FieldBasicProgressBar = FieldInteger.extend({
         this._super.apply(this, arguments);
         this._render_value(this._getValue());
     },
-    _onClick: function (event) {
+    // -------------------------
+    //  Drag and drop functions
+    // -------------------------
+    /**
+     * Handle mousedown event on the progressbar to begin to follow the mouse on the bar.
+     * 
+     * @param {*} event 
+     * @private
+     */
+    _onMousedown: function (event) {
+        if (this.enable_drag_and_drop) {
+            this.moused_down = true;
+            this._render_value(this._get_progress_value(event), true);
+        }
+    },
+    /**
+     * Handle mousedown event on the progressbar to follow the mouse on the bar
+     * 
+     * @param {*} event
+     * @private
+     */
+    _onMousemove: function (event) {
+        if (this.moused_down) {
+            this._render_value(this._get_progress_value(event), true);
+        }
+    },
+    /**
+     * Handle mousedown event on the progressbar to stop and follow the mouse as the user left the bar
+     * 
+     * @param {*} event
+     * @private
+     */
+    _onMouseleave: function (event) {
+        if (this.moused_down) {
+            // Update the value of the field before going out of the progress bar.
+            this.on_update(this._get_progress_value(event), true);
+            this.moused_down = false;
+        }
+    },
+    /**
+     * Handle click on the progressbar, apply focus on the hidden input to handle keydown events
+     * 
+     * @param {*} event
+     * @private
+     */
+    _onProgressClick: function (event) {
         this.moused_down = false;
         if (this.enable_drag_and_drop) {
-            this.on_update(this.get_progress_value(event));
+            this.on_update(this._get_progress_value(event), true);
             this.$('.o_progress_keydown').focus();
         }
     },
+    /**
+     * Handle keydown on the progressbar, increment or decrement the value with the configured step
+     * 
+     * @param {*} event
+     * @private
+     */
     _onProgressKeydown: function (event) {
         if (this.enable_drag_and_drop) {
             var increment = (this.step > 0 ? this.step : 1);
             var value = null;
             if (event.keyCode === $.ui.keyCode.UP || event.keyCode === $.ui.keyCode.RIGHT) {
-                value = this.value + increment;
+                value = this._parseValue(this._getValue()) + increment;
             } else if (event.keyCode === $.ui.keyCode.DOWN || event.keyCode === $.ui.keyCode.LEFT) {
-                value = this.value - increment;
+                value = this._parseValue(this._getValue()) - increment;
             }
-            if (value !== null) {
-                this.on_update(value);
-                this._render_value(value);
+            this.max_value = (this.recordData[this.nodeOptions.max_value_field] || this.max_value);
+            if (value !== null && value <= this.max_value && value >= 0) {
+                this.on_update(value, true);
             }
         }
     },
-    _onMousedown: function (event) {
-        if (this.enable_drag_and_drop) {
-            this.moused_down = true;
-            this._render_value(this.get_progress_value(event), true);
-        }
+    // ---------------
+    // Utils
+    // ---------------
+    /**
+     * This function is meant to be easily overriden for further needs (widget editable in kanban view...)
+     */
+    _allowEdit: function () {
+        return false;
     },
-    _onMousemove: function (event) {
-        if (this.moused_down) {
-            this._render_value(this.get_progress_value(event), true);
-        }
+    /**
+     * Updates the widget with value
+     *
+     * @param {Number} value
+     */
+    on_update: function (value, fromDragAndDrop) {
+        this._render_value(value, fromDragAndDrop);
+        this._valueChanged();
     },
-    _onMouseleave: function (event) {
-        if (this.moused_down) {
-            // Update the value of the field before going out of the progress bar.
-            this.on_update(this.get_progress_value(event));
-            this.moused_down = false;
-        }
+    /**
+     * This function is meant to be easily overriden for further needs (commit changes at each updates (@see _setValue ), ...)
+     */
+    _valueChanged: function () {
+        this._doAction();
     },
+    /**
+     * Get the value of the click on the progress bar
+     * 
+     * @param {Event} event 
+     */
+    _get_progress_value: function (event) {
+        var $target = $(event.currentTarget);
+        var numValue = Math.floor((event.pageX - $target.offset().left) / $target.outerWidth() * this.max_value);
+        if (this.step > 0) {
+            numValue = Math.round(numValue / this.step) * this.step;
+        }
+        return numValue;
+    },
+    /**
+     * Parse Input. 
+     * If the value is already a number, returns it.
+     * Else, try to parse it, if it fails, returns null, else returns the parsed value. 
+     * @param {*} value 
+     */
+    _parseInput: function (value) {
+        if (!isNaN(value)) {
+            return value;
+        }
+        try {
+            return this._parseValue(value);
+        } catch (ignored) {
+            // ignored - will return null.
+        }
+        return null;
+    },
+    /**
+     * @override
+     */
     isSet: function () {
         return true;
     },
+});
+
+/**
+ * This Widget allows to edit the Basic ProgressBar outside form views in edit mode.
+ * 
+ * /!\ If you use it in kanban with draggable cards, it's highly recommended to keep drag_and_drop with its default value (false)
+ */
+var FieldQuicklyEditableBasicProgressBar = FieldBasicProgressBar.extend({
+    events: _.extend({}, FieldBasicProgressBar.prototype.events, {
+        'click .o_progressbar': '_onQuickEditClick',
+    }),
+    init: function () {
+        this._super.apply(this, arguments);
+        this.originalCanWrite = this.canWrite;
+        this.editable = this.canWrite;
+        this.isFirstEdition = true;
+    },
+    /**
+     * In this quick edit mode, we will by-pass the _notifyChanges called by the other library functions which are meant to
+     * be called in a real edit mode.
+     * 
+     * The storage function will be the _setValue function called in the @see _onBlurQuickEdit and @see _on_update 
+     * (only called with drag and drop) function
+     * 
+     * @override
+     */
+    _notifyChanges: function () {
+        if (this.mode === "edit") {
+            return this._super.apply(this, arguments);
+        }
+    },
+    /**
+     * In readonly mode we commit changes during @see _onBlurQuickEdit
+     * 
+     * @override
+     */
+    _valueChanged: function () {
+        if (this.mode === "edit") {
+            return this._super.apply(this, arguments);
+        }
+    },
+    /**
+     * @override
+     */
+    _renderReadonly: function () {
+        this._super.apply(this, arguments);
+        this.$el.on('click', this._onQuickEditClick.bind(this));
+    },
+    /**
+     * Handle the first click on the progressbar.
+     * 
+     * If we are in a readonly view (!originalCanWrite), the field is diplayed as readonly (!editable), and there are no readonly option on the field,
+     * we can re-render the field as an editable field.
+     */
+    _onQuickEditClick: function () {
+        if (!this.editable && !this.nodeOptions.readonly && !this.originalCanWrite) {
+            this.canWrite = true;
+            this.enable_edit_text = (this.nodeOptions.edit_text !== undefined ? this.nodeOptions.edit_text : true);
+            if (!this.edit_max_value) {
+                this.enable_drag_and_drop = (this.nodeOptions.drag_and_drop || false);
+            }
+            if (this.enable_edit_text) {    
+                if (this.edit_max_value) {
+                    this.$('.o_basic_progressbar_unit').empty();
+                } else {
+                    this.$('.o_basic_progressbar_value').empty();
+                }
+            }
+            this._renderEdit();
+            if (this.isFirstEdition && this.enable_drag_and_drop) {
+                window.addEventListener('click', this._onBlurQuickEdit.bind(this), true);
+                this.isFirstEdition = false;
+            }
+            if (this.$input && !this.enable_drag_and_drop) {
+                this.$input.on('blur', this._onBlurQuickEdit.bind(this));
+                this.$input.on('keydown', this._onQuickEditKeyDown.bind(this));
+            }
+            if (this.$input) {
+                this.$input.focus();
+            }
+            this.editable = true;
+        }
+    },
+    _onBlurQuickEdit: function (event) {
+        var condition = true;
+        if (event.type === "click") {
+            var isInProgressBar = $(event.target).closest(".o_progressbar:not(.o_progressbar_readonly)").length;
+            condition = !isInProgressBar;
+        }
+        if (condition && this.editable) {
+            this.editable = false;
+            var value = this._getValue();
+            this.canWrite = this.originalCanWrite;
+            this.enable_edit_text = this.canWrite && (this.nodeOptions.edit_text !== undefined ? this.nodeOptions.edit_text : true);
+            if (!this.edit_max_value) {
+                this.enable_drag_and_drop = this.canWrite && (this.nodeOptions.drag_and_drop || false);
+            }
+            this._render_value(value);
+            this._setValue(value);
+        }
+    },
+    _onQuickEditKeyDown: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            event.preventDefault();
+            event.stopPropagation();
+            this._onBlurQuickEdit(event);
+        }
+    }
 });
 
 /**
@@ -3970,6 +4215,7 @@ return {
     FieldPhone: FieldPhone,
     FieldProgressBar: FieldProgressBar,
     FieldBasicProgressBar: FieldBasicProgressBar,
+    FieldQuicklyEditableBasicProgressBar: FieldQuicklyEditableBasicProgressBar,
     FieldText: FieldText,
     ListFieldText: ListFieldText,
     FieldToggleBoolean: FieldToggleBoolean,
