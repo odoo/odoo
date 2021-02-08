@@ -90,7 +90,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         :param move:        The move of the document or None to create a new one.
         :param move_type:   If move is None, the type of the invoice to create, defaults to 'out_invoice'.
         """
-        move = move or self.init_invoice(move_type or 'out_invoice')
+        move = move or self.init_invoice(move_type or 'out_invoice', products=self.product_a)
         return self.env['account.edi.document'].create({
             'edi_format_id': edi_format.id,
             'move_id': move.id,
