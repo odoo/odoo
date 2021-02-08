@@ -18,7 +18,7 @@ class TestTrackData(TestEventOnlineCommon):
         test_email = '"Nibbler In Space" <nibbler@futurama.example.com>'
         test_phone = '0456001122'
         test_bio = '<p>UserInput</p>'
-        test_bio_void = '<p><br/></p>'
+        # test_bio_void = '<p><br/></p>'
 
         event = self.env['event.event'].browse(self.event_0.ids)
         customer = self.env['res.partner'].browse(self.event_customer.id)
@@ -51,9 +51,9 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.partner_email, test_email,
             'Track should take user input over computed partner value')
-        # self.assertEqual(
-        #     new_track.partner_phone, customer.phone,
-        #     'Track should take partner value if not user input')
+        self.assertEqual(
+            new_track.partner_phone, customer.phone,
+            'Track should take partner value if not user input')
 
         # already filled information should not be updated
         new_track = self.env['event.track'].create({
