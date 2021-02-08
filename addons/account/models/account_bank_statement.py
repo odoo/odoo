@@ -1254,7 +1254,7 @@ class AccountBankStatementLine(models.Model):
         # Assign partner if needed (for example, when reconciling a statement
         # line with no partner, with an invoice; assign the partner of this invoice)
         if not self.partner_id:
-            rec_overview_partners = set(overview['counterpart_line'].partner_id
+            rec_overview_partners = set(overview['counterpart_line'].partner_id.id
                                         for overview in reconciliation_overview
                                         if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
             if len(rec_overview_partners) == 1:
