@@ -236,8 +236,6 @@ class AccountMove(models.Model):
         docs = self.edi_document_ids.filtered(lambda d: d.state in ('to_send', 'to_cancel'))
         if 'blocking_level' in self.env['account.edi.document']._fields:
             docs = docs.filtered(lambda d: d.blocking_level != 'error')
-        else:
-            docs = docs.filtered(lambda d: not d.error)
         docs._process_documents_web_services(with_commit=False)
 
 class AccountMoveLine(models.Model):
