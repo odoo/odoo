@@ -51,9 +51,9 @@ class TestTrackData(TestEventTrackOnlineCommon):
         self.assertEqual(
             new_track.partner_email, test_email,
             'Track should take user input over computed partner value')
-        # self.assertEqual(
-        #     new_track.partner_phone, customer.phone,
-        #     'Track should take partner value if not user input')
+        self.assertEqual(
+            new_track.partner_phone, customer.phone,
+            'Track should take partner value if not user input')
 
         # already filled information should not be updated
         new_track = self.env['event.track'].create({
