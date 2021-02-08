@@ -143,8 +143,8 @@ var BasicView = AbstractView.extend({
                         } else {
                             var x2mFieldInfo = record.fieldsInfo[this.viewType][name];
                             var viewType = x2mFieldInfo.viewType || x2mFieldInfo.mode;
-                            var knownFields = Object.keys(record.data[name].fieldsInfo[record.data[name].viewType] || {});
-                            var newFields = Object.keys(record.data[name].fieldsInfo[viewType]);
+                            var knownFields = Object.keys(record.data[name].fieldsInfo && record.data[name].fieldsInfo[record.data[name].viewType] || {});
+                            var newFields = Object.keys(record.data[name].fieldsInfo && record.data[name].fieldsInfo[viewType] || {});
                             if (_.difference(newFields, knownFields).length) {
                                 fieldNames.push(name);
                             }
