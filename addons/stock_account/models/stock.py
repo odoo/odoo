@@ -418,6 +418,15 @@ class StockMove(models.Model):
             move._run_valuation()
         for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and (m._is_in() or m._is_out() or m._is_dropshipped() or m._is_dropshipped_returned())):
             move._account_entry_move()
+
+        products_to_vacuum = defaultdict(lambda: self.env['product.product'])
+        for move in res.filtered(lambda m: m.product_id.valuation == 'real_time' and m._is_in() and (m.product_id.property_cost_method == 'fifo' or m.product_id.categ_id.property_cost_method == 'fifo')):
+            products_to_vacuum[move.company_id.id] += move.product_id
+        for company_id in products_to_vacuum:
+            moves_to_vacuum = self.search(
+                [('product_id', 'in', products_to_vacuum[company_id].ids), ('remaining_qty', '<', 0)] + self._get_all_base_domain(company_id=company_id))
+            moves_to_vacuum._fifo_vacuum()
+
         return res
 
     @api.multi
