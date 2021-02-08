@@ -27,6 +27,7 @@
         'data/mailing_data_templates.xml',
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_views.xml',
+        'wizard/mailing_contact_to_list_views.xml',
         'wizard/mailing_list_merge_views.xml',
         'wizard/mailing_mailing_test_views.xml',
         'views/mailing_mailing_views_menus.xml',
