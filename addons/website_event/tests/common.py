@@ -107,3 +107,10 @@ class TestEventOnlineCommon(TestEventCommon, EventDtPatcher):
             'date_begin': datetime.combine(cls.reference_now, time(7, 0)) - timedelta(days=1),
             'date_end': datetime.combine(cls.reference_now, time(13, 0)) + timedelta(days=1),
         })
+
+        cls.event_customer.write({
+            'website_description': '<p>I am your best customer, %s</p>' % cls.event_customer.name,
+        })
+        cls.event_customer2.write({
+            'website_description': '<p>I am your best customer, %s</p>' % cls.event_customer2.name,
+        })
