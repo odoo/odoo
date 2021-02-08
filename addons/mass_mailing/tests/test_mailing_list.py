@@ -2,7 +2,53 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests.common import users
+from odoo.tests.common import Form, users
+
+
+class TestMailingContactToList(MassMailCommon):
+
+    @users('user_marketing')
+    def test_mailing_contact_to_list(self):
+        contacts = self.env['mailing.contact'].create([{
+            'name': 'Contact %02d',
+            'email': 'contact_%02d@test.example.com',
+        } for x in range(30)])
+
+        self.assertEqual(len(contacts), 30)
+        self.assertEqual(contacts.list_ids, self.env['mailing.list'])
+
+        mailing = self.env['mailing.list'].create({
+            'name': 'Contacts Agregator',
+        })
+
+        # create wizard with context values
+        wizard_form = Form(self.env['mailing.contact.to.list'].with_context(default_contact_ids=contacts.ids))
+        self.assertEqual(wizard_form.contact_ids._get_ids(), contacts.ids)
+
+        # set mailing list and add contacts
+        wizard_form.mailing_list_id = mailing
+        wizard = wizard_form.save()
+        action = wizard.action_add_contacts()
+        self.assertEqual(contacts.list_ids, mailing)
+        self.assertEqual(action["type"], "ir.actions.client")
+        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
+        subaction = action["params"]["next"]
+        self.assertEqual(subaction["type"], "ir.actions.act_window_close")
+
+        # set mailing list, add contacts and redirect to mailing view
+        mailing2 = self.env['mailing.list'].create({
+            'name': 'Contacts Sublimator',
+        })
+
+        wizard_form.mailing_list_id = mailing2
+        wizard = wizard_form.save()
+        action = wizard.action_add_contacts_and_send_mailing()
+        self.assertEqual(contacts.list_ids, mailing + mailing2)
+        self.assertEqual(action["type"], "ir.actions.client")
+        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
+        subaction = action["params"]["next"]
+        self.assertEqual(subaction["type"], "ir.actions.act_window")
+        self.assertEqual(subaction["context"]["default_contact_list_ids"], [mailing2.id])
 
 
 class TestMailingListMerge(MassMailCommon):
@@ -18,7 +64,6 @@ class TestMailingListMerge(MassMailCommon):
                 (0, 0, {'name': 'Norberto', 'email': 'norbert@example.com'}),
             ]
         })
-
 
     @users('user_marketing')
     def test_mailing_contact_create(self):
