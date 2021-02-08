@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Ensure the modified files conform to the style enforced by the "Style" CI
+# test. You may change the `pylint_cmd` variable to set the path of your pylint
+# executable.
+
+pylint_cmd=pylint
+
+set -euo pipefail
+cd -P -- "$(dirname -- "$0")/../.."  # cd to the project root
+base_branch=$(git rev-parse --abbrev-ref HEAD | egrep -o '(master|(saas-)?[0-9]+\.[0-9])')
+git diff $base_branch --name-only | { egrep '.py$' || true; } | xargs -r $pylint_cmd -E --rcfile pylint.conf
+exit 0
