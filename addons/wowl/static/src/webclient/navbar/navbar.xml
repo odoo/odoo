@@ -33,7 +33,8 @@
     <i class="fa fa-th-large" />
     <t t-set-slot="menu">
       <DropdownItem
-        t-foreach="apps" t-as="app" t-key="app.id"
+        t-foreach="apps" t-as="app" t-key="app.id" 
+        t-att-class="{ o_dropdown_active: menuRepo.getCurrentApp() === app }"
         payload="app"
         t-esc="app.name" />
     </t>

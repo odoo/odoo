@@ -55,6 +55,30 @@ QUnit.test("dropdown menu can be toggled", async (assert) => {
   assert.containsNone(dropdown, "ul.o_dropdown_menu");
   navbar.destroy();
 });
+
+QUnit.test("navbar can display current active app", async (assert) => {
+  const env = await makeTestEnv(baseConfig);
+  const navbar = await mount(NavBar, { env });
+  const dropdown = navbar.el.querySelector(".o_navbar_apps_menu");
+  // Open apps menu
+  await click(dropdown, "button.o_dropdown_toggler");
+  assert.containsOnce(
+    dropdown,
+    "ul.o_dropdown_menu li.o_dropdown_item:not(.o_dropdown_active)",
+    "should not show the current active app as the menus service has not loaded an app yet"
+  );
+
+  // Activate an app
+  env.services.menus.setCurrentMenu(1);
+  await nextTick();
+  assert.containsOnce(
+    dropdown,
+    "ul.o_dropdown_menu li.o_dropdown_item.o_dropdown_active",
+    "should show the current active app"
+  );
+  navbar.destroy();
+});
+
 QUnit.test("navbar can display systray items", async (assert) => {
   const env = await makeTestEnv(baseConfig);
   const navbar = await mount(NavBar, { env });
