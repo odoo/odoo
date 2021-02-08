@@ -1511,7 +1511,7 @@ exports.Product = Backbone.Model.extend({
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price: function(pricelist, quantity){
+    get_price: function(pricelist, quantity, price_extra){
         var self = this;
         var date = moment().startOf('day');
 
@@ -1540,6 +1540,9 @@ exports.Product = Backbone.Model.extend({
         });
 
         var price = self.lst_price;
+        if (price_extra){
+            price += price_extra;
+        }
         _.find(pricelist_items, function (rule) {
             if (rule.min_quantity && quantity < rule.min_quantity) {
                 return false;
@@ -1767,7 +1770,7 @@ exports.Orderline = Backbone.Model.extend({
 
         // just like in sale.order changing the quantity will recompute the unit price
         if(! keep_price && ! this.price_manually_set){
-            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()) + this.get_price_extra());
+            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity(), this.get_price_extra()));
             this.order.fix_tax_included_price(this);
         }
         this.trigger('change', this);
@@ -2936,7 +2939,7 @@ exports.Order = Backbone.Model.extend({
             return ! line.price_manually_set;
         });
         _.each(lines_to_recompute, function (line) {
-            line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity()) + line.get_price_extra());
+            line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra()));
             self.fix_tax_included_price(line);
         });
         this.trigger('change');
@@ -2996,7 +2999,7 @@ exports.Order = Backbone.Model.extend({
 
         if (options.price_extra !== undefined){
             orderline.price_extra = options.price_extra;
-            orderline.set_unit_price(orderline.get_unit_price() + options.price_extra);
+            orderline.set_unit_price(orderline.product.get_price(this.pricelist, orderline.get_quantity(), options.price_extra));
             this.fix_tax_included_price(orderline);
         }
 
