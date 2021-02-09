@@ -589,7 +589,7 @@ class AccountJournal(models.Model):
                     break
             if not invoice:
                 invoice = self.env['account.move'].create({})
-                invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
             invoices += invoice
 
         action_vals = {
