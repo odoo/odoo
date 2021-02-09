@@ -16,6 +16,7 @@ var fonts = require('wysiwyg.fonts');
 var rte = require('web_editor.rte');
 var ServicesMixin = require('web.ServicesMixin');
 var weWidgets = require('wysiwyg.widgets');
+require("summernote/summernote");
 
 var _t = core._t;
 
