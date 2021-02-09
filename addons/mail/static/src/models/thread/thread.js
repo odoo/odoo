@@ -1343,6 +1343,9 @@ function factory(dependencies) {
             const index = this.orderedMessages.findIndex(message =>
                 message.id === this.lastSeenByCurrentPartnerMessageId
             );
+            if (index === -1) {
+                return [['unlink']];
+            }
             const message = this.orderedMessages[index + 1];
             if (!message) {
                 return [['unlink']];
