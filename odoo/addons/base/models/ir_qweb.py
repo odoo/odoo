@@ -9,7 +9,6 @@ from time import time
 
 from lxml import html
 from lxml import etree
-from werkzeug import urls
 
 from odoo import api, models, tools
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, _SAFE_OPCODES
@@ -19,6 +18,7 @@ from odoo.modules.module import get_resource_path
 
 from odoo.addons.base.models.qweb import QWeb, Contextifier
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS
 
 _logger = logging.getLogger(__name__)
 
@@ -159,7 +159,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if len(el):
             raise SyntaxError("t-call-assets cannot contain children nodes")
 
-        # nodes = self._get_asset_nodes(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
+        # nodes = self._get_asset_nodes(bundle, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
         #
         # for index, (tagName, t_attrs, content) in enumerate(nodes):
         #     if index:
@@ -216,7 +216,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                         ast.keyword('async_load', self._get_attr_bool(el.get('async_load', False))),
                         ast.keyword('defer_load', self._get_attr_bool(el.get('defer_load', False))),
                         ast.keyword('lazy_load', self._get_attr_bool(el.get('lazy_load', False))),
-                        ast.keyword('values', ast.Name(id='values', ctx=ast.Load())),
+                        ast.keyword('media', ast.Constant(el.get('media'))),
                     ],
                     starargs=None, kwargs=None
                 )
@@ -281,92 +281,89 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
-    def get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
-        return AssetsBundle(xmlid, files, env=env, css=css, js=js)
+    def get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True):
+        return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
 
-    def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, values=None):
+    def _get_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
         if debug and 'assets' in debug:
-            return self._generate_asset_nodes(xmlid, options, css, js, debug, async_load, defer_load, lazy_load, values)
+            return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
         else:
-            return self._generate_asset_nodes_cache(xmlid, options, css, js, debug, async_load, defer_load, lazy_load, values)
+            return self._generate_asset_nodes_cache(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
 
     @tools.conditional(
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id",)),
+        tools.ormcache_context('bundle', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id",)),
     )
-    def _generate_asset_nodes_cache(self, xmlid, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, values=None):
-        return self._generate_asset_nodes(xmlid, options, css, js, debug, async_load, defer_load, lazy_load, values)
+    def _generate_asset_nodes_cache(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+        return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
 
-    def _generate_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, values=None):
-        files, remains = self._get_asset_content(xmlid, options)
-        asset = self.get_asset_bundle(xmlid, files, env=self.env, css=css, js=js)
-        remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
+    def _generate_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+        nodeAttrs = None
+        if css and media:
+            nodeAttrs = {
+                'media': media,
+            }
+        files, remains = self._get_asset_content(bundle, options, nodeAttrs)
+        asset = self.get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
+        remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
-    def _get_asset_link_urls(self, xmlid, options):
-        asset_nodes = self._get_asset_nodes(xmlid, options, js=False)
+    def _get_asset_link_urls(self, bundle, options):
+        asset_nodes = self._get_asset_nodes(bundle, options, js=False)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
-    @tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', keys=("website_id",))
-    def _get_asset_content(self, xmlid, options):
+    @tools.ormcache_context('bundle', 'options.get("lang", "en_US")', keys=("website_id",))
+    def _get_asset_content(self, bundle, options, nodeAttrs=None):
         options = dict(options,
             inherit_branding=False, inherit_branding_auto=False,
             edit_translations=False, translatable=False,
             rendering_bundle=True)
 
         options['website_id'] = self.env.context.get('website_id')
-        IrQweb = self.env['ir.qweb'].with_context(options)
 
-        def can_aggregate(url):
-            return not urls.url_parse(url).scheme and not urls.url_parse(url).netloc and not url.startswith('/web/assets')
-
-        # TODO: This helper can be used by any template that wants to embedd the backend.
-        #       It is currently necessary because the ir.ui.view bundle inheritance does not
-        #       match the module dependency graph.
-        def get_modules_order():
-            if request:
-                from odoo.addons.web.controllers.main import module_boot
-                return json.dumps(module_boot())
-            return '[]'
-        template = IrQweb._render(xmlid, {"get_modules_order": get_modules_order})
+        asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
 
         files = []
         remains = []
-        for el in html.fragments_fromstring(template):
-            if isinstance(el, html.HtmlElement):
-                href = el.get('href', '')
-                src = el.get('src', '')
-                atype = el.get('type')
-                media = el.get('media')
+        for path, *_ in asset_paths:
+            ext = path.split('.')[-1]
+            is_js = ext in SCRIPT_EXTENSIONS
+            is_css = ext in STYLE_EXTENSIONS
+            if not is_js and not is_css:
+                continue
 
-                if can_aggregate(href) and (el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet')):
-                    if href.endswith('.sass'):
-                        atype = 'text/sass'
-                    elif href.endswith('.scss'):
-                        atype = 'text/scss'
-                    elif href.endswith('.less'):
-                        atype = 'text/less'
-                    if atype not in ('text/less', 'text/scss', 'text/sass'):
-                        atype = 'text/css'
-                    path = [segment for segment in href.split('/') if segment]
-                    filename = get_resource_path(*path) if path else None
-                    files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
-                elif can_aggregate(src) and el.tag == 'script':
-                    atype = 'text/javascript'
-                    path = [segment for segment in src.split('/') if segment]
-                    filename = get_resource_path(*path) if path else None
-                    files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
-                else:
-                    remains.append((el.tag, OrderedDict(el.attrib), el.text))
+            mimetype = 'text/javascript' if is_js else 'text/%s' % ext
+            if can_aggregate(path):
+                segments = [segment for segment in path.split('/') if segment]
+                files.append({
+                    'atype': mimetype,
+                    'url': path,
+                    'filename': get_resource_path(*segments) if segments else None,
+                    'content': '',
+                    'media': nodeAttrs and nodeAttrs.get('media'),
+                })
             else:
-                # the other cases are ignored
-                pass
+                if is_js:
+                    tag = 'script'
+                    attributes = {
+                        "type": mimetype,
+                        "src": path,
+                    }
+                else:
+                    tag = 'link'
+                    attributes = {
+                        "type": mimetype,
+                        "rel": "stylesheet",
+                        "href": path,
+                        'media': nodeAttrs and nodeAttrs.get('media'),
+                    }
+                remains.append((tag, attributes, ''))
 
         return (files, remains)
 

@@ -55,7 +55,7 @@ from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
-from .modules.module import module_manifest
+from .modules.module import read_manifest
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -1303,21 +1303,21 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
+        manifests = addons_manifest
         for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
-                if module not in addons_manifest:
+                if module not in manifests:
+                    # Deal with the manifest first
                     mod_path = opj(addons_path, module)
-                    manifest_path = module_manifest(mod_path)
+                    manifest = read_manifest(addons_path, module)
+                    if not manifest or (not manifest.get('installable', True) and 'assets' not in manifest):
+                        continue
+                    manifest['addons_path'] = addons_path
+                    manifests[module] = manifest
+                    # Then deal with the statics
                     path_static = opj(addons_path, module, 'static')
-                    if manifest_path and os.path.isdir(path_static):
-                        with open(manifest_path, 'rb') as fd:
-                            manifest_data = fd.read()
-                        manifest = ast.literal_eval(pycompat.to_text(manifest_data))
-                        if not manifest.get('installable', True):
-                            continue
-                        manifest['addons_path'] = addons_path
+                    if os.path.isdir(path_static):
                         _logger.debug("Loading %s", module)
-                        addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
         if statics:
