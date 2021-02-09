@@ -583,6 +583,7 @@ var FileWidget = SearchableMediaWidget.extend({
                             'data': result.split(',')[1],
                             'res_id': this.options.res_id,
                             'res_model': this.options.res_model,
+                            'is_image': this.widgetType === 'image',
                             'width': 0,
                             'quality': 0,
                         }
@@ -779,7 +780,13 @@ var FileWidget = SearchableMediaWidget.extend({
             },
         }).then(attachment => {
             $progressBar.find('.fa-spinner, .progress').addClass('d-none');
-            $progressBar.find('.js_progressbar_txt .text-success').removeClass('d-none');
+            if (attachment.error) {
+                this.hasError = true;
+                $progressBar.find('.js_progressbar_txt .text-danger').removeClass('d-none');
+                $progressBar.find('.js_progressbar_txt .text-danger .o_we_error_text').text(attachment.error);
+            } else {
+                $progressBar.find('.js_progressbar_txt .text-success').removeClass('d-none');
+            }
             return attachment;
         }).guardedCatch(() => {
             this.hasError = true;
@@ -806,6 +813,7 @@ var ImageWidget = FileWidget.extend({
      */
     init: function (parent, media, options) {
         this.searchService = 'all';
+        this.widgetType = 'image';
         options = _.extend({
             accept: 'image/*',
             mimetypeDomain: [['mimetype', 'in', this.IMAGE_MIMETYPES]],

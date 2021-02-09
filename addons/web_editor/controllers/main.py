@@ -18,7 +18,7 @@ from odoo.exceptions import UserError
 from odoo.modules.module import get_module_path, get_resource_path
 from odoo.tools.misc import file_open
 
-from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
@@ -163,11 +163,19 @@ class Web_Editor(http.Controller):
         return True
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
-        try:
-            data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-        except UserError:
-            pass  # not an image
+    def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+        if is_image:
+            format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
+            try:
+                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+                img_extension = tools.base64_to_image(data).format.lower()
+                if img_extension not in [ext.replace('.', '') for ext in SUPPORTED_IMAGE_EXTENSIONS]:
+                    return {'error': format_error_msg}
+            except UserError:
+                # considered as an image by the brower file input, but not
+                # recognized as such by PIL, eg .webp
+                return {'error': format_error_msg}
+
         self._clean_context()
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
