@@ -113,7 +113,15 @@ Wysiwyg.include({
     _saveViewBlocks: async function () {
         await this._super.apply(this, arguments);
         if (this.isDirty()) {
+<<<<<<< HEAD:addons/website/static/src/js/editor/wysiwyg.js
             return this._restoreMegaMenus();
+=======
+            return this._restoreMegaMenus()
+                .then(() => this.editor.save(false))
+                .then(() => ({isDirty: true}));
+        } else {
+            return Promise.resolve({isDirty: false});
+>>>>>>> 41151e1240d... temp:addons/website/static/src/js/editor/wysiwyg_multizone.js
         }
     },
     /**
