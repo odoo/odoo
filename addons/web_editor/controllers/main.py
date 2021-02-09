@@ -242,6 +242,10 @@ class Web_Editor(http.Controller):
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
+        if name.lower().endswith('.bmp'):
+            # Avoid mismatch between content type and mimetype, see commit msg
+            name = name[:-4]
+
         if not name and url:
             name = url.split("/").pop()
 
