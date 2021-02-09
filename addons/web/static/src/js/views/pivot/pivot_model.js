@@ -1095,7 +1095,6 @@ var PivotModel = AbstractModel.extend({
                         description: field.string,
                         fieldName,
                         fieldType: field.type,
-                        isActive: groupedFieldNames.includes(fieldName),
                     };
                 })
                 .sort((left, right) => left.description < right.description ? -1 : 1);
@@ -1114,17 +1113,10 @@ var PivotModel = AbstractModel.extend({
                     fieldName,
                     fieldType: field.type,
                     groupNumber: 1000, // for instance static 1000
-                    isActive: false,
                 });
             }
         });
 
-        // set active groups to search groups
-        searchGroups.forEach(item => {
-            if (groupedFieldNames.includes(item.fieldName)) {
-                item.isActive = true;
-            }
-        });
         return searchGroups;
     },
 

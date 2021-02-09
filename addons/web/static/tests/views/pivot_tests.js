@@ -713,7 +713,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pivot renders group dropdown same as search groupby dropdown if group tag given in searchview', async function (assert) {
-        assert.expect(8);
+        assert.expect(6);
 
         const pivot = await createView({
             View: PivotView,
@@ -751,10 +751,6 @@ QUnit.module('Views', {
             "should have 3 dropdown items same as searchview groupby");
         assert.containsOnce(pivot, '.o_pivot_field_menu .o_generator_menu',
             "should have custom group generator same as searchview groupby");
-        assert.hasClass(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="bar"]'), 'disabled',
-            "date field should be disabled as it is defined as col field in pivot");
-        assert.hasClass(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'), 'disabled',
-            "date field should be disabled as it is defined as row field in pivot");
         // check custom groupby selection has groupable fields only
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
         assert.containsN(pivot, '.o_pivot_field_menu .o_generator_menu .o_group_by_selector option', 3,
@@ -768,7 +764,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pivot group dropdown sync with search groupby dropdown', async function (assert) {
-        assert.expect(7);
+        assert.expect(5);
 
         const pivot = await createView({
             View: PivotView,
@@ -799,8 +795,6 @@ QUnit.module('Views', {
         await cpHelpers.toggleMenuItem(pivot, "bar");
         // click on closed header to open dropdown
         await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed:nth(1)'));
-        assert.containsOnce(pivot, '.o_pivot_field_menu .dropdown-item.disabled',
-            "should have 1 disabled item which is selected by search custom group");
 
         await cpHelpers.toggleGroupByMenu(pivot);
         await testUtils.dom.click(pivot.$('.o_control_panel .o_cp_bottom_right .o_generator_menu button.o_add_custom_group_by'));
@@ -813,8 +807,6 @@ QUnit.module('Views', {
         // applying groupby/custom groupby will update pivot groupby dropdown while reverse is not true
         assert.containsN(pivot, '.o_pivot_field_menu > .dropdown-item', 3,
             "should have 3 dropdown items same as searchview groupby");
-        assert.containsN(pivot, '.o_pivot_field_menu .dropdown-item.disabled', 2,
-            "should have 2 disabled item which is selected by search groupby dropdown");
 
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
         await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector'), 'date');

@@ -96,7 +96,6 @@
                         <a href="#"
                            t-on-click.prevent="trigger('item-selected', { item: item, interval: 'month' })"
                            class="dropdown-item o_pivot_field_selection"
-                           t-att-class="{ disabled: item.isActive }"
                            t-att-data-field="item.fieldName"
                         >
                             <t t-esc="item.description"/>
@@ -135,7 +134,6 @@
                     role="menuitem"
                     class="dropdown-item"
                     t-att-data-field="item.fieldName"
-                    t-att-class="{ disabled: item.isActive }"
                     t-on-click.prevent="trigger('item-selected', { item: item, interval: false })">
                     <t t-esc="item.description"/>
                 </a>
