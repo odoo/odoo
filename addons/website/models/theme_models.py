@@ -180,7 +180,8 @@ class Theme(models.AbstractModel):
         )
 
         # Reinitialize effets
-        self.disable_view('website.option_ripple_effect')
+        self.disable_asset('option_ripple_effect_css')
+        self.disable_asset('option_ripple_effect_js')
 
         # Reinitialize header templates
         self.enable_view('website.template_header_default')
@@ -210,6 +211,14 @@ class Theme(models.AbstractModel):
         self.disable_view('website.option_footer_scrolltop')
 
     @api.model
+    def _toggle_asset(self, name, active):
+        website = self.env['website'].get_current_website()
+        asset = self.env['ir.asset'].search([('name', '=', name), ('website_id', '=', website.id)])
+        if active == asset.active:
+            return
+        asset.write({'active': active})
+
+    @api.model
     def _toggle_view(self, xml_id, active):
         obj = self.env.ref(xml_id)
         website = self.env['website'].get_current_website()
@@ -230,6 +239,14 @@ class Theme(models.AbstractModel):
             if not has_specific and active == obj.active:
                 return
         obj.write({'active': active})
+
+    @api.model
+    def enable_asset(self, name):
+        self._toggle_asset(name, True)
+
+    @api.model
+    def disable_asset(self, name):
+        self._toggle_asset(name, False)
 
     @api.model
     def enable_view(self, xml_id):

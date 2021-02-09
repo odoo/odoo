@@ -25,6 +25,7 @@ import warnings
 from os.path import join as opj
 from zlib import adler32
 
+from collections import OrderedDict
 import babel.core
 from datetime import datetime, date
 import passlib.utils
@@ -52,10 +53,10 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .sql_db import flush_env
 from .tools.func import lazy_property
-from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
+from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils, topological_sort
 from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
-from .modules.module import module_manifest
+from .modules.module import read_manifest
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -1232,6 +1233,7 @@ class Response(werkzeug.wrappers.Response):
         """
         env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
         self.qcontext['request'] = request
+        self.qcontext['get_modules_order'] = lambda: json.dumps(module_boot())
         return env["ir.ui.view"]._render_template(self.template, self.qcontext)
 
     def flatten(self):
@@ -1307,13 +1309,10 @@ class Root(object):
             for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
-                    manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
-                    if manifest_path and os.path.isdir(path_static):
-                        with open(manifest_path, 'rb') as fd:
-                            manifest_data = fd.read()
-                        manifest = ast.literal_eval(pycompat.to_text(manifest_data))
-                        if not manifest.get('installable', True):
+                    if os.path.isdir(path_static):
+                        manifest = read_manifest(addons_path, module)
+                        if not manifest or not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
@@ -1529,6 +1528,35 @@ def db_monodb(httprequest=None):
     if len(dbs) == 1:
         return dbs[0]
     return None
+
+def module_boot(db=None):
+    server_wide_modules = odoo.conf.server_wide_modules or []
+    serverside = ['base', 'web']
+    dbside = []
+    for i in server_wide_modules:
+        if i in addons_manifest and i not in serverside:
+            serverside.append(i)
+    monodb = db or db_monodb()
+    if monodb:
+        dbside = module_installed_bypass_session(monodb)
+        dbside = [i for i in dbside if i not in serverside]
+    addons = serverside + dbside
+    return addons
+
+def module_installed(environment):
+    # Candidates module the current heuristic is the /static dir
+    # Retrieve database installed modules
+    return environment['ir.module.module']._installed_sorted()
+
+def module_installed_bypass_session(dbname):
+    try:
+        registry = odoo.registry(dbname)
+        with registry.cursor() as cr:
+            return module_installed(
+                environment=odoo.api.Environment(cr, odoo.SUPERUSER_ID, {}))
+    except Exception:
+        pass
+    return {}
 
 def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None,
               add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):

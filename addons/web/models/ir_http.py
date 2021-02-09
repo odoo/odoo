@@ -4,10 +4,10 @@ import hashlib
 import json
 
 from odoo import api, models
-from odoo.http import request
+from odoo.http import module_boot, request
 from odoo.tools import ustr
 
-from odoo.addons.web.controllers.main import module_boot, HomeStaticTemplateHelpers
+from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
 import odoo
 
@@ -17,6 +17,7 @@ class Http(models.AbstractModel):
 
     def webclient_rendering_context(self):
         return {
+            'get_modules_order': lambda: json.dumps(module_boot()),
             'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
             'session_info': self.session_info(),
         }

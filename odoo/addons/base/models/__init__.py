@@ -8,6 +8,7 @@ from . import ir_model
 from . import ir_sequence
 from . import ir_ui_menu
 from . import ir_ui_view
+from . import ir_asset
 from . import ir_actions
 from . import ir_actions_report
 from . import ir_attachment

@@ -416,6 +416,21 @@ class IrModuleModule(models.Model):
                         'res_id': theme.id,
                     })
 
+    def get_themes_domain(self):
+        """Returns the 'ir.module.module' search domain matching all available themes."""
+        def get_id(view_id):
+            view = self.env.ref(view_id, False)
+            return view.id if view else False
+        return [
+            ('category_id', 'not in', [
+                get_id('base.module_category_hidden'),
+                get_id('base.module_category_theme_hidden'),
+            ]),
+            '|',
+            ('category_id', '=', get_id('base.module_category_theme')),
+            ('category_id.parent_id', '=', get_id('base.module_category_theme'))
+        ]
+
     def _check(self):
         super()._check()
         View = self.env['ir.ui.view']

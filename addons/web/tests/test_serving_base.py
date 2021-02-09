@@ -52,8 +52,8 @@ class TestStaticInheritanceCommon(BaseCase):
         super(TestStaticInheritanceCommon, self).setUp()
         # output is "manifest_glob" return
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_2_file_1', None, 'module_2'),
+            ('module_1_file_1', 'module_1', None),
+            ('module_2_file_1', 'module_2', None),
         ]
 
         self.template_files = {
@@ -111,10 +111,10 @@ class TestStaticInheritanceCommon(BaseCase):
 
     # Private methods
     def _get_module_names(self):
-        return ','.join([glob[2] for glob in self.modules])
+        return ','.join([glob[1] for glob in self.modules])
 
     def _set_patchers(self):
-        def _patched_for_manifest_glob(*args, **kwargs):
+        def _patched_for_get_asset_paths(*args, **kwargs):
             # Ordered by module
             return self.modules
 
@@ -122,7 +122,7 @@ class TestStaticInheritanceCommon(BaseCase):
             return self.template_files[args[1]]
 
         self.patchers = [
-            patch.object(HomeStaticTemplateHelpers, '_manifest_glob', _patched_for_manifest_glob),
+            patch.object(HomeStaticTemplateHelpers, '_get_asset_paths', _patched_for_get_asset_paths),
             patch.object(HomeStaticTemplateHelpers, '_read_addon_file', _patch_for_read_addon_file),
         ]
 
@@ -179,7 +179,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             '''
         }
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
@@ -219,7 +219,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             '''
         }
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         contents = HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
         expected = b"""
@@ -244,8 +244,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_static_inheritance_in_same_module(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_1_file_2', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
+            ('module_1_file_2', 'module_1', None),
         ]
 
         self.template_files = {
@@ -287,7 +287,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_static_inheritance_in_same_file(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
 
         self.template_files = {
@@ -324,7 +324,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_static_inherit_extended_template(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b'''
@@ -368,9 +368,9 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_sibling_extension(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_2_file_1', None, 'module_2'),
-            ('module_3_file_1', None, 'module_3'),
+            ('module_1_file_1', 'module_1', None),
+            ('module_2_file_1', 'module_2', None),
+            ('module_3_file_1', 'module_3', None),
         ]
         self.template_files = {
             'module_1_file_1': b'''
@@ -455,7 +455,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         Replacing a template's meta definition in place doesn't keep the original attrs of the template
         """
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -485,7 +485,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_replace_in_debug_mode2(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -526,7 +526,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         This doesn't mean anything in terms of the business of template inheritance
         But it is in the XPATH specs"""
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -566,7 +566,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         Root node IS targeted by //NODE_TAG in xpath
         """
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -604,7 +604,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         """
         self.maxDiff = None
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -643,7 +643,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         and new ones if one is to replace its defining root node
         """
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -681,7 +681,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
     def test_replace_in_nodebug_mode1(self):
         """Comments already in the arch are ignored"""
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -718,7 +718,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_inherit_from_dotted_tname_1(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -755,7 +755,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_inherit_from_dotted_tname_2(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -792,7 +792,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_inherit_from_dotted_tname_2bis(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -829,7 +829,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_inherit_from_dotted_tname_2ter(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
+            ('module_1_file_1', 'module_1', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""
@@ -866,8 +866,8 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
     def test_inherit_from_dotted_tname_3(self):
         self.modules = [
-            ('module_1_file_1', None, 'module_1'),
-            ('module_2_file_1', None, 'module_2'),
+            ('module_1_file_1', 'module_1', None),
+            ('module_2_file_1', 'module_2', None),
         ]
         self.template_files = {
             'module_1_file_1': b"""

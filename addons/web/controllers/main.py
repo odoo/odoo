@@ -34,13 +34,13 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
+from odoo.tools import image_process, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
 from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
-from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
+from odoo.http import content_disposition, dispatch_rpc, module_boot, module_installed, request, serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -182,47 +182,6 @@ def ensure_db(redirect='/web/database/selector'):
         abort_and_redirect(request.httprequest.url)
 
     request.session.db = db
-
-def module_installed(environment):
-    # Candidates module the current heuristic is the /static dir
-    loadable = list(http.addons_manifest)
-
-    # Retrieve database installed modules
-    # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = environment['ir.module.module']
-    domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = OrderedDict(
-        (module.name, module.dependencies_id.mapped('name'))
-        for module in Modules.search(domain)
-    )
-
-    sorted_modules = topological_sort(modules)
-    return sorted_modules
-
-def module_installed_bypass_session(dbname):
-    try:
-        registry = odoo.registry(dbname)
-        with registry.cursor() as cr:
-            return module_installed(
-                environment=Environment(cr, odoo.SUPERUSER_ID, {}))
-    except Exception:
-        pass
-    return {}
-
-def module_boot(db=None):
-    server_wide_modules = odoo.conf.server_wide_modules or []
-    serverside = ['base', 'web']
-    dbside = []
-    for i in server_wide_modules:
-        if i in http.addons_manifest and i not in serverside:
-            serverside.append(i)
-    monodb = db or db_monodb()
-    if monodb:
-        dbside = module_installed_bypass_session(monodb)
-        dbside = [i for i in dbside if i not in serverside]
-    addons = serverside + dbside
-    return addons
-
 
 def fs2web(path):
     """convert FS path into web path"""
@@ -584,11 +543,6 @@ class HomeStaticTemplateHelpers(object):
             if re.match(COMMENT_PATTERN, comment.text.strip()):
                 comment.getparent().remove(comment)
 
-    def _manifest_glob(self):
-        '''Proxy for manifest_glob
-        Usefull to make 'self' testable'''
-        return manifest_glob('qweb', self.addons, self.db)
-
     def _read_addon_file(self, file_path):
         """Reads the content of a file given by file_path
         Usefull to make 'self' testable
@@ -629,14 +583,27 @@ class HomeStaticTemplateHelpers(object):
 
         return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
 
+    def _get_asset_paths(self):
+        """Proxy for ir_asset.get_asset_paths
+        Useful to make 'self' testable.
+        """
+        return request.env['ir.asset'].get_asset_paths(addons=self.addons, bundle='web.assets_qweb', xml=True)
+
     def _get_qweb_templates(self):
         """One and only entry point that gets and evaluates static qweb templates
 
         :rtype: (str, str)
         """
-        files = OrderedDict([(addon, list()) for addon in self.addons])
-        [files[f[2]].append(f[0]) for f in self._manifest_glob()]
-        content, checksum = self._concat_xml(files)
+        xml_paths = OrderedDict()
+
+        for path, addon, _ in self._get_asset_paths():
+            if addon not in xml_paths:
+                xml_paths[addon] = []
+            addon_paths = xml_paths[addon]
+            if path not in addon_paths:
+                addon_paths.append(path)
+
+        content, checksum = self._concat_xml(xml_paths)
         return content, checksum
 
     @classmethod
