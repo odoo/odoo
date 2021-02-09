@@ -89,5 +89,18 @@
             <field name="sequence">2</field>
             <field name="name">Retired</field>
         </record>
+
+        <!-- Work permit expires Soon -->
+        <record id="ir_cron_data_check_work_permit_validity" model="ir.cron">
+            <field name="name">HR Employee: check work permit validity</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_work_permit_validity()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
     </data>
 </odoo>
