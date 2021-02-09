@@ -84,7 +84,7 @@ class Inventory(models.Model):
         if not self.exists():
             return
         self.ensure_one()
-        if not self.user_has_groups('stock.group_stock_manager'):
+        if not self.user_has_groups('stock.group_stock_manager') and not self.env.su:
             raise UserError(_("Only a stock manager can validate an inventory adjustment."))
         if self.state != 'confirm':
             raise UserError(_(
