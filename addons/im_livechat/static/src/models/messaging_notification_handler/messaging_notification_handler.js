@@ -37,6 +37,39 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
             partner_name: partnerName,
         }));
     },
+
+    /**
+     * @private
+     * @param {integer} channelId
+     * @param {Object} data
+     * @param {string} [data.info]
+     * @param {boolean} [data.is_typing]
+     * @param {integer} [data.last_message_id]
+     * @param {integer} [data.partner_id]
+     */
+    async _handleNotificationChannel(channelId, data) {
+        if (data.info && data.info === 'close_livechat_session') {
+            return this._handleNotificationChannelCloseLivechatSession(channelId);
+        } else {
+            this._super.apply(this, arguments)
+        }
+    },
+
+    /**
+     * @private
+     * @param {integer} channelId
+     */
+    _handleNotificationChannelCloseLivechatSession(channelId) {
+        const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+            id: channelId,
+            model: 'mail.channel',
+        });
+        if (!channel) {
+            return;
+        }
+        channel.disableComposer();
+    },
+
 });
 
 });

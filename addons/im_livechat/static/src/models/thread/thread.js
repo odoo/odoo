@@ -3,8 +3,10 @@ odoo.define('im_livechat/static/src/models/thread/thread.js', function (require)
 
 const {
     registerClassPatchModel,
+    registerFieldPatchModel,
     registerInstancePatchModel,
 } = require('mail/static/src/model/model_core.js');
+const { attr } = require('mail/static/src/model/model_field.js');
 
 registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
 
@@ -54,6 +56,9 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
                 data2.correspondent = [['insert', partnerData]];
             }
         }
+        if ('livechat_active' in data) {
+            data2.livechatActive = data.livechat_active;
+        }
         return data2;
     },
 });
@@ -92,6 +97,25 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
     _computeIsChatChannel() {
         return this.channel_type === 'livechat' || this._super();
     },
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _computeisLiveChatActive() {
+        return (this.channel_type === 'livechat' && this.livechatActive !== undefined) ? this.livechatActive : true;
+    }
 });
 
+registerFieldPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
+    livechatActive: attr({
+        'default': true
+    }),
+    isLiveChatActive: attr({
+        compute: '_computeisLiveChatActive',
+        dependencies: [
+            'channel_type',
+            'livechatActive',
+        ],
+    }),
+});
 });

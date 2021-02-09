@@ -37,6 +37,7 @@ class ComposerTextInput extends Component {
                 composerTextInputCursorStart: composer && composer.textInputCursorStart,
                 composerTextInputSelectionDirection: composer && composer.textInputSelectionDirection,
                 isDeviceMobile: this.env.messaging.device.isMobile,
+                threadIsDisabled: thread && thread.isDisabled,
                 threadModel: thread && thread.model,
             };
         });
@@ -79,6 +80,9 @@ class ComposerTextInput extends Component {
     get textareaPlaceholder() {
         if (!this.composer) {
             return "";
+        }
+        if (this.composer.thread && this.composer.thread.isDisabled) {
+            return this.env._t("Conversation Closed");
         }
         if (this.composer.thread && this.composer.thread.model !== 'mail.channel') {
             if (this.composer.isLog) {

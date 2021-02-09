@@ -1632,6 +1632,15 @@ function factory(dependencies) {
             this.unregisterOtherMemberTypingMember(partner);
         }
 
+        /**
+         * Disable composer input and buttons based on the chat sessions.
+         *
+         * @private
+         * */
+        disableComposer() {
+            this.update({ isDisabled: true });
+        }
+
     }
 
     Thread.fields = {
@@ -2191,6 +2200,9 @@ function factory(dependencies) {
             ]
         }),
         uuid: attr(),
+        isDisabled: attr({
+            default: false,
+        }),
     };
 
     Thread.modelName = 'mail.thread';

@@ -26,7 +26,7 @@ MockModels.patch('im_livechat/static/tests/helpers/mock_models.js', T =>
             Object.assign(data['mail.channel'].fields, {
                 anonymous_name: { string: "Anonymous Name", type: 'char' },
                 country_id: { string: "Country", type: 'many2one', relation: 'res.country' },
-                livechat_active: { string: "Is livechat ongoing?", type: 'boolean', default: false },
+                livechat_active: { string: "Is livechat ongoing?", type: 'boolean', default: true },
                 livechat_channel_id: { string: "Channel", type: 'many2one', relation: 'im_livechat.channel' },
                 livechat_operator_id: { string: "Operator", type: 'many2one', relation: 'res.partner' },
             });

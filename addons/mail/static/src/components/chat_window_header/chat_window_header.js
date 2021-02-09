@@ -27,6 +27,7 @@ class ChatWindowHeader extends Component {
                 chatWindowName: chatWindow && chatWindow.name,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
+                threadIsDisabled: thread && thread.isDisabled,
                 threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
                 threadMassMailing: thread && thread.mass_mailing,
             };

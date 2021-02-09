@@ -87,6 +87,7 @@ class MailChannel(models.Model):
                     channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
                 # add the anonymous or partner name
                 channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
+                channel_infos_dict[channel.id]['livechat_active'] = channel.livechat_active
         return list(channel_infos_dict.values())
 
     @api.model
@@ -190,6 +191,7 @@ class MailChannel(models.Model):
             # Notify that the visitor has left the conversation
             self.message_post(author_id=self.env.ref('base.partner_root').id,
                               body=self._get_visitor_leave_message(**kwargs), message_type='comment', subtype_xmlid='mail.mt_comment')
+            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), {'info': 'close_livechat_session',}]])
 
     # Rating Mixin
 

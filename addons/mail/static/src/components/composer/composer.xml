@@ -13,7 +13,7 @@
             t-on-keydown="_onKeydown"
         >
             <t t-if="composer">
-                <t t-if="isDropZoneVisible.value">
+                <t t-if="isDropZoneVisible.value and !composer.isDisabled">
                     <DropZone
                         class="o_Composer_dropZone"
                         t-on-o-dropzone-files-dropped="_onDropZoneFilesDropped"
@@ -88,6 +88,7 @@
                     />
                     <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': env.messaging.device.isMobile }">
                         <div class="o_Composer_toolButtons"
+                            t-if="!composer.isDisabled"
                             t-att-class="{
                                 'o-composer-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                                 'o-composer-is-compact': props.isCompact,
@@ -161,7 +162,7 @@
                         'o-composer-is-compact': props.isCompact,
                         'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
-                    t-att-disabled="!composer.canPostMessage ? 'disabled' : ''"
+                    t-att-disabled="!composer.canPostMessage || composer.isDisabled ? 'disabled' : ''"
                     type="button"
                     t-on-click="_onClickSend"
                 >

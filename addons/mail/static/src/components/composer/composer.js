@@ -47,6 +47,7 @@ class Composer extends Component {
                 composerSubjectContent: composer && composer.subjectContent,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
+                threadIsDisabled: thread && thread.isDisabled,
                 threadChannelType: thread && thread.channel_type, // for livechat override
                 threadDisplayName: thread && thread.displayName,
                 threadMassMailing: thread && thread.mass_mailing,

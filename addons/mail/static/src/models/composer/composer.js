@@ -1123,6 +1123,9 @@ function factory(dependencies) {
         thread: one2one('mail.thread', {
             inverse: 'composer',
         }),
+        isDisabled: attr({
+            related: 'thread.isDisabled',
+        }),
     };
 
     Composer.modelName = 'mail.composer';
