@@ -1558,8 +1558,8 @@ exports.Orderline = Backbone.Model.extend({
             var mapped_included_taxes = [];
             var self = this;
             _(taxes).each(function(tax) {
-                var line_tax = self._map_tax_fiscal_position(tax);
-                if(tax.price_include && line_tax.id != tax.id){
+                var line_taxes = self._map_tax_fiscal_position(tax);
+                if(tax.price_include && _.contains(line_taxes, tax)){
                     mapped_included_taxes.push(tax);
                 }
             });
@@ -1712,20 +1712,28 @@ exports.Orderline = Backbone.Model.extend({
         return taxes;
     },
     _map_tax_fiscal_position: function(tax) {
+        var self = this;
         var current_order = this.pos.get_order();
         var order_fiscal_position = current_order && current_order.fiscal_position;
+        var taxes = [];
 
         if (order_fiscal_position) {
-            var mapped_tax = _.find(order_fiscal_position.fiscal_position_taxes_by_id, function (fiscal_position_tax) {
+            var tax_mappings = _.filter(order_fiscal_position.fiscal_position_taxes_by_id, function (fiscal_position_tax) {
                 return fiscal_position_tax.tax_src_id[0] === tax.id;
             });
 
-            if (mapped_tax) {
-                tax = this.pos.taxes_by_id[mapped_tax.tax_dest_id[0]];
+            if (tax_mappings && tax_mappings.length) {
+                _.each(tax_mappings, function(tm) {
+                    taxes.push(self.pos.taxes_by_id[tm.tax_dest_id[0]]);
+                });
+            } else {
+                // If no map default to the one given by the product
+                taxes.push(tax);
             }
+        } else {
+            taxes.push(tax);
         }
-
-        return tax;
+        return taxes;
     },
     _compute_all: function(tax, base_amount, quantity) {
         if (tax.amount_type === 'fixed') {
@@ -1756,13 +1764,18 @@ exports.Orderline = Backbone.Model.extend({
         var total_excluded = round_pr(price_unit * quantity, currency_rounding);
         var total_included = total_excluded;
         var base = total_excluded;
-        _(taxes).each(function(tax) {
-            if (!no_map_tax){
-                tax = self._map_tax_fiscal_position(tax);
-            }
-            if (!tax){
-                return;
-            }
+        var taxes_mapped = [];
+
+        if (!no_map_tax){
+            _(taxes).each(function(tax){
+                _(self._map_tax_fiscal_position(tax)).each(function(tax){
+                    taxes_mapped.push(tax);
+                });
+            });
+        } else {
+            taxes_mapped = taxes;
+        }
+        _(taxes_mapped).each(function(tax) {
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
                 total_excluded = ret.total_excluded;
