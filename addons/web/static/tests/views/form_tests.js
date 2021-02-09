@@ -10319,6 +10319,45 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Quick Edition: Label click (duplicated field)', async function (assert) {
+        assert.expect(8);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <div class="o_td_label" invisible="1">
+                            <label for="foo" string="A"/>
+                        </div>
+                        <field name="foo" nolabel="1" invisible="1"/>
+
+                        <div class="o_td_label">
+                            <label for="foo" string="B"/>
+                        </div>
+                        <field name="foo" nolabel="1"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsN(form, '.o_form_label', 2);
+        assert.containsOnce(form, '.o_invisible_modifier .o_form_label');
+
+        await testUtils.dom.click(form.$('.o_form_label')[1]);
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable');
+        assert.containsN(form, '.o_form_label', 2);
+        assert.containsOnce(form, '.o_invisible_modifier .o_form_label');
+        assert.containsOnce(form, 'input.o_field_widget[name="foo"]');
+        assert.strictEqual(document.activeElement, form.$('input.o_field_widget[name="foo"]')[0]);
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: Checkbox click', async function (assert) {
         assert.expect(11);
 
