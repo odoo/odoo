@@ -2186,7 +2186,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     );
 });
 
-QUnit.test('new message separator is shown in a chat window of a chat on receiving new message', async function (assert) {
+QUnit.test('new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation', async function (assert) {
     assert.expect(6);
 
     this.data['res.partner'].records.push({ id: 10, name: "Demo" });
@@ -2205,6 +2205,12 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
             uuid: 'channel-10-uuid',
         },
     ];
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [10],
+        model: 'mail.channel',
+        res_id: 10,
+    });
     await this.start({
         mockRPC(route, args) {
             if (args.method === 'channel_fold') {
@@ -2232,10 +2238,11 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
         '.o_ChatWindow',
         "a chat window should be visible after receiving a new message from a chat"
     );
-    assert.containsOnce(
+    assert.containsN(
         document.body,
         '.o_Message',
-        "chat window should have a single message (the newly received one)"
+        2,
+        "chat window should have 2 messages"
     );
     assert.containsOnce(
         document.body,
@@ -2245,6 +2252,41 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
     assert.verifySteps(
         ['rpc:channel_fold:channel-10-uuid'],
         "fold state of chat window of chat should have been updated to server"
+    );
+});
+
+QUnit.test('new message separator is not shown in a chat window of a chat on receiving new message if there is no history of conversation', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 10, name: "Demo" });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records = [{
+        channel_type: "chat",
+        id: 10,
+        members: [this.data.currentPartnerId, 10],
+        uuid: 'channel-10-uuid',
+    }];
+    await this.start();
+
+    // simulate receiving a message
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            message_content: "hu",
+            uuid: 'channel-10-uuid',
+        },
+    }));
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should not display 'new messages' separator in the conversation of a chat on receiving new message if there is no history of conversation"
     );
 });
 
@@ -2268,6 +2310,12 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
             uuid: 'channel-10-uuid',
         },
     );
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        channel_ids: [10],
+        model: 'mail.channel',
+        res_id: 10,
+    });
     await this.start();
 
     // simulate receiving a message
