@@ -148,6 +148,7 @@ STATES = [
     ('to install', 'To be installed'),
 ]
 
+
 class Module(models.Model):
     _name = "ir.module.module"
     _rec_name = "shortdesc"

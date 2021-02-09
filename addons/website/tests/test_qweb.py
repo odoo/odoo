@@ -34,8 +34,8 @@ class TestQweb(TransactionCaseWithUserDemo):
         demo_env = self.env(user=demo)
 
         html = demo_env['ir.qweb']._render('website.test_template', {"user": demo}, website_id= website.id)
-        asset_data = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[0]
-        asset_xmlid = asset_data.attrib.get('data-asset-xmlid')
+        asset_data = etree.HTML(html).xpath('//*[@data-asset-bundle]')[0]
+        asset_xmlid = asset_data.attrib.get('data-asset-bundle')
         asset_version = asset_data.attrib.get('data-asset-version')
 
         html = html.strip().decode('utf8')
@@ -53,17 +53,16 @@ class TestQweb(TransactionCaseWithUserDemo):
             "asset_xmlid": asset_xmlid,
             "asset_version": asset_version,
         }
-
-        self.assertEqual(html, ("""<!DOCTYPE html>
+        self.assertHTMLEqual(html, ("""<!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
-        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
+        <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
+        <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
+        <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="http://test.cdn%(js)s" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
+        <script type="text/javascript" src="http://test.cdn%(js)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
     </head>
     <body>
         <img src="http://test.external.link/img.png" loading="lazy"/>

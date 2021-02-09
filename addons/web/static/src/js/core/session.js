@@ -28,7 +28,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
         options = options || {};
-        this.module_list = (options.modules && options.modules.slice()) || (window.odoo._modules && window.odoo._modules.slice()) || [];
         this.server = null;
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
@@ -79,21 +78,20 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         var prom = this.session_reload();
 
-        if (this.is_frontend) {
+        if (this.is_frontend || this.is_report) {
             return prom.then(function () {
                 return self.load_translations();
             });
         }
 
         return prom.then(function () {
-            var modules = self.module_list.join(',');
-            var promise = self.load_qweb(modules);
+            var promise = self.load_qweb();
             if (self.session_is_valid()) {
                 return promise.then(function () { return self.load_modules(); });
             }
             return Promise.all([
                     promise,
-                    self.rpc('/web/webclient/bootstrap_translations', {mods: self.module_list})
+                    self.rpc('/web/webclient/bootstrap_translations')
                         .then(function (trans) {
                             _t.database.set_bundle(trans);
                         })
@@ -182,35 +180,21 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Load additional web addons of that instance and init them
      *
      */
+
     load_modules: function () {
         var self = this;
-        var modules = odoo._modules;
-        var all_modules = _.uniq(self.module_list.concat(modules));
-        var to_load = _.difference(modules, self.module_list).join(',');
-        this.module_list = all_modules;
 
         var loaded = Promise.resolve(self.load_translations());
         var locale = "/web/webclient/locale/" + self.user_context.lang || 'en_US';
         var file_list = [ locale ];
-        if(to_load.length) {
-            loaded = Promise.all([
-                loaded,
-                self.rpc('/web/webclient/csslist', {mods: to_load})
-                    .then(self.load_css.bind(self)),
-                self.load_qweb(to_load),
-                self.rpc('/web/webclient/jslist', {mods: to_load})
-                    .then(function (files) {
-                        file_list = file_list.concat(files);
-                    })
-            ]);
-        }
+
         return loaded.then(function () {
             return self.load_js(file_list);
         }).then(function () {
             self._configureLocale();
         });
     },
-    load_translations: function () {
+    load_translations: function (modules=null) {
         /* We need to get the website lang at this level.
            The only way is to get it is to take the HTML tag lang
            Without it, we will always send undefined if there is no lang
@@ -219,13 +203,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             htmlLang = (html.getAttribute('lang') || 'en_US').replace('-', '_'),
             lang = this.user_context.lang || htmlLang;
 
-        return _t.database.load_translations(this, this.module_list, lang, this.translationURL);
-    },
-    load_css: function (files) {
-        var self = this;
-        _.each(files, function (file) {
-            ajax.loadCSS(self.url(file, null));
-        });
+        return _t.database.load_translations(this, modules, lang, this.translationURL);
     },
     load_js: function (files) {
         var self = this;
@@ -243,7 +221,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         var lock = this.qweb_mutex.exec(function () {
             var cacheId = self.cache_hashes && self.cache_hashes.qweb;
-            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now()) + '?mods=' + mods;
+            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now());
             return $.get(route).then(function (doc) {
                 if (!doc) { return; }
                 const owlTemplates = [];

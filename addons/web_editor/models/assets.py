@@ -124,25 +124,25 @@ class Assets(models.AbstractModel):
         parts = url.rsplit(".", 1)
         return "%s.custom.%s.%s" % (parts[0], bundle_xmlid, parts[1])
 
-    def reset_asset(self, url, bundle_xmlid):
+    def reset_asset(self, url, bundle):
         """
         Delete the potential customizations made to a given (original) asset.
 
         Params:
             url (str): the URL of the original asset (scss / js) file
 
-            bundle_xmlid (str):
+            bundle (str):
                 the name of the bundle in which the customizations to delete
                 were made
         """
-        custom_url = self.make_custom_asset_file_url(url, bundle_xmlid)
+        custom_url = self.make_custom_asset_file_url(url, bundle)
 
         # Simply delete the attachement which contains the modified scss/js file
         # and the xpath view which links it
         self._get_custom_attachment(custom_url).unlink()
-        self._get_custom_view(custom_url).unlink()
+        self._get_custom_asset(custom_url).unlink()
 
-    def save_asset(self, url, bundle_xmlid, content, file_type):
+    def save_asset(self, url, bundle, content, file_type):
         """
         Customize the content of a given asset (scss / js).
 
@@ -151,7 +151,7 @@ class Assets(models.AbstractModel):
                 the URL of the original asset to customize (whether or not the
                 asset was already customized)
 
-            bundle_xmlid (src):
+            bundle (src):
                 the name of the bundle in which the customizations will take
                 effect
 
@@ -160,7 +160,7 @@ class Assets(models.AbstractModel):
             file_type (src):
                 either 'scss' or 'js' according to the file being customized
         """
-        custom_url = self.make_custom_asset_file_url(url, bundle_xmlid)
+        custom_url = self.make_custom_asset_file_url(url, bundle)
         datas = base64.b64encode((content or "\n").encode("utf-8"))
 
         # Check if the file to save had already been modified
@@ -179,49 +179,27 @@ class Assets(models.AbstractModel):
                 'datas': datas,
                 'url': custom_url,
             }
-            new_attach.update(self._save_asset_attachment_hook())
+            new_attach.update(self._save_asset_hook())
             self.env["ir.attachment"].create(new_attach)
 
-            # Create a view to extend the template which adds the original file
-            # to link the new modified version instead
-            file_type_info = {
-                'tag': 'link' if file_type == 'scss' else 'script',
-                'attribute': 'href' if file_type == 'scss' else 'src',
+            # Create an asset with the new attachment
+            IrAsset = self.env['ir.asset']
+            new_asset = {
+                'glob': custom_url,
+                'target': url,
+                'directive': 'replace',
+                **self._save_asset_hook(),
             }
-
-            def views_linking_url(view):
-                """
-                Returns whether the view arch has some html tag linked to
-                the url. (note: searching for the URL string is not enough as it
-                could appear in a comment or an xpath expression.)
-                """
-                tree = etree.XML(view.arch)
-                return bool(tree.xpath("//%%(tag)s[@%%(attribute)s='%(url)s']" % {
-                    'url': url,
-                } % file_type_info))
-
-            IrUiView = self.env["ir.ui.view"]
-            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(views_linking_url)
-            new_view = {
-                'name': custom_url,
-                'key': 'web_editor.%s_%s' % (file_type, str(uuid.uuid4())[:6]),
-                'mode': "extension",
-                'inherit_id': view_to_xpath.id,
-                'arch': """
-                    <data inherit_id="%(inherit_xml_id)s" name="%(name)s">
-                        <xpath expr="//%%(tag)s[@%%(attribute)s='%(url_to_replace)s']" position="attributes">
-                            <attribute name="%%(attribute)s">%(new_url)s</attribute>
-                        </xpath>
-                    </data>
-                """ % {
-                    'inherit_xml_id': view_to_xpath.xml_id,
-                    'name': custom_url,
-                    'url_to_replace': url,
-                    'new_url': custom_url,
-                } % file_type_info
-            }
-            new_view.update(self._save_asset_view_hook())
-            IrUiView.create(new_view)
+            target_asset = self._get_custom_asset(url)
+            if target_asset:
+                new_asset['name'] = target_asset.name + ' override'
+                new_asset['bundle'] = target_asset.bundle
+                new_asset['sequence'] = target_asset.sequence
+            else:
+                path_parts = '/'.join(os.path.split(custom_url)).split('/')
+                new_asset['name'] = '%s: replace %s' % (bundle, path_parts[-1])
+                new_asset['bundle'] = IrAsset._get_related_bundle(url, bundle)
+            IrAsset.create(new_asset)
 
         self.env["ir.qweb"].clear_caches()
 
@@ -239,35 +217,24 @@ class Assets(models.AbstractModel):
         assert op in ('in', '='), 'Invalid operator'
         return self.env["ir.attachment"].search([("url", op, custom_url)])
 
-    def _get_custom_view(self, custom_url, op='='):
+    def _get_custom_asset(self, custom_url):
         """
-        Fetch the ir.ui.view record related to the given customized asset (the
+        Fetch the ir.asset record related to the given customized asset (the
         inheriting view which replace the original asset by the customized one).
 
         Params:
             custom_url (str): the URL of the customized asset
-            op (str, default: '='): the operator to use to search the records
 
         Returns:
-            ir.ui.view()
+            ir.asset()
         """
-        assert op in ('='), 'Invalid operator'
-        return self.env["ir.ui.view"].search([("name", op, custom_url)])
+        url = custom_url[1:] if custom_url.startswith(('/', '\\')) else custom_url
+        return self.env['ir.asset'].search([('glob', 'like', url)])
 
-    def _save_asset_attachment_hook(self):
+    def _save_asset_hook(self):
         """
         Returns the additional values to use to write the DB on customized
-        attachment creation.
-
-        Returns:
-            dict
-        """
-        return {}
-
-    def _save_asset_view_hook(self):
-        """
-        Returns the additional values to use to write the DB on customized
-        asset's related view creation.
+        attachment and asset creation.
 
         Returns:
             dict

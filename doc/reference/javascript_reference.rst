@@ -81,24 +81,36 @@ Assets Management
 
 Managing assets in Odoo is not as straightforward as it is in some other apps.
 One of the reason is that we have a variety of situations where some, but not all
-the assets are required.  For example, the needs of the web client, the point of
-sale, the website or even the mobile application are different.  Also, some
-assets may be large, but are seldom needed.  In that case, we sometimes want them
+the assets are required. For example, the needs of the web client, the point of
+sale, the website or even the mobile application are different. Also, some
+assets may be large, but are seldom needed. In that case, we sometimes want them
 to be loaded lazily.
 
-The main idea is that we define a set of *bundles* in xml.  A bundle is here defined as
-a collection of files (javascript, css, scss). In Odoo, the most important
-bundles are defined in the file *addons/web/views/webclient_templates.xml*. It looks
-like this:
+The main idea is that we define a set of *bundles* in the module manifest. A
+bundle is here defined as a list of files (xml, javascript, css, scss). Files
+are declared using `glob`_ syntax, meaning that you can declare several asset
+files using a single line. Each file found using a glob will be appended to the
+`<head>` of the page, at most once, in the order the globs are given.
 
-.. code-block:: xml
+As mentionned, the bundles are declared in each module's `__manifest__.py`, under
+a dedicated `assets` key which contains a dictionary. Said dictionary will declare
+bundles (keys) with the files they contain (values). It looks like this:
 
-    <template id="web.assets_common" name="Common Assets (used in backend interface and website)">
-        <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
-        ...
-        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
-        ...
-    </template>
+.. code-block:: py
+
+    'assets': {
+        'assets_backend': [
+            'web/static/src/xml/**/*',
+        ],
+        'assets_common': [
+            'web/static/lib/bootstrap/**/*',
+            'web/static/src/js/boot.js',
+            'web/static/src/js/webclient.js',
+        ],
+        'qunit_suite_tests': [
+            'web/static/src/js/webclient_tests.js',
+        ],
+    },
 
 
 The files in a bundle can then be inserted into a template by using the *t-call-assets*
@@ -106,8 +118,8 @@ directive:
 
 .. code-block:: xml
 
-    <t t-call-assets="web.assets_common" t-js="false"/>
-    <t t-call-assets="web.assets_common" t-css="false"/>
+    <t t-call-assets="assets_common" t-js="false"/>
+    <t t-call-assets="assets_common" t-css="false"/>
 
 Here is what happens when a template is rendered by the server with these directives:
 
@@ -139,51 +151,207 @@ and if necessary, will create/recreate the corresponding bundles.
 
 Here are some important bundles that most developers will need to know:
 
-- *web.assets_common*: this bundle contains most assets which are common to the
+- *assets_common*: this bundle contains most assets which are common to the
   web client, the website, and also the point of sale. This is supposed to contain
-  lower level building blocks for the odoo framework.  Note that it contains the
+  lower level building blocks for the odoo framework. Note that it contains the
   *boot.js* file, which defines the odoo module system.
 
-- *web.assets_backend*: this bundle contains the code specific to the web client
-  (notably the web client/action manager/views)
+- *assets_backend*: this bundle contains the code specific to the web client
+  (notably the web client/action manager/views) and all static XML templates used
+  in the backend environment
 
-- *web.assets_frontend*: this bundle is about all that is specific to the public
+- *assets_frontend*: this bundle is about all that is specific to the public
   website: ecommerce, forum, blog, event management, ...
 
+Operations on asset bundles
+---------------------------
 
-Adding files in an asset bundle
--------------------------------
+Typically, handling assets is quite trivial: you just need to add some new files
+to a frequently used bundle like 'common' or 'backend'. But there are other operations
+available to cover use cases bringing additional constraints. Such cases can mostly
+be covered with the following operations.
 
-The proper way to add a file located in *addons/web* to a bundle is simple:
-it is just enough to add a *script* or a *stylesheet* tag to the bundle in the
-file *webclient_templates.xml*.  But when we work in a different addon, we need
-to add a file from that addon.  In that case, it should be done in three steps:
+a) Add one or multiple file(s): append
 
-1. add a *assets.xml* file in the *views/* folder
-2. add the string 'views/assets.xml' in the 'data' key in the manifest file
-3. create an inherited view of the desired bundle, and add the file(s) with an
-   xpath expression. For example,
+The proper way to add a file to a bundle in any addon is simple: it is just enough
+to add a glob path to the bundle in the file *__manifest__.py* like so:
 
-.. code-block:: xml
+.. code-block:: py
 
-    <template id="assets_backend" name="helpdesk assets" inherit_id="web.assets_backend">
-        <xpath expr="//script[last()]" position="after">
-            <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/>
-            <script type="text/javascript" src="/helpdesk/static/src/js/helpdesk_dashboard.js"></script>
-        </xpath>
-    </template>
+    'assets_common': [
+        'my_addon/static/src/js/**/*',
+    ],
 
+By default, adding a simple string to a bundle will append the files matching the
+glob at the end of the bundle.
+
+b) Add one or multiple file(s) at the beginning of the list: prepend
+
+Sometimes you need to put a certain file before the others in a bundle, when
+loading css file for example. In this case, you can use the *prepend* directive
+like so:
+
+.. code-block:: py
+
+    'assets_common': [
+        ('prepend', 'my_addon/static/src/css/bootstrap_overridden.scss'),
+    ],
+
+c) Add one or multiple file(s) before a specific file: before
+
+Prepending a file at the beginning of a bundle might not be precise enough. The
+*before* directive can be used to add the given files right before the target
+file. The syntax is `('before', target, glob)`:
+
+.. code-block:: py
+
+    'assets_common': [
+        ('before', 'web/static/src/css/bootstrap_overridden.scss', 'my_addon/static/src/css/bootstrap_overridden.scss'),
+    ],
+
+d) Add one or multiple file(s) after a specofic file: after
+
+Same as *before*, with the resulting files appended after the target file. The
+syntax is `('after', target, glob)`:
+
+.. code-block:: py
+
+    'assets_common': [
+        ('after', 'web/static/src/css/list_view.scss', 'my_addon/static/src/css/list_view.scss'),
+    ],
+
+e) Use nested bundles: include
+
+The *include* directive is a way to use a same bundle in other bundles to minimize
+the size of your manifest. In Odoo we use sub bundles (prefixed with an underscore
+by convention) to batch glob files used in multiple other bundles. You can then
+specify the sub bundle like this:
+
+.. code-block:: py
+
+    'assets_common': [
+        ('include', 'web._primary_variables'),
+    ],
+
+f) Remove one or multiple file(s): remove
+
+In some additional module you may want to get rid of the call of a certain asset
+in a bundle. Any file can be removed from an existing bundle using the *remove*
+directive:
+
+.. code-block:: py
+
+    'assets_common': [
+        ('remove', 'web/static/src/js/boot.js'),
+    ],
+
+g) Replace an asset file with one or multiple file(s): replace
+
+Let us now say that an asset need not only to be removed, but you also want to insert
+your new version of that asset at the same exact position. This can be done with
+the *replace* directive, using a 3-element tuple `('replace', target, asset)`:
+
+.. code-block:: py
+
+    'assets_common': [
+        ('replace', 'web/static/src/js/boot.js', 'my_addon/static/src/js/boot.js'),
+    ],
+
+Note that directives targetting a certain file (i.e. *before*, *after*, *replace* and *remove*)
+need that file to be declared beforehand, either in manifests higher up in the hierarchy
+or in 'ir.asset' records with a lower sequence.
 
 .. note ::
 
     Note that the files in a bundle are all loaded immediately when the user loads the
-    odoo web client.  This means that the files are transferred through the network
-    every time (except when the browser cache is active).  In some cases, it may be
-    better to lazyload some assets.  For example, if a widget requires a large
+    odoo web client. This means that the files are transferred through the network
+    every time (except when the browser cache is active). In some cases, it may be
+    better to lazyload some assets. For example, if a widget requires a large
     library, and that widget is not a core part of the experience, then it may be
     a good idea to only load the library when the widget is actually created. The
     widget class has actually builtin support just for this use case. (see section
     :ref:`reference/javascript_reference/qweb`)
+
+Assets loading order
+-------------------
+
+The order in which assets are loaded is sometimes critical and must be deterministic,
+mostly for stylesheets priorities and setup scripts. Assets in Odoo are processed
+as follows.
+
+1. When an asset bundle is called (e.g. `t-call-assets="assets_common"`), an empty
+list of assets is generated
+
+2. All records of type 'ir.asset' matching the bundle will be fetched and sorted
+by sequence number. Then all records with a sequence strictly less than 16 will
+be processed and applied to the current list of assets.
+
+3. All modules declaring assets for said bundle in their manifest will apply their
+assets operations to this list. This is done following the order of modules dependencies
+(e.g. 'web' assets will be processed before 'website'). If a directive tries to add
+a file already present in the list, nothing is done for that file. In other word,
+only the first occurrence of a file is kept in the list.
+
+4. The remaining 'ir.asset' records (those with a sequence greater than or equal
+to 16) are eventually processed and applied as well.
+
+Assets declared in the manifest may need to be loaded in a particular order, for
+example `jquery.js` must be loaded before all other jquery scripts when loading the
+lib folder. One solution would be to create an 'ir.asset' record with a lower sequence
+or a 'prepend' directive, but there is another simpler way to do so.
+
+Since the unicity of each file path in the list of assets is guaranteed, you can
+mention any specific file before a glob that includes it. That file will thus appear
+in the list before all the others included in the glob.
+
+.. code-block:: py
+
+    'assets_common': [
+        'my_addon/static/lib/jquery/jquery.js',
+        'my_addon/static/lib/jquery/**/*',
+    ],
+
+.. note ::
+
+    A module *b* removing/replacing the assets declared in a module *a* will have
+    to depend on it. Trying to operate on assets that have yet to be declared will
+    result in an error.
+
+The 'ir.asset' model
+--------------------
+
+In most cases the assets declared in the manifest will largely suffice. But Odoo
+being highly customizable requires to modify things as critical as defining assets
+to be editted in place. A model 'ir.asset' exists to do such things. Records will
+be associated to a `bundle` and apply their `glob` (and `target` if any) to the
+list of assets using according to their `directive`. Each record of 'ir.asset' has
+the following fields:
+
+.. autoclass:: odoo.addons.base.models.ir_asset.IrAsset
+
+``name``
+    Name of the asset record (for identification purpose).
+
+``bundle``
+    Bundle in which the asset will be applied.
+
+``directive`` (default='append')
+    Directive to use on the bundle.
+
+``glob``
+    Glob string defining:
+        a) a path to a file/folder in the Odoo file system
+        b) a URL to an attachment
+
+``target``
+    Target file to specify a position in the bundle. Can only be used with the
+    directives 'replace', 'before' and 'after'.
+
+``active`` (default=True)
+
+``sequence`` (default=16)
+    Loading order of the asset records (ascending). A sequence lower than 16 means
+    that the asset will be processed __before__ the ones declared in the manifest.
 
 What to do if a file is not loaded/updated
 ------------------------------------------
@@ -225,7 +393,7 @@ another file. There are two ways of sharing code between files:
 
 - use a module system that will provide a way for each modules to export or import
   values, and will make sure that they are loaded in a proper order.
-  
+
 While it's possible to work in the global scope, this has a number of issues:
 
 It is difficult to ensure that implementation details are not exposed by work done in the global scope directly.
@@ -241,14 +409,14 @@ It is difficult to ensure that implementation details are not exposed by work do
 
 For most Odoo code, we want to use a module system.  Because of the way assets
 work in Odoo (and in particular, the fact that each installed odoo addon can
-modify the list of files contained in a bundle), Odoo has to resolve modules 
+modify the list of files contained in a bundle), Odoo has to resolve modules
 browser side.  To do that, Odoo provides a small module system described just
 below (see :ref:`reference/javascript_reference/odoo_module`).
 
-However, Odoo also provides support for native javascript modules (see 
+However, Odoo also provides support for native javascript modules (see
 :ref:`reference/javascript_reference/js_module`). These modules
 will simply be translated by the server into odoo modules. It is encouraged to
-write all javascript code as a native module, for a better IDE integration. In 
+write all javascript code as a native module, for a better IDE integration. In
 the future, the Odoo module system should be considered an implementation detail,
 not the primary way to write javascript code.
 
@@ -442,9 +610,9 @@ error). This file will then be translated into an Odoo module that look like thi
 
 .. code-block:: javascript
 
-  odoo.define('@web/file_a', function (require) {                
-  'use strict';                
-  let __exports = {};                
+  odoo.define('@web/file_a', function (require) {
+  'use strict';
+  let __exports = {};
 
   const { someFunction } = require("@web/file_b");
 
@@ -486,14 +654,14 @@ The file ``file_b`` can import ``file_a`` like this:
 .. code-block:: javascript
 
   /** @odoo-module **/
-  import {something} from `./file_a` 
+  import {something} from `./file_a`
 
 But ``file_c`` need to use the full name:
 
 .. code-block:: javascript
 
   /** @odoo-module **/
-  import {something} from `@web/file_a` 
+  import {something} from `@web/file_a`
 
 
 Aliased modules
@@ -2668,6 +2836,9 @@ do that, several steps should be done.
 
 The ``updateControlPanel`` is the main method to customize the content in controlpanel.
 For more information, look into the `control_panel_renderer.js <https://github.com/odoo/odoo/blob/13.0/addons/web/static/src/js/views/control_panel/control_panel_renderer.js#L130>`_ file.
+
+.. _glob:
+    https://en.wikipedia.org/wiki/Glob_(programming)
 
 .. _.appendTo():
     https://api.jquery.com/appendTo/

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
+import json
 import logging
 import re
 import time
@@ -355,7 +356,8 @@ class Web_Editor(http.Controller):
         url_infos = dict()
         for v in views:
             for asset_call_node in etree.fromstring(v["arch"]).xpath("//t[@t-call-assets]"):
-                if asset_call_node.get(resources_type_info['t_call_assets_attribute']) == "false":
+                attr = asset_call_node.get(resources_type_info['t_call_assets_attribute'])
+                if attr and not json.loads(attr.lower()):
                     continue
                 asset_name = asset_call_node.get("t-call-assets")
 
@@ -386,10 +388,7 @@ class Web_Editor(http.Controller):
                 # scss data is returned sorted by bundle, with the bundles
                 # names and xmlids
                 if len(files_data):
-                    files_data_by_bundle.append([
-                        {'xmlid': asset_name, 'name': request.env.ref(asset_name).name},
-                        files_data
-                    ])
+                    files_data_by_bundle.append([asset_name, files_data])
 
         # Filter bundles/files:
         # - A file which appears in multiple bundles only appears in the
@@ -400,8 +399,8 @@ class Web_Editor(http.Controller):
             bundle_1 = files_data_by_bundle[i]
             for j in range(0, len(files_data_by_bundle)):
                 bundle_2 = files_data_by_bundle[j]
-                # In unwanted bundles, keep only the files which are in wanted bundles too (_assets_helpers)
-                if bundle_1[0]["xmlid"] not in bundles_restriction and bundle_2[0]["xmlid"] in bundles_restriction:
+                # In unwanted bundles, keep only the files which are in wanted bundles too (web._helpers)
+                if bundle_1[0] not in bundles_restriction and bundle_2[0] in bundles_restriction:
                     bundle_1[1] = [item_1 for item_1 in bundle_1[1] if item_1 in bundle_2[1]]
         for i in range(0, len(files_data_by_bundle)):
             bundle_1 = files_data_by_bundle[i]
@@ -414,7 +413,7 @@ class Web_Editor(http.Controller):
         # Only keep bundles which still have files and that were requested
         files_data_by_bundle = [
             data for data in files_data_by_bundle
-            if (len(data[1]) > 0 and (not bundles_restriction or data[0]["xmlid"] in bundles_restriction))
+            if (len(data[1]) > 0 and (not bundles_restriction or data[0] in bundles_restriction))
         ]
 
         # Fetch the arch of each kept file, in each bundle
@@ -439,7 +438,7 @@ class Web_Editor(http.Controller):
         return files_data_by_bundle
 
     @http.route("/web_editor/save_asset", type="json", auth="user", website=True)
-    def save_asset(self, url, bundle_xmlid, content, file_type):
+    def save_asset(self, url, bundle, content, file_type):
         """
         Save a given modification of a scss/js file.
 
@@ -447,18 +446,18 @@ class Web_Editor(http.Controller):
             url (str):
                 the original url of the scss/js file which has to be modified
 
-            bundle_xmlid (str):
-                the xmlid of the bundle in which the scss/js file addition can
+            bundle (str):
+                the name of the bundle in which the scss/js file addition can
                 be found
 
             content (str): the new content of the scss/js file
 
             file_type (str): 'scss' or 'js'
         """
-        request.env['web_editor.assets'].save_asset(url, bundle_xmlid, content, file_type)
+        request.env['web_editor.assets'].save_asset(url, bundle, content, file_type)
 
     @http.route("/web_editor/reset_asset", type="json", auth="user", website=True)
-    def reset_asset(self, url, bundle_xmlid):
+    def reset_asset(self, url, bundle):
         """
         The reset_asset route is in charge of reverting all the changes that
         were done to a scss/js file.
@@ -467,11 +466,11 @@ class Web_Editor(http.Controller):
             url (str):
                 the original URL of the scss/js file to reset
 
-            bundle_xmlid (str):
-                the xmlid of the bundle in which the scss/js file addition can
+            bundle (str):
+                the name of the bundle in which the scss/js file addition can
                 be found
         """
-        request.env['web_editor.assets'].reset_asset(url, bundle_xmlid)
+        request.env['web_editor.assets'].reset_asset(url, bundle)
 
     @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
     def public_render_template(self, args):
