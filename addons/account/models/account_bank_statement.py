@@ -468,6 +468,7 @@ class AccountBankStatement(models.Model):
 
     def _get_last_sequence_domain(self, relaxed=False):
         self.ensure_one()
+<<<<<<< HEAD
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {'journal_id': self.journal_id.id}
 
@@ -488,6 +489,21 @@ class AccountBankStatement(models.Model):
     def _get_starting_sequence(self):
         self.ensure_one()
         return "%s %s %04d/%02d/00000" % (self.journal_id.code, _('Statement'), self.date.year, self.date.month)
+=======
+        limit = int(self.env["ir.config_parameter"].get_param("account.reconcile.batch", 1000))
+        bank_stmt_lines = self.env['account.bank.statement.line'].search([
+            ('statement_id', 'in', self.ids),
+            # take not reconciled lines only. See _check_lines_reconciled method
+            ('account_id', '=', False),
+            ('journal_entry_ids', '=', False),
+            ('amount', '!=', 0),
+        ], limit=limit)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'bank_statement_reconciliation_view',
+            'context': {'statement_line_ids': bank_stmt_lines.ids, 'company_ids': self.mapped('company_id').ids},
+        }
+>>>>>>> a9976654c14... temp
 
 
 class AccountBankStatementLine(models.Model):
