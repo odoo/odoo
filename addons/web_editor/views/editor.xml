@@ -64,54 +64,41 @@
 </template>
 
 <template id="assets_summernote" name="Summernote">
-    <script type="text/javascript">
-        (function () {
-            "use strict";
-            odoo.define('jquery', function () {return $;});
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/summernote_import_start.js"/>
 
-            var uniqId = 0;
-            odoo.__define__ = window.define;
-            window.define = function (id) {
-                var args = Array.prototype.slice.call(arguments);
-                var factorie = args.pop();
-                var id = args[0];
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/core/async.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/core/func.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/core/agent.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/core/list.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/core/dom.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/core/key.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/core/range.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/editing/Bullet.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/editing/History.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/editing/Style.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/editing/Table.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/editing/Typing.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Editor.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Button.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Clipboard.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Codeview.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/DragAndDrop.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Fullscreen.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Handle.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/HelpDialog.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/ImageDialog.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/LinkDialog.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Popover.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Statusbar.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/module/Toolbar.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/Renderer.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/EventHandler.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/defaults.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/summernote.js"/>
+    <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/.js"/>
 
-                if (id instanceof Array) {
-                    var name = "summernote_factorie_" + (++uniqId);
-                    odoo[name] = factorie;
-
-                    var head = '';
-                    var fn = 'var fn = odoo.'+name+';\ndelete odoo.'+name+';\n';
-                    fn += 'return fn(';
-                    for (var k=0; k&lt;id.length; k++) {
-                        head += 'var a'+(++uniqId)+' = require("'+id[k]+'");\n';
-                        fn += 'a'+uniqId+', ';
-                    }
-                    fn += 'null);';
-
-                    odoo.define(odoo.website_next_define, new Function('require', head + fn));
-                } else {
-                    odoo.define(id, factorie);
-                }
-            };
-        })();
-    </script>
-    <t t-set="summer_js_files" t-value="['core/async', 'core/func', 'core/agent', 'core/list',
-        'core/dom', 'core/key', 'core/range', 'editing/Bullet', 'editing/History', 'editing/Style',
-        'editing/Table', 'editing/Typing', 'module/Editor', 'module/Button', 'module/Clipboard',
-        'module/Codeview', 'module/DragAndDrop', 'module/Fullscreen', 'module/Handle',
-        'module/HelpDialog', 'module/ImageDialog', 'module/LinkDialog', 'module/Popover',
-        'module/Statusbar', 'module/Toolbar', 'Renderer', 'EventHandler', 'defaults', 'summernote']" />
-    <t t-foreach="summer_js_files" t-as="file">
-        <script>odoo.website_next_define = 'summernote/<t t-esc="file" />';</script>
-        <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/{{ file }}.js"></script>
-    </t>
     <script type="text/javascript" src="/web_editor/static/src/js/editor/summernote.js" />
-    <script type="text/javascript">
-        window.define = odoo.__define__;
-        delete odoo.__define__;
-        delete odoo.website_next_define;
-    </script>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/summernote_import_end.js"/>
     <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
 </template>
 
@@ -184,15 +171,8 @@
 
 <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript">
-            odoo.define('web_editor.wysiwyg.root.test', function (require) {
-                'use strict';
-                var WysiwygRoot = require('web_editor.wysiwyg.root');
-                WysiwygRoot.include({
-                    assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
-                });
-            });
-        </script>
+        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/test_root.js"/>
+
         <t t-call="web_editor.compiled_assets_wysiwyg"/>
 
         <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
