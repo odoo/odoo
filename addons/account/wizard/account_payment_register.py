@@ -115,7 +115,10 @@ class AccountPaymentRegister(models.TransientModel):
         :param batch_result:    A batch returned by '_get_batches'.
         :return:                A string representing a communication to be set on payment.
         '''
-        return ' '.join(label for label in batch_result['lines'].mapped('name') if label)
+        name = ' '.join(label for label in batch_result['lines'].mapped('name') if label)
+        if not name.strip() and batch_result['lines']:
+            name = " ".join(move_id.payment_reference or move_id.ref or move_id.name for move_id in batch_result['lines'].mapped('move_id'))
+        return name
 
     @api.model
     def _get_line_batch_key(self, line):
