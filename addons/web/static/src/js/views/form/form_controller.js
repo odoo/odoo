@@ -691,8 +691,10 @@ var FormController = BasicController.extend({
      */
     _onQuickEdit: async function (ev) {
         ev.stopPropagation();
-        await this._setEditMode();
-        this.renderer.quickEdit(ev.data);
+        if (this.activeActions.edit) {
+            await this._setEditMode();
+            this.renderer.quickEdit(ev.data);
+        }
     },
     /**
      * Called when the user wants to save the current record -> @see saveRecord
