@@ -1165,6 +1165,12 @@ class AccountBankStatementLine(models.Model):
 
                 counterpart_vals['account_id'] = open_balance_account.id
                 counterpart_vals['partner_id'] = partner.id
+            else:
+                if self.amount > 0:
+                    open_balance_account = self.company_id.partner_id.with_company(self.company_id).property_account_receivable_id
+                else:
+                    open_balance_account = self.company_id.partner_id.with_company(self.company_id).property_account_payable_id
+                counterpart_vals['account_id'] = open_balance_account.id
 
             open_balance_vals = self._prepare_counterpart_move_line_vals(counterpart_vals)
         else:
