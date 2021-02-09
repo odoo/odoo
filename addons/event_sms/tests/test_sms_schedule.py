@@ -47,33 +47,38 @@ class TestSMSSchedule(TestEventCommon, SMSCase):
         self._create_registrations(self.event_0, 3)
 
         # check subscription scheduler
-        schedulers = self.env['event.mail'].search([('event_id', '=', self.event_0.id), ('interval_type', '=', 'after_sub')])
-        self.assertEqual(len(schedulers), 1)
-        self.assertEqual(schedulers.scheduled_date, self.event_0.create_date, 'event: incorrect scheduled date for checking controller')
+        sub_scheduler = self.env['event.mail'].search([('event_id', '=', self.event_0.id), ('interval_type', '=', 'after_sub')])
+        self.assertEqual(len(sub_scheduler), 1)
+        self.assertEqual(sub_scheduler.scheduled_date, self.event_0.create_date, 'event: incorrect scheduled date for checking controller')
 
         # verify that subscription scheduler was auto-executed after each registration
-        self.assertEqual(len(schedulers.mail_registration_ids), 3)
-        self.assertTrue(all(m.mail_sent is True for m in schedulers.mail_registration_ids))
-        self.assertEqual(schedulers.mapped('mail_registration_ids.registration_id'), self.event_0.registration_ids)
+        self.assertEqual(len(sub_scheduler.mail_registration_ids), 3)
+        self.assertTrue(all(m.mail_sent is True for m in sub_scheduler.mail_registration_ids))
+        self.assertEqual(sub_scheduler.mapped('mail_registration_ids.registration_id'), self.event_0.registration_ids)
+
         sanitized_numbers = []
         for registration in self.event_0.registration_ids:
             reg_sanitized_number = phone_validation.phone_format(registration.phone, 'BE', '32', force_format='E164')
             sanitized_numbers.append(reg_sanitized_number)
             self.assertSMSOutgoing(self.env['res.partner'], reg_sanitized_number, '%s registration confirmation.' % self.event_0.organizer_id.name)
+        self.assertTrue(sub_scheduler.mail_done)
+        self.assertEqual(sub_scheduler.mail_count_done, 3)
 
         # clear notification queue to avoid conflicts when checking next notifications
         self.env['mail.notification'].search([('sms_number', 'in', sanitized_numbers)]).unlink()
         self.env['sms.sms'].search([('number', 'in', sanitized_numbers)]).unlink()
 
         # check before event scheduler
-        schedulers = self.env['event.mail'].search([('event_id', '=', self.event_0.id), ('interval_type', '=', 'before_event')])
-        self.assertEqual(len(schedulers), 1, 'event: wrong scheduler creation')
-        self.assertEqual(schedulers[0].scheduled_date, self.event_0.date_begin + relativedelta(days=-3))
+        before_scheduler = self.env['event.mail'].search([('event_id', '=', self.event_0.id), ('interval_type', '=', 'before_event')])
+        self.assertEqual(len(before_scheduler), 1, 'event: wrong scheduler creation')
+        self.assertEqual(before_scheduler.scheduled_date, self.event_0.date_begin + relativedelta(days=-3))
 
         # execute event reminder scheduler explicitly
-        schedulers.execute()
+        before_scheduler.execute()
 
         # verify that subscription scheduler was auto-executed after each registration
         for registration in self.event_0.registration_ids:
             reg_sanitized_number = phone_validation.phone_format(registration.phone, 'BE', '32', force_format='E164')
             self.assertSMSOutgoing(self.env['res.partner'], reg_sanitized_number, '%s reminder' % self.event_0.organizer_id.name)
+        self.assertTrue(before_scheduler.mail_done)
+        self.assertEqual(before_scheduler.mail_count_done, 3)

@@ -149,18 +149,25 @@ class EventRegistration(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         registrations = super(EventRegistration, self).create(vals_list)
+
+        # auto_confirm if possible; if not automatically confirmed, call mail schedulers in case
+        # some were created already open
         if registrations._check_auto_confirmation():
             registrations.sudo().action_confirm()
+        else:
+            registrations._update_mail_schedulers()
 
         return registrations
 
     def write(self, vals):
+        pre_draft = self.env['event.registration']
+        if vals.get('state') == 'open':
+            pre_draft = self.filtered(lambda registration: registration.state == 'draft')
+
         ret = super(EventRegistration, self).write(vals)
 
         if vals.get('state') == 'open':
-            # auto-trigger after_sub (on subscribe) mail schedulers, if needed
-            onsubscribe_schedulers = self.mapped('event_id.event_mail_ids').filtered(lambda s: s.interval_type == 'after_sub')
-            onsubscribe_schedulers.sudo().execute()
+            pre_draft._update_mail_schedulers()
 
         return ret
 
@@ -233,6 +240,26 @@ class EventRegistration(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    def _update_mail_schedulers(self):
+        """ Update schedulers to set them as running again, and cron to be called
+        as soon as possible. """
+        open_registrations = self.filtered(lambda registration: registration.state == 'open')
+        if not open_registrations:
+            return
+
+        onsubscribe_schedulers = self.env['event.mail'].sudo().search([
+            ('event_id', 'in', open_registrations.event_id.ids),
+            ('interval_type', '=', 'after_sub')
+        ])
+        if not onsubscribe_schedulers:
+            return
+
+        onsubscribe_schedulers.update({'mail_done': False})
+        # we could simply call _create_missing_mail_registrations and let cron do their job
+        # but it currently leads to several delays. We therefore call execute until
+        # cron triggers are correctly used
+        onsubscribe_schedulers.execute()
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
