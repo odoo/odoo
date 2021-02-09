@@ -10825,6 +10825,32 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('Quick Edition: non-editable form', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form edit="0">
+                    <group>
+                        <field name="foo"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        await testUtils.dom.click(form.$('.o_form_label'));
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+
+        await testUtils.dom.click(form.$('.o_field_widget'));
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+
+        form.destroy();
+    });
 });
 
 });
