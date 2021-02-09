@@ -137,7 +137,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             msg1 = self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[employee_partner.id])
             self._reset_bus()
             employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg1.id] }])
+            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg1.id], 'needaction_inbox_counter': 0 }])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
@@ -156,7 +156,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
 
             self._reset_bus()
             employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg2.id] }])
+            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg2.id], 'needaction_inbox_counter': 0 }])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 

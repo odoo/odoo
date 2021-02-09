@@ -2574,18 +2574,22 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
             body: "not empty",
             channel_ids: [20], // link message to channel
             id: 100, // random unique id, useful to link notification
+            model: 'mail.channel',
             // needaction needs to be set here for message_fetch domain, because
             // mocked models don't have computed fields
             needaction: true,
+            res_id: 20,
         },
         // second expected message
         {
             body: "not empty",
             channel_ids: [20], // link message to channel
             id: 101, // random unique id, useful to link notification
+            model: 'mail.channel',
             // needaction needs to be set here for message_fetch domain, because
             // mocked models don't have computed fields
             needaction: true,
+            res_id: 20,
         }
     );
     this.data['mail.notification'].records.push(
