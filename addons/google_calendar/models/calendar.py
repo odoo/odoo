@@ -23,7 +23,7 @@ class Meeting(models.Model):
         # Event if the event is moved, the google_id remains the same.
         for event in self:
             google_recurrence_id = event.recurrence_id._get_event_google_id(event)
-            if google_recurrence_id:
+            if not event.google_id and google_recurrence_id:
                 event.google_id = google_recurrence_id
             elif not event.google_id:
                 event.google_id = False
@@ -36,7 +36,7 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         return super().create([
-            dict(vals, need_sync=False) if vals.get('recurrency') else vals
+            dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
 
@@ -44,7 +44,10 @@ class Meeting(models.Model):
         recurrence_update_setting = values.get('recurrence_update')
         if recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1:
             values = dict(values, need_sync=False)
-        return super().write(values)
+        res = super().write(values)
+        if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
+            self.recurrence_id.need_sync = True
+        return res
 
     def _get_sync_domain(self):
         return [('partner_ids.user_ids', 'in', self.env.user.id)]
@@ -196,11 +199,24 @@ class Meeting(models.Model):
         }
         if self.privacy:
             values['visibility'] = self.privacy
-        if self.user_id and self.user_id != self.env.user:
-            values['extendedProperties']['shared']['%s_owner_id' % self.env.cr.dbname] = self.user_id.id
-
         if not self.active:
             values['status'] = 'cancelled'
+        if self.user_id and self.user_id != self.env.user:
+            values['extendedProperties']['shared']['%s_owner_id' % self.env.cr.dbname] = self.user_id.id
+        elif not self.user_id:
+            # We don't store the real owner identity (mail)
+            # We can't store on the shared properties in that case without getting a 403
+            # If several odoo users are attendees but the owner is not in odoo, the event will be duplicated on odoo database
+            # if we are not the owner, we should change the post values to avoid errors because we don't have enough rights
+            # See https://developers.google.com/calendar/concepts/sharing
+            keep_keys = ['id', 'attendees', 'start', 'end', 'reminders']
+            values = {key: val for key, val in values.items() if key in keep_keys}
+            # values['extendedProperties']['private] should be used if the owner is not an odoo user
+            values['extendedProperties'] = {
+                'private': {
+                    '%s_odoo_id' % self.env.cr.dbname: self.id,
+                },
+            }
         return values
 
     def _cancel(self):
