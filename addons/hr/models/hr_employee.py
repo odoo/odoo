@@ -5,11 +5,13 @@ import base64
 from random import choice
 from string import digits
 from werkzeug.urls import url_encode
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.osv.query import Query
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
+from odoo.tools.misc import format_date
 
 
 class HrEmployeePrivate(models.Model):
@@ -79,6 +81,9 @@ class HrEmployeePrivate(models.Model):
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
     visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user", tracking=True)
+    work_permit_expiration_date = fields.Date('Work Permit Expiration Date', groups="hr.group_hr_user", tracking=True)
+    has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user", tracking=True)
+    work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
     certificate = fields.Selection([
         ('graduate', 'Graduate'),
@@ -138,6 +143,27 @@ class HrEmployeePrivate(models.Model):
         for r in res:
             record = self.browse(r['id'])
             record._update_cache({k:v for k,v in r.items() if k in fields}, validate=False)
+
+    @api.model
+    def _cron_check_work_permit_validity(self):
+        # Called by a cron
+        # Schedule an activity 1 month before the work permit expires
+        outdated_days = fields.Date.today() + relativedelta(months=+1)
+        nearly_expired_work_permits = self.search([('work_permit_scheduled_activity', '=', False), ('work_permit_expiration_date', '<', outdated_days)])
+        employees_scheduled = self.env['hr.employee']
+        for employee in nearly_expired_work_permits.filtered(lambda employee: employee.parent_id):
+            responsible_user_id = employee.parent_id.user_id.id
+            if responsible_user_id:
+                employees_scheduled |= employee
+                lang = self.env['res.partner'].browse(responsible_user_id).lang
+                formated_date = format_date(employee.env, employee.work_permit_expiration_date, date_format="dd MMMM y", lang_code=lang)
+                employee.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    note=_('The work permit of %(employee)s expires at %(date)s.',
+                        employee=employee.name,
+                        date=formated_date),
+                    user_id=responsible_user_id)
+        employees_scheduled.write({'work_permit_scheduled_activity': True})
 
     def read(self, fields, load='_classic_read'):
         if self.check_access_rights('read', raise_exception=False):
@@ -254,6 +280,8 @@ class HrEmployeePrivate(models.Model):
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
                                         (bool(self.image_1920))))
+        if 'work_permit_expiration_date' in vals:
+            vals['work_permit_scheduled_activity'] = False
         res = super(HrEmployeePrivate, self).write(vals)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
