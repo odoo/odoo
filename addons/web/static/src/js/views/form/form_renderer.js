@@ -1154,10 +1154,8 @@ var FormRenderer = BasicRenderer.extend({
         const entry = Object.entries(this.idsForLabels)
             .find(x => x[1] === idForLabel);
         if (entry) {
-            const fieldWidget = this.allFieldWidgets[this.state.id]
-                .find(field => field[symbol] === entry[0]);
             this.trigger_up('quick_edit', {
-                fieldName: fieldWidget.name,
+                fieldName: this.fieldIdsToNames[entry[0]],
                 target: ev.currentTarget,
                 extraInfo: {},
             });
