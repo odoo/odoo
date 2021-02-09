@@ -266,6 +266,8 @@ class StockMove(models.Model):
                 continue
 
         for svl in stock_valuation_layers.with_context(active_test=False):
+            if svl.stock_move_id in valued_moves['out']:
+                svl.stock_move_id.price_unit = -svl.unit_cost
             if not svl.product_id.valuation == 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
