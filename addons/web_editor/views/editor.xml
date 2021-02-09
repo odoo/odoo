@@ -184,15 +184,8 @@
 
 <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript">
-            odoo.define('web_editor.wysiwyg.root.test', function (require) {
-                'use strict';
-                var WysiwygRoot = require('web_editor.wysiwyg.root');
-                WysiwygRoot.include({
-                    assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
-                });
-            });
-        </script>
+        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/test_root.js"/>
+
         <t t-call="web_editor.compiled_assets_wysiwyg"/>
 
         <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
