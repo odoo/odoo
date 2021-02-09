@@ -104,7 +104,6 @@ class SalonBookingWeb(http.Controller):
                 'start_time_only': time_start_local_pp,
                 'end_time_only': time_end_local_pp
             }
-            print("DDDDDDDDDDDDDDD DATA ",data,type(data))
             if orders.chair_id.id not in order_details:
                 order_details[orders.chair_id.id] = {'name': orders.chair_id.name, 'orders': [data]}
             else:
