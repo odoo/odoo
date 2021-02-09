@@ -104,6 +104,7 @@ class SalonBookingWeb(http.Controller):
                 'start_time_only': time_start_local_pp,
                 'end_time_only': time_end_local_pp
             }
+            print("DDDDDDDDDDDDDDD DATA ",data,type(data))
             if orders.chair_id.id not in order_details:
                 order_details[orders.chair_id.id] = {'name': orders.chair_id.name, 'orders': [data]}
             else:
@@ -119,30 +120,48 @@ class SalonBookingWeb(http.Controller):
         date_check_obj_add_17 = datetime.strptime(date_check_str,'%Y-%m-%d') + timedelta(hours=17,minutes=0,seconds=0)    
         date_check_obj_minus_7 = date_check_obj - timedelta (hours=7,minutes=0,seconds=0)
         # FIXED THE TIMING DIFFERENT +7 HOURS BASE >
-        order_obj_17_sorted = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
+        order_obj_17 = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
                                                        ('stage_id', 'in', [1, 2, 3]), 
                                                        ('start_time', '>=',date_check_obj_minus_7),
                                                        ('start_time','<',date_check_obj_add_17) 
                                                        ]).sorted('start_time')
-                                                       
+        chair_obj = request.env['salon.chair'].search([('active_booking_chairs', '=', True)])
+        working_hour_obj = request.env['salon.working.hours'].search([('name','=',date_check_obj.strftime("%A"))])
         order_details = {}
-        for orders in order_obj_17_sorted:
-            # This block of function might not included if timzone configuration is right when deployed 
-            time_start_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
-            time_end_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
-            # This block of function might not included if timzone configuration is right when deployed 
+        oc_list = []
+        for orders in order_obj_17:
+            if orders.chair_id.id not in oc_list:
+                oc_list.append(orders.chair_id.id)
+        # AVAILABLE TIME OF BOOKED COURT
+        for orders in order_obj_17:
+            if orders.chair_id.id not in oc_list:
+                oc_list.append(orders.chair_id.id)
 
+            time_start_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
             data = {
-                'number': orders.id,
-                'start_time_only': time_start_local_pp,
-                'end_time_only': time_end_local_pp
+                    'number': orders.id,
+                    'start_time_only': time_start_local_pp,
+                    'end_time_only': 'NONE'
             }
-            
-            if orders.chair_id.id not in order_details:
+            if orders.chair_id.id not in order_details: 
                 order_details[orders.chair_id.id] = {'name': orders.chair_id.name, 'orders': [data]}
             else:
                 order_details[orders.chair_id.id]['orders'].append(data)
-
+        # AVAILABLE TIME OF BOOKED COURT
+        # AVAILABLE TIME OF NO-BOOKED COURT
+        for chair in chair_obj :
+            if chair.id not in oc_list: 
+                # This block of function might not included if timzone configuration is right when deployed 
+                time_start_local_pp = '{0:02.0f}:{1:02.0f}'.format(*divmod(working_hour_obj.from_time * 60, 60))
+                time_end_local_pp = '{0:02.0f}:{1:02.0f}'.format(*divmod(working_hour_obj.to_time * 60, 60))
+                # This block of function might not included if timzone configuration is right when deployed 
+                data={
+                    'number' : chair.id,
+                    'start_time_only' : time_start_local_pp,
+                    'end_time_only' : time_end_local_pp 
+                }
+                order_details [chair.id] = {'name': chair.name, 'orders': [data]}
+        # AVAILABLE TIME OF NO-BOOKED COURT
         return order_details
 
     @http.route('/page/sport_management.sport_booking_thank_you', type='http', auth="public", website=True)
