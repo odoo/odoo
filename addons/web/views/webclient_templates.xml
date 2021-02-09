@@ -21,10 +21,6 @@
         <t t-call="web._assets_utils"/>
         <t t-call="web._assets_primary_variables"/>
         <t t-call="web._assets_secondary_variables"/>
-
-        <t t-raw="0"/>
-
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
     </template>
 
     <template id="_assets_backend_helpers">
@@ -55,6 +51,7 @@
 
     <template id="assets_common" name="Common Assets (used in backend interface and website)">
         <t t-call="web._assets_helpers"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
@@ -187,9 +184,9 @@
     </template>
 
     <template id="assets_backend" name="Backend Assets (used in backend interface)">
-        <t t-call="web._assets_helpers">
-            <t t-call="web._assets_backend_helpers"/>
-        </t>
+        <t t-call="web._assets_helpers"/>
+        <t t-call="web._assets_backend_helpers"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
 
         <t t-call="web._assets_bootstrap"/>
 
@@ -408,9 +405,9 @@
     </template>
 
     <template id="assets_frontend" name="Website Assets">
-        <t t-call="web._assets_helpers">
-            <t t-call="web._assets_frontend_helpers"/>
-        </t>
+        <t t-call="web._assets_helpers"/>
+        <t t-call="web._assets_frontend_helpers"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
 
         <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_frontend.scss"/>
