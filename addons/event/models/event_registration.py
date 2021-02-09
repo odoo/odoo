@@ -208,6 +208,36 @@ class EventRegistration(models.Model):
     def action_cancel(self):
         self.write({'state': 'cancel'})
 
+    def action_send_badge_email(self):
+        """ Open a window to compose an email, with the template - 'event_badge'
+            message loaded by default
+        """
+        self.ensure_one()
+        template = self.env.ref('event.event_registration_mail_template_badge')
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
+        ctx = dict(
+            default_model='event.registration',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template.id,
+            default_composition_mode='comment',
+            custom_layout="mail.mail_notification_light",
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
+
+    # ------------------------------------------------------------
+    # MAILING / GATEWAY
+    # ------------------------------------------------------------
+
     def _message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self)._message_get_suggested_recipients()
         public_users = self.env['res.users'].sudo()
@@ -248,31 +278,9 @@ class EventRegistration(models.Model):
                 ]).write({'partner_id': new_partner.id})
         return super(EventRegistration, self)._message_post_after_hook(message, msg_vals)
 
-    def action_send_badge_email(self):
-        """ Open a window to compose an email, with the template - 'event_badge'
-            message loaded by default
-        """
-        self.ensure_one()
-        template = self.env.ref('event.event_registration_mail_template_badge')
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form')
-        ctx = dict(
-            default_model='event.registration',
-            default_res_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template.id,
-            default_composition_mode='comment',
-            custom_layout="mail.mail_notification_light",
-        )
-        return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
-            'target': 'new',
-            'context': ctx,
-        }
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
 
     def get_date_range_str(self):
         self.ensure_one()

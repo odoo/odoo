@@ -27,6 +27,7 @@ Key Features
         'views/event_stage_views.xml',
         'report/event_event_templates.xml',
         'report/event_event_reports.xml',
+        'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         'data/event_data.xml',
         'views/res_config_settings_views.xml',
