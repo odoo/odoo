@@ -5,10 +5,16 @@ import datetime
 import string
 import re
 import stdnum
+from stdnum.eu.vat import check_vies
+from stdnum.exceptions import InvalidComponent
+import logging
 
 from odoo import api, models, tools, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
+
+
+_logger = logging.getLogger(__name__)
 
 _eu_country_vat = {
     'GR': 'EL'
@@ -99,20 +105,24 @@ class ResPartner(models.Model):
     def _check_vies(self, vat):
         # Store the VIES result in the cache. In case an exception is raised during the request
         # (e.g. service unavailable), the fallback on simple_vat_check is not kept in cache.
-        return stdnum.eu.vat.check_vies(vat)
+        return check_vies(vat)
 
     @api.model
     def vies_vat_check(self, country_code, vat_number):
         try:
             # Validate against  VAT Information Exchange System (VIES)
             # see also http://ec.europa.eu/taxation_customs/vies/
-            return self._check_vies(country_code.upper() + vat_number)
+            vies_result = self._check_vies(country_code.upper() + vat_number)
+            return vies_result['valid']
+        except InvalidComponent:
+            return False
         except Exception:
             # see http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl
             # Fault code may contain INVALID_INPUT, SERVICE_UNAVAILABLE, MS_UNAVAILABLE,
             # TIMEOUT or SERVER_BUSY. There is no way we can validate the input
             # with VIES if any of these arise, including the first one (it means invalid
             # country code or empty VAT number), so we fall back to the simple check.
+            _logger.exception("Failed VIES VAT check.")
             return self.simple_vat_check(country_code, vat_number)
 
     @api.model
@@ -134,17 +144,18 @@ class ResPartner(models.Model):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
             company = self.env.company
-        if company.vat_check_vies:
-            # force full VIES online check
-            check_func = self.vies_vat_check
-        else:
-            # quick and partial off-line checksum validation
-            check_func = self.simple_vat_check
+        eu_countries = self.env.ref('base.europe').country_ids
         for partner in self:
             if not partner.vat:
                 continue
             #check with country code as prefix of the TIN
             vat_country, vat_number = self._split_vat(partner.vat)
+            if company.vat_check_vies and partner.commercial_partner_id.country_id in eu_countries:
+                # force full VIES online check
+                check_func = self.vies_vat_check
+            else:
+                # quick and partial off-line checksum validation
+                check_func = self.simple_vat_check
             if not check_func(vat_country, vat_number):
                 #if fails, check with country code from country
                 country_code = partner.commercial_partner_id.country_id.code
@@ -183,7 +194,7 @@ class ResPartner(models.Model):
         '''
         # A new VAT number format in Switzerland has been introduced between 2011 and 2013
         # https://www.estv.admin.ch/estv/fr/home/mehrwertsteuer/fachinformationen/steuerpflicht/unternehmens-identifikationsnummer--uid-.html
-        # The old format "TVA 123456" is not valid since 2014 
+        # The old format "TVA 123456" is not valid since 2014
         # Accepted format are: (spaces are ignored)
         #     CHE#########MWST
         #     CHE#########TVA
