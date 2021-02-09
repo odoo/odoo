@@ -3,6 +3,7 @@ odoo.define('wysiwyg.widgets.LinkDialog', function (require) {
 
 var core = require('web.core');
 var Dialog = require('wysiwyg.widgets.Dialog');
+require("summernote/summernote");
 
 var dom = $.summernote.core.dom;
 var range = $.summernote.core.range;
