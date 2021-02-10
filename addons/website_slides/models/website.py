@@ -14,3 +14,11 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('Courses'), url_for('/slides'), 'website_slides'))
         return suggested_controllers
+
+    def _search_get_details(self, search_type, order, options):
+        result = super()._search_get_details(search_type, order, options)
+        if search_type in ['slides', 'slide_channels_only', 'all']:
+            result.append(self.env['slide.channel']._search_get_detail(self, order, options))
+        if search_type in ['slides', 'slides_only', 'all']:
+            result.append(self.env['slide.slide']._search_get_detail(self, order, options))
+        return result

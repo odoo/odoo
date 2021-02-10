@@ -22,9 +22,9 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError, AccessError
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.osv.expression import FALSE_DOMAIN
+from odoo.osv.expression import AND, OR, FALSE_DOMAIN
 from odoo.tools.translate import _
-from odoo.tools import pycompat
+from odoo.tools import escape_psql, pycompat
 
 logger = logging.getLogger(__name__)
 
@@ -1437,3 +1437,173 @@ class Website(models.Model):
                 SET active = %(active)s
                 WHERE path ~ %(assets_path)s
             """, {"active": is_snippet_used, "assets_path": assets_path})
+
+    def _search_build_domain(self, domain, search, fields, extra=None):
+        """
+        Builds a search domain AND-combining a base domain with partial matches of each term in
+        the search expression in any of the fields.
+
+        :param domain: base domain combined in the search expression
+        :param search: search expression string
+        :param fields: list of field names to match the terms of the search expression with
+        :param extra: function that returns an additional subdomain for a search term
+
+        :return: domain limited to the matches of the search expression
+        """
+        domains = domain.copy()
+        if search:
+            for search_term in search.split(' '):
+                subdomains = []
+                for field in fields:
+                    subdomains.append([(field, 'ilike', escape_psql(search_term))])
+                if extra:
+                    subdomains.append(extra(self.env, search_term))
+                domains.append(OR(subdomains))
+        return AND(domains)
+
+    def _search_text_from_html(self, html_fragment):
+        """
+        Returns the plain non-tag text from an html
+
+        :param html_fragment: document from which text must be extracted
+
+        :return text extracted from the html
+        """
+        # lxml requires one single root element
+        tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True))
+        return ' '.join(tree.itertext())
+
+    def _search_get_details(self, search_type, order, options):
+        """
+        Returns indications on how to perform the searches
+
+        :param search_type: type of search
+        :param order: order in which the results are to be returned
+        :param options: search options
+
+        :return list of objects with:
+            - model: name of the searched model
+            - base_domain: domain within which to perform the search
+            - search_fields: fields within which the search term must be found
+            - secondary_search_fields: optionally performs a second search
+            - filter_function: optionally filters obtained results
+            - fetch_fields: fields from which data must be fetched
+            - patch_data_function: optionally sets additional fields for rendering
+            - mapping: mapping from the results towards the structure used in rendering templates.
+                The mapping is a dict that associates the rendering name of each field
+                to a dict containing the 'name' of the field in the results list and the 'type'
+                that must be used for rendering the value
+            - icon: name of the icon to use if there is no image
+        """
+        result = []
+        if search_type in ['pages', 'all']:
+            result.append(self.env['website.page']._search_get_detail(self, order, options))
+        return result
+
+    def _search_with_fuzzy(self, search_type, search, limit, order, options):
+        """
+        Performs a search with a search text or with a resembling word
+
+        :param search_type: indicates what to search within, 'all' matches all available types
+        :param search: text against which to match results
+        :param limit: maximum number of results per model type involved in the result
+        :param order: order on which to sort results within a model type
+        :param options: search options from the submitted form containing:
+            - allowFuzzy: boolean indicating whether the fuzzy matching must be done
+            - other options used by `_search_get_details()`
+
+        :return: tuple containing:
+            - count: total number of results across all involved models
+            - results: list of results per model (see _search_exact)
+            - fuzzy_term: similar word against which results were obtained, indicates there were
+                no results for the initially requested search
+        """
+        # TODO find fuzzy term
+        search_details = self._search_get_details(search_type, order, options)
+        count, results = self._search_exact(search_details, search, limit, order)
+        return count, results, None
+
+    def _search_exact(self, search_details, search, limit, order):
+        """
+        Performs a search with a search text
+
+        :param search_details: see :meth:`_search_get_details`
+        :param search: text against which to match results
+        :param limit: maximum number of results per model type involved in the result
+        :param order: order on which to sort results within a model type
+
+        :return: tuple containing:
+            - total number of results across all involved models
+            - list of results per model made of:
+                - initial search_detail for the model
+                - count: number of results for the model
+                - results: model list equivalent to a `model.search()`
+        """
+        all_results = []
+        total_count = 0
+        for search_detail in search_details:
+            model = self.env[search_detail['model']]
+            fields = search_detail['search_fields']
+            base_domain = search_detail['base_domain']
+            domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
+            if search_detail.get('requires_sudo'):
+                model = model.sudo()
+            results = model.search(
+                domain,
+                limit=limit,
+                order=search_detail.get('order', order)
+            )
+            if search:
+                base_results = results
+                secondary_fields = search_detail.get('secondary_search_fields')
+                if secondary_fields:
+                    domain = self._search_build_domain(base_domain, search, secondary_fields)
+                    results = model.search(
+                        domain,
+                        limit=limit,
+                        order=search_detail.get('order', order)
+                    )
+                    results = results.union(base_results)
+                filter_function = search_detail.get('filter_function')
+                if filter_function:
+                    results = results.filtered(lambda result: filter_function(search, result, base_results, results))
+            search_detail['results'] = results
+            count = model.search_count(domain)
+            total_count += count
+            search_detail['count'] = count
+            all_results.append(search_detail)
+
+        return total_count, all_results
+
+    def _search_render_results(self, search_details, limit):
+        """
+        Prepares data for the autocomplete and hybrid list rendering
+
+        :param search_details: obtained from `_search_exact()`
+        :param limit: maximum number or rows to render
+
+        :return: the updated `search_details` containing an additional `results_data` field equivalent
+            to the result of a `model.read()`
+        """
+        for search_detail in search_details:
+            fields = search_detail['fetch_fields']
+            results = search_detail['results']
+            results_data = results.read(fields)[:limit]
+            icon = search_detail['icon']
+            mapping = search_detail['mapping']
+            for result in results_data:
+                result['_fa'] = icon
+                result['_mapping'] = mapping
+            html_fields = [config['name'] for config in mapping.values() if config.get('html')]
+            patch_function = search_detail.get('patch_data_function')
+            if patch_function or html_fields:
+                for result, data in zip(results, results_data):
+                    for html_field in html_fields:
+                        if data[html_field]:
+                            text = self._search_text_from_html(data[html_field])
+                            text = re.sub('\\s+', ' ', text).strip()
+                            data[html_field] = text
+                    if patch_function:
+                        patch_function(result, data)
+            search_detail['results_data'] = results_data
+        return search_details

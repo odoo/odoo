@@ -21,16 +21,14 @@
             </section>
             <div class="container mt16 o_wslides_home_nav position-relative">
                 <nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: white!important">
-                    <form method="GET" class="form-inline o_wslides_nav_navbar_right order-lg-3" t-attf-action="/slides/all" role="search">
-                        <div class="input-group">
-                            <input type="search" name="search" class="form-control" placeholder="Search courses" aria-label="Search" t-att-value="search_term"/>
-                            <div class="input-group-append">
-                                <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
-                                    <i class="fa fa-search"/>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    <t t-call="website.website_search_box_input">
+                        <t t-set="_form_classes" t-valuef="form-inline o_wslides_nav_navbar_right order-lg-3"/>
+                        <t t-set="search_type" t-valuef="slides"/>
+                        <t t-set="action" t-valuef="/slides/all"/>
+                        <t t-set="display_description" t-valuef="true"/>
+                        <t t-set="display_detail" t-valuef="false"/>
+                        <t t-set="placeholder">Search courses</t>
+                    </t>
                     <button class="navbar-toggler px-2 order-1" type="button"
                         data-toggle="collapse" data-target="#navbarSlidesHomepage"
                         aria-controls="navbarSlidesHomepage" aria-expanded="false" aria-label="Toggle navigation">
@@ -191,21 +189,18 @@
                             <i class="fa fa-eraser"/> Clear filters
                         </a>
                     </div>
-                    <form t-else="" method="GET" class="form-inline o_wslides_nav_navbar_right d-md-none">
+                    <t t-else="" t-call="website.website_search_box_input">
                         <!-- Search box (mobile)-->
-                        <div class="input-group">
-                            <input type="search" name="search" class="form-control"
-                                placeholder="Search courses" aria-label="Search"
-                                t-att-value="search_term"/>
-                            <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
-                            <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
-                            <div class="input-group-append">
-                                <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
-                                    <i class="fa fa-search"/>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        <t t-set="_form_classes" t-valuef="form-inline o_wslides_nav_navbar_right d-md-none"/>
+                        <t t-set="search_type" t-valuef="slides"/>
+                        <!-- No action: remain on same URL -->
+                        <t t-set="display_description" t-valuef="true"/>
+                        <t t-set="display_detail" t-valuef="false"/>
+                        <t t-set="placeholder">Search courses</t>
+                        <t t-set="search" t-value="original_search or search_term"/>
+                        <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
+                        <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
+                    </t>
                     <button class="navbar-toggler px-1" type="button"
                         data-toggle="collapse" data-target="#navbarTagGroups"
                         aria-controls="navbarTagGroups" aria-expanded="false" aria-label="Toggle navigation">
@@ -240,20 +235,17 @@
                             </a>
                         </div>
                         <!-- Search box (desktop) -->
-                        <form method="GET" class="form-inline o_wslides_nav_navbar_right d-none d-md-flex">
-                            <div class="input-group">
-                                <input type="search" name="search" class="form-control"
-                                    placeholder="Search courses" aria-label="Search"
-                                    t-att-value="search_term"/>
-                                <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
-                                <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
-                                <div class="input-group-append">
-                                    <button class="btn border border-left-0 oe_search_button" type="submit" aria-label="Search" title="Search">
-                                        <i class="fa fa-search"/>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                        <t t-call="website.website_search_box_input">
+                            <t t-set="_form_classes" t-valuef="form-inline o_wslides_nav_navbar_right d-none d-md-flex"/>
+                            <t t-set="search_type" t-valuef="slides"/>
+                            <!-- No action: remain on same URL -->
+                            <t t-set="display_description" t-valuef="true"/>
+                            <t t-set="display_detail" t-valuef="false"/>
+                            <t t-set="placeholder">Search courses</t>
+                            <t t-set="search" t-value="original_search or search_term"/>
+                            <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
+                            <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
+                        </t>
                     </div>
                 </nav>
                 <div class="o_wprofile_email_validation_container mb16 mt16">
@@ -297,13 +289,18 @@
                 <div t-elif="not channels" class="alert alert-info mb-5">
                     No course was found matching your search.
                 </div>
-                <div t-else="" class="row mx-n2">
-                    <t t-foreach="channels" t-as="channel">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex flex-grow-1">
-                            <t t-call="website_slides.course_card"/>
-                        </div>
-                    </t>
-                </div>
+                <t t-else="">
+                    <div t-if="original_search" class="alert alert-warning mb-5">
+                        No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search_term"/>'.
+                    </div>
+                    <div class="row mx-n2">
+                        <t t-foreach="channels" t-as="channel">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex flex-grow-1">
+                                <t t-call="website_slides.course_card"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
             </div>
 
             <t t-call="website_slides.courses_footer"></t>

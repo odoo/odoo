@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+from collections import defaultdict
+from dateutil.relativedelta import relativedelta
 import json
 import werkzeug.urls
 
@@ -9,6 +12,7 @@ from pytz import utc
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.osv import expression
+from odoo.tools.misc import get_lang, format_date
 
 GOOGLE_CALENDAR_URL = 'https://www.google.com/calendar/render?'
 
@@ -428,3 +432,117 @@ class Event(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
+
+    @api.model
+    def _search_build_dates(self):
+        today = fields.Datetime.today()
+
+        def sdn(date):
+            return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
+
+        def sd(date):
+            return fields.Datetime.to_string(date)
+
+        def get_month_filter_domain(filter_name, months_delta):
+            first_day_of_the_month = today.replace(day=1)
+            filter_string = _('This month') if months_delta == 0 \
+                else format_date(self.env, value=today + relativedelta(months=months_delta),
+                    date_format='LLLL', lang_code=get_lang(self.env).code).capitalize()
+            return [filter_name, filter_string, [
+                ("date_end", ">=", sd(first_day_of_the_month + relativedelta(months=months_delta))),
+                ("date_begin", "<", sd(first_day_of_the_month + relativedelta(months=months_delta+1)))],
+                0]
+
+        return [
+            ['all', _('Upcoming Events'), [("date_end", ">", sd(today))], 0],
+            ['today', _('Today'), [
+                ("date_end", ">", sd(today)),
+                ("date_begin", "<", sdn(today))],
+                0],
+            get_month_filter_domain('month', 0),
+            ['old', _('Past Events'), [
+                ("date_end", "<", sd(today))],
+                0],
+        ]
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """See website_page._search_get_detail()"""
+        with_description = options['displayDescription']
+        with_date = options['displayDetail']
+        date = options.get('date', 'all')
+        country = options.get('country')
+        tags = options.get('tags')
+        event_type = options.get('type', 'all')
+
+        domain = [website.website_domain()]
+        if event_type != 'all':
+            domain.append([("event_type_id", "=", int(event_type))])
+        search_tags = self.env['event.tag']
+        if tags:
+            try:
+                tag_ids = literal_eval(tags)
+            except SyntaxError:
+                pass
+            else:
+                # perform a search to filter on existing / valid tags implicitely + apply rules on color
+                search_tags = self.env['event.tag'].search([('id', 'in', tag_ids)])
+
+            # Example: You filter on age: 10-12 and activity: football.
+            # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
+            # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
+            # ("age: 10-12" OR "age: 12-15") AND "activity: football
+            grouped_tags = defaultdict(list)
+            for tag in search_tags:
+                grouped_tags[tag.category_id].append(tag)
+            for group in grouped_tags:
+                domain.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
+
+        no_country_domain = domain.copy()
+        if country:
+            if country == 'online':
+                domain.append([("country_id", "=", False)])
+            elif country != 'all':
+                domain.append(['|', ("country_id", "=", int(country)), ("country_id", "=", False)])
+
+        no_date_domain = domain.copy()
+        dates = self._search_build_dates()
+        current_date = None
+        for date_details in dates:
+            if date == date_details[0]:
+                domain.append(date_details[2])
+                no_country_domain.append(date_details[2])
+                if date_details[0] != 'all':
+                    current_date = date_details[1]
+
+        search_fields = ['name']
+        fetch_fields = ['name', 'website_url']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('subtitle')
+            fetch_fields.append('subtitle')
+            mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
+        if with_date:
+            mapping['detail'] = {'name': 'range', 'type': 'html'}
+        def patch_event(event, data):
+            begin = self.env['ir.qweb.field.date'].record_to_html(event, 'date_begin', {})
+            end = self.env['ir.qweb.field.date'].record_to_html(event, 'date_end', {})
+            data['range'] = '%s🠖%s' % (begin, end) if begin != end else begin
+        return {
+            'model': 'event.event',
+            'base_domain': domain,
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'patch_data_function': patch_event if with_date else None,
+            'mapping': mapping,
+            'icon': 'fa-ticket',
+            # for website_event main controller:
+            'dates': dates,
+            'current_date': current_date,
+            'search_tags': search_tags,
+            'no_date_domain': no_date_domain,
+            'no_country_domain': no_country_domain,
+        }

@@ -92,29 +92,6 @@ class WebsiteForum(WebsiteProfile):
     def questions(self, forum, tag=None, page=1, filters='all', my=None, sorting=None, search='', **post):
         Post = request.env['forum.post']
 
-        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active'), ('can_view', '=', True)]
-        if search:
-            domain += ['|', ('name', 'ilike', search), ('content', 'ilike', search)]
-        if tag:
-            domain += [('tag_ids', 'in', tag.id)]
-        if filters == 'unanswered':
-            domain += [('child_ids', '=', False)]
-        elif filters == 'solved':
-            domain += [('has_validated_answer', '=', True)]
-        elif filters == 'unsolved':
-            domain += [('has_validated_answer', '=', False)]
-
-        user = request.env.user
-
-        if my == 'mine':
-            domain += [('create_uid', '=', user.id)]
-        elif my == 'followed':
-            domain += [('message_partner_ids', '=', user.partner_id.id)]
-        elif my == 'tagged':
-            domain += [('tag_ids.message_partner_ids', '=', user.partner_id.id)]
-        elif my == 'favourites':
-            domain += [('favourite_ids', '=', user.id)]
-
         if sorting:
             # check that sorting is valid
             # retro-compatibily for V8 and google links
@@ -126,7 +103,22 @@ class WebsiteForum(WebsiteProfile):
         if not sorting:
             sorting = forum.default_order
 
-        question_count = Post.search_count(domain)
+        options = {
+            'displayDescription': False,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'forum': str(forum.id) if forum else None,
+            'tag': str(tag.id) if tag else None,
+            'filters': filters,
+            'my': my,
+        }
+        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy("forum_posts_only", search,
+            limit=page * self._post_per_page, order=sorting, options=options)
+        question_ids = details[0].get('results', Post)
+        question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
 
         if tag:
             url = "/forum/%s/tag/%s/questions" % (slug(forum), slug(tag))
@@ -146,8 +138,6 @@ class WebsiteForum(WebsiteProfile):
                                       step=self._post_per_page, scope=self._post_per_page,
                                       url_args=url_args)
 
-        question_ids = Post.search(domain, limit=self._post_per_page, offset=pager['offset'], order=sorting)
-
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
             'main_object': tag or forum,
@@ -160,7 +150,8 @@ class WebsiteForum(WebsiteProfile):
             'filters': filters,
             'my': my,
             'sorting': sorting,
-            'search': search,
+            'search': fuzzy_search_term or search,
+            'original_search': fuzzy_search_term and search,
         })
         return request.render("website_forum.forum_index", values)
 
