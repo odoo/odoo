@@ -1111,7 +1111,7 @@ class MrpProduction(models.Model):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
 
-        :param replan: If it is a replan, only ready and pending workorder will be take in account
+        :param replan: If it is a replan, only ready and pending workorder will be taken into account
         :type replan: bool.
         """
         self.ensure_one()
@@ -1123,7 +1123,7 @@ class MrpProduction(models.Model):
         qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
         start_date = max(self.date_planned_start, datetime.datetime.now())
         if replan:
-            workorder_ids = self.workorder_ids.filtered(lambda wo: wo.state in ['ready', 'pending'])
+            workorder_ids = self.workorder_ids.filtered(lambda wo: wo.state in ['ready', 'pending', 'waiting'])
             # We plan the manufacturing order according to its `date_planned_start`, but if
             # `date_planned_start` is in the past, we plan it as soon as possible.
             workorder_ids.leave_id.unlink()
@@ -1457,8 +1457,6 @@ class MrpProduction(models.Model):
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
 
-        self.workorder_ids.button_finish()
-
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=False)
         backorders = productions_to_backorder._generate_backorder_productions()
@@ -1485,6 +1483,7 @@ class MrpProduction(models.Model):
 
         for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
             workorder.duration_expected = workorder._get_duration_expected()
+            workorder.button_finish()
 
         if not backorders:
             if self.env.context.get('from_workorder'):

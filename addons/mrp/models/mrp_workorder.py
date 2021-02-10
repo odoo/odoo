@@ -701,8 +701,8 @@ class MrpWorkorder(models.Model):
             FROM mrp_workorder wo1, mrp_workorder wo2
             WHERE
                 wo1.id IN %s
-                AND wo1.state IN ('pending','ready')
-                AND wo2.state IN ('pending','ready')
+                AND wo1.state IN ('waiting', 'pending', 'ready')
+                AND wo2.state IN ('waiting', 'pending', 'ready')
                 AND wo1.id != wo2.id
                 AND wo1.workcenter_id = wo2.workcenter_id
                 AND (DATE_TRUNC('second', wo2.date_planned_start), DATE_TRUNC('second', wo2.date_planned_finished))
