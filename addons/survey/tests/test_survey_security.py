@@ -331,12 +331,9 @@ class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
     def test_survey_start_short(self):
         # avoid name clash with existing data
         surveys = self.env['survey.survey'].search([
-            ('state', '=', 'open'),
             ('session_state', 'in', ['ready', 'in_progress'])
         ])
-        surveys.write({'state': 'done'})
         self.survey.write({
-            'state': 'open',
             'session_state': 'ready',
             'session_code': '123456',
             'session_start_time': datetime.datetime.now(),
@@ -353,12 +350,12 @@ class TestSurveySecurityControllers(common.TestSurveyCommon, HttpCase):
         response = self.url_open(f'/s/______')
         self.assertFalse(self.survey.title in response.text)
 
-        # right short token, but wrong state
-        self.survey.state = 'draft'
+        # right short token, but closed survey
+        self.survey.action_archive()
         response = self.url_open(f'/s/123456')
         self.assertFalse(self.survey.title in response.text)
 
         # right short token, but wrong `session_state`
-        self.survey.write({'state': 'open', 'session_state': False})
+        self.survey.write({'session_state': False, 'active': True})
         response = self.url_open(f'/s/123456')
         self.assertFalse(self.survey.title in response.text)

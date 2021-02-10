@@ -28,7 +28,6 @@ class UserInputSession(http.Controller):
         We limit to sessions opened within the last 7 days to avoid potential abuses. """
         if session_code:
             matching_survey = request.env['survey.survey'].sudo().search([
-                ('state', '=', 'open'),
                 ('session_start_time', '>', fields.Datetime.now() - relativedelta(days=7)),
                 ('session_code', '=', session_code),
             ], limit=1)

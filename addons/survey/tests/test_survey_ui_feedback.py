@@ -13,7 +13,6 @@ class TestUiFeedback(HttpCaseWithUserDemo):
         self.survey_feedback = self.env['survey.survey'].create({
             'title': 'User Feedback Form',
             'access_token': 'b137640d-14d4-4748-9ef6-344caaaaaae',
-            'state': 'open',
             'access_mode': 'public',
             'users_can_go_back': True,
             'questions_layout': 'page_per_section',

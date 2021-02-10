@@ -55,10 +55,7 @@ class Survey(models.Model):
         help="This message will be displayed when survey is completed")
     background_image = fields.Binary("Background Image")
     active = fields.Boolean("Active", default=True)
-    state = fields.Selection(selection=[
-        ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')
-    ], string="Survey Stage", default='draft', required=True,
-        group_expand='_read_group_states')
+    user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
@@ -292,10 +289,6 @@ class Survey(models.Model):
                not survey.certification:
                 survey.certification_give_badge = False
 
-    def _read_group_states(self, values, domain, order):
-        selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
-        return [s[0] for s in selection]
-
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -400,9 +393,7 @@ class Survey(models.Model):
                 raise exceptions.UserError(_('Creating test token is not allowed for you.'))
         else:
             if not self.active:
-                raise exceptions.UserError(_('Creating token for archived surveys is not allowed.'))
-            elif self.state == 'closed':
-                raise exceptions.UserError(_('Creating token for closed surveys is not allowed.'))
+                raise exceptions.UserError(_('Creating token for closed/archived surveys is not allowed.'))
             if self.access_mode == 'authentication':
                 # signup possible -> should have at least a partner to create an account
                 if self.users_can_signup and not user and not partner:
@@ -799,22 +790,13 @@ class Survey(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def action_draft(self):
-        self.write({'state': 'draft'})
-
-    def action_open(self):
-        self.write({'state': 'open'})
-
-    def action_close(self):
-        self.write({'state': 'closed'})
-
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
         if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
             raise exceptions.UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
-        if self.state == 'closed':
+        if not self.active:
             raise exceptions.UserError(_("You cannot send invitations for closed surveys."))
 
         template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
