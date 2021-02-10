@@ -243,6 +243,7 @@ class Field(MetaField('DummyField', (object,), {})):
     groups = None                       # csv list of group xml ids
     change_default = False              # whether the field may trigger a "user-onchange"
     deprecated = None                   # whether the field is deprecated
+    adhoc = False                       # if field is not storable, but we need to search/group by it
 
     related_field = None                # corresponding related field
     group_operator = None               # operator for aggregating values
@@ -691,11 +692,11 @@ class Field(MetaField('DummyField', (object,), {})):
 
     @property
     def _description_searchable(self):
-        return bool(self.store or self.search)
+        return bool(self.store or self.search or self.adhoc)
 
     @property
     def _description_sortable(self):
-        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable)
+        return (self.column_type and self.store) or (self.inherited and self.related_field._description_sortable) or self.adhoc
 
     def _description_string(self, env):
         if self.string and env.lang:

@@ -6206,12 +6206,12 @@ QUnit.module('Views', {
         assert.verifySteps([
             // initial load
             'web_read_group',
-            'read_progress_bar',
+            'read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             // reload
             'web_read_group',
-            'read_progress_bar',
+            'read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
         ]);
@@ -6253,7 +6253,7 @@ QUnit.module('Views', {
         assert.verifySteps([
             // initial load
             'web_read_group',
-            'read_progress_bar',
+            'read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
             // activate filter

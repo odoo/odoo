@@ -479,8 +479,5 @@ odoo.define('web.sample_server_tests', function (require) {
 
             assert.strictEqual(result.length, MAIN_RECORDSET_SIZE);
         });
-
-        // To be implemented if needed
-        // QUnit.test("Send 'read_progress_bar' RPC", async function (assert) { ... });
     });
 });

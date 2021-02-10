@@ -9,6 +9,7 @@ import pytz
 
 from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
+from odoo.osv.query import Query
 
 from odoo.tools.misc import clean_context
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -1021,3 +1022,66 @@ class MailActivityMixin(models.AbstractModel):
             return False
         self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True
+
+    def _generate_adhoc_fields(self):
+        res = super()._generate_adhoc_fields()
+
+        if 'activity_state' in res:
+            return res
+
+        self_name = self._name
+
+        def sql(records, alias, query):
+            # use datetime.utcnow() instead of date.today(), because
+            # it's used in _compute_state_from_date and on mocking in tests
+            today_utc = datetime.utcnow()
+            today = date(year=today_utc.year, month=today_utc.month, day=today_utc.day)
+
+            # use subquery because
+            # * return value cannot have parameters (today)
+            # * we want use utcnow in python instead CURRENT_DATE in sql to allow mocking in tests
+            mail_activity_alias = records.env['mail.activity']._table
+            subquery = Query(records.env.cr, mail_activity_alias)
+            res_users_alias = subquery.left_join(
+                mail_activity_alias, 'user_id',
+                'res_users', 'id',
+                'user_id'
+            )
+            res_partner_alias = subquery.left_join(
+                res_users_alias, 'partner_id',
+                'res_partner', 'id',
+                'partner_id'
+            )
+            subquery.add_where(
+                f"{mail_activity_alias}.res_model = '{self_name}'"
+            )
+            # In each record (res_id) we need to find minimum of "days to
+            # deadline" amount all activities and users to compute
+            # activity_state depending on that value
+            query_str, _ = subquery.select(
+                f'"{mail_activity_alias}"."res_id" AS res_id',
+                f'min(date_deadline - (%s AT TIME ZONE {res_partner_alias}.tz)::timestamp) AS min_days_to_deadline'
+            )
+            query_str += f' GROUP BY "{mail_activity_alias}"."res_id"'
+
+            query.add_with('mail_activity_min', query_str, [today])
+            mail_activity_min_alias = query.left_join(
+                alias, 'id',
+                'mail_activity_min', 'res_id',
+                'mail_activity_min'
+            )
+
+            return f"""
+                CASE
+                WHEN {mail_activity_min_alias}.min_days_to_deadline > interval '00:00:00' THEN 'planned'
+                WHEN {mail_activity_min_alias}.min_days_to_deadline < interval '00:00:00' THEN 'overdue'
+                WHEN {mail_activity_min_alias}.min_days_to_deadline = interval '00:00:00' THEN 'today'
+                ELSE null
+                END
+            """
+
+        res['activity_state'] = {
+            'sql': sql,
+            'type': 'char',
+        }
+        return res

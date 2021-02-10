@@ -69,7 +69,7 @@ _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
 _unlink = logging.getLogger(__name__ + '.unlink')
 
-regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_order = re.compile(r'^(\s*([a-z0-9:_.]+|"[a-z0-9:_.]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -1889,9 +1889,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _read_group_fill_results(self, domain, groupby, remaining_groupbys,
                                  aggregated_fields, count_field,
-                                 read_group_result, read_group_order=None):
+                                 read_group_result, read_group_order=None, adhoc=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
+        if groupby in adhoc:
+            # TODO: add group_expand for adhoc fields
+            return read_group_result
         field = self._fields[groupby]
         if not field.group_expand:
             return read_group_result
@@ -2031,7 +2034,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return result
 
     @api.model
-    def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
+    def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query, adhoc=None):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
         to the query if order should be computed against m2o field. 
@@ -2062,8 +2065,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             order_split = order_part.split()
             order_field = order_split[0]
             if order_field == 'id' or order_field in groupby_fields:
-                if self._fields[order_field.split(':')[0]].type == 'many2one':
-                    order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
+                order_field_name = order_field.split(':')[0]
+                if order_field_name in self._fields:
+                    order_field_type = self._fields[order_field_name].type
+                else:
+                    order_field_type = adhoc[order_field_name]['type']
+
+                if order_field_type == 'many2one':
+                    order_clause = self._generate_order_by(order_part, query, adhoc=adhoc).replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
@@ -2073,7 +2082,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             elif order_field in aggregated_fields:
                 order_split[0] = '"%s"' % order_field
                 orderby_terms.append(' '.join(order_split))
-            elif order_field not in self._fields:
+            elif order_field not in self._fields and order_field not in adhoc:
                 raise ValueError("Invalid field %r on model %r" % (order_field, self._name))
             else:
                 # Cannot order by a field that will not appear in the results (needs to be grouped or aggregated)
@@ -2083,20 +2092,24 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return groupby_terms, orderby_terms
 
     @api.model
-    def _read_group_process_groupby(self, gb, query):
+    def _read_group_process_groupby(self, gb, query, adhoc=None):
         """
             Helper method to collect important information about groupbys: raw
             field name, type, time information, qualified name, ...
         """
         split = gb.split(':')
-        field = self._fields.get(split[0])
-        if not field:
-            raise ValueError("Invalid field %r on model %r" % (split[0], self._name))
-        field_type = field.type
+        fname = split[0]
+        if fname in adhoc:
+            field_type = adhoc[fname]['type']
+        else:
+            field = self._fields.get(fname)
+            if not field:
+                raise ValueError("Invalid field %r on model %r" % (fname, self._name))
+            field_type = field.type
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
         tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
-        qualified_field = self._inherits_join_calc(self._table, split[0], query)
+        qualified_field = self._inherits_join_calc(self._table, fname, query, adhoc=adhoc)
         if temporal:
             display_formats = {
                 # Careful with week/year formats:
@@ -2129,7 +2142,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
-            'field': split[0],
+            'field': fname,
             'groupby': gb,
             'type': field_type, 
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
@@ -2225,6 +2238,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         del data['id']
         return data
 
+    def _generate_adhoc_fields(self):
+        return {}
+
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         """Get the list of records in list view grouped by the given ``groupby`` fields.
@@ -2261,13 +2277,46 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
         """
-        result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
         groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
-        dt = [
-            f for f in groupby
-            if self._fields[f.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
-        ]
+
+        adhoc = self._generate_adhoc_fields()
+        for f in set(list(fields) + [f.split(':')[0] for f in groupby]):
+            if '.' in f:
+                parts = f.split('.')
+                model = self
+                joins = []
+                last_fname = parts.pop()
+                for part_fname in parts:
+                    field = model._fields[part_fname]
+                    assert field.type == 'many2one' and field.store, 'Related field in read_group must chain of stored many2one fields'
+                    model = self.env[field.comodel_name]
+                    joins.append((model._table, part_fname))
+
+                def sql(records, alias, query):
+                    for table, fname in joins:
+                        alias = query.left_join(alias, fname, table, 'id', fname)
+                    return f'"{alias}"."{last_fname}"'
+
+                base_field = model._fields[last_fname]
+
+                adhoc[f] = {
+                    'sql': sql,
+                    'type': base_field.type,
+                    'comodel_name': base_field.comodel_name,
+                }
+
+        result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy, adhoc=adhoc)
+
+        dt = []
+        for f in groupby:
+            # e.g. 'date:month'
+            fname = f.split(':')[0]
+            try:
+                field_type = self._fields[fname].type
+            except KeyError:
+                field_type = adhoc[fname]
+            if field_type in ('date', 'datetime'):
+                dt.append(f)
 
         # iterate on all results and replace the "full" date/datetime value
         # (range, label) by just the formatted label, in-place
@@ -2282,23 +2331,28 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return result
 
     @api.model
-    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True, adhoc=None):
+        adhoc = adhoc or {}
         self.check_access_rights('read')
-        query = self._where_calc(domain)
+        query = self._where_calc(domain, adhoc=adhoc)
         fields = fields or [f.name for f in self._fields.values() if f.store]
 
         groupby = [groupby] if isinstance(groupby, str) else list(OrderedSet(groupby))
         groupby_list = groupby[:1] if lazy else groupby
-        annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
+        annotated_groupbys = [self._read_group_process_groupby(gb, query, adhoc=adhoc) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
-            assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
-            gb_field = self._fields[gb].base_field
-            assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
+            if gb in adhoc:
+                pass
+            elif gb in self._fields:
+                gb_field = self._fields[gb].base_field
+                assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
+            else:
+                raise ValueError("Unknown field %r in 'groupby'" % gb)
 
         aggregated_fields = []
         select_terms = []
@@ -2316,7 +2370,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 raise UserError(_("Invalid field specification %r.", fspec))
 
             name, func, fname = match.groups()
-            if func:
+            if name in adhoc:
+                fname = name
+                func = func or adhoc[fname].get('group_operator')
+                if not func:
+                    if adhoc[fname].get('type') in ('integer', 'float', 'monetary'):
+                        func = 'sum'
+                    else:
+                        continue
+            elif func:
                 # we have either 'name:func' or 'name:func(fname)'
                 fname = fname or name
                 field = self._fields.get(fname)
@@ -2344,7 +2406,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 raise UserError(_("Output name %r is used twice.", name))
             aggregated_fields.append(name)
 
-            expr = self._inherits_join_calc(self._table, fname, query)
+            expr = self._inherits_join_calc(self._table, fname, query, adhoc=adhoc)
             if func.lower() == 'count_distinct':
                 term = 'COUNT(DISTINCT %s) AS "%s"' % (expr, name)
             else:
@@ -2354,10 +2416,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
 
-        self._flush_search(domain, fields=fnames + groupby_fields)
+        self._flush_search(domain, fields=filter(lambda f: f not in adhoc, fnames + groupby_fields))
 
-        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
-        from_clause, where_clause, where_clause_params = query.get_sql()
+        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query, adhoc=adhoc)
+        with_clause, from_clause, where_clause, params = query.get_sql_with()
         if lazy and (len(groupby_fields) >= 2 or not self._context.get('group_by_no_leaf')):
             count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
         else:
@@ -2368,6 +2430,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
+            %(with)s
             SELECT min("%(table)s".id) AS id, count("%(table)s".id) AS "%(count_field)s" %(extra_fields)s
             FROM %(from)s
             %(where)s
@@ -2376,6 +2439,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             %(limit)s
             %(offset)s
         """ % {
+            'with': with_clause,
             'table': self._table,
             'count_field': count_field,
             'extra_fields': prefix_terms(',', select_terms),
@@ -2386,13 +2450,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             'limit': prefix_term('LIMIT', int(limit) if limit else None),
             'offset': prefix_term('OFFSET', int(offset) if limit else None),
         }
-        self._cr.execute(query, where_clause_params)
+        self._cr.execute(query, params)
         fetched_data = self._cr.dictfetchall()
 
         if not groupby_fields:
             return fetched_data
 
-        self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+        self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys, adhoc=adhoc)
 
         data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
 
@@ -2410,14 +2474,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             result = self._read_group_fill_results(
                 domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                 aggregated_fields, count_field, result, read_group_order=order,
+                adhoc=adhoc,
             )
         return result
 
-    def _read_group_resolve_many2one_fields(self, data, fields):
+    def _read_group_resolve_many2one_fields(self, data, fields, adhoc=None):
+        adhoc = adhoc or {}
         many2onefields = {field['field'] for field in fields if field['type'] == 'many2one'}
         for field in many2onefields:
             ids_set = {d[field] for d in data if d[field]}
-            m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
+            if field in self._fields:
+                comodel_name = self._fields[field].comodel_name
+            else:
+                comodel_name = adhoc[field]['comodel_name']
+            m2o_records = self.env[comodel_name].browse(ids_set)
             data_dict = dict(lazy_name_get(m2o_records.sudo()))
             for d in data:
                 d[field] = (d[field], data_dict[d[field]]) if d[field] else False
@@ -2437,7 +2507,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return parent_alias
 
     @api.model
-    def _inherits_join_calc(self, alias, fname, query):
+    def _inherits_join_calc(self, alias, fname, query, adhoc=None):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
@@ -2448,6 +2518,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :return: qualified name of field, to be used in SELECT clause
         """
         # INVARIANT: alias is the SQL alias of model._table in query
+        if adhoc and fname in adhoc:
+            adhoc_field = adhoc[fname]
+            select = adhoc_field['sql'](self, alias, query)
+            adhoc_field['select'] = select
+            return select
+
         model, field = self, self._fields[fname]
         while field.inherited:
             # retrieve the parent model where field is inherited from
@@ -4226,9 +4302,8 @@ Fields:
 
         return original_self.concat(*(data['record'] for data in data_list))
 
-    # TODO: ameliorer avec NULL
     @api.model
-    def _where_calc(self, domain, active_test=True):
+    def _where_calc(self, domain, active_test=True, adhoc=None):
         """Computes the WHERE clause needed to implement an OpenERP domain.
         :param domain: the domain to compute
         :type domain: list
@@ -4246,7 +4321,7 @@ Fields:
                 domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
-            return expression.expression(domain, self).query
+            return expression.expression(domain, self, adhoc=adhoc).query
         else:
             return Query(self.env.cr, self._table, self._table_query)
 
@@ -4337,7 +4412,7 @@ Fields:
                                                    reverse_direction, seen)
 
     @api.model
-    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False, seen=None):
+    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False, seen=None, adhoc=None):
         if seen is None:
             seen = set()
         self._check_qorder(order_spec)
@@ -4350,6 +4425,10 @@ Fields:
             if reverse_direction:
                 order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
             do_reverse = order_direction == 'DESC'
+
+            if adhoc and order_field in adhoc:
+                order_by_elements.append('%s %s' % (adhoc[order_field]['select'], order_direction))
+                continue
 
             field = self._fields.get(order_field)
             if not field:
@@ -4366,7 +4445,7 @@ Fields:
                         seen.add(key)
                         order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 elif field.store and field.column_type:
-                    qualifield_name = self._inherits_join_calc(alias, order_field, query)
+                    qualifield_name = self._inherits_join_calc(alias, order_field, query, adhoc=adhoc)
                     if field.type == 'boolean':
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     order_by_elements.append("%s %s" % (qualifield_name, order_direction))
@@ -4377,7 +4456,7 @@ Fields:
         return order_by_elements
 
     @api.model
-    def _generate_order_by(self, order_spec, query):
+    def _generate_order_by(self, order_spec, query, adhoc=None):
         """
         Attempt to construct an appropriate ORDER BY clause based on order_spec, which must be
         a comma-separated list of valid field names, optionally followed by an ASC or DESC direction.
@@ -4387,7 +4466,7 @@ Fields:
         order_by_clause = ''
         order_spec = order_spec or self._order
         if order_spec:
-            order_by_elements = self._generate_order_by_inner(self._table, order_spec, query)
+            order_by_elements = self._generate_order_by_inner(self._table, order_spec, query, adhoc=adhoc)
             if order_by_elements:
                 order_by_clause = ",".join(order_by_elements)
 
@@ -4490,7 +4569,8 @@ Fields:
         # the flush must be done before the _where_calc(), as the latter can do some selects
         self._flush_search(args, order=order)
 
-        query = self._where_calc(args)
+        adhoc = self._generate_adhoc_fields()
+        query = self._where_calc(args, adhoc=adhoc)
         self._apply_ir_rules(query, 'read')
 
         if count:

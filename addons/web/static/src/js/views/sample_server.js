@@ -110,8 +110,6 @@
                     return this._mockWebReadGroup(params);
                 case 'read_group':
                     return this._mockReadGroup(params);
-                case 'read_progress_bar':
-                    return this._mockReadProgressBar(params);
                 case 'read':
                     return this._mockRead(params);
             }
@@ -457,40 +455,6 @@
                 });
             }
             return result;
-        }
-
-        /**
-         * Mocks calls to the read_progress_bar method.
-         * @private
-         * @param {Object} params
-         * @param {string} params.model
-         * @param {Object} params.kwargs
-         * @return {Object}
-         */
-        _mockReadProgressBar(params) {
-            const groupBy = params.kwargs.group_by;
-            const progress_bar = params.kwargs.progress_bar;
-            const groupByField = this.data[params.model].fields[groupBy];
-            const data = {};
-            for (const record of this.data[params.model].records) {
-                let groupByValue = record[groupBy];
-                if (groupByField.type === "many2one") {
-                    const relatedRecords = this.data[groupByField.relation].records;
-                    const relatedRecord = relatedRecords.find(r => r.id === groupByValue);
-                    groupByValue = relatedRecord.display_name;
-                }
-                if (!(groupByValue in data)) {
-                    data[groupByValue] = {};
-                    for (const key in progress_bar.colors) {
-                        data[groupByValue][key] = 0;
-                    }
-                }
-                const fieldValue = record[progress_bar.field];
-                if (fieldValue in data[groupByValue]) {
-                    data[groupByValue][fieldValue]++;
-                }
-            }
-            return data;
         }
 
         /**

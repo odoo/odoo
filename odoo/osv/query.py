@@ -59,6 +59,10 @@ class Query(object):
         # database cursor
         self._cr = cr
 
+        # with {alias: definition}
+        self._withs = {}
+        self._withs_params = []
+
         # tables {alias: table}
         self._tables = {alias: table or alias}
 
@@ -75,10 +79,21 @@ class Query(object):
         self.limit = None
         self.offset = None
 
+    def add_with(self, alias, with_clause, with_params=()):
+        """ Add a with statement. """
+        if alias in self._withs:
+            return
+        self._check_alias(alias)
+        self._withs[alias] = with_clause
+        self._withs_params.extend(with_params)
+
     def add_table(self, alias, table=None):
         """ Add a table with a given alias to the from clause. """
-        assert alias not in self._tables and alias not in self._joins, "Alias %r already in %s" % (alias, str(self))
+        self._check_alias(alias)
         self._tables[alias] = table or alias
+
+    def _check_alias(self, alias):
+        assert alias not in self._tables and alias not in self._joins and alias not in self._withs, "Alias %r already in %s" % (alias, str(self))
 
     def add_where(self, where_clause, where_params=()):
         """ Add a condition to the where clause. """
@@ -103,11 +118,18 @@ class Query(object):
         rhs_alias = _generate_table_alias(lhs_alias, link)
         assert rhs_alias not in self._tables, "Alias %r already in %s" % (rhs_alias, str(self))
 
+        assert lhs_column and rhs_column or extra, "Either column names or extra condition must be specified"
+
         if rhs_alias not in self._joins:
-            condition = f'"{lhs_alias}"."{lhs_column}" = "{rhs_alias}"."{rhs_column}"'
+            if lhs_column and rhs_column:
+                condition = f'"{lhs_alias}"."{lhs_column}" = "{rhs_alias}"."{rhs_column}"'
+            else:
+                condition = ""
             condition_params = []
             if extra:
-                condition = condition + " AND " + extra.format(lhs=lhs_alias, rhs=rhs_alias)
+                if condition:
+                    condition += " AND "
+                condition += extra.format(lhs=lhs_alias, rhs=rhs_alias)
                 condition_params = list(extra_params)
             if kind:
                 self._joins[rhs_alias] = (kind, rhs_table, condition, condition_params)
@@ -119,8 +141,9 @@ class Query(object):
 
     def select(self, *args):
         """ Return the SELECT query as a pair ``(query_string, query_params)``. """
-        from_clause, where_clause, params = self.get_sql()
-        query_str = 'SELECT {} FROM {} WHERE {}{}{}{}'.format(
+        with_clause, from_clause, where_clause, params = self.get_sql_with()
+        query_str = '{} SELECT {} FROM {} WHERE {}{}{}{}'.format(
+            with_clause,
             ", ".join(args or [f'"{next(iter(self._tables))}".id']),
             from_clause,
             where_clause or "TRUE",
@@ -129,6 +152,16 @@ class Query(object):
             (" OFFSET %d" % self.offset) if self.offset else "",
         )
         return query_str, params
+
+    def get_sql_with(self):
+        from_clause, where, params = self.get_sql()
+        with_clause = ",\n".join([
+            "%s AS (%s)" % (with_alias, with_clause)
+            for with_alias, with_clause in self._withs.items()
+        ])
+        if with_clause:
+            with_clause = "WITH %s" % with_clause
+        return with_clause, from_clause, where, self._withs_params + params
 
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """

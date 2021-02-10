@@ -410,7 +410,7 @@ class expression(object):
         For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html
     """
 
-    def __init__(self, domain, model, alias=None, query=None):
+    def __init__(self, domain, model, alias=None, query=None, adhoc=None):
         """ Initialize expression object and automatically parse the expression
             right after initialization.
 
@@ -424,6 +424,7 @@ class expression(object):
             :attr result: the result of the parsing, as a pair (query, params)
             :attr query: Query object holding the final result
         """
+        self.adhoc = adhoc or {}
         self._unaccent = get_unaccent_wrapper(model._cr)
         self.root_model = model
         self.root_alias = alias or model._table

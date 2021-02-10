@@ -389,20 +389,29 @@ var KanbanModel = BasicModel.extend({
         const groupsDef = this._readGroup(list, options);
         const progressBarDef = this._readProgressBar(list);
         const [groups, progressBar] = await Promise.all([groupsDef, progressBarDef]);
+
+        const progressBarGrouped = {};
+        const column_field = list.groupedBy[0];
+        const progress_bar_field = list.progressBar.field;
+        progressBar.forEach(gr => {
+            let column_value = gr[column_field];
+            if (_.isArray(column_value))
+                column_value = column_value[1];
+            if (!progressBarGrouped[column_value]) {
+                progressBarGrouped[column_value] = {};
+            }
+            const progress_bar_value = gr[progress_bar_field];
+            progressBarGrouped[column_value][progress_bar_value] = gr.__count;
+        });
+
         list.data.forEach(groupId => {
             const group = this.localData[groupId];
 
-            const valuesCount = progressBar[group.value] || {};
-            const valuesCountTotal = Object.keys(valuesCount).reduce((sum, key) => {
-                return sum + valuesCount[key];
-            }, 0);
-
-            // Compute records count for progressbar field values
-            // not specified in the progressbar attributes
-            const counts = Object.assign({
-                __false: group.count - valuesCountTotal
-            }, valuesCount);
-
+            const counts = progressBarGrouped[group.value] || {};
+            if (false in counts) {
+                counts["__false"] = counts[false];
+                delete counts[false];
+            }
             group.progressBarValues = Object.assign({
                 counts,
             }, list.progressBar);
@@ -414,15 +423,16 @@ var KanbanModel = BasicModel.extend({
      * @returns {Promise}
      */
     _readProgressBar: function (list) {
+        const progress_bar_field = list.progressBar.field;
+        const column_field = list.groupedBy[0];
         return this._rpc({
             model: list.model,
-            method: 'read_progress_bar',
-            kwargs: {
-                domain: list.domain,
-                group_by: list.groupedBy[0],
-                progress_bar: list.progressBar,
-                context: list.context,
-            },
+            method: 'read_group',
+            domain: list.domain,
+            fields: [progress_bar_field],
+            groupBy: [column_field, progress_bar_field],
+            lazy: false,
+            context: list.context,
         });
     },
     /**
