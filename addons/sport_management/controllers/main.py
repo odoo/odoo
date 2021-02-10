@@ -110,6 +110,7 @@ class SalonBookingWeb(http.Controller):
                 order_details[orders.chair_id.id]['orders'].append(data)
         return order_details
     
+    # < ALERT : THIS FUNCTION IS NOT YET WORKING ,  NEED TO FIX THE END TIME 
     @http.route('/page/salon_check_date_available_court', type='json', auth="public", website=True)
     def salon_check_available_court(self, **kwargs):
         date_check = str(kwargs.get('check_date'))
@@ -159,7 +160,7 @@ class SalonBookingWeb(http.Controller):
                 order_details [chair.id] = {'name': chair.name, 'orders': [data]}
         # AVAILABLE TIME OF NO-BOOKED COURT
         return order_details
-
+    # ALERT : THIS FUNCTION IS NOT YET WORKING ,  NEED TO FIX THE END TIME >
     @http.route('/page/sport_management.sport_booking_thank_you', type='http', auth="public", website=True)
     def thank_you(self, **post):
         return request.render('sport_management.salon_booking_thank_you', {})
