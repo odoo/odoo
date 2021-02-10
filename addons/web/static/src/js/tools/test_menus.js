@@ -106,6 +106,9 @@
         console.log("Testing app menu:", element.dataset.menuXmlid);
         if (testedApps.indexOf(element.dataset.menuXmlid) >= 0) return; // Another infinite loop protection
         testedApps.push(element.dataset.menuXmlid);
+        if (isEnterprise) {
+            await ensureHomeMenu();
+        }
         await testMenuItem(element);
         if (appsMenusOnly === true) return;
         const subMenuItems = document.querySelectorAll('.o_menu_entry_lvl_1, .o_menu_entry_lvl_2, .o_menu_entry_lvl_3, .o_menu_entry_lvl_4');
@@ -113,8 +116,7 @@
             await testMenuItem(subMenuItem);
         }
         if (isEnterprise) {
-            const homeMenu = document.querySelector('nav.o_main_navbar > a.o_menu_toggle.fa-th');
-            return triggerClick(homeMenu, "home menu toggle button");
+            await ensureHomeMenu();
         }
     }
 
@@ -274,6 +276,17 @@
             });
         });
         return promise;
+    }
+
+    /**
+     * Make sure the home menu is open
+     */
+    async function ensureHomeMenu() {
+        const menuToggle = document.querySelector('nav.o_main_navbar > a.o_menu_toggle.fa-th');
+        if (menuToggle) {
+            await triggerClick(menuToggle, 'home menu toggle button');
+            await waitForCondition(() => document.querySelector('.o_home_menu'));
+        }
     }
 
     const MOUSE_EVENTS = [
