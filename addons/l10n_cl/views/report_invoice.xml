@@ -4,7 +4,6 @@
     <!-- this header can be used on any Chilean report -->
     <template id="custom_header">
 
-        <t t-set="report_date" t-value="o.invoice_date"/>
         <t t-set="report_number" t-value="int(o.l10n_latam_document_number)"/>
         <t t-set="pre_printed_report" t-value="report_type == 'pdf'"/>
         <t t-set="report_name" t-value="o.l10n_latam_document_type_id.name"/>
