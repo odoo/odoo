@@ -112,7 +112,7 @@ def _check_svg(data):
 # for "master" formats with many subformats, discriminants is a list of
 # functions, tried in order and the first non-falsy value returned is the
 # selected mime type. If all functions return falsy values, the master
-# mimetype is returned.
+# mimetype if set is returned.
 _Entry = collections.namedtuple('_Entry', ['mimetype', 'signatures', 'discriminants'])
 _mime_mappings = (
     # pdf
@@ -122,7 +122,7 @@ _mime_mappings = (
     _Entry('image/png', [b'\x89PNG\r\n\x1A\n'], []),
     _Entry('image/gif', [b'GIF87a', b'GIF89a'], []),
     _Entry('image/bmp', [b'BM'], []),
-    _Entry('image/svg+xml', [b'<'], [
+    _Entry(None, [b'<'], [
         _check_svg,
     ]),
     # OLECF files in general (Word, Excel, PPT, default to word because why not?)
@@ -157,7 +157,8 @@ def guess_mimetype(bin_data, default='application/octet-stream'):
                         )
                 # if no discriminant or no discriminant matches, return
                 # primary mime type
-                return entry.mimetype
+                if entry.mimetype:
+                    return entry.mimetype
     return default
 
 

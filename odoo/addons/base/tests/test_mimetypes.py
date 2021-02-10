@@ -69,6 +69,10 @@ class test_guess_mimetype(BaseCase):
         mimetype = guess_mimetype(b"   " + content, default='test')
         self.assertNotIn("svg", mimetype)
 
+    def test_mimetype_xml(self):
+        mimetype = guess_mimetype(b'<_/>', default='test')
+        self.assertEqual(mimetype, 'test')
+
 
 
 if __name__ == '__main__':
