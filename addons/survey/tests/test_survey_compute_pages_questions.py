@@ -9,7 +9,6 @@ class TestSurveyComputePagesQuestions(common.TestSurveyCommon):
         with self.with_user('survey_manager'):
             survey = self.env['survey.survey'].create({
                 'title': 'Test compute survey',
-                'state': 'open',
             })
 
             page_0 = self.env['survey.question'].create({

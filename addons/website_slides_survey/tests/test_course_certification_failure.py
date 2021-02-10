@@ -18,7 +18,6 @@ class TestCourseCertificationFailureFlow(TestSurveyCommon):
                 'is_attempts_limited': True,
                 'scoring_success_min': 100.0,
                 'attempts_limit': 2,
-                'state': 'open',
             })
 
             self._add_question(

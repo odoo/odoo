@@ -4,7 +4,7 @@
     <record id="survey_demo_quiz" model="survey.survey">
         <field name="title">Quiz about our Company</field>
         <field name="access_token">b137640d-9876-1234-abcd-344ca256531e</field>
-        <field name="state">open</field>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="access_mode">public</field>
         <field name="users_can_go_back" eval="False"/>
         <field name="scoring_type">scoring_with_answers</field>
