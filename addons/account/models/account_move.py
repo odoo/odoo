@@ -916,8 +916,12 @@ class AccountMoveLine(models.Model):
             credit_move = credit_moves[0]
             company_currency = debit_move.company_id.currency_id
             # We need those temporary value otherwise the computation might be wrong below
-            temp_amount_residual = min(debit_move.amount_residual, -credit_move.amount_residual)
-            temp_amount_residual_currency = min(debit_move.amount_residual_currency, -credit_move.amount_residual_currency)
+            if debit_move[field] < -credit_move[field]:
+                temp_amount_residual = debit_move.amount_residual
+                temp_amount_residual_currency = debit_move.amount_residual_currency
+            else:
+                temp_amount_residual = -credit_move.amount_residual
+                temp_amount_residual_currency = -credit_move.amount_residual_currency
             dc_vals[(debit_move.id, credit_move.id)] = (debit_move, credit_move, temp_amount_residual_currency)
             amount_reconcile = min(debit_move[field], -credit_move[field])
 
