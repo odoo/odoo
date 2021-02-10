@@ -2,6 +2,23 @@
 <odoo>
 
 <!-- Search Box -->
+<template id="events_search_box_input" name="Events search box">
+    <t t-call="website.website_search_box_input">
+        <t t-set="_classes" t-valuef="o_wevent_event_searchbar_form w-100 my-1 my-lg-0 #{_classes}"/>
+        <t t-set="search_type" t-valuef="events"/>
+        <t t-set="action" t-valuef="/event"/>
+        <t t-set="display_description" t-valuef="true"/>
+        <t t-set="display_detail" t-valuef="false"/>
+        <t t-set="search" t-value="search or searches and searches['search']"/>
+        <t t-set="placeholder">Search an event...</t>
+        <t t-foreach="searches" t-as="item">
+            <input t-if="item != 'search' and item_value != 'all'" type="hidden"
+                t-att-name="item" t-att-value="item_value"/>
+        </t>
+        <t t-out="0"/>
+    </t>
+</template>
+
 <template id="events_search_box" inherit_id="website.website_search_box" primary="True">
     <xpath expr="//div[@role='search']" position="replace">
         <form t-attf-class="o_wevent_event_searchbar_form o_wait_lazy_js w-100 my-1 my-lg-0 #{_classes}"

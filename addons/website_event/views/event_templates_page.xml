@@ -27,10 +27,8 @@
                             </li>
                         </ul>
                         <div class="d-flex align-items-centerflex-wrap pl-sm-3 pr-0">
-                            <t t-call="website_event.events_search_box">
-                                <t t-set="_classes" t-value="'ml-auto'"/>
-                                <t t-set="_searches" t-value="searches"/>
-                                <t t-set="_placeholder">Search an event ...</t>
+                            <t t-call="website_event.events_search_box_input">
+                                <t t-set="_classes" t-valuef="ml-auto"/>
                             </t>
                         </div>
                     </div>

@@ -198,41 +198,6 @@ class WebsiteSlides(WebsiteProfile):
 
         return channel_progress
 
-    def _build_channel_domain(self, base_domain, slide_type=None, slug_tags=None, my=False, **post):
-        search_term = post.get('search')
-        if slug_tags:
-            tags = self._channel_search_tags_slug(slug_tags)
-        elif post.get('tags'):
-            tags = self._channel_search_tags_ids(post['tags'])
-        else:
-            tags = request.env['slide.channel.tag']
-
-        domain = base_domain
-        if search_term:
-            domain = expression.AND([
-                domain,
-                ['|', ('name', 'ilike', search_term), ('description', 'ilike', search_term)]])
-
-        if tags:
-            # Group by group_id
-            grouped_tags = defaultdict(list)
-            for tag in tags:
-                grouped_tags[tag.group_id].append(tag)
-
-            # OR inside a group, AND between groups.
-            group_domain_list = []
-            for group in grouped_tags:
-                group_domain_list.append([('tag_ids', 'in', [tag.id for tag in grouped_tags[group]])])
-
-            domain = expression.AND([domain, *group_domain_list])
-
-        if slide_type and 'nbr_%s' % slide_type in request.env['slide.channel']:
-            domain = expression.AND([domain, [('nbr_%s' % slide_type, '>', 0)]])
-
-        if my:
-            domain = expression.AND([domain, [('partner_ids', '=', request.env.user.partner_id.id)]])
-        return domain
-
     def _channel_remove_session_answers(self, channel, slide=False):
         """ Will remove the answers saved in the session for a specific channel / slide. """
 
@@ -396,13 +361,22 @@ class WebsiteSlides(WebsiteProfile):
                 url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_type=slide_type)()
                 return request.redirect(url, code=302)
 
-        domain = request.website.website_domain()
-        domain = self._build_channel_domain(domain, slide_type=slide_type, slug_tags=slug_tags, my=my, **post)
-
+        options = {
+            'displayDescription': True,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'my': my,
+            'tag': slug_tags or post.get('tag'),
+            'slide_type': slide_type,
+        }
+        search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
-
-        channels = request.env['slide.channel'].search(domain, order=order)
-        # channels_layouted = list(itertools.zip_longest(*[iter(channels)] * 4, fillvalue=None))
+        _, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,
+            limit=1000, order=order, options=options)
+        channels = details[0].get('results', request.env['slide.channel'])
 
         tag_groups = request.env['slide.channel.tag.group'].search(
             ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
@@ -417,7 +391,8 @@ class WebsiteSlides(WebsiteProfile):
         values.update({
             'channels': channels,
             'tag_groups': tag_groups,
-            'search_term': post.get('search'),
+            'search_term': fuzzy_search_term or search,
+            'original_search': fuzzy_search_term and search,
             'search_slide_type': slide_type,
             'search_my': my,
             'search_tags': search_tags,

@@ -198,16 +198,16 @@
             </ul>
 
             <!-- 'Search Box' -->
-            <form id="o_wforum_search" class="form-inline collapse w-100 w-md-auto pt-2 pt-md-0 d-md-flex"
-                  role="search" t-attf-action="#{url_for('/forum/')}#{slug(forum)}#{tag and ('/tag/%s/questions' % slug(tag))}" method="get">
-                <t t-call="website.website_search_box">
-                    <t t-set="_classes" t-valuef="w-100"/>
-                </t>
-
+            <t t-call="website.website_search_box_input">
+                <t t-set="_classes" t-valuef="w-100 w-md-auto pt-2 pt-md-0 d-md-flex"/>
+                <t t-set="search_type" t-valuef="forums"/>
+                <t t-set="action" t-value="'/forum/%s%s' % (slug(forum), tag and ('/tag/%s/questions' % slug(tag)) or '')"/>
+                <t t-set="display_description" t-valuef="true"/>
+                <t t-set="display_detail" t-valuef="true"/>
                 <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
                 <input t-if="my" type="hidden" name="my" t-att-value="my"/>
                 <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
-            </form>
+            </t>
         </div>
     </div>
 </template>
@@ -738,7 +738,7 @@
             </div>
 
             <!-- No posts or search/filters result -->
-            <div t-if="question_count == 0" class="col">
+            <div t-if="question_count == 0 or original_search" class="col">
                 <div t-if="search or tag or (not no_filters)" class="alert alert-info">
                     <t t-set="_filters_str">
                         <t t-if="filters == 'unanswered'">unanswered</t>
@@ -750,13 +750,14 @@
                         <t t-if="my == 'followed'">in your followed list</t>
                         <t t-if="my == 'mine'">in your posts</t>
                     </t>
-                    <t t-set="_search_str"><t t-if="search">matching "<em class="font-weight-bold" t-esc="search"/>"</t></t>
+                    <t t-set="_search_str"><t t-if="search">matching "<em class="font-weight-bold" t-esc="original_search or search"/>"</t></t>
                     <t t-set="_search_and_tag_str"><t t-if="search and tag">&amp;nbsp;and&amp;nbsp;</t></t>
                     <t t-set="_tag_str"><t t-if="tag">using the <span class="badge badge-light" t-esc="tag.name"/> tag</t></t>
                     <t t-set="result_msg">
                         Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s.
                     </t>
                     <span t-out="result_msg % (_filters_str.strip(), _my_str.strip(), _search_str.strip(), _search_and_tag_str.strip(), _tag_str.strip())"/>
+                    <span t-if="original_search">Showing results for <em class="font-weight-bold" t-esc="search"/> instead.</span>
                 </div>
 
                 <t t-elif="not tag and not search and no_filters">
@@ -777,7 +778,7 @@
                     Be the first one asking a question
                 </div>
 
-                <t t-if="search">
+                <t t-if="search and question_count == 0">
                     <h4>Search Tips</h4>
                     <ul>
                         <li>Check your spelling and try again</li>

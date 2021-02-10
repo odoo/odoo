@@ -122,6 +122,13 @@ class WebsiteSaleForm(WebsiteForm):
 
 class Website(main.Website):
     @http.route()
+    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+        options = options or {}
+        if 'display_currency' not in options:
+            options['display_currency'] = request.website.get_current_pricelist().currency_id
+        return super().autocomplete(search_type, term, order, limit, max_nb_chars, options)
+
+    @http.route()
     def get_switchable_related_views(self, key):
         views = super(Website, self).get_switchable_related_views(key)
         if key == 'website_sale.product':
@@ -249,7 +256,6 @@ class WebsiteSale(http.Controller):
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
-        domain = self._get_search_domain(search, category, attrib_values)
 
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, min_price=min_price, max_price=max_price, order=post.get('order'))
 
@@ -257,18 +263,42 @@ class WebsiteSale(http.Controller):
 
         request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
 
+        filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
+        if filter_by_price_enabled:
+            company_currency = request.website.company_id.currency_id
+            conversion_rate = request.env['res.currency']._get_conversion_rate(company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
+        else:
+            conversion_rate = 1
+
         url = "/shop"
         if search:
             post["search"] = search
         if attrib_list:
             post['attrib'] = attrib_list
 
-        Product = request.env['product.template'].with_context(bin_size=True)
+        options = {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'category': str(category.id) if category else None,
+            'min_price': min_price / conversion_rate,
+            'max_price': max_price / conversion_rate,
+            'attrib_values': attrib_values,
+            'display_currency': pricelist.currency_id,
+        }
+        # No limit because attributes are obtained from complete product list
+        product_count, details, fuzzy_search_term = request.website._search_with_fuzzy("products_only", search,
+            limit=None, order=self._get_search_order(post), options=options)
+        search_product = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
 
         filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
-            company_currency = request.website.company_id.currency_id
-            conversion_rate = request.env['res.currency']._get_conversion_rate(company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
+            # TODO Find an alternative way to obtain the domain through the search metadata.
+            Product = request.env['product.template'].with_context(bin_size=True)
+            domain = self._get_search_domain(search, category, attrib_values)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             from_clause, where_clause, where_params = Product._where_calc(domain).get_sql()
@@ -290,13 +320,10 @@ class WebsiteSale(http.Controller):
                 if min_price:
                     min_price = min_price if min_price <= available_max_price else available_min_price
                     post['min_price'] = min_price
-                    domain = expression.AND([domain, [('list_price', '>=', min_price / conversion_rate)]])
                 if max_price:
                     max_price = max_price if max_price >= available_min_price else available_max_price
                     post['max_price'] = max_price
-                    domain = expression.AND([domain, [('list_price', '<=', max_price / conversion_rate)]])
 
-        search_product = Product.search(domain, order=self._get_search_order(post))
         website_domain = request.website.website_domain()
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
@@ -309,10 +336,9 @@ class WebsiteSale(http.Controller):
         if category:
             url = "/shop/category/%s" % slug(category)
 
-        product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         offset = pager['offset']
-        products = search_product[offset: offset + ppg]
+        products = search_product[offset:offset + ppg]
 
         ProductAttribute = request.env['product.attribute']
         if products:
@@ -329,7 +355,8 @@ class WebsiteSale(http.Controller):
                 layout_mode = 'grid'
 
         values = {
-            'search': search,
+            'search': fuzzy_search_term or search,
+            'original_search': fuzzy_search_term and search,
             'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
@@ -1164,78 +1191,6 @@ class WebsiteSale(http.Controller):
             zip_required=country.zip_required,
             state_required=country.state_required,
         )
-
-    # --------------------------------------------------------------------------
-    # Products Search Bar
-    # --------------------------------------------------------------------------
-
-    @http.route('/shop/products/autocomplete', type='json', auth='public', website=True)
-    def products_autocomplete(self, term, options={}, **kwargs):
-        """
-        Returns list of products according to the term and product options
-
-        Params:
-            term (str): search term written by the user
-            options (dict)
-                - 'limit' (int), default to 5: number of products to consider
-                - 'display_description' (bool), default to True
-                - 'display_price' (bool), default to True
-                - 'order' (str)
-                - 'max_nb_chars' (int): max number of characters for the
-                                        description if returned
-
-        Returns:
-            dict (or False if no result)
-                - 'products' (list): products (only their needed field values)
-                        note: the prices will be strings properly formatted and
-                        already containing the currency
-                - 'products_count' (int): the number of products in the database
-                        that matched the search query
-        """
-        ProductTemplate = request.env['product.template']
-
-        display_description = options.get('display_description', True)
-        display_price = options.get('display_price', True)
-        order = self._get_search_order(options)
-        max_nb_chars = options.get('max_nb_chars', 999)
-
-        category = options.get('category')
-        attrib_values = options.get('attrib_values')
-
-        domain = self._get_search_domain(term, category, attrib_values, display_description)
-        products = ProductTemplate.search(
-            domain,
-            limit=min(20, options.get('limit', 5)),
-            order=order
-        )
-
-        fields = ['id', 'name', 'website_url']
-        if display_description:
-            fields.append('description_sale')
-
-        res = {
-            'products': products.read(fields),
-            'products_count': ProductTemplate.search_count(domain),
-        }
-
-        if display_description:
-            for res_product in res['products']:
-                desc = res_product['description_sale']
-                if desc and len(desc) > max_nb_chars:
-                    res_product['description_sale'] = "%s..." % desc[:(max_nb_chars - 3)]
-
-        if display_price:
-            FieldMonetary = request.env['ir.qweb.field.monetary']
-            monetary_options = {
-                'display_currency': request.website.get_current_pricelist().currency_id,
-            }
-            for res_product, product in zip(res['products'], products):
-                combination_info = product._get_combination_info(only_template=True)
-                res_product.update(combination_info)
-                res_product['list_price'] = FieldMonetary.value_to_html(res_product['list_price'], monetary_options)
-                res_product['price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
-
-        return res
 
     # --------------------------------------------------------------------------
     # Products Recently Viewed

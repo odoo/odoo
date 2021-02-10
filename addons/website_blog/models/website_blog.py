@@ -6,7 +6,7 @@ import random
 import json
 
 from odoo import api, models, fields, _
-from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
 
@@ -85,6 +85,33 @@ class Blog(models.Model):
             tag_by_blog[blog_id] = BlogTag.browse(tag_by_blog[blog_id])
 
         return tag_by_blog
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """See website_page._search_get_detail()"""
+        with_description = options['displayDescription']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('subtitle')
+            fetch_fields.append('subtitle')
+            mapping['description'] = {'name': 'subtitle', 'type': 'text', 'match': True}
+        def patch_blog(blog, data):
+            data['url'] = '/blog/%s' % data['id']
+        return {
+            'model': 'blog.blog',
+            'base_domain': [website.website_domain()],
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'patch_data_function': patch_blog,
+            'mapping': mapping,
+            'icon': 'fa-rss-square',
+            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+        }
 
 
 class BlogTagCategory(models.Model):
@@ -267,3 +294,55 @@ class BlogPost(models.Model):
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_meta_description'] = self.subtitle
         return res
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """See website_page._search_get_detail()"""
+        with_description = options['displayDescription']
+        with_date = options['displayDetail']
+        blog = options.get('blog')
+        tags = options.get('tag')
+        date_begin = options.get('date_begin')
+        date_end = options.get('date_end')
+        state = options.get('state')
+        domain = [website.website_domain()]
+        if blog:
+            domain.append([('blog_id', '=', unslug(blog)[1])])
+        if tags:
+            active_tag_ids = [unslug(tag)[1] for tag in tags.split(',')] or []
+            if active_tag_ids:
+                domain.append([('tag_ids', 'in', active_tag_ids)])
+        if date_begin and date_end:
+            domain.append([("post_date", ">=", date_begin), ("post_date", "<=", date_end)])
+        if self.env.user.has_group('website.group_website_designer'):
+            if state == "published":
+                domain.append([("website_published", "=", True), ("post_date", "<=", fields.Datetime.now())])
+            elif state == "unpublished":
+                domain.append(['|', ("website_published", "=", False), ("post_date", ">", fields.Datetime.now())])
+        else:
+            domain.append([("post_date", "<=", fields.Datetime.now())])
+        search_fields = ['name', 'author_name']
+        def search_in_tags(env, search_term):
+            tags_like_search = env['blog.tag'].search([('name', 'ilike', search_term)])
+            return [('tag_ids', 'in', tags_like_search.ids)]
+        fetch_fields = ['name', 'website_url']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('content')
+            fetch_fields.append('content')
+            mapping['description'] = {'name': 'content', 'type': 'text', 'html': True, 'match': True}
+        if with_date:
+            fetch_fields.append('published_date')
+            mapping['detail'] = {'name': 'published_date', 'type': 'date'}
+        return {
+            'model': 'blog.post',
+            'base_domain': domain,
+            'search_fields': search_fields,
+            'search_extra': search_in_tags,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-rss',
+        }

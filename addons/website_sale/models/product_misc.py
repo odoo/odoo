@@ -176,3 +176,30 @@ class ProductPublicCategory(models.Model):
                 category.parents_and_self = self.env['product.public.category'].browse([int(p) for p in category.parent_path.split('/')[:-1]])
             else:
                 category.parents_and_self = category
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """See website_page._search_get_detail()"""
+        with_description = options['displayDescription']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('website_description')
+            fetch_fields.append('website_description')
+            mapping['description'] = {'name': 'website_description', 'type': 'text', 'match': True}
+        def patch_category(category, data):
+            data['url'] = '/shop/category/%s' % data['id']
+        return {
+            'model': 'product.public.category',
+            'base_domain': [], # categories are not website-specific
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'patch_data_function': patch_category,
+            'mapping': mapping,
+            'icon': 'fa-folder-o',
+            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+        }

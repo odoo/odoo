@@ -96,18 +96,30 @@ class WebsiteBlog(http.Controller):
 
         # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
-        first_post = BlogPost
         if not blog:
-            first_post = BlogPost.search(domain + [('website_published', '=', True)], order="post_date desc, id asc", limit=1)
             if use_cover and not fullwidth_cover:
                 offset += 1
 
-        if search:
-            tags_like_search = BlogTag.search([('name', 'ilike', search)])
-            domain += ['|', '|', '|', ('author_name', 'ilike', search), ('name', 'ilike', search), ('content', 'ilike', search), ('tag_ids', 'in', tags_like_search.ids)]
-
-        posts = BlogPost.search(domain, offset=offset, limit=self._blog_post_per_page, order="is_published desc, post_date desc, id asc")
-        total = BlogPost.search_count(domain)
+        options = {
+            'displayDescription': True,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not request.params.get('noFuzzy'),
+            'blog': str(blog.id) if blog else None,
+            'tag': ','.join([str(id) for id in active_tags.ids]),
+            'date_begin': date_begin,
+            'date_end': date_end,
+            'state': state,
+        }
+        total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
+            limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
+        posts = details[0].get('results', BlogPost)
+        first_post = BlogPost
+        if posts and not blog and posts[0].website_published:
+            first_post = posts[0]
+        posts = posts[offset:offset + self._blog_post_per_page]
 
         pager = request.website.pager(
             url=request.httprequest.path.partition('/page/')[0],
@@ -125,6 +137,8 @@ class WebsiteBlog(http.Controller):
 
         # for performance prefetch the first post with the others
         post_ids = (first_post | posts).ids
+        # and avoid accessing related blogs one by one
+        posts.blog_id
 
         return {
             'date_begin': date_begin,
@@ -142,8 +156,9 @@ class WebsiteBlog(http.Controller):
             'state_info': state and {"state": state, "published": published_count, "unpublished": unpublished_count},
             'blogs': blogs,
             'blog': blog,
-            'search': search,
+            'search': fuzzy_search_term or search,
             'search_count': total,
+            'original_search': fuzzy_search_term and search,
         }
 
     @http.route([

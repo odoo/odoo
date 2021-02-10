@@ -2302,11 +2302,15 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <template id="website_search_box" name="Website Searchbox">
     <div t-attf-class="input-group #{_classes}" role="search">
         <t t-set="search_placeholder">Search...</t>
-        <input type="search" name="search" class="search-query form-control oe_search_box" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
+        <input type="search" name="search" t-att-class="'search-query form-control oe_search_box %s' % _input_classes" t-att-placeholder="placeholder if placeholder else search_placeholder" t-att-value="search"/>
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
+            <button type="submit" t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
         </div>
     </div>
+</template>
+
+<template id="search_text_with_highlight" name="Website Searchbox item highlight">
+    <span t-foreach="enumerate(parts)" t-as="part" t-att-class="'text-primary' if part[0] % 2 else None" t-esc="part[1]"/>
 </template>
 
 <template id="index_management">
@@ -2322,9 +2326,11 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
   <t t-call="website.layout">
     <div id="wrap">
       <div class="container" id="list_website_pages">
-          <form class="mt8 float-right" role="search" t-attf-action="/website/pages" method="get">
-              <t t-call="website.website_search_box"/>
-          </form>
+          <t t-call="website.website_search_box_input">
+              <t t-set="_form_classes" t-valuef="mt8 float-right"/>
+              <t t-set="search_type" t-valuef="pages"/>
+              <t t-set="action" t-valuef="/website/pages"/>
+          </t>
           <div t-if="searchbar_sortings" class="dropdown float-right mt8 mr8">
               <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
                   <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
@@ -2382,6 +2388,50 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
   </t>
 </template>
 
+<template id="list_website_public_pages" name="Website Pages">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container" id="list_website_pages">
+                <t t-call="website.website_search_box_input">
+                    <t t-set="_form_classes" t-valuef="mt8 float-right"/>
+                    <t t-set="search_type" t-valuef="pages"/>
+                    <t t-set="action" t-valuef="/pages"/>
+                    <t t-set="search" t-value="original_search or search"/>
+                </t>
+                <h3 class="mt16">Pages</h3>
+                <t t-if="not pages">
+                    <div t-if="search" class="alert alert-warning mt8" role="alert">
+                        Your search '<t t-esc="search" />' did not match any pages.
+                    </div>
+                    <div t-else="" class="alert alert-warning mt8" role="alert">
+                        There are currently no pages for this website.
+                    </div>
+                </t>
+                <div t-elif="original_search" class="alert alert-warning mt8" role="alert">
+                    No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
+                </div>
+                <div t-if="pages" class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="pages" t-as="page">
+                                <td><a t-att-href="page.url"><t t-esc="page.name"/></a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div t-if="pager" class="o_portal_pager text-center">
+                    <t t-call="website.pager"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
 <template id="one_page_line">
     <t t-set='specific_page' t-value="page.website_id"/>
     <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
@@ -2424,6 +2474,75 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </tr>
 </template>
 
+<template id="list_hybrid" name="Any Search Results">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="container pt24 pb24" id="list_website_pages">
+                <t t-call="website.website_search_box_input">
+                    <t t-set="_classes" t-valuef="mt8"/>
+                    <t t-set="search_type" t-valuef="all"/>
+                    <t t-set="action" t-valuef="/website/search"/>
+                </t>
+                <div class="mt24 h3">Search Results</div>
+                <t t-if="not results">
+                    <div class="alert alert-warning mt8" role="alert">
+                        <t t-if="search">
+                            Your search '<t t-esc="search" />' did not match anything.
+                        </t>
+                        <t t-else="">
+                            Specify a search term.
+                        </t>
+                    </div>
+                </t>
+                <t t-elif="fuzzy_search">
+                    <div class="alert alert-warning mt8" role="alert">
+                        Your search '<t t-esc="search" />' did not match anything.
+                        Results are displayed for '<t t-esc="fuzzy_search"/>'.
+                    </div>
+                </t>
+                <div t-if="results" class="table-responsive">
+                    <t t-call="website.one_hybrid" t-foreach="results" t-as="result"/>
+                </div>
+                <div t-if="pager" class="o_portal_pager text-center">
+                    <t t-call="website.pager"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="one_hybrid" name="Single any Search Results">
+    <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap">
+        <div class="media align-items-center o_search_result_item">
+            <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
+            <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
+            <div class="media-body px-3">
+                <t t-set="description" t-value="result.get('description')"/>
+                <t t-set="extra_link" t-value="result.get('extra_link_url') and result.get('extra_link')"/>
+                <div t-att-class="'h6 font-weight-bold %s' % ('' if description else 'mb-0')" t-out="result['name']"/>
+                <p t-if="description" class="mb-0" t-out="description"/>
+                <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-out="extra_link"
+                    t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
+            </div>
+            <div class="flex-shrink-0">
+                <t t-if="result.get('detail_strike')">
+                    <span class="text-danger text-nowrap" style="text-decoration: line-through;">
+                        <t t-out="result.get('detail_strike')"/>
+                    </span>
+                    <br/>
+                </t>
+                <b t-if="result.get('detail')" class="text-nowrap">
+                    <t t-out="result.get('detail')"/>
+                </b>
+                <t t-if="result.get('detail_extra')">
+                    <br/>
+                    <span class="text-nowrap" t-out="result.get('detail_extra')"/>
+                </t>
+            </div>
+        </div>
+    </a>
+</template>
+
 <template id="website_configurator" name="Website Configurator" inherit_id="web.frontend_layout" primary="True">
     <xpath expr="//head/t[@t-call-assets][last()]" position="after">
         <t t-call-assets="website.website_configurator_assets_js" lazy_load="True"/>
@@ -2433,6 +2552,29 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </xpath>
     <xpath expr="//nav" position="replace"/>
     <xpath expr="//div[@id='wrapwrap']" position="replace"/>
+</template>
+
+<!-- Search Bar input-group template -->
+<template id="website_search_box_input" inherit_id="website.website_search_box" primary="True">
+    <xpath expr="//input[@name='search']" position="attributes">
+        <attribute name="t-att-data-search-type">search_type</attribute>
+        <attribute name="t-att-data-limit">limit or '5'</attribute>
+        <attribute name="t-att-data-display-image">display_image or 'true'</attribute>
+        <attribute name="t-att-data-display-description">display_description or 'true'</attribute>
+        <attribute name="t-att-data-display-extra-link">display_extra_link or 'true'</attribute>
+        <attribute name="t-att-data-display-detail">display_detail or 'true'</attribute>
+        <attribute name="t-att-data-order-by">order_by or 'name asc'</attribute>
+    </xpath>
+    <xpath expr="//div[@role='search']" position="attributes">
+        <attribute name="t-attf-class" remove="s_searchbar_input" separator=" "/>
+    </xpath>
+    <xpath expr="//div[@role='search']" position="replace">
+        <form t-attf-class="o_searchbar_form o_wait_lazy_js s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
+            <t>$0</t>
+            <input name="order" type="hidden" class="o_search_order_by" t-att-value="order_by if order_by else 'name asc'"/>
+            <t t-out="0"/>
+        </form>
+    </xpath>
 </template>
 
 </odoo>
