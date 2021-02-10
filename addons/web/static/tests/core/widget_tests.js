@@ -450,6 +450,27 @@ QUnit.module('core', {}, function () {
         parent.destroy();
     });
 
+    QUnit.test("calling do_hide on a widget destroyed before being rendered", async function (assert) {
+        assert.expect(1);
+
+        const MyWidget = Widget.extend({
+            willStart() {
+                return new Promise(() => {});
+            }
+        });
+
+        const widget = new MyWidget();
+        widget.appendTo(document.createDocumentFragment());
+        widget.destroy();
+
+        // those calls should not crash
+        widget.do_hide();
+        widget.do_show();
+        widget.do_toggle(true);
+
+        assert.ok(true);
+    });
+
     QUnit.test('start is not called when widget is destroyed', function (assert) {
         assert.expect(0);
         const $fix = $("#qunit-fixture");
