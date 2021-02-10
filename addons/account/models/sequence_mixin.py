@@ -241,7 +241,9 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         last_sequence = self._get_last_sequence()
         new = not last_sequence
-        if new:
+        if self.env.context.get('prefix_change'):
+            last_sequence = self._get_starting_sequence()
+        elif new:
             last_sequence = self._get_last_sequence(relaxed=True) or self._get_starting_sequence()
 
         format, format_values = self._get_sequence_format_param(last_sequence)

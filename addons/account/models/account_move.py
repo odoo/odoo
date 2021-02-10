@@ -1081,10 +1081,14 @@ class AccountMove(models.Model):
         highest_name = self[0]._get_last_sequence() if self else False
 
         # Group the moves by journal and month
+        prefix_change = False
         for move in self:
             if not highest_name and move == self[0] and not move.posted_before:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
+                pass
+            elif highest_name and not highest_name.startswith(move.journal_id.code + '/'):
+                prefix_change = True
                 pass
             elif (move.name and move.name != '/') or move.state != 'posted':
                 try:
@@ -1098,7 +1102,7 @@ class AccountMove(models.Model):
             group = grouped[journal_key(move)][date_key(move)]
             if not group['records']:
                 # Compute all the values needed to sequence this whole group
-                move._set_next_sequence()
+                move.with_context(prefix_change=prefix_change)._set_next_sequence()
                 group['format'], group['format_values'] = move._get_sequence_format_param(move.name)
                 group['reset'] = move._deduce_sequence_number_reset(move.name)
             group['records'] += move
