@@ -308,9 +308,11 @@ QUnit.module('widgets', {
                         fields: [{
                             name: 'foo',
                             label: 'Foo',
+                            type: 'char',
                         }, {
                             name: 'bar',
                             label: 'Bar',
+                            type: 'char',
                         }]
                     }, "should be called with correct params")
                     args.complete();
@@ -355,9 +357,11 @@ QUnit.module('widgets', {
                         fields: [{
                             name: 'foo',
                             label: 'Foo',
+                            type: 'char',
                         }, {
                             name: 'bar',
                             label: 'Bar',
+                            type: 'char',
                         }]
                     }, "should be called with correct params")
                     args.complete();
