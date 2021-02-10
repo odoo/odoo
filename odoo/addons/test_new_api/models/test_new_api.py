@@ -1277,3 +1277,64 @@ class TriggerRight(models.Model):
     def _compute_left_size(self):
         for record in self:
             record.left_size = len(record.left_ids)
+
+
+class SqlFields(models.Model):
+    _name = 'test_new_api.sql'
+    _description = 'model with fields computed via query'
+
+    state = fields.Selection(
+        [
+            ('overdue', 'Overdue'),
+            ('today', 'Today'),
+            ('planned', 'Planned')
+        ],
+        'State',
+        sql='_sql_state'
+    )
+    deadline = fields.Date('Due Date')
+    tz = fields.Char('Timezone', default='UTC')
+    partner_id = fields.Many2one('res.partner')
+    partner_name = fields.Char(sql='_sql_partner_name')
+    line_ids = fields.One2many('test_new_api.sql.line', 'order_id')
+    total = fields.Monetary(sql='_sql_total')
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
+
+    @api.depends('deadline', 'tz')
+    def _sql_state(self, alias, query):
+        return f"""
+            CASE
+            WHEN "{alias}".deadline - (CURRENT_DATE AT TIME ZONE "{alias}".tz)::date > 0 THEN 'planned'
+            WHEN "{alias}".deadline - (CURRENT_DATE AT TIME ZONE "{alias}".tz)::date < 0 THEN 'overdue'
+            WHEN "{alias}".deadline - (CURRENT_DATE AT TIME ZONE "{alias}".tz)::date = 0 THEN 'today'
+            ELSE null
+            END
+        """
+
+    @api.model
+    @api.depends('partner_id.name')
+    def _sql_partner_name(self, alias, query):
+        #import wdb; wdb.set_trace()
+        coalias = query.left_join(alias, 'partner_id', 'res_partner', 'id', 'partner_id')
+        return f'"{coalias}"."name"'
+
+    @api.model
+    @api.depends('line_ids.qty', 'line_ids.price')
+    def _sql_total(self, alias, query):
+        coalias = self.env['test_new_api.sql.line']._table
+        return f"""(
+            SELECT SUM("{coalias}"."price" * "{coalias}"."qty")
+            FROM "{coalias}"
+            WHERE "{coalias}"."order_id" = "{alias}".id
+        )"""
+
+
+class QueryComputedLine(models.Model):
+    _name = 'test_new_api.sql.line'
+    _description = 'lines for model with fields computed via query'
+
+    order_id = fields.Many2one('test_new_api.sql')
+    currency_id = fields.Many2one('res.currency', related="order_id.currency_id")
+    name = fields.Char()
+    qty = fields.Float()
+    price = fields.Monetary()

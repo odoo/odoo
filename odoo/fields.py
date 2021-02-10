@@ -226,6 +226,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _depends = None                     # collection of field dependencies
     _depends_context = None             # collection of context key dependencies
     recursive = False                   # whether self depends on itself
+    sql = None                          # sql(table_alias, query) computes field with sql expression
     compute = None                      # compute(recs) computes field on recs
     compute_sudo = False                # whether field should be recomputed as superuser
     inverse = None                      # inverse(recs) inverses field on recs
@@ -427,6 +428,10 @@ class Field(MetaField('DummyField', (object,), {})):
             funcs = resolve_mro(model, self.compute, callable)
         elif self.compute:
             funcs = [self.compute]
+        elif isinstance(self.sql, str):
+            funcs = resolve_mro(model, self.sql, callable)
+        elif self.sql:
+            funcs = [self.sql]
         else:
             funcs = []
 

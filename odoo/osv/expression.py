@@ -639,6 +639,32 @@ class expression(object):
             if not field:
                 raise ValueError("Invalid field %s.%s in leaf %s" % (model._name, path[0], str(leaf)))
 
+            elif field.sql:
+                field_sql = field.sql
+                if isinstance(field_sql, str):
+                    field_sql = getattr(model, field.sql)
+
+                left_sql = field_sql(alias, self.query)
+
+                need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
+                cast = '::text' if  sql_operator.endswith('like') else ''
+
+                column_format = '%s' if need_wildcard else model._fields[left].column_format
+                unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
+                query = '(%s %s %s)' % (unaccent(left_sql + cast), sql_operator, unaccent(column_format))
+
+                if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
+                    query = '(%s OR %s."%s" IS NULL)' % (query, alias, left_sql)
+
+                if need_wildcard:
+                    params = ['%%%s%%' % pycompat.to_text(right)]
+                else:
+                    field = model._fields[left]
+                    params = [field.convert_to_column(right, model, validate=False)]
+
+                push_result(query, params)
+
             elif field.inherited:
                 parent_model = model.env[field.related_field.model_name]
                 parent_fname = model._inherits[parent_model._name]

@@ -2298,7 +2298,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for gb in groupby_fields:
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
             gb_field = self._fields[gb].base_field
-            assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
+            assert gb_field.store and gb_field.column_type or gb_field.sql, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True, or virtual sql fields"
 
         aggregated_fields = []
         select_terms = []
@@ -2461,6 +2461,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # handle the case where the field is translated
         if field.translate is True:
             return model._generate_translated_field(alias, fname, query)
+        elif field.sql:
+            field_sql = field.sql
+            if isinstance(field_sql, str):
+                field_sql = getattr(model, field.sql)
+            return field_sql(alias, query)
         else:
             return '"%s"."%s"' % (alias, fname)
 
