@@ -140,29 +140,17 @@
         </xpath>
     </template>
 
-    <!-- Products Search Bar input-group template -->
-    <template id="website_sale_products_search_box" inherit_id="website.website_search_box" primary="True">
-        <xpath expr="//input[@name='search']" position="attributes">
-            <attribute name="data-limit">5</attribute>
-            <attribute name="data-display-description">true</attribute>
-            <attribute name="data-display-price">true</attribute>
-            <attribute name="data-display-image">true</attribute>
-        </xpath>
-        <xpath expr="//div[@role='search']" position="attributes">
-            <attribute name="t-attf-class" remove="#{_classes}" separator=" "/>
-        </xpath>
-        <xpath expr="//div[@role='search']" position="replace">
-            <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get" t-att-data-snippet="_snippet">
-                <t>$0</t>
-                <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
-                <t t-out="0"/>
-            </form>
-        </xpath>
-    </template>
-
+    <!-- Search Bar input-group template -->
     <template id="search" name="Search Box">
-        <t t-call="website_sale.website_sale_products_search_box">
-            <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0)"/>
+        <t t-call="website.website_search_box_input">
+            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form w-100 w-md-auto mr-auto mb-2"/>
+            <t t-set="_classes" t-valuef=" "/>
+            <t t-set="search_type" t-valuef="products"/>
+            <t t-set="action" t-value="keep('/shop'+ ('/category/'+slug(category)) if category else None, search=0) or '/shop'"/>
+            <t t-set="display_image" t-valuef="true"/>
+            <t t-set="display_description" t-valuef="true"/>
+            <t t-set="display_extra_link" t-valuef="true"/>
+            <t t-set="display_detail" t-valuef="true"/>
             <t t-if="attrib_values">
                 <t t-foreach="attrib_values" t-as="a">
                     <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])" />
@@ -172,8 +160,8 @@
     </template>
 
     <template id="search_count_box" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
-        <xpath expr="//button[hasclass('oe_search_button')]" position="inside">
-            <span t-if='search' class='oe_search_found'> <small>(<t t-esc="search_count"/> found)</small></span>
+        <xpath expr="//button[contains(@t-att-class, 'oe_search_button')]" position="inside">
+            <span t-if='search' class='oe_search_found'> <small>(<t t-esc="search_count or 0"/> found)</small></span>
         </xpath>
     </template>
 
@@ -289,10 +277,14 @@
                             <div class="products_header form-inline flex-md-nowrap justify-content-end mb-4">
                                 <t t-call="website_sale.search">
                                     <t t-set="_classes" t-valuef="w-100 w-md-auto mr-auto mb-2"/>
+                                    <t t-set="search" t-value="original_search or search"/>
                                 </t>
                                 <t t-call="website_sale.pricelist_list">
                                     <t t-set="_classes" t-valuef="ml-3 mb-2"/>
                                 </t>
+                            </div>
+                            <div t-if="original_search and bins" class="alert alert-warning mt8">
+                                No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
                             </div>
                             <t t-if="category">
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>

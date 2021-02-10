@@ -11,7 +11,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import misc, sql
 from odoo.tools.translate import html_translate
-from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 
 _logger = logging.getLogger(__name__)
 
@@ -260,6 +260,33 @@ class Forum(models.Model):
     def _update_website_count(self):
         for website in self.env['website'].sudo().search([]):
             website.forums_count = self.env['forum.forum'].sudo().search_count(website.website_domain())
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """See website_page._search_get_detail()"""
+        with_description = options['displayDescription']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text'},
+        }
+        if with_description:
+            search_fields.append('description')
+            fetch_fields.append('description')
+            mapping['description'] = {'name': 'description', 'type': 'text', 'match': True}
+        def patch_forum(forum, data):
+            data['website_url'] = forum._compute_website_url()
+        return {
+            'model': 'forum.forum',
+            'base_domain': [website.website_domain()],
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'patch_data_function': patch_forum,
+            'mapping': mapping,
+            'icon': 'fa-comments-o',
+            'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
+        }
 
 
 class Post(models.Model):
@@ -932,6 +959,72 @@ class Post(models.Model):
             'type': 'ir.actions.act_url',
             'target': 'self',
             'url': self._compute_website_url(),
+        }
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """See website_page._search_get_detail()"""
+        with_description = options['displayDescription']
+        with_date = options['displayDetail']
+        search_fields = ['name']
+        fetch_fields = ['id', 'name']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'website_url', 'type': 'text'},
+        }
+
+        domain = website.website_domain()
+        domain += [('parent_id', '=', False), ('state', '=', 'active'), ('can_view', '=', True)]
+        forum = options.get('forum')
+        if forum:
+            domain += [('forum_id', '=', unslug(forum)[1])]
+        tags = options.get('tag')
+        if tags:
+            domain += [('tag_ids', 'in', [unslug(tag)[1] for tag in tags.split(',')])]
+        filters = options.get('filters')
+        if filters == 'unanswered':
+            domain += [('child_ids', '=', False)]
+        elif filters == 'solved':
+            domain += [('has_validated_answer', '=', True)]
+        elif filters == 'unsolved':
+            domain += [('has_validated_answer', '=', False)]
+        user = self.env.user
+        my = options.get('my')
+        if my == 'mine':
+            domain += [('create_uid', '=', user.id)]
+        elif my == 'followed':
+            domain += [('message_partner_ids', '=', user.partner_id.id)]
+        elif my == 'tagged':
+            domain += [('tag_ids.message_partner_ids', '=', user.partner_id.id)]
+        elif my == 'favourites':
+            domain += [('favourite_ids', '=', user.id)]
+
+        # 'sorting' from the form's "Order by" overrides order during auto-completion
+        order = options.get('sorting', order)
+        if 'is_published' in order:
+            parts = [part for part in order.split(',') if 'is_published' not in part]
+            order = ','.join(parts)
+
+        if with_description:
+            search_fields.append('content')
+            fetch_fields.append('content')
+            mapping['description'] = {'name': 'content', 'type': 'text', 'html': True, 'match': True}
+        if with_date:
+            fetch_fields.append('write_date')
+            mapping['detail'] = {'name': 'date', 'type': 'html'}
+        def patch_forum_post(post, data):
+            data['website_url'] = post._compute_website_url()
+            if with_date:
+                data['date'] = self.env['ir.qweb.field.date'].record_to_html(post, 'write_date', {})
+        return {
+            'model': 'forum.post',
+            'base_domain': [domain],
+            'search_fields': search_fields,
+            'fetch_fields': fetch_fields,
+            'patch_data_function': patch_forum_post,
+            'mapping': mapping,
+            'icon': 'fa-comment-o',
+            'order': order,
         }
 
 

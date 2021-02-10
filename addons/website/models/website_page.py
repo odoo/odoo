@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo.addons.http_routing.models.ir_http import slugify
 from odoo import api, fields, models
 from odoo.tools.safe_eval import safe_eval
@@ -228,6 +230,55 @@ class Page(models.Model):
     def _set_cache_response(self, cache_key, response):
         """ Put in cache the given response. """
         self.pool._Registry__cache[('website.page', _cached_response, self.id, cache_key)] = response
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """
+        Returns indications on how to perform the searches
+
+        :param website: website within which the search is done
+        :param order: order in which the results are to be returned
+        :param options: search options
+
+        :return search detail as expected in elements of the result of website._search_get_details()
+        """
+        with_description = options['displayDescription']
+        # Read access on website.page requires sudo.
+        requires_sudo = True
+        domain = [website.website_domain()]
+        if not self.env.user.has_group('website.group_website_designer'):
+            # Rule must be reinforced because of sudo.
+            domain.append([('website_published', '=', True)])
+
+        fetch_fields = ['id', 'name', 'url']
+        mapping = {
+            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'website_url': {'name': 'url', 'type': 'text'},
+        }
+        if with_description:
+            fetch_fields.append('arch')
+            mapping['description'] = {'name': 'arch', 'type': 'text', 'html': True, 'match': True}
+        def filter_page(search, page, base_pages, all_pages):
+            if not all_pages._is_most_specific_page(page):
+                return False
+            if page in base_pages:
+                return True
+            text = '%s %s' % (page.name, page.url)
+            if with_description:
+                text = '%s %s' % (text, website._search_text_from_html(page.arch))
+            pattern = '|'.join([re.escape(search_term) for search_term in search.split()])
+            return re.findall('(%s)' % pattern, text, flags=re.I) if pattern else False
+        return {
+            'model': 'website.page',
+            'base_domain': domain,
+            'requires_sudo': requires_sudo,
+            'search_fields': ['name', 'url'],
+            'secondary_search_fields': ['name', 'url', 'view_id.arch_db'] if with_description else None,
+            'filter_function': filter_page,
+            'fetch_fields': fetch_fields,
+            'mapping': mapping,
+            'icon': 'fa-file-o',
+        }
 
 
 # this is just a dummy function to be used as ormcache key

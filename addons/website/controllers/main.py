@@ -5,6 +5,7 @@ import datetime
 import json
 import os
 import logging
+import re
 import requests
 import werkzeug.urls
 import werkzeug.utils
@@ -12,6 +13,7 @@ import werkzeug.wrappers
 
 from itertools import islice
 from lxml import etree
+from textwrap import shorten
 from xml.etree import ElementTree as ET
 
 import odoo
@@ -19,7 +21,7 @@ import odoo
 from odoo import http, models, fields, _
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import OrderedSet, escape_psql
+from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
@@ -347,6 +349,183 @@ class Website(Home):
             'symbol': request.website.company_id.currency_id.symbol,
             'position': request.website.company_id.currency_id.position,
         }
+
+    # --------------------------------------------------------------------------
+    # Search Bar
+    # --------------------------------------------------------------------------
+
+    def _get_search_order(self, order):
+        # OrderBy will be parsed in orm and so no direct sql injection
+        # id is added to be sure that order is a unique sort key
+        order = order or 'name ASC'
+        return 'is_published desc, %s, id desc' % order
+
+    @http.route('/website/snippet/autocomplete', type='json', auth='public', website=True)
+    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+        """
+        Returns list of results according to the term and options
+
+        :param str search_type: indicates what to search within, 'all' matches all available types
+        :param str term: search term written by the user
+        :param str order:
+        :param int limit: number of results to consider, defaults to 5
+        :param int max_nb_chars: max number of characters for text fields
+        :param dict options: options map containing
+            allowFuzzy: enables the fuzzy matching when truthy
+            fuzzy (boolean): True when called after finding a name through fuzzy matching
+
+        :returns: dict (or False if no result) containing
+            - 'results' (list): results (only their needed field values)
+                    note: the monetary fields will be strings properly formatted and
+                    already containing the currency
+            - 'results_count' (int): the number of results in the database
+                    that matched the search query
+            - 'parts' (dict): presence of fields across all results
+            - 'fuzzy_search': search term used instead of requested search
+        """
+        order = self._get_search_order(order)
+        options = options or {}
+        results_count, search_results, fuzzy_term = request.website._search_with_fuzzy(search_type, term, limit, order, options)
+        if not results_count:
+            return {
+                'results': [],
+                'results_count': 0,
+                'parts': {},
+            }
+        term = fuzzy_term or term
+        search_results = request.website._search_render_results(search_results, limit)
+
+        mappings = []
+        results_data = []
+        for search_result in search_results:
+            results_data += search_result['results_data']
+            mappings.append(search_result['mapping'])
+        if search_type == 'all':
+            # Only supported order for 'all' is on name
+            results_data.sort(key=lambda r: r.get('name', ''), reverse='name desc' in order)
+        results_data = results_data[:limit]
+        result = []
+        for record in results_data:
+            mapping = record['_mapping']
+            mapped = {
+                '_fa': record.get('_fa'),
+            }
+            for mapped_name, field_meta in mapping.items():
+                value = record.get(field_meta.get('name'))
+                if not value:
+                    mapped[mapped_name] = ''
+                    continue
+                field_type = field_meta.get('type')
+                if field_type == 'text':
+                    if value:
+                        value = shorten(value, max_nb_chars, placeholder='...')
+                    if field_meta.get('match') and value and term:
+                        pattern = '|'.join(map(re.escape, term.split()))
+                        if pattern:
+                            parts = re.split(f'({pattern})', value, flags=re.IGNORECASE)
+                            if len(parts) > 1:
+                                value = request.env['ir.ui.view'].sudo()._render_template(
+                                    "website.search_text_with_highlight",
+                                    {'parts': parts}
+                                )
+                                field_type = 'html'
+
+                if field_type not in ('image', 'binary') and ('ir.qweb.field.%s' % field_type) in request.env:
+                    opt = {}
+                    if field_type == 'monetary':
+                        opt['display_currency'] = options['display_currency']
+                    elif field_type == 'html':
+                        opt['template_options'] = {}
+                    value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
+                mapped[mapped_name] = escape(value)
+            result.append(mapped)
+
+        return {
+            'results': result,
+            'results_count': results_count,
+            'parts': {key: True for mapping in mappings for key in mapping},
+            'fuzzy_search': fuzzy_term,
+        }
+
+    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
+    def pages_list(self, page=1, search='', **kw):
+        options = {
+            'displayDescription': False,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not kw.get('noFuzzy'),
+        }
+        step = 50
+        pages_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
+            "pages", search, limit=page * step, order='name asc, website_id desc, id',
+            options=options)
+        pages = details[0].get('results', request.env['website.page'])
+
+        pager = portal_pager(
+            url="/pages",
+            url_args={'search': search},
+            total=pages_count,
+            page=page,
+            step=step
+        )
+
+        pages = pages[(page - 1) * step:page * step]
+
+        values = {
+            'pager': pager,
+            'pages': pages,
+            'search': fuzzy_search_term or search,
+            'search_count': pages_count,
+            'original_search': fuzzy_search_term and search,
+        }
+        return request.render("website.list_website_public_pages", values)
+
+    @http.route([
+        '/website/search',
+        '/website/search/page/<int:page>',
+        '/website/search/<string:search_type>',
+        '/website/search/<string:search_type>/page/<int:page>',
+    ], type='http', auth="public", website=True, sitemap=False)
+    def hybrid_list(self, page=1, search='', search_type='all', **kw):
+        if not search:
+            return request.render("website.list_hybrid")
+
+        options = {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not kw.get('noFuzzy'),
+        }
+        data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=500, max_nb_chars=200, options=options)
+
+        results = data.get('results', [])
+        search_count = len(results)
+        parts = data.get('parts', {})
+
+        step = 50
+        pager = portal_pager(
+            url="/website/search/%s" % search_type,
+            url_args={'search': search},
+            total=search_count,
+            page=page,
+            step=step
+        )
+
+        results = results[(page - 1) * step:page * step]
+
+        values = {
+            'pager': pager,
+            'results': results,
+            'parts': parts,
+            'search': search,
+            'fuzzy_search': data.get('fuzzy_search'),
+            'search_count': search_count,
+        }
+        return request.render("website.list_hybrid", values)
 
     # ------------------------------------------------------
     # Edit
