@@ -47,6 +47,12 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
                 return this.state.buffer;
             }
         }
+        confirm(event) {
+            const bufferState = event.detail;
+            if (bufferState.buffer !== '') {
+                super.confirm();
+            }
+        }
         sendInput(key) {
             this.trigger('numpad-click-input', { key });
         }
