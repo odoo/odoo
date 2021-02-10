@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="im_livechat.CategoryLivechatItem" owl="1">
+        <CategoryItem class="o_CategoryLivechatItem" threadLocalId="thread.localId">
+            <t t-set-slot="avatar">
+                <div class="o_CategoryLivechatItem_imageContainer">
+                    <img class="o_CategoryLivechatItem_image rounded-circle" t-att-src="image" alt="Thread Image"/>
+                    <t t-if="thread.correspondent and thread.correspondent.im_status">
+                        <PartnerImStatusIcon
+                            class="o_CategoryLivechatItem_partnerImStatusIcon"
+                            partnerLocalId="thread.correspondent.localId"
+                        />
+                    </t>
+                </div>
+            </t>
+            <t t-set-slot="commands">
+                <t t-if="!thread.localMessageUnreadCounter">
+                    <div 
+                        class="fa fa-times o_CategoryLivechatItem_command o_CategoryLivechatItem_commandUnpin" 
+                        t-on-click="_onClickUnpin" 
+                        title="Unpin conversation" 
+                        role="img"
+                    />
+                </t>
+            </t>
+        </CategoryItem>
+    </t>
+</templates>

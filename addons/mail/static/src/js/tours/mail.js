@@ -9,11 +9,11 @@ tour.register('mail_tour', {
     url: "/web#action=mail.widgets.discuss",
     sequence: 80,
 }, [{
-    trigger: '.o_DiscussSidebar_groupChannel .o_DiscussSidebar_groupHeaderItemAdd',
+    trigger: '.o_CategoryChannelTitle_commandChannelAdd',
     content: _t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"),
     position: 'bottom',
 }, {
-    trigger: '.o_DiscussSidebar_itemNewInput',
+    trigger: '.o_CategoryChannelTitle_newInput',
     content: _t("<p>Create a channel here.</p>"),
     position: 'bottom',
     auto: true,
@@ -22,7 +22,7 @@ tour.register('mail_tour', {
         actions.text("SomeChannel_" + t, this.$anchor);
     },
 }, {
-    trigger: ".o_DiscussSidebar_newChannelAutocompleteSuggestions",
+    trigger: ".o_CategoryChannelTitle_newChannelAutocompleteSuggestions",
     content: _t("<p>Create a public or private channel.</p>"),
     position: 'right',
     run() {
@@ -46,11 +46,11 @@ tour.register('mail_tour', {
     content: _t("Messages can be <b>starred</b> to remind you to check back later."),
     position: "bottom",
 }, {
-    trigger: '.o_DiscussSidebarItem.o-starred-box',
+    trigger: '.o_DiscussSidebar_groupMailbox .o-starred-box',
     content: _t("Once a message has been starred, you can come back and review it at any time here."),
     position: "bottom",
 }, {
-    trigger: '.o_DiscussSidebar_groupChat .o_DiscussSidebar_groupHeaderItemAdd',
+    trigger: '.o_CategoryChatTitle_commandChatAdd',
     content: _t("<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"),
     position: 'bottom',
 }]);

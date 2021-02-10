@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.CategoryItem" owl="1">
+        <div class="o_CategoryItem"
+            t-att-class="{
+                'o-item-active': thread and discuss.thread === thread,
+                'o-item-unread': thread and thread.localMessageUnreadCounter > 0,
+            }"
+            t-att-data-thread-local-id="thread ? thread.localId : undefined"
+            t-att-data-thread-name="thread ? thread.displayName : undefined"
+            t-on-click="_onClick"
+        >
+            <t t-if="thread">
+                <div class="o_CategoryItem_item o_CategoryItem_avatar">
+                    <t t-slot="avatar">
+                        <ThreadIcon threadLocalId="thread.localId"/>
+                    </t>
+                </div>
+                <t t-slot="name">
+                    <span class="o_CategoryItem_name o_CategoryItem_item" t-att-class="{'o-item-unread': thread.localMessageUnreadCounter > 0}">
+                        <t t-esc="thread.displayName"/>
+                    </span>
+                </t>
+                <div class="o-autogrow o_CategoryItem_item"/>
+                <div class="o_CategoryItem_item o_CategoryItem_commands">
+                    <t t-slot="commands"/>
+                </div>
+                <t t-if="unreadCounter">
+                    <div class="o_CategoryItem_counter o_CategoryItem_item badge badge-pill">
+                        <t t-esc="unreadCounter"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

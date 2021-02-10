@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.CategoryChannelItem" owl="1">
+        <CategoryItem class="o_CategoryChannelItem" threadLocalId="thread.localId">
+            <t t-set-slot="avatar">
+                <div class="o_CategoryChannelItem_imageContainer">
+                    <img class="o_CategoryChannelItem_image rounded-circle" t-att-src="image" alt="Thread Image" />
+                    <ThreadIcon class="o_CategoryChannelItem_threadIcon" threadLocalId="thread.localId"/>
+                </div>
+            </t>
+            <t t-set-slot="name">
+                <span class="o_CategoryItem_item o_CategoryChannelItem_name" t-att-class="{'o-item-unread': thread.localMessageUnreadCounter > 0}">
+                    <t t-esc="thread.displayName"/>
+                </span>
+                <t t-if="thread.mass_mailing">
+                    <i class="fa fa-envelope-o" title="Messages are sent by email" role="img"/>
+                </t>
+            </t>
+            <t t-set-slot="commands">
+                <div 
+                    class="o_CategoryChannelItem_command o_CategoryChannelItem_commandSettings fa fa-cog"
+                    t-on-click="_onClickSettings"
+                    title="Channel settings"
+                    role="img"
+                />
+                <t t-if="!thread.message_needaction_counter and !thread.group_based_subscription">
+                    <div
+                        class="o_CategoryChannelItem_command o_CategoryChannelItem_commandLeave fa fa-times"
+                        t-on-click="_onClickLeave"
+                        title="Leave this channel"
+                        role="img"
+                    />
+                </t>
+            </t>
+        </CategoryItem>
+    </t>
+</templates>

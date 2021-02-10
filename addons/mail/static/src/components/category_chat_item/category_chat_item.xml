@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.CategoryChatItem" owl="1">
+        <CategoryItem class="o_CategoryChatItem" threadLocalId="thread.localId">
+            <t t-set-slot="avatar">
+                <div class="o_CategoryChatItem_imageContainer">
+                    <img class="o_CategoryChatItem_image rounded-circle" t-att-src="image" alt="Thread Image" />
+                    <t t-if="thread.correspondent and thread.correspondent.im_status">
+                        <PartnerImStatusIcon
+                            class="o_CategoryChatItem_partnerImStatusIcon"
+                            partnerLocalId="thread.correspondent.localId"
+                        />
+                    </t>
+                </div>
+            </t>
+            <t t-set-slot="name">
+                <t t-if="discuss.renamingThreads.includes(thread)">
+                    <span class="o_CategoryItem_item o_CategoryChatItem_name o-editable">
+                        <EditableText
+                            class="o_CategoryChatItem_nameInput"
+                            placeholder="thread.correspondent.name"
+                            value="thread.displayName"
+                            t-on-o-cancel="_onCancelRenaming"
+                            t-on-o-clicked="_onClickedEditableText"
+                            t-on-o-validate="_onValidateEditableText"
+                        />
+                    </span>
+                </t>
+                <t t-else="">
+                    <span class="o_CategoryItem_item o_CategoryChatItem_name" t-att-class="{'o-item-unread': thread.localMessageUnreadCounter > 0}">
+                        <t t-esc="thread.displayName"/>
+                    </span>
+                </t>
+            </t>
+            <t t-set-slot="commands">
+                <div 
+                    class="o_CategoryChatItem_command o_CategoryChatItem_commandRename fa fa-cog"
+                    t-on-click="_onClickRename"
+                    title="Rename conversation"
+                    role="img"
+                />
+                <t t-if="!thread.localMessageUnreadCounter">
+                    <div 
+                        class="o_CategoryChatItem_command o_CategoryChatItem_commandUnpin fa fa-times"
+                        t-on-click="_onClickUnpin"
+                        title="Unpin conversation"
+                        role="img"
+                    />
+                </t>
+            </t>
+        </CategoryItem>
+    </t>
+</templates>

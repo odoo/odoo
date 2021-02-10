@@ -70,6 +70,7 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} param0
+         * @param {Object} param0.category_open_states
          * @param {Object} param0.channel_slots
          * @param {Array} [param0.commands=[]]
          * @param {Object} param0.current_partner
@@ -85,6 +86,7 @@ function factory(dependencies) {
          * @param {integer} [param0.starred_counter=0]
          */
         async _init({
+            category_open_states,
             channel_slots,
             commands = [],
             current_partner,
@@ -125,6 +127,8 @@ function factory(dependencies) {
             await this.async(() => this._initChannels(channel_slots));
             // failures after channels
             this._initMailFailures(mail_failures);
+            // initialize discuss sidebar categories
+            this._initCategories(category_open_states);
             discuss.update({ menu_id });
         }
 
@@ -171,6 +175,34 @@ function factory(dependencies) {
                     channel.pin();
                 }
             }));
+        }
+
+        /**
+         * @private
+         * @param {Object} data
+         * @param {Boolean} data.is_category_channel_open
+         * @param {Boolean} data.is_category_chat_open
+         */
+        _initCategories(data) {
+            const discuss = this.messaging.discuss;
+            const { 
+                is_category_channel_open = true, 
+                is_category_chat_open = true, 
+            } = data;
+            discuss.update({
+                categoryChannel: [['create', {
+                    id: "channel",
+                    displayName: "Channels",
+                    isServerOpen: is_category_channel_open,
+                }]]
+            });
+            discuss.update({
+                categoryChat: [['create', {
+                    id: "chat",
+                    displayName: "Direct Messages",
+                    isServerOpen: is_category_chat_open,
+                }]]
+            });
         }
 
         /**

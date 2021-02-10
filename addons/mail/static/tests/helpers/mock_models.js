@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+const { datetime_to_str } = require('web.time');
+
 /**
  * Allows to generate mocked models that will be used by the mocked server.
  * This is defined as a class to allow patches by dependent modules and a new
@@ -93,6 +95,7 @@ class MockModels {
                     // naive and non RFC-compliant UUID, good enough for the
                     // string comparison that are done with it during tests
                     uuid: { string: "UUID", type: "char", required: true, default() { return _.uniqueId('mail.channel_uuid-'); } },
+                    last_activity_time: { string: "Last activity time", type: "char", default() {return datetime_to_str(new Date()); } },
                 },
                 records: [],
             },

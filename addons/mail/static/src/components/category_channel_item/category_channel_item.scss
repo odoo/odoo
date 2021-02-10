@@ -1,0 +1,73 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CategoryChannelItem {
+    padding: map-get($spacers, 2) 0;
+}
+
+.o_CategoryChannelItem_command {
+    @include o-mail-category-item-command-layout();
+}
+
+.o_CategoryChannelItem_name {
+    @include o-mail-category-item-name-layout();
+    
+    margin-left: 10px;
+    margin-right: 3px;
+}
+
+.o_CategoryChannelItem_imageContainer {
+    position: relative;
+}
+
+.o_CategoryChannelItem_threadIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// ------------------------------------------------------------------
+// style
+// ------------------------------------------------------------------
+
+.o_CategoryChannelItem {
+
+    & .o_CategoryChannelItem_threadIcon {
+        font-size: xx-small;
+        background-color: gray('900');
+        width: 1.2rem;
+        height: 1.2rem;
+        border-radius: 50%;
+    }
+
+    &:hover {
+        .o_CategoryChannelItem_threadIcon {
+            background-color: darken(gray('900'), 5%);
+        }
+    }
+
+    &.o-item-active {
+        .o_CategoryChannelItem_threadIcon {
+            background-color: lighten(gray('900'), 5%);
+        }
+    }
+}
+
+.o_CategoryChannelItem_command {
+    @include o-mail-category-item-command-style();
+}
+
+.o_CategoryChannelItem_image {
+    @include o-mail-category-item-image-style();
+}
+
+.o_CategoryChannelItem_imageContainer{
+    @include o-mail-category-item-image-container-style();
+}
+
+.o_CategoryChannelItem_name {
+    @include o-mail-category-item-name-style();
+}

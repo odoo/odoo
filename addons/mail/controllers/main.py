@@ -269,6 +269,7 @@ class MailController(http.Controller):
             'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
             'current_partner': request.env.user.partner_id.mail_partner_format(),
             'current_user_id': request.env.user.id,
+            'category_open_states': request.env.user.get_category_open_states(),
         }
         return values
 

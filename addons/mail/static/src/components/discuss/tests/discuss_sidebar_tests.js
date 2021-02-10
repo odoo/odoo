@@ -53,13 +53,13 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
         },
     });
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebar_groupHeaderItemAdd`).click()
+        document.querySelector(`.o_CategoryChannelTitle_commandChannelAdd`).click()
     );
-    document.querySelector(`.o_DiscussSidebar_itemNew`).focus();
+    document.querySelector(`.o_CategoryChannelTitle_newInput`).focus();
     document.execCommand('insertText', false, "test");
-    document.querySelector(`.o_DiscussSidebar_itemNew`)
+    document.querySelector(`.o_CategoryChannelTitle_newInput`)
         .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_DiscussSidebar_itemNew`)
+    document.querySelector(`.o_CategoryChannelTitle_newInput`)
         .dispatchEvent(new window.KeyboardEvent('keyup'));
 
     await searchReadDef;
@@ -106,13 +106,13 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
         },
     });
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebar_groupHeaderItemAdd`).click()
+        document.querySelector(`.o_CategoryChannelTitle_commandChannelAdd`).click()
     );
-    document.querySelector(`.o_DiscussSidebar_itemNew`).focus();
+    document.querySelector(`.o_CategoryChannelTitle_newInput`).focus();
     document.execCommand('insertText', false, "test");
-    document.querySelector(`.o_DiscussSidebar_itemNew`)
+    document.querySelector(`.o_CategoryChannelTitle_newInput`)
         .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_DiscussSidebar_itemNew`)
+    document.querySelector(`.o_CategoryChannelTitle_newInput`)
         .dispatchEvent(new window.KeyboardEvent('keyup'));
 
     await searchReadDef;
@@ -147,7 +147,7 @@ QUnit.test('sidebar channels should be ordered case insensitive alphabetically',
         { id: 22, name: "Xyz" }
     );
     await this.start();
-    const results = document.querySelectorAll('.o_DiscussSidebar_groupChannel .o_DiscussSidebarItem_name');
+    const results = document.querySelectorAll('.o_DiscussSidebar_groupChannel .o_CategoryChannelItem_name');
     assert.deepEqual(
         [results[0].textContent, results[1].textContent, results[2].textContent, results[3].textContent],
         ["abc", "Abc", "Xyz", "Xyz"],

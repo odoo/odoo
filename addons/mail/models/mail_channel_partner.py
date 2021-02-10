@@ -23,6 +23,7 @@ class ChannelPartner(models.Model):
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
+    last_activity_time = fields.Datetime('Last activity time', default=fields.Datetime.now)
 
     @api.model_create_multi
     def create(self, vals_list):

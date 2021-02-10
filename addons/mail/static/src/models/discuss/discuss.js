@@ -237,6 +237,17 @@ function factory(dependencies) {
             return `${thread.model}_${thread.id}`;
         }
 
+        /**
+         * @param {String} value
+         */
+        updateSidebarQuickSearchValue(value) {
+            if (!this.sidebarQuickSearchValue) {
+                this.categoryChat.open();
+                this.categoryChannel.open();
+            }
+            this.update({ sidebarQuickSearchValue: value });
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -261,6 +272,26 @@ function factory(dependencies) {
                 return "";
             }
             return this.addingChannelValue;
+        }
+
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeCategoryChatUnreadCounter() {
+            const counter = this.allPinnedAndSortedChatTypeThreads
+                .filter(thread => thread.localMessageUnreadCounter > 0).length;
+            return counter;
+        }
+
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeCategoryChannelUnreadCounter() {
+            const counter = this.allPinnedAndSortedChannelTypeThreads
+                .filter(thread => thread.message_needaction_counter > 0).length;
+            return counter;
         }
 
         /**
@@ -303,6 +334,38 @@ function factory(dependencies) {
                 return false;
             }
             return this.isAddingChat;
+        }
+
+        /**
+         * @private
+         * @returns [{mail.thread}]
+         */
+        _computeQuickSearchPinnedAndSortedChatTypeThreads() {
+            let threads = this.allPinnedAndSortedChatTypeThreads;
+            if (this.sidebarQuickSearchValue) {
+                const qsVal = this.sidebarQuickSearchValue.toLowerCase();
+                threads = this.allPinnedAndSortedChatTypeThreads.filter(thread => {
+                    const nameVal = thread.displayName.toLowerCase();
+                    return nameVal.includes(qsVal);
+                });
+            }
+            return [['replace', threads]];
+        }
+
+        /**
+         * @private
+         * @returns [{mail.thread}]
+         */
+        _computeQuickSearchPinnedAndSortedChannelTypeThreads() {
+            let threads = this.allPinnedAndSortedChannelTypeThreads;
+            if (this.sidebarQuickSearchValue) {
+                const qsVal = this.sidebarQuickSearchValue.toLowerCase();
+                threads = this.allPinnedAndSortedChannelTypeThreads.filter(thread => {
+                    const nameVal = thread.displayName.toLowerCase();
+                    return nameVal.includes(qsVal);
+                });
+            }
+            return [['replace', threads]];
         }
 
         /**
@@ -377,6 +440,29 @@ function factory(dependencies) {
             compute: '_computeAddingChannelValue',
             default: "",
             dependencies: ['isOpen'],
+        }),
+
+        allPinnedAndSortedChatTypeThreads: one2many('mail.thread', {
+            related: 'messaging.allPinnedAndSortedChatTypeThreads',
+        }),
+        allPinnedAndSortedChatTypeThreadsLocalMessageUnreadCounter: attr({
+            related: 'allPinnedAndSortedChatTypeThreads.localMessageUnreadCounter',
+        }),
+        allPinnedAndSortedChannelTypeThreads: one2many('mail.thread', {
+            related: 'messaging.allPinnedAndSortedChannelTypeThreads',
+        }),
+        allPinnedAndSortedChannelTypeThreadsMessageNeedactionCounter: attr({
+            related: 'allPinnedAndSortedChannelTypeThreads.message_needaction_counter',
+        }),
+        categoryChannel: one2one('mail.category'),
+        categoryChannelUnreadCounter: attr({
+            compute: "_computeCategoryChannelUnreadCounter",
+            dependencies: ["allPinnedAndSortedChannelTypeThreads", "allPinnedAndSortedChannelTypeThreadsMessageNeedactionCounter"],
+        }),
+        categoryChat: one2one('mail.category'),
+        categoryChatUnreadCounter: attr({
+            compute: "_computeCategoryChatUnreadCounter",
+            dependencies: ["allPinnedAndSortedChatTypeThreads", "allPinnedAndSortedChatTypeThreadsLocalMessageUnreadCounter"],
         }),
         /**
          * Serves as compute dependency.
@@ -477,6 +563,14 @@ function factory(dependencies) {
         }),
         messagingInbox: many2one('mail.thread', {
             related: 'messaging.inbox',
+        }),
+        quickSearchPinnedAndSortedChatTypeThreads: one2many('mail.thread', {
+            compute: '_computeQuickSearchPinnedAndSortedChatTypeThreads',
+            dependencies: ['allPinnedAndSortedChatTypeThreads', 'sidebarQuickSearchValue'],
+        }),
+        quickSearchPinnedAndSortedChannelTypeThreads: one2many('mail.thread', {
+            compute: '_computeQuickSearchPinnedAndSortedChannelTypeThreads',
+            dependencies: ['allPinnedAndSortedChannelTypeThreads', 'sidebarQuickSearchValue'],
         }),
         renamingThreads: one2many('mail.thread'),
         /**

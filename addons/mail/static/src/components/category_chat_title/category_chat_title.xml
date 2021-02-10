@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.CategoryChatTitle" owl="1">
+        <CategoryTitle class="o_CategoryChatTitle" categoryLocalId="category.localId">
+            <t t-set-slot="commands">
+                <t t-if="category.isOpen">
+                    <div 
+                        class="o_CategoryChatTitle_headerItem o_CategoryChatTitle_command o_CategoryChatTitle_commandChatAdd fa fa-plus" 
+                        t-on-click="_onClickChatAdd" 
+                        title="Start a conversation"
+                        role="img"
+                    />
+                </t>
+            </t>
+            <t t-set-slot="searchTerm">
+                <t t-if="category.isOpen and discuss.isAddingChat">
+                    <div class="o_CategoryChatTitle_newItem">
+                        <AutocompleteInput 
+                            class="o_CategoryChatTitle_newInput" 
+                            isFocusOnMount="true" 
+                            placeholder="FIND_OR_START_CONVERSATION" 
+                            select="_onAddChatAutocompleteSelect" 
+                            source="_onAddChatAutocompleteSource" 
+                            t-on-o-hide="_onHideAddingItem"
+                        />
+                    </div>
+                </t>
+            </t>
+        </CategoryTitle>
+    </t>
+</templates>

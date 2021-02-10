@@ -27,4 +27,23 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
             }
         }));
     },
+
+    /**
+     * @override
+     * @param {Object} data
+     * @param {Boolean} data.is_category_livechat_open
+     */
+    async _initCategories(data) {
+        const { 
+            is_category_livechat_open=true 
+        } = data;
+        this.messaging.discuss.update({
+            'categoryLivechat': [['create', {
+                id: "livechat",
+                displayName: "Livechat",
+                isServerOpen: is_category_livechat_open,
+            }]],
+        });
+        this._super(data);
+    }
 });

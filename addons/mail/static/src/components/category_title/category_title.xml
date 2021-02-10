@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.CategoryTitle" owl="1">
+        <div class="o_CategoryTitle">
+            <div class="o_CategoryTitle_header" t-on-click="_toggleCategoryOpen">
+                <div class="o_CategoryTitle_title o_CategoryTitle_headerItem">
+                    <div class="o_CategoryTitle_titleIcon fa" t-att-class="category.isOpen ? 'fa-chevron-down' : 'fa-chevron-right'"/>
+                    <span class="o_CategoryTitle_titleText"><t t-esc="title"/></span>
+                </div>
+                <div class="o-autogrow o_CategoryTtile_headerItem" />
+                <div class="o_CategoryTitle_headerItem o_CategoryTitle_commands">
+                    <t t-slot="commands"/>
+                </div>
+                <t t-set="counter" t-value="unreadCounter()"/>
+                <t t-if="!category.isOpen and counter">
+                    <div class="o_CategoryTitle_headerItem o_CategoryTitle_counter badge badge-pill">
+                        <t t-esc="counter"/>
+                    </div>
+                </t>
+            </div>
+            <t t-slot="searchTerm"/>
+        </div> 
+    </t>
+</templates>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.CategoryChannelTitle" owl="1">
+        <CategoryTitle class="o_CategoryChannelTitle" categoryLocalId="category.localId">
+            <t t-set-slot="commands">
+                <div 
+                    class="o_CategoryChannelTitle_command o_CategoryChannelTitle_commandChannelsView fa fa-cog" 
+                    t-on-click="_onClickChannelsView" 
+                    title="View channels" 
+                    role="img" 
+                />
+                <t t-if="category.isOpen">
+                    <div 
+                        class="o_CategoryChannelTitle_command o_CategoryChannelTitle_commandChannelAdd fa fa-plus" 
+                        t-on-click="_onClickChannelAdd" 
+                        title="Add or join a channel" 
+                        role="img" 
+                    />
+                </t>
+            </t>
+            <t t-set-slot="searchTerm">
+                <t t-if="category.isOpen and discuss.isAddingChannel">
+                    <div class="o_CategoryChannelTitle_newItem">
+                        <AutocompleteInput
+                            class="o_CategoryChannelTitle_newInput" 
+                            customClass="'o_CategoryChannelTitle_newChannelAutocompleteSuggestions'"
+                            isFocusOnMount="true"
+                            isHtml="true"
+                            placeholder="FIND_OR_CREATE_CHANNEL"
+                            select="_onAddChannelAutocompleteSelect"
+                            source="_onAddChannelAutocompleteSource"
+                            t-on-o-hide="_onHideAddingItem"
+                        />
+                    </div>
+                </t>
+            </t>
+        </CategoryTitle>
+    </t>
+</templates>

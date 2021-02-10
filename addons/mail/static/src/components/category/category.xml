@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.Category" owl="1">
+        <div class="o_Category" t-att-data-category-local-id="category ? category.localId : undefined" t-att-data-category-name="category ? category.name : undefined">
+            <t t-if="category">
+                <div class="o_Category_title">
+                    <t t-slot="title" />
+                </div>
+                <div class="o_Category_content">
+                    <t t-if="category.isOpen">
+                        <t t-slot="content" />
+                    </t>
+                    <t t-else="">
+                        <t t-slot="activeThread" />
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -10,6 +10,18 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
 
     /**
      * @override
+     * @param {Object} data 
+     * @param {Boolean} data.is_category_livechat_open
+     */
+    _handleNotificationCategoryStates(data) {
+        if ('is_category_livechat_open' in data) {
+            this.env.messaging.discuss.categoryLivechat.update({ isServerOpen: data.is_category_livechat_open });
+        }
+        this._super(data);
+    },
+
+    /**
+     * @override
      */
     _handleNotificationChannelTypingStatus(channelId, data) {
         const { partner_id, partner_name } = data;

@@ -1,0 +1,72 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CategoryLivechatItem {
+    padding: map-get($spacers, 2) 0;
+}
+
+.o_CategoryLivechatItem_command {
+    @include o-mail-category-item-command-layout();
+}
+
+.o_CategoryLivechatItem_imageContainer {
+    position: relative;
+    margin-right: 10px;
+}
+
+.o_CategoryLivechatItem_partnerImStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// ------------------------------------------------------------------
+// style
+// ------------------------------------------------------------------
+
+.o_CategoryLivechatItem {
+
+    .o_PartnerImStatusIcon_innerBackground {
+        color: gray('900');
+    }
+
+    &:hover {
+        .o_CategoryLivechatItem_partnerImStatusIcon {
+            color: darken(gray('900'), 5%);
+        }
+ 
+        .o_PartnerImStatusIcon_innerBackground  {
+            color: darken(gray('900'), 5%);
+        }
+    }
+
+    &.o-item-active {
+        .o_CategoryLivechatItem_partnerImStatusIcon {
+            color: lighten(gray('900'), 5%);
+        }
+
+        .o_PartnerImStatusIcon_innerBackground {
+            color: lighten(gray('900'), 5%);
+        }
+    }
+}
+
+.o_CategoryLivechatItem_command {
+    @include o-mail-category-item-command-style();
+}
+
+.o_CategoryLivechatItem_partnerImStatusIcon {
+    font-size: x-small;
+    color: gray('900');
+}
+
+.o_CategoryLivechatItem_image{
+    @include o-mail-category-item-image-style();
+}
+
+.o_CategoryLivechatItem_imageContainer {
+    @include o-mail-category-item-image-container-style();
+}

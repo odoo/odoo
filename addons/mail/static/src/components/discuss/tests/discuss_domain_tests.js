@@ -21,6 +21,7 @@ QUnit.module('discuss_domain_tests.js', {
                 hasDiscuss: true,
             }));
             this.afterEvent = afterEvent;
+            this.afterNextRender = afterNextRender;
             this.env = env;
             this.widget = widget;
         };
@@ -126,7 +127,7 @@ QUnit.test('discuss should keep filter domain on changing thread', async functio
         eventName: 'o-thread-view-hint-processed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebar_item[data-thread-local-id="${channel.localId}"]
+                .o_CategoryItem[data-thread-local-id="${channel.localId}"]
             `).click();
         },
         message: "should wait until channel 20 is loaded after clicking on it",
@@ -158,7 +159,7 @@ QUnit.test('discuss should refresh filtered thread on receiving new message', as
         eventName: 'o-thread-view-hint-processed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebar_item[data-thread-local-id="${channel.localId}"]
+                .o_CategoryItem[data-thread-local-id="${channel.localId}"]
             `).click();
         },
         message: "should wait until channel 20 is loaded after clicking on it",
@@ -236,7 +237,7 @@ QUnit.test('discuss should refresh filtered thread on changing thread', async fu
         eventName: 'o-thread-view-hint-processed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebar_item[data-thread-local-id="${channel20.localId}"]
+                .o_CategoryItem[data-thread-local-id="${channel20.localId}"]
             `).click();
         },
         message: "should wait until channel 20 is loaded after clicking on it",
@@ -275,7 +276,7 @@ QUnit.test('discuss should refresh filtered thread on changing thread', async fu
         eventName: 'o-thread-view-hint-processed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebar_item[data-thread-local-id="${channel21.localId}"]
+                .o_CategoryItem[data-thread-local-id="${channel21.localId}"]
             `).click();
         },
         message: "should wait until channel 21 is loaded after clicking on it",
@@ -310,7 +311,7 @@ QUnit.test('discuss should refresh filtered thread on changing thread', async fu
         eventName: 'o-thread-view-hint-processed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebar_item[data-thread-local-id="${channel20.localId}"]
+                .o_CategoryItem[data-thread-local-id="${channel20.localId}"]
             `).click();
         },
         message: "should wait until channel 20 is loaded with the new message after clicking on it",
@@ -350,7 +351,7 @@ QUnit.test('select all and unselect all buttons should work on filtered thread',
         eventName: 'o-thread-view-hint-processed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebar_item[data-thread-local-id="${this.env.messaging.moderation.localId}"]
+                .o_CategoryItem[data-thread-local-id="${this.env.messaging.moderation.localId}"]
             `).click();
         },
         message: "should wait until moderation box is loaded after clicking on it",

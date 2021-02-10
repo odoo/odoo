@@ -1,0 +1,95 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CategoryChatItem {
+    padding: map-get($spacers, 2) 0;
+}
+
+.o_CategoryChatItem_name {
+    @include o-mail-category-item-name-layout();
+    
+    margin-left: 10px;
+
+    &.o-editable {
+        margin-right: $o-mail-discuss-sidebar-scrollbar-width;
+    }
+}
+
+.o_CategoryChatItem_nameInput {
+    width: 100%;
+}
+
+.o_CategoryChatItem_command {
+    @include o-mail-category-item-command-layout();
+}
+
+.o_CategoryChatItem_imageContainer {
+    position: relative;
+}
+
+.o_CategoryChatItem_partnerImStatusIcon{
+    @include o-position-absolute($bottom: 0, $right: 0);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// ------------------------------------------------------------------
+// style
+// ------------------------------------------------------------------
+
+.o_CategoryChatItem {
+
+    .o_PartnerImStatusIcon_innerBackground {
+        color: gray('900');
+    }
+
+    &:hover {
+        .o_CategoryChatItem_partnerImStatusIcon {
+            color: darken(gray('900'), 5%);
+        }
+
+        .o_PartnerImStatusIcon_innerBackground  {
+            color: darken(gray('900'), 5%);
+        }
+    }
+
+    &.o-item-active {
+        .o_CategoryChatItem_partnerImStatusIcon {
+            color: lighten(gray('900'), 5%);
+        }
+
+        .o_PartnerImStatusIcon_innerBackground {
+            color: lighten(gray('900'), 5%);
+        }
+    }
+}
+
+.o_CategoryChatItem_partnerImStatusIcon {
+    font-size: x-small;
+    color: gray('900');
+}
+
+.o_CategoryChatItem_name {
+    @include o-mail-category-item-name-style();
+}
+
+.o_CategoryChatItem_nameInput{
+    outline: none;
+    border: none;
+    border-radius: 2px;
+}
+
+.o_CategoryChatItem_command {
+    @include o-mail-category-item-command-style();
+}
+
+.o_CategoryChatItem_image {
+    @include o-mail-category-item-image-style();
+}
+
+.o_CategoryChatItem_imageContainer {
+    @include o-mail-category-item-image-container-style();
+}

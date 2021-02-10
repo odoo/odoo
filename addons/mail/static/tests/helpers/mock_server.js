@@ -400,6 +400,11 @@ MockServer.include({
         ]).length;
 
         return {
+            category_open_states: {
+                is_category_channel_open: true,
+                is_category_chat_open: true,
+                is_category_livechat_open: true,
+            },
             channel_slots: {
                 channel_channel: channelInfos,
                 channel_direct_message: directMessageInfos,

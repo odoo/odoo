@@ -48,17 +48,17 @@ QUnit.test('as moderator, moderated channel with pending moderation message', as
 
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
+            .o_CategoryItem[data-thread-local-id="${
                 this.env.messaging.moderation.localId
             }"]
         `),
         "should display the moderation box in the sidebar"
     );
     const mailboxCounter = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.messaging.moderation.localId
         }"]
-        .o_DiscussSidebarItem_counter
+        .o_CategoryItem_counter
     `);
     assert.ok(
         mailboxCounter,
@@ -73,7 +73,7 @@ QUnit.test('as moderator, moderated channel with pending moderation message', as
     // 1. go to moderation mailbox
     await afterNextRender(() =>
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
+            .o_CategoryItem[data-thread-local-id="${
                 this.env.messaging.moderation.localId
             }"]
         `).click()
@@ -215,7 +215,7 @@ QUnit.test('as moderator, moderated channel with pending moderation message', as
     // 2. go to channel 'general'
     await afterNextRender(() =>
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
+            .o_CategoryItem[data-thread-local-id="${
                 this.env.models['mail.thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
@@ -341,7 +341,7 @@ QUnit.test('as moderator, accept pending moderation message', async function (as
 
     // 1. go to moderation box
     const moderationBox = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.messaging.moderation.localId
         }"]
     `);
@@ -377,7 +377,7 @@ QUnit.test('as moderator, accept pending moderation message', async function (as
 
     // 2. go to channel 'general'
     const channel = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -461,7 +461,7 @@ QUnit.test('as moderator, reject pending moderation message (reject with explana
 
     // 1. go to moderation box
     const moderationBox = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.messaging.moderation.localId
         }"]
     `);
@@ -551,7 +551,7 @@ QUnit.test('as moderator, reject pending moderation message (reject with explana
 
     // 2. go to channel 'general'
     const channel = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -603,7 +603,7 @@ QUnit.test('as moderator, discard pending moderation message (reject without exp
 
     // 1. go to moderation box
     const moderationBox = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.messaging.moderation.localId
         }"]
     `);
@@ -668,7 +668,7 @@ QUnit.test('as moderator, discard pending moderation message (reject without exp
 
     // 2. go to channel 'general'
     const channel = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -698,7 +698,7 @@ QUnit.test('as author, send message in moderated channel', async function (asser
     });
     await this.start();
     const channel = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -755,7 +755,7 @@ QUnit.test('as author, sent message accepted in moderated channel', async functi
     await this.start();
 
     const channel = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -829,7 +829,7 @@ QUnit.test('as author, sent message rejected in moderated channel', async functi
     await this.start();
 
     const channel = document.querySelector(`
-        .o_DiscussSidebar_item[data-thread-local-id="${
+        .o_CategoryItem[data-thread-local-id="${
             this.env.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -896,7 +896,7 @@ QUnit.test('as moderator, pending moderation message accessibility', async funct
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({ id: 20, model: 'mail.channel' });
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
+            .o_CategoryItem[data-thread-local-id="${
                 this.env.messaging.moderation.localId
             }"]
         `),
@@ -905,7 +905,7 @@ QUnit.test('as moderator, pending moderation message accessibility', async funct
 
     await afterNextRender(() =>
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${thread.localId}"]
+            .o_CategoryItem[data-thread-local-id="${thread.localId}"]
         `).click()
     );
     const message = this.env.models['mail.message'].findFromIdentifyingData({ id: 100 });
@@ -917,7 +917,7 @@ QUnit.test('as moderator, pending moderation message accessibility', async funct
 
     await afterNextRender(() =>
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
+            .o_CategoryItem[data-thread-local-id="${
                 this.env.messaging.moderation.localId
             }"]
         `).click()
@@ -949,7 +949,7 @@ QUnit.test('as author, pending moderation message should appear in origin thread
 
     await afterNextRender(() =>
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${thread.localId}"]
+            .o_CategoryItem[data-thread-local-id="${thread.localId}"]
         `).click()
     );
     const message = this.env.models['mail.message'].findFromIdentifyingData({ id: 100 });
@@ -971,10 +971,9 @@ QUnit.test('as moderator, new pending moderation message posted by someone else'
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({ id: 20, model: 'mail.channel' });
-
     await afterNextRender(() =>
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${thread.localId}"]
+            .o_CategoryItem[data-thread-local-id="${thread.localId}"]
         `).click()
     );
     assert.containsNone(
@@ -1008,7 +1007,7 @@ QUnit.test('as moderator, new pending moderation message posted by someone else'
 
     await afterNextRender(() =>
         document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
+            .o_CategoryItem[data-thread-local-id="${
                 this.env.messaging.moderation.localId
             }"]
         `).click()
