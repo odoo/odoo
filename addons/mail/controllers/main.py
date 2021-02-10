@@ -87,7 +87,7 @@ class MailController(http.Controller):
                     #   _get_mail_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
                     #   - Merge the suggested company with the companies on the cookie
-                    # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
+                    # - Make a new access test if it succeeds, redirect to the record. Otherwise,
                     #   redirect to the messaging.
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
@@ -270,6 +270,7 @@ class MailController(http.Controller):
             'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
             'current_partner': request.env.user.partner_id.mail_partner_format(),
             'current_user_id': request.env.user.id,
+            'tenor_api_key': request.env['ir.config_parameter'].sudo().get_param('mail.tenor.api_key'),
         }
         return values
 

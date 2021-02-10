@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.GifCategory" owl="1">
+        <div class="o_GifCategory">
+            <img class="gif" loading="lazy" t-att-src="gifCategory.image" t-on-load="_onLoadCategory" />
+            <div class="o_GifCategoryTitle" t-on-click="_onClickGifCategory">
+                <span class="o_GifTitle">
+                    <t t-esc="gifCategory.title" />
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -111,6 +111,15 @@
                                         <EmojisPopover t-ref="emojisPopover"/>
                                     </t>
                                 </Popover>
+                                <t t-if="env.messaging.tenorApiKey">
+                                    <Popover position="'top'">
+                                        <button class="o_Composer_button o_Composer_buttonGif o_Composer_toolButton btn btn-light fa fa-fire" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Add Gif" type="button" t-on-click="_onClickGif" />
+                                        <t t-set="opened">
+                                            <GifManager gifManagerLocalId="composer.gifManager.localId" />
+                                        </t>
+                                    </Popover>
+                                </t>
+
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
                             </div>
                             <t t-if="props.isExpandable">

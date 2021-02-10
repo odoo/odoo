@@ -9,6 +9,7 @@ import ComposerSuggestedRecipientList from '@mail/components/composer_suggested_
 import DropZone from '@mail/components/drop_zone/drop_zone';
 import EmojisPopover from '@mail/components/emojis_popover/emojis_popover';
 import FileUploader from '@mail/components/file_uploader/file_uploader';
+import GifManager from '@mail/components/gif_manager/gif_manager';
 import TextInput from '@mail/components/composer_text_input/composer_text_input';
 import ThreadTextualTypingStatus from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
 import { replace } from '@mail/model/model_field_command';
@@ -26,6 +27,7 @@ const components = {
     DropZone,
     EmojisPopover,
     FileUploader,
+    GifManager,
     TextInput,
     ThreadTextualTypingStatus,
 };
@@ -272,6 +274,10 @@ class Composer extends Component {
      */
     _onClickFullComposer() {
         this.composer.openFullComposer();
+    }
+
+    _onClickGif() {
+        this.composer.gifManager.init();
     }
 
     /**

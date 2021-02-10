@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.GifFavorite" owl="1">
+        <div class="o_GifFavorite">
+            <div class="grid" t-on-scroll="_onScroll">
+                <t t-foreach="gifManager.favorites" t-as="gif" t-key="gif.localId">
+                    <div class="grid-item">
+                        <Gif gifLocalId="gif.localId" />
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

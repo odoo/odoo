@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.GifSearchInput" owl="1">
+        <div class="o_GifSearchInput">
+            <div class="GifBackCategory" t-if="gifManager.active != 'categories'" t-on-click="_onClickBack">
+                <button class="BackButton" title="Back">
+                    <i class="fa fa-arrow-left"></i>
+                </button>
+            </div>
+            <div class="gifSearchInput">
+                <i class="gifSearch_icon fa fa-search" />
+                <input type="search" t-on-input="_onInputEvent" t-att-value="gifManager.searchInputContent" />
+            </div>
+        </div>
+    </t>
+</templates>

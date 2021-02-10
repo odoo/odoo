@@ -119,6 +119,12 @@ class MockModels {
                 },
                 records: [],
             },
+            'mail.gif_favorite': {
+                fields: {
+                    gif_id: { string: 'Gif id from tenor.io', type: 'integer' },
+                },
+                records: [],
+            },
             'mail.message': {
                 fields: {
                     attachment_ids: { string: "Attachments", type: 'many2many', relation: 'ir.attachment', default: [] },

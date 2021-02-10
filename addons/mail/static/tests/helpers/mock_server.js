@@ -40,6 +40,10 @@ MockServer.include({
             this.publicUserId = data.publicUserId;
             delete data.publicUserId;
         }
+        if (data && data.tenorApiKey) {
+            this.tenorApiKey = data.tenorApiKey;
+            delete data.tenorApiKey;
+        }
         this._widget = options.widget;
 
         this._super(...arguments);
@@ -91,6 +95,283 @@ MockServer.include({
                 },
             };
         }
+        if (resource === 'https://g.tenor.com/v1/categories?key=test&locale=en_US') {
+            return {
+                json() {
+                    return {
+                        "locale": "en",
+                        "tags": [
+                            {
+                                "searchterm": "cry",
+                                "path": "https://api.tenor.com/v1/search?tag=cry&locale=en_US&key=5PFWYKTVK1VO",
+                                "image": "https://media.tenor.com/images/51392a240d27ac8dde7bd24afe7fffc1/tenor.gif",
+                                "name": "#cry"
+                            }
+                        ]
+                    };
+                }
+            };
+        }
+        if (resource === 'https://g.tenor.com/v1/gifs?ids=15579685&key=test&locale=en_US') {
+            return {
+                json() {
+                    return {
+                        next: 0,
+                        results: [ {
+                            "tags": [],
+                            "url": "https://tenor.com/bdw9p.gif",
+                            "media": [
+                                {
+                                    "nanomp4": {
+                                        "url": "https://media.tenor.com/videos/f27c8e51a74939fb0f5ea9533652e1f5/mp4",
+                                        "dims": [
+                                            150,
+                                            128
+                                        ],
+                                        "duration": 2.2,
+                                        "preview": "https://media.tenor.com/images/3cf93a0852b5460cff2962bf77b21433/tenor.png",
+                                        "size": 59361
+                                    },
+                                    "nanowebm": {
+                                        "url": "https://media.tenor.com/videos/8333fe33f3c72d707a3704e218a43fe6/webm",
+                                        "dims": [
+                                            150,
+                                            128
+                                        ],
+                                        "preview": "https://media.tenor.com/images/3cf93a0852b5460cff2962bf77b21433/tenor.png",
+                                        "size": 56669
+                                    },
+                                    "tinygif": {
+                                        "url": "https://media.tenor.com/images/f842f1ea35e0fc654880c0b2e6be012d/tenor.gif",
+                                        "dims": [
+                                            220,
+                                            189
+                                        ],
+                                        "preview": "https://media.tenor.com/images/18f479e1310f601f1e683cc61d5e03b7/tenor.gif",
+                                        "size": 330325
+                                    },
+                                    "tinymp4": {
+                                        "url": "https://media.tenor.com/videos/0191bb4c18b5dd248b23b4c478709313/mp4",
+                                        "dims": [
+                                            320,
+                                            274
+                                        ],
+                                        "duration": 2.2,
+                                        "preview": "https://media.tenor.com/images/ee61b7819c9273b176acf1be89c49ad6/tenor.png",
+                                        "size": 168273
+                                    },
+                                    "tinywebm": {
+                                        "url": "https://media.tenor.com/videos/eeb877c4332fe1b3bb5f4f0d76079a01/webm",
+                                        "dims": [
+                                            320,
+                                            274
+                                        ],
+                                        "preview": "https://media.tenor.com/images/ee61b7819c9273b176acf1be89c49ad6/tenor.png",
+                                        "size": 62570
+                                    },
+                                    "webm": {
+                                        "url": "https://media.tenor.com/videos/08b9bf5189c081d55cc3753d64b077a3/webm",
+                                        "dims": [
+                                            640,
+                                            550
+                                        ],
+                                        "preview": "https://media.tenor.com/images/d35972f2c28d55905aa06b819370ebd7/tenor.png",
+                                        "size": 127663
+                                    },
+                                    "gif": {
+                                        "url": "https://media.tenor.com/images/474ce31f4df1e3592f5ec787f915eb37/tenor.gif",
+                                        "dims": [
+                                            498,
+                                            427
+                                        ],
+                                        "preview": "https://media.tenor.com/images/d35972f2c28d55905aa06b819370ebd7/tenor.png",
+                                        "size": 2986184
+                                    },
+                                    "mp4": {
+                                        "url": "https://media.tenor.com/videos/134d5f0a9833b6f0fdb4e585964084fd/mp4",
+                                        "dims": [
+                                            640,
+                                            550
+                                        ],
+                                        "duration": 2.2,
+                                        "preview": "https://media.tenor.com/images/d35972f2c28d55905aa06b819370ebd7/tenor.png",
+                                        "size": 524047
+                                    },
+                                    "loopedmp4": {
+                                        "url": "https://media.tenor.com/videos/29590579ba16ce2868f9062807d0241a/mp4",
+                                        "dims": [
+                                            640,
+                                            550
+                                        ],
+                                        "duration": 6.6,
+                                        "preview": "https://media.tenor.com/images/d35972f2c28d55905aa06b819370ebd7/tenor.png",
+                                        "size": 1570641
+                                    },
+                                    "mediumgif": {
+                                        "url": "https://media.tenor.com/images/58ee17d37d082a72d19c1f72b29ed128/tenor.gif",
+                                        "dims": [
+                                            640,
+                                            550
+                                        ],
+                                        "preview": "https://media.tenor.com/images/acee632e939efdf889494eba1f699393/tenor.gif",
+                                        "size": 2657571
+                                    },
+                                    "nanogif": {
+                                        "url": "https://media.tenor.com/images/d70cdba341929211936846fb90fdea73/tenor.gif",
+                                        "dims": [
+                                            105,
+                                            90
+                                        ],
+                                        "preview": "https://media.tenor.com/images/381175079b1251b82e89855cccbb4b9b/tenor.gif",
+                                        "size": 85861
+                                    }
+                                }
+                            ],
+                            "created": 1574033032.77747,
+                            "shares": 1,
+                            "itemurl": "https://tenor.com/view/cat-hug-dog-annoyed-puppy-gif-15579685",
+                            "composite": null,
+                            "hasaudio": false,
+                            "title": "",
+                            "id": "15579685"
+                        } ],
+                    };
+                }
+            };
+        }
+        if (resource === 'https://g.tenor.com/v1/search?q=cry&key=test&locale=en_US') {
+            return {
+                json() {
+                    return {
+                        "results": [
+                            {
+                                "id": "18054267",
+                                "title": "",
+                                "h1_title": "",
+                                "media": [
+                                    {
+                                        "tinygif": {
+                                            "url": "https://media.tenor.com/images/097d93c00e81371b1d206e98df61b8a3/tenor.gif",
+                                            "dims": [
+                                                220,
+                                                165
+                                            ],
+                                            "size": 38902,
+                                            "preview": "https://media.tenor.com/images/e6c1778b27ef8a333b34c75c556771f4/tenor.gif"
+                                        },
+                                        "nanowebm": {
+                                            "size": 14182,
+                                            "preview": "https://media.tenor.com/images/be70bce412f95b7f9a25069514a7f09f/tenor.png",
+                                            "url": "https://media.tenor.com/videos/f82219432a7dbbe7b27db6c77f1ba410/webm",
+                                            "dims": [
+                                                150,
+                                                112
+                                            ]
+                                        },
+                                        "loopedmp4": {
+                                            "url": "https://media.tenor.com/videos/f26c1420e1c64d2beeb40f4de3bd8b9b/mp4",
+                                            "duration": 1.8,
+                                            "size": 386020,
+                                            "preview": "https://media.tenor.com/images/b4190086b93cd541460f2b1082cd855a/tenor.png",
+                                            "dims": [
+                                                640,
+                                                480
+                                            ]
+                                        },
+                                        "nanogif": {
+                                            "dims": [
+                                                120,
+                                                90
+                                            ],
+                                            "size": 15937,
+                                            "url": "https://media.tenor.com/images/51392a240d27ac8dde7bd24afe7fffc1/tenor.gif",
+                                            "preview": "https://media.tenor.com/images/2b516290a99af57cc1dd2b70af6d2667/tenor.gif"
+                                        },
+                                        "nanomp4": {
+                                            "size": 20857,
+                                            "duration": 0.6,
+                                            "dims": [
+                                                150,
+                                                112
+                                            ],
+                                            "url": "https://media.tenor.com/videos/831de46d7b956f34d7860557dbafa6db/mp4",
+                                            "preview": "https://media.tenor.com/images/be70bce412f95b7f9a25069514a7f09f/tenor.png"
+                                        },
+                                        "tinymp4": {
+                                            "preview": "https://media.tenor.com/images/edc38de3b2231680367e93ece6cb924a/tenor.png",
+                                            "url": "https://media.tenor.com/videos/b9037642300062785dccd1bd0c6a88f6/mp4",
+                                            "dims": [
+                                                320,
+                                                240
+                                            ],
+                                            "size": 43435,
+                                            "duration": 0.6
+                                        },
+                                        "gif": {
+                                            "size": 965992,
+                                            "preview": "https://media.tenor.com/images/b4190086b93cd541460f2b1082cd855a/tenor.png",
+                                            "url": "https://media.tenor.com/images/e3b409d8220d6ca3955425565957879f/tenor.gif",
+                                            "dims": [
+                                                498,
+                                                373
+                                            ]
+                                        },
+                                        "tinywebm": {
+                                            "preview": "https://media.tenor.com/images/edc38de3b2231680367e93ece6cb924a/tenor.png",
+                                            "dims": [
+                                                320,
+                                                240
+                                            ],
+                                            "size": 16055,
+                                            "url": "https://media.tenor.com/videos/6932718cd7bdf4d8d2dea4c529be92c7/webm"
+                                        },
+                                        "mediumgif": {
+                                            "dims": [
+                                                640,
+                                                480
+                                            ],
+                                            "url": "https://media.tenor.com/images/10c0b6e97b991076e13afb4240440ed7/tenor.gif",
+                                            "size": 421605,
+                                            "preview": "https://media.tenor.com/images/9e3483c58b2f44ac34f43af392b58d9d/tenor.gif"
+                                        },
+                                        "webm": {
+                                            "dims": [
+                                                640,
+                                                480
+                                            ],
+                                            "url": "https://media.tenor.com/videos/0a98a374d55f64d397eac338d41aa48b/webm",
+                                            "preview": "https://media.tenor.com/images/b4190086b93cd541460f2b1082cd855a/tenor.png",
+                                            "size": 24582
+                                        },
+                                        "mp4": {
+                                            "dims": [
+                                                640,
+                                                480
+                                            ],
+                                            "preview": "https://media.tenor.com/images/b4190086b93cd541460f2b1082cd855a/tenor.png",
+                                            "url": "https://media.tenor.com/videos/be2fa10f108387ea38a442952f7c1318/mp4",
+                                            "size": 129179,
+                                            "duration": 0.6
+                                        }
+                                    }
+                                ],
+                                "bg_color": "",
+                                "created": 1596994944.1445379,
+                                "itemurl": "https://tenor.com/view/tom-y-jerry-tom-and-jerry-meme-sad-cry-gif-18054267",
+                                "url": "https://tenor.com/bnUT1.gif",
+                                "tags": [],
+                                "flags": [],
+                                "shares": 1,
+                                "hasaudio": false,
+                                "hascaption": false,
+                                "source_id": "",
+                                "composite": null
+                            }
+                        ],
+                    };
+                }
+            };
+        }
         return this._super(...arguments);
     },
     /**
@@ -103,6 +384,9 @@ MockServer.include({
             const message_content = args.message_content;
             const context = args.context;
             return this._mockRouteMailChatPost(uuid, message_content, context);
+        }
+        if (route === '/mail/get_gif_favorites') {
+            return this._mockRouteMailGetGifFavorites();
         }
         if (route === '/mail/get_suggested_recipients') {
             const model = args.model;
@@ -336,6 +620,21 @@ MockServer.include({
         return this._mockMailThread_MessageGetSuggestedRecipients(model, res_ids);
     },
     /**
+     * Simulates `/mail/get_gif_favorites` route.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _mockRouteMailGetGifFavorites() {
+        const favorites = this._getRecords('mail.gif_favorite');
+        return {
+            results: [
+                ...favorites,
+            ],
+            'offset': 20,
+        };
+    },
+    /**
      * Simulates the `/mail/init_messaging` route.
      *
      * @private
@@ -399,6 +698,8 @@ MockServer.include({
             ['starred_partner_ids', 'in', this.currentPartnerId],
         ]).length;
 
+        const tenorApikey = this.tenorApiKey || undefined;
+
         return {
             channel_slots: {
                 channel_channel: channelInfos,
@@ -418,6 +719,7 @@ MockServer.include({
             public_partners: [publicPartnerFormat],
             shortcodes,
             starred_counter: starredCounter,
+            tenor_api_key: tenorApikey,
         };
     },
     /**

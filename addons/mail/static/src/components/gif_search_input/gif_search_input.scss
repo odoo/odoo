@@ -1,0 +1,35 @@
+.o_GifSearchInput {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1em;
+
+    .GifBackCategory {
+        margin-right: 0.5em;
+        .BackButton {
+            color: $primary;
+            text-decoration: none;
+            background-color: transparent;
+            border: none;
+        }
+    }
+
+    .gifSearchInput {
+        position: relative;
+        border-bottom: 1px solid #8f8f8f;
+        width: 100%;
+
+        .gifSearch_icon {
+            position: absolute;
+            left: 0;
+            top: 3px;
+        }
+
+        input {
+            padding-left: 1em;
+            width: 100%;
+            border: none;
+            outline: none;
+        }
+    }
+}

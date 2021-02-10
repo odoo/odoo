@@ -2,3 +2,4 @@
 from . import main
 from . import bus
 from . import home
+from . import gif

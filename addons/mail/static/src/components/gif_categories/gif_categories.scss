@@ -1,0 +1,47 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 0.25em;
+    max-height: 455px;
+    width: 420px;
+    overflow: auto;
+
+    .grid-item {
+        height: 200px;
+
+        .o_GifFavoriteCategory {
+            position: relative;
+            background: rgba($blue, .5);
+            color: $yellow;
+            font-size: 4rem;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .o_GifFavoriteOverlay {
+                width: 100%;
+                height: 100%;
+
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                justify-content: center;
+                align-items: center;
+
+                span {
+                    color: $white;
+                    font-size: 2rem;
+                }
+            }
+
+            &:hover .o_GifFavoriteOverlay {
+                display: flex;
+                background: rgba($black, .5);
+            }
+        }
+    }
+}

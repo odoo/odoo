@@ -98,7 +98,8 @@ function factory(dependencies) {
             partner_root,
             public_partners,
             shortcodes = [],
-            starred_counter = 0
+            starred_counter = 0,
+            tenor_api_key,
         }) {
             const discuss = this.messaging.discuss;
             // partners first because the rest of the code relies on them
@@ -125,6 +126,11 @@ function factory(dependencies) {
             await this.async(() => this._initChannels(channel_slots));
             // failures after channels
             this._initMailFailures(mail_failures);
+            if (tenor_api_key) {
+                this.messaging.update({
+                    tenorApiKey: tenor_api_key,
+                });
+            }
             discuss.update({ menu_id });
         }
 

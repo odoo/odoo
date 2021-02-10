@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.GifManager" owl="1">
+        <div class="o_GifManager">
+            <GifSearchInput gifManagerLocalId="gifManager.localId" />
+            <t t-if="gifManager.active == 'categories'">
+                <GifCategories gifManagerLocalId="gifManager.localId" />
+            </t>
+            <t t-if="gifManager.active == 'search'">
+                <GifSearch gifManagerLocalId="gifManager.localId" />
+            </t>
+            <t t-if="gifManager.active == 'favorites'">
+                <GifFavorite gifManagerLocalId="gifManager.localId" />
+            </t>
+        </div>
+    </t>
+</templates>

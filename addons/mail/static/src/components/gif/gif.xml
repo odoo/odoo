@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.Gif" owl="1">
+        <div class="o_Gif">
+            <button class="btn btn-favorite" t-if="!gif.isFavorite" t-on-click="_onClickFav" title="make favorite">
+                <i class="fa fa-star-o"></i>
+            </button>
+            <button class="btn btn-unfavorite" t-if="gif.isFavorite" t-on-click="_onClickUnfav" title="make favorite">
+                <i class="fa fa-star"></i>
+            </button>
+            <img class="gif" loading="lazy" t-att-src="gif.image" t-on-click="_onClickGif" t-on-loaded="_onLoadedGif" />
+        </div>
+    </t>
+</templates>

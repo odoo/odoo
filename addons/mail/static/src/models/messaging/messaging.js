@@ -314,6 +314,10 @@ function factory(dependencies) {
          * Mailbox Starred.
          */
         starred: one2one('mail.thread'),
+        /**
+         * Tenor api key to use for gif APi
+         */
+        tenorApiKey: attr(),
     };
 
     Messaging.modelName = 'mail.messaging';
