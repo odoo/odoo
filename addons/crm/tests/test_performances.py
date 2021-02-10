@@ -46,7 +46,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
 
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=474):  # crm only: 466
+            with self.assertQueryCount(user_sales_manager=475):  # crm only: 466
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
