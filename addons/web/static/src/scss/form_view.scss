@@ -54,32 +54,34 @@
         float: right!important;
     }
 
-    .o_row {
-        &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
-            display: flex;
-            width: auto!important;
-        }
+    @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+        .o_row {
+            &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
+                display: flex;
+                width: auto!important;
+            }
 
-        align-items: baseline;
-        min-width: 50px;
-        margin: 0 (-$o-form-spacing-unit/2);
+            align-items: baseline;
+            min-width: 50px;
+            margin: 0 (-$o-form-spacing-unit/2);
 
-        > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
-            flex: 0 0 auto;
-            width: auto!important;
-            margin-right: $o-form-spacing-unit/2;
-            margin-left: $o-form-spacing-unit/2;
-        }
+            > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
+                flex: 0 0 auto;
+                width: auto!important;
+                margin-right: $o-form-spacing-unit/2;
+                margin-left: $o-form-spacing-unit/2;
+            }
 
-        > .o_row {
-            margin: 0;
-        }
-        > .btn {
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-        > .o_field_boolean {
-            align-self: center;
+            > .o_row {
+                margin: 0;
+            }
+            > .btn {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            > .o_field_boolean {
+                align-self: center;
+            }
         }
     }
 
@@ -97,10 +99,6 @@
             &, & > div {
                 display: inline-block;
             }
-        }
-
-        .o_quick_editable:not(.o_form_uri) {
-            cursor: default;
         }
     }
 
@@ -134,18 +132,16 @@
             max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
         }
 
-        .o_field_x2many .o_list_table .o_handle_cell .o_row_handle {
-            padding: 0.3rem;
-        }
+        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+            .o_row {
+                > .o_field_widget, > div {
+                    flex: 1 1 auto;
+                    width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
 
-        .o_row {
-            > .o_field_widget, > div {
-                flex: 1 1 auto;
-                width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
-
-                &.o_field_boolean, &.o_priority {
-                    flex: 0 0 auto;
-                    width: auto!important;
+                    &.o_field_boolean, &.o_priority {
+                        flex: 0 0 auto;
+                        width: auto!important;
+                    }
                 }
             }
         }
@@ -195,10 +191,6 @@
                 margin: $o-statusbar-buttons-vmargin 3px $o-statusbar-buttons-vmargin 0;
                 padding-top: 2px;
                 padding-bottom: 2px;
-
-                > .o_button_icon {
-                    margin-right: $o-statbutton-spacing;
-                }
             }
         }
 
@@ -226,13 +218,17 @@
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
                     border-left: 1px solid gray('400');
-                    &.disabled {
-                        border-color: gray('300');
-                    }
                 }
 
                 &:active {
                     box-shadow: none;
+                }
+
+                &.disabled {
+                    opacity: 1.0;
+                    color: $text-muted;
+                    pointer-events: none;
+                    border-left: 1px solid gray('300');
                 }
 
                 &:not(:first-child):before, &:not(:first-child):after {
@@ -276,13 +272,6 @@
                 }
             }
 
-            > .o_arrow_button, > .dropdown-menu > .o_arrow_button {
-                &.disabled {
-                    opacity: 1.0;
-                    color: $text-muted;
-                    pointer-events: none;
-                }
-            }
         }
 
         // Touch device mode
@@ -328,6 +317,7 @@
 
         > .btn.oe_stat_button, > .o_dropdown_more {
             flex: 0 0 auto;
+
             width: percentage(1/3); // Adapt the number of visible buttons for each screen width
             @include media-breakpoint-up(md) {
                 width: percentage(1/5);
@@ -364,6 +354,7 @@
                 vertical-align: middle;
                 line-height: $o-statbutton-height;
                 width: 30%;
+                height: inherit;
 
                 &:before {
                     font-size: 22px;
@@ -490,12 +481,6 @@
         .o_priority > .o_priority_star {
             font-size: inherit;
         }
-        > h1 {
-            min-height: 55px;
-        }
-        > h2 {
-            min-height: 43px;
-        }
     }
 
     // Avatar
@@ -516,10 +501,6 @@
         display: inline-block;
         width: 100%;
         margin: 10px 0;
-
-        .o_group {
-            margin: 0;
-        }
 
         // o_group contains nested groups
         @for $i from 1 through $o-form-group-cols {
@@ -568,7 +549,7 @@
                                               // it does not really matter
             // Makes extra buttons (e.g. m2o external button) overflow on the
             // right padding of the parent element
-            .o_input_dropdown {
+            > .o_input_dropdown {
                 flex: 1 0 auto;
             }
         }
@@ -618,14 +599,6 @@
         .o_field_widget {
             margin-bottom: 0px;
         }
-    }
-    td.o_td_label .o_form_label {
-        min-height: 33px;
-    }
-    td:not(.o_field_cell) .o_form_uri > span:first-child {
-        display: inline-block;
-        padding: 1px 0;
-        margin-bottom: 1px;
     }
 
     // Translate icon
