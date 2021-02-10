@@ -128,9 +128,6 @@ class SalonBookingWeb(http.Controller):
         working_hour_obj = request.env['salon.working.hours'].search([('name','=',date_check_obj.strftime("%A"))])
         order_details = {}
         oc_list = []
-        for orders in order_obj_17:
-            if orders.chair_id.id not in oc_list:
-                oc_list.append(orders.chair_id.id)
         # AVAILABLE TIME OF BOOKED COURT
         for orders in order_obj_17:
             if orders.chair_id.id not in oc_list:
