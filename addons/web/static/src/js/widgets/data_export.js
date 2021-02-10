@@ -121,6 +121,7 @@ var DataExport = Dialog.extend({
             name: field,
             label: this.record.fields[field].string,
             store: this.record.fields[field].store,
+            type: this.record.fields[field].type,
         }));
         this._exportData(exportedFields, 'xlsx', false);
     },
