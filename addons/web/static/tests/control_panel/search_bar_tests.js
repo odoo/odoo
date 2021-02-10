@@ -571,8 +571,8 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('autocomplete a boolean value', async function (assert) {
-            assert.expect(5);
+        QUnit.test('autocompletion with a boolean field', async function (assert) {
+            assert.expect(9);
 
             this.archs['partner,false,search'] = '<search><field name="bool"/></search>';
 
@@ -598,9 +598,22 @@ odoo.define('web.search_bar_tests', function (require) {
             // select "Yes"
             await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
 
+            await cpHelpers.removeFacet(actionManager, 0);
+
+            await cpHelpers.editSearch(actionManager, "No");
+
+            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2);
+            assert.strictEqual(actionManager.$('.o_searchview_autocomplete li:last-child').text(), "No");
+
+            // select "No"
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
+
+
             assert.verifySteps([
                 JSON.stringify([]), // initial search
                 JSON.stringify([["bool", "=", true]]),
+                JSON.stringify([]),
+                JSON.stringify([["bool", "=", false]]),
             ]);
 
             actionManager.destroy();
