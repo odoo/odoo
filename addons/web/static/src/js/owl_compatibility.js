@@ -439,14 +439,14 @@ odoo.define('web.OwlCompatibility', function () {
          * @return {Promise}
          */
         async update(props = {}) {
-            if (this.__owl__.isDestroyed) {
+            if (this.__owl__.status === 5 /* destroyed */) {
                 return new Promise(() => {});
             }
 
             Object.assign(this.props, props);
 
             let prom;
-            if (this.__owl__.isMounted) {
+            if (this.__owl__.status === 3 /* mounted */) {
                 prom = this.render();
             } else {
                 // we may not be in the DOM, but actually want to be redrawn
