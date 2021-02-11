@@ -7,7 +7,7 @@ const components = {
 
 const { patch } = require('web.utils');
 
-patch(components.DiscussSidebarItem, 'im_livechat/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js', {
+patch(components.DiscussSidebarItem.prototype, 'im_livechat/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js', {
 
     //--------------------------------------------------------------------------
     // Public

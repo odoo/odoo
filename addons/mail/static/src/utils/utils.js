@@ -124,7 +124,7 @@ function patchClassMethods(Class, patchName, patch) {
  * @returns {function} unpatch function
  */
 function patchInstanceMethods(Class, patchName, patch) {
-    return webUtilsPatch(Class, patchName, patch);
+    return webUtilsPatch(Class.prototype, patchName, patch);
 }
 
 /**
@@ -158,7 +158,7 @@ function unpatchClassMethods(Class, patchName) {
  * @param {string} patchName
  */
 function unpatchInstanceMethods(Class, patchName) {
-    return webUtilsUnpatch(Class, patchName);
+    return webUtilsUnpatch(Class.prototype, patchName);
 }
 
 //------------------------------------------------------------------------------

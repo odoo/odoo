@@ -15,8 +15,6 @@ const components = {
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
-const patchMixin = require('web.patchMixin');
-
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -308,6 +306,6 @@ Object.assign(Discuss, {
     template: 'mail.Discuss',
 });
 
-return patchMixin(Discuss);
+return Discuss;
 
 });

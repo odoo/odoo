@@ -1,7 +1,6 @@
 /** @odoo-module alias=web.searchPanel **/
 
     import { Model, useModel } from "web.Model";
-    import patchMixin from "web.patchMixin";
 
     const { Component, hooks } = owl;
     const { useState, useSubEnv } = hooks;
@@ -17,9 +16,7 @@
      * @extends Component
      */
     class SearchPanel extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             useSubEnv({ searchModel: this.props.searchModel });
 
             this.state = useState({
@@ -209,4 +206,4 @@
     };
     SearchPanel.template = "web.SearchPanel";
 
-    export default patchMixin(SearchPanel);
+    export default SearchPanel;

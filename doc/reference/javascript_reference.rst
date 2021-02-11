@@ -607,6 +607,14 @@ to use inheritance, mixins.
 For these reasons, Odoo decided to use its own class system, inspired by John
 Resig. The base Class is located in *web.Class*, in the file *class.js*.
 
+
+.. note ::
+
+    Note that the custom class system should be avoided for creating new code. It
+    will be deprecated at some point, and then removed.  New classes should use
+    the standard ES6 class system.
+    
+
 Creating a subclass
 -------------------
 
@@ -2650,3 +2658,158 @@ For more information, look into the `control_panel_renderer.js <https://github.c
     https://api.jquery.com/delegate/
 
 .. _datepicker: https://github.com/Eonasdan/bootstrap-datetimepicker
+
+
+Patching code
+=============
+
+Sometimes we need to modify an object or a class in place. To achieve that, Odoo
+provides the utility function ``patch``. It is mostly useful to override/update
+the behaviour of some other component/piece of code that one does not control.
+Obviously, it is not the primary tool of working with Odoo. It should be used
+with care.
+
+Patching a simple object
+------------------------
+
+Here is a simple example of how an object can be patched:
+
+.. code-block:: javascript
+
+  const { patch } = require("web.utils");
+
+  const object = {
+    field: "a field",
+    fn() {
+      // do something
+    },
+  };
+
+  patch(object, "patch name", {
+    fn() {
+      // do things
+    },
+  });
+
+
+When patching functions, we usually want to be able to access the ``parent``
+function.  Since we are working with patch objects, not ES6 classes, we cannot
+use the native ``super`` keyword. So, Odoo provides a special method to simulate
+this behaviour: ``this._super``:
+
+.. code-block:: javascript
+
+  patch(object, "_super patch", {
+    fn() {
+      this._super(...arguments);
+      // do other things
+    },
+  });
+
+.. warning::
+
+  ``this._super`` is reassigned after each patched function is called.
+  This means that if you use an asynchronous function in the patch then you
+  cannot call ``this._super`` after an ``await``, because it may or may not be
+  the function that you expect.  The correct way to do that is to keep a reference
+  to the initial ``_super` method:
+
+  .. code-block:: javascript
+
+    patch(object, "async _super patch", {
+      async myAsyncFn() {
+        const _super = this._super;
+        await Promise.resolve();
+        await _super(...arguments);
+        // await this._super(...arguments); // this._super is undefined.
+      },
+    });
+
+
+Getters and setters are supported too!
+
+.. code-block:: javascript
+
+    patch(object, "getter/setter patch", {
+      get number() {
+        return this._super() / 2;
+      },
+      set number(value) {
+        this._super(value * 2);
+      },
+    });
+
+Native JS class
+---------------
+
+
+The ``patch`` function is similar to ``OdooClass.include``, but it is designed
+to work with anything: object, Odoo class, ES6 class.
+
+However, since ES6 classes work with the javascript prototypal inheritance, when
+one wishes to patch a standard method from a class, then we actually need to patch
+the ``prototype``:
+
+.. code-block:: javascript
+
+  class MyClass {
+    static myStaticFn() {...}
+    myPrototypeFn() {...}
+  }
+
+  // this will patch static properties!!!
+  patch(MyClass, "static patch", {
+    myStaticFn() {...},
+  });
+
+  // this is probably the usual case: patching a class method
+  patch(MyClass.prototype, "prototype patch", {
+    myPrototypeFn() {...},
+  });
+
+
+Also, Javascript handle the constructor in a special native way which makes it
+impossible to be patched. The only workaround is to call a method in the original
+constructor and patch that method instead:
+
+.. code-block:: javascript
+
+  class MyClass {
+    constructor() {
+      this.setup();
+    }
+    setup() {
+      this.number = 1;
+    }
+  }
+
+  patch(MyClass.prototype, "constructor", {
+    setup() {
+      this._super(...arguments);
+      this.doubleNumber = this.number * 2;
+    },
+  });
+
+
+Note that for this reason, Owl component have all the ``setup`` method builtin.
+Therefore, patching a component constructor is always possible:
+
+.. code-block:: javascript
+
+  patch(MyComponent.prototype, "my patch", {
+    setup() {
+      useMyHook();
+    },
+  });
+
+
+Removing a patch
+-----------------
+
+We can also remove the patch by calling the ``unpatch`` function. This is really
+only useful for tests.
+
+.. code-block:: javascript
+
+  unpatch(object, "patch name");
+

@@ -16,7 +16,7 @@ Object.assign(components.Message.components, {
     SnailmailNotificationPopover: components.SnailmailNotificationPopover,
 });
 
-patch(components.Message, 'snailmail/static/src/components/message/message.js', {
+patch(components.Message.prototype, 'snailmail/static/src/components/message/message.js', {
     /**
      * @override
      */

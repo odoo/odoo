@@ -16,6 +16,7 @@ var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
+const { patch, unpatch } = require('web.utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
 
@@ -11226,15 +11227,12 @@ QUnit.module('Views', {
 
         let mountedCounterCall = 0;
 
-        ControlPanel.patch('test.ControlPanel', T => {
-            class ControlPanelPatchTest extends T {
-                mounted() {
-                    mountedCounterCall = mountedCounterCall + 1;
-                    assert.step(`mountedCounterCall-${mountedCounterCall}`);
-                    super.mounted(...arguments);
-                }
-            }
-            return ControlPanelPatchTest;
+        patch(ControlPanel.prototype, 'test.ControlPanel', {
+            mounted() {
+                mountedCounterCall = mountedCounterCall + 1;
+                assert.step(`mountedCounterCall-${mountedCounterCall}`);
+                this._super(...arguments);
+            },
         });
 
         const MyListView = ListView.extend({
@@ -11261,7 +11259,7 @@ QUnit.module('Views', {
             'mountedCounterCall-1',
         ]);
 
-        ControlPanel.unpatch('test.ControlPanel');
+        unpatch(ControlPanel.prototype, 'test.ControlPanel');
 
         list.destroy();
     });

@@ -2,7 +2,6 @@
 
     import OwlAbstractRenderer from '../abstract_renderer_owl';
     import field_utils from 'web.field_utils';
-    import patchMixin from 'web.patchMixin';
 
     const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
 
@@ -196,4 +195,4 @@
 
     PivotRenderer.template = 'web.PivotRenderer';
 
-    export default patchMixin(PivotRenderer);
+    export default PivotRenderer;
