@@ -28,5 +28,10 @@
     <xpath expr="//*[@data-js='anchor']" position="attributes">
         <attribute name="data-exclude" add=".o_wblog_post_content_field > :not(div, section)" separator=","/>
     </xpath>
+
+    <!-- Hides ContainerWidth option for content in blog posts -->
+    <xpath expr="//div[@data-js='ContainerWidth']" position="attributes">
+        <attribute name="data-exclude" add="#o_wblog_post_content *" separator=","/>
+    </xpath>
 </template>
 </odoo>
