@@ -106,6 +106,8 @@ class AccountChartTemplate(models.Model):
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     account_journal_suspense_account_id = fields.Many2one('account.account.template', string='Journal Suspense Account')
+    account_journal_payment_debit_account_id = fields.Many2one('account.account.template', string='Journal Outstanding Receipts Account')
+    account_journal_payment_credit_account_id = fields.Many2one('account.account.template', string='Journal Outstanding Payments Account')
     default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
     default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
@@ -277,6 +279,25 @@ class AccountChartTemplate(models.Model):
         # Set default cash difference account on company
         if not company.account_journal_suspense_account_id:
             company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
+
+        account_type_current_assets = self.env.ref('account.data_account_type_current_assets')
+        if not company.account_journal_payment_debit_account_id:
+            company.account_journal_payment_debit_account_id = self.env['account.account'].create({
+                'name': _("Outstanding Receipts"),
+                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, company.bank_account_code_prefix or ''),
+                'reconcile': True,
+                'user_type_id': account_type_current_assets.id,
+                'company_id': company.id,
+            })
+
+        if not company.account_journal_payment_credit_account_id:
+            company.account_journal_payment_credit_account_id = self.env['account.account'].create({
+                'name': _("Outstanding Payments"),
+                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, company.bank_account_code_prefix or ''),
+                'reconcile': True,
+                'user_type_id': account_type_current_assets.id,
+                'company_id': company.id,
+            })
 
         if not company.default_cash_difference_expense_account_id:
             company.default_cash_difference_expense_account_id = self.env['account.account'].create({
@@ -619,6 +640,8 @@ class AccountChartTemplate(models.Model):
             'default_cash_difference_income_account_id': self.default_cash_difference_income_account_id.id,
             'default_cash_difference_expense_account_id': self.default_cash_difference_expense_account_id.id,
             'account_journal_suspense_account_id': self.account_journal_suspense_account_id.id,
+            'account_journal_payment_debit_account_id': self.account_journal_payment_debit_account_id.id,
+            'account_journal_payment_credit_account_id': self.account_journal_payment_credit_account_id.id,
             'account_cash_basis_base_account_id': self.property_cash_basis_base_account_id.id,
             'account_default_pos_receivable_account_id': self.default_pos_receivable_account_id.id,
             'income_currency_exchange_account_id': self.income_currency_exchange_account_id.id,
