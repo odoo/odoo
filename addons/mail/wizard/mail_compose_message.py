@@ -131,7 +131,8 @@ class MailComposer(models.TransientModel):
                             help='Whether the message is an internal note (comment mode only)')
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
-        'wizard_id', 'partner_id', 'Additional Contacts')
+        'wizard_id', 'partner_id', 'Additional Contacts',
+        domain=[('type', '!=', 'private')])
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     auto_delete = fields.Boolean('Delete Emails',
