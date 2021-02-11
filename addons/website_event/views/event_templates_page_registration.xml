@@ -215,6 +215,7 @@
                             <span t-if="tickets" t-field="tickets.name"/>
                             <span t-else="">Registration</span>
                         </h6>
+                        <small t-if="tickets.end_sale_date and tickets.sale_available and not tickets.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="tickets.end_sale_date"/></small>
                         <div class="ml-auto o_wevent_nowrap">
                             <t t-if="event.event_registrations_open">
                                 <span class="text-dark font-weight-bold align-middle pr-2">Qty</span>
