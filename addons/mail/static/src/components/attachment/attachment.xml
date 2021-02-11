@@ -6,7 +6,7 @@
             t-att-class="{
                 'o-downloadable': props.isDownloadable,
                 'o-editable': props.isEditable,
-                'o-has-card-details': detailsMode === 'card',
+                'o-has-card-details': attachment and detailsMode === 'card',
                 'o-temporary': attachment and attachment.isTemporary,
                 'o-viewable': attachment and attachment.isViewable,
             }" t-att-title="attachment ? attachment.displayName : undefined" t-att-data-attachment-local-id="attachment ? attachment.localId : undefined"
