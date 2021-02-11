@@ -646,7 +646,7 @@ class Contact(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         if not value:
-            return False
+            return ''
 
         opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
         opsep = options and options.get('separator') or "\n"
