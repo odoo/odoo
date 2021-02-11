@@ -1066,6 +1066,7 @@ var ImageWidget = FileWidget.extend({
     _onSearchInput: function (ev) {
         this.libraryMedia = [];
         this._super(...arguments);
+        this.$('.o_we_search_select').removeClass('d-none');
     },
     /**
      * @override

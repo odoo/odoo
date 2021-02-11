@@ -125,7 +125,7 @@
     </div>
 
     <t t-name="wysiwyg.widgets.media.search">
-        <div class="input-group ml-auto">
+        <div class="input-group mr-auto">
             <input type="text" class="form-control o_we_search" t-att-placeholder="searchPlaceholder.trim()"/>
             <div class="input-group-append">
                 <div class="input-group-text o_we_search_icon">
@@ -152,13 +152,10 @@
 
     <t t-name="wysiwyg.widgets.files.submenu">
         <div class="form-inline align-items-center py-4">
-            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" t-att-multiple="widget.options.multiImages &amp;&amp; 'multiple'"/>
+            <t t-call="wysiwyg.widgets.media.search"/>
+            <t t-raw="0"/>
 
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary o_upload_media_button">
-                    <t t-esc="uploadText"/>
-                </button>
-            </div>
+            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="widget.options.accept" t-att-multiple="widget.options.multiImages &amp;&amp; 'multiple'"/>
 
             <div class="input-group align-items-center ml-2">
                 <input type="text" class="form-control o_we_url_input o_we_horizontal_collapse o_we_transition_ease" name="url" t-att-placeholder="urlPlaceholder"/>
@@ -173,8 +170,12 @@
                     </div>
                 </div>
             </div>
-            <t t-raw="0"/>
-            <t t-call="wysiwyg.widgets.media.search"/>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary o_upload_media_button">
+                    <t t-esc="uploadText"/>
+                </button>
+            </div>
         </div>
     </t>
 
@@ -186,14 +187,14 @@
             <t t-set="searchPlaceholder">Search an image</t>
             <t t-set="urlWarningTitle">Uploaded image's format is not supported. Try with: </t>
             <t t-set="urlWarningTitle" t-value="urlWarningTitle + widget.IMAGE_EXTENSIONS.join(', ')"/>
-            <div class="d-flex justify-content-end flex-grow-1 pr-3">
+            <div class="d-flex justify-content-start flex-grow-1 ml-2">
                 <div t-attf-class="custom-control custom-switch #{__debug__ and 'd-flex' or 'd-none'} align-items-center mr-2">
                     <input class="o_we_show_optimized ml-2 custom-control-input" type="checkbox" id="o_we_show_optimized_switch"/>
                     <label class="custom-control-label" for="o_we_show_optimized_switch">
                         Show optimized images
                     </label>
                 </div>
-                <select class="custom-select o_we_search_select">
+                <select class="custom-select o_we_search_select d-none">
                     <option value="all">All</option>
                     <option value="database">My Images</option>
                     <option t-if="widget.options.useMediaLibrary" value="media-library">Illustrations</option>
