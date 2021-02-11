@@ -133,7 +133,7 @@ class Partner(models.Model):
             The return format is a list of partner data (as per returned by `mail_partner_format()`).
         """
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
-        search_dom = expression.AND([[('active', '=', True)], search_dom])
+        search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
         if channel_id:
             search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
 
