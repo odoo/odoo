@@ -611,57 +611,80 @@ var utils = {
         }, []);
     },
     /**
-     * Patch a class and return a function that remove the patch
+     * Patch an object and return a function that remove the patch
      * when called.
      *
-     * This function is the last resort solution for monkey-patching an
-     * ES6 Class, for people that do not control the code defining the Class
-     * to patch (e.g. partners), and when that Class isn't patchable already
-     * (i.e. when it doesn't have a 'patch' function, defined by the 'web.patchMixin').
-     *
-     * @param {Class} C Class to patch
+     * @param {Object} obj Object to patch
      * @param {string} patchName
      * @param {Object} patch
-     * @returns {Function}
      */
-    patch: function (C, patchName, patch) {
-        let metadata = patchMap.get(C.prototype);
-        if (!metadata) {
-            metadata = {
-                origMethods: {},
-                patches: {},
-                current: []
-            };
-            patchMap.set(C.prototype, metadata);
-        }
-        const proto = C.prototype;
-        if (metadata.patches[patchName]) {
-            throw new Error(`Patch [${patchName}] already exists`);
-        }
-        metadata.patches[patchName] = patch;
-        applyPatch(proto, patch);
-        metadata.current.push(patchName);
-
-        function applyPatch(proto, patch) {
-            Object.keys(patch).forEach(function (methodName) {
-                const method = patch[methodName];
-                if (typeof method === "function") {
-                    const original = proto[methodName];
-                    if (!(methodName in metadata.origMethods)) {
-                        metadata.origMethods[methodName] = original;
-                    }
-                    proto[methodName] = function (...args) {
-                        const previousSuper = this._super;
-                        this._super = original;
-                        const res = method.call(this, ...args);
-                        this._super = previousSuper;
-                        return res;
-                    };
-                }
+    patch: function (obj, patchName, patch) {
+        if (!patchMap.has(obj)) {
+            patchMap.set(obj, {
+                original: {},
+                patches: [],
             });
         }
+        const objDesc = patchMap.get(obj);
+        if (objDesc.patches.some(p => p.name === patchName)) {
+            throw new Error(`Class ${obj.name} already has a patch ${patchName}`);
+        }
+        objDesc.patches.push({
+            name: patchName,
+            patch,
+        });
 
-        return utils.unpatch.bind(null, C, patchName);
+        for (const k in patch) {
+            let prevDesc = null;
+            let proto = obj;
+            do {
+                prevDesc = Object.getOwnPropertyDescriptor(proto, k);
+                proto = Object.getPrototypeOf(proto);
+            } while (!prevDesc && proto);
+
+            const newDesc = Object.getOwnPropertyDescriptor(patch, k);
+            if (!objDesc.original.hasOwnProperty(k)) {
+                objDesc.original[k] = Object.getOwnPropertyDescriptor(obj, k);
+            }
+
+            if (prevDesc) {
+                const patchedFnName = `${k} (patch ${patchName})`;
+
+                if (prevDesc.value && typeof newDesc.value === "function") {
+                    makeIntermediateFunction("value", prevDesc, newDesc, patchedFnName);
+                }
+                if (prevDesc.get || prevDesc.set) {
+                    // get and set are defined together. If they are both defined
+                    // in the previous descriptor but only one in the new descriptor
+                    // then the other will be undefined so we need to apply the
+                    // previous descriptor in the new one.
+                    newDesc.get = newDesc.get || prevDesc.get;
+                    newDesc.set = newDesc.set || prevDesc.set;
+                    if (prevDesc.get && typeof newDesc.get === "function") {
+                        makeIntermediateFunction("get", prevDesc, newDesc, patchedFnName);
+                    }
+                    if (prevDesc.set && typeof newDesc.set === "function") {
+                        makeIntermediateFunction("set", prevDesc, newDesc, patchedFnName);
+                    }
+                }
+            }
+
+            Object.defineProperty(obj, k, newDesc);
+        }
+
+        function makeIntermediateFunction(key, prevDesc, newDesc, patchedFnName) {
+            const _superFn = prevDesc[key];
+            const patchFn = newDesc[key];
+            newDesc[key] = {
+                [patchedFnName](...args) {
+                    const prevSuper = this._super;
+                    this._super = _superFn.bind(this);
+                    const result = patchFn.call(this, ...args);
+                    this._super = prevSuper;
+                    return result;
+                }
+            }[patchedFnName];
+        }
     },
     /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
@@ -872,26 +895,29 @@ var utils = {
      * We define here an unpatch function.  This is mostly useful if we want to
      * remove a patch.  For example, for testing purposes
      *
-     * @param {Class} C
+     * @param {Object} obj
      * @param {string} patchName
      */
-    unpatch: function (C, patchName) {
-        const proto = C.prototype;
-        let metadata = patchMap.get(proto);
-        if (!metadata) {
-            return;
+    unpatch: function (obj, patchName) {
+        const objDesc = patchMap.get(obj);
+        if (!objDesc.patches.some(p => p.name === patchName)) {
+            throw new Error(`Class ${obj.name} does not have any patch ${patchName}`);
         }
-        patchMap.delete(proto);
+        patchMap.delete(obj);
 
-        // reset to original
-        for (let k in metadata.origMethods) {
-            proto[k] = metadata.origMethods[k];
+        // Restore original methods on the prototype and the class.
+        for (const k in objDesc.original) {
+            if (objDesc.original[k] === undefined) {
+                delete obj[k];
+            } else {
+                Object.defineProperty(obj, k, objDesc.original[k]);
+            }
         }
 
-        // apply other patches
-        for (let name of metadata.current) {
-            if (name !== patchName) {
-                utils.patch(C, name, metadata.patches[name]);
+        // Re-apply the patches except the one to remove.
+        for (const patchDesc of objDesc.patches) {
+            if (patchDesc.name !== patchName) {
+                utils.patch(obj, patchDesc.name, patchDesc.patch);
             }
         }
     },

@@ -1,8 +1,6 @@
 odoo.define('mail/static/tests/helpers/mock_models.js', function (require) {
 'use strict';
 
-const patchMixin = require('web.patchMixin');
-
 /**
  * Allows to generate mocked models that will be used by the mocked server.
  * This is defined as a class to allow patches by dependent modules and a new
@@ -253,6 +251,6 @@ class MockModels {
 
 }
 
-return patchMixin(MockModels);
+return MockModels;
 
 });

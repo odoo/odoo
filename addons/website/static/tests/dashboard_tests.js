@@ -4,6 +4,7 @@ odoo.define('website/static/tests/dashboard_tests', function (require) {
 const ControlPanel = require('web.ControlPanel');
 const Dashboard = require('website.backend.dashboard');
 const testUtils = require("web.test_utils");
+const { patch, unpatch } = require('web.utils');
 
 const { createParent, nextTick, prepareTarget } = testUtils;
 
@@ -13,18 +14,16 @@ QUnit.module('Website Backend Dashboard', {
         // This test can be removed as soon as we don't mix legacy and owl layers anymore.
         assert.expect(5);
 
-        ControlPanel.patch('test.ControlPanel', T => {
-            class ControlPanelPatchTest extends T {
-                mounted() {
-                    assert.step('mounted');
-                    super.mounted(...arguments);
-                }
-                willUnmount() {
-                    assert.step('willUnmount');
-                    super.mounted(...arguments);
-                }
-            }
-            return ControlPanelPatchTest;
+        patch(ControlPanel.prototype, 'test.ControlPanel', {
+            mounted() {
+                this.__superMounted = this._super.bind(this);
+                assert.step('mounted');
+                this.__superMounted(...arguments);
+            },
+            willUnmount() {
+                assert.step('willUnmount');
+                this.__superMounted(...arguments);
+            },
         });
 
         const params = {
@@ -60,7 +59,7 @@ QUnit.module('Website Backend Dashboard', {
         dashboard.destroy();
         assert.verifySteps(['willUnmount']);
 
-        ControlPanel.unpatch('test.ControlPanel');
+        unpatch(ControlPanel.prototype, 'test.ControlPanel');
     });
 });
 

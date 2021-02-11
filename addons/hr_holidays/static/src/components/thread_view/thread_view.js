@@ -7,7 +7,7 @@ const components = {
 
 const { patch } = require('web.utils');
 
-patch(components.ThreadView, 'hr_holidays/static/src/components/thread_view/thread_view.js', {
+patch(components.ThreadView.prototype, 'hr_holidays/static/src/components/thread_view/thread_view.js', {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

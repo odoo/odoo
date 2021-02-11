@@ -5,6 +5,7 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
     const dom = require('web.dom');
     const StockReportGeneric = require('stock.stock_report_generic');
     const testUtils = require('web.test_utils');
+    const { patch, unpatch } = require('web.utils');
 
     const { createActionManager, dom: domUtils } = testUtils;
 
@@ -77,20 +78,18 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
 
             let mountCount = 0;
 
-            ControlPanel.patch('test.ControlPanel', T => {
-                class ControlPanelPatchTest extends T {
-                    mounted() {
-                        mountCount = mountCount + 1;
-                        this.__uniqueId = mountCount;
-                        assert.step(`mounted ${this.__uniqueId}`);
-                        super.mounted(...arguments);
-                    }
-                    willUnmount() {
-                        assert.step(`willUnmount ${this.__uniqueId}`);
-                        super.mounted(...arguments);
-                    }
-                }
-                return ControlPanelPatchTest;
+            patch(ControlPanel.prototype, 'test.ControlPanel', {
+                mounted() {
+                    mountCount = mountCount + 1;
+                    this.__uniqueId = mountCount;
+                    assert.step(`mounted ${this.__uniqueId}`);
+                    this.__superMounted = this._super.bind(this);
+                    this.__superMounted(...arguments);
+                },
+                willUnmount() {
+                    assert.step(`willUnmount ${this.__uniqueId}`);
+                    this.__superMounted(...arguments);
+                },
             });
 
             const actionManager = await createActionManager({
@@ -145,7 +144,7 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
                 'willUnmount 3',
             ]);
 
-            ControlPanel.unpatch('test.ControlPanel');
+            unpatch(ControlPanel.prototype, 'test.ControlPanel');
         });
     });
 });

@@ -7,7 +7,7 @@ const components = {
 
 const { patch } = require('web.utils');
 
-patch(components.ThreadNeedactionPreview, 'thread_needaction_preview', {
+patch(components.ThreadNeedactionPreview.prototype, 'thread_needaction_preview', {
 
     //--------------------------------------------------------------------------
     // Public

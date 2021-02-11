@@ -5,7 +5,6 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
     const { device } = require("web.config");
     const { DateClasses } = require("web.dataComparisonUtils");
     const fieldUtils = require("web.field_utils");
-    const patchMixin = require("web.patchMixin");
     const { sortBy } = require("web.utils");
 
     const COLORS = [
@@ -1048,6 +1047,6 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
         withSearchPanel: { type: Boolean, optional: 1 },
     };
 
-    return patchMixin(GraphRenderer);
+    return GraphRenderer;
 
 });

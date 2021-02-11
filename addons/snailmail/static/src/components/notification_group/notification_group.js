@@ -7,7 +7,7 @@ const components = {
 
 const { patch } = require('web.utils');
 
-patch(components.NotificationGroup, 'snailmail/static/src/components/notification_group/notification_group.js', {
+patch(components.NotificationGroup.prototype, 'snailmail/static/src/components/notification_group/notification_group.js', {
 
     //--------------------------------------------------------------------------
     // Public

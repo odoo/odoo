@@ -6,7 +6,6 @@ odoo.define('web.CustomFilterItem', function (require) {
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
     const field_utils = require('web.field_utils');
-    const patchMixin = require('web.patchMixin');
     const { useModel } = require('web.Model');
 
     /**
@@ -262,5 +261,5 @@ odoo.define('web.CustomFilterItem', function (require) {
     };
     CustomFilterItem.template = 'web.CustomFilterItem';
 
-    return patchMixin(CustomFilterItem);
+    return CustomFilterItem;
 });
