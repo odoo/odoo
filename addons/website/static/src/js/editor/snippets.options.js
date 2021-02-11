@@ -2714,6 +2714,7 @@ options.registry.SnippetMove = options.Class.extend({
             dom.scrollTo(this.$target[0], {
                 extraOffset: 50,
                 easing: 'linear',
+                duration: 550,
             });
         }
     },
