@@ -151,20 +151,34 @@
                   </thead>
                   <tbody>
                     <t t-foreach="order.order_line" t-as="ol">
-                      <tr>
-                        <td>
-                          <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
-                          <span t-esc="ol.name"/>
-                        </td>
-                        <td class="text-right d-none d-sm-table-cell">
-                          <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
-                        </td>
-                        <td class="text-right">
-                          <span t-esc="ol.product_qty"/>
-                        </td>
-                        <td class="text-right">
-                          <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
-                        </td>
+                      <tr t-att-class="'bg-200 font-weight-bold o_line_section' if ol.display_type == 'line_section' else 'font-italic o_line_note' if ol.display_type == 'line_note' else ''">
+                        <t t-if="not ol.display_type">
+                          <td>
+                            <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
+                            <span t-esc="ol.name"/>
+                          </td>
+                          <td class="text-right d-none d-sm-table-cell">
+                            <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                          </td>
+                          <td class="text-right">
+                            <span t-esc="ol.product_qty"/>
+                          </td>
+                          <td class="text-right">
+                            <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                          </td>
+                        </t>
+                        <t t-if="ol.display_type == 'line_section'">
+                            <td colspan="99">
+                                <span t-field="ol.name"/>
+                            </td>
+                            <t t-set="current_section" t-value="line"/>
+                            <t t-set="current_subtotal" t-value="0"/>
+                        </t>
+                        <t t-if="ol.display_type == 'line_note'">
+                            <td colspan="99">
+                                <span t-field="ol.name"/>
+                            </td>
+                        </t>
                       </tr>
                     </t>
                   </tbody>
