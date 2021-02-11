@@ -2839,6 +2839,7 @@ class AccountMoveLine(models.Model):
             price_subtotal = self._get_price_total_and_subtotal()['price_subtotal']
             self.tax_ids = self.move_id.fiscal_position_id.map_tax(
                 self.tax_ids._origin,
+                product=self.product_id,
                 partner=self.move_id.partner_id)
             accounting_vals = self._get_fields_onchange_subtotal(
                 price_subtotal=price_subtotal,
@@ -3103,7 +3104,7 @@ class AccountMoveLine(models.Model):
             taxes = self._get_computed_taxes()
 
             if taxes and self.move_id.fiscal_position_id:
-                taxes = self.move_id.fiscal_position_id.map_tax(taxes, partner=self.partner_id)
+                taxes = self.move_id.fiscal_position_id.map_tax(taxes, product=self.product_id, partner=self.partner_id)
 
             self.tax_ids = taxes
 
