@@ -29,7 +29,7 @@ class Followers(models.Model):
     res_id = fields.Many2oneReference(
         'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
     partner_id = fields.Many2one(
-        'res.partner', string='Related Partner', ondelete='cascade', index=True)
+        'res.partner', string='Related Partner', ondelete='cascade', index=True, domain=[('type', '!=', 'private')])
     channel_id = fields.Many2one(
         'mail.channel', string='Listener', ondelete='cascade', index=True)
     subtype_ids = fields.Many2many(
