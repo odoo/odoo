@@ -128,9 +128,14 @@ class BlogPost(models.Model):
             blog_post.website_url = "/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
     def _default_content(self):
-        return '''
-            <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
+        return f'''
+            <section class="s_text_block" data-snippet="s_text_block">
+                <p class="o_container_small">
+                    {_("Start writing here...")}
+                </p>
+            </section>
         '''
+
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
