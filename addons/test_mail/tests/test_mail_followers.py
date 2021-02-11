@@ -174,6 +174,21 @@ class BaseFollowersTest(TestMailCommon):
         self.assertEqual(document.message_partner_ids, self.partner_portal, 'No active test: customer not visible')
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | customer)
 
+    @users('employee')
+    def test_followers_private_address(self):
+        """ Test standard API does not subscribe private addresses """
+        private_address = self.env['res.partner'].sudo().create({
+            'name': 'Private Address',
+            'type': 'private',
+        })
+        document = self.env['mail.test.simple'].browse(self.test_record.id)
+        document.message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
+        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal)
+
+        # works through low-level API
+        document._message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
+        self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | private_address)
+
 
 @tagged('mail_followers')
 class AdvancedFollowersTest(TestMailCommon):
