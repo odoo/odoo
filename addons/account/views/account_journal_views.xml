@@ -11,8 +11,14 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="journal_group_ids" widget="many2many_tags" readonly="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="journal_group_ids" widget="many2many_tags" readonly="1" optional="show"/>
+                    <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="code" optional="show"/>
+                    <field name="default_account_id" optional="show"/>
+                    <field name="payment_debit_account_id" optional="hide"/>
+                    <field name="payment_credit_account_id" optional="hide"/>
+                    <field name="active" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 </tree>
             </field>
         </record>

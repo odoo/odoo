@@ -80,7 +80,8 @@ class AccountJournal(models.Model):
                "'|', ('user_type_id', '=', default_account_type), ('user_type_id', 'in', type_control_ids),"
                "('user_type_id.type', 'not in', ('receivable', 'payable'))]")
     payment_debit_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
+        comodel_name='account.account', check_company=True, ondelete='restrict',
+        compute='_compute_payment_debit_account_id', store=True, readonly=False,
         help="Incoming payments entries triggered by invoices/refunds will be posted on the Outstanding Receipts Account "
              "and displayed as blue lines in the bank reconciliation widget. During the reconciliation process, concerned "
              "transactions will be reconciled with entries on the Outstanding Receipts Account instead of the "
@@ -89,7 +90,8 @@ class AccountJournal(models.Model):
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
                              '|', ('user_type_id', '=', %s), ('id', '=', default_account_id)]" % self.env.ref('account.data_account_type_current_assets').id)
     payment_credit_account_id = fields.Many2one(
-        comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
+        comodel_name='account.account', check_company=True, ondelete='restrict',
+        compute='_compute_payment_credit_account_id', store=True, readonly=False,
         help="Outgoing payments entries triggered by bills/credit notes will be posted on the Outstanding Payments Account "
              "and displayed as blue lines in the bank reconciliation widget. During the reconciliation process, concerned "
              "transactions will be reconciled with entries on the Outstanding Payments Account instead of the "
@@ -256,6 +258,30 @@ class AccountJournal(models.Model):
                 journal.suspense_account_id = journal.company_id.account_journal_suspense_account_id
             else:
                 journal.suspense_account_id = False
+
+    @api.depends('company_id', 'type')
+    def _compute_payment_debit_account_id(self):
+        for journal in self:
+            if journal.type not in ('bank', 'cash'):
+                journal.payment_debit_account_id = False
+            elif journal.payment_debit_account_id:
+                journal.payment_debit_account_id = journal.payment_debit_account_id
+            elif journal.company_id.account_journal_payment_debit_account_id:
+                journal.payment_debit_account_id = journal.company_id.account_journal_payment_debit_account_id
+            else:
+                journal.payment_debit_account_id = False
+
+    @api.depends('company_id', 'type')
+    def _compute_payment_credit_account_id(self):
+        for journal in self:
+            if journal.type not in ('bank', 'cash'):
+                journal.payment_credit_account_id = False
+            elif journal.payment_credit_account_id:
+                journal.payment_credit_account_id = journal.payment_credit_account_id
+            elif journal.company_id.account_journal_payment_credit_account_id:
+                journal.payment_credit_account_id = journal.company_id.account_journal_payment_credit_account_id
+            else:
+                journal.payment_credit_account_id = False
 
     def _compute_alias_domain(self):
         alias_domain = self._default_alias_domain()
@@ -491,7 +517,6 @@ class AccountJournal(models.Model):
 
         if journal_type in ('bank', 'cash'):
             has_liquidity_accounts = vals.get('default_account_id')
-            has_payment_accounts = vals.get('payment_debit_account_id') or vals.get('payment_credit_account_id')
             has_profit_account = vals.get('profit_account_id')
             has_loss_account = vals.get('loss_account_id')
 
@@ -514,21 +539,6 @@ class AccountJournal(models.Model):
                 default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
                 default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
                 vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
-            if not has_payment_accounts:
-                vals['payment_debit_account_id'] = self.env['account.account'].create({
-                    'name': _("Outstanding Receipts"),
-                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
-                    'reconcile': True,
-                    'user_type_id': current_assets_type.id,
-                    'company_id': company.id,
-                }).id
-                vals['payment_credit_account_id'] = self.env['account.account'].create({
-                    'name': _("Outstanding Payments"),
-                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
-                    'reconcile': True,
-                    'user_type_id': current_assets_type.id,
-                    'company_id': company.id,
-                }).id
             if journal_type == 'cash' and not has_profit_account:
                 vals['profit_account_id'] = company.default_cash_difference_income_account_id.id
             if journal_type == 'cash' and not has_loss_account:
