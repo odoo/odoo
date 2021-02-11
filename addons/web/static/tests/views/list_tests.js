@@ -7200,7 +7200,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('reference field batched in grouped list', async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         this.data.foo.records= [
             // group 1
@@ -7226,7 +7226,7 @@ QUnit.module('Views', {
                     if (args.model === 'bar') {
                         assert.deepEqual(args.args[0], [1, 2 ,3]);
                     }
-                    if (args.model === "res.currency") {
+                    if (args.model === "res_currency") {
                         assert.deepEqual(args.args[0], [1]);
                     }
                 }
