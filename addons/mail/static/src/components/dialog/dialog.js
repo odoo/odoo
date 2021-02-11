@@ -4,8 +4,6 @@ odoo.define('mail/static/src/components/dialog/dialog.js', function (require) {
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
-const patchMixin = require('web.patchMixin');
-
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -114,6 +112,6 @@ Object.assign(Dialog, {
     template: 'mail.Dialog',
 });
 
-return patchMixin(Dialog);
+return Dialog;
 
 });

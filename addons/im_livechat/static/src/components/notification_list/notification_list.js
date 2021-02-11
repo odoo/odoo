@@ -9,7 +9,7 @@ const { patch } = require('web.utils');
 
 components.NotificationList._allowedFilters.push('livechat');
 
-patch(components.NotificationList, 'im_livechat/static/src/components/notification_list/notification_list.js', {
+patch(components.NotificationList.prototype, 'im_livechat/static/src/components/notification_list/notification_list.js', {
 
     //--------------------------------------------------------------------------
     // Public

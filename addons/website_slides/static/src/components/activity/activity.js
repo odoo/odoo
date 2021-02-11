@@ -6,7 +6,7 @@ const components = {
 };
 const { patch } = require('web.utils');
 
-patch(components.Activity, 'website_slides/static/src/components/activity/activity.js', {
+patch(components.Activity.prototype, 'website_slides/static/src/components/activity/activity.js', {
 
     //--------------------------------------------------------------------------
     // Handlers

@@ -13,6 +13,7 @@ var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 var fieldUtils = require('web.field_utils');
+const { patch, unpatch } = require('web.utils');
 
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
@@ -9602,24 +9603,23 @@ QUnit.module('fields', {}, function () {
             const prom = new Promise(r => {
                 resolveCP = r;
             });
-            ControlPanel.patch('cp_patch_mock', T =>
-                class extends T {
-                    constructor() {
-                        super(...arguments);
-                        owl.hooks.onMounted(() => {
-                            assert.step('mounted');
-                        });
-                        owl.hooks.onWillUnmount(() => {
-                            assert.step('willUnmount');
-                        });
-                    }
-                    async update() {
-                        // the issue is a race condition, so we manually delay the update to turn it deterministic
-                        await prom;
-                        super.update(...arguments);
-                    }
-                }
-            );
+            patch(ControlPanel.prototype, 'cp_patch_mock', {
+                setup() {
+                    this._super(...arguments);
+                    owl.hooks.onMounted(() => {
+                        assert.step('mounted');
+                    });
+                    owl.hooks.onWillUnmount(() => {
+                        assert.step('willUnmount');
+                    });
+                },
+                async update() {
+                    const _super = this._super.bind(this);
+                    // the issue is a race condition, so we manually delay the update to turn it deterministic
+                    await prom;
+                    _super.update(...arguments);
+                },
+            });
 
             const form = await createView({
                 View: FormView,
@@ -9644,7 +9644,7 @@ QUnit.module('fields', {}, function () {
 
             assert.verifySteps([]);
 
-            ControlPanel.unpatch('cp_patch_mock');
+            unpatch(ControlPanel.prototype, 'cp_patch_mock');
             delete fieldRegistry.map.pad_like;
             form.destroy();
 

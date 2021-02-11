@@ -7,7 +7,7 @@ const components = {
 
 const { patch } = require('web.utils');
 
-patch(components.NotificationGroup, 'sms/static/src/components/notification_group/notification_group.js', {
+patch(components.NotificationGroup.prototype, 'sms/static/src/components/notification_group/notification_group.js', {
 
     //--------------------------------------------------------------------------
     // Public

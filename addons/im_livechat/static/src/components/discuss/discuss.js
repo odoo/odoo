@@ -7,7 +7,7 @@ const components = {
 
 const { patch } = require('web.utils');
 
-patch(components.Discuss, 'im_livechat/static/src/components/discuss/discuss.js', {
+patch(components.Discuss.prototype, 'im_livechat/static/src/components/discuss/discuss.js', {
 
     //--------------------------------------------------------------------------
     // Public

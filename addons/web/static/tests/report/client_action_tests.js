@@ -4,6 +4,7 @@ odoo.define('web/static/tests/report/client_action_tests', function (require) {
     const ControlPanel = require('web.ControlPanel');
     const ReportClientAction = require('report.client_action');
     const testUtils = require("web.test_utils");
+    const { patch, unpatch } = require('web.utils');
 
     const { createActionManager, dom, mock } = testUtils;
 
@@ -29,20 +30,18 @@ odoo.define('web/static/tests/report/client_action_tests', function (require) {
                 }
             });
 
-            ControlPanel.patch('test.ControlPanel', T => {
-                class ControlPanelPatchTest extends T {
-                    mounted() {
-                        mountCount = mountCount + 1;
-                        this.__uniqueId = mountCount;
-                        assert.step(`mounted ${this.__uniqueId}`);
-                        super.mounted(...arguments);
-                    }
-                    willUnmount() {
-                        assert.step(`willUnmount ${this.__uniqueId}`);
-                        super.mounted(...arguments);
-                    }
-                }
-                return ControlPanelPatchTest;
+            patch(ControlPanel.prototype, 'test.ControlPanel', {
+                mounted() {
+                    mountCount = mountCount + 1;
+                    this.__uniqueId = mountCount;
+                    assert.step(`mounted ${this.__uniqueId}`);
+                    this.__superMounted = this._super.bind(this);
+                    this.__superMounted(...arguments);
+                },
+                willUnmount() {
+                    assert.step(`willUnmount ${this.__uniqueId}`);
+                    this.__superMounted(...arguments);
+                },
             });
             const actionManager = await createActionManager({
                 actions: [
@@ -103,7 +102,7 @@ odoo.define('web/static/tests/report/client_action_tests', function (require) {
                 'willUnmount 3',
             ]);
 
-            ControlPanel.unpatch('test.ControlPanel');
+            unpatch(ControlPanel.prototype, 'test.ControlPanel');
             mock.unpatch(ReportClientAction);
         });
     });
