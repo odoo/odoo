@@ -55,7 +55,11 @@
                                 You can remove contacts from this list to avoid merging them.
                             </p>
                             <group col="2">
-                                <field name="dst_partner_id" domain="[('id', 'in', partner_ids or False)]" attrs="{'required': [('state', '=', 'selection')]}"/>
+                                <field name="dst_partner_id"
+                                    domain="[('id', 'in', partner_ids or False)]"
+                                    attrs="{'required': [('state', '=', 'selection')]}"
+                                    context="{'partner_show_db_id': True}"
+                                    options="{'always_reload': True}"/>
                             </group>
                             <field name="partner_ids" nolabel="1">
                                 <tree string="Partners">

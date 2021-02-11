@@ -40,3 +40,12 @@ class TestPartner(TransactionCase):
 
         with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"), self.cr.savepoint():
             test_partner_company.write({'company_id': company_2.id})
+
+    def test_partner_merge_wizard_dst_partner_id(self):
+        """ Check that dst_partner_id in merge wizard displays id along with partner name """
+        test_partner = self.env['res.partner'].create({'name': 'Radu the Handsome'})
+        expected_partner_name = '%s (%s)' % (test_partner.name, test_partner.id)
+
+        partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
+            {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
+        self.assertEqual(partner_merge_wizard.dst_partner_id.display_name, expected_partner_name, "'Destination Contact' name should contain db ID in brackets")

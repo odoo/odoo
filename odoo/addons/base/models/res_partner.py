@@ -662,6 +662,8 @@ class Partner(models.Model):
             name = name + "\n" + partner._display_address(without_company=True)
         name = name.replace('\n\n', '\n')
         name = name.replace('\n\n', '\n')
+        if self._context.get('partner_show_db_id'):
+            name = "%s (%s)" % (name, partner.id)
         if self._context.get('address_inline'):
             name = name.replace('\n', ', ')
         if self._context.get('show_email') and partner.email:
