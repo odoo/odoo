@@ -2094,7 +2094,7 @@ class AccountMove(models.Model):
         """ This computes the reference based on the Odoo format.
             The data used is the reference set on the partner or its database
             id otherwise. For instance if the reference of the customer is
-            'dumb customer 97', the reference will be 'CUST/dumb customer 97'.
+            'example customer 97', the reference will be 'CUST/example customer 97'.
         """
         ref = self.partner_id.ref or str(self.partner_id.id)
         prefix = _('CUST')
