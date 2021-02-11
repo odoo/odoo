@@ -45,16 +45,48 @@ class Partner(models.Model):
                  'member_lines.date_to', 'member_lines.date_from',
                  'associate_member')
     def _compute_membership_state(self):
+<<<<<<< HEAD
         today = fields.Date.today()
+=======
+        values = self._membership_state()
+        for partner in self:
+            partner.membership_state = values[partner.id]
+
+        # Do not depend directly on "associate_member.membership_state" or we might end up in an
+        # infinite loop. Since we still need this dependency somehow, we explicitly search for the
+        # "parent members" and trigger a recompute.
+        parent_members = self.search([('associate_member', 'in', self.ids)]) - self
+        if parent_members:
+            parent_members._recompute_todo(self._fields['membership_state'])
+
+    @api.depends('associate_member', 'member_lines.date_from', 'member_lines.date_cancel')
+    def _compute_membership_start(self):
+        """Return  date of membership"""
+>>>>>>> 963a6a34b5a... temp
         for partner in self:
             state = 'none'
 
             partner.membership_start = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.associate_member.id or partner.id), ('date_cancel','=',False)
             ], limit=1, order='date_from').date_from
+<<<<<<< HEAD
             partner.membership_stop = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.associate_member.id or partner.id),('date_cancel','=',False)
             ], limit=1, order='date_to desc').date_to
+=======
+
+    @api.depends('associate_member', 'member_lines.date_to', 'member_lines.date_cancel')
+    def _compute_membership_stop(self):
+        MemberLine = self.env['membership.membership_line']
+        for partner in self:
+            partner.membership_stop = self.env['membership.membership_line'].search([
+                ('partner', '=', partner.associate_member.id or partner.id),('date_cancel','=',False)
+            ], limit=1, order='date_to desc').date_to
+
+    @api.depends('member_lines.date_cancel')
+    def _compute_membership_cancel(self):
+        for partner in self:
+>>>>>>> 963a6a34b5a... temp
             partner.membership_cancel = self.env['membership.membership_line'].search([
                 ('partner', '=', partner.id)
             ], limit=1, order='date_cancel').date_cancel
