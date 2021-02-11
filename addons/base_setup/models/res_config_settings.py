@@ -22,6 +22,9 @@ class ResConfigSettings(models.TransientModel):
         string='Allow the users to synchronize their calendar  with Google Calendar')
     module_microsoft_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar with Outlook Calendar')
+    module_mail_client_extension = fields.Boolean(
+        string='Allow integration with the mail plugins'
+    )
     module_google_drive = fields.Boolean("Attach Google documents to any record")
     module_google_spreadsheet = fields.Boolean("Google Spreadsheet")
     module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")

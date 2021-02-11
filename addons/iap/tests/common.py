@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import exceptions
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.crm_iap_lead_enrich.models.iap_enrich_api import IapEnrichAPI
+from odoo.addons.iap.models.iap_enrich_api import IapEnrichAPI
 from odoo.tests import common
 
 
