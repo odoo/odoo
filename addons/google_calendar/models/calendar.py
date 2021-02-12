@@ -53,7 +53,20 @@ class Meeting(models.Model):
         return super().write(values)
 
     def _get_sync_domain(self):
+<<<<<<< HEAD
         return [('partner_ids.user_ids', 'in', self.env.user.id)]
+=======
+        # in case of full sync, limit to a range of 1y in past and 1y in the future by default
+        ICP = self.env['ir.config_parameter'].sudo()
+        day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
+        lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
+        upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
+        return [
+            ('partner_ids.user_ids', 'in', self.env.user.id),
+            ('stop', '>', lower_bound),
+            ('start', '<', upper_bound)
+        ]
+>>>>>>> f07fd3e3746... temp
 
     @api.model
     def _odoo_values(self, google_event, default_reminders=()):
