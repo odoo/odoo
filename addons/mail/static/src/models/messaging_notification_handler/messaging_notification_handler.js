@@ -129,6 +129,8 @@ function factory(dependencies) {
                         partner_id,
                         partner_name,
                     });
+                case 'channel_updated':
+                    return this._handleNotificationChannelUpdated(channelId, data);
                 default:
                     return this._handleNotificationChannelMessage(channelId, data);
             }
@@ -680,6 +682,23 @@ function factory(dependencies) {
                 message,
                 type: 'info',
             });
+        }
+
+        /**
+         * @private
+         * @param {integer} channelId
+         * @param {Object} messageData
+         */
+        _handleNotificationChannelUpdated(channelId, messageData) {
+            const convertedData = this.env.models['mail.thread'].convertData(messageData.channel);
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: channelId,
+                model: 'mail.channel',
+            });
+            if (!channel) {
+                return;
+            }
+            channel.update(convertedData);
         }
 
         /**

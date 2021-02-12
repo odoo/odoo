@@ -256,6 +256,18 @@ class Channel(models.Model):
                 ('res_id', 'in', self.ids)
             ])._moderate_accept()
 
+        # Reflect changes when switching a channel to a mailing one or vice versa
+        if 'email_send' in vals:
+            notifications = []
+            for channel in self:
+                notifications.append([(self._cr.dbname, 'mail.channel', channel.id), {
+                    'info': 'channel_updated',
+                    'channel': {
+                        'mass_mailing': channel.email_send,
+                    },
+                }])
+            self.env['bus.bus'].sendmany(notifications)
+
         return result
 
     def init(self):
