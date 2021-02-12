@@ -145,10 +145,10 @@ class Product(models.Model):
                 '|',
                     '&',
                         ('state', '=', 'done'),
-                        ('date', '<=', from_date),
+                        ('date', '>=', from_date),
                     '&',
                         ('state', '!=', 'done'),
-                        ('date_expected', '<=', from_date),
+                        ('date_expected', '>=', from_date),
             ]
             domain_move_in += date_date_expected_domain_from
             domain_move_out += date_date_expected_domain_from
