@@ -837,6 +837,9 @@ var ListController = BasicController.extend({
             ev.data.onFailure = saveMulti; // will show the appropriate dialog
             // disable onchanges as we'll save directly
             ev.data.notifyChange = false;
+            // In multi edit mode, we will be asked if we want to write on the selected
+            // records, so the force_save for readonly is not necessary.
+            ev.data.force_save = false;
         }
         this._super.apply(this, arguments);
     },
