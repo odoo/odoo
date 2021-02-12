@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo import tools
 
 
 class AccountJournal(models.Model):
@@ -29,6 +30,9 @@ class AccountJournal(models.Model):
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
+
+    def init(self):
+        tools.create_index(self._cr, 'account_move_line_move_product_index', self._table, ['move_id', 'product_id'])
 
     @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
     def _compute_tax_base_amount(self):
