@@ -7709,6 +7709,44 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view (multi edition): writable fields in readonly (force save)', async function (assert) {
+        assert.expect(7);
+
+        // boolean toogle widget allows for writing on the record even in readonly mode
+        const list = await createView({
+            arch: `
+                <tree multi_edit="1">
+                    <field name="bar" widget="boolean_toggle"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+            mockRPC(route, args) {
+                assert.step(args.method || route);
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args, [[1,3], {bar: false}]);
+                }
+                return this._super(...arguments);
+            }
+        });
+
+        assert.verifySteps(['/web/dataset/search_read']);
+        // select two records
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(2) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row .o_field_boolean')[0]);
+
+        assert.ok($('.modal').text().includes("Confirmation"), "Modal should ask to save changes");
+        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.verifySteps([
+            'write',
+            'read',
+        ]);
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition with readonly modifiers', async function (assert) {
         assert.expect(5);
 
