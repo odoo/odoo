@@ -427,18 +427,25 @@
 
 
 .o_theme_install_loader_container {
+    padding: 7%;
     background-color: rgba($o-shadow-color, .9);
+    font-size: 37px;
+    font-family: "Montserrat", $font-family-sans-serif;
     pointer-events: all;
-    font-size: 4.5rem;
     justify-content: space-evenly;
     .o_tooltip {
-        top: 0 !important;
+        top: auto !important;
+        bottom: 11px !important;
         left: 0 !important;
         margin-right: 7px !important;
-        padding-left: 28px !important;
+        padding-left: 33px !important;
     }
     .o_theme_install_loader_tip {
         font-size: 0.5em;
+
+        @include media-breakpoint-down(md) {
+            width: 50% !important;
+        }
     }
 }
 .o_theme_install_loader {

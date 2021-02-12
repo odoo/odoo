@@ -25,13 +25,13 @@
     </t>
     <t t-name="website.ThemePreview.Loader">
         <div class="o_theme_install_loader_container position-fixed fixed-top fixed-left
-            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold">
+            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold text-center">
             <t t-if="showTips">Building your website...</t>
             <div class="o_theme_install_loader"></div>
-            <p t-if="showTips" class="o_theme_install_loader_tip text-center w-25">
-                TIP: Follow the
-                <span class="o_tooltip o_tooltip_visible top o_animated position-relative"></span>
-                to build the perfect page in 5 steps.
+            <p t-if="showTips" class="o_theme_install_loader_tip w-25">
+                TIP: Once loaded, follow the
+                <span class="o_tooltip o_tooltip_visible bottom o_animated position-relative"></span>
+                <br/>pointer to build the perfect page in 7 steps.
             </p>
         </div>
     </t>
