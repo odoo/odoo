@@ -971,8 +971,12 @@ exports.PosModel = Backbone.Model.extend({
 
         return new Promise(function (resolve, reject) {
             self.flush_mutex.exec(function () {
-                var flushed = self._flush_orders([self.db.get_order(order_id)], opts);
-
+                var order = self.db.get_order(order_id);
+                if (order){
+                    var flushed = self._flush_orders([order], opts);
+                } else {
+                    var flushed = Promise.resolve([]);
+                }
                 flushed.then(resolve, reject);
 
                 return flushed;
