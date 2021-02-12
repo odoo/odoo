@@ -11,6 +11,7 @@ class MrpRoutingWorkcenter(models.Model):
     _check_company_auto = True
 
     name = fields.Char('Operation', required=True)
+    active = fields.Boolean(default=True)
     workcenter_id = fields.Many2one('mrp.workcenter', 'Work Center', required=True, check_company=True)
     sequence = fields.Integer(
         'Sequence', default=100,
