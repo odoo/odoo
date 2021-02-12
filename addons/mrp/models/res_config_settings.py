@@ -34,7 +34,10 @@ class ResConfigSettings(models.TransientModel):
         # Work Orders' is deactivated.
         # Long story short: if 'mrp_workorder' is already installed, we don't uninstall it based on
         # group_mrp_routings
+        operations = self.env['mrp.routing.workcenter'].with_context({'active_test': False}).search([('company_id', '=', self.company_id.id)])
         if self.group_mrp_routings:
             self.module_mrp_workorder = True
-        elif not self.env['ir.module.module'].search([('name', '=', 'mrp_workorder'), ('state', '=', 'installed')]):
-            self.module_mrp_workorder = False
+        else:
+            operations.action_archive()  # When deactivating workorders we want to archive all the operations linked to the company
+            if not self.env['ir.module.module'].search([('name', '=', 'mrp_workorder'), ('state', '=', 'installed')]):
+                self.module_mrp_workorder = False
