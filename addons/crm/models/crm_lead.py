@@ -8,6 +8,7 @@ from datetime import date, datetime, timedelta
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
@@ -17,6 +18,8 @@ from odoo.tools import date_utils, email_re, email_split
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
+
+
 
 CRM_LEAD_FIELDS_TO_MERGE = [
     # UTM mixin
@@ -451,7 +454,7 @@ class Lead(models.Model):
             if lead.email_from:
                 email_state = 'incorrect'
                 for email in email_split(lead.email_from):
-                    if tools.email_normalize(email):
+                    if mail_validation.mail_validate(email):
                         email_state = 'correct'
                         break
             lead.email_state = email_state
