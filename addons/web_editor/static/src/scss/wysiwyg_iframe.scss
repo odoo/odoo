@@ -17,6 +17,10 @@ iframe.wysiwyg_iframe.o_fullscreen {
 body.o_in_iframe {
     background-color: $o-view-background-color;
 
+    &.editor_enable {
+        padding-top: var(--o-we-toolbar-height) !important;
+    }
+
     .note-statusbar {
         display: none;
     }
