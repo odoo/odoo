@@ -7,7 +7,7 @@ class MembershipLine(models.Model):
 
     _inherit = 'membership.membership_line'
 
-    def get_published_companies(self, limit=None):
+    def _get_published_companies(self, limit=None):
         if not self.ids:
             return []
         limit_clause = '' if limit is None else ' LIMIT %d' % limit
