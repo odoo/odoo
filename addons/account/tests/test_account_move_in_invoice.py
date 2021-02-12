@@ -1789,3 +1789,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         move.post()
         self.assertEquals(move.name, 'INV/2019/01/1')
+
+    def test_in_invoice_payment_ref(self):
+        ''' Test the 'name' of the payable line fallbacks on the move's ref if the payment ref is empty. '''
+        ref = 'VENDORBILL123456'
+        with Form(self.invoice) as move_form:
+            move_form.ref = ref
+
+        self.assertInvoiceValues(self.invoice, [
+            self.product_line_vals_1,
+            self.product_line_vals_2,
+            self.tax_line_vals_1,
+            self.tax_line_vals_2,
+            {
+                **self.term_line_vals_1,
+                'name': ref,
+            },
+        ], {
+            **self.move_vals,
+            'ref': ref,
+        })
