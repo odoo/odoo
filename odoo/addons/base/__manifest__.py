@@ -12,6 +12,7 @@ The kernel of Odoo, needed for all installation.
 """,
     'depends': [],
     'data': [
+        'data/res_bank.xml',
         'data/res.lang.csv',
         'data/res_lang_data.xml',
         'data/res_partner_data.xml',
