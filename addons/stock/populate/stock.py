@@ -67,11 +67,34 @@ class Warehouse(models.Model):
         ]
 
 
+class StorageCategory(models.Model):
+    _inherit = 'stock.storage.category'
+
+    _populate_sizes = {'small': 10, 'medium': 20, 'large': 50}
+
+    def _populate(self, size):
+        # Activate options used in the stock populate to have a ready Database
+
+        self.env['res.config.settings'].create({
+            'group_stock_storage_categories': True,  # Activate storage categories
+        }).execute()
+
+        return super()._populate(size)
+
+    def _populate_factories(self):
+
+        return [
+            ('name', populate.constant("SC-{counter}")),
+            ('max_weight', populate.iterate([10, 100, 500, 1000])),
+            ('allow_new_product', populate.randomize(['empty', 'same', 'mixed'], [0.1, 0.1, 0.8])),
+        ]
+
+
 class Location(models.Model):
     _inherit = 'stock.location'
 
     _populate_sizes = {'small': 50, 'medium': 2_000, 'large': 50_000}
-    _populate_dependencies = ['stock.warehouse']
+    _populate_dependencies = ['stock.warehouse', 'stock.storage.category']
 
     def _populate(self, size):
         locations = super()._populate(size)
@@ -132,19 +155,75 @@ class Location(models.Model):
         # Change 20 % the usage of some no-leaf location into 'view' (instead of 'internal')
         to_views = locations_sample.filtered_domain([('child_ids', '!=', [])]).ids
         random = populate.Random('stock_location_views')
-        self.browse(random.sample(to_views, int(len(to_views) * 0.1))).usage = 'view'
+        view_locations = self.browse(random.sample(to_views, int(len(to_views) * 0.1)))
+        view_locations.write({
+            'usage': 'view',
+            'storage_category_id': False,
+        })
 
         return locations
 
     def _populate_factories(self):
         company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
         removal_strategies = self.env['product.removal'].search([])
+        storage_category_ids = self.env.registry.populated_models['stock.storage.category']
+
+        def get_storage_category_id(values, counter, random):
+            if random.random() > 0.5:
+                return random.choice(storage_category_ids)
+            return False
 
         return [
             ('name', populate.constant("Loc-{counter}")),
             ('usage', populate.constant('internal')),
             ('removal_strategy_id', populate.randomize(removal_strategies.ids + [False])),
             ('company_id', populate.iterate(company_ids)),
+            ('storage_category_id', populate.compute(get_storage_category_id)),
+        ]
+
+
+class StockPutawayRule(models.Model):
+    _inherit = 'stock.putaway.rule'
+
+    _populate_sizes = {'small': 10, 'medium': 20, 'large': 50}
+    _populate_dependencies = ['stock.location', 'product.product']
+
+    def _populate_factories(self):
+        company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
+        product_ids = self.env['product.product'].browse(self.env.registry.populated_models['product.product']).filtered(lambda p: p.type == 'product').ids
+        product_categ_ids = self.env.registry.populated_models['product.category']
+        storage_categ_ids = self.env.registry.populated_models['stock.storage.category']
+        location_ids = self.env['stock.location'].browse(self.env.registry.populated_models['stock.location']).filtered(lambda loc: loc.usage == 'internal')
+
+        def get_product_id(values, counter, random):
+            if random.random() > 0.5:
+                return random.choice(product_ids)
+            return False
+
+        def get_category_id(values, counter, random):
+            if not values['product_id']:
+                return random.choice(product_categ_ids)
+            return False
+
+        def get_location_in_id(values, counter, random):
+            locations = location_ids.filtered(lambda loc: loc.company_id.id == values['company_id'])
+            return random.choice(locations.ids)
+
+        def get_location_out_id(values, counter, random):
+            child_locs = self.env['stock.location'].search([
+                ('id', 'child_of', values['location_in_id']),
+                ('usage', '=', 'internal')
+            ]) + self.env['stock.location'].browse(values['location_in_id'])
+            return random.choice(child_locs.ids)
+
+        return [
+            ('company_id', populate.randomize(company_ids)),
+            ('product_id', populate.compute(get_product_id)),
+            ('category_id', populate.compute(get_category_id)),
+            ('location_in_id', populate.compute(get_location_in_id)),
+            ('location_out_id', populate.compute(get_location_out_id)),
+            ('sequence', populate.randint(1, 1000)),
+            ('storage_category_id', populate.randomize(storage_categ_ids)),
         ]
 
 
@@ -228,7 +307,7 @@ class Inventory(models.Model):
     _inherit = 'stock.inventory'
 
     _populate_sizes = {'small': 5, 'medium': 10, 'large': 20}
-    _populate_dependencies = ['stock.location']
+    _populate_dependencies = ['stock.location', 'product.product']
 
     def _populate(self, size):
         inventories = super()._populate(size)
@@ -497,7 +576,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     _populate_sizes = {'small': 1_000, 'medium': 20_000, 'large': 1_000_000}
-    _populate_dependencies = ['stock.picking']
+    _populate_dependencies = ['stock.picking', 'product.product']
 
     def _populate(self, size):
         moves = super()._populate(size)
