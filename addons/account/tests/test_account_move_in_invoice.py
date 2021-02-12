@@ -1761,3 +1761,23 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'amount_currency': 96.0,   'debit': 48.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
             {'amount_currency': -96.0,  'debit': 0.0,   'credit': 48.0,     'account_id': wizard.expense_accrual_account.id,        'reconciled': True},
         ])
+
+    def test_in_invoice_payment_reference(self):
+        ''' Test the 'name' of the payable line fallbacks on the move's ref if the payment ref is empty. '''
+        ref = 'VENDORBILL123456'
+        with Form(self.invoice) as move_form:
+            move_form.ref = ref
+
+        self.assertInvoiceValues(self.invoice, [
+            self.product_line_vals_1,
+            self.product_line_vals_2,
+            self.tax_line_vals_1,
+            self.tax_line_vals_2,
+            {
+                **self.term_line_vals_1,
+                'name': ref,
+            },
+        ], {
+            **self.move_vals,
+            'ref': ref,
+        })
