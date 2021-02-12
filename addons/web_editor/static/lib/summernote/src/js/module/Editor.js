@@ -680,7 +680,9 @@ define([
      * @return {String} [return.url=""]
      */
     this.getLinkInfo = function ($editable) {
-      this.focus($editable);
+      // ODOO: modification
+      // this.focus($editable);
+      this.focus($editable.closest(':not(form)'));
 
       var rng = range.create().expand(dom.isAnchor);
 
