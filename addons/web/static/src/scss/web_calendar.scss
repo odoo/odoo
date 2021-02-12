@@ -51,6 +51,11 @@ $o-cw-filter-avatar-size: 20px;
             font-weight: 500;
         }
 
+        // Try to show one full lien for short event
+        &.fc-short .fc-content {
+            margin-top: 1px;
+        }
+
         &.o_cw_custom_highlight {
             z-index: 10!important;
 
@@ -208,6 +213,7 @@ $o-cw-filter-avatar-size: 20px;
             // Try to avoid showing no title for short event
             &.fc-short {
                 padding-top: 0;
+                padding-bottom: 0;
             }
         }
 
