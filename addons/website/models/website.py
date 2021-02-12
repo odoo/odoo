@@ -30,6 +30,7 @@ DEFAULT_CDN_FILTERS = [
     "^/web/(css|js)/",
     "^/web/image",
     "^/web/content",
+    "^/web/assets",
     # retrocompatibility
     "^/website/image/",
 ]
