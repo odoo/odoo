@@ -7692,7 +7692,7 @@ QUnit.module('basic_fields', {
             }
         };
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7739,7 +7739,7 @@ QUnit.module('basic_fields', {
         assert.expect(4);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7752,15 +7752,15 @@ QUnit.module('basic_fields', {
                 return this._super.apply(this, arguments);
             }
         });
-        var $view = $('#qunit-fixture').contents();
+        const $view = $('#qunit-fixture').contents();
         $view.prependTo('body'); // => select with click position
 
         assert.strictEqual(form.$('.o_basic_progressbar_value').text(), '99',
             'Initial value should be correct');
 
-        var $progressBarEl = form.$('.o_basic_progress');
-        var top = $progressBarEl.offset().top + 5;
-        var left = $progressBarEl.offset().left + 5;
+        const $progressBarEl = form.$('.o_basic_progress');
+        const top = $progressBarEl.offset().top + 5;
+        const left = $progressBarEl.offset().left + 5;
         try {
             testUtils.triggerPositionalMouseEvent(left, top, "click");
         } catch (e) {
@@ -7782,7 +7782,7 @@ QUnit.module('basic_fields', {
         this.data.partner.records[0].int_field = 99;
         // Warning : Different behaviour than the one in ProgressBar
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7798,7 +7798,7 @@ QUnit.module('basic_fields', {
                 return this._super.apply(this, arguments);
             }
         });
-        var $view = $('#qunit-fixture').contents();
+        const $view = $('#qunit-fixture').contents();
         $view.prependTo('body'); // => select with click position
 
         assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
@@ -7806,9 +7806,9 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), '99',
             'Initial value should be correct');
 
-        var $progressBarEl = form.$('.o_basic_progress');
-        var top = $progressBarEl.offset().top + 5;
-        var left = $progressBarEl.offset().left + 5;
+        const $progressBarEl = form.$('.o_basic_progress');
+        const top = $progressBarEl.offset().top + 5;
+        const left = $progressBarEl.offset().left + 5;
         try {
             testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
         } catch (e) {
@@ -7855,7 +7855,7 @@ QUnit.module('basic_fields', {
         assert.expect(5);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7880,7 +7880,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_basic_progressbar_value .o_input').val(), '99',
             'Initial value should be correct');
 
-        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        const $valInput = form.$('.o_basic_progressbar_value .o_input');
         assert.strictEqual($valInput.val(), '99', 'Initial value in input is correct');
         $valInput.focus();
         $valInput.val("");
@@ -7898,7 +7898,7 @@ QUnit.module('basic_fields', {
         assert.expect(2);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7920,7 +7920,7 @@ QUnit.module('basic_fields', {
         assert.expect(2);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7942,7 +7942,7 @@ QUnit.module('basic_fields', {
         assert.expect(2);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7964,7 +7964,7 @@ QUnit.module('basic_fields', {
         assert.expect(6);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -7991,7 +7991,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_basic_progressbar_unit').text(), ' / 0',
             'Initial value should be correct');
 
-        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        const $valInput = form.$('.o_basic_progressbar_value .o_input');
         assert.strictEqual($valInput.val(), '99', 'Initial value in input is correct');
         $valInput.focus();
         $valInput.val("");
@@ -8013,7 +8013,7 @@ QUnit.module('basic_fields', {
 
         // Warning : Different behaviour than the ProgressBar : If you want to edit a value as a max value, the widget must be used in this "max value" field.
         //           And, thus, use the "value" field as an option. This field must be present in the view, indeed.
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -8041,7 +8041,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_basic_progressbar_unit .o_input').val(), '0.4',
             'Initial value should be correct');
 
-        var $valInput = form.$('.o_basic_progressbar_unit .o_input');
+        const $valInput = form.$('.o_basic_progressbar_unit .o_input');
         assert.strictEqual($valInput.val(), "0.4", 'Initial value in input is correct');
         $valInput.focus();
         $valInput.val("");
@@ -8061,7 +8061,7 @@ QUnit.module('basic_fields', {
         assert.expect(7);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -8096,7 +8096,7 @@ QUnit.module('basic_fields', {
         assert.expect(5);
         this.data.partner.records[0].int_field = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -8122,7 +8122,7 @@ QUnit.module('basic_fields', {
 
         assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
-        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        const $valInput = form.$('.o_basic_progressbar_value .o_input');
         assert.strictEqual($valInput.val(), '99', 'Initial value in input is correct');
         document.execCommand('insertText', false, 'ninety nine');
         await testUtils.form.clickSave(form);
@@ -8137,7 +8137,7 @@ QUnit.module('basic_fields', {
         assert.expect(4);
         this.data.partner.records[0].qux = 99;
 
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -8163,7 +8163,7 @@ QUnit.module('basic_fields', {
 
         assert.ok(form.$('.o_form_view').hasClass('o_form_editable'), 'Form in edit mode');
 
-        var $valInput = form.$('.o_basic_progressbar_value .o_input');
+        const $valInput = form.$('.o_basic_progressbar_value .o_input');
         assert.strictEqual($valInput.val(), '99:0', 'Initial value in input is correct');
         $valInput.val("");
         $valInput.focus();
@@ -8182,7 +8182,7 @@ QUnit.module('basic_fields', {
         assert.expect(6);
         this.data.partner.records[0].int_field = 99;
 
-        var kanban = await createView({
+        const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -8205,7 +8205,7 @@ QUnit.module('basic_fields', {
 
         await testUtilsDom.click(kanban.$('.o_progressbar'));
 
-        var $valInput = kanban.$('.o_basic_progressbar_unit .o_input');
+        const $valInput = kanban.$('.o_basic_progressbar_unit .o_input');
         assert.strictEqual($valInput.val(), "0.4", 'Initial value in input is correct');
         await testUtils.fields.editAndTrigger($valInput, '69', ['input', 'blur']);
 
@@ -8223,7 +8223,7 @@ QUnit.module('basic_fields', {
         assert.expect(3);
         this.data.partner.records[0].int_field = 99;
 
-        var kanban = await createView({
+        const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -8244,7 +8244,7 @@ QUnit.module('basic_fields', {
 
         await testUtilsDom.click(kanban.$('.o_progressbar'));
 
-        var $valInput = kanban.$('.o_basic_progressbar_value .o_input');
+        const $valInput = kanban.$('.o_basic_progressbar_value .o_input');
         assert.strictEqual($valInput.val(), "99", 'Initial value in input is correct');
         await testUtils.fields.editAndTrigger($valInput, '42', ['input', 'blur']);
 
@@ -8258,7 +8258,7 @@ QUnit.module('basic_fields', {
         assert.expect(3);
         this.data.partner.records[0].int_field = 99;
 
-        var kanban = await createView({
+        const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
@@ -8274,7 +8274,7 @@ QUnit.module('basic_fields', {
                   '</kanban>',
             domain: [['id', '=', 1]],
         });
-        var $view = $('#qunit-fixture').contents();
+        const $view = $('#qunit-fixture').contents();
         $view.prependTo('body'); // => select with click position
 
         assert.strictEqual(kanban.$('.o_basic_progressbar_value').text(), '99',
@@ -8282,11 +8282,11 @@ QUnit.module('basic_fields', {
 
         await testUtilsDom.click(kanban.$('.o_progressbar'));
 
-        var $valInput = kanban.$('.o_basic_progressbar_value .o_input');
+        const $valInput = kanban.$('.o_basic_progressbar_value .o_input');
         assert.strictEqual($valInput.val(), "99", 'Initial value in input is correct');
-        var $progressBarEl = kanban.$('.o_basic_progress');
-        var top = $progressBarEl.offset().top + 5;
-        var left = $progressBarEl.offset().left + 1;
+        const $progressBarEl = kanban.$('.o_basic_progress');
+        const top = $progressBarEl.offset().top + 5;
+        const left = $progressBarEl.offset().left + 1;
         try {
             testUtils.dom.triggerPositionalMouseEvent(left, top, "click");
         } catch (e) {

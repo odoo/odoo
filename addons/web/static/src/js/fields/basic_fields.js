@@ -3050,7 +3050,7 @@ var FieldProgressBar = AbstractField.extend({
  * - human_number : If set, the numbers are shown using human_numbers in readonly rendering, default : formatValue is used.
  * - format_type : If set, overrides the formatType of the field used in the formatValue.
  */
-var FieldBasicProgressBar = FieldInteger.extend({
+const FieldBasicProgressBar = FieldInteger.extend({
     description: _lt("Basic Progress Bar"),
     template: "BasicProgressBar",
     events: _.extend({}, FieldInteger.prototype.events, {
@@ -3094,7 +3094,7 @@ var FieldBasicProgressBar = FieldInteger.extend({
      */
     _renderEdit: function () {
         this._render_value();
-        if (this.enable_edit_text) {    
+        if (this.enable_edit_text) {
             if (this.edit_max_value) {
                 this._prepareInput(this.$input).appendTo(this.$('.o_basic_progressbar_unit'));
             } else {
@@ -3115,9 +3115,9 @@ var FieldBasicProgressBar = FieldInteger.extend({
      * @param {Number} v
      */
     _render_value: function (v, fromDragAndDrop) {
-        var value = this.edit_max_value ? (this.recordData[this.nodeOptions.progress_value_field] || this.progress_value) : this.value;
-        var maxValue = this.edit_max_value ? this.value : (this.recordData[this.nodeOptions.max_value_field] || this.max_value);
-        var parsed = this._parseInput(v);
+        let value = this.edit_max_value ? (this.recordData[this.nodeOptions.progress_value_field] || this.progress_value) : this.value;
+        let maxValue = this.edit_max_value ? this.value : (this.recordData[this.nodeOptions.max_value_field] || this.max_value);
+        const parsed = this._parseInput(v);
         if (parsed !== null) {
             if (this.edit_max_value) {
                 maxValue = parsed;
@@ -3128,7 +3128,7 @@ var FieldBasicProgressBar = FieldInteger.extend({
         value = value || 0;
         maxValue = maxValue || 0;
 
-        var widthComplete;
+        let widthComplete;
         if (value <= maxValue) {
             widthComplete = value / maxValue * 100;
         } else {
@@ -3179,7 +3179,7 @@ var FieldBasicProgressBar = FieldInteger.extend({
         return this.$('.o_basic_progressbar_value').text();
     },
     /**
-     * Override method to manage keydown event done elsewhere than in the input field. 
+     * Override method to manage keydown event done elsewhere than in the input field.
      * 
      * @override
      */
@@ -3205,7 +3205,7 @@ var FieldBasicProgressBar = FieldInteger.extend({
     /**
      * Handle mousedown event on the progressbar to begin to follow the mouse on the bar.
      * 
-     * @param {*} event 
+     * @param {*} event
      * @private
      */
     _onMousedown: function (event) {
@@ -3259,8 +3259,8 @@ var FieldBasicProgressBar = FieldInteger.extend({
      */
     _onProgressKeydown: function (event) {
         if (this.enable_drag_and_drop) {
-            var increment = (this.step > 0 ? this.step : 1);
-            var value = null;
+            const increment = (this.step > 0 ? this.step : 1);
+            let value = null;
             if (event.keyCode === $.ui.keyCode.UP || event.keyCode === $.ui.keyCode.RIGHT) {
                 value = this._parseValue(this._getValue()) + increment;
             } else if (event.keyCode === $.ui.keyCode.DOWN || event.keyCode === $.ui.keyCode.LEFT) {
@@ -3299,21 +3299,21 @@ var FieldBasicProgressBar = FieldInteger.extend({
     /**
      * Get the value of the click on the progress bar
      * 
-     * @param {Event} event 
+     * @param {Event} event
      */
     _get_progress_value: function (event) {
-        var $target = $(event.currentTarget);
-        var numValue = Math.floor((event.pageX - $target.offset().left) / $target.outerWidth() * this.max_value);
+        const $target = $(event.currentTarget);
+        let numValue = Math.floor((event.pageX - $target.offset().left) / $target.outerWidth() * this.max_value);
         if (this.step > 0) {
             numValue = Math.round(numValue / this.step) * this.step;
         }
         return numValue;
     },
     /**
-     * Parse Input. 
+     * Parse Input.
      * If the value is already a number, returns it.
-     * Else, try to parse it, if it fails, returns null, else returns the parsed value. 
-     * @param {*} value 
+     * Else, try to parse it, if it fails, returns null, else returns the parsed value.
+     * @param {*} value
      */
     _parseInput: function (value) {
         if (!isNaN(value)) {
@@ -3339,21 +3339,21 @@ var FieldBasicProgressBar = FieldInteger.extend({
  * 
  * /!\ If you use it in kanban with draggable cards, it's highly recommended to keep drag_and_drop with its default value (false)
  */
-var FieldQuicklyEditableBasicProgressBar = FieldBasicProgressBar.extend({
+const FieldQuicklyEditableBasicProgressBar = FieldBasicProgressBar.extend({
     events: _.extend({}, FieldBasicProgressBar.prototype.events, {
         'click .o_progressbar': '_onQuickEditClick',
     }),
     init: function () {
         this._super.apply(this, arguments);
         this.originalCanWrite = this.canWrite;
-        this.editable = this.canWrite;
+        this.editable = false;
         this.isFirstEdition = true;
     },
     /**
      * In this quick edit mode, we will by-pass the _notifyChanges called by the other library functions which are meant to
      * be called in a real edit mode.
      * 
-     * The storage function will be the _setValue function called in the @see _onBlurQuickEdit and @see _on_update 
+     * The storage function will be the _setValue function called in the @see _onBlurQuickEdit and @see _on_update
      * (only called with drag and drop) function
      * 
      * @override
@@ -3393,7 +3393,7 @@ var FieldQuicklyEditableBasicProgressBar = FieldBasicProgressBar.extend({
             if (!this.edit_max_value) {
                 this.enable_drag_and_drop = (this.nodeOptions.drag_and_drop || false);
             }
-            if (this.enable_edit_text) {    
+            if (this.enable_edit_text) {
                 if (this.edit_max_value) {
                     this.$('.o_basic_progressbar_unit').empty();
                 } else {
@@ -3416,12 +3416,7 @@ var FieldQuicklyEditableBasicProgressBar = FieldBasicProgressBar.extend({
         }
     },
     _onBlurQuickEdit: function (event) {
-        var condition = true;
-        if (event.type === "click") {
-            var isInProgressBar = $(event.target).closest(".o_progressbar:not(.o_progressbar_readonly)").length;
-            condition = !isInProgressBar;
-        }
-        if (condition && this.editable) {
+        if (this.editable && (event.type !== "click" || !$(event.target).closest(".o_progressbar:not(.o_progressbar_readonly)").length)) {
             this.editable = false;
             var value = this._getValue();
             this.canWrite = this.originalCanWrite;
