@@ -38,7 +38,7 @@ class GoogleCalendarService():
             params['syncToken'] = sync_token
         else:
             # full sync, limit to a range of 1y in past to 1y in the futur by default
-            ICP = self.google_service.env['ir.config_parameter']
+            ICP = self.google_service.env['ir.config_parameter'].sudo()
             day_range = int(ICP.get_param('google_calendar.sync.range_days', default=365))
             _logger.info("Full cal sync, restricting to %s days range", day_range)
             lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
