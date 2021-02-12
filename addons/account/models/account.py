@@ -1286,6 +1286,8 @@ class AccountTax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4))
+    currency_id = fields.Many2one('res.currency', string='Currency',
+        default=lambda self: self.company_id and self.company_id.currency_id or self.env.company.currency_id)
     description = fields.Char(string='Label on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
@@ -1373,6 +1375,12 @@ class AccountTax(models.Model):
             if not all(child.type_tax_use in ('none', tax.type_tax_use) for child in tax.children_tax_ids):
                 raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))\
 
+    @api.constrains('type_tax_use', 'currency_id')
+    def _check_currency_id_requirement(self):
+        for tax in self:
+            if tax.type_tax_use == "fixed" and not tax.currency_id:
+                raise ValidationError(_("Please provide the currency for tax '%s'.") % (tax.name,))
+
     @api.constrains('company_id')
     def _check_company_consistency(self):
         if not self:
@@ -1457,7 +1465,7 @@ class AccountTax(models.Model):
         if self.price_include:
             self.include_base_amount = True
 
-    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, currency=None, currency_date=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
             price_unit * quantity eventually affected by previous taxes (if tax is include_base_amount XOR price_include)
         """
@@ -1473,9 +1481,17 @@ class AccountTax(models.Model):
             # When the price unit is equal to 0, the sign of the quantity is absorbed in base_amount then
             # a "else" case is needed.
             if base_amount:
-                return math.copysign(quantity, base_amount) * self.amount
+                value = math.copysign(quantity, base_amount) * self.amount
             else:
-                return quantity * self.amount
+                value = quantity * self.amount
+            # Convert amount to needed currency
+            if currency and self.currency_id != currency:
+                if not currency_date:
+                    currency_date = self._context.get("date", fields.Date.context_today(self))
+                value = self.currency_id._convert(
+                    value, currency, self.company_id, currency_date, round=False
+                )
+            return value
 
         price_include = self._context.get('force_price_include', self.price_include)
 
@@ -1711,7 +1727,7 @@ class AccountTax(models.Model):
                         incl_fixed_amount += quantity * tax.amount * sum_repartition_factor
                     else:
                         # tax.amount_type == other (python)
-                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner) * sum_repartition_factor
+                        tax_amount = tax._compute_amount(base, sign * price_unit, quantity, product, partner, currency) * sum_repartition_factor
                         incl_fixed_amount += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
@@ -1747,7 +1763,7 @@ class AccountTax(models.Model):
                 cumulated_tax_included_amount = 0
             else:
                 tax_amount = tax.with_context(force_price_include=False)._compute_amount(
-                    base, sign * price_unit, quantity, product, partner)
+                    base, sign * price_unit, quantity, product, partner, currency)
 
             # Round the tax_amount multiplied by the computed repartition lines factor.
             tax_amount = round(tax_amount, precision_rounding=prec)

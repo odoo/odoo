@@ -530,7 +530,7 @@ class AccountMove(models.Model):
                 tax_type = base_line.tax_ids[0].type_tax_use if base_line.tax_ids else None
                 is_refund = (tax_type == 'sale' and base_line.debit) or (tax_type == 'purchase' and base_line.credit)
 
-            balance_taxes_res = base_line.tax_ids._origin.with_context(force_sign=move._get_tax_force_sign()).compute_all(
+            balance_taxes_res = base_line.tax_ids._origin.with_context(force_sign=move._get_tax_force_sign(), date=move.date).compute_all(
                 price_unit_comp_curr,
                 currency=base_line.company_currency_id,
                 quantity=quantity,
@@ -551,7 +551,7 @@ class AccountMove(models.Model):
 
             if base_line.currency_id:
                 # Multi-currencies mode: Taxes are computed both in company's currency / foreign currency.
-                amount_currency_taxes_res = base_line.tax_ids._origin.with_context(force_sign=move._get_tax_force_sign()).compute_all(
+                amount_currency_taxes_res = base_line.tax_ids._origin.with_context(force_sign=move._get_tax_force_sign(), date=move.date).compute_all(
                     price_unit_foreign_curr,
                     currency=base_line.currency_id,
                     quantity=quantity,
@@ -574,10 +574,10 @@ class AccountMove(models.Model):
                     tax = self.env['account.tax'].browse(b_tax_res['id'])
                     b_tax_res['amount_currency'] = ac_tax_res['amount']
 
-                    # A tax having a fixed amount must be converted into the company currency when dealing with a
-                    # foreign currency.
-                    if tax.amount_type == 'fixed':
-                        b_tax_res['amount'] = base_line.currency_id._convert(b_tax_res['amount'], move.company_id.currency_id, move.company_id, move.date)
+                    # A tax having a fixed amount must be converted back into
+                    # the invoice currency when dealing with a foreign currency.
+                    if tax.amount_type == 'fixed' and base_line.currency_id != move.company_id.currency_id:
+                        b_tax_res['amount_currency'] = move.company_id.currency_id._convert(b_tax_res['amount'], base_line.currency_id, move.company_id, move.date)
 
             return balance_taxes_res
 
@@ -2836,7 +2836,7 @@ class AccountMoveLine(models.Model):
         # E.g. mapping a 10% price-included tax to a 20% price-included tax for a price_unit of 110 should preserve
         # 100 as balance but set 120 as price_unit.
         if self.tax_ids and self.move_id.fiscal_position_id:
-            price_subtotal = self._get_price_total_and_subtotal()['price_subtotal']
+            price_subtotal = self.with_context(date=self.move_id.date)._get_price_total_and_subtotal()['price_subtotal']
             self.tax_ids = self.move_id.fiscal_position_id.map_tax(
                 self.tax_ids._origin,
                 partner=self.move_id.partner_id)
@@ -2850,6 +2850,8 @@ class AccountMoveLine(models.Model):
 
     def _get_price_total_and_subtotal(self, price_unit=None, quantity=None, discount=None, currency=None, product=None, partner=None, taxes=None, move_type=None):
         self.ensure_one()
+        if "date" not in self._context:
+            self = self.with_context(date=self.move_id.date)
         return self._get_price_total_and_subtotal_model(
             price_unit=price_unit or self.price_unit,
             quantity=quantity or self.quantity,
@@ -2943,6 +2945,8 @@ class AccountMoveLine(models.Model):
 
     def _get_fields_onchange_balance(self, quantity=None, discount=None, balance=None, move_type=None, currency=None, taxes=None, price_subtotal=None, force_computation=False):
         self.ensure_one()
+        if "date" not in self._context:
+            self = self.with_context(date=self.move_id.date)
         return self._get_fields_onchange_balance_model(
             quantity=quantity or self.quantity,
             discount=discount or self.discount,
@@ -3387,7 +3391,7 @@ class AccountMoveLine(models.Model):
                         balance = vals.get('amount_currency', 0.0)
                     else:
                         balance = vals.get('debit', 0.0) - vals.get('credit', 0.0)
-                    price_subtotal = self._get_price_total_and_subtotal_model(
+                    price_subtotal = self.with_context(date=move.date)._get_price_total_and_subtotal_model(
                         vals.get('price_unit', 0.0),
                         vals.get('quantity', 0.0),
                         vals.get('discount', 0.0),
@@ -3397,7 +3401,7 @@ class AccountMoveLine(models.Model):
                         taxes,
                         move.type,
                     ).get('price_subtotal', 0.0)
-                    vals.update(self._get_fields_onchange_balance_model(
+                    vals.update(self.with_context(date=move.date)._get_fields_onchange_balance_model(
                         vals.get('quantity', 0.0),
                         vals.get('discount', 0.0),
                         balance,
@@ -3406,7 +3410,7 @@ class AccountMoveLine(models.Model):
                         taxes,
                         price_subtotal
                     ))
-                    vals.update(self._get_price_total_and_subtotal_model(
+                    vals.update(self.with_context(date=move.date)._get_price_total_and_subtotal_model(
                         vals.get('price_unit', 0.0),
                         vals.get('quantity', 0.0),
                         vals.get('discount', 0.0),
@@ -3417,7 +3421,7 @@ class AccountMoveLine(models.Model):
                         move.type,
                     ))
                 elif any(vals.get(field) for field in BUSINESS_FIELDS):
-                    vals.update(self._get_price_total_and_subtotal_model(
+                    vals.update(self.with_context(date=move.date)._get_price_total_and_subtotal_model(
                         vals.get('price_unit', 0.0),
                         vals.get('quantity', 0.0),
                         vals.get('discount', 0.0),
