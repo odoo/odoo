@@ -706,7 +706,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {OdooEvent} ev
      */
     _onFieldChanged: function (ev) {
-        if (this.mode === 'readonly') {
+        if (this.mode === 'readonly' && !('force_save' in ev.data)) {
             ev.data.force_save = true;
         }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
