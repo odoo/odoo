@@ -414,7 +414,7 @@ var ListController = BasicController.extend({
                 }
                 dialog = Dialog.confirm(self, message, {
                     confirm_callback: function () {
-                        return self.model.saveRecords(recordId, validRecordIds, fieldName)
+                        return self.model._saveRecords(self.handle, recordId, validRecordIds, fieldName)
                             .then(function () {
                                 self._updateButtons('readonly');
                                 var state = self.model.get(self.handle);
