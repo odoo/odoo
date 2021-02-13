@@ -14,7 +14,8 @@
 # Silmar <pinheirosilmar@gmail.com>, 2020
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2020
 # André Carvalho <and2carvalho@gmail.com>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Vanderlei Romera <vanderleiromera@gmail.com>, 2020\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">Funcionários Permitidos </span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -54,7 +55,7 @@ msgstr "Alterar vendedor"
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Close session"
-msgstr ""
+msgstr "Fechar sessão"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee__display_name
@@ -76,12 +77,12 @@ msgstr "Funcionário"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "Funcionário: %s - Config(s) PdV: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "Funcionários com acesso"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee__id
@@ -95,6 +96,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
 msgstr ""
+"Se deixado vazio, todos os funcionários poderão logar em sessão de PdV"
 
 #. module: pos_hr
 #. openerp-web
@@ -116,7 +118,7 @@ msgstr "Última modificação em"
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
+msgstr "Logar em"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -124,7 +126,7 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
-"Somente usuários com direitos de acesso de gerente para o aplicativo PoS "
+"Somente usuários com direitos de acesso de gerente para o aplicativo PdV "
 "podem modificar os preços dos produtos nos pedidos."
 
 #. module: pos_hr
@@ -180,7 +182,7 @@ msgstr "Escaneie seu crachá"
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
+msgstr "Selecionar Caixa"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -189,6 +191,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Você não pode excluir um funcionário que pode ser usado em uma sessão de PdV"
+" ativa, feche as sessões primeiro: \n"
 
 #. module: pos_hr
 #. openerp-web
@@ -202,4 +206,4 @@ msgstr "ou"
 #: code:addons/pos_hr/static/src/xml/CashierName.xml:0
 #, python-format
 msgid "selectCashier"
-msgstr ""
+msgstr "selectCashier"

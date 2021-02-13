@@ -9,7 +9,6 @@
 # Kevin Harrings <kha@odoo.com>, 2020
 # Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
 # Eduardo Aparicio <eduardo.caparica@gmail.com>, 2020
-# Gabriel Bortolotto Contesotto <gabrielbortolotto@gmail.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # 6dd21606a11e5d7d8e94f6aa08fa2771_7a56499 <e74a6544b2625f1cc3570d395d0e36e4_602227>, 2020
 # Rui Andrada <shingonoide@gmail.com>, 2020
@@ -20,7 +19,7 @@
 # Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2020
 # Yannick Belot <yannickbh@gmail.com>, 2020
 # mariana rodrigues <mariana12v@gmail.com>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Gideoni Silva <gd.willian@gmail.com>, 2020
 # Ademílson F. Tonato <apraqueisso@gmail.com>, 2020
 # zimbora <alexandre.ruffer@tkobr.com>, 2020
@@ -3813,7 +3812,8 @@ msgstr "País para o qual este relatório está disponível."
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
 msgid "Country for which this tag is available, when applied on taxes."
 msgstr ""
-"País para o qual esta tag está disponível, quando aplicada sobre impostos."
+"País para o qual este marcador está disponível, quando aplicada sobre "
+"impostos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -5070,7 +5070,7 @@ msgstr "Rascunho de Nota de Crédito de Fornecedor"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 #, python-format
 msgid "Due"
-msgstr "Devido"
+msgstr "Vencido"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -6533,7 +6533,9 @@ msgid "Internal Notes"
 msgstr "Anotações Internas"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Internal Transfer"
 msgstr "Transferência interna"
 
@@ -8516,6 +8518,7 @@ msgstr "Apenas Administradores podem carregar um plano de contas."
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Apenas Faturas puderam ser impressas."
@@ -10907,7 +10910,7 @@ msgstr "Definições"
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
 msgid "Setup"
-msgstr "Instalação"
+msgstr "Definição"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -11368,8 +11371,8 @@ msgid ""
 "Tag name and formula are mutually exclusive, they should not be set together"
 " on the same tax report line."
 msgstr ""
-"Nome da Tag e a fórmula são mutuamente exclusivos e não devem ser definidos "
-"juntos na mesma linha do relatório de imposto."
+"Nome do Marcador e a fórmula são mutuamente exclusivos e não devem ser "
+"definidos juntos na mesma linha do relatório de imposto."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -12146,6 +12149,16 @@ msgid "That is the date of the opening entry."
 msgstr "Essa é a data da entrada de abertura."
 
 #. module: account
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
+"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
+msgstr ""
+"O/a %(date_field)s (%(date)s) não corresponde à %(sequence_field)s (%(sequence)s).\n"
+"Você pode querer limpar o campo %(sequence_field)s antes de proceder à alteração da data."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
 #: model:ir.model.fields,help:account.field_account_account_type__internal_group
 #: model:ir.model.fields,help:account.field_account_move_line__account_internal_group
@@ -12438,16 +12451,6 @@ msgstr ""
 "todas as linhas estão reconciliadas. Não há mais nada para processar."
 
 #. module: account
-#: code:addons/account/models/sequence_mixin.py:0
-#, python-format
-msgid ""
-"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
-msgstr ""
-"O/a %(date_field)s (%(date)s) não corresponde à %(sequence_field)s (%(sequence)s).\n"
-"Você pode querer limpar o campo %(sequence_field)s antes de proceder à alteração da data."
-
-#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The day of the month used for this term must be strictly positive."
@@ -12545,7 +12548,7 @@ msgid ""
 "set a tag_name on these lines."
 msgstr ""
 "As seguintes linhas de relatório de impostos são usadas em alguns modelos de"
-" distribuição de impostos, embora não gerem nenhuma tag: %s Isso "
+" distribuição de impostos, embora não gerem nenhuma marcador: %s Isso "
 "provavelmente significa que você se esqueceu de definir um tag_name nessas "
 "linhas."
 
@@ -12579,6 +12582,19 @@ msgstr ""
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "O titular da conta bancária do diário deve ser a empresa (%s)."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr "A fatura já contém linhas, não foi atualizada do anexo."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr "A fatura não é um rascunho, não foi atualizada do anexo."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13068,7 +13084,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
 msgid "The tax report lines using this tag"
-msgstr "As linhas do relatório de impostos usando esta tag"
+msgstr "As linhas do relatório de impostos usando este marcador"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__invoice_tax_id
@@ -13328,8 +13344,8 @@ msgstr "O movimento está configurado para ser auto-lançado em %s"
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
 msgstr ""
-"Este movimento está configurado para ser lançado automaticamente na data da "
-"fatura:"
+"Este movimento está configurado para ser lançado automaticamente na data "
+"contábil:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14903,6 +14919,7 @@ msgstr "Faixa de CEP Para"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

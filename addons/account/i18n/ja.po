@@ -18,7 +18,6 @@
 # Masayuki Takesue <m_takesue@nifty.com>, 2020
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
-# Tsuda Ryoko <ryoko04nov@gmail.com>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
@@ -26,6 +25,7 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2020
 # Noma Yuki, 2020
 # Martin Trigaux, 2021
+# Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Tsuda Ryoko <ryoko04nov@gmail.com>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6266,7 +6266,9 @@ msgid "Internal Notes"
 msgstr "内部注記"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Internal Transfer"
 msgstr "内部振替"
 
@@ -8194,6 +8196,7 @@ msgstr "唯一の管理者アカウントのチャートを読み込むことが
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "唯一の請求書を印刷することができます。"
@@ -11663,6 +11666,14 @@ msgid "That is the date of the opening entry."
 msgstr "それがオープニングエントリーの日付です。"
 
 #. module: account
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
+"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
 #: model:ir.model.fields,help:account.field_account_account_type__internal_group
 #: model:ir.model.fields,help:account.field_account_move_line__account_internal_group
@@ -11922,14 +11933,6 @@ msgstr ""
 "銀行取引明細書の現在の状態：-新規：ドラフト仕訳で完全に編集可能。-処理：転記された仕訳で編集できなくなり、照合の準備ができました。-検証済み：すべての行が照合されます。何も処理するものはありません"
 
 #. module: account
-#: code:addons/account/models/sequence_mixin.py:0
-#, python-format
-msgid ""
-"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The day of the month used for this term must be strictly positive."
@@ -12046,6 +12049,19 @@ msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "ジャーナルの銀行口座の保有者は、会社(%s)でなければなりません。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -12080,7 +12096,7 @@ msgstr ""
 "一貫性を保つためには、ジャーナルエントリは、次の項目を常に含む必要があります。\n"
 "- 優秀な支払いを伴う1つのジャーナル項目/領収書が占めている。\n"
 "- 売掛金/買掛金を含む1つのジャーナル項目。\n"
-"- すべて同じアカウントを共有するオプションジャーナル項目。"
+"- すべて同じアカウントを共有するオプションジャーナル項目。\n"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -14123,6 +14139,7 @@ msgstr "郵便番号範囲の終了"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

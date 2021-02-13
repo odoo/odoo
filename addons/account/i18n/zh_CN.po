@@ -6279,7 +6279,9 @@ msgid "Internal Notes"
 msgstr "内部备注"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Internal Transfer"
 msgstr "内部转账"
 
@@ -8207,6 +8209,7 @@ msgstr "只有管理员才能加载会计科目表"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "只能打印结算单。"
@@ -11665,6 +11668,16 @@ msgid "That is the date of the opening entry."
 msgstr "那是开始登记的日期。"
 
 #. module: account
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
+"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
+msgstr ""
+"%(date_field)s（%(date)s）与%(sequence_field)s（%(sequence)s）不匹配。\n"
+"您可能需要在更改日期之前清除%(sequence_field)s字段。"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
 #: model:ir.model.fields,help:account.field_account_account_type__internal_group
 #: model:ir.model.fields,help:account.field_account_move_line__account_internal_group
@@ -11918,16 +11931,6 @@ msgstr ""
 "银行对账单的当前状态：- 新：完全可编辑草稿日记帐条目.- 处理：不再可编辑已过帐的日记帐分录，准备对账.- 已验证：所有行都已对帐。没有什么可处理的。"
 
 #. module: account
-#: code:addons/account/models/sequence_mixin.py:0
-#, python-format
-msgid ""
-"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
-msgstr ""
-"%(date_field)s（%(date)s）与%(sequence_field)s（%(sequence)s）不匹配。\n"
-"您可能需要在更改日期之前清除%(sequence_field)s字段。"
-
-#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The day of the month used for this term must be strictly positive."
@@ -12042,6 +12045,19 @@ msgstr ""
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "日记账银行账的所有者必须为公司 (%s)."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14105,6 +14121,7 @@ msgstr "邮编范围到"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
