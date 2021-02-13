@@ -944,7 +944,9 @@ class Picking(models.Model):
         """
         quantity_todo = {}
         quantity_done = {}
-        for move in self.mapped('move_lines'):
+        # If a preceding move has been canceled and propagated state to its
+        # destination move, we don't take quantities into account
+        for move in self.mapped('move_lines').filtered(lambda m: m.state != "cancel"):
             quantity_todo.setdefault(move.product_id.id, 0)
             quantity_done.setdefault(move.product_id.id, 0)
             quantity_todo[move.product_id.id] += move.product_uom_qty
