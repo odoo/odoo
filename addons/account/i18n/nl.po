@@ -6492,7 +6492,9 @@ msgid "Internal Notes"
 msgstr "Interne notities"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Internal Transfer"
 msgstr "Interne overboeking"
 
@@ -8476,6 +8478,7 @@ msgstr "Alleen administrators kunnen een lijst met accounts laden"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Alleen facturen konden afgedrukt worden."
@@ -12102,6 +12105,16 @@ msgid "That is the date of the opening entry."
 msgstr "Dat is de datum van de openingsboeking."
 
 #. module: account
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
+"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
+msgstr ""
+"De  %(date_field)s (%(date)s) komen niet overeen met %(sequence_field)s (%(sequence)s).\n"
+"Mogelijk wilt u het veld %(sequence_field)s leegmaken voordat u doorgaat met het wijzigen van de datum."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
 #: model:ir.model.fields,help:account.field_account_account_type__internal_group
 #: model:ir.model.fields,help:account.field_account_move_line__account_internal_group
@@ -12396,16 +12409,6 @@ msgstr ""
 "afgeletterd. Er valt niets meer te verwerken."
 
 #. module: account
-#: code:addons/account/models/sequence_mixin.py:0
-#, python-format
-msgid ""
-"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
-msgstr ""
-"De  %(date_field)s (%(date)s) komen niet overeen met %(sequence_field)s (%(sequence)s).\n"
-"Mogelijk wilt u het veld %(sequence_field)s leegmaken voordat u doorgaat met het wijzigen van de datum."
-
-#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The day of the month used for this term must be strictly positive."
@@ -12536,6 +12539,20 @@ msgstr ""
 #, python-format
 msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "De rekeninghouder van het bankdagboek moet het bedrijf zijn (%s)."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+"De factuur bevat al regels, deze is niet bijgewerkt vanuit de bijlage."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr "De factuur is geen concept en is niet bijgewerkt vanuit de bijlage."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14869,6 +14886,7 @@ msgstr "Tot postcode"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

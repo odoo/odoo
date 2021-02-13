@@ -24,7 +24,7 @@
 # Keli Brugalli <kbr@odoo.com>, 2020
 # Maurício Liell <mauricio@liell.com.br>, 2020
 # André Carvalho <and2carvalho@gmail.com>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2020
 # danimaribeiro <danimaribeiro@gmail.com>, 2020
@@ -93,6 +93,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
 "${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Cotação') or 'Pedido'} (Ref "
+"${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -3609,7 +3612,7 @@ msgstr "Avisos de Vendas"
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr "Vendas por Canal (All in One)"
+msgstr "Vendas por Canal (Tudo em Um)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4260,7 +4263,7 @@ msgstr ""
 "parceiro, produto, etc). Use este relatório para realizar análises em vendas"
 " que não foram faturadas ainda. Se você quiser analisar o volume de "
 "negócios, seria melhor usar o relatório de Análise de Faturamento no módulo "
-"Contas."
+"Contabilidade."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
