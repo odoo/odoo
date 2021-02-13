@@ -32,7 +32,11 @@ class AccountTaxPython(models.Model):
             product = product.product_variant_id
         if self.amount_type == 'code':
             company = self.env.company
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company, 'currency': currency, 'currency_date': currency_date}
+            # mimic the determining of the currency_date to be the same as in the super
+            _currency_date = currency_date
+            if not _currency_date:
+                _currency_date = self._context.get("date", fields.Date.context_today(self))
+            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company, 'currency': currency, 'currency_date': _currency_date}
             safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
             return localdict['result']
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, currency, currency_date)
