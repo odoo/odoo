@@ -1295,6 +1295,40 @@ class StockMove(models.Model):
         partially_available_moves.write({'state': 'partially_available'})
         assigned_moves.write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()
+    
+    def _propagate_cancel(self):
+        for move in self:
+            siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
+            if move.propagate_cancel:
+                qty_dest_to_cancel = move.product_uom_qty
+                qty_dest_todo = 0.0
+                rounding = move.product_uom.rounding
+                move_dest_ids = move.move_dest_ids.filtered(lambda m: m.state not in ("done", "cancel"))
+                for move_dest in move_dest_ids:
+                    qty_dest_todo += move_dest.product_uom_qty
+                # If original cancelled move quantity is < destination moves quantity
+                if float_compare(move.product_uom_qty, qty_dest_todo, precision_digits=rounding) <= 0:
+                    # Collect quantities to be cancelled sorted by biggest ones
+                    # to reduce the splits and writes
+                    for move_dest in move_dest_ids.sorted(key=lambda m: m.product_uom_qty, reverse=True):
+                        if float_compare(qty_dest_to_cancel, 0.0, precision_digits=rounding) <= 0:
+                            break
+                        if float_compare(move_dest.product_uom_qty, qty_dest_to_cancel, precision_digits=rounding) > 0:
+                            qty_split = move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+                            new_move_id = move_dest._split(qty_split)
+                            move._unreserve_initial_demand(new_move_id)
+                            move_to_cancel = self.env["stock.move"].browse(new_move_id)
+                        else:
+                            move_to_cancel = move_dest
+                        qty_dest_to_cancel -= move_to_cancel.product_uom_qty
+                        move_to_cancel._action_cancel()
+                        
+                if all(state == 'cancel' for state in siblings_states):
+                    move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
+            else:
+                if all(state in ('done', 'cancel') for state in siblings_states):
+                    move.move_dest_ids.write({'procure_method': 'make_to_stock'})
+                    move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
 
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
@@ -1303,17 +1337,8 @@ class StockMove(models.Model):
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids
         moves_to_cancel._do_unreserve()
+        moves_to_cancel._propagate_cancel()
 
-        for move in moves_to_cancel:
-            siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
-            if move.propagate_cancel:
-                # only cancel the next move if all my siblings are also cancelled
-                if all(state == 'cancel' for state in siblings_states):
-                    move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
-            else:
-                if all(state in ('done', 'cancel') for state in siblings_states):
-                    move.move_dest_ids.write({'procure_method': 'make_to_stock'})
-                    move.move_dest_ids.write({'move_orig_ids': [(3, move.id, 0)]})
         self.write({'state': 'cancel', 'move_orig_ids': [(5, 0, 0)]})
         return True
 
