@@ -26,16 +26,16 @@ class AccountTaxPython(models.Model):
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
 
-    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
+    def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None, currency=None, currency_date=None):
         self.ensure_one()
         if product and product._name == 'product.template':
             product = product.product_variant_id
         if self.amount_type == 'code':
             company = self.env.company
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
+            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company, 'currency': currency, 'currency_date': currency_date}
             safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
             return localdict['result']
-        return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
+        return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, currency, currency_date)
 
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True):
         taxes = self.filtered(lambda r: r.amount_type != 'code')
