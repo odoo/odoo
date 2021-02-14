@@ -25,7 +25,7 @@
 # 传红 周 <zch1354@qq.com>, 2017
 # v2exerer <9010446@qq.com>, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
-# jack adam <jackadam@sina.com>, 2017
+# 上官飞鸿 <jackadam@sina.com>, 2017
 # sunny sun <sunxiaoxia@inspur.com>, 2018
 # Maie <m@maie.name>, 2018
 # 0023d6d916c2d56e4d76ed7a6e80ad5b, 2018
@@ -8274,6 +8274,7 @@ msgstr "只有管理员才能加载会计科目表"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "只能打印发票。"
@@ -12124,6 +12125,19 @@ msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "日记账银行账的所有者必须是公司：%s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -14196,6 +14210,7 @@ msgstr "邮编范围到"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

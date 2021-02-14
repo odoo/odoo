@@ -8127,6 +8127,7 @@ msgstr "只有管理員才能加載會計科目表"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "只能列印發票。"
@@ -11959,6 +11960,19 @@ msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "日記帳銀行帳戶的所有者必須是公司（%s）。"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -14004,6 +14018,7 @@ msgstr "郵編範圍到"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

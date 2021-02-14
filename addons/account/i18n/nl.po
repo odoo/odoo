@@ -8518,6 +8518,7 @@ msgstr "Alleen administrators kunnen een lijst met accounts laden"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Alleen facturen konden afgedrukt worden."
@@ -12596,6 +12597,20 @@ msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "De rekeninghouder van het bankdagboek moet het bedrijf zijn (%s)."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+"De factuur bevat al regels, deze is niet bijgewerkt vanuit de bijlage."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr "De factuur is geen concept en is niet bijgewerkt vanuit de bijlage."
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -14938,6 +14953,7 @@ msgstr "Tot postcode"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

@@ -20,14 +20,15 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"POT-Creation-Date: 2021-01-12 10:19+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Priscilla (prs) Odoo <prs@odoo.com>, 2020\n"
+"Last-Translator: Anthony Chaussin <chaussin.anthony@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -340,6 +341,17 @@ msgstr "Le modèle Google ne sait pas être trouvé. Il a peut-être été effac
 #: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
 msgstr "L'URL pour générer le code d'autorisation de Google"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
+"Le filtre de document ne doit pas inclure de partie \"dynamique\", donc il "
+"ne doit pas être basé sur l'heure actuelle ou l'utilisateur actuel, par "
+"exemple."
 
 #. module: google_drive
 #: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form

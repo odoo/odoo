@@ -8542,6 +8542,7 @@ msgstr "Apenas Administradores podem carregar um plano de contas."
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Apenas Faturas puderam ser impressas."
@@ -12625,6 +12626,19 @@ msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "O titular da conta bancária do diário deve ser a empresa (%s)."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr "A fatura já contém linhas, não foi atualizada do anexo."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr "A fatura não é um rascunho, não foi atualizada do anexo."
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -14958,6 +14972,7 @@ msgstr "Faixa de CEP Para"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

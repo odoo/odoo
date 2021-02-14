@@ -96,7 +96,7 @@
 # Marie Willemyns <mwi@odoo.com>, 2020
 # Christelle Pinchart <cpi@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Luc Nailis <lna@odoo.com>, 2020
+# Luc N <lna@odoo.com>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Yann Papouin <y.papouin@dec-industrie.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
@@ -8563,6 +8563,7 @@ msgstr "Seuls les administrateurs peuvent charger un plan comptable"
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Seules les factures ont pu être imprimées."
@@ -12535,6 +12536,19 @@ msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr "Le propriétaire d'un journal bancaire doit être l'entreprise (%s)."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid ""
@@ -14721,6 +14735,7 @@ msgstr "Fin de l'intervalle de code postal"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
