@@ -69,9 +69,12 @@ const ColorPaletteWidget = Widget.extend({
         const res = this._super.apply(this, arguments);
 
         const $colorSection = this.$('.o_colorpicker_sections[data-color-tab="theme-colors"]');
-        const $clpicker = $(colorpickerArch || `<colorpicker><div class="o_colorpicker_section" data-name="common"></div></colorpicker>`);
+        const $clpicker = $(colorpickerArch || `<colorpicker><div class="o_colorpicker_section" data-name="theme"></div><div class="o_colorpicker_section" data-name="common"></div></colorpicker>`);
         $clpicker.find('button').addClass('o_we_color_btn');
-        $clpicker.appendTo($colorSection);
+        const $clpicker_theme = $clpicker.find('[data-name="theme"]').addClass('o_colorpicker_section_top')
+
+        $clpicker_theme.appendTo($colorSection);
+        $clpicker.insertAfter($clpicker_theme);
 
         // Remove excluded palettes (note: only hide them to still be able
         // to remove their related colors on the DOM target)
@@ -144,7 +147,7 @@ const ColorPaletteWidget = Widget.extend({
             this.colorPicker = new ColorpickerWidget(this, {
                 defaultColor: defaultColor,
             });
-            await this.colorPicker.prependTo($colorSection);
+            await this.colorPicker.insertAfter($clpicker_theme);
         }
 
         return res;
