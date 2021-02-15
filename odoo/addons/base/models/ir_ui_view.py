@@ -420,13 +420,14 @@ actual arch.
                     combined_archs = combined_archs[0]
                 for view_arch in combined_archs:
                     check = valid_view(view_arch, env=self.env, model=view.model)
-                    view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                     if not check:
+                        view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                         raise ValidationError(_(
                             'Invalid view %(name)s definition in %(file)s',
                             name=view_name, file=view.arch_fs
                         ))
                     if check == "Warning":
+                        view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                         _logger.warning('Invalid view %s definition in %s \n%s', view_name, view.arch_fs, view.arch)
             except ValueError as e:
                 lines = etree.tostring(combined_arch, encoding='unicode').splitlines(keepends=True)
