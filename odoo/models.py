@@ -52,7 +52,7 @@ from . import SUPERUSER_ID
 from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
-from .osv.query import Query
+from .osv.query import Query, QueryUnion
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
                    groupby
@@ -4221,9 +4221,8 @@ Fields:
 
         return original_self.concat(*(data['record'] for data in data_list))
 
-    # TODO: ameliorer avec NULL
     @api.model
-    def _where_calc(self, domain, active_test=True):
+    def _where_calc(self, domain, active_test=True, allow_query_union=False):
         """Computes the WHERE clause needed to implement an OpenERP domain.
         :param domain: the domain to compute
         :type domain: list
@@ -4241,7 +4240,7 @@ Fields:
                 domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
-            return expression.expression(domain, self).query
+            return expression.expression(domain, self, allow_query_union=allow_query_union).query
         else:
             return Query(self.env.cr, self._table, self._table_query)
 
@@ -4286,12 +4285,23 @@ Fields:
         :return: the qualified field name (or expression) to use for ``field``
         """
         if self.env.lang:
+            fork = None
+            if isinstance(query, QueryUnion):
+                query, fork = query.fork()
+
             alias = query.left_join(
                 table_alias, 'id', 'ir_translation', 'res_id', field,
                 extra='"{rhs}"."type" = \'model\' AND "{rhs}"."name" = %s AND "{rhs}"."lang" = %s AND "{rhs}"."value" != %s',
                 extra_params=["%s,%s" % (self._name, field), self.env.lang, ""],
             )
-            return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
+            if fork is None:
+                return 'COALESCE("%s"."%s", "%s"."%s")' % (alias, 'value', table_alias, field)
+            else:
+                assert alias
+                translation = '"%s"."%s"' % (alias, 'value')
+                original = '"%s"."%s"' % (table_alias, field)
+                fork.add_column_ref_replacement(translation, original)
+                return translation
         else:
             return '"%s"."%s"' % (table_alias, field)
 
@@ -4485,7 +4495,7 @@ Fields:
         # the flush must be done before the _where_calc(), as the latter can do some selects
         self._flush_search(args, order=order)
 
-        query = self._where_calc(args)
+        query = self._where_calc(args, allow_query_union=not count)
         self._apply_ir_rules(query, 'read')
 
         if count:

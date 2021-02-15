@@ -122,7 +122,7 @@ from functools import partial
 
 from datetime import date, datetime, time
 import odoo.modules
-from odoo.osv.query import Query
+from odoo.osv.query import Query, QueryUnion
 from odoo.tools import pycompat
 from odoo.tools.misc import get_lang
 from ..models import MAGIC_COLUMNS, BaseModel
@@ -410,7 +410,7 @@ class expression(object):
         For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html
     """
 
-    def __init__(self, domain, model, alias=None, query=None):
+    def __init__(self, domain, model, alias=None, query=None, allow_query_union=False):
         """ Initialize expression object and automatically parse the expression
             right after initialization.
 
@@ -433,6 +433,8 @@ class expression(object):
 
         # this object handles all the joins
         self.query = Query(model.env.cr, model._table, model._table_query) if query is None else query
+        if allow_query_union:
+            self.query = QueryUnion([self.query])
 
         # parse the domain expression
         self.parse()
@@ -744,7 +746,7 @@ class expression(object):
                     if inverse_is_int and domain:
                         ids2 = comodel._search([('id', 'in', ids2)] + domain, order='id')
 
-                    if isinstance(ids2, Query) and comodel._fields[field.inverse_name].store:
+                    if (isinstance(ids2, Query) or isinstance(ids2, QueryUnion)) and comodel._fields[field.inverse_name].store:
                         op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                         subquery, subparams = ids2.select('"%s"."%s"' % (comodel._table, field.inverse_name))
                         push(('id', op1, (subquery, subparams)), model, alias, internal=True)
@@ -806,7 +808,7 @@ class expression(object):
                     else:
                         ids2 = [right]
 
-                    if isinstance(ids2, Query):
+                    if isinstance(ids2, Query) or isinstance(ids2, QueryUnion):
                         # rewrite condition in terms of ids2
                         subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                         subquery, subparams = ids2.select()
@@ -966,7 +968,7 @@ class expression(object):
                 else:
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
-            elif isinstance(right, Query):
+            elif isinstance(right, Query) or isinstance(right, QueryUnion):
                 subquery, subparams = right.select()
                 query = '(%s."%s" %s (%s))' % (table_alias, left, operator, subquery)
                 params = subparams

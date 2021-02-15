@@ -3,11 +3,13 @@
 
 import re
 import warnings
+import logging
 from zlib import crc32
 
 from odoo.tools import lazy_property
 
 IDENT_RE = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
+_logger = logging.getLogger(__name__)
 
 
 def _from_table(table, alias):
@@ -75,6 +77,23 @@ class Query(object):
         self.limit = None
         self.offset = None
 
+        # QueryUnion
+        self._column_ref_replacement = {}
+
+    def copy(self):
+        query = Query(self._cr, next(iter(self._tables)))
+        query._joins = self._joins.copy()
+        query._where_clauses = self._where_clauses[:]
+        query._where_params = self._where_params[:]
+        query.order = self.order
+        query.limit = self.limit
+        query.offset = self.offset
+        query._column_ref_replacement = self._column_ref_replacement.copy()
+        return query
+
+    def add_column_ref_replacement(self, source, target):
+        self._column_ref_replacement[source] = target
+
     def add_table(self, alias, table=None):
         """ Add a table with a given alias to the from clause. """
         assert alias not in self._tables and alias not in self._joins, "Alias %r already in %s" % (alias, str(self))
@@ -128,6 +147,8 @@ class Query(object):
             (" LIMIT %d" % self.limit) if self.limit else "",
             (" OFFSET %d" % self.offset) if self.offset else "",
         )
+        for source, target in self._column_ref_replacement.items():
+            query_str = query_str.replace(source, target)
         return query_str, params
 
     def get_sql(self):
@@ -185,3 +206,134 @@ class Query(object):
         kind = '' if implicit else ('LEFT JOIN' if outer else 'JOIN')
         rhs_alias = self._join(kind, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra, extra_params)
         return rhs_alias, _from_table(rhs_table, rhs_alias)
+
+
+class QueryUnion(object):
+    MAX_UNIONS = 2
+
+    def __init__(self, queries):
+        self._queries = queries
+
+        # order, limit, offset
+        self.order = None
+        self.limit = None
+        self.offset = None
+
+    def left_join(self, *args, **kwargs):
+        return self._apply_to_all('left_join', args, kwargs)
+
+    def add_where(self, *args, **kwargs):
+        return self._apply_to_all('add_where', args, kwargs)
+
+    def add_column_ref_replacement(self, *args, **kwargs):
+        return self._apply_to_all('add_column_ref_replacement', args, kwargs)
+
+    def _apply_to_all(self, method, args, kwargs):
+        res = set(getattr(q, method)(*args, **kwargs) for q in self._queries)
+        # if all values are the same, return it
+        if len(res) == 1:
+            return res.pop()
+
+    # TODO: get_sql may work with multiple quieries if we pass select args in advance
+    def get_sql(self, *args, **kwargs):
+        return self._one_query_only('get_sql', args, kwargs)
+
+    def _one_query_only(self, method, args, kwargs):
+        #if len(self._queries) > 1:
+        #    import wdb; wdb.set_trace()
+        assert len(self._queries) == 1, "QueryUnion has multiple queries, but is used as a single query"
+        return getattr(self._queries[0], method)(*args, **kwargs)
+
+    def fork(self):
+        if len(self._queries) >= self.MAX_UNIONS:
+            return self, None
+
+        fork1 = self._queries[:]
+        fork2 = [q.copy() for q in self._queries]
+        self._queries += fork2
+        return QueryUnion(fork1), QueryUnion(fork2)
+
+    def select(self, *args):
+        """ Return the SELECT query as a pair ``(query_string, query_params)``. """
+        if len(self._queries) == 1:
+            self._queries[0].order = self.order
+            self._queries[0].limit = self.limit
+            self._queries[0].offset = self.offset
+            return self._queries[0].select(*args)
+        if args:
+            args = list(args)
+
+        #from odoo.http import request
+        #_logger.warning("QueryUnion select: %s", [self._queries[0]._tables, args, request.httprequest.url])
+        all_query_str = []
+        all_params = []
+        priority = 0
+
+        order = self.order or self._queries[0].order
+        # TODO: choose a better names
+        order_fields_to_select_local = []
+        order_fields_to_select_global = []
+        order_fields_to_order_global = []
+        if order:
+            # use regexp to exclude COALESCE in order by, e.g.
+            # COALESCE("ir_module_module"."application", false) DESC,"ir_module_module"."sequence" ,"ir_module_module"."name"
+            # https://stackoverflow.com/a/38748250 -- thanks for regexp
+            for order_part in re.sub(r",(?![^\(\[]*[\]\)])", "\n", order).split("\n"):
+                order_split = re.sub(r" (?![^\(\[]*[\]\)])", "\n", order_part.strip()).split("\n")
+                order_field = order_split[0].strip()
+                order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
+                field_global = order_field.replace('.', '_').replace('"', '_').replace('(', '_').replace(')', '_').replace(' ', '_').replace(',', '_')
+                order_fields_to_select_local.append("%s AS %s" % (order_field, field_global))
+                order_fields_to_select_global.append(field_global)
+                order_fields_to_order_global.append("%s %s" % (field_global, order_direction))
+
+        for query in self._queries:
+            # TODO: 'count(1)' is too hardcoded
+            select_local = args[:] if args and args != ['count(1)'] else [f'"{next(iter(query._tables))}".id']
+            select_local += order_fields_to_select_local
+            select_local.append("%s AS union_priority" % priority)
+            # TODO: shall we pass order to query?
+            query_str, params = query.select(*select_local)
+            all_query_str.append(query_str)
+            all_params.extend(params)
+            priority += 1
+
+        select_clause = ", ".join((args if args and args != ['count(1)'] else ['id']) + order_fields_to_select_global)
+        main_query = " UNION ALL ".join("(%s)" % q for q in all_query_str)
+        # TODO: do we always have id field ?
+        main_query = "SELECT DISTINCT ON(id) {} FROM ({}) AS x ORDER BY id, union_priority".format(
+            select_clause,
+            main_query
+        )
+        order = ", ".join(order_fields_to_order_global)
+        limit = self.limit or self._queries[0].limit
+        offset = self.offset or self._queries[0].offset
+        # TODO: combine this select with previous SELECT DISTINCT ?
+        select_clause = ", ".join((args if args else ['id']) + order_fields_to_select_global)
+        main_query = "SELECT {} FROM ({}) AS xx {}{}{}".format(
+            select_clause,
+            main_query,
+            (" ORDER BY %s" % order) if order else "",
+            (" LIMIT %d" % limit) if limit else "",
+            (" OFFSET %d" % offset) if offset else "",
+        )
+        return main_query, all_params
+
+    @lazy_property
+    def _result(self):
+        query_str, params = self.select()
+        cr = self._queries[0]._cr
+        cr.execute(query_str, params)
+        return [row[0] for row in cr.fetchall()]
+
+    def __str__(self):
+        return '<osv.Query: %r with params: %r>' % self.select()
+
+    def __bool__(self):
+        return bool(self._result)
+
+    def __len__(self):
+        return len(self._result)
+
+    def __iter__(self):
+        return iter(self._result)
