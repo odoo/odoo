@@ -185,21 +185,9 @@ tour.register('sale_timesheet_tour', {
     trigger: 'div.o_notebook_headers',
     content: 'Click on Invoicing tab to configure the invoicing of this project.',
     run: function (actions) {
-        const notebookId = $('div[name="pricing_type"]').closest("div.tab-pane").attr('id');
+        const notebookId = $('div[name="sale_order_id"]').closest("div.tab-pane").attr('id');
         actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
     },
-}, {
-    trigger: 'div[name="pricing_type"]',
-    content: 'Check if the pricing type is equal to Task Rate',
-    run: function (actions) {
-        const pricingType = this.$anchor.find('input[data-value="task_rate"]').attr('checked');
-        if (!pricingType)
-            console.error('The default pricing type of the project should be "Task Rate".');
-    }
-}, {
-    trigger: 'input[data-value="fixed_rate"]',
-    content: 'Change the pricing type to "Project Rate"',
-    run: 'click',
 }, {
     trigger: 'div[name="partner_id"]',
     content: 'Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.',
@@ -229,10 +217,6 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: 'ul.ui-autocomplete > li:first-child > a',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
-    run: 'click',
-}, {
-    trigger: 'input[data-value="employee_rate"]',
-    content: 'Select "Employee rate" as pricing type.',
     run: 'click',
 }, {
     trigger: 'div[name="sale_line_employee_ids"] td.o_field_x2many_list_row_add > a[role="button"]',
