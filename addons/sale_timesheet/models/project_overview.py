@@ -115,6 +115,7 @@ class Project(models.Model):
             profit['expense_cost'] += data.get('expense_cost', 0.0)
             profit['expense_amount_untaxed_invoiced'] += data.get('expense_amount_untaxed_invoiced', 0.0)
         profit['other_revenues'] = other_revenues - data.get('amount_untaxed_invoiced', 0.0) if other_revenues else 0.0
+        profit['other_revenues'] = profit['other_revenues'] - data.get('expense_amount_untaxed_invoiced', 0.0) if profit['other_revenues'] else 0.0
         profit['total'] = sum([profit[item] for item in profit.keys()])
         dashboard_values['profit'] = profit
 
