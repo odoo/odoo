@@ -136,8 +136,14 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             # mark all as read clear needactions
             msg1 = self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[employee_partner.id])
             self._reset_bus()
-            employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg1.id], 'needaction_inbox_counter': 0 }])
+            with self.assertBus(
+                    [(self.cr.dbname, 'res.partner', employee_partner.id)],
+                    message_items=[
+                        {'type': 'mark_as_read',
+                         'message_ids': [msg1.id],
+                         'needaction_inbox_counter': 0}
+                    ]):
+                employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
@@ -155,8 +161,14 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
             self._reset_bus()
-            employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg2.id], 'needaction_inbox_counter': 0 }])
+            with self.assertBus(
+                    [(self.cr.dbname, 'res.partner', employee_partner.id)],
+                    message_items=[
+                        {'type': 'mark_as_read',
+                         'message_ids': [msg2.id],
+                         'needaction_inbox_counter': 0}
+                    ]):
+                employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 
