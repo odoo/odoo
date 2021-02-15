@@ -71,6 +71,7 @@ Authors:
         #Views
         'views/account_tax_view.xml',
         'views/l10n_latam_document_type_view.xml',
+        'views/res_partner_bank_views.xml',
     ],
     'installable': True,
     'auto_install': False,
