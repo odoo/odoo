@@ -178,6 +178,14 @@ class ProfitabilityAnalysis(models.Model):
                                     LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                     LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
                                 WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                                    AND NOT EXISTS (
+                                        SELECT SOL.id
+                                        FROM sale_order_line SOL
+                                        JOIN sale_order_line_invoice_rel SOINV ON SOINV.order_line_id = SOL.id
+                                        JOIN account_move_line AML ON SOINV.invoice_line_id = AAL.move_id
+                                        WHERE SOL.qty_delivered_method IN ('timesheet', 'manual')
+                                            OR (SOL.qty_delivered_method = 'analytic' AND SOL.invoice_status != 'no')
+                                    )
 
                                 UNION ALL
 
