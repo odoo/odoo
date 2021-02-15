@@ -104,7 +104,11 @@
 
         <record id="expire_coupon_cron" model="ir.cron">
             <field name="name">Coupon: expire coupon based on date</field>
+<<<<<<< HEAD:addons/coupon/data/coupon_email_data.xml
             <field name="model_id" ref="coupon.model_coupon_coupon"/>
+=======
+            <field name="model_id" ref="sale_coupon.model_sale_coupon"/>
+>>>>>>> 4ac37c6e9d1... temp:addons/sale_coupon/data/sale_coupon_email_data.xml
             <field name="state">code</field>
             <field name="code">model.cron_expire_coupon()</field>
             <field name="active" eval="True"/>
