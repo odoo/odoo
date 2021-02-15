@@ -9,6 +9,7 @@ class AccountTax(models.Model):
     l10n_ec_code_base = fields.Char(string='Code base', help='Tax declaration code of the base amount prior to the calculation of the tax')
     l10n_ec_code_applied = fields.Char(string='Code applied', help='Tax declaration code of the resulting amount after the calculation of the tax')
     l10n_ec_code_ats = fields.Char(string='Code ATS', help='Tax Identification Code for the Simplified Transactional Annex')
+    l10n_ec_type = fields.Selection(related='tax_group_id.l10n_ec_type')
 
 class AccountTaxTemplate(models.Model):
     _inherit = 'account.tax.template'    

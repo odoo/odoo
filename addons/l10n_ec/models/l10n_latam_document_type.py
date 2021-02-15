@@ -14,12 +14,11 @@ class L10nLatamDocumentType(models.Model):
         ('out_waybill', 'Issued Waybill'),
         ('out_withhold', 'Customer Withhold'),
         ('in_withhold', 'Supplier Withhold'),
-        ('hr_advance', 'Employee Advance'),
         ('other', 'Others'),
     ]
 
     _EC_AUTHORIZATION = [
-        ('none', 'None'),
+        ('none', 'None'), #use authorization 9999999999 instead
         ('own', 'Issued by my company'),
         ('third', 'Issued by Third Parties')
     ]
@@ -31,7 +30,6 @@ class L10nLatamDocumentType(models.Model):
         )
     l10n_ec_require_vat = fields.Boolean(
         string='Require Vat Number', 
-        track_visibility='onchange',
         help='Force the registration of customer vat number on invoice validation',
         )
     l10n_ec_authorization = fields.Selection(

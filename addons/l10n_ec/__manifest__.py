@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Ecuadorian Accounting by Trescloud',
-    'version': '3.3',
+    'version': '3.5', #pendiente mover a 3.6 con el impuesto 351
     'description': '''
 Functional
 ----------
