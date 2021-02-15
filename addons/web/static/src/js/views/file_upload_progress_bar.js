@@ -1,9 +1,8 @@
-odoo.define('web.ProgressBar', function (require) {
-'use strict';
+/** @odoo-module alias=web.ProgressBar **/
 
-const { _t } = require('web.core');
-const Dialog = require('web.Dialog');
-const Widget = require('web.Widget');
+import { _t } from 'web.core';
+import Dialog from 'web.Dialog';
+import Widget from 'web.Widget';
 
 const ProgressBar = Widget.extend({
     template: 'web.FileUploadProgressBar',
@@ -71,6 +70,4 @@ const ProgressBar = Widget.extend({
     },
 });
 
-return ProgressBar;
-
-});
+export default ProgressBar;

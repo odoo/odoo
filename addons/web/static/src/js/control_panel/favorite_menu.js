@@ -5,7 +5,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS } = require("web.searchUtils");
     const Registry = require('web.Registry');
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     /**
      * 'Favorites' menu

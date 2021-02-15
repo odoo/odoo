@@ -1434,15 +1434,16 @@ class Binary(http.Controller):
         '/web/content/<string:xmlid>/<string:filename>',
         '/web/content/<int:id>',
         '/web/content/<int:id>/<string:filename>',
-        '/web/content/<int:id>-<string:unique>',
-        '/web/content/<int:id>-<string:unique>/<string:filename>',
-        '/web/content/<int:id>-<string:unique>/<path:extra>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='name', unique=None, mimetype=None,
                        download=None, data=None, token=None, access_token=None, **kw):
 
+        return self._get_content_common(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token, token=token)
+
+    def _get_content_common(self, xmlid, model, id, field, unique, filename, filename_field, download, mimetype, access_token, token):
         status, headers, content = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token)
@@ -1456,6 +1457,19 @@ class Binary(http.Controller):
         if token:
             response.set_cookie('fileToken', token)
         return response
+
+    @http.route(['/web/assets/debug/<string:filename>',
+        '/web/assets/debug/<path:extra>/<string:filename>',
+        '/web/assets/<int:id>/<string:filename>',
+        '/web/assets/<int:id>-<string:unique>/<string:filename>',
+        '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
+    def content_assets(self, id=None, filename=None, unique=None, extra=None, **kw):
+        id = id or request.env['ir.attachment'].sudo().search_read(
+            [('url', '=like', f'/web/assets/%/{extra}/{filename}' if extra else f'/web/assets/%/{filename}')],
+             fields=['id'], limit=1)[0]['id']
+
+        return self._get_content_common(xmlid=None, model='ir.attachment', id=id, field='datas', unique=unique, filename=filename,
+            filename_field='name', download=None, mimetype=None, access_token=None, token=None)
 
     @http.route(['/web/partner_image',
         '/web/partner_image/<int:rec_id>',

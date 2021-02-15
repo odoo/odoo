@@ -3,7 +3,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
     const Domain = require('web.Domain');
     const CustomFilterItem = require('web.CustomFilterItem');
-    const ActionModel = require('web/static/src/js/views/action_model.js');
+    const ActionModel = require('web.ActionModel');
     const pyUtils = require('web.py_utils');
     const testUtils = require('web.test_utils');
 

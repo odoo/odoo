@@ -1,5 +1,5 @@
-odoo.define('web.PivotController', function (require) {
-    "use strict";
+/** @odoo-module alias=web.PivotController **/
+
     /**
      * Odoo Pivot Table Controller
      *
@@ -12,10 +12,10 @@ odoo.define('web.PivotController', function (require) {
      * view.
      */
 
-    const AbstractController = require('web.AbstractController');
-    const core = require('web.core');
-    const framework = require('web.framework');
-    const session = require('web.session');
+    import AbstractController from '../abstract_controller';
+    import core from 'web.core';
+    import framework from 'web.framework';
+    import session from 'web.session';
 
     const _t = core._t;
     const QWeb = core.qweb;
@@ -321,6 +321,4 @@ odoo.define('web.PivotController', function (require) {
         },
     });
 
-    return PivotController;
-
-});
+    export default PivotController;

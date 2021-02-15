@@ -1,14 +1,13 @@
-odoo.define('web.fileUploadMixin', function (require) {
-'use strict';
+/** @odoo-module alias=web.fileUploadMixin **/
 
 /**
  * Mixin to be used in view Controllers to manage uploads and generate progress bars.
  * supported views: kanban, list
  */
 
-const { csrf_token, _t } = require('web.core');
-const ProgressBar = require('web.ProgressBar');
-const ProgressCard = require('web.ProgressCard');
+import { csrf_token, _t } from 'web.core';
+import ProgressBar from 'web.ProgressBar';
+import ProgressCard from 'web.ProgressCard';
 
 const ProgressBarMixin = {
 
@@ -229,6 +228,4 @@ const ProgressBarMixin = {
 
 };
 
-return ProgressBarMixin;
-
-});
+export default ProgressBarMixin;
