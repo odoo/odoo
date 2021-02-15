@@ -91,14 +91,6 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'partner_id': cls.partner_b.id,
             'analytic_account_id': cls.analytic_account_sale.id,
         })
-        cls.project_project_rate = cls.project_task_rate.copy({
-            'name': 'Project with pricing_type="project_rate"',
-            'pricing_type': 'fixed_rate',
-        })
-        cls.project_employee_rate = cls.project_task_rate.copy({
-            'name': 'Project with pricing_type="employee_rate"',
-            'pricing_type': 'employee_rate',
-        })
 
         cls.project_subtask = Project.create({
             'name': "Sub Task Project (non billable)",

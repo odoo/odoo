@@ -22,13 +22,13 @@
                     <group>
                         <group>
                             <field name="display_create_order" invisible="1"/>
-                            <field name="pricing_type" attrs="{'invisible': [('allow_billable', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
+                            <field name="pricing_type" invisible="1" widget="radio"/>
                             <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
-                            <field name="sale_order_id" attrs="{'invisible': [('pricing_type', '=', 'task_rate')], 'readonly': [('sale_order_id', '!=', False)]}" force_save="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
-                            <field name="sale_line_id" string="Default Sales Order Item" attrs="{'invisible': [('pricing_type', '=', 'task_rate')]}" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_order_id" attrs="{'readonly': [('sale_order_id', '!=', False)]}" force_save="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_line_id" string="Default Sales Order Item" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                         </group>
                     </group>
-                    <field name="sale_line_employee_ids" attrs="{'invisible': [('pricing_type', '!=', 'employee_rate')]}">
+                    <field name="sale_line_employee_ids">
                         <tree editable="bottom">
                             <field name="company_id" invisible="1"/>
                             <field name="project_id" invisible="1"/>
