@@ -245,7 +245,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
+        fields: ['name','amount', 'price_include', 'include_base_amount', 'is_base_affected', 'amount_type', 'children_tax_ids'],
         domain: function(self) {return [['company_id', '=', self.company && self.company.id || false]]},
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -2218,11 +2218,16 @@ exports.Orderline = Backbone.Model.extend({
         i = 0;
         var cumulated_tax_included_amount = 0;
         _(taxes.reverse()).each(function(tax){
+            if(tax.price_include || tax.is_base_affected)
+                var tax_base_amount = base;
+            else
+                var tax_base_amount = total_excluded;
+
             if(tax.price_include && total_included_checkpoints[i] !== undefined){
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
             }else
-                var tax_amount = self._compute_all(tax, base, quantity, true);
+                var tax_amount = self._compute_all(tax, tax_base_amount, quantity, true);
 
             tax_amount = round_pr(tax_amount, currency_rounding);
 
@@ -2233,7 +2238,7 @@ exports.Orderline = Backbone.Model.extend({
                 'id': tax.id,
                 'name': tax.name,
                 'amount': sign * tax_amount,
-                'base': sign * round_pr(base, currency_rounding),
+                'base': sign * round_pr(tax_base_amount, currency_rounding),
             });
 
             if(tax.include_base_amount)

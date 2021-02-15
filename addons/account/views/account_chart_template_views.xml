@@ -172,6 +172,8 @@
                                     <group name="price_definitions">
                                         <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                         <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                        <field name="is_base_affected"
+                                               attrs="{'invisible': ['|', ('amount_type','=', 'group'), ('price_include', '=', True)]}"/>
                                     </group>
                                     <group name="tax_configuration">
                                         <field name="active" groups="base.group_no_one"/>
