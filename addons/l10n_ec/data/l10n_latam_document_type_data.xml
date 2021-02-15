@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-	<data noupdate="1">
+	<data noupdate="0">
     	<record id="ec_02" model="l10n_latam.document.type">
 			<field name="code">02</field>
 			<field name="name">Nota o Boleta de Venta</field>
@@ -411,5 +411,41 @@
 			<field name="country_id" ref="base.ec"/>
 		</record>
 
+		<record id="ec375purchase" model="l10n_latam.document.type">
+			<field name="code">375</field>
+			<field name="name">Liquidación de compra RISE de bienes o prestación de servicios</field>
+			<field name="report_name">Liquidación</field>
+			<field name="doc_code_prefix">Liq.</field>
+			<field name="sequence">210</field>
+			<field name="internal_type">invoice</field>
+			<field name="l10n_ec_type">in_invoice</field>
+			<field name="l10n_ec_authorization">own</field>
+			<field name="country_id" ref="base.ec"/>
+			<field name="active">False</field>
+		</record>
+		
+		<record id="ec_employee_advance" model="l10n_latam.document.type">
+			<field name="code">901</field>
+			<field name="name">Anticipo para Empleado</field>
+			<field name="report_name">Anticipo Empleado</field>
+			<field name="doc_code_prefix">AntEmp.</field>
+			<field name="sequence">900</field>
+			<field name="internal_type">invoice</field>
+			<field name="l10n_ec_type">in_invoice</field>
+			<field name="l10n_ec_authorization">none</field>
+			<field name="country_id" ref="base.ec"/>
+		</record>
+
+		<record id="ec_document_no_fiscal" model="l10n_latam.document.type">
+			<field name="code">100</field>
+			<field name="name">Documentos sin validez tributaria</field>
+			<field name="report_name">Doc. Sin Validez Tributaria</field>
+			<field name="doc_code_prefix">SinDoc</field>
+			<field name="sequence">910</field>
+			<field name="internal_type">invoice</field>
+			<field name="l10n_ec_type">in_invoice</field>
+			<field name="l10n_ec_authorization">none</field>
+			<field name="country_id" ref="base.ec"/>
+		</record>
 	</data>	
 </odoo>
