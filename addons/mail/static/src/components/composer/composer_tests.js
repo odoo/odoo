@@ -696,6 +696,85 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
     );
 });
 
+QUnit.test('do not send typing notification on typing "/" command', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.channel_command'].records.push({
+        channel_types: ['channel'],
+        help: "List users in the current channel",
+        name: "who",
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'notify_typing') {
+                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.verifySteps([], "No rpc done");
+});
+
+QUnit.test('do not send typing notification on typing after selecting suggestion from "/" command', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.channel_command'].records.push({
+        channel_types: ['channel'],
+        help: "List users in the current channel",
+        name: "who",
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'notify_typing') {
+                assert.step(`notify_typing:${args.kwargs.is_typing}`);
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, " is user?");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.verifySteps([], "No rpc done");
+});
+
 QUnit.test('use a command for a specific channel type', async function (assert) {
     assert.expect(4);
 
