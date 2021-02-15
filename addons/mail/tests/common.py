@@ -32,6 +32,10 @@ class MockEmail(common.BaseCase):
                     ('cancel', 'Cancelled')
     """
 
+    # ------------------------------------------------------------
+    # GATEWAY MOCK
+    # ------------------------------------------------------------
+
     @contextmanager
     def mock_mail_gateway(self, mail_unlink_sent=False, sim_error=None):
         build_email_origin = IrMailServer.build_email
