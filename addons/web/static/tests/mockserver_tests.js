@@ -16,8 +16,16 @@ QUnit.module("MockServer", {
                         string: "Email",
                         type: "string",
                     },
+                    active: {
+                        string: "Active",
+                        type: "bool",
+                        default: true,
+                    },
                 },
-                records: [{ id: 1, name: "Jean-Michel", email: "jean.michel@example.com" }],
+                records: [
+                    { id: 1, name: "Jean-Michel", email: "jean.michel@example.com" },
+                    { id: 2, name: "Raoul", email: "raoul@example.com", active: false },
+                ],
             },
         };
     },
@@ -130,6 +138,64 @@ QUnit.module("MockServer", {
             kwargs: {},
         });
         assert.deepEqual(result, [[null, "False"], [1, "Jean-Michel"]]);
+    });
+
+    QUnit.test("performRpc: search with active_test=false", async function (assert) {
+        assert.expect(1);
+        const server = new MockServer(this.data, {});
+        const result = await server.performRpc("", {
+            model: "res.partner",
+            method: "search",
+            args: [[]],
+            kwargs: {
+                context: { active_test: false },
+            },
+        });
+        assert.deepEqual(result, [1, 2]);
+    });
+
+    QUnit.test("performRpc: search with active_test=true", async function (assert) {
+        assert.expect(1);
+        const server = new MockServer(this.data, {});
+        const result = await server.performRpc("", {
+            model: "res.partner",
+            method: "search",
+            args: [[]],
+            kwargs: {
+                context: { active_test: true },
+            },
+        });
+        assert.deepEqual(result, [1]);
+    });
+
+    QUnit.test("performRpc: search_read with active_test=false", async function (assert) {
+        assert.expect(1);
+        const server = new MockServer(this.data, {});
+        const result = await server.performRpc("", {
+            model: "res.partner",
+            method: "search_read",
+            args: [[]],
+            kwargs: {
+                fields: ["name"],
+                context: { active_test: false },
+            },
+        });
+        assert.deepEqual(result, [{id: 1, name: "Jean-Michel"}, {id: 2, name: "Raoul"}]);
+    });
+
+    QUnit.test("performRpc: search_read with active_test=true", async function (assert) {
+        assert.expect(1);
+        const server = new MockServer(this.data, {});
+        const result = await server.performRpc("", {
+            model: "res.partner",
+            method: "search_read",
+            args: [[]],
+            kwargs: {
+                fields: ["name"],
+                context: { active_test: true },
+            },
+        });
+        assert.deepEqual(result, [{id: 1, name: "Jean-Michel"}]);
     });
 });
 });
