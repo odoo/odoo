@@ -311,6 +311,12 @@ function factory(dependencies) {
             if (!this.thread) {
                 return;
             }
+            if (
+                this.suggestionModelName === 'mail.channel_command' ||
+                this._getCommandFromText(this.textInputContent)
+            ) {
+                return;
+            }
             if (this.thread.typingMembers.includes(this.env.messaging.currentPartner)) {
                 this.thread.refreshCurrentPartnerIsTyping();
             } else {
