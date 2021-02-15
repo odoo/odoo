@@ -606,6 +606,42 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible attrs on notebook page which has only one page', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="bar"/>' +
+                        '<notebook>' +
+                            '<page string="Foo" attrs=\'{"invisible": [["bar", "!=", false]]}\'>' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.notOk(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should not be active');
+        assert.ok(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be invisible');
+
+        // enable checkbox
+        form.$('.o_field_boolean input').click();
+        assert.ok(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should be active');
+        assert.notOk(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be visible');
+
+        form.destroy();
+    });
+
     QUnit.test('first notebook page invisible', function (assert) {
         assert.expect(2);
 
