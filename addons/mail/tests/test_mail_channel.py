@@ -9,6 +9,8 @@ from odoo.tests import tagged, Form
 from odoo.tests.common import users
 from odoo.tools import mute_logger, formataddr
 
+
+@tagged('mail_channel')
 class TestChannelAccessRights(MailCommon):
 
     @classmethod
@@ -139,6 +141,7 @@ class TestChannelAccessRights(MailCommon):
             })
 
 
+@tagged('mail_channel')
 class TestChannelInternals(MailCommon):
 
     @classmethod
@@ -395,7 +398,7 @@ class TestChannelInternals(MailCommon):
             self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
 
 
-@tagged('moderation')
+@tagged('moderation', 'mail_channel')
 class TestChannelModeration(MailCommon):
 
     @classmethod
@@ -440,24 +443,24 @@ class TestChannelModeration(MailCommon):
         self.assertFalse(msg_c1_admin1.channel_ids | msg_c1_admin2.channel_ids | msg_c1_emplo2.channel_ids)
 
         # accept
-        msg_c1_admin1.with_user(self.user_employee)._moderate('accept')
+        with self.assertBus([(self.cr.dbname, 'mail.channel', self.channel.id)]):
+            msg_c1_admin1.with_user(self.user_employee)._moderate('accept')
         self.assertEqual(msg_c1_admin1.channel_ids, self.channel)
         self.assertEqual(msg_c1_admin1.moderation_status, 'accepted')
         self.assertEqual(msg_c1_admin2.moderation_status, 'pending_moderation')
-        self.assertBusNotifications([(self.cr.dbname, 'mail.channel', self.channel.id)])
 
         # allow
         self._reset_bus()
-        (msg_c1_admin1 | msg_c1_emplo2).with_user(self.user_employee)._moderate('allow')
+        with self.assertBus([
+                (self.cr.dbname, 'mail.channel', self.channel.id),
+                (self.cr.dbname, 'mail.channel', self.channel.id)]):
+            (msg_c1_admin1 | msg_c1_emplo2).with_user(self.user_employee)._moderate('allow')
         self.assertEqual(msg_c1_admin1.channel_ids, self.channel)
         self.assertEqual(msg_c1_admin2.channel_ids, self.channel)
         self.assertEqual(msg_c1_emplo2.channel_ids, self.channel)
         self.assertEqual(msg_c1_admin1.moderation_status, 'accepted')
         self.assertEqual(msg_c1_admin2.moderation_status, 'accepted')
         self.assertEqual(msg_c1_emplo2.moderation_status, 'accepted')
-        self.assertBusNotifications([
-            (self.cr.dbname, 'mail.channel', self.channel.id),
-            (self.cr.dbname, 'mail.channel', self.channel.id)])
 
     @mute_logger('odoo.models.unlink')
     def test_message_moderate_reject(self):
@@ -481,17 +484,16 @@ class TestChannelModeration(MailCommon):
 
         # test discard: silently remove
         self._reset_bus()
-        (msg_c1_admin2 + msg_c1_portal).with_user(self.user_employee)._moderate_discard()
-
-        # check all generated bus notifications
-        self.assertBusNotifications(
-            [(self.cr.dbname, 'res.partner', self.partner_admin.id),
-             (self.cr.dbname, 'res.partner', self.partner_employee.id),
-             (self.cr.dbname, 'res.partner', self.partner_portal.id)],
-            [{'type': 'deletion', 'message_ids': [id2]},  # author of 1 message
-             {'type': 'deletion', 'message_ids': [id2, id4]},  # moderator
-             {'type': 'deletion', 'message_ids': [id4]}]  # author of 1 message
-        )
+        with self.assertBus(
+                [(self.cr.dbname, 'res.partner', self.partner_admin.id),
+                 (self.cr.dbname, 'res.partner', self.partner_employee.id),
+                 (self.cr.dbname, 'res.partner', self.partner_portal.id)],
+                message_items=[
+                    {'type': 'deletion', 'message_ids': [id2]},  # author of 1 message
+                    {'type': 'deletion', 'message_ids': [id2, id4]},  # moderator
+                    {'type': 'deletion', 'message_ids': [id4]}  # author of 1 message
+                ]):
+            (msg_c1_admin2 + msg_c1_portal).with_user(self.user_employee)._moderate_discard()
 
     @mute_logger('odoo.models.unlink')
     def test_message_notify_moderators(self):
