@@ -1332,7 +1332,7 @@ class HttpCaseCommon(BaseCase):
         session.db = db
 
         if user: # if authenticated
-            uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
+            uid = self.registry['res.users'].authenticate(self.cr, user, password, {'interactive': False})
             env = api.Environment(self.cr, uid, {})
             session.uid = uid
             session.login = user

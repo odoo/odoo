@@ -999,7 +999,7 @@ class OpenERPSession(sessions.Session):
             HTTP_HOST=wsgienv['HTTP_HOST'],
             REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
         )
-        uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
+        uid = odoo.registry(db)['res.users'].authenticate(request.cr, login, password, env)
         self.pre_uid = uid
 
         self.rotate = True
