@@ -14,6 +14,9 @@
     <record id="uom_categ_length" model="uom.category">
         <field name="name">Length / Distance</field>
     </record>
+    <record id="uom_categ_surface" model="uom.category">
+        <field name="name">Surface</field>
+    </record>
     <record id="product_uom_categ_vol" model="uom.category">
         <field name="name">Volume</field>
     </record>
@@ -72,6 +75,14 @@
         <field name="name">cm</field>
         <field name="factor" eval="100"/>
         <field name="uom_type">smaller</field>
+    </record>
+
+    <!-- SURFACE -->
+    <record id="uom_square_meter" model="uom.uom">
+        <field name="name">m²</field>
+        <field name="category_id" ref="uom_categ_surface"/>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">reference</field>
     </record>
 
     <!-- VOLUME -->
@@ -143,6 +154,14 @@
         <field name="category_id" ref="uom_categ_length"/>
         <field name="factor_inv" eval="1609.34"/>
         <field name="uom_type">bigger</field>
+    </record>
+
+    <!-- SURFACE -->
+    <record id="uom_square_foot" model="uom.uom">
+        <field name="name">ft²</field>
+        <field name="category_id" ref="uom_categ_surface"/>
+        <field name="factor">10.76391</field>
+        <field name="uom_type">smaller</field>
     </record>
 
     <!-- VOLUME -->
