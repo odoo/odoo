@@ -154,7 +154,7 @@
                     <field name="so_line"
                         attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
-                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', parent.project_sale_order_id)]"
+                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"
                         optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='remaining_hours']" position="after">
