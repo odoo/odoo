@@ -356,6 +356,9 @@ var SelectCreateDialog = ViewDialog.extend({
                         in_DOM: true,
                     });
                     self.set_buttons(self.__buttons);
+
+                    // display the filters,groups and favorites on top of modal
+                    self.el.style.overflow = self.el.scrollHeight > self.el.clientHeight ? 'auto' : 'visible';
                 });
                 _super();
             });

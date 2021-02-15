@@ -623,6 +623,12 @@ ListRenderer.include({
         var self = this;
         this.currentRow = null;
         return this._super.apply(this, arguments).then(function () {
+            // display the filters,groups and favorites on top of modal
+            var model = self.el.closest('.modal-body');
+            if (model) {
+                var isModalOverflowing = model.clientHeight < model.firstElementChild.clientHeight + model.lastElementChild.clientHeight;
+                model.style.overflow = isModalOverflowing ? 'auto' : 'visible';
+            }
             if (self._isEditable()) {
                 self.$('table').addClass('o_editable_list');
             }
