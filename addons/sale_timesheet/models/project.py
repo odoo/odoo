@@ -140,14 +140,13 @@ class Project(models.Model):
         for project in self.filtered(lambda p: not p.project_overview):
             project.project_overview = project.allow_billable or project.allow_timesheets
 
-    @api.constrains('sale_line_id', 'pricing_type')
+    @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
-        for project in self:
-            if project.pricing_type == 'fixed_rate':
-                if project.sale_line_id and not project.sale_line_id.is_service:
-                    raise ValidationError(_("A billable project should be linked to a Sales Order Item having a Service product."))
-                if project.sale_line_id and project.sale_line_id.is_expense:
-                    raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
+        for project in self.filtered(lambda project: project.sale_line_id):
+            if not project.sale_line_id.is_service:
+                raise ValidationError(_("A billable project should be linked to a Sales Order Item having a Service product."))
+            if project.sale_line_id.is_expense:
+                raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
 
     @api.onchange('allow_billable')
     def _onchange_allow_billable(self):
