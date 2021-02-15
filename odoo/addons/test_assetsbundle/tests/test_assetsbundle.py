@@ -42,12 +42,13 @@ class TestJavascriptAssetsBundle(FileTouchable):
         files, remains = env['ir.qweb']._get_asset_content(xmlid, env.context)
         return AssetsBundle(xmlid, files, env=env)
 
-    def _any_ira_for_bundle(self, type, lang=None):
+    def _any_ira_for_bundle(self, extension, lang=None):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
         user_direction = self.env['res.lang']._lang_get(lang or self.env.user.lang).direction
-        bundle = self.jsbundle_xmlid if type == 'js' else self.cssbundle_xmlid
-        url = '/web/content/%-%/{0}{1}.{2}'.format(('rtl/' if type == 'css' and user_direction == 'rtl' else ''), bundle, type)
+        bundle = self.jsbundle_xmlid if extension in ['js', 'min.js'] else self.cssbundle_xmlid
+        rtl = 'rtl/' if extension == 'css' and user_direction == 'rtl' else ''
+        url = f'/web/assets/%-%/{rtl}{bundle}.{extension}'
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
@@ -60,20 +61,39 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
     def test_01_generation(self):
         """ Checks that a bundle creates an ir.attachment record when its `js` method is called
-        for the first time.
+        for the first time and this ir.attachment is different depending on `is_minified` param.
         """
         self.bundle = self._get_asset(self.jsbundle_xmlid, env=self.env)
 
-        # there shouldn't be any attachment associated to this bundle
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 0)
-        self.assertEqual(len(self.bundle.get_attachments('js')), 0)
+        # there shouldn't be any minified attachment associated to this bundle
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 0,
+                         "there shouldn't be any minified attachment associated to this bundle")
+        self.assertEqual(len(self.bundle.get_attachments('min.js')), 0,
+                         "there shouldn't be any minified attachment associated to this bundle")
 
         # trigger the first generation and, thus, the first save in database
         self.bundle.js()
 
-        # there should be one attachment associated to this bundle
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 1)
-        self.assertEqual(len(self.bundle.get_attachments('js')), 1)
+        # there should be one minified attachment associated to this bundle
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                         "there should be one minified attachment associated to this bundle")
+        self.assertEqual(len(self.bundle.get_attachments('min.js')), 1,
+                         "there should be one minified attachment associated to this bundle")
+
+        # there shouldn't be any non-minified attachment associated to this bundle
+        self.assertEqual(len(self._any_ira_for_bundle('js')), 0,
+                         "there shouldn't be any non-minified attachment associated to this bundle")
+        self.assertEqual(len(self.bundle.get_attachments('js')), 0,
+                         "there shouldn't be any non-minified attachment associated to this bundle")
+
+        # trigger the first generation and, thus, the first save in database for the non-minified version.
+        self.bundle.js(is_minified=False)
+
+        # there should be one non-minified attachment associated to this bundle
+        self.assertEqual(len(self._any_ira_for_bundle('js')), 1,
+                         "there should be one non-minified attachment associated to this bundle")
+        self.assertEqual(len(self.bundle.get_attachments('js')), 1,
+                         "there should be one non-minified attachment associated to this bundle")
 
     def test_02_access(self):
         """ Checks that the bundle's cache is working, i.e. that the bundle creates only one
@@ -82,23 +102,27 @@ class TestJavascriptAssetsBundle(FileTouchable):
         bundle0 = self._get_asset(self.jsbundle_xmlid)
         bundle0.js()
 
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                         "there should be one minified attachment associated to this bundle")
 
         version0 = bundle0.version
-        ira0 = self._any_ira_for_bundle('js')
+        ira0 = self._any_ira_for_bundle('min.js')
         date0 = ira0.create_date
 
         bundle1 = self._get_asset(self.jsbundle_xmlid)
         bundle1.js()
 
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                         "there should be one minified attachment associated to this bundle")
 
         version1 = bundle1.version
-        ira1 = self._any_ira_for_bundle('js')
+        ira1 = self._any_ira_for_bundle('min.js')
         date1 = ira1.create_date
 
-        self.assertEqual(version0, version1)
-        self.assertEqual(date0, date1)
+        self.assertEqual(version0, version1,
+                         "the version should not be changed because the bundle hasn't changed")
+        self.assertEqual(date0, date1,
+                         "the date of creation of the ir.attachment should not change because the bundle is unchanged")
 
     def test_03_date_invalidation(self):
         """ Checks that a bundle is invalidated when one of its assets' modification date is changed.
@@ -115,11 +139,14 @@ class TestJavascriptAssetsBundle(FileTouchable):
             bundle1.js()
             last_modified1 = bundle1.last_modified
             version1 = bundle1.version
-            self.assertNotEqual(last_modified0, last_modified1)
-            self.assertNotEqual(version0, version1)
+            self.assertNotEqual(last_modified0, last_modified1,
+                                "the creation date of the ir.attachment should change because the bundle has changed.")
+            self.assertNotEqual(version0, version1,
+                                "the version must should because the bundle has changed.")
 
             # check if the previous attachment is correctly cleaned
-            self.assertEqual(len(self._any_ira_for_bundle('js')), 1)
+            self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                             "there should be one minified attachment associated to this bundle")
 
     def test_04_content_invalidation(self):
         """ Checks that a bundle is invalidated when its content is modified by adding a file to
@@ -130,7 +157,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
         files0 = bundle0.files
         version0 = bundle0.version
 
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                         "there should be one minified attachment associated to this bundle")
 
         view_arch = """
         <data>
@@ -152,23 +180,70 @@ class TestJavascriptAssetsBundle(FileTouchable):
         files1 = bundle1.files
         version1 = bundle1.version
 
-        self.assertNotEqual(files0, files1)
-        self.assertNotEqual(version0, version1)
+        self.assertNotEqual(files0, files1,
+                            "the list of files should be different because a file has been added to the bundle")
+        self.assertNotEqual(version0, version1,
+                            "the version should be different because a file has been added to the bundle")
 
         # check if the previous attachment are correctly cleaned
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                         "there should be one minified attachment associated to this bundle")
 
-    def test_05_debug(self):
-        """ Checks that a bundle rendered in debug mode outputs non-minified assets.
+    def test_05_normal_mode(self):
+        """ Checks that a bundle rendered in normal mode outputs minified assets
+            and create a minified ir.attachment.
+        """
+        debug_bundle = self._get_asset(self.jsbundle_xmlid)
+        nodes = debug_bundle.to_node()
+        content = self._node_to_list(nodes)
+        # there should be a minified file
+        self.assertEqual(content[3].count('test_assetsbundle.bundle1.min.js'), 1)
+
+        # there should be one minified assets created in normal mode
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                         "there should be one minified assets created in normal mode")
+
+        # there shouldn't be any non-minified assets created in normal mode
+        self.assertEqual(len(self._any_ira_for_bundle('js')), 0,
+                         "there shouldn't be any non-minified assets created in normal mode")
+
+    def test_06_debug(self):
+        """ Checks that a bundle rendered in debug 1 mode outputs non-minified assets
+            and create an non-minified ir.attachment.
+        """
+        debug_bundle = self._get_asset(self.jsbundle_xmlid)
+        nodes = debug_bundle.to_node(debug='1')
+        content = self._node_to_list(nodes)
+        # there should be a minified file
+        self.assertEqual(content[3].count('test_assetsbundle.bundle1.min.js'), 1,
+                         "there should be one minified assets created in debug mode")
+
+        # there should be one minified assets created in debug mode
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
+                         "there should be one minified assets created in debug mode")
+
+        # there shouldn't be any non-minified assets created in debug mode
+        self.assertEqual(len(self._any_ira_for_bundle('js')), 0,
+                         "there shouldn't be any non-minified assets created in debug mode")
+
+    def test_07_debug_assets(self):
+        """ Checks that a bundle rendered in debug assets mode outputs non-minified assets
+            and create an non-minified ir.attachment at the .
         """
         debug_bundle = self._get_asset(self.jsbundle_xmlid)
         nodes = debug_bundle.to_node(debug='assets')
         content = self._node_to_list(nodes)
-        # find back one of the original asset file
-        self.assertIn('/test_assetsbundle/static/src/js/test_jsfile1.js', content)
+        # there should be a non-minified file (not .min.js)
+        self.assertEqual(content[3].count('test_assetsbundle.bundle1.js'), 1,
+                         "there should be one non-minified assets created in debug assets mode")
 
-        # there shouldn't be any assets created in debug mode
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 0)
+        # there shouldn't be any minified assets created in debug mode
+        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 0,
+                         "there shouldn't be any minified assets created in debug assets mode")
+
+        # there should be one non-minified assets created in debug mode
+        self.assertEqual(len(self._any_ira_for_bundle('js')), 1,
+                         "there should be one non-minified assets without a version in its url created in debug assets mode")
 
     def test_08_css_generation3(self):
         # self.cssbundle_xlmid contains 3 rules
@@ -343,7 +418,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # Check two bundles are available, one for ltr and one for rtl
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
+            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -389,7 +464,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
             # check if the previous attachment is correctly cleaned
             css_bundles = self.env['ir.attachment'].search([
-                ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
+                ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
             ])
             self.assertEqual(len(css_bundles), 2)
 
@@ -409,7 +484,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         rtl_version0 = rtl_bundle0.version
 
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
+            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -451,7 +526,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # check if the previous attachment are correctly cleaned
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
+            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_xmlid, 'css'))
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -473,18 +548,20 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
     def test_20_exteral_lib_assets(self):
         html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2')
-        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
+        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 2)
 
-        asset_data = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[0]
-        asset_xmlid = asset_data.attrib.get('data-asset-xmlid')
-        asset_version = asset_data.attrib.get('data-asset-version')
+        asset_data_css = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[0]
+        asset_data_js = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[1]
 
         format_data = {
             "js": attachments[0].url,
             "css": attachments[1].url,
-            "asset_xmlid": asset_xmlid,
-            "asset_version": asset_version,
+            "asset_xmlid_css": asset_data_css.attrib.get('data-asset-xmlid'),
+            "asset_version_css": asset_data_css.attrib.get('data-asset-version'),
+            "asset_xmlid_js": asset_data_js.attrib.get('data-asset-xmlid'),
+            "asset_version_js": asset_data_js.attrib.get('data-asset-version'),
+
         }
 
         self.assertEqual(html.strip(), ("""<!DOCTYPE html>
@@ -492,11 +569,11 @@ class TestJavascriptAssetsBundle(FileTouchable):
     <head>
         <link rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="%(css)s" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
+        <link type="text/css" rel="stylesheet" href="%(css)s" data-asset-xmlid="%(asset_xmlid_css)s" data-asset-version="%(asset_version_css)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="%(js)s" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
+        <script type="text/javascript" src="%(js)s" data-asset-xmlid="%(asset_xmlid_js)s" data-asset-version="%(asset_version_js)s"></script>
     </head>
     <body>
     </body>
@@ -504,31 +581,30 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
     def test_21_exteral_lib_assets_debug_mode(self):
         html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2', {"debug": "assets"})
-        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
-        self.assertEqual(len(attachments), 0)
+        attachments = self.env['ir.attachment'].search([('url', '=like', '%/test_assetsbundle.bundle4.js')])
+        self.assertEqual(len(attachments), 1)
 
-        asset_data = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[0]
-        asset_xmlid = asset_data.attrib.get('data-asset-xmlid')
-        asset_version = asset_data.attrib.get('data-asset-version')
+        asset_data_css = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[0]
+        asset_data_js = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[2]
 
         format_data = {
-            "asset_xmlid": asset_xmlid,
-            "asset_version": asset_version,
+            "asset_xmlid_css": asset_data_css.attrib.get('data-asset-xmlid'),
+            "asset_version_css": asset_data_css.attrib.get('data-asset-version'),
+            "asset_xmlid_js": asset_data_js.attrib.get('data-asset-xmlid'),
+            "asset_version_js": asset_data_js.attrib.get('data-asset-version'),
+            "js": '/web/assets/debug/test_assetsbundle.bundle4.js',
         }
-
         self.assertEqual(html.strip(), ("""<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
-        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile2.css" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
+        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css" data-asset-xmlid="%(asset_xmlid_css)s" data-asset-version="%(asset_version_css)s"/>
+        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile2.css" data-asset-xmlid="%(asset_xmlid_css)s" data-asset-version="%(asset_version_css)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile1.js" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
-        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile2.js" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
-        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile3.js" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
+        <script type="text/javascript" src="%(js)s" data-asset-xmlid="%(asset_xmlid_js)s" data-asset-version="%(asset_version_js)s"></script>
     </head>
     <body>
     </body>

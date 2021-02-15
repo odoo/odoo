@@ -1,15 +1,14 @@
-odoo.define('web.ListRenderer', function (require) {
-"use strict";
+/** @odoo-module alias=web.ListRenderer **/
 
-var BasicRenderer = require('web.BasicRenderer');
-const { ComponentWrapper } = require('web.OwlCompatibility');
-var config = require('web.config');
-var core = require('web.core');
-var dom = require('web.dom');
-var field_utils = require('web.field_utils');
-var Pager = require('web.Pager');
-var utils = require('web.utils');
-var viewUtils = require('web.viewUtils');
+import BasicRenderer from 'web.BasicRenderer';
+import { ComponentWrapper } from 'web.OwlCompatibility';
+import config from 'web.config';
+import core from 'web.core';
+import dom from 'web.dom';
+import field_utils from 'web.field_utils';
+import Pager from 'web.Pager';
+import utils from 'web.utils';
+import viewUtils from 'web.viewUtils';
 
 var _t = core._t;
 
@@ -1477,5 +1476,4 @@ var ListRenderer = BasicRenderer.extend({
     },
 });
 
-return ListRenderer;
-});
+export default ListRenderer;

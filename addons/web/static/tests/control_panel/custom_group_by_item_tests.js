@@ -2,7 +2,7 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
     "use strict";
 
     const CustomGroupByItem = require('web.CustomGroupByItem');
-    const ActionModel = require('web/static/src/js/views/action_model.js');
+    const ActionModel = require('web.ActionModel');
     const testUtils = require('web.test_utils');
 
     const { createComponent } = testUtils;

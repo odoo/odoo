@@ -1,7 +1,6 @@
-odoo.define('web.ListModel', function (require) {
-    "use strict";
+/** @odoo-module alias=web.ListModel **/
 
-    var BasicModel = require('web.BasicModel');
+    import BasicModel from 'web.BasicModel';
 
     var ListModel = BasicModel.extend({
 
@@ -163,5 +162,4 @@ odoo.define('web.ListModel', function (require) {
             });
         },
     });
-    return ListModel;
-});
+    export default ListModel;

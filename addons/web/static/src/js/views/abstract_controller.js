@@ -1,5 +1,4 @@
-odoo.define('web.AbstractController', function (require) {
-"use strict";
+/** @odoo-module alias=web.AbstractController **/
 
 /**
  * The Controller class is the class coordinating the model and the renderer.
@@ -12,12 +11,12 @@ odoo.define('web.AbstractController', function (require) {
  * reading localstorage, ...) has to go through the controller.
  */
 
-var ActionMixin = require('web.ActionMixin');
-var ajax = require('web.ajax');
-var concurrency = require('web.concurrency');
-const { ComponentWrapper } = require('web.OwlCompatibility');
-var mvc = require('web.mvc');
-var session = require('web.session');
+import ActionMixin from 'web.ActionMixin';
+import ajax from 'web.ajax';
+import concurrency from 'web.concurrency';
+import { ComponentWrapper } from 'web.OwlCompatibility';
+import mvc from 'web.mvc';
+import session from 'web.session';
 
 
 var AbstractController = mvc.Controller.extend(ActionMixin, {
@@ -588,6 +587,4 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     },
 });
 
-return AbstractController;
-
-});
+export default AbstractController;

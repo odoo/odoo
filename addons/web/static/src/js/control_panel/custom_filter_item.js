@@ -7,7 +7,7 @@ odoo.define('web.CustomFilterItem', function (require) {
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
     const field_utils = require('web.field_utils');
     const patchMixin = require('web.patchMixin');
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     /**
      * Filter generator menu

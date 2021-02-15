@@ -115,8 +115,8 @@ class TestWebsitePerformance(UtilPerf):
 
         self.assertEqual(self._get_url_hot_query(self.page.url), 11)
 
-    def test_50_perf_sql_web_content(self):
-        # assets route /web/content/..
+    def test_50_perf_sql_web_assets(self):
+        # assets route /web/assets/..
         self.url_open('/')  # create assets attachments
-        assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/content/%/web.assets_common%.js')], limit=1).url
+        assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_common%.js')], limit=1).url
         self.assertEqual(self._get_url_hot_query(assets_url), 2)

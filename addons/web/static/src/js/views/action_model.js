@@ -1,12 +1,11 @@
-odoo.define("web/static/src/js/views/action_model.js", function (require) {
-    "use strict";
+/** @odoo-module alias=web.ActionModel **/
 
-    const Domain = require("web.Domain");
-    const { FACET_ICONS } = require("web.searchUtils");
-    const { Model } = require("web/static/src/js/model.js");
-    const { parseArch } = require("web.viewUtils");
-    const pyUtils = require("web.py_utils");
-    const Registry = require("web.Registry");
+    import Domain from "web.Domain";
+    import { FACET_ICONS } from "web.searchUtils";
+    import { Model } from "web.Model";
+    import { parseArch } from "web.viewUtils";
+    import pyUtils from "web.py_utils";
+    import Registry from "web.Registry";
 
     const isNotNull = (value) => value !== null && value !== undefined;
     const isObject = (obj) => typeof obj === "object" && obj !== null;
@@ -232,5 +231,4 @@ odoo.define("web/static/src/js/views/action_model.js", function (require) {
         (value) => value.prototype instanceof ActionModel.Extension
     );
 
-    return ActionModel;
-});
+    export default ActionModel;

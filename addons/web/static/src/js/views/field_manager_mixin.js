@@ -1,5 +1,4 @@
-odoo.define('web.FieldManagerMixin', function (require) {
-"use strict";
+/** @odoo-module alias=web.FieldManagerMixin **/
 
 /**
  * The FieldManagerMixin is a mixin, designed to do the plumbing between field
@@ -8,8 +7,8 @@ odoo.define('web.FieldManagerMixin', function (require) {
  * calling the correct methods on the model.  This is the field_manager's job.
  */
 
-var BasicModel = require('web.BasicModel');
-var concurrency = require('web.concurrency');
+import BasicModel from 'web.BasicModel';
+import concurrency from 'web.concurrency';
 
 var FieldManagerMixin = {
     custom_events: {
@@ -162,5 +161,4 @@ var FieldManagerMixin = {
     },
 };
 
-return FieldManagerMixin;
-});
+export default FieldManagerMixin;

@@ -1,7 +1,7 @@
 odoo.define('web.search_bar_tests', function (require) {
     "use strict";
 
-    const { Model } = require('web/static/src/js/model.js');
+    const { Model } = require('web.Model');
     const Registry = require("web.Registry");
     const SearchBar = require('web.SearchBar');
     const testUtils = require('web.test_utils');

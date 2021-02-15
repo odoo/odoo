@@ -3,7 +3,7 @@ odoo.define('base_import.ImportMenu', function (require) {
 
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     /**
      * Import Records menu

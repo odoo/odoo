@@ -1,20 +1,19 @@
-odoo.define('web.AbstractAction', function (require) {
-"use strict";
+/** @odoo-module alias=web.AbstractAction **/
 
 /**
  * We define here the AbstractAction widget, which implements the ActionMixin.
  * All client actions must extend this widget.
  *
- * @module web.AbstractAction
+ * @module @web/chrome/abstract_action
  */
 
-var ActionMixin = require('web.ActionMixin');
-const ActionModel = require('web/static/src/js/views/action_model.js');
-var ControlPanel = require('web.ControlPanel');
-var Widget = require('web.Widget');
-const { ComponentWrapper } = require('web.OwlCompatibility');
+import ActionMixin from "web.ActionMixin";
+import ActionModel from "web.ActionModel";
+import ControlPanel from "web.ControlPanel";
+import Widget from "web.Widget";
+import { ComponentWrapper } from "web.OwlCompatibility";
 
-var AbstractAction = Widget.extend(ActionMixin, {
+const AbstractAction = Widget.extend(ActionMixin, {
     config: {
         ControlPanel: ControlPanel,
     },
@@ -187,6 +186,4 @@ var AbstractAction = Widget.extend(ActionMixin, {
     _onSearch: function () {},
 });
 
-return AbstractAction;
-
-});
+export default AbstractAction;

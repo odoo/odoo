@@ -1,5 +1,5 @@
-odoo.define('web.viewUtils', function (require) {
-"use strict";
+/** @odoo-module alias=web.viewUtils **/
+
 
 var dom = require('web.dom');
 var utils = require('web.utils');
@@ -87,6 +87,4 @@ var viewUtils = {
     },
 };
 
-return viewUtils;
-
-});
+export default viewUtils;
