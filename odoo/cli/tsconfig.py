@@ -12,6 +12,9 @@ from odoo.modules.module import MANIFEST_NAMES
 class TSConfig(Command):
     """Generates tsconfig files for javascript code"""
 
+    def __init__(self):
+        self.command_name = "tsconfig"
+
     def get_module_list(self, path):
         return [
             mod.split(os.path.sep)[-2]
