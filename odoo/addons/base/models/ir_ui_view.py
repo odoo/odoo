@@ -504,6 +504,16 @@ actual arch.
                 values['name'] = "%s %s" % (values.get('model'), values['type'])
             # Create might be called with either `arch` (xml files), `arch_base` (form view) or `arch_db`.
             values['arch_prev'] = values.get('arch_base') or values.get('arch_db') or values.get('arch')
+            # write on arch: bypass _inverse_arch()
+            if 'arch' in values:
+                values['arch_db'] = values.pop('arch')
+                if 'install_filename' in self._context:
+                    # we store the relative path to the resource instead of the absolute path, if found
+                    # (it will be missing e.g. when importing data-only modules using base_import_module)
+                    path_info = get_resource_from_path(self._context['install_filename'])
+                    if path_info:
+                        values['arch_fs'] = '/'.join(path_info[0:2])
+                        values['arch_updated'] = False
             values.update(self._compute_defaults(values))
 
         self.clear_caches()
