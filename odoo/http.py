@@ -227,7 +227,7 @@ class WebRequest(object):
         if not self.db:
             raise RuntimeError('request not bound to a database')
         if not self._cr:
-            self._cr = self.registry.cursor()
+            self._cr = self.registry.cursor(False)
         return self._cr
 
     @property
