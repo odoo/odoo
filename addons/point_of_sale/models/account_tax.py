@@ -10,7 +10,7 @@ class AccountTax(models.Model):
     def write(self, vals):
         forbidden_fields = set([
             'amount_type', 'amount', 'type_tax_use', 'tax_group_id', 'price_include',
-            'include_base_amount'
+            'include_base_amount', 'is_base_affected',
         ])
         if forbidden_fields & set(vals.keys()):
             tax_ids = self.env['pos.order.line'].sudo().search([
