@@ -231,12 +231,12 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onInputTextarea() {
+        this.saveStateInStore();
         if (this._textareaLastInputValue !== this._textareaRef.el.value) {
             this.composer.handleCurrentPartnerIsTyping();
         }
         this._textareaLastInputValue = this._textareaRef.el.value;
         this._updateHeight();
-        this.saveStateInStore();
     }
 
     /**
