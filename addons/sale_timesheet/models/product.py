@@ -20,7 +20,7 @@ class ProductTemplate(models.Model):
     ], ondelete={'timesheet': 'set default'})
     # override domain
     project_id = fields.Many2one(domain="[('allow_billable', '=', True), ('pricing_type', '=', 'task_rate'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
-    project_template_id = fields.Many2one(domain="[('allow_billable', '=', True), ('pricing_type', 'in', ('fixed_rate', 'employee_rate')), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
+    project_template_id = fields.Many2one(domain="[('allow_billable', '=', True), ('pricing_type', '!=', 'task_rate'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
     service_upsell_warning = fields.Boolean('Upsell Warning', help="The salesperson in charge will be assigned an activity informing him of an upselling opportunity once the selected threshold is reached.")
     service_upsell_threshold = fields.Float('Threshold', help="Percentage of time delivered compared to the prepaid amount that must be reached for the upselling opportunity activity to be triggered.")
 
