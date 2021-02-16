@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchase_a4_portrait">
+            <t t-call="web.html_container">
+                <t t-call="web.internal_layout">
+                    <div class="page">
+                        <t t-set="count" t-value="0"/>
+                        <t t-set="count" t-value="len([doc.state for doc in docs if doc.state == 'purchase'])"/>
+                        <t t-if="count != 0"><strong>purchase Orders state : Confirm</strong><br/></t>
+                            <table class="table table-sm table-reports" t-if="count != 0">
+                                <thead>
+                                    <tr style="text-align:20px; font-size:25px;">
+                                        <th>Purchase Order No</th>
+                                        <th>Customer Name</th>
+                                        <th>Order Date</th>
+                                        <th>Total Bill</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="docs" t-as="doc">
+                                        <tr t-if="doc.state == 'purchase'">
+                                            <td><t t-esc="doc.name"/></td>
+                                            <td> <t t-esc="doc.partner_id.name"/></td>
+                                            <td> <t t-esc="doc.date_order"/></td>
+                                            <td> <t t-esc="doc.amount_total"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        <t t-if="count != 0">
+                            <div class="clearfix" name="so_total_summary">
+                                <div id="total" class="row" name="total">
+                                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                                        <table class="table table-sm">
+                                            <tr class="border-black o_subtotal" style="">
+                                                <td name="td_amount_untaxed_label"><strong>Subtotal</strong></td>
+                                                <td name="td_amount_untaxed" class="text-right">
+                                                    <span
+                                                            t-esc="sum([doc.amount_untaxed for doc in docs if doc.state == 'purchase'])"
+                                                            t-options='{"widget": "monetary", "display_currency": docs[0].currency_id}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr class="border-black o_total">
+                                                <td name="td_amount_total_label"><strong>Total(tax)</strong></td>
+                                                <td name="td_amount_total" class="text-right">
+                                                    <span
+                                                        t-esc="sum([doc.amount_total for doc in docs if doc.state == 'purchase'])"
+                                                        t-options='{"widget": "monetary", "display_currency": docs[0].currency_id}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+<!--                        ________________________________________________ -->
+                        <t t-set="ocount" t-value="0"/>
+                        <t t-set="ocount" t-value="len([doc.state for doc in docs if doc.state != 'purchase'])"/>
+                        <t t-if="ocount != 0"><strong>purchase Orders state : Not Confirm</strong><br/></t>
+                            <table class="table table-sm table-reports" t-if="ocount != 0">
+                                <thead>
+                                    <tr style="text-align:20px; font-size:25px;">
+                                        <th>Purchase Order No</th>
+                                        <th>Customer Name</th>
+                                        <th>Order Status</th>
+                                        <th>Order Date</th>
+                                        <th>Total Bill</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="docs" t-as="doc">
+                                        <tr t-if="doc.state != 'purchase'">
+                                            <td><t t-esc="doc.name"/></td>
+                                            <td> <t t-esc="doc.partner_id.name"/></td>
+                                            <td> <t t-esc="doc.state"/></td>
+                                            <td> <t t-esc="doc.date_order"/></td>
+                                            <td> <t t-esc="doc.amount_total"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        <t t-if="ocount != 0">
+                            <div class="clearfix" name="so_total_summary">
+                                <div id="total" class="row" name="total">
+                                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                                        <table class="table table-sm">
+                                            <tr class="border-black o_subtotal" style="">
+                                                <td name="td_amount_untaxed_label"><strong>Subtotal</strong></td>
+                                                <td name="td_amount_untaxed" class="text-right">
+                                                    <span
+                                                            t-esc="sum([doc.amount_untaxed for doc in docs if doc.state != 'purchase'])"
+                                                            t-options='{"widget": "monetary", "display_currency": docs[0].currency_id}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr class="border-black o_total">
+                                                <td name="td_amount_total_label"><strong>Total(tax)</strong></td>
+                                                <td name="td_amount_total" class="text-right">
+                                                    <span
+                                                        t-esc="sum([doc.amount_total for doc in docs if doc.state != 'purchase'])"
+                                                        t-options='{"widget": "monetary", "display_currency": docs[0].currency_id}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+        </t>
+    </template>
+</odoo>

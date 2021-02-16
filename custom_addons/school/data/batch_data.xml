@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="batch_batch1" model="task.batch">
+            <field name="name">batch1</field>
+            <field name="course_batch_ids" eval="[(4,ref('school.course_cou1')), (4,ref('school.course_cou14'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch2" model="task.batch">
+            <field name="name">batch2</field>
+            <field name="course_batch_ids" eval="[(4,ref('school.course_cou2')), (4,ref('school.course_cou12'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch3" model="task.batch">
+            <field name="name">batch3</field>
+            <field name="course_batch_ids" eval="[(4,ref('school.course_cou3')), (4,ref('school.course_cou13'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch4" model="task.batch">
+            <field name="name">batch4</field>
+            <field name="course_batch_ids" eval="[(4,ref('school.course_cou4')), (4,ref('school.course_cou11'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch5" model="task.batch">
+            <field name="name">batch5</field>
+            <field name="course_batch_ids" eval="[(4,ref('school.course_cou5')), (4,ref('school.course_cou10'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch6" model="task.batch">
+            <field name="name">batch6</field>
+            <field name="course_batch_ids" eval="[(4,ref('school.course_cou6')), (4,ref('school.course_cou9'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch7" model="task.batch">
+            <field name="name">batch7</field>
+            <field name="course_batch_ids" eval="[(4,ref('school.course_cou7')), (4,ref('school.course_cou8'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch75" model="task.batch">
+            <field name="name">batch7tyhruty</field>
+<!--            <field name="course_batch_ids" eval="[(4,ref('school.course_cou7')), (4,ref('school.course_cou8'))]"/>-->
+            <field name="course_batch_ids" eval="[(5,0), (0, 0, {'name': 'balance123', 'no_of_year':16, 'start_year':2020, 'total_seats':30,})]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="batch_batch76" model="task.batch">
+            <field name="name">RTO</field>
+<!--            <field name="course_batch_ids" eval="[(4,ref('school.course_cou7')), (4,ref('school.course_cou8'))]"/>-->
+            <field name="course_batch_ids" eval="[(6, 0, [ref('school.course_cou7'),ref('school.course_cou8')])]"/>
+        </record>
+    </data>
+</odoo>

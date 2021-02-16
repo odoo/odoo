@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html) -->
+
+<odoo>
+    <data>
+        <record id="base.module_category_forms" model="ir.module.category">
+            <field name="description">Forms</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record id="group_formio_user" model="res.groups">
+            <field name="name">User: Assigned forms</field>
+            <field name="category_id" ref="base.module_category_forms_forms"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_formio_user_all_forms" model="res.groups">
+            <field name="name">User: All forms</field>
+            <field name="category_id" ref="base.module_category_forms_forms"/>
+            <field name="implied_ids" eval="[(4, ref('group_formio_user'))]"/>
+        </record>
+
+        <record id="group_formio_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="base.module_category_forms_forms"/>
+	    <field name="implied_ids" eval="[(4, ref('formio.group_formio_user_all_forms'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+
+    <data>
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('formio.group_formio_admin'))]"/>
+        </record>
+    </data>
+</odoo>

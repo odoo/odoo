@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Registration Tree View -->
+    <record id="registration_tree_view" model="ir.ui.view">
+        <field name="name">registration.tree.view</field>
+        <field name="model">task.registration</field>
+        <field name="arch" type="xml">
+            <tree string="Registration Information">
+                <field name="student_id"/>
+                <field name="batch_id"/>
+                <field name="no_of_year"/>
+                <field name="batch_id"/>
+                <field name="total_seats"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Registration form view -->
+    <record id="registration_form_view" model="ir.ui.view">
+        <field name="name">registration.form.view</field>
+        <field name="model">task.registration</field>
+        <field name="arch" type="xml">
+            <form string="Registration">
+<!--                <header>-->
+<!--                    <button class="oe_highlight" name="button_done" states="draft" string="Done" type="object"/>-->
+<!--                    <button class="oe_highlight" name="button_reset" states="done,cancel" string="Reset to Draft" type="object"/>-->
+<!--                    <button name="button_cancel" states="draft,done" string="Cancel" type="object"/>-->
+<!--                    <field name="state" statusbar_visible="draft,done" widget="statusbar"/>-->
+<!--                </header>-->
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="student_id"/>
+                            <field name="total_seats"/>
+                            <field name="no_of_year"/>
+                            <field name="id_student"/>
+                            <field name="current_year"/>
+                        </group>
+                        <group>
+                            <field name="batch_id"/>
+                            <field name="course_id" widget="many2many_tags">
+                                <tree>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                            <field name="remaining_seat"/>
+                            <field name="course_select"/>
+                            <field name="payment"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+<!--     <record model="ir.ui.view" id="registration_graph_view">-->
+<!--            <field name="name">registration.graph</field>-->
+<!--            <field name="model">task.registration</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <graph string="Participations by Courses">-->
+<!--&lt;!&ndash;                    <field name="course_id"/>&ndash;&gt;-->
+<!--                    <field name="student_id" type="measure"/>-->
+<!--                </graph>-->
+<!--            </field>-->
+<!--        </record>-->
+
+    <!-- Registration Menu Action -->
+    <record id="registration_menu_action" model="ir.actions.act_window">
+        <field name="name">registration</field>
+        <field name="res_model">task.registration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+<!--            <p class="o_view_nocontent_smiling_face">Add Registrations</p>-->
+            <p class="o_view_nocontent_empty_folder">Add Registrations</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="task_menu" name="task"/>
+    <menuitem action="registration_menu_action" id="task_registration_menu" name="Registration" parent="task_menu" sequence="5"/>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    search settings     -->
+    <record id="view_search_course" model="ir.ui.view">
+        <field name="name">course.search.view</field>
+            <field name="model">task.course</field>
+            <field name="arch" type="xml">
+                <search string="Search Course">
+                    <field name="name"/>
+                    <field name="batch_id"/>
+                    <filter name="no_of_year" string="No of years" domain="[('no_of_year', '=', uid)]"/>
+                    <filter name="no_of_student" string="No of student" domain="[('total_seats', '=', uid)]"/>
+                    <group string="Group By">
+                        <filter name="no_of_year" string="Years" context="{'group_by': 'no_of_year'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter name="total_seats" string="Student" context="{'group_by': 'total_seats'}"/>
+                        <filter name="no_of_year" string="No of year" context="{'group_by': 'no_of_year'}"/>
+                        <filter name="start_year" string="Start Year" context="{'group_by': 'start_year'}"/>
+                        <filter name="end_year" string="End Year" context="{'group_by': 'end_year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <!-- course Tree View -->
+    <record id="course_tree_view" model="ir.ui.view">
+        <field name="name">course.tree.view</field>
+        <field name="model">task.course</field>
+        <field name="arch" type="xml">
+            <tree string="Course Information">
+                <field name="name"/>
+                <field name="no_of_year"/>
+                <field name="start_year"/>
+                <field name="end_year"/>
+                <field name="remaining_seats" widget="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- course form view -->
+    <record id="course_form_view" model="ir.ui.view">
+        <field name="name">course.form.view</field>
+        <field name="model">task.course</field>
+        <field name="arch" type="xml">
+            <form string="Course">
+                <sheet>
+                    <group string="Course Information">
+                        <group>
+                            <field name="name"/>
+                            <field name="no_of_year"/>
+                            <field name="start_year"/>
+                        </group>
+                        <group>
+                            <field name="end_year"/>
+                            <field name="total_seats"/>
+                        </group>
+<!--                            <field name="register_id"/>-->
+                    </group>
+                    <group string="Students">
+                        <field name="student_ids" widget="many2many_tags">
+                            <!--                                <field name="student_id"/>-->
+                        </field>
+                        <field name="remaining_seats" widget="progressbar"/>
+                    </group>
+                    <!--                    <notebook>-->
+<!--                        <page string="Student">-->
+<!--                            <field name="students" widget="many2many_tags">-->
+<!--                                <field name="name"/>-->
+<!--                            </field>-->
+<!--                        </page>-->
+<!--                    </notebook>-->
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Course Menu Action -->
+    <record id="course_menu_action" model="ir.actions.act_window">
+        <field name="name">course</field>
+        <field name="res_model">task.course</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Add Course</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="task_menu" name="task"/>
+    <menuitem action="course_menu_action" id="task_course_menu" name="Course" parent="task_menu" sequence="2"/>
+</odoo>

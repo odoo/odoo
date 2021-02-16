@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_report_general_ledger_view" model="ir.ui.view">
+        <field name="name">General Ledger</field>
+        <field name="model">account.report.general.ledger</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name='target_move']" position="after">
+            <field name="sortby" widget="radio"/>
+            <field name="display_account" widget="radio"/>
+            <field name="initial_balance"/>
+            <newline/>
+        </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="action_account_general_ledger_menu" model="ir.actions.act_window">
+        <field name="name">General Ledger</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.report.general.ledger</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_report_general_ledger_view"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_account" />
+        <field name="binding_type">report</field>
+    </record>
+
+    <menuitem
+        id="menu_general_ledger"
+        name="General Ledger"
+        sequence="3"
+        parent="accounting_pdf_reports.menu_finance_legal_statement"
+        action="action_account_general_ledger_menu"
+        groups="account.group_account_user,account.group_account_manager"
+       />
+
+</odoo>

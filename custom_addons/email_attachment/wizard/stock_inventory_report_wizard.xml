@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_stock_inventory_wizard_action_form" model="ir.ui.view">
+            <field name="name">report.stock.inventory.wizard.form</field>
+            <field name="model">report.stock.inventory.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="product_ids" widget="many2many_tags" options="{'no_quick_create':True}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Enter to win" name="print_report" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="report_stock_inventory_wizard_action_menu" model="ir.actions.act_window">
+            <field name="name">product information(stock/inventory)</field>
+            <field name="res_model">report.stock.inventory.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem id="menu_valuation_report"
+              name="product information(stock/inventory)"
+              parent="stock.menu_warehouse_report"
+              sequence="115"
+              action="report_stock_inventory_wizard_action_menu"/>
+    </data>
+</odoo>

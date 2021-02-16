@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <record id="view_formio_res_model_tree" model="ir.ui.view">
+        <field name="name">formio.res.model.tree</field>
+        <field name="model">formio.res.model</field>
+        <field name="arch" type="xml">
+            <tree string="Resource Model">
+                <field name="ir_model_id"/>
+                <field name="module_dependency"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_formio_res_model_form" model="ir.ui.view">
+        <field name="name">formio.res.model.form</field>
+        <field name="model">formio.res.model</field>
+        <field name="arch" type="xml">
+	    <form string="Form">
+                <sheet>
+                    <group>
+                        <field name="ir_model_id" attrs="{'readonly': [('module_dependency', '=', True)]}"/>
+                        <field name="module_dependency"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_formio_res_model" model="ir.actions.act_window">
+        <field name="name">Resource Models</field>
+        <field name="res_model">formio.res.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_formio_res_model_tree"/>
+    </record>
+</odoo>

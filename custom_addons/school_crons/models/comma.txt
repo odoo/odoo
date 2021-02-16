@@ -1,0 +1,33 @@
+@api.model
+    def create(self, vals_list):
+        return super(Courses, self).create(vals_list)
+
+    def write(self, values):
+        return super(Courses, self).write(values)
+
+    def _create_multiple_course(self):
+        for i in range(4):
+            name = [''.join(rn.choice(ascii_uppercase) for i in range(1)) + ''.join(rn.choice(ascii_lowercase) for i in range(4))]
+            student_id_list = self.env['res.partner'].search([('is_student', '=', True)]).ids
+            batch_id_list = self.env['school.batch'].search([]).ids
+            course_select_list = self.env['school.course'].search([]).ids
+            vals_list = {'name': name, 'no_of_year': 2, 'start_year': 2020,
+                         'student_ids': student_id_list,
+                         'batch_id': batch_id_list[i],
+                         'reg_std_ids': student_id_list}
+            self.create(vals_list)
+
+    def _write_multiple_course(self):
+        course_id_list = self.env['school.course'].search([]).ids
+        student_id_list = self.env['res.partner'].search([('is_student', '=', True)]).ids
+        batch_id_list = self.env['school.batch'].search([]).ids
+        for rec in course_id_list:
+            name = rn.choice(ascii_uppercase) + ''.join(rn.choice(ascii_lowercase) for i in range(4))
+            update_student_list = [rn.choice(student_id_list) for _ in range(5)]
+            update_student_list1 = [rn.choice(student_id_list) for _ in range(5)]
+            update_batch_list = [rn.choice(batch_id_list) for _ in range(5)]
+            vals_list = {'name': name, 'no_of_year': 3, 'start_year': 2020,
+                         'student_ids': update_student_list,
+                         'reg_std_ids': update_student_list1}
+            self.env['school.course'].browse(rec).write(vals_list)
+            print(vals_list)

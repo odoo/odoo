@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- faculty Tree View -->
+    <record id="faculty_tree_view" model="ir.ui.view">
+        <field name="name">faculty.tree.view</field>
+        <field name="model">rfp.faculty</field>
+        <field name="arch" type="xml">
+            <tree string="Faculty Information">
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="about"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- faculty form view -->
+    <record id="faculty_form_view" model="ir.ui.view">
+        <field name="name">faculty.form.view</field>
+        <field name="model">rfp.faculty</field>
+        <field name="arch" type="xml">
+            <form string="Faculty">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="about"/>
+                        <field name="department_id"/>
+                        <field name="department_about"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Course Menu Action -->
+    <record id="faculty_menu_action" model="ir.actions.act_window">
+        <field name="name">faculty</field>
+        <field name="res_model">rfp.faculty</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Course</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="rfp_menu" name="rfp"/>
+    <menuitem action="faculty_menu_action" id="rfp_faculty_menu" name="Faculty" parent="rfp_menu" sequence="3"/>
+</odoo>

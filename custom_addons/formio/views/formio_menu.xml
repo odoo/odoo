@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <menuitem
+        id="menu_formio_root"
+        name="Forms"
+        sequence="2"
+        web_icon="formio,static/description/icon.png"
+        groups="base.group_user"/>
+    <menuitem
+        id="menu_formio_form"
+        name="Forms"
+        parent="formio.menu_formio_root"
+        sequence="50"
+        action="formio.action_formio_form"/>
+    <menuitem
+        id="menu_formio_builder"
+        name="Form Builders"
+        parent="formio.menu_formio_root"
+        sequence="70"
+        groups="formio.group_formio_admin"
+        action="formio.action_formio_builder"/>
+    <menuitem
+        id="menu_formio_configuration"
+        name="Configuration"
+        parent="formio.menu_formio_root"
+        sequence="100"/>
+    <!-- Settings -->
+    <menuitem
+        id="menu_formio_version_root"
+        name="Versions"
+        parent="formio.menu_formio_configuration"
+        sequence="30"/>
+    <menuitem
+        id="menu_formio_version"
+        name="Versions"
+        parent="formio.menu_formio_version_root"
+        sequence="10"
+        action="formio.action_formio_version"/>
+    <menuitem
+        id="menu_formio_version_github_tag"
+        name="GitHub releases (tags)"
+        parent="formio.menu_formio_version_root"
+        sequence="30"
+        action="formio.action_formio_version_github_tag"/>
+    <menuitem
+        id="menu_formio_translation_root"
+        name="Translations"
+        parent="formio.menu_formio_configuration"
+        sequence="50"/>
+    <menuitem
+        id="menu_formio_translation"
+        name="Translations"
+        parent="formio.menu_formio_translation_root"
+        sequence="10"
+        action="formio.action_formio_translation"/>
+    <menuitem
+        id="menu_formio_translation_source"
+        name="Translation Sources"
+        parent="formio.menu_formio_translation_root"
+        sequence="20"
+        action="formio.action_formio_translation_source"/>
+    <menuitem
+        id="menu_formio_builder_js_options"
+        name="Form Builder JS options"
+        parent="formio.menu_formio_configuration"
+        sequence="100"
+        action="formio.action_formio_builder_js_options"/>
+    <menuitem
+        id="menu_formio_res_model"
+        name="Resource Models"
+        parent="formio.menu_formio_configuration"
+        sequence="200"
+        action="formio.action_formio_res_model"/>
+
+</odoo>

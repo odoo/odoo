@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_purchase_sale_pivot" model="ir.ui.view">
+            <field name="name">report.purchase.sale.pivot</field>
+            <field name="model">report.purchase.sale</field>
+            <field name="arch" type="xml">
+                <pivot string="report purchase sale analysis">
+                    <field name="product_id" type="row"/>
+                    <field name="sale_delivered" type="measure"/>
+                    <field name="purchase_received" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+    <record id="report_stock_quantity_action" model="ir.actions.act_window">
+        <field name="name">Report Purchase Sale</field>
+        <field name="res_model">report.purchase.sale</field>
+        <field name="view_mode">pivot</field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="task_menu" name="school cron"/>
+    <menuitem action="report_stock_quantity_action" id="report_stock_quantity_action_menu" name="Purchase Sale" />
+</odoo>
+

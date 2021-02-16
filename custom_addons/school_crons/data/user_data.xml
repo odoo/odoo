@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Student user record -->
+        <record id="user_student" model="res.users">
+            <field name="login">Shivamst</field>
+            <field name="password">st</field>
+            <field name="partner_id" ref="school_crons.partner_student"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="[(4, ref('base.main_company'))]" name="company_ids"/>
+<!--            <field eval="[(6,0,[])]" name="groups_id"/>-->
+            <field name="signature">
+            <![CDATA[<span>-- <br/>Shiv</span>]]>
+            </field>
+        </record>
+
+        <!-- User Professor -->
+        <record id="user_professor" model="res.users">
+            <field name="login">Shivampf</field>
+            <field name="password">pf</field>
+            <field name="partner_id" ref="school_crons.partner_professor"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="[(4, ref('base.main_company'))]" name="company_ids"/>
+            <!-- <field eval="[(6,0,[])]" name="groups_id"/>-->
+            <field name="signature">
+            <![CDATA[<span>-- <br/>ShivPf</span>]]>
+            </field>
+        </record>
+
+<!-- Student user record-->
+        <record id="user_student_yagnesh" model="res.users">
+            <field name="login">yagnesh</field>
+            <field name="password">2012</field>
+            <field name="partner_id" ref="school_crons.partner_student_yagnesh"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="[(4, ref('base.main_company'))]" name="company_ids"/>
+<!--            <field eval="[(6,0,[])]" name="groups_id"/>-->
+            <field name="groups_id" eval="[(4,ref('school_crons.group_school_student'))]"/>
+            <field name="signature">
+            <![CDATA[<span>-- <br/>Shiv</span>]]>
+            </field>
+        </record>
+
+        <!-- User Professor -->
+        <record id="user_professor_yagnesh" model="res.users">
+            <field name="login">yagnesh777</field>
+            <field name="password">2012</field>
+            <field name="partner_id" ref="school_crons.partner_professor_yagnesh"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="[(4, ref('base.main_company'))]" name="company_ids"/>
+            <!-- <field eval="[(6,0,[])]" name="groups_id"/>-->
+            <field name="groups_id" eval="[(4,ref('school_crons.group_school_student'))]"/>
+            <field name="signature">
+            <![CDATA[<span>-- <br/>ShivPf</span>]]>
+            </field>
+        </record>
+
+        <!-- Student user record-->
+        <record id="user_student_piyush" model="res.users">
+            <field name="login">piyush</field>
+            <field name="password">2012</field>
+            <field name="partner_id" ref="school_crons.partner_student_piyush"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="[(4, ref('base.main_company'))]" name="company_ids"/>
+<!--            <field eval="[(6,0,[])]" name="groups_id"/>-->
+            <field name="groups_id" eval="[(4,ref('school_crons.group_school_student'))]"/>
+            <field name="signature">
+            <![CDATA[<span>-- <br/>Shiv</span>]]>
+            </field>
+        </record>
+
+        <!-- User Professor -->
+        <record id="user_professor_piyush" model="res.users">
+            <field name="login">piyush777</field>
+            <field name="password">2012</field>
+            <field name="partner_id" ref="school_crons.partner_professor_piyush"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field eval="[(4, ref('base.main_company'))]" name="company_ids"/>
+            <!-- <field eval="[(6,0,[])]" name="groups_id"/>-->
+            <field name="groups_id" eval="[(4,ref('school_crons.group_school_student'))]"/>
+            <field name="signature">
+            <![CDATA[<span>-- <br/>ShivPf</span>]]>
+            </field>
+        </record>
+</data>
+</odoo>

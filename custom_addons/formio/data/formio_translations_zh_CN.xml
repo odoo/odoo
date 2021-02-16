@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <!-- 中文 -->
+    <data noupdate="1">
+        <record id="i18n_zh_CN_complete" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_complete"/>
+            <field name="value">提交完成！</field>
+        </record>
+        <record id="i18n_zh_CN_error" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_error"/>
+            <field name="value">请在提交前修正以下错误：</field>
+        </record>
+        <record id="i18n_zh_CN_required" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_required"/>
+            <field name="value">{{field}} 是必填项</field>
+        </record>
+        <record id="i18n_zh_CN_pattern" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_pattern"/>
+            <field name="value">{{field}} 不符合 {{pattern}} 格式</field>
+        </record>
+        <record id="i18n_zh_CN_minLength" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_minLength"/>
+            <field name="value">{{field}} 必须至少 {{length}} 个字符.</field>
+        </record>
+        <record id="i18n_zh_CN_maxLength" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_maxLength"/>
+            <field name="value">{{field}} 不能超过 {{length}} 个字符.</field>
+        </record>
+        <record id="i18n_zh_CN_min" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_min"/>
+            <field name="value">{{field}} 不能小于 {{min}}.</field>
+        </record>
+        <record id="i18n_zh_CN_max" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_max"/>
+            <field name="value">{{field}} 不能大于 {{max}}.</field>
+        </record>
+        <record id="i18n_zh_CN_maxDate" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_maxDate"/>
+            <field name="value">{{field}} 日期值不能晚于 {{- maxDate}}.</field>
+        </record>
+        <record id="i18n_zh_CN_minDate" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_minDate"/>
+            <field name="value">{{field}} 日期值不能早于 {{- minDate}}.</field>
+        </record>
+        <record id="i18n_zh_CN_invalid_email" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_invalid_email"/>
+            <field name="value">{{field}} 不是正确的邮箱地址.</field>
+        </record>
+        <record id="i18n_zh_CN_invalid_url" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_invalid_url"/>
+            <field name="value">{{field}} 不是正确的网址格式.</field>
+        </record>
+        <record id="i18n_zh_CN_invalid_regex" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_invalid_regex"/>
+            <field name="value">{{field}} 不符合模式.</field>
+        </record>
+        <record id="i18n_zh_CN_invalid_date" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_invalid_date"/>
+            <field name="value">{{field}} 不是有效的日期格式.</field>
+        </record>
+        <record id="i18n_zh_CN_invalid_day" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_invalid_day"/>
+            <field name="value">{{field}} 不是有效的日期.</field>
+        </record>
+        <record id="i18n_zh_CN_mask" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_invalid_mask"/>
+            <field name="value">{{field}} 与掩码不匹配.</field>
+        </record>
+        <record id="i18n_zh_CN_stripe" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_stripe"/>
+            <field name="value">{{stripe}}</field>
+        </record>
+        <record id="i18n_zh_CN_month" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_month"/>
+            <field name="value">月</field>
+        </record>
+        <record id="i18n_zh_CN_day" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_day"/>
+            <field name="value">日</field>
+        </record>
+        <record id="i18n_zh_CN_year" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_year"/>
+            <field name="value">年</field>
+        </record>
+        <record id="i18n_zh_CN_january" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_january"/>
+            <field name="value">一月</field>
+        </record>
+        <record id="i18n_zh_CN_february" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_february"/>
+            <field name="value">二月</field>
+        </record>
+        <record id="i18n_zh_CN_march" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_march"/>
+            <field name="value">三月</field>
+        </record>
+        <record id="i18n_zh_CN_april" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_april"/>
+            <field name="value">四月</field>
+        </record>
+        <record id="i18n_zh_CN_may" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_may"/>
+            <field name="value">五月</field>
+        </record>
+        <record id="i18n_zh_CN_june" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_june"/>
+            <field name="value">六月</field>
+        </record>
+        <record id="i18n_zh_CN_july" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_july"/>
+            <field name="value">七月</field>
+        </record>
+        <record id="i18n_zh_CN_august" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_august"/>
+            <field name="value">八月</field>
+        </record>
+        <record id="i18n_zh_CN_september" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_september"/>
+            <field name="value">九月</field>
+        </record>
+        <record id="i18n_zh_CN_october" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_october"/>
+            <field name="value">十月</field>
+        </record>
+        <record id="i18n_zh_CN_november" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_november"/>
+            <field name="value">十一月</field>
+        </record>
+        <record id="i18n_zh_CN_december" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_december"/>
+            <field name="value">十二月</field>
+        </record>
+        <record id="i18n_zh_CN_next" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_next"/>
+            <field name="value">下一步</field>
+        </record>
+        <record id="i18n_zh_CN_previous" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_previous"/>
+            <field name="value">上一步</field>
+        </record>
+        <record id="i18n_zh_CN_cancel" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_cancel"/>
+            <field name="value">取消</field>
+        </record>
+        <record id="i18n_zh_CN_submit" model="formio.translation">
+            <field name="lang_id" ref="base.lang_zh_CN"/>
+            <field name="source_id" ref="formio.i18n_submit"/>
+            <field name="value">提交</field>
+        </record>
+    </data>
+</odoo>

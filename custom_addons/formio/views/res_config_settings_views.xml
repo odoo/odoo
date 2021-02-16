@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html) -->
+
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.formio.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Form.io" data-key="formio">
+                    <h2>Form.io JS/library version importer</h2>
+                    <div class="row mt16 o_settings_container formio_version">
+                        <div class="col-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <div class="row">
+                                    <label for="formio_default_version_id" class="col-md-4" string="Default Version"/>
+                                    <field name="formio_default_version_id"/>
+                                </div>
+                                <div class="text-muted">
+                                    When adding a new Form Builder, use this Form.io client/library version.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <strong>Check, register and install the latest 30 available Versions</strong>
+                                <div class="text-muted">
+                                    A scheduled action (daily cron) is available and already active.<br/>
+                                    Source: <a href="https://github.com/formio/formio.js/releases" target="_blank">https://github.com/formio/formio.js/releases</a>
+                                </div>
+                                <div class="mt-4">
+                                    <label for="formio_github_personal_access_token" string="GitHub personal access token"/>
+                                    <field name="formio_github_personal_access_token" style="width: 85%;"/>
+                                    <div>
+                                        <i class="fa fa-info-circle" title="info"/>
+                                        <a href="https://github.com/settings/tokens" target="_blank"> Personal access token</a> is not required, but it can get a higher rate limit.
+                                        This prevents timeouts and authorization errors.
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <button name="action_formio_version_github_importer" type="object"
+                                            confirm="Are you sure to check for available versions? This could take some time to load, please be patient."
+                                            string="Check and Register available Versions" class="ml-2 btn btn-primary" icon="fa-cog"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Default CSS assets</h2>
+                    <div class="row mt16 o_settings_container formio_assets">
+                        <div class="text-muted">
+                            Add additional CSS files to be included for every new installed Form.io client/library.
+                        </div>
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <div class="col-12 col-md-12 o_setting_box">
+                                <div class="row">
+                                    <field name="formio_default_asset_css_ids">
+                                        <tree editable="bottom">
+                                            <field name="url" widget="url"/>
+                                            <field name="active"/>
+                                            <field name="nodelete"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Components</h2>
+                    <div class="row mt16 o_settings_container formio_components">
+                        <div class="text-muted">
+                            Custom and 3rd-party Component settings.
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Default Form Builder JavaScript Options Template</h2>
+                    <div class="row mt16 o_settings_container formio_default_builder_js_options">
+                        <div class="text-muted">
+                            Select a default Form Builder JavaScript Options Template.<br/>
+                            It's contents, the Form Builder JavaScript Options, shall be shown below.
+                        </div>
+                        
+                        <div class="col-12 col-md-12 o_setting_box">
+                            <div class="row">
+                                <label for="formio_default_builder_js_options_id" string="Options Template"/>
+                                <field name="formio_default_builder_js_options_id"/>
+                            </div>
+                            <div class="row">
+                                <code><field name="formio_default_builder_js_options"/></code>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12 col-md-12 text-muted">
+                                <strong>Example below</strong>. Options could contain the Form Builder "editForm" with some "File" component settings:<br/>
+                                <a href="https://github.com/formio/formio.js/blob/master/src/components/file/editForm/File.edit.file.js" target="_blank">
+                                    https://github.com/formio/formio.js/blob/master/src/components/file/editForm/File.edit.file.js
+                                </a>
+                            </div>
+                            <div class="col-12 col-md-12">
+                                <pre style="background-color: #e9ecef;">{
+  'editForm': {
+    'file': [
+      {
+        'key': 'file',
+        'components': [
+          {'key': 'webcam', 'defaultValue': True},
+          {'key': 'storage', 'defaultValue': 'base64'}
+        ]
+      }
+    ]
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_formio_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'formio'}</field>
+    </record>
+
+    <menuitem name="Settings"
+              id="menu_formio_config_settings"
+              action="action_formio_config_settings"
+              parent="menu_formio_configuration"
+              groups="base.group_system"
+              sequence="10"/>
+</odoo>

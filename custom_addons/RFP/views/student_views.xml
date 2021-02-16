@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Courses Tree View -->
+    <record id="student_tree_view" model="ir.ui.view">
+        <field name="name">student.tree.view</field>
+        <field name="model">rfp.student</field>
+        <field name="arch" type="xml">
+            <tree string="Student Information">
+                <field name="name"/>
+                <field name="dob"/>
+                <field name="age"/>
+                <field name="course" />
+                <field name="subject" widget="many2many_tags" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Courses form view -->
+    <record id="student_form_view" model="ir.ui.view">
+        <field name="name">student.form.view</field>
+        <field name="model">rfp.student</field>
+        <field name="arch" type="xml">
+            <form string="Student">
+<!--                <header>-->
+<!--                    <button class="oe_highlight" name="button_done" states="draft" string="Done" type="object"/>-->
+<!--                    <button class="oe_highlight" name="button_reset" states="done,cancel" string="Reset to Draft" type="object"/>-->
+<!--                    <button name="button_cancel" states="draft,done" string="Cancel" type="object"/>-->
+<!--                    <field name="state" statusbar_visible="draft,done" widget="statusbar"/>-->
+<!--                </header>-->
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="dob"/>
+                            <field name="course"/>
+                            <field name="subject" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="age"/>
+                            <field name="about"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Course Menu Action -->
+    <record id="student_menu_action" model="ir.actions.act_window">
+        <field name="name">student</field>
+        <field name="res_model">rfp.student</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="domain">[]</field> -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add student</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="rfp_menu" name="rfp"/>
+    <menuitem action="student_menu_action" id="rfp_student_menu" name="Student" parent="rfp_menu"  sequence="4"/>
+</odoo>

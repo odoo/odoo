@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <record id="view_formio_form_tree" model="ir.ui.view">
+        <field name="name">formio.form.tree</field>
+        <field name="model">formio.form</field>
+        <field name="arch" type="xml">
+            <tree string="Forms"
+                  decoration-info="state in ('DRAFT')"
+                  decoration-success="state in ('COMPLETE')"
+                  decoration-muted="state in ('CANCEL')">
+                <field name="id"/>
+                <field name="uuid" optional="hide"/>
+                <field name="sequence" optional="hide"/>
+                <field name="title"/>
+                <field name="builder_id"/>
+                <field name="user_id"/>
+                <field name="submission_partner_id"/>
+                <field name="submission_date"/>
+                <field name="state"/>
+                <button string="Form" class="btn-sm btn-secondary" name="action_view_formio" type="object"/>
+                <field name="portal_share" optional="show"/>
+                <field name="public_share" optional="show"/>
+                <field name="public_access" optional="show"/>
+                <field name="public_create" optional="hide"/>
+                <field name="res_model_name" string="Resource Type" optional="show"/>
+                <field name="initial_res_model_name" string="Resource Type #1" optional="hide"/>
+                <field name="res_name" optional="show"/>
+                <field name="res_partner_id" optional="show"/>
+                <field name="write_date" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_formio_form_kanban" model="ir.ui.view">
+        <field name="name">formio.form.kanban</field>
+        <field name="model">formio.form</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard" default_group_by="kanban_group_state" quick_create="false">
+                <field name="kanban_group_state"/>
+                <field name="res_model_id"/>
+                <field name="res_id"/>
+                <field name="res_act_window_url"/>
+                <field name="user_id"/>
+                <field name="portal"/>
+                <field name="public"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <!-- <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click"> -->
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><field name="title"/></strong><br/>
+                                        <div>
+                                            <div class="mt8">
+                                                <button name="action_view_formio" type="object" role="button" class="btn btn-primary">Form</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body" style="min-height: 67px;">
+                                    <t t-if="record.res_model_id.raw_value and record.res_id.raw_value">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <t t-if="record.res_name.raw_value"><field name="res_name"/>: </t><a class="btn btn-default" t-att-href="record.res_act_window_url.raw_value" role="button"><field name="res_model_name"/></a>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <span class="oe_kanban_details">
+                                        <!-- submission info -->
+                                        <t t-if="record.submission_partner_id.raw_value">
+                                            <strong>Submission:</strong>
+                                            <div>
+                                                <div>
+                                                    <i class="fa fa-user" title="Submission partner" aria-label="Submission partner"/> <field name="submission_partner_id"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <i class="fa fa-clock-o" title="Submission date" aria-label="Submission date"/> <field name="submission_date"/>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>
+                                                    <span>State: <field name="state"/></span>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <small class="text-muted">ID: <field name="id"/></small>
+                                        <div style="margin-left: 4px;" attrs="{'invisible': [('portal', '=', False)]}">
+                                            <i class="fa fa-globe text-muted"/><span class="text-muted"> portal</span>
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_formio_form_formio" model="ir.ui.view">
+        <field name="name">formio.form.formio</field>
+        <field name="model">formio.form</field>
+        <field name="arch" type="xml">
+            <formio_form string="Form.io Form">
+                <field name="id"/>
+                <field name="uuid"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="state"/>
+                <field name="display_state"/>
+                <field name="submission_partner_name"/>
+                <field name="submission_date"/>
+                <field name="submission_data"/>
+            </formio_form>
+        </field>
+    </record>
+
+    <record id="view_formio_form_form" model="ir.ui.view">
+        <field name="name">formio.form.form</field>
+        <field name="model">formio.form</field>
+        <field name="arch" type="xml">
+	    <form string="Form">
+                <header>
+                    <button
+                        name="action_send_invitation_mail" type="object" string="Send Invitation Mail"
+                        groups="formio.group_formio_user_all_forms"
+                        attrs="{'invisible': ['|', '|', ('user_id', '=', False), ('id', '=', False), ('state', 'not in', ['PENDING', 'DRAFT'])]}"
+                        class="btn-primary"/>
+                    <button
+                       name="action_draft" type="object" string="Draft"
+                        attrs="{'invisible': ['|', ('state', 'in', ['PENDING', 'DRAFT']), ('allow_force_update_state', '=', False)]}"/>
+                    <button
+                        name="action_complete" type="object" string="Complete"
+                        attrs="{'invisible': ['|', ('state', '!=', 'DRAFT'), ('allow_force_update_state', '=', False)]}"/>
+                    <button
+                        name="action_cancel" type="object" string="Cancel"
+                        attrs="{'invisible': ['|', ('state', 'in', ['CANCEL']), ('allow_force_update_state', '=', False)]}"/>
+                    <button 
+                        name="action_copy_to_current" type="object" string="Copy To Current" 
+                        attrs="{'invisible': ['|', ('allow_copy', '=', False), ('copy_to_current', '=', False)]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="PENDING,DRAFT,COMPLETE,CANCEL"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_formio" type="object" string="Form"
+                                class="oe_stat_button" icon="fa-rocket" aria-label="Form"/>
+                        <button name="action_open_res_act_window" type="object"
+                                attrs="{'invisible': ['|', ('res_id', '=', False), ('res_id', '=', 0)]}"
+                                class="oe_stat_button" icon="fa-link" aria-label="Resource">
+                            <field name="res_name"/>
+                        </button>
+                    </div>
+                    <h1><field name="title" attrs="{'invisible': [('builder_id', '=', False)]}"/></h1>
+                    <group name="general">
+                        <group>
+                            <field name="res_name" string="Resource" attrs="{'invisible': [('res_name', '=', False)]}"/>
+                            <field name="builder_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="id" attrs="{'invisible': [('id', '=', False)]}"/>
+                            <field name="uuid" attrs="{'invisible': [('id', '=', False)]}"/>
+                            <field name="res_id" invisible="1"/>
+                            <field name="allow_force_update_state" invisible="1"/>
+                        </group>
+                    </group>
+                    <group name="assignment_and_submission">
+                        <group attrs="{'invisible': [('builder_id', '=', False)]}">
+                            <field name="invitation_mail_template_id" invisible="1"/>
+                            <field name="user_id" groups="formio.group_formio_user_all_forms" attrs="{'readonly': [('state', 'in', ['COMPLETE', 'CANCEL'])]}"/>
+                            <field name="submission_partner_id" string="Submission Partner"/>
+                            <field name="submission_user_id" groups="base.group_erp_manager" string="Submission User"/>
+                            <field name="submission_date" string="Submission Date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Settings" name="settings">
+                            <group>
+                                <group name="access_settings" string="Access">
+                                    <field name="public_share" groups="formio.group_formio_admin"/>
+                                    <field name="public_access_date_from" groups="formio.group_formio_admin" attrs="{'required': [('public_share', '=', True)]}"/>
+                                    <label for="public_access_interval_number" string="Public Access Expire"/>
+                                    <div>
+                                        <field name="public_access_interval_number" class="oe_inline" groups="formio.group_formio_admin" attrs="{'required': [('public_share', '=', True)]}"/>
+                                        <field name="public_access_interval_type" class="oe_inline ml-2" groups="formio.group_formio_admin" attrs="{'required': [('public_share', '=', True)]}"/>
+                                    </div>
+                                    <field name="public_access" groups="formio.group_formio_admin"/>
+                                </group>
+                                <group string="Appearance" name="appearance_settings">
+                                    <field name="show_title" groups="formio.group_formio_admin" attrs="{'invisible': [('builder_id', '=', False)]}"/>
+                                    <field name="show_state" groups="formio.group_formio_admin" attrs="{'invisible': [('builder_id', '=', False)]}"/>
+                                    <field name="show_user_metadata" groups="formio.group_formio_admin" attrs="{'invisible': [('builder_id', '=', False)]}"/>
+                                    <field name="show_id" string="Show ID" groups="formio.group_formio_admin" attrs="{'invisible': [('builder_id', '=', False)]}"/>
+                                    <field name="show_uuid" string="Show UUID" groups="formio.group_formio_admin" attrs="{'invisible': [('builder_id', '=', False)]}"/>
+                                </group>
+                                <group name="actions_settings" string="Actions">
+                                    <field name="allow_copy" groups="formio.group_formio_admin" />
+                                    <field name="copy_to_current" groups="formio.group_formio_admin" attrs="{'invisible': [('allow_copy', '=', False)]}" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Data" name="data" groups="formio.group_formio_admin">
+                            <field name="submission_data" attrs="{'readonly': ['|', ('id', '!=', False), ('readonly_submission_data', '=', True)]}"/>
+                            <field name="readonly_submission_data" invisible="1"/>
+                            <field name="id" invisible="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_formio_form_search" model="ir.ui.view">
+        <field name="name">formio.form.search</field>
+        <field name="model">formio.form</field>
+        <field name="arch" type="xml">
+            <search string="Forms">
+                <field name="id"/>
+                <field name="uuid"/>
+                <field name="title"/>
+                <field name="user_id" groups="base.group_erp_manager"/>
+                <field name="submission_partner_id"/>
+                <field name="submission_user_id" groups="base.group_erp_manager"/>
+                <field name="res_name" string="Resource Name"/>
+                <field name="res_partner_id"/>
+                <field name="res_model_id"/>
+                <field name="res_id"/>
+                <field name="initial_res_model_id"/>
+                <field name="initial_res_id"/>
+                <separator/>
+                <filter string="My Forms" name="my_forms"
+                        domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Pending" name="state_pending"
+                        domain="[('state', '=', 'PENDING')]"/>
+                <filter string="Draft" name="state_draft"
+                        domain="[('state', '=', 'DRAFT')]"/>
+                <filter string="Completed" name="state_complete"
+                        domain="[('state', '=', 'COMPLETE')]"/>
+                <filter string="Canceled" name="state_cancel"
+                        domain="[('state', '=', 'CANCEL')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Title" name="title" domain="[]" context="{'group_by':'title'}"/>
+                    <filter string="Form Builder" name="builder_id" domain="[]" context="{'group_by':'builder_id'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Resource Name" name="res_name" domain="[]" context="{'group_by':'res_name'}"/>
+                    <filter string="Assigned User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Submission Date" name="submission_date" domain="[]" context="{'group_by':'submission_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- actions -->
+    <record id="action_formio_form" model="ir.actions.act_window">
+        <field name="name">Forms</field>
+        <field name="res_model">formio.form</field>
+        <field name="view_mode">tree,kanban,form,formio_form</field>
+    </record>
+
+    <record id="action_formio_form_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="formio.view_formio_form_tree"/>
+        <field name="act_window_id" ref="action_formio_form"/>
+    </record>
+    <record id="action_formio_form_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="formio.view_formio_form_kanban"/>
+        <field name="act_window_id" ref="action_formio_form"/>
+    </record>
+    <record id="action_formio_form_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="formio.view_formio_form_form"/>
+        <field name="act_window_id" ref="action_formio_form"/>
+    </record>
+    <record id="action_formio_form_view_formio" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">formio_form</field>
+        <field name="view_id" ref="formio.view_formio_form_formio"/>
+        <field name="act_window_id" ref="action_formio_form"/>
+    </record>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    search settings     -->
+    <record id="view_search_com" model="ir.ui.view">
+        <field name="name">com.search.view</field>
+            <field name="model">com.com</field>
+            <field name="arch" type="xml">
+                <search string="Search com">
+                    <field name="name"/>
+                    <filter name="no_of_year" string="No of years" domain="[('no_of_year', '=', uid)]"/>
+                    <filter name="no_of_student" string="No of student" domain="[('no_of_student', '=', uid)]"/>
+                    <group string="Group By">
+                        <filter name="no_of_year" string="Years" context="{'group_by': 'no_of_year'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter name="no_of_student" string="Student" context="{'group_by': 'no_of_student'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <!-- com Tree View -->
+    <record id="com_tree_view" model="ir.ui.view">
+        <field name="name">com.tree.view</field>
+        <field name="model">com.com</field>
+        <field name="arch" type="xml">
+            <tree string="com Information">
+                <field name="name"/>
+                <field name="no_of_student"/>
+                <field name="no_of_year"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- com form view -->
+    <record id="com_form_view" model="ir.ui.view">
+        <field name="name">com.form.view</field>
+        <field name="model">com.com</field>
+        <field name="arch" type="xml">
+            <form string="com">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="ser"/>
+                        </group>
+                        <group>
+                            <field name="no_of_year"/>
+                            <field name="no_of_student"/>
+<!--                            <field name="student_ids" widget="many2many_tags">-->
+<!--                                <field name="student_id"/>-->
+<!--                            </field>-->
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- com Menu Action -->
+    <record id="com_menu_action" model="ir.actions.act_window">
+        <field name="name">com</field>
+        <field name="res_model">com.com</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Add com</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="com_menu" name="com"/>
+    <menuitem action="com_menu_action" id="com_com_menu" name="COM" parent="com_menu" sequence="2"/>
+</odoo>

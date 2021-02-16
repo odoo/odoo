@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_sale_purchase_a4_portrait_both">
+            <t t-call="web.html_container">
+                <t t-call="web.internal_layout">
+                    <div class="page">
+                        <strong>Sale Orders</strong><br/>
+                            <table class="table table-sm table-reports">
+                                <thead>
+                                    <tr style="text-align:20px; font-size:25px;">
+                                        <th>Sale Order No</th>
+                                        <th>Customer Name</th>
+                                        <th>Sales Person</th>
+                                        <th>Order Date</th>
+                                        <th>Status Order</th>
+                                        <th>Total Bill</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="docs" t-as="doc">
+                                        <tr t-if="doc.partner_id.customer_rank &gt; 0 and doc.partner_id.supplier_rank &gt; 0">
+                                            <td><t t-esc="doc.name"/></td>
+                                            <td> <t t-esc="doc.partner_id.name"/></td>
+                                            <td> <t t-esc="doc.user_id.name"/></td>
+                                            <td> <t t-esc="doc.date_order"/></td>
+                                            <td> <t t-esc="doc.state"/></td>
+                                            <td> <t t-esc="doc.amount_total"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <div class="clearfix" name="so_total_summary">
+                                <div id="total" class="row" name="total">
+                                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
+                                        <table class="table table-sm">
+                                            <tr class="border-black o_subtotal" style="">
+                                                <td name="td_amount_untaxed_label"><strong>Subtotal</strong></td>
+                                                <td name="td_amount_untaxed" class="text-right">
+                                                    <span
+                                                        t-esc="sum([doc.amount_untaxed for doc in docs if doc.partner_id.customer_rank &gt; 0 and doc.partner_id.supplier_rank &gt; 0])"
+                                                        t-options='{"widget": "monetary", "display_currency": docs[0].pricelist_id.currency_id}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr class="border-black o_total">
+                                                <td name="td_amount_total_label"><strong>Total(tax)</strong></td>
+                                                <td name="td_amount_total" class="text-right">
+                                                    <span
+                                                        t-esc="sum([doc.amount_total for doc in docs if doc.partner_id.customer_rank &gt; 0 and doc.partner_id.supplier_rank &gt; 0])"
+                                                        t-options='{"widget": "monetary", "display_currency": docs[0].pricelist_id.currency_id}'
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </t>
+        </t>
+    </template>
+</odoo>

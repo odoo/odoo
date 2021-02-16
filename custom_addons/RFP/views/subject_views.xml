@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Courses Tree View -->
+    <record id="subject_tree_view" model="ir.ui.view">
+        <field name="name">subject.tree.view</field>
+        <field name="model">rfp.subject</field>
+        <field name="arch" type="xml">
+            <tree string="subject Information">
+                <field name="name"/>
+                <field name="course_id" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Courses form view -->
+    <record id="subject_form_view" model="ir.ui.view">
+        <field name="name">subject.form.view</field>
+        <field name="model">rfp.subject</field>
+        <field name="arch" type="xml">
+            <form string="Courses">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="course_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Course Menu Action -->
+    <record id="subject_menu_action" model="ir.actions.act_window">
+        <field name="name">Subject</field>
+        <field name="res_model">rfp.subject</field>
+        <field name="view_mode">tree,form</field>
+        <!-- <field name="domain">[]</field> -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Subject</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="rfp_menu" name="rfp"/>
+    <menuitem action="subject_menu_action" id="rfp_subject_menu" name="Subject" parent="rfp_menu"  sequence="5"/>
+</odoo>

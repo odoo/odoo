@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- course form view -->
+    <record id="batch_form_view_new" model="ir.ui.view">
+        <field name="name">batch.form.view</field>
+        <field name="model">school.batch.new</field>
+        <field name="arch" type="xml">
+            <form string="Course">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="no_of_course"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="course">
+                            <field name="course_batch_ids" widget="many2many_tags">
+                                <tree>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- course Tree View -->
+    <record id="batch_tree_view_new" model="ir.ui.view">
+        <field name="name">batch.tree.view.new</field>
+        <field name="model">school.batch.new</field>
+        <field name="arch" type="xml">
+            <tree string="Batch Information">
+                <field name="name"/>
+                <field name="course_batch_ids" widget="many2many_tags">
+                    <tree>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </tree>
+        </field>
+    </record>
+
+    <record id="batch_menu_action_new" model="ir.actions.act_window">
+        <field name="name">Batch xyz</field>
+        <field name="res_model">school.batch.new</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Add Batch</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="task_menu" name="school cron"/>
+    <menuitem action="batch_menu_action_new" id="school_batch_menu_new" name="Batch" parent="task_menu" sequence="3"/>
+</odoo>

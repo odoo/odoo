@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_product_stock_inventory_wizard">
+        <t t-call="web.html_container">
+        <t t-set="prod" t-value="data['pdata'].keys()"/>
+            <t t-foreach="prod" t-as="pd">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <strong>Product Movement : <t style="font-size:25px" t-esc="pd"/></strong><br/>
+                    <table class="table table-sm table-reports">
+                        <thead>
+                            <tr style="text-align:20px; font-size:25px;">
+                                <th>Movenent</th>
+                                <th>QTY movenent</th>
+                                <th>Location Name</th>
+                                <th>State</th>
+                                <th>WH Reference</th>
+                                <th>On Hand Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="count" t-value="0"/>
+                            <t t-foreach="data['pdata'][pd]['move']" t-as="p">
+                                <tr>
+                                    <td><t t-esc="data['pdata'][pd]['move'][count]"/></td>
+                                    <td><t t-esc="data['pdata'][pd]['qty'][count]"/></td>
+                                    <td><t t-esc="data['pdata'][pd]['location'][count]"/></td>
+                                    <td><t t-esc="data['pdata'][pd]['istate'][count]"/></td>
+                                    <td><t t-esc="data['pdata'][pd]['reference'][count]"/></td>
+                                    <td><t t-esc="data['pdata'][pd]['quantity']"/></td>
+                                </tr>
+                                <t t-set="count" t-value="count + 1"/>
+                            </t>
+                        </tbody>
+                    </table>
+                    <!-- Purchase Order -->
+                    <t t-if="'purchase_order_name' in data['pdata'][pd].keys()">
+                        <strong>Purchase Order Data: <t style="font-size:25px" t-esc="pd"/></strong><br/>
+                        <table class="table table-sm table-reports">
+                            <thead>
+                                <tr style="text-align:20px; font-size:25px;">
+                                    <th>Order Name</th>
+                                    <th>Vendor Name</th>
+                                    <th>Order Date</th>
+                                    <th>State</th>
+                                    <th>Order Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price(Tax)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <t t-set="count" t-value="0"/>
+                                <t t-foreach="data['pdata'][pd]['purchase_order_name']" t-as="p">
+                                    <tr>    
+                                        <td><t t-esc="data['pdata'][pd]['purchase_order_name'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['vendor'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['order_date'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['pstate'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['product_qty'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['price'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['price_total'][count]"/></td>
+                                    </tr>
+                                    <t t-set="count" t-value="count + 1"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                    <!-- Sales Order -->
+                    <t t-if="'sale_order_name' in data['pdata'][pd].keys()">
+                        <strong>Sales Order data: <t style="font-size:25px" t-esc="pd"/></strong><br/>
+                        <table class="table table-sm table-reports">
+                            <thead>
+                                <tr style="text-align:20px; font-size:25px;">
+                                    <th>Order Name</th>
+                                    <th>Customer Name</th>
+                                    <th>Order Date</th>
+                                    <th>State</th>
+                                    <th>Order Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price(Tax)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <t t-set="count" t-value="0"/>
+                                <t t-foreach="data['pdata'][pd]['sale_order_name']" t-as="p">
+                                    <tr>    
+                                        <td><t t-esc="data['pdata'][pd]['sale_order_name'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['customer'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['order_date'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['sstate'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['sproduct_qty'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['sprice'][count]"/></td>
+                                        <td><t t-esc="data['pdata'][pd]['sprice_total'][count]"/></td>
+                                    </tr>
+                                    <t t-set="count" t-value="count + 1"/>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+        </t>
+    </template>
+</odoo>

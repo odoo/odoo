@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--&lt;!&ndash;        filter and search view&ndash;&gt;-->
+<!--    <record id="view_partner_student_tree_search" model="ir.ui.view">-->
+<!--            <field name="name">res.partner.student.inherit.search</field>-->
+<!--            <field name="model">res.partner</field>-->
+<!--&lt;!&ndash;            <field name="inherit_id" ref="base.view_partner_tree"/>&ndash;&gt;-->
+<!--            <field name="arch" type="xml">-->
+<!--               <search>-->
+<!--&lt;!&ndash;                <field name="name" domain="[('is_student','=',True)]"/>&ndash;&gt;-->
+<!--                <group string="Group By">-->
+<!--                    <filter name="name" string="Student"-->
+<!--                            domain="[('is_student', '=', True)]"/>-->
+<!--                    <filter name="is_student" string="Student"-->
+<!--                            context="{'group_by': 'is_student'}"/>-->
+<!--                </group>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--    </record>-->
+
+
+    <record id="view_partner_student_form" model="ir.ui.view">
+        <field name="name">res.partner.student.inherit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form//sheet//group//field[@name='vat']" position="before">
+                <field name="is_student"/>
+                <field name="is_faculty"/>
+            </xpath>
+            <xpath expr="//form//sheet//group//field[@name='vat']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//group//field[@name='country_id']" ref="base.in" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//group//field[@name='type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//group//field[@name='function']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//group//field[@name='email']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='contact_addresses']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='sales_purchases']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='internal_notes']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- student tree view-->
+    <record id="view_partner_student_tree" model="ir.ui.view">
+        <field name="name">res.partner.student.inherit.tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="display_name" position="after">
+                <field name="is_student" string="Student"/>
+                <button string="Enter Registration action" name="school_crons.register_redirect_wizard_action"
+                        type="action" class="oe_highlight"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- contact form-->
+    <record model="ir.actions.act_window" id="registration_student_action">
+            <field name="name">task.student.registration.inherit</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="task_menu" name="school cron"/>
+    <menuitem action="registration_student_action" id="student_registration_menu" name="Student" parent="task_menu" sequence="6"/>
+</odoo>

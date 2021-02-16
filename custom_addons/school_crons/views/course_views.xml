@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    search settings     -->
+    <record id="view_search_course" model="ir.ui.view">
+        <field name="name">course.search.view</field>
+            <field name="model">school.course</field>
+            <field name="arch" type="xml">
+                <search string="Search Course">
+                    <field name="name"/>
+                    <field name="batch_id"/>
+                    <filter name="no_of_year" string="No of years" domain="[('no_of_year', '=', uid)]"/>
+                    <filter name="no_of_student" string="No of student" domain="[('total_seats', '=', uid)]"/>
+                    <group string="Group By">
+                        <filter name="no_of_year" string="Years" context="{'group_by': 'no_of_year'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter name="total_seats" string="Student" context="{'group_by': 'total_seats'}"/>
+                        <filter name="no_of_year" string="No of year" context="{'group_by': 'no_of_year'}"/>
+                        <filter name="start_year" string="Start Year" context="{'group_by': 'start_year'}"/>
+                        <filter name="end_year" string="End Year" context="{'group_by': 'end_year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <!-- course Tree View -->
+    <record id="course_tree_view" model="ir.ui.view">
+        <field name="name">course.tree.view</field>
+        <field name="model">school.course</field>
+        <field name="arch" type="xml">
+            <tree string="Course Information">
+                <field name="name"/>
+                <field name="no_of_year"/>
+                <field name="start_year"/>
+                <field name="end_year"/>
+                <field name="remaining_seats" widget="percentage"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- course form view -->
+    <record id="course_form_view" model="ir.ui.view">
+        <field name="name">course.form.view</field>
+        <field name="model">school.course</field>
+        <field name="arch" type="xml">
+            <form string="Course">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="get_registrations" type="object" class="oe_stat_button" icon="fa-globe icon">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">View</span>
+                                <span class="o_stat_text">Registrations</span>
+                            </div>
+                        </button>
+                        <button name="get_batch" type="object" class="oe_stat_button" icon="fa-globe icon">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">View</span>
+                                <span class="o_stat_text">Batches</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group string="Course Information">
+                        <group>
+                            <field name="name"/>
+                            <field name="no_of_year"/>
+                            <field name="start_year"/>
+                        </group>
+                        <group>
+                            <field name="end_year"/>
+                            <field name="total_seats"/>
+                            <field name="batch_id"/>
+                        </group>
+                        <!--                            <field name="register_id"/>-->
+                    </group>
+                    <group string="Students">
+                        <field name="reg_std_ids" widget="many2many_tags"/>
+<!--                        <field name="student_ids" widget="many2many_checkboxes"/>-->
+                        <field name="remaining_seats" widget="progressbar"/>
+
+                    </group>
+                    <notebook>
+                        <page string="Register Students (one2many)">
+                            <field name="student_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="student_id"/>
+                                    <field name="total_seats"/>
+                                    <field name="rollno"/>
+                                    <field name="admission_date" attrs="{
+                                            'column_invisible': [('parent.no_of_year', '=', 5)],
+                                        }"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Course Menu Action -->
+    <record id="course_menu_action" model="ir.actions.act_window">
+        <field name="name">course</field>
+        <field name="res_model">school.course</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Add Course</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="task_menu" name="school cron"/>
+    <menuitem action="course_menu_action" id="school_course_menu" name="Course" parent="task_menu" sequence="2"/>
+</odoo>

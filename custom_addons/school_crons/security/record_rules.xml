@@ -1,0 +1,119 @@
+<odoo>
+	<record id="module_category_school" model="ir.module.category">
+		<field name="name">School</field>
+		<field name="description">Category for school</field>
+		<field name="sequence">45</field>
+	</record>
+
+	<!-- Assigning student users to the students group-->
+	<record id="group_school_student" model="res.groups">
+		<field name="name">Student</field>
+		<field name="category_id" ref="module_category_school"/>
+		<field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+		<field name="users" eval="[(4, ref('school_crons.user_student'))]"/>
+	</record>
+
+	<!-- Assigning professor users to the professor's group-->
+	<record id="group_school_professor" model="res.groups">
+		<field name="name">Professor</field>
+		<field name="category_id" ref="module_category_school"/>
+		<field eval="[(4,ref('group_school_student'))]" name="implied_ids"/>
+		<field eval="[(4, ref('school_crons.user_professor'))]" name="users"/>
+	</record>
+	
+<!--	 Students can only see their records in Members model-->
+	<record id="can_not_create_contact" model="ir.rule">
+		<field name="name">can not create contact</field>
+		<field name="model_id" ref="model_res_partner"/>
+		<field name="domain_force">[('name','=',user.name)]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="0"/>-->
+<!--		<field name="perm_create" eval="0"/>-->
+<!--		<field name="perm_unlink" eval="0" />-->
+		<field eval="[(4,ref('school_crons.group_school_student'))]" name="groups"/>
+	</record>
+
+	<!-- Professor can see all the records in the members model -->
+	<record id="can_create_contact" model="ir.rule">
+		<field name="name">create, read, update, delete member contact</field>
+		<field name="model_id" ref="model_res_partner"/>
+		<field name="domain_force">[(1, '=', 1)]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="1"/>-->
+<!--		<field name="perm_create" eval="1"/>-->
+<!--		<field name="perm_unlink" eval="1" />-->
+		<field eval="[(4,ref('school_crons.group_school_professor'))]" name="groups"/>
+	</record>
+
+	<!-- Students can only see their records in Memebers model -->
+	<record id="see_his_own_registrations" model="ir.rule">
+		<field name="name">can not create registrations </field>
+		<field name="model_id" ref="model_school_registration"/>
+		<field name="domain_force">[('student_id.name','=',user.name)]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="0"/>-->
+<!--		<field name="perm_create" eval="0"/>-->
+<!--		<field name="perm_unlink" eval="0" />-->
+		<field eval="[(4,ref('school_crons.group_school_student'))]" name="groups"/>
+	</record>
+
+	<!-- Professor can see all the records in the members model -->
+	<record id="see_all_member_registrations" model="ir.rule">
+		<field name="name">create, read, update, delete member registrations</field>
+		<field name="model_id" ref="model_school_registration"/>
+		<field name="domain_force">[(1, '=', 1)]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="1"/>-->
+<!--		<field name="perm_create" eval="1"/>-->
+<!--		<field name="perm_unlink" eval="1" />-->
+		<field eval="[(4,ref('school_crons.group_school_professor'))]" name="groups"/>
+	</record>
+
+	<!-- Students can only see their records in members model -->
+	<record id="see_his_own_batch" model="ir.rule">
+		<field name="name">can only read batch</field>
+		<field name="model_id" ref="model_school_batch"/>
+		<field name="domain_force">[]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="0"/>-->
+<!--		<field name="perm_create" eval="0"/>-->
+<!--		<field name="perm_unlink" eval="0" />-->
+		<field eval="[(4,ref('school_crons.group_school_student'))]" name="groups"/>
+	</record>
+
+	<!-- Professor can see all the records in the members model -->
+	<record id="see_all_member_batch" model="ir.rule">
+		<field name="name">create, read, update, delete member batch</field>
+		<field name="model_id" ref="model_school_batch"/>
+		<field name="domain_force">[(1, '=', 1)]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="1"/>-->
+<!--		<field name="perm_create" eval="1"/>-->
+<!--		<field name="perm_unlink" eval="1" />-->
+		<field eval="[(4,ref('school_crons.group_school_professor'))]" name="groups"/>
+	</record>
+
+	<!-- Students can only see their records in manbers model -->
+	<record id="see_his_own_course" model="ir.rule">
+		<field name="name">can only read course </field>
+		<field name="model_id" ref="model_school_course"/>
+		<field name="domain_force">[]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="0"/>-->
+<!--		<field name="perm_create" eval="0"/>-->
+<!--		<field name="perm_unlink" eval="0" />-->
+		<field eval="[(4,ref('school_crons.group_school_student'))]" name="groups"/>
+	</record>
+
+	<!-- Professor can see all the records in the members model -->
+	<record id="see_all_member_course" model="ir.rule">
+		<field name="name">create, read, update, delete member course</field>
+		<field name="model_id" ref="model_school_course"/>
+		<field name="domain_force">[(1, '=', 1)]</field>
+<!--		<field name="perm_read" eval="1"/>-->
+<!--		<field name="perm_write" eval="1"/>-->
+<!--		<field name="perm_create" eval="1"/>-->
+<!--		<field name="perm_unlink" eval="1" />-->
+		<field eval="[(4,ref('school_crons.group_school_professor'))]" name="groups"/>
+	</record>
+</odoo>

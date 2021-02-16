@@ -1,0 +1,2269 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* formio
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-16 05:48+0000\n"
+"PO-Revision-Date: 2020-12-16 10:06+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: formio
+#: model:mail.template,body_html:formio.mail_invitation_internal_user
+msgid ""
+"\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello ${object.user_id.partner_id.name},<br/><br/>\n"
+"        You have been invited to fill-in the form: ${object.title}<br/>\n"
+"        Your response would be appreciated.<br/><br/>\n"
+"        Click the button to go to the form (record), which requires you're logged in.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${object.act_window_url}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Form\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+msgstr ""
+"\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        您好，${object.user_id.partner_id.name},<br/><br/>\n"
+"        您已受邀填写以下表单: ${object.title}<br/>\n"
+"        如能回复，将不胜感激！<br/><br/>\n"
+"        单击按钮转到需要填写的表单(记录)。\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${object.act_window_url}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Form\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+
+#. module: formio
+#: model:mail.template,body_html:formio.mail_invitation_portal_user
+msgid ""
+"\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello ${object.user_id.partner_id.name},<br/><br/>\n"
+"        You have been invited to fill-in the form: ${object.title}<br/>\n"
+"        Your response would be appreciated.<br/><br/>\n"
+"        Click the button to go to the form, which requires you're logged in.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"/my/formio/form/${object.uuid}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Form\n"
+"            </a>\n"
+"        </div>\n"
+"        Your assigned forms are listed on the page <a href=\"/my/formio\">My Forms</a> \n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+msgstr ""
+"\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        您好, ${object.user_id.partner_id.name},<br/><br/>\n"
+"        您已受邀填写以下表单: ${object.title}<br/>\n"
+"        如能回复，将不胜感激！<br/><br/>\n"
+"        单击按钮转到需要填写的表单。\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"/my/formio/form/${object.uuid}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Form\n"
+"            </a>\n"
+"        </div>\n"
+"        Your assigned forms are listed on the page <a href=\"/my/formio\">My Forms</a> \n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__state
+msgid ""
+"        - Available: Not downloaded and installed yet.\n"
+"        - Installed: Downloaded and installed."
+msgstr ""
+"        - 可用:尚未下载和安装。\n"
+"        - 安装:下载并安装。"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__state
+msgid ""
+"        - Draft: In draft / design.\n"
+"        - Current: Live and in use (publisehd).\n"
+"        - Obsolete: Was current but obsolete (unpublished)"
+msgstr ""
+"        - 草稿:在草稿/设计中。\n"
+"        - 生效:活跃和使用(已发布)\n"
+"        - 已过时:生效但已过时(未发布)"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__portal_submit_done_url
+#: model:ir.model.fields,help:formio.field_formio_builder__public_submit_done_url
+#: model:ir.model.fields,help:formio.field_formio_form__portal_submit_done_url
+msgid ""
+"        IMPORTANT:\n"
+"        - Absolute URL should contain a protocol (https://, http://)\n"
+"        - Relative URL is also supported e.g. /web/login\n"
+"        "
+msgstr ""
+"        IMPORTANT:\n"
+"        - 绝对网址应包含协议（https：//，http：//）\n"
+"        - 支持相对网址，例如： /web/login\n"
+"        "
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<br/>\n"
+"                                <i class=\"fa fa-info-circle\" title=\"info\"/><strong> Integration / Resource settings</strong> - Enables integration of Form and ERP/Odoo objects.<br/>"
+msgstr ""
+"<br/>\n"
+"                                <i class=\"fa fa-info-circle\" title=\"info\"/><strong> 集成/资源设置</strong> - 启用 Form 和 Odoo 对象的集成。<br/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid ""
+"<i class=\"fa fa-clock-o\" title=\"Submission date\" aria-label=\"Submission"
+" date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" title=\"提交日期\" aria-label=\"提交日期\"/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "<i class=\"fa fa-globe text-muted\"/><span class=\"text-muted\"> portal</span>"
+msgstr "<i class=\"fa fa-globe text-muted\"/><span class=\"text-muted\"> 门户</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/>"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/> Configuration of Website "
+"features shall also be done here."
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> 网站功能的配置也应在此处进行。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/> Configure in Resource tab "
+"(if settings are available)"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> 在“数据源模型”菜单中配置（如果设置可用）"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/> Configure in related tabs "
+"(Portal, Public / Website)"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> 在相关标签（门户，公共/网站）中进行配置"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/> Specific permissions on Forms"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/>表单的特定权限"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/> This doesn't make any sense "
+"with Public (published) Forms, which are standalone."
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> 对于独立的公共（已发布）表单，此配置暂无意义。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/> To create or link (existing) Partner with a Form submission, specify the fields (Email, Name) from the Components API / Property Names.<br/>\n"
+"                                    Partner determination/match shall be done by Email. This API is especially useful for public Forms."
+msgstr ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/> 要创建或链接（现有）合作伙伴与表单提交，请从“组件API” /“属性名称”中指定字段（“电子邮件”，“名称”）。<br/>\n"
+"                                    合作伙伴确定/匹配应通过电子邮件完成。 该API对于公共表单特别有用"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Documentation</strong><br/>\n"
+"                                For example, Options could contain the Form Builder editForm with some File component settings:<br/>"
+msgstr ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Documentation</strong><br/>\n"
+"                                如下示例. 该选项可以让构建器包含某些文件组件的设置:<br/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Expire "
+"After:</strong> - Applicable on the Form it's (datimetime field) "
+"<strong>Public Access From</strong>."
+msgstr ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/><strong> 过期时间:</strong> - "
+"适用于表单上（datimetime字段）<strong>公开访问源</strong>."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/><strong> View as HTML</strong> - This setting (still) doesn't work since version 4.x<br/>\n"
+"                                For more info see Formio.js GitHub issue:"
+msgstr ""
+"<i class=\"fa fa-info-circle\" title=\"info\"/><strong> 以HTML格式查看</strong> - 此设置（仍然）自版本4.x起不起作用<br/>\n"
+"                                有关更多信息，请参见来自Formio.js GitHub的问题:"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid ""
+"<i class=\"fa fa-user\" title=\"Submission partner\" aria-label=\"Submission"
+" partner\"/>"
+msgstr "<i class=\"fa fa-user\" title=\"提交人\" aria-label=\"提交人\"/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid ""
+"<span aria-label=\"Cancel &amp; close Form\" title=\"Cancel &amp; close "
+"Form\" confirm=\"Are you sure?\">Cancel Form</span>"
+msgstr "<span aria-label=\"取消/关闭表单\" title=\"取消/关闭表单\" confirm=\"您确定吗?\">取消表单</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid ""
+"<span aria-label=\"Delete form\" title=\"Delete form\" confirm=\"Are you "
+"sure?\">Delete Form</span>"
+msgstr "<span aria-label=\"删除表单\" title=\"删除表单\" confirm=\"您确认吗？\">删除表单</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "<span aria-label=\"Edit form\" title=\"Edit form\">Edit Form</span>"
+msgstr "<span aria-label=\"编辑表单\" title=\"编辑表单\">编辑表单</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "<span aria-label=\"View form\" title=\"View form\">View Form</span>"
+msgstr "<span aria-label=\"预览表单\" title=\"预览表单\">预览表单</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"<strong>Check, register and install the latest 30 available "
+"Versions</strong>"
+msgstr "<strong>检查，注册并安装最新的30个可用版本</strong>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"<strong>Example below</strong>. Options could contain the Form Builder "
+"\"editForm\" with some \"File\" component settings:<br/>"
+msgstr "<strong>如下示例</strong>. 该选项可以让构建器包含某些文件组件的设置:<br/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "<strong>Submission:</strong>"
+msgstr "<strong>提交:</strong>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"A scheduled action (daily cron) is available and already active.<br/>\n"
+"                                    Source:"
+msgstr ""
+"计划任务（每日动作）已可用，并且已经处于活动状态。<br/>\n"
+"                                    资源:"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Access"
+msgstr "访问"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__act_window_multi_url
+msgid "Act Window Multi Url"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__act_window_url
+#: model:ir.model.fields,field_description:formio.field_formio_form__act_window_url
+msgid "Act Window Url"
+msgstr "窗口动作Url"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_needaction
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_needaction
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_needaction
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_needaction
+msgid "Action Needed"
+msgstr "需要设置行为"
+
+#. module: formio
+#: model:ir.model,name:formio.model_ir_actions_act_window_view
+msgid "Action Window View"
+msgstr "动作窗口视图"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Actions"
+msgstr "操作"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__active
+msgid "Active"
+msgstr "有效"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_exception_decoration
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_exception_decoration
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "活动异常符号"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_state
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_state
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_state
+msgid "Activity State"
+msgstr "活动状态"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_type_icon
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_type_icon
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活动类型图标"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"Add additional CSS files to be included for every new installed Form.io "
+"client/library."
+msgstr "为新安装的Formio.js添加匹配的CSS文件。"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__component_partner_add_follower
+msgid "Add determined partner to followers of the Form."
+msgstr "将已确定的合作伙伴添加为表单关注者。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Add to Followers"
+msgstr "添加关注者"
+
+#. module: formio
+#: model:res.groups,name:formio.group_formio_admin
+msgid "Admin"
+msgstr "管理员"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__allow_unlink
+msgid "Allow delete"
+msgstr "允许删除"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__allow_force_update_state
+msgid "Allow force update State"
+msgstr "允许强制更新状态"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__allow_force_update_state_group_ids
+msgid "Allow groups to force update State"
+msgstr "允许权限组强制更新状态"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Appearance"
+msgstr "界面"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__archive_url
+msgid "Archive URL"
+msgstr "归档URL"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"Are you sure to check for available versions? This could take some time to "
+"load, please be patient."
+msgstr "是否确定要检查可用版本？这可能需要一些时间来加载，请耐心等待。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid ""
+"Are you sure to download and install? This could take some time to load, "
+"please be patient."
+msgstr "是否确定要下载和安装？这可能需要一些时间来加载，请耐心等待。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"Are you sure? Modifying the Form Builder causes existing forms to be "
+"invalid."
+msgstr "你确定吗？修改表单构建器可能会导致现有表单无效。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Are you sure? The Form shall be unpublished."
+msgstr "你确定吗？本表单将不予公布。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid "Are you to Reset, to download and install again?"
+msgstr "您要重置，下载并重新安装吗？"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version__assets
+msgid "Assets"
+msgstr "资源地址"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_form
+msgid "Assets (JavaScript, CSS)"
+msgstr "资源（JS，CSS）"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__assigned_partner_id
+msgid "Assigned Partner"
+msgstr "分配的合作伙伴"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__assigned_partner_name
+msgid "Assigned Partner Name"
+msgstr "分配的合作伙伴称呼"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Assigned User"
+msgstr "分配用户"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__user_id
+#: model:ir.model.fields,field_description:formio.field_formio_form__user_id
+msgid "Assigned user"
+msgstr "分配用户"
+
+#. module: formio
+#: model:ir.model,name:formio.model_ir_attachment
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__attachment_id
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__attachment_id
+msgid "Attachment"
+msgstr "附件"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_attachment_count
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_attachment_count
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_attachment_count
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件数量"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__attachment_type
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__attachment_type
+msgid "Attachment Type"
+msgstr "附件类型"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_version_github_tag__state__available
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Available"
+msgstr "可用"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__available_version_github_tag_ids
+msgid "Available Version Github Tag"
+msgstr "可用版本下载源"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Available Versions (releases)"
+msgstr "可用版本（发行版）"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/js/views/formio_builder_view.js:0
+#, python-format
+msgid "Builder"
+msgstr "构建器"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version__css_assets
+msgid "CSS Assets"
+msgstr "CSS资源"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Cancel"
+msgstr "取消"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__kanban_group_state__d
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__state__cancel
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Canceled"
+msgstr "已取消"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__changelog_url
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__changelog_url
+msgid "Changelog URL"
+msgstr "更新日志网址"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Check and Register available Versions"
+msgstr "检查和注册可用版本"
+
+#. module: formio
+#: code:addons/formio/models/res_config_settings.py:0
+#, python-format
+msgid "Check and Register new Versions"
+msgstr "检查和注册新版本"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Complete"
+msgstr "完成"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__kanban_group_state__c
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__state__complete
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Completed"
+msgstr "已完成"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__component_partner_add_follower
+msgid "Component Partner Add to Followers"
+msgstr "组件合作伙伴添加到关注者"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__component_partner_email
+msgid "Component Partner Email"
+msgstr "组件合作伙伴电子邮件"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__component_partner_name
+msgid "Component Partner Name"
+msgstr "组件合作伙伴名称"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Components"
+msgstr "组件"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Components API"
+msgstr "组件API"
+
+#. module: formio
+#: model:ir.model,name:formio.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: formio
+#: model:ir.ui.menu,name:formio.menu_formio_configuration
+msgid "Configuration"
+msgstr "配置"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Confirm as Current"
+msgstr "生效"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Create New Version"
+msgstr "创建新版本"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_form__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_form__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__create_date
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_builder__state__current
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Current"
+msgstr "生效"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Custom and 3rd-party Component settings."
+msgstr "自定义和第三方组件设置。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_data
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Data"
+msgstr "提交数据"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__readonly_submission_data
+msgid "Data is readonly"
+msgstr "数据只读"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__initial_res_id
+#: model:ir.model.fields,help:formio.field_formio_form__res_id
+msgid "Database ID of the record in res_model to which this applies"
+msgstr "数据库ID"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_access_date_from
+msgid "Datetime from when the form is public shared until it expires."
+msgstr "从公开共享表单到分享结束的时间。"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__submission_date
+msgid "Datetime when the form was last submitted."
+msgstr "上次提交表单的时间。"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_builder__public_access_interval_type__days
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__public_access_interval_type__days
+msgid "Days"
+msgstr "天"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Default CSS assets"
+msgstr "默认CSS资源"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Default Form Builder JavaScript Options Template"
+msgstr "表单构建器默认JS选项模板"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Default Version"
+msgstr "默认版本"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__description
+#: model:ir.model.fields,field_description:formio.field_formio_version__description
+msgid "Description"
+msgstr "描述"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Description..."
+msgstr "描述..."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_form__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_translation__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__display_name
+#: model:ir.model.fields,field_description:formio.field_ir_actions_act_window_view__display_name
+#: model:ir.model.fields,field_description:formio.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:formio.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:formio.field_res_lang__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__display_name_full
+msgid "Display Name Full"
+msgstr "显示完整名称"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__display_state
+#: model:ir.model.fields,field_description:formio.field_formio_form__display_state
+msgid "Display State"
+msgstr "显示状态"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid "Download and Install"
+msgstr "下载并安装"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_builder__state__draft
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__kanban_group_state__b
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__state__draft
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Draft"
+msgstr "草稿"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Dropdown menu"
+msgstr "下拉菜单"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__edit_url
+msgid "Edit Url"
+msgstr "编辑Url"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Email"
+msgstr "电子邮件"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__language_en_enable
+msgid "English Enabled"
+msgstr "多语言时显示英文"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Expire After"
+msgstr "剩余到期时间"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_follower_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_follower_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_follower_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_channel_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_channel_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_channel_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者（频道）"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_partner_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_partner_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_partner_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__activity_type_icon
+#: model:ir.model.fields,help:formio.field_formio_version__activity_type_icon
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome 图标，如：fa-tasks"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/js/views/formio_form_view.js:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_res_model_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_form
+#, python-format
+msgid "Form"
+msgstr "表单"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Form Appearance"
+msgstr "界面"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__builder_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Form Builder"
+msgstr "构建器"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_builder_js_options
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_js_options_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_js_options_tree
+msgid "Form Builder JS Options"
+msgstr "构建器JS选项模板"
+
+#. module: formio
+#: model:ir.ui.menu,name:formio.menu_formio_builder_js_options
+msgid "Form Builder JS options"
+msgstr "JS选项模板"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_builder
+#: model:ir.ui.menu,name:formio.menu_formio_builder
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_tree
+msgid "Form Builders"
+msgstr "构建器"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__builder_id
+msgid "Form builder"
+msgstr "构建器"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__portal
+#: model:ir.model.fields,help:formio.field_formio_form__portal
+msgid "Form is accessible by assigned portal user"
+msgstr "指定的门户用户可以访问表单"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__public
+#: model:ir.model.fields,help:formio.field_formio_form__public
+msgid ""
+"Form is public accessible (e.g. used in Shop checkout, Events registration"
+msgstr "表单可被公共访问（例如用于商店结账、活动注册等）"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_create
+msgid "Form was public created"
+msgstr "表单为公众而建"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__ir_actions_act_window_view__view_mode__formio_builder
+#: model:ir.model.fields.selection,name:formio.selection__ir_ui_view__type__formio_builder
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_formio
+msgid "Form.io Builder"
+msgstr "Form.io构建器"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_builder_js_options
+msgid "Form.io Builder JS options"
+msgstr "构建器JS选项"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_builder_js_options_id
+msgid "Form.io Builder JS options ID"
+msgstr "构建器JS选项ID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_css_assets
+msgid "Form.io CSS"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_asset_css_ids
+msgid "Form.io CSS assets"
+msgstr "Form.io CSS源"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__ir_actions_act_window_view__view_mode__formio_form
+#: model:ir.model.fields.selection,name:formio.selection__ir_ui_view__type__formio_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_formio
+msgid "Form.io Form"
+msgstr "Form.io 表单"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Form.io JS/library version importer"
+msgstr "Formio.js版本导入"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Form.io JavaScript (JS)"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_js_assets
+msgid "Form.io Javascript"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_js_options
+msgid "Form.io Javascript Options"
+msgstr "Form.io JS选项"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_js_options_id
+msgid "Form.io Javascript Options template"
+msgstr "Formio JS选项模板"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_version_id
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_version_id
+msgid "Form.io Version"
+msgstr "版本"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Form.io Version GitHub Importer"
+msgstr "Formio版本 GitHub导入"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__formio_version_name
+#: model:ir.model.fields,help:formio.field_formio_version__name
+msgid "Form.io release/version."
+msgstr "Form.io发行/版本"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_version_name
+msgid "Form.io version"
+msgstr "Formio版本"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:0
+#, python-format
+msgid "Form.io version:"
+msgstr "Formio版本："
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_default_asset_css
+msgid "Formio Asset CSS"
+msgstr "Formio CSS源"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_builder
+msgid "Formio Builder"
+msgstr "Formio构建器"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_builder_js_options
+msgid "Formio Builder JavaScript Options"
+msgstr "Formio构建器JS选项"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_builder_translation
+msgid "Formio Builder Translation"
+msgstr "Formio构建器翻译包"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_form
+msgid "Formio Form"
+msgstr "Formio表单"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_res_model
+msgid "Formio Resource Model"
+msgstr "Formio数据源模型"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__formio_version_id
+msgid "Formio Version"
+msgstr "Formio版本"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_asset
+msgid "Formio Version Asset"
+msgstr "Formio版本资源"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_github_checker_wizard
+msgid "Formio Version GitHub Checker Wizard"
+msgstr "Formio版本 GitHub 检查向导"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_github_tag
+msgid "Formio Version GitHub Tag"
+msgstr "Formio版本下载源"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_github_tag_available
+msgid "Formio Version GitHub Tag Available"
+msgstr "Formio可用版本下载源"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_translation
+msgid "Formio Version Translation"
+msgstr "Formio版本翻译包"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_translation_source
+msgid "Formio Version Translation Source"
+msgstr "Formio版本翻译源"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_form
+#: model:ir.model.fields,field_description:formio.field_formio_builder__forms
+#: model:ir.module.category,description:formio.module_category_formio
+#: model:ir.module.category,name:formio.module_category_formio
+#: model:ir.ui.menu,name:formio.menu_formio_form
+#: model:ir.ui.menu,name:formio.menu_formio_root
+#: model_terms:ir.ui.view,arch_db:formio.portal_layout
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_home
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+msgid "Forms"
+msgstr "表单"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Forms Permissions"
+msgstr "表单权限"
+
+#. module: formio
+#: model:ir.actions.server,name:formio.ir_cron_formio_version_github_tag_check_and_register_ir_actions_server
+#: model:ir.cron,cron_name:formio.ir_cron_formio_version_github_tag_check_and_register
+#: model:ir.cron,name:formio.ir_cron_formio_version_github_tag_check_and_register
+msgid "Forms: Check and register new Versions (GitHub tags)"
+msgstr ""
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:0
+#, python-format
+msgid "Fullscreen (Exit with ESC)"
+msgstr "全屏（按ESC退出）"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "General"
+msgstr "常规"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__github_tag_ids
+msgid "GitHub Tags"
+msgstr "GitHub标签"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_github_personal_access_token
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "GitHub personal access token"
+msgstr "GitHub个人密钥"
+
+#. module: formio
+#: model:ir.ui.menu,name:formio.menu_formio_version_github_tag
+msgid "GitHub releases (tags)"
+msgstr "版本下载源"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Group By"
+msgstr "分组按"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_builder__public_access_interval_type__hours
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__public_access_interval_type__hours
+msgid "Hours"
+msgstr "小时"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__id
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__id
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__id
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__id
+#: model:ir.model.fields,field_description:formio.field_formio_form__id
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__id
+#: model:ir.model.fields,field_description:formio.field_formio_translation__id
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__id
+#: model:ir.model.fields,field_description:formio.field_formio_version__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__id
+#: model:ir.model.fields,field_description:formio.field_ir_actions_act_window_view__id
+#: model:ir.model.fields,field_description:formio.field_ir_attachment__id
+#: model:ir.model.fields,field_description:formio.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__id
+#: model:ir.model.fields,field_description:formio.field_res_lang__id
+msgid "ID"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "ID:"
+msgstr "ID："
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_lang__formio_ietf_code
+msgid "IETF Code"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_exception_icon
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_exception_icon
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_exception_icon
+msgid "Icon"
+msgstr "图标"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__activity_exception_icon
+#: model:ir.model.fields,help:formio.field_formio_version__activity_exception_icon
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "表示一个例外活动的图标。"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__name
+#: model:ir.model.fields,help:formio.field_formio_form__name
+msgid ""
+"Identifies this specific form. This name can be used in APIs.         Use "
+"only ASCII letters, digits, \"-\" or \"_\"."
+msgstr "标识此特定表单，此名称可以在API中使用。 仅使用ASCII字符，数字 \"-\" or \"_\"."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_needaction
+#: model:ir.model.fields,help:formio.field_formio_builder__message_unread
+#: model:ir.model.fields,help:formio.field_formio_form__message_needaction
+#: model:ir.model.fields,help:formio.field_formio_form__message_unread
+#: model:ir.model.fields,help:formio.field_formio_version__message_needaction
+#: model:ir.model.fields,help:formio.field_formio_version__message_unread
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__message_needaction
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "确认后, 出现提示消息."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_has_error
+#: model:ir.model.fields,help:formio.field_formio_form__message_has_error
+#: model:ir.model.fields,help:formio.field_formio_version__message_has_error
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "如果勾选此项， 某些消息将会产生传递错误。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Insert a meaningful title here"
+msgstr "在此处填入有意义的标题"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_version_github_tag__state__installed
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Installed"
+msgstr "已安装"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__installed_version_ids
+msgid "Installed Versions"
+msgstr "已安装版本"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__install_date
+msgid "Installed on"
+msgstr "安装时间"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Integration"
+msgstr "集成"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__invitation_mail_template_id
+msgid "Invitation Mail"
+msgstr "邀请邮件"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_is_follower
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_is_follower
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_is_follower
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_is_follower
+msgid "Is Follower"
+msgstr "关注者"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "JS Options"
+msgstr "选项JSON"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__schema
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "JSON Schema"
+msgstr "表单JSON"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version__js_assets
+msgid "Javascript Assets"
+msgstr "JS资源"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__kanban_group_state
+msgid "Kanban Group State"
+msgstr "看板组状态"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__lang_id
+#: model:ir.model.fields,field_description:formio.field_formio_translation__lang_id
+msgid "Language"
+msgstr "语言"
+
+#. module: formio
+#: model:ir.model,name:formio.model_res_lang
+#: model:ir.model.fields,field_description:formio.field_formio_builder__languages
+#: model:ir.model.fields,field_description:formio.field_formio_form__languages
+msgid "Languages"
+msgstr "语言"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_form____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_res_model____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_translation____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available____last_update
+#: model:ir.model.fields,field_description:formio.field_ir_actions_act_window_view____last_update
+#: model:ir.model.fields,field_description:formio.field_ir_attachment____last_update
+#: model:ir.model.fields,field_description:formio.field_ir_ui_view____last_update
+#: model:ir.model.fields,field_description:formio.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:formio.field_res_lang____last_update
+msgid "Last Modified on"
+msgstr "修改日期"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_form__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__write_uid
+msgid "Last Updated by"
+msgstr "更新人员"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_form__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__write_date
+msgid "Last Updated on"
+msgstr "更新日期"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__formio_version_id
+msgid ""
+"Loads the specific Form.io Javascript API/libraries version (sourcecode: "
+"\\https://github.com/formio/formio.js)"
+msgstr "加载特定的Form.io JS API /库版本（源代码： \\https://github.com/formio/formio.js）"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_main_attachment_id
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_main_attachment_id
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_main_attachment_id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "主要附件"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_has_error
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_has_error
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_has_error
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_has_error
+msgid "Message Delivery error"
+msgstr "消息发送出错"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_builder__public_access_interval_type__minutes
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__public_access_interval_type__minutes
+msgid "Minutes"
+msgstr "分钟"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__res_model_id
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__ir_model_id
+msgid "Model"
+msgstr "模型"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__formio_res_model_id
+#: model:ir.model.fields,help:formio.field_formio_builder__res_model_id
+#: model:ir.model.fields,help:formio.field_formio_form__initial_res_model_id
+msgid "Model as resource this form represents or acts on"
+msgstr "此表单关联的源模型"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__module_dependency
+msgid "Module Dependency"
+msgstr "模块依赖性"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "My Form Builders"
+msgstr "我的构建器"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "My Forms"
+msgstr "我的表单"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__name
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__name
+#: model:ir.model.fields,field_description:formio.field_formio_form__name
+#: model:ir.model.fields,field_description:formio.field_formio_version__name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__name
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Name"
+msgstr "名称"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_date_deadline
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_date_deadline
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下次活动截止日期"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_summary
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_summary
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_summary
+msgid "Next Activity Summary"
+msgstr "下次活动摘要"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_type_id
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_type_id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_type_id
+msgid "Next Activity Type"
+msgstr "下次活动类型"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__nodelete
+msgid "No delete (core)"
+msgstr "勿删除(核心)"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Not Portal"
+msgstr "非门户"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Not Wizard"
+msgstr "非向导"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_needaction_counter
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_needaction_counter
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_needaction_counter
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_needaction_counter
+msgid "Number of Actions"
+msgstr "操作次数"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_has_error_counter
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_has_error_counter
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_has_error_counter
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_has_error_counter
+msgid "Number of errors"
+msgstr "错误数"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_needaction_counter
+#: model:ir.model.fields,help:formio.field_formio_form__message_needaction_counter
+#: model:ir.model.fields,help:formio.field_formio_version__message_needaction_counter
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要操作的消息数"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_has_error_counter
+#: model:ir.model.fields,help:formio.field_formio_form__message_has_error_counter
+#: model:ir.model.fields,help:formio.field_formio_version__message_has_error_counter
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "递送错误的消息数"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_unread_counter
+#: model:ir.model.fields,help:formio.field_formio_form__message_unread_counter
+#: model:ir.model.fields,help:formio.field_formio_version__message_unread_counter
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读取的消息数"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_builder__state__obsolete
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Obsolete"
+msgstr "过期"
+
+#. module: formio
+#: code:addons/formio/models/formio_builder.py:0
+#, python-format
+msgid "Only one Form Builder with name \"{name}\" can be in state Current."
+msgstr "只有一个名为\"{name}\"的表单构建器可以处于生效状态。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Options Template"
+msgstr "JS选项模板"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__parent_id
+msgid "Parent Builder"
+msgstr "父级构建器"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__parent_version
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Parent Version"
+msgstr "父级版本"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:0
+#, python-format
+msgid "Parent version:"
+msgstr "父级版本:"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__partner_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__assigned_partner_id
+#: model:ir.model.fields,help:formio.field_formio_form__submission_partner_id
+msgid "Partner-related data of the user"
+msgstr "此用户的业务伙伴相关数据"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__kanban_group_state__a
+#: model:ir.model.fields.selection,name:formio.selection__formio_form__state__pending
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Pending"
+msgstr "等待中"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Personal access token"
+msgstr "个人密钥"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__portal
+#: model:ir.model.fields,field_description:formio.field_formio_form__portal_share
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Portal"
+msgstr "门户"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__portal
+msgid "Portal (Builder)"
+msgstr "门户（构建器）"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__portal_submit_done_url
+#: model:ir.model.fields,field_description:formio.field_formio_form__portal_submit_done_url
+msgid "Portal Submit-done URL"
+msgstr "门户提交完成URL"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_translation__property
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__property
+msgid "Property"
+msgstr "属性"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_share
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Public"
+msgstr "公开"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public
+msgid "Public (Builder)"
+msgstr "公共（构建器）"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access
+msgid "Public Access"
+msgstr "公开访问"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Public Access Expire"
+msgstr "公开访问到期"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access_date_from
+msgid "Public Access From"
+msgstr "公开访问开始"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public_access_interval_number
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access_interval_number
+msgid "Public Access Interval Number"
+msgstr "公开访问间隔数值"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public_access_interval_type
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access_interval_type
+msgid "Public Access Interval Type"
+msgstr "公开访问间隔类型"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_create
+msgid "Public Created"
+msgstr "公开创建"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public_submit_done_url
+msgid "Public Submit-done URL"
+msgstr "公共提交完成URL"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__public_access_interval_number
+msgid ""
+"Public access to submitted Form shall be rejected after expiration of the "
+"configured time interval."
+msgstr "在允许访问的时间到期后，将拒绝公开访问已提交的表单。"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Publish"
+msgstr "发布"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Publish on Portal"
+msgstr "在门户发布"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Publish to Public"
+msgstr "向公众发布"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_name
+msgid "Record  Name"
+msgstr "记录名称"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_id
+msgid "Record ID"
+msgstr "记录ID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_id
+msgid "Record ID #1"
+msgstr "记录ID #1"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Redirect After Submit"
+msgstr "提交后重定向URL"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Redirect URL"
+msgstr "重定向URL"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Register Available Versions"
+msgstr "注册可用版本"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_act_window_url
+msgid "Res Act Window Url"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__res_model
+msgid "Res Model"
+msgstr "模型名称"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid "Reset (to download and install again)"
+msgstr "重置（将重新下载并安装）"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Resource"
+msgstr "资源"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_res_model_id
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_model_id
+msgid "Resource Model"
+msgstr "数据源模型"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_model_id
+msgid "Resource Model #1"
+msgstr "源模型#1"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_model
+msgid "Resource Model Name"
+msgstr "源模型名称"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_model
+msgid "Resource Model Name #1"
+msgstr "源模型名称#1"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_res_model
+#: model:ir.ui.menu,name:formio.menu_formio_res_model
+msgid "Resource Models"
+msgstr "数据源模型"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_model_name
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Resource Name"
+msgstr "资源名称"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_model_name
+msgid "Resource Name #1"
+msgstr "资源名称#1"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_partner_id
+msgid "Resource Partner"
+msgstr "资源合作伙伴"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+msgid "Resource Type"
+msgstr "资源类型"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+msgid "Resource Type #1"
+msgstr "资源类型#1"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_user_id
+#: model:ir.model.fields,field_description:formio.field_formio_version__activity_user_id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__activity_user_id
+msgid "Responsible User"
+msgstr "责任人"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Select Form.io JS Options"
+msgstr "选择JS选项模板"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"Select a default Form Builder JavaScript Options Template.<br/>\n"
+"                            It's contents, the Form Builder JavaScript Options, shall be shown below."
+msgstr ""
+"给表单构建器指定一个默认的JS选项模板.<br/>\n"
+"                            内容如下所示："
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Send Invitation Mail"
+msgstr "发送邀请邮件"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__sequence
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_config_settings
+#: model:ir.ui.menu,name:formio.menu_formio_config_settings
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Settings"
+msgstr "设置"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_share
+msgid "Share form in public? (with access expiration check)."
+msgstr "公开分享表单？（具有访问过期检查）。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_id
+msgid "Show Form ID"
+msgstr "显示表单ID"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_id
+msgid "Show Form ID in the Form header."
+msgstr "在表单顶部显示表单ID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_state
+msgid "Show Form State"
+msgstr "显示表单状态"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_title
+msgid "Show Form Title"
+msgstr "显示表单标题"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_title
+msgid "Show Form Title in the Form header."
+msgstr "在表单顶部显示标题"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_uuid
+msgid "Show Form UUID"
+msgstr "显示表单UUID"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_uuid
+msgid "Show Form UUID in the Form."
+msgstr "在表单中显示UUID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Show ID"
+msgstr "显示ID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_state
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Show State"
+msgstr "显示状态"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_title
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Show Title"
+msgstr "显示标题"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_uuid
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Show UUID"
+msgstr "显示UUID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_user_metadata
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_user_metadata
+msgid "Show User Metadata"
+msgstr "显示用户数据"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_user_metadata
+msgid "Show submission and assigned user metadata in the Form header."
+msgstr "在表单标题中显示已提交和分配用户等数据。"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_state
+msgid "Show the state in the Form header."
+msgstr "在表单顶部显示状态。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__source
+#: model:ir.model.fields,field_description:formio.field_formio_translation__source_id
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__source
+msgid "Source Term"
+msgstr "源术语"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__state
+#: model:ir.model.fields,field_description:formio.field_formio_form__state
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__state
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "State"
+msgstr "状态"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:0
+#: code:addons/formio/static/src/xml/formio.xml:0
+#: code:addons/formio/static/src/xml/formio.xml:0
+#: code:addons/formio/static/src/xml/formio.xml:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+#, python-format
+msgid "State:"
+msgstr "状态："
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__activity_state
+#: model:ir.model.fields,help:formio.field_formio_version__activity_state
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来活动。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_date
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Submission Date"
+msgstr "提交日期"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_partner_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Submission Partner"
+msgstr "提交人"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_partner_name
+msgid "Submission Partner Name"
+msgstr "提交人称呼"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_user_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Submission User"
+msgstr "提交用户"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Submission date"
+msgstr "提交日期"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Submit a Form"
+msgstr "提交表单"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_access
+msgid ""
+"The Public Access check. Computed public access by checking whether (field) "
+"Public Access From has been expired."
+msgstr "公开访问检查。 通过检查（字段）“公开访问开始”是否已过期来验证公开访问。"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__title
+msgid "The form title in the current language"
+msgstr "当前语言的表单标题"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "There are no Forms."
+msgstr "没有表单"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__invitation_mail_template_id
+msgid ""
+"This e-mail template will be sent on user assignment. Leave empty to send "
+"nothing."
+msgstr "该邮件模板将根据用户分配发送。 留空将不发送。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__title
+#: model:ir.model.fields,field_description:formio.field_formio_form__title
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Title"
+msgstr "标题"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__value
+msgid "Translated Value"
+msgstr "翻译值"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_form
+msgid "Translation"
+msgstr "已翻译术语"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_source_form
+msgid "Translation Source"
+msgstr "翻译源"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_translation_source
+#: model:ir.ui.menu,name:formio.menu_formio_translation_source
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_source_tree
+msgid "Translation Sources"
+msgstr "翻译源"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_translation__value
+msgid "Translation Value"
+msgstr "翻译值"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_translation
+#: model:ir.model.fields,field_description:formio.field_formio_builder__translations
+#: model:ir.model.fields,field_description:formio.field_formio_version__translations
+#: model:ir.ui.menu,name:formio.menu_formio_translation
+#: model:ir.ui.menu,name:formio.menu_formio_translation_root
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_tree
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_form
+msgid "Translations"
+msgstr "翻译"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__type
+msgid "Type"
+msgstr "类型"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__activity_exception_decoration
+#: model:ir.model.fields,help:formio.field_formio_version__activity_exception_decoration
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "记录的例外活动类型。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__url
+msgid "URL"
+msgstr "网址"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__uuid
+#: model:ir.model.fields,field_description:formio.field_formio_form__uuid
+msgid "UUID"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_unread
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_unread
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_unread
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_unread_counter
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_unread_counter
+#: model:ir.model.fields,field_description:formio.field_formio_version__message_unread_counter
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息数"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__url
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__url
+msgid "Url"
+msgstr "网址"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Use ASCII letters, digits (0-9), - or _"
+msgstr "使用ASCII字符，数字（0-9），-或_"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__sequence
+msgid "Usefull when storing and listing forms in an ordered way"
+msgstr "在按顺序存储和列出表单时很有用"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__allow_force_update_state_group_ids
+msgid ""
+"User groups allowed to manually force an update of the Form state.If no "
+"groups are specified it's allowed for every user."
+msgstr "允许用户组手动强制更新Form状态。如果未指定任何权限组，则允许任意用户使用。"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__submission_user_id
+msgid "User who submitted the form."
+msgstr "提交表单的用户。"
+
+#. module: formio
+#: model:res.groups,name:formio.group_formio_user_all_forms
+msgid "User: All forms"
+msgstr "用户：所有表单"
+
+#. module: formio
+#: model:res.groups,name:formio.group_formio_user
+msgid "User: Assigned forms"
+msgstr "用户：分配的表单"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__value
+msgid "Value (JSON)"
+msgstr "值（JSON）"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__version
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__version_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_res_model_tree
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_tree
+msgid "Version"
+msgstr "版本"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__version_checker_wizard_id
+msgid "Version Checker Wizard"
+msgstr "版本检查向导"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__version_comment
+msgid "Version Comment"
+msgstr "版本注释"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Version GitHub tags"
+msgstr "版本下载源"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:0
+#, python-format
+msgid "Version:"
+msgstr "版本："
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_version
+#: model:ir.ui.menu,name:formio.menu_formio_version
+#: model:ir.ui.menu,name:formio.menu_formio_version_root
+msgid "Versions"
+msgstr "版本"
+
+#. module: formio
+#: code:addons/formio/wizard/formio_version_github_checker_wizard.py:0
+#: model:ir.actions.act_window,name:formio.action_formio_version_github_tag
+#, python-format
+msgid "Versions GitHub tags"
+msgstr "版本下载源"
+
+#. module: formio
+#: model:ir.model,name:formio.model_ir_ui_view
+msgid "View"
+msgstr "查看"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_ir_actions_act_window_view__view_mode
+#: model:ir.model.fields,field_description:formio.field_ir_ui_view__type
+msgid "View Type"
+msgstr "视图类型"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__view_as_html
+msgid "View as HTML"
+msgstr "以HTML格式查看"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__view_as_html
+msgid "View submission as a HTML view instead of disabled webform."
+msgstr "以HTML视图而不是禁用的Webform形式查看提交。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__website_message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__website_message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version__website_message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__website_message_ids
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__website_message_ids
+#: model:ir.model.fields,help:formio.field_formio_form__website_message_ids
+#: model:ir.model.fields,help:formio.field_formio_version__website_message_ids
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__website_message_ids
+msgid "Website communication history"
+msgstr "网站讨论历史"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"When adding a new Form Builder, use this Form.io client/library version."
+msgstr "创建新的表单构建器时，将默认使用此Formio.js版本。"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__wizard
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Wizard"
+msgstr "页面向导"
+
+#. module: formio
+#: code:addons/formio/models/formio_builder.py:0
+#, python-format
+msgid "Write comment about version %s ..."
+msgstr "撰写有关评论关于版本%s ..."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_default_asset_css__attachment_type
+#: model:ir.model.fields,help:formio.field_formio_version_asset__attachment_type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr "您可以从本地计算机上载文件，也可以将Internet链接复制/粘贴到文件中。"
+
+#. module: formio
+#: code:addons/formio/models/formio_form.py:0
+#, python-format
+msgid "You're not allowed to (force) update the Form into Cancel state."
+msgstr "您不允许（强制）将表单更新为“取消”状态。"
+
+#. module: formio
+#: code:addons/formio/models/formio_form.py:0
+#, python-format
+msgid "You're not allowed to (force) update the Form into Complete state."
+msgstr "您不允许（强制）将表单更新为“完成”状态。"
+
+#. module: formio
+#: code:addons/formio/models/formio_form.py:0
+#, python-format
+msgid "You're not allowed to (force) update the Form into Draft state."
+msgstr "您不允许（强制）将表单更新为“草稿”状态。"
+
+#. module: formio
+#: model:mail.template,subject:formio.mail_invitation_internal_user
+#: model:mail.template,subject:formio.mail_invitation_portal_user
+msgid "[Form] ${object.title}"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__version_name
+msgid "_compute_fields"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_version_asset__type__css
+msgid "css"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"https://github.com/formio/formio.js/blob/master/src/components/file/editForm/File.edit.file.js"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "https://github.com/formio/formio.js/releases"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid ""
+"is not required, but it can get a higher rate limit.\n"
+"                                        This prevents timeouts and authorization errors."
+msgstr ""
+"非必须，但是可以获得更高的速率限制。\n"
+"                                        这样可以避免超时和授权错误。"
+
+#. module: formio
+#: model:ir.model.fields.selection,name:formio.selection__formio_version_asset__type__js
+msgid "js"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "select component rendering error in viewAsHtml model #1545"
+msgstr "选择 viewAsHtml 组件渲染出错 ＃1545"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid ""
+"{\n"
+"  'editForm': {\n"
+"    'file': [\n"
+"      {\n"
+"        'key': 'file',\n"
+"        'components': [\n"
+"          {'key': 'webcam', 'defaultValue': True},\n"
+"          {'key': 'storage', 'defaultValue': 'base64'}\n"
+"        ]\n"
+"      }\n"
+"    ]\n"
+"  }\n"
+"}"
+msgstr ""
+
+#. module: formio
+#: code:addons/formio/models/formio_builder.py:0
+#, python-format
+msgid "{title} (state: {state} - version: {version})"
+msgstr "{title} (状态: {state} - 版本号: {version})"

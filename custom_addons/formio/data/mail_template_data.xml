@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full copyright and licensing details.
+-->
+
+<odoo>
+    <data>
+        <record id="mail_invitation_internal_user" model="mail.template">
+            <field name="name">Forms: Invitation internal user</field>
+            <field name="model_id" ref="formio.model_formio_form"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="email_from">"${user.company_id.name|safe}" &lt;${(user.company_id.email or user.email)|safe}&gt;</field>
+            <field name="email_to">${object.user_id.mail}</field>
+            <field name="subject">[Form] ${object.title}</field>
+            <field name="body_html">
+<![CDATA[
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello ${object.user_id.partner_id.name},<br/><br/>
+        You have been invited to fill-in the form: ${object.title}<br/>
+        Your response would be appreciated.<br/><br/>
+        Click the button to go to the form (record), which requires you're logged in.
+        <div style="margin: 16px 0px 16px 0px;">
+            <a href="${object.act_window_url}"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                Form
+            </a>
+        </div>
+    </p>
+</div>
+]]>
+            </field>
+        </record>
+
+        <record id="mail_invitation_portal_user" model="mail.template">
+            <field name="name">Forms: Invitation portal user</field>
+            <field name="model_id" ref="formio.model_formio_form"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="email_from">"${user.company_id.name|safe}" &lt;${(user.company_id.email or user.email)|safe}&gt;</field>
+            <field name="email_to">${user.user_id.mail}</field>
+            <field name="subject">[Form] ${object.title}</field>
+            <field name="body_html">
+<![CDATA[
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello ${object.user_id.partner_id.name},<br/><br/>
+        You have been invited to fill-in the form: ${object.title}<br/>
+        Your response would be appreciated.<br/><br/>
+        Click the button to go to the form, which requires you're logged in.
+        <div style="margin: 16px 0px 16px 0px;">
+            <a href="/my/formio/form/${object.uuid}"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                Form
+            </a>
+        </div>
+        Your assigned forms are listed on the page <a href="/my/formio">My Forms</a> 
+    </p>
+</div>
+]]>
+            </field>
+        </record>
+    </data>
+</odoo>

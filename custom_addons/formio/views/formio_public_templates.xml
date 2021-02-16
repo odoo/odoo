@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <template id="formio_form_public_embed" name="formio.form - embed">
+        &lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+                <script type="text/javascript" src="/formio/static/lib/iframe-resizer/iframeResizer.contentWindow.min.js"></script>
+                <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+                <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
+                <script type="text/javascript" src="/formio/static/src/js/odoo.jsonrpc.js"/>
+                <script type="module" src="/formio/static/src/js/form/formio_form.js"/>
+                <script type="module" src="/formio/static/src/js/form/public_app.js"/>
+                <t t-foreach="formio_css_assets" t-as="css">
+                    <link rel="stylesheet" type="text/css" t-att-href="css.url"/>
+                </t>
+                <t t-foreach="formio_js_assets" t-as="js">
+                    <script type="text/javascript" t-att-src="js.url"></script>
+                </t>
+                <link rel="stylesheet" href="/formio/static/src/css/formio_form_embed.css"/>
+            </head>
+            <body>
+                <h3 t-if="form.show_title" class="formio_form_title"><span name="title" t-esc="form.title"/></h3>
+                <div t-if="form.show_id or form.show_uuid or form.show_state or form.show_user_metadata" class="formio_form_dock float-right">
+                    <ul>
+                        <li t-if="form.assigned_partner_id and form.show_user_metadata" class="assigned">
+                            <strong>Assigned to:</strong> <span t-esc="form.assigned_partner_name"/>
+                        </li>
+                        <li t-if="form.submission_data and form.show_user_metadata" class="submission">
+                            <strong>Submission by:</strong> <span t-esc="form.submission_partner_name"/> (<span t-field="form.submission_date"/>)
+                        </li>
+                        <li t-if="form.show_id" class="form_id">
+                            <strong>ID:</strong> <span t-esc="form.id"/>
+                        </li>
+                        <li t-if="form.show_state" class="form_state">
+                            <t t-if="form.state == 'PENDING'">
+                                <span t-attf-class="badge mb-1 badge-pill badge-info">State: <strong><t t-esc="form.display_state"/></strong></span>
+                            </t>
+                            <t t-elif="form.state == 'DRAFT'">
+                                <span t-attf-class="badge mb-1 badge-pill badge-warning">State: <span t-esc="form.display_state"/></span>
+                            </t>
+                            <t t-elif="form.state == 'COMPLETE'">
+                                <span t-attf-class="badge mb-1 badge-pill badge-success">State: <strong><t t-esc="form.display_state"/></strong></span>
+                            </t>
+                            <t t-elif="form.state == 'CANCEL'">
+                                <span t-attf-class="badge mb-1 badge-pill badge-dark">State: <strong><t t-esc="form.display_state"/></strong></span>
+                            </t>
+                            <t t-else="">
+                                <span t-attf-class="badge mb-1 badge-pill badge-light">State: <strong><t t-esc="form.display_state"/></strong></span>
+                            </t>
+                        </li>
+                    </ul>
+                </div>
+                <t t-if="len(languages) > 1">
+                    <div class="formio_languages">
+                        <t t-foreach="languages" t-as="lang">
+                            <button class="btn btn-sm btn-default" t-attf-onclick="setLanguage('{{ lang.formio_ietf_code }}')"><span t-field="lang.name"/></button>
+                        </t>
+                    </div>
+                </t>
+                <!-- Form shall be mounted here -->
+                <div id="formio_form_app"/>
+
+                <div t-if="form.show_uuid" class="float-right">
+                    <small class="text-muted">UUID: <span t-esc="form.uuid"/></small>
+                </div>
+                <input type="hidden" id="formio_form_uuid" name="uuid" t-att-value="form.uuid"/>
+            </body>
+        </html>
+    </template>
+
+    <template id="formio_form_public_create_embed" name="formio.form - public create - embed">
+        &lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+                <script type="text/javascript" src="/formio/static/lib/iframe-resizer/iframeResizer.contentWindow.min.js"></script>
+                <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+                <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
+                <script type="text/javascript" src="/formio/static/src/js/odoo.jsonrpc.js"/>
+                <script type="module" src="/formio/static/src/js/form/formio_form.js"/>
+                <script type="module" src="/formio/static/src/js/form/public_create_app.js"/>
+                <t t-foreach="formio_css_assets" t-as="css">
+                    <link rel="stylesheet" type="text/css" t-att-href="css.url"/>
+                </t>
+                <t t-foreach="formio_js_assets" t-as="js">
+                    <script type="text/javascript" t-att-src="js.url"></script>
+                </t>
+                <link rel="stylesheet" href="/formio/static/src/css/formio_form_embed.css"/>
+            </head>
+            <body>
+                <t t-if="builder">
+                    <h3 t-if="builder.show_form_title" class="formio_form_title"><span name="title" t-esc="builder.title"/></h3>
+                </t>
+                
+                <t t-if="len(languages) > 1">
+                    <div class="formio_languages">
+                        <t t-foreach="languages" t-as="lang">
+                            <button class="btn btn-sm btn-default" t-attf-onclick="setLanguage('{{ lang.formio_ietf_code }}')"><span t-field="lang.name"/></button>
+                        </t>
+                    </div>
+                </t>
+
+                <!-- Form shall be mounted here -->
+                <div id="formio_form_app"/>
+
+                <t t-if="formio_builder_uuid">
+                    <input type="hidden" id="formio_builder_uuid" name="formio_builder_uuid" t-att-value="formio_builder_uuid"/>
+                </t>
+            </body>
+        </html>
+    </template>
+</odoo>

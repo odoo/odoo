@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    Code Generator for Account-->
+    <record id="sequence_code" model="ir.sequence">
+        <field name="name">Code</field>
+        <field name="code">school.account</field>
+        <field name="active">TRUE</field>
+        <field name="prefix">C</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+<!--    Tree view for Account-->
+    <record id="account_tree_view" model="ir.ui.view">
+        <field name="name">school.account.tree</field>
+        <field name="model">school.account</field>
+        <field name="arch" type="xml">
+            <tree string="Account">
+                <field name="name"/>
+                <field name="balance"/>
+                <field name="today"/>
+                <field name="code"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    Form view for Account-->
+    <record id="account_form_view" model="ir.ui.view">
+        <field name="name">school.account.form</field>
+        <field name="model">school.account</field>
+        <field name="arch" type="xml">
+            <form string="Account Details">
+                <sheet string="COM">
+                    <group string="Account Code">
+                        <field name="code"/>
+                        <field name="today"/>
+                    </group>
+                    <group>
+                        <group string="Basic">
+                            <field name="name"/>
+                            <field name="balance"/>
+                        </group>
+                        <group string="Detail">
+                            <field name="note"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                    <group string="Banking" >
+                        <group id='operations_selection' string="Select Operations" >
+                            <field name="operations"/>
+                            <field name="debit" attrs="{'invisible':['|',('operations', '=', 'deposit'),('operations', '=', 'none')]}"/>
+                            <field name="deposit" attrs="{'invisible':['|',('operations', '=', 'debit'),('operations', '=', 'none')]}"/>
+                        </group>
+                        <group string="Transaction Detail">
+                            <field name="transaction"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_account" model="ir.actions.act_window">
+        <field name="name">Accounts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">school.account</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enter Account Details!!!
+            </p>
+        </field>
+    </record>
+
+    <!--    creating menus  -->
+    <menuitem id="com_root" name="COM" sequence="0"/>
+    <menuitem id="com_account" name="Account" parent="com_root" action="action_account" sequence="1"/>
+</odoo>

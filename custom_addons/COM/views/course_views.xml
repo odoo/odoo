@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--    search settings     -->
+    <record id="view_search_course" model="ir.ui.view">
+        <field name="name">course.search.view</field>
+            <field name="model">task.course</field>
+            <field name="arch" type="xml">
+                <search string="Search Course">
+                    <field name="name"/>
+                    <field name="batch_id"/>
+                    <filter name="no_of_year" string="No of years" domain="[('no_of_year', '=', uid)]"/>
+                    <filter name="no_of_student" string="No of student" domain="[('no_of_student', '=', uid)]"/>
+                    <group string="Group By">
+                        <filter name="no_of_year" string="Years" context="{'group_by': 'no_of_year'}"/>
+                    </group>
+                    <group string="Group By">
+                        <filter name="no_of_student" string="Student" context="{'group_by': 'no_of_student'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <!-- course Tree View -->
+    <record id="course_tree_view" model="ir.ui.view">
+        <field name="name">course.tree.view</field>
+        <field name="model">task.course</field>
+        <field name="arch" type="xml">
+            <tree string="Course Information">
+                <field name="name"/>
+                <field name="no_of_student"/>
+                <field name="no_of_year"/>
+                <field name="batch_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- course form view -->
+    <record id="course_form_view" model="ir.ui.view">
+        <field name="name">course.form.view</field>
+        <field name="model">task.course</field>
+        <field name="arch" type="xml">
+            <form string="Course">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="batch_id"/>
+                            <field name="course_year"/>
+                        </group>
+                        <group>
+                            <field name="no_of_year"/>
+                            <field name="no_of_student"/>
+<!--                            <field name="student_ids" widget="many2many_tags">-->
+<!--                                <field name="student_id"/>-->
+<!--                            </field>-->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Student">
+                            <field name="students" widget="many2many_tags">
+                                <field name="name"/>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Course Menu Action -->
+    <record id="course_menu_action" model="ir.actions.act_window">
+        <field name="name">course</field>
+        <field name="res_model">task.course</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">Add Course</p>
+        </field>
+    </record>
+
+    <!-- Menu items -->
+    <menuitem id="task_menu" name="task"/>
+    <menuitem action="course_menu_action" id="task_course_menu" name="Course" parent="task_menu" sequence="2"/>
+</odoo>

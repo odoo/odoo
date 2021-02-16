@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <record id="view_formio_builder_js_options_tree" model="ir.ui.view">
+        <field name="name">formio.builder.js.options.tree</field>
+        <field name="model">formio.builder.js.options</field>
+        <field name="arch" type="xml">
+            <tree string="Form Builder JS Options">
+                <field name="name"/>
+                <field name="value"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_formio_builder_js_options_form" model="ir.ui.view">
+        <field name="name">formio.builder.js.options.form</field>
+        <field name="model">formio.builder.js.options</field>
+        <field name="arch" type="xml">
+	    <form string="Form Builder JS Options">
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <field name="value"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_formio_builder_js_options" model="ir.actions.act_window">
+        <field name="name">Form Builder JS Options</field>
+        <field name="res_model">formio.builder.js.options</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_formio_builder_js_options_tree"/>
+    </record>
+</odoo>

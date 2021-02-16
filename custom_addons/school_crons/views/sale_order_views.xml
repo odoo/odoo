@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.student.inherit.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+<!--            <xpath expr="//page[last()]" position="after">-->
+            <xpath expr="//notebook/page[@name='customer_signature']" position="after" name="new_page">
+                <page name="new_page" string="New Page" >
+                    <b>Page</b>
+                </page >
+            </xpath>
+        </field>
+    </record>
+</odoo>

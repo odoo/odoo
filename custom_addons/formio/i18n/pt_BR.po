@@ -1,0 +1,2146 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* formio
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-03 20:48+0000\n"
+"PO-Revision-Date: 2020-12-03 20:48+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: formio
+#: model:mail.template,body_html:formio.mail_invitation_internal_user
+msgid "\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello ${object.user_id.partner_id.name},<br/><br/>\n"
+"        You have been invited to fill-in the form: ${object.title}<br/>\n"
+"        Your response would be appreciated.<br/><br/>\n"
+"        Click the button to go to the form (record), which requires you're logged in.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${object.act_window_url}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Form\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+msgstr "\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Olá ${object.user_id.partner_id.name},<br/><br/>\n"
+"        Você foi convidado a preencher o formulário: ${object.title}<br/>\n"
+"        Sua resposta seria apreciada.<br/><br/>\n"
+"        Clique no botão para ir para o formulário (record), o que exige que você esteja logado.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${object.act_window_url}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Formulário\n"
+"            </a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+
+#. module: formio
+#: model:mail.template,body_html:formio.mail_invitation_portal_user
+msgid "\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello ${object.user_id.partner_id.name},<br/><br/>\n"
+"        You have been invited to fill-in the form: ${object.title}<br/>\n"
+"        Your response would be appreciated.<br/><br/>\n"
+"        Click the button to go to the form, which requires you're logged in.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"/my/formio/form/${object.uuid}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Form\n"
+"            </a>\n"
+"        </div>\n"
+"        Your assigned forms are listed on the page <a href=\"/my/formio\">My Forms</a> \n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+msgstr "\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Olá ${object.user_id.partner_id.name},<br/><br/>\n"
+"        Você foi convidado a preencher o formulário: ${object.title}<br/>\n"
+"        Sua resposta seria apreciada.<br/><br/>\n"
+"        Clique no botão para ir para o formulário, que exige que você esteja logado.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"/my/formio/form/${object.uuid}\"\n"
+"                style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Formulário\n"
+"            </a>\n"
+"        </div>\n"
+"        Seus formulários atribuídos estão listados na página <a href=\"/my/formio\">My Forms</a> \n"
+"    </p>\n"
+"</div>\n"
+"\n"
+"            "
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_version_github_tag__state
+msgid "        - Available: Not downloaded and installed yet.\n"
+"        - Installed: Downloaded and installed."
+msgstr "        - Disponível: ainda não baixado e instalado.\n"
+"        - Instalado: baixado e instalado."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__state
+msgid "        - Draft: In draft / design.\n"
+"        - Current: Live and in use (publisehd).\n"
+"        - Obsolete: Was current but obsolete (unpublished)"
+msgstr "        - Rascunho: Em rascunho / design.\n"
+"        - Atual: Ao vivo e em uso (publicado).\n"
+"        - Obsoleto: era atual, mas obsoleto (não publicado)"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__portal_submit_done_url
+#: model:ir.model.fields,help:formio.field_formio_builder__public_submit_done_url
+#: model:ir.model.fields,help:formio.field_formio_form__portal_submit_done_url
+msgid "        IMPORTANT:\n"
+"        - Absolute URL should contain a protocol (https://, http://)\n"
+"        - Relative URL is also supported e.g. /web/login\n"
+"        "
+msgstr "        IMPORTANTE:\n"
+"        - O URL absoluto deve conter um protocolo (https://, http://)\n"
+"        - URL relativo também é compatível, por exemplo, /web/login\n"
+"        "
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<br/>\n"
+"                                <i class=\"fa fa-info-circle\" title=\"info\"/><strong> Integration / Resource settings</strong> - Enables integration of Form and ERP/Odoo objects.<br/>"
+msgstr "<br/>\n"
+"                                <i class=\"fa fa-info-circle\" title=\"info\"/><strong> Integração / Configuração de Recursos</strong> - Permite a integração de objetos Form.io e MultiERP.<br/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "<i class=\"fa fa-clock-o\" title=\"Submission date\" aria-label=\"Submission date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" title=\"Data do envio\" aria-label=\"Data do envio\"/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "<i class=\"fa fa-globe text-muted\"/><span class=\"text-muted\"> portal</span>"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/>"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/> Configuration of Website features shall also be done here."
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> A configuração dos recursos do site também deve ser feita aqui."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/> Configure in Resource tab (if settings are available)"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> Configurar na guia Recursos (se as configurações estiverem disponíveis)"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/> Configure in related tabs (Portal, Public / Website)"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> Configurar nas guias relacionadas (Portal, Público / Site)"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/> Specific permissions on Forms"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> Permissões específicas em formulários"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/> This doesn't make any sense with Public (published) Forms, which are standalone."
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> Isso não faz sentido com formulários públicos (publicados), que são independentes."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/> To create or link (existing) Partner with a Form submission, specify the fields (Email, Name) from the Components API / Property Names.<br/>\n"
+"                                    Partner determination/match shall be done by Email. This API is especially useful for public Forms."
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/> Para criar ou vincular o parceiro (existente) a um envio de formulário, especifique os campos (e-mail, nome) da API de Componentes/Propriedades.<br/>\n"
+"                                    A determinação/correspondência do parceiro deve ser feita por e-mail. Esta API é especialmente útil para formulários públicos."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Documentation</strong><br/>\n"
+"                                For example, Options could contain the Form Builder editForm with some File component settings:<br/>"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Documentação</strong><br/>\n"
+"                                Por exemplo, Opções podem conter o editForm com algumas configurações do arquivo do componente:<br/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Expire After:</strong> - Applicable on the Form it's (datimetime field) <strong>Public Access From</strong>."
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Expira após:</strong> - Aplicável no formulário é (datimetime field) <strong>Acesso público de</strong>."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "<i class=\"fa fa-info-circle\" title=\"info\"/><strong> View as HTML</strong> - This setting (still) doesn't work since version 4.x<br/>\n"
+"                                For more info see Formio.js GitHub issue:"
+msgstr "<i class=\"fa fa-info-circle\" title=\"info\"/><strong> Ver como HTML</strong> - Esta configuração (ainda) não funciona desde a versão 4.x<br/>\n"
+"                                Para obter mais informações, consulte Formio.js no problema do GitHub:"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "<i class=\"fa fa-user\" title=\"Submission partner\" aria-label=\"Submission partner\"/>"
+msgstr "<i class=\"fa fa-user\" title=\"Parceiro de envio\" aria-label=\"Parceiro de envio\"/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "<span aria-label=\"Cancel &amp; close Form\" title=\"Cancel &amp; close Form\" confirm=\"Are you sure?\">Cancel Form</span>"
+msgstr "<span aria-label=\"Cancelar &amp; Fechar Formulário\" title=\"Cancelar &amp; Fechar Formulário\" confirm=\"Você tem certeza?\">Cancelar Formulário</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "<span aria-label=\"Delete form\" title=\"Delete form\" confirm=\"Are you sure?\">Delete Form</span>"
+msgstr "<span aria-label=\"Apagar Formulário\" title=\"Apagar Formulário\" confirm=\"Você tem certeza?\">Apagar Formulário</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "<span aria-label=\"Edit form\" title=\"Edit form\">Edit Form</span>"
+msgstr "<span aria-label=\"Editar Formulário\" title=\"Editar Formulário\">Editar Formulário</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "<span aria-label=\"View form\" title=\"View form\">View Form</span>"
+msgstr "<span aria-label=\"Visualizar Formulário\" title=\"Visualizar Formulário\">Visualizar Formulário</span>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "<strong>Check, register and install the latest 30 available Versions</strong>"
+msgstr "<strong>Verifique, registre e instale as últimas 30 versões disponíveis</strong>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "<strong>Example below</strong>. Options could contain the Form Builder \"editForm\" with some \"File\" component settings:<br/>"
+msgstr "<strong>Exemplo abaixo</strong>. As opções podem conter o Form Builder \"editForm\" com algum \"Arquivo\" configurações de componentes:<br/>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "<strong>Submission:</strong>"
+msgstr "<strong>Enviado:</strong>"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "A scheduled action (daily cron) is available and already active.<br/>\n"
+"                                    Source:"
+msgstr "Uma ação programada (cron diário) está disponível e já está ativa.<br/>\n"
+"                                    Fonte:"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Access"
+msgstr "Acesso"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__act_window_multi_url
+msgid "Act Window Multi Url"
+msgstr "Url de Janela Múltipla"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__act_window_url
+#: model:ir.model.fields,field_description:formio.field_formio_form__act_window_url
+msgid "Act Window Url"
+msgstr "URL da Janela de Ação"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_needaction
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_needaction
+msgid "Action Needed"
+msgstr "Ação Necessária"
+
+#. module: formio
+#: model:ir.model,name:formio.model_ir_actions_act_window_view
+msgid "Action Window View"
+msgstr "Vista da janela de ação"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Actions"
+msgstr "Ações"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__active
+msgid "Active"
+msgstr "Ativo"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_ids
+msgid "Activities"
+msgstr "Atividades"
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Activity"
+msgstr "Atividade"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_state
+msgid "Activity State"
+msgstr "Estado de Atividade"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Add additional CSS files to be included for every new installed Form.io client/library."
+msgstr "Adicione arquivos CSS adicionais a serem incluídos para cada novo cliente/biblioteca Form.io instalado."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__component_partner_add_follower
+msgid "Add determined partner to followers of the Form."
+msgstr "Adicione determinado parceiro aos seguidores do Form."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Add to Followers"
+msgstr "Adicionar aos seguidores"
+
+#. module: formio
+#: model:res.groups,name:formio.group_formio_admin
+msgid "Admin"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__allow_unlink
+msgid "Allow delete"
+msgstr "Permitir exclusão"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__allow_force_update_state
+msgid "Allow force update State"
+msgstr "Permitir estado de atualização forçada"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__allow_force_update_state_group_ids
+msgid "Allow groups to force update State"
+msgstr "Permitir que os grupos forcem o estado de atualização"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Appearance"
+msgstr "Aparência"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__archive_url
+msgid "Archive URL"
+msgstr "URL do arquivo"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Are you sure to check for available versions? This could take some time to load, please be patient."
+msgstr "Tem certeza de que deseja verificar as versões disponíveis? Isso pode levar algum tempo para carregar, seja paciente."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid "Are you sure to download and install? This could take some time to load, please be patient."
+msgstr "Tem certeza de que deseja baixar e instalar? Isso pode levar algum tempo para carregar, seja paciente."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Are you sure? Modifying the Form Builder causes existing forms to be invalid."
+msgstr "Você tem certeza? A modificação do Construtor faz com que os formulários existentes sejam inválidos."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Are you sure? The Form shall be unpublished."
+msgstr "Você tem certeza? O formulário não será publicado."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid "Are you to Reset, to download and install again?"
+msgstr "Você deve reiniciar, baixar e instalar novamente?"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version__assets
+msgid "Assets"
+msgstr "Patrimônios"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_form
+msgid "Assets (JavaScript, CSS)"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__assigned_partner_id
+msgid "Assigned Partner"
+msgstr "Parceiro designado"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__assigned_partner_name
+msgid "Assigned Partner Name"
+msgstr "Nome do parceiro atribuído"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Assigned User"
+msgstr "Usuário Designado"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__user_id
+#: model:ir.model.fields,field_description:formio.field_formio_form__user_id
+msgid "Assigned user"
+msgstr "Usuário designado"
+
+#. module: formio
+#: model:ir.model,name:formio.model_ir_attachment
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__attachment_id
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__attachment_id
+msgid "Attachment"
+msgstr "Anexo"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_attachment_count
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_attachment_count
+msgid "Attachment Count"
+msgstr "Contagem de Anexos"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__attachment_type
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__attachment_type
+msgid "Attachment Type"
+msgstr "Tipo de Anexo"
+
+#. module: formio
+#: selection:formio.version.github.tag,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Available"
+msgstr "Disponível"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__available_version_github_tag_ids
+msgid "Available Version Github Tag"
+msgstr "Tag da versão disponível do Github"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Available Versions (releases)"
+msgstr "Versões disponíveis (lançamentos)"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/js/views/formio_builder_view.js:18
+#, python-format
+msgid "Builder"
+msgstr "Construtor"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version__css_assets
+msgid "CSS Assets"
+msgstr "Recursos CSS"
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Calendar"
+msgstr "Calendário"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: formio
+#: selection:formio.form,kanban_group_state:0
+#: selection:formio.form,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Canceled"
+msgstr "Cancelada"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__changelog_url
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__changelog_url
+msgid "Changelog URL"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Check and Register available Versions"
+msgstr "Verificar e registrar as versões disponíveis"
+
+#. module: formio
+#: code:addons/formio/models/res_config_settings.py:84
+#, python-format
+msgid "Check and Register new Versions"
+msgstr "Verificar e registrar novas versões"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Complete"
+msgstr "Completo"
+
+#. module: formio
+#: selection:formio.form,kanban_group_state:0
+#: selection:formio.form,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Completed"
+msgstr "Concluída"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__component_partner_add_follower
+msgid "Component Partner Add to Followers"
+msgstr "Componente Parceiro Adicionar aos Seguidores"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__component_partner_email
+msgid "Component Partner Email"
+msgstr "Email do parceiro de componente"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__component_partner_name
+msgid "Component Partner Name"
+msgstr "Nome do parceiro do componente"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Components"
+msgstr "Componentes"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Components API"
+msgstr "API de Componentes"
+
+#. module: formio
+#: model:ir.model,name:formio.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajuste de configurações"
+
+#. module: formio
+#: model:ir.ui.menu,name:formio.menu_formio_configuration
+msgid "Configuration"
+msgstr "Configuração"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Confirm as Current"
+msgstr "Confirmar como Atual"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Create New Version"
+msgstr "Criar Nova Versão"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_form__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__create_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_form__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__create_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__create_date
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: formio
+#: selection:formio.builder,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Current"
+msgstr "Atual"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Custom and 3rd-party Component settings."
+msgstr "Configurações de componentes personalizados e de terceiros."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_data
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Data"
+msgstr "Dados"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__readonly_submission_data
+msgid "Data is readonly"
+msgstr "Os dados são somente leitura"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__initial_res_id
+#: model:ir.model.fields,help:formio.field_formio_form__res_id
+msgid "Database ID of the record in res_model to which this applies"
+msgstr "ID do banco de dados do registro em res_model ao qual isso se aplica"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_access_date_from
+msgid "Datetime from when the form is public shared until it expires."
+msgstr "Data e hora de quando o formulário é compartilhado publicamente até que expire"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__submission_date
+msgid "Datetime when the form was last submitted."
+msgstr "Data e hora em que o formulário foi enviado pela última vez."
+
+#. module: formio
+#: selection:formio.builder,public_access_interval_type:0
+#: selection:formio.form,public_access_interval_type:0
+msgid "Days"
+msgstr "Dias"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Default CSS assets"
+msgstr "Recursos CSS padrão"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Default Form Builder JavaScript Options Template"
+msgstr "Modelo de opções de JavaScript do criador de formulários padrão"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Default Version"
+msgstr "Versão Padrão"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__description
+#: model:ir.model.fields,field_description:formio.field_formio_version__description
+msgid "Description"
+msgstr "Descrição"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Description..."
+msgstr "Descrição..."
+
+#. module: formio
+#: selection:ir.ui.view,type:0
+msgid "Diagram"
+msgstr "Diagrama"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_form__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_translation__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__display_name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__display_name_full
+msgid "Display Name Full"
+msgstr "Nome de exibição completo"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__display_state
+#: model:ir.model.fields,field_description:formio.field_formio_form__display_state
+msgid "Display State"
+msgstr "Estado de exibição"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid "Download and Install"
+msgstr "Baixar e Instalar"
+
+#. module: formio
+#: selection:formio.builder,state:0
+#: selection:formio.form,kanban_group_state:0
+#: selection:formio.form,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Draft"
+msgstr "Provisório"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Dropdown menu"
+msgstr "Menu dropdown"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__edit_url
+msgid "Edit Url"
+msgstr "Editar URL"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Email"
+msgstr "E-mail"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Expire After"
+msgstr "Expira após"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_follower_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_channel_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Seguidores (Canais)"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_partner_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Parceiros)"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/js/views/formio_form_view.js:18
+#: selection:ir.actions.act_window.view,view_mode:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_res_model_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_form
+#: selection:ir.ui.view,type:0
+#, python-format
+msgid "Form"
+msgstr "Formulário"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Form Appearance"
+msgstr "Aparência de Formulário"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__builder_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Form Builder"
+msgstr "Construtor de Formulários"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_builder_js_options
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_js_options_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_js_options_tree
+msgid "Form Builder JS Options"
+msgstr "Opções de JS do Form Builder"
+
+#. module: formio
+#: model:ir.ui.menu,name:formio.menu_formio_builder_js_options
+msgid "Form Builder JS options"
+msgstr "Opções de JS do Form Builder"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_builder
+#: model:ir.ui.menu,name:formio.menu_formio_builder
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_tree
+msgid "Form Builders"
+msgstr "Construtores de Formulários"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__builder_id
+msgid "Form builder"
+msgstr "Construtor de Formulários"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__portal
+#: model:ir.model.fields,help:formio.field_formio_form__portal
+msgid "Form is accessible by assigned portal user"
+msgstr "O formulário pode ser acessado pelo usuário do portal designado"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__public
+#: model:ir.model.fields,help:formio.field_formio_form__public
+msgid "Form is public accessible (e.g. used in Shop checkout, Events registration"
+msgstr "O formulário é acessível ao público (por exemplo, usado no checkout da loja, registro de eventos"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_create
+msgid "Form was public created"
+msgstr "O formulário foi criado publicamente"
+
+#. module: formio
+#: model:ir.module.category,description:formio.module_category_formio
+#: model:ir.module.category,name:formio.module_category_formio
+#: model:ir.ui.menu,name:formio.menu_formio_root
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_formio
+msgid "Form.io"
+msgstr "Formulários"
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Form.io Builder"
+msgstr "Construtor de Formulários"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_builder_js_options
+msgid "Form.io Builder JS options"
+msgstr "Opções de JS do Construtor de Formulários"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_builder_js_options_id
+msgid "Form.io Builder JS options ID"
+msgstr "ID Opções de JS do Construtor de Formulários"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_css_assets
+msgid "Form.io CSS"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_asset_css_ids
+msgid "Form.io CSS assets"
+msgstr "Recursos CSS Form.io"
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Form.io Form"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_js_assets
+msgid "Form.io Javascript"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_js_options
+msgid "Form.io Javascript Options"
+msgstr "Opções de Javascript Form.io"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_js_options_id
+msgid "Form.io Javascript Options template"
+msgstr "Modelo de opções de Javascript Form.io"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_version_id
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_default_version_id
+msgid "Form.io Version"
+msgstr "Versão do Form.io"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Form.io Version GitHub Importer"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Form.io client/library version importer"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__formio_version_name
+#: model:ir.model.fields,help:formio.field_formio_version__name
+msgid "Form.io release/version."
+msgstr "Versão de Lançamento do Form.io"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_version_name
+msgid "Form.io version"
+msgstr "Versão Form.io"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:20
+#, python-format
+msgid "Form.io version:"
+msgstr "Versão Form.io:"
+
+#. module: formio
+#: model:ir.actions.server,name:formio.ir_cron_formio_version_github_tag_check_and_register_ir_actions_server
+#: model:ir.cron,cron_name:formio.ir_cron_formio_version_github_tag_check_and_register
+#: model:ir.cron,name:formio.ir_cron_formio_version_github_tag_check_and_register
+msgid "Form.io: Check and register new Versions (GitHub tags)"
+msgstr "Form.io: Verifique e registre novas versões (tags GitHub)"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_default_asset_css
+msgid "Formio Asset CSS"
+msgstr ""
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_builder
+msgid "Formio Builder"
+msgstr "Construtor Form.io"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_builder_js_options
+msgid "Formio Builder JavaScript Options"
+msgstr ""
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_builder_translation
+msgid "Formio Builder Translation"
+msgstr "Tradução do Formio Builder"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_form
+msgid "Formio Form"
+msgstr "Formulário Form.io"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_res_model
+msgid "Formio Resource Model"
+msgstr "Modelo de Recursos Formio"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__formio_version_id
+msgid "Formio Version"
+msgstr "Versão Formio"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_asset
+msgid "Formio Version Asset"
+msgstr "Ativo de versão do Formio"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_github_checker_wizard
+msgid "Formio Version GitHub Checker Wizard"
+msgstr "Assistente do Verificador de GitHub da versão do Formio"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_github_tag
+msgid "Formio Version GitHub Tag"
+msgstr "Tag GitHub da versão do Formio"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_version_github_tag_available
+msgid "Formio Version GitHub Tag Available"
+msgstr "Tag do GitHub da versão do Formio disponível"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_translation
+msgid "Formio Version Translation"
+msgstr "Tradução da versão do Formio"
+
+#. module: formio
+#: model:ir.model,name:formio.model_formio_translation_source
+msgid "Formio Version Translation Source"
+msgstr "Fonte de tradução da versão do Formio"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_form
+#: model:ir.model.fields,field_description:formio.field_formio_builder__forms
+#: model:ir.ui.menu,name:formio.menu_formio_form
+#: model_terms:ir.ui.view,arch_db:formio.portal_layout
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_home
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+msgid "Forms"
+msgstr "Formulários"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Forms Permissions"
+msgstr "Permissões de Formulários"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:9
+#, python-format
+msgid "Fullscreen (Exit with ESC)"
+msgstr "Tela Cheia (sair com ESC)"
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Gantt"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "General"
+msgstr "Geral"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__github_tag_ids
+msgid "GitHub Tags"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_res_config_settings__formio_github_personal_access_token
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "GitHub personal access token"
+msgstr "Token de acesso pessoal do GitHub"
+
+#. module: formio
+#: model:ir.ui.menu,name:formio.menu_formio_version_github_tag
+msgid "GitHub releases (tags)"
+msgstr ""
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Graph"
+msgstr "Gráfico"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: formio
+#: selection:formio.builder,public_access_interval_type:0
+#: selection:formio.form,public_access_interval_type:0
+msgid "Hours"
+msgstr "Horas"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__id
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__id
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__id
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__id
+#: model:ir.model.fields,field_description:formio.field_formio_form__id
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__id
+#: model:ir.model.fields,field_description:formio.field_formio_translation__id
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__id
+#: model:ir.model.fields,field_description:formio.field_formio_version__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__id
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__id
+msgid "ID"
+msgstr "Id."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+msgid "ID:"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__name
+#: model:ir.model.fields,help:formio.field_formio_form__name
+msgid "Identifies this specific form. This name can be used in APIs.         Use only ASCII letters, digits, \"-\" or \"_\"."
+msgstr "Identifica este formulário específico. Este nome pode ser usado nas APIs.         Use apenas letras, dígitos ASCII, \"-\" or \"_\"."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_unread
+#: model:ir.model.fields,help:formio.field_formio_form__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_needaction
+#: model:ir.model.fields,help:formio.field_formio_form__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Se marcado novas mensagens solicitarão sua atenção."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_has_error
+#: model:ir.model.fields,help:formio.field_formio_form__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Se marcado, algumas mensagens tem erro de entrega."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Insert a meaningful title here"
+msgstr "Insira um título significativo"
+
+#. module: formio
+#: selection:formio.version.github.tag,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Installed"
+msgstr "Instalado"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__installed_version_ids
+msgid "Installed Versions"
+msgstr "Versões Instaladas"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__install_date
+msgid "Installed on"
+msgstr "Instalado em"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Integration"
+msgstr "Integração"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__invitation_mail_template_id
+msgid "Invitation Mail"
+msgstr "E-mail de convite"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_is_follower
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_is_follower
+msgid "Is Follower"
+msgstr "É um seguidor"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "JS Options"
+msgstr "Opções JS"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__schema
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "JSON Schema"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version__js_assets
+msgid "Javascript Assets"
+msgstr ""
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Kanban"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__kanban_group_state
+msgid "Kanban Group State"
+msgstr "Estado do Grupo Kanban"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__lang_id
+#: model:ir.model.fields,field_description:formio.field_formio_translation__lang_id
+msgid "Language"
+msgstr "Idioma"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__languages
+#: model:ir.model.fields,field_description:formio.field_formio_form__languages
+msgid "Languages"
+msgstr "Idiomas"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_form____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_res_model____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_translation____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag____last_update
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available____last_update
+msgid "Last Modified on"
+msgstr "Última modificação em"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_form__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__write_uid
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_form__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_checker_wizard__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__write_date
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__formio_version_id
+msgid "Loads the specific Form.io Javascript API/libraries version (sourcecode: \\https://github.com/formio/formio.js)"
+msgstr "Carrega a versão específica da API/bibliotecas Form.io Javascript (sourcecode: \\https://github.com/formio/formio.js)"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_main_attachment_id
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Anexo Principal"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_has_error
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_has_error
+msgid "Message Delivery error"
+msgstr "Erro de entrega de Mensagem"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_ids
+msgid "Messages"
+msgstr "Mensagens"
+
+#. module: formio
+#: selection:formio.builder,public_access_interval_type:0
+#: selection:formio.form,public_access_interval_type:0
+msgid "Minutes"
+msgstr "Minutos"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__res_model_id
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__ir_model_id
+msgid "Model"
+msgstr "Modelo"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__formio_res_model_id
+#: model:ir.model.fields,help:formio.field_formio_builder__res_model_id
+#: model:ir.model.fields,help:formio.field_formio_form__initial_res_model_id
+msgid "Model as resource this form represents or acts on"
+msgstr "Modelar como recurso que este formulário representa ou age sobre"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_res_model__module_dependency
+msgid "Module Dependency"
+msgstr "Dependência do módulo"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "My Form Builders"
+msgstr "Meu Contrutor de Formulários"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "My Forms"
+msgstr "Meus Formuários"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__name
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__name
+#: model:ir.model.fields,field_description:formio.field_formio_form__name
+#: model:ir.model.fields,field_description:formio.field_formio_version__name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__name
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__name
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Name"
+msgstr "Nome"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Prazo final para Próxima Atividade"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_summary
+msgid "Next Activity Summary"
+msgstr "Próximo Sumário de Atividade"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipo da Próxima Atividade"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__nodelete
+msgid "No delete (core)"
+msgstr "Sem exclusão (núcleo)"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Not Portal"
+msgstr "Não é Portal"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Not Wizard"
+msgstr "Não Assistente"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_needaction_counter
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de ações"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_has_error_counter
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_has_error_counter
+msgid "Number of error"
+msgstr "Número do erro"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_needaction_counter
+#: model:ir.model.fields,help:formio.field_formio_form__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Número de mensagens que requer uma ação"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_has_error_counter
+#: model:ir.model.fields,help:formio.field_formio_form__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensagens com erro de entrega"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__message_unread_counter
+#: model:ir.model.fields,help:formio.field_formio_form__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Quantidade de mensagens não lidas."
+
+#. module: formio
+#: selection:formio.builder,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Obsolete"
+msgstr "Obsoleto"
+
+#. module: formio
+#: code:addons/formio/models/formio_builder.py:167
+#, python-format
+msgid "Only one Form Builder with name \"{name}\" can be in state Current."
+msgstr "Apenas um Formulário com nome \"{name}\" pode estar no estado Atual."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Options Template"
+msgstr "Modelo de Opções"
+
+#. module: formio
+#: selection:formio.builder,activity_state:0
+msgid "Overdue"
+msgstr "Vencidos"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__parent_id
+msgid "Parent Builder"
+msgstr "Construtor (Parente)"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__parent_version
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Parent Version"
+msgstr "Versão (Parente)"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:16
+#, python-format
+msgid "Parent version:"
+msgstr "Versão (Parente):"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__partner_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Partner"
+msgstr "Parceiro"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__assigned_partner_id
+#: model:ir.model.fields,help:formio.field_formio_form__submission_partner_id
+msgid "Partner-related data of the user"
+msgstr "Dados do usuário relacionado ao Parceiro"
+
+#. module: formio
+#: selection:formio.form,kanban_group_state:0
+#: selection:formio.form,state:0
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Pending"
+msgstr "Pendente"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Personal access token"
+msgstr "Token de acesso pessoal"
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Pivot"
+msgstr "Pivô"
+
+#. module: formio
+#: selection:formio.builder,activity_state:0
+msgid "Planned"
+msgstr "Planejado"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__portal
+#: model:ir.model.fields,field_description:formio.field_formio_form__portal_share
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Portal"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__portal
+msgid "Portal (Builder)"
+msgstr "Portal (Construtor)"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__portal_submit_done_url
+#: model:ir.model.fields,field_description:formio.field_formio_form__portal_submit_done_url
+msgid "Portal Submit-done URL"
+msgstr "URL de envio do portal concluído"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_translation__property
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__property
+msgid "Property"
+msgstr "Propriedade"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_share
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Public"
+msgstr "Público"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public
+msgid "Public (Builder)"
+msgstr "Público (Construtor)"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access
+msgid "Public Access"
+msgstr "Acesso Público"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Public Access Expire"
+msgstr "Expiração de acesso público"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access_date_from
+msgid "Public Access From"
+msgstr "Acesso Público de"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public_access_interval_number
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access_interval_number
+msgid "Public Access Interval Number"
+msgstr "Número do intervalo de acesso público"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public_access_interval_type
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_access_interval_type
+msgid "Public Access Interval Type"
+msgstr "Tipo de intervalo de acesso público"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__public_create
+msgid "Public Created"
+msgstr "Publicada"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__public_submit_done_url
+msgid "Public Submit-done URL"
+msgstr "URL de envio público feito"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__public_access_interval_number
+msgid "Public access to submitted Form shall be rejected after expiration of the configured time interval."
+msgstr "O acesso público ao Formulário enviado será rejeitado após o término do intervalo de tempo configurado."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Publish"
+msgstr "Publicar"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Publish on Portal"
+msgstr "Publicar no Portal"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Publish to Public"
+msgstr "Publicar para o público"
+
+#. module: formio
+#: selection:ir.ui.view,type:0
+msgid "QWeb"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_name
+msgid "Record  Name"
+msgstr "Nome do Registro"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_id
+msgid "Record ID"
+msgstr "ID do Registro"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_id
+msgid "Record ID #1"
+msgstr "Registro ID #1"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Redirect After Submit"
+msgstr "Redirecionar após enviar"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Redirect URL"
+msgstr "URL de redirecionamento"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_checker_wizard
+msgid "Register Available Versions"
+msgstr "Registre as versões disponíveis"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_act_window_url
+msgid "Res Act Window Url"
+msgstr "URL da janela de ação de Recurso"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__res_model
+msgid "Res Model"
+msgstr "Modelo RES"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_form
+msgid "Reset (to download and install again)"
+msgstr "Redefinir (para baixar e instalar novamente)"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Resource"
+msgstr "Recurso"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__formio_res_model_id
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_model_id
+msgid "Resource Model"
+msgstr "Modelo de Recurso"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_model_id
+msgid "Resource Model #1"
+msgstr "Modelo de Recursos #1"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_model
+msgid "Resource Model Name"
+msgstr "Nome do Modelo de Recurso"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_model
+msgid "Resource Model Name #1"
+msgstr "Nome do Modelo de Recurso #1"
+
+#. module: formio
+#: model:ir.ui.menu,name:formio.menu_formio_res_model
+msgid "Resource Models"
+msgstr "Modelos de Recursos"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_model_name
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Resource Name"
+msgstr "Nome do Recurso"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__initial_res_model_name
+msgid "Resource Name #1"
+msgstr "Nome do Recurso #1"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__res_partner_id
+msgid "Resource Partner"
+msgstr "Parceiro de Recursos"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+msgid "Resource Type"
+msgstr "Tipo de Recurso"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_tree
+msgid "Resource Type #1"
+msgstr "Tipo de Recurso #1"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__activity_user_id
+msgid "Responsible User"
+msgstr "Usuário Responsável"
+
+#. module: formio
+#: selection:ir.ui.view,type:0
+msgid "Search"
+msgstr "Pesquisar"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Select Form.io JS Options"
+msgstr "Selecione as opções de Form.io JS"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "Select a default Form Builder JavaScript Options Template.<br/>\n"
+"                            It's contents, the Form Builder JavaScript Options, shall be show below."
+msgstr "Selecione um modelo padrão de opções de JavaScript do criador de formulários.<br/>\n"
+"                            Seu conteúdo, as opções JavaScript do Form Builder, será mostrado a seguir."
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Send Invitation Mail"
+msgstr "Enviar e-mail de convite"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__sequence
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__sequence
+msgid "Sequence"
+msgstr "Seqüência"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_config_settings
+#: model:ir.ui.menu,name:formio.menu_formio_config_settings
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Settings"
+msgstr "Configurações"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_share
+msgid "Share form in public? (with access expiration check)."
+msgstr "Compartilhar formulário em público? (com verificação de expiração de acesso)."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_id
+msgid "Show Form ID"
+msgstr "Mostrar ID do Formulário"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_id
+msgid "Show Form ID in the Form header."
+msgstr "Mostre o ID do formulário no cabeçalho do formulário."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_state
+msgid "Show Form State"
+msgstr "Mostrar estado do formulário"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_title
+msgid "Show Form Title"
+msgstr "Mostrar título do formulário"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_title
+msgid "Show Form Title in the Form header."
+msgstr "Mostre o título do formulário no cabeçalho do formulário."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_uuid
+msgid "Show Form UUID"
+msgstr "Mostrar UUID do Formulário"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_uuid
+msgid "Show Form UUID in the Form."
+msgstr "Mostrar UUID do formulário no formulário."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Show ID"
+msgstr "Mostrar ID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_state
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Show State"
+msgstr "Mostrar Estado"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_title
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Show Title"
+msgstr "Mostrar Título"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_uuid
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Show UUID"
+msgstr "Mostrar UUID"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__show_form_user_metadata
+#: model:ir.model.fields,field_description:formio.field_formio_form__show_user_metadata
+msgid "Show User Metadata"
+msgstr "Mostrar metadados do usuário"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_user_metadata
+msgid "Show submission and assigned user metadata in the Form header."
+msgstr "Mostra o envio e os metadados do usuário atribuídos no cabeçalho do formulário."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__show_form_state
+msgid "Show the state in the Form header."
+msgstr "Mostre o estado no cabeçalho do formulário."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__source
+#: model:ir.model.fields,field_description:formio.field_formio_translation__source_id
+#: model:ir.model.fields,field_description:formio.field_formio_translation_source__source
+msgid "Source Term"
+msgstr "Termo da Origem"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__state
+#: model:ir.model.fields,field_description:formio.field_formio_form__state
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__state
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "State"
+msgstr "Estado"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:24
+#: code:addons/formio/static/src/xml/formio.xml:27
+#: code:addons/formio/static/src/xml/formio.xml:30
+#: code:addons/formio/static/src/xml/formio.xml:33
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_kanban
+#, python-format
+msgid "State:"
+msgstr "Estado:"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr "Status baseado em atividades\n"
+"Atrasado: Data definida já passou\n"
+"Hoje: Data de atividade é hoje\n"
+"Planejado: Atividades futuras."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_date
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Submission Date"
+msgstr "Data do Envio"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_partner_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Submission Partner"
+msgstr "Parceiro do Envio"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_partner_name
+msgid "Submission Partner Name"
+msgstr "Nome do Parceiro de Envio"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__submission_user_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_form
+msgid "Submission User"
+msgstr "Usuário do Envio"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Submission date"
+msgstr "Data do Envio"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "Submit a Form"
+msgstr "Formulário de Envio"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__public_access
+msgid "The Public Access check. Computed public access by checking whether (field) Public Access From has been expired."
+msgstr "A verificação de acesso público. Acesso público computado verificando se (campo) Acesso público de expirou."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__title
+msgid "The form title in the current language"
+msgstr "O título do formulário no idioma atual"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+msgid "There are no Forms."
+msgstr "Não há formulários."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__invitation_mail_template_id
+msgid "This e-mail template will be sent on user assignment. Leave empty to send nothing."
+msgstr "Este modelo de email será enviado na atribuição do usuário. Deixe em branco para não enviar nada."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__title
+#: model:ir.model.fields,field_description:formio.field_formio_form__title
+#: model_terms:ir.ui.view,arch_db:formio.portal_my_formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_form_search
+msgid "Title"
+msgstr "Título"
+
+#. module: formio
+#: selection:formio.builder,activity_state:0
+msgid "Today"
+msgstr "Hoje"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_translation__value
+msgid "Translated Value"
+msgstr "Valor Traduzido"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_form
+msgid "Translation"
+msgstr "Tradução"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_source_form
+msgid "Translation Source"
+msgstr "Fonte da Tradução"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_translation_source
+#: model:ir.ui.menu,name:formio.menu_formio_translation_source
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_source_tree
+msgid "Translation Sources"
+msgstr "Fontes de Tradução"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_translation__value
+msgid "Translation Value"
+msgstr "Texto traduzido"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_translation
+#: model:ir.model.fields,field_description:formio.field_formio_builder__translations
+#: model:ir.model.fields,field_description:formio.field_formio_version__translations
+#: model:ir.ui.menu,name:formio.menu_formio_translation
+#: model:ir.ui.menu,name:formio.menu_formio_translation_root
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_translation_tree
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_form
+msgid "Translations"
+msgstr "Traduções"
+
+#. module: formio
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Tree"
+msgstr "Visão em árvore"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_default_asset_css__url
+msgid "URL"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__uuid
+#: model:ir.model.fields,field_description:formio.field_formio_form__uuid
+msgid "UUID"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_unread
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_unread
+msgid "Unread Messages"
+msgstr "Mensagens não lidas"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__message_unread_counter
+#: model:ir.model.fields,field_description:formio.field_formio_form__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Contador de Mensagens Não Lidas"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_form__url
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__url
+msgid "Url"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "Use ASCII letters, digits (0-9), - or _"
+msgstr "Use letras, dígitos (0-9), - ou _ (sem espaço entre eles)"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__sequence
+msgid "Usefull when storing and listing forms in an ordered way"
+msgstr "Útil ao armazenar e listar formulários de forma ordenada"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__allow_force_update_state_group_ids
+msgid "User groups allowed to manually force an update of the Form state.If no groups are specified it's allowed for every user."
+msgstr "Os grupos de usuários têm permissão para forçar manualmente uma atualização do formulário. Se nenhum grupo for especificado, é permitido para todos os usuários."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_form__submission_user_id
+msgid "User who submitted the form."
+msgstr "Usuário que enviou o formulário."
+
+#. module: formio
+#: model:res.groups,name:formio.group_formio_user_all_forms
+msgid "User: All forms"
+msgstr "Usuário: Todos os formulários"
+
+#. module: formio
+#: model:res.groups,name:formio.group_formio_user
+msgid "User: Assigned forms"
+msgstr "Usuário: Formulários atribuídos"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder_js_options__value
+msgid "Value (JSON)"
+msgstr "Valor (JSON)"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__version
+#: model:ir.model.fields,field_description:formio.field_formio_version_asset__version_id
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_res_model_tree
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_tree
+msgid "Version"
+msgstr "Versão"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag_available__version_checker_wizard_id
+msgid "Version Checker Wizard"
+msgstr "Assistente de verificação de versão"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__version_comment
+msgid "Version Comment"
+msgstr "Versão Comentário"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_version_github_tag_search
+msgid "Version GitHub tags"
+msgstr "Tags de versão do GitHub"
+
+#. module: formio
+#. openerp-web
+#: code:addons/formio/static/src/xml/formio.xml:12
+#, python-format
+msgid "Version:"
+msgstr "Versão:"
+
+#. module: formio
+#: model:ir.actions.act_window,name:formio.action_formio_res_model
+#: model:ir.actions.act_window,name:formio.action_formio_version
+#: model:ir.ui.menu,name:formio.menu_formio_version
+#: model:ir.ui.menu,name:formio.menu_formio_version_root
+msgid "Versions"
+msgstr "Versões"
+
+#. module: formio
+#: code:addons/formio/wizard/formio_version_github_checker_wizard.py:51
+#: model:ir.actions.act_window,name:formio.action_formio_version_github_tag
+#, python-format
+msgid "Versions GitHub tags"
+msgstr "Tags de versões do GitHub"
+
+#. module: formio
+#: model:ir.model,name:formio.model_ir_ui_view
+msgid "View"
+msgstr "Visão"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_ir_actions_act_window_view__view_mode
+#: model:ir.model.fields,field_description:formio.field_ir_ui_view__type
+msgid "View Type"
+msgstr "Tipo de Visão"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__view_as_html
+msgid "View as HTML"
+msgstr "Ver como HTML"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__view_as_html
+msgid "View submission as a HTML view instead of disabled webform."
+msgstr "Veja o envio como uma exibição HTML em vez de um formulário da web desabilitado."
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__website_message_ids
+#: model:ir.model.fields,field_description:formio.field_formio_form__website_message_ids
+msgid "Website Messages"
+msgstr "Mensagens do Site"
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_builder__website_message_ids
+#: model:ir.model.fields,help:formio.field_formio_form__website_message_ids
+msgid "Website communication history"
+msgstr "Histórico de Comunicação do Site"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "When adding a new Form Builder, use this Form.io client/library version."
+msgstr "Ao adicionar um novo Form Builder, use esta versão cliente/biblioteca Form.io"
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_builder__wizard
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_search
+msgid "Wizard"
+msgstr "Assistente"
+
+#. module: formio
+#: code:addons/formio/models/formio_builder.py:320
+#, python-format
+msgid "Write comment about version %s ..."
+msgstr "Escreva um comentário sobre a versão %s ..."
+
+#. module: formio
+#: model:ir.model.fields,help:formio.field_formio_default_asset_css__attachment_type
+#: model:ir.model.fields,help:formio.field_formio_version_asset__attachment_type
+msgid "You can either upload a file from your computer or copy/paste an internet link to your file."
+msgstr "Você pode enviar um arquivo diretamente de seu computador ou dispositivo ou pode copiar e colar o link para seu arquivo na internet."
+
+#. module: formio
+#: code:addons/formio/models/formio_form.py:321
+#, python-format
+msgid "You're not allowed to (force) update the Form into Cancel state."
+msgstr "Você não tem permissão para (forçar) a atualização do formulário para o estado Cancelar."
+
+#. module: formio
+#: code:addons/formio/models/formio_form.py:314
+#, python-format
+msgid "You're not allowed to (force) update the Form into Complete state."
+msgstr "Você não tem permissão para (forçar) a atualização do formulário para o estado completo."
+
+#. module: formio
+#: code:addons/formio/models/formio_form.py:300
+#, python-format
+msgid "You're not allowed to (force) update the Form into Draft state."
+msgstr "Você não tem permissão para (forçar) a atualização do formulário para o estado Rascunho."
+
+#. module: formio
+#: model:mail.template,subject:formio.mail_invitation_internal_user
+#: model:mail.template,subject:formio.mail_invitation_portal_user
+msgid "[Form] ${object.title}"
+msgstr ""
+
+#. module: formio
+#: model:ir.model.fields,field_description:formio.field_formio_version_github_tag__version_name
+msgid "_compute_fields"
+msgstr ""
+
+#. module: formio
+#: selection:formio.version.asset,type:0
+msgid "css"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "https://github.com/formio/formio.js/blob/master/src/components/file/editForm/File.edit.file.js"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "https://github.com/formio/formio.js/releases"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+msgid "is not required, but it can get a higher rate limit.\n"
+"                                        This prevents timeouts and authorization errors."
+msgstr "não é obrigatório, mas pode obter um limite de taxa mais alto.\n"
+"                                        Isso evita tempos limite e erros de autorização."
+
+#. module: formio
+#: selection:formio.version.asset,type:0
+msgid "js"
+msgstr ""
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "select component rendering error in viewAsHtml model #1545"
+msgstr "selecionar erro de renderização de componente no modelo viewAsHtml #1545"
+
+#. module: formio
+#: model_terms:ir.ui.view,arch_db:formio.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:formio.view_formio_builder_form
+msgid "{\n"
+"  'editForm': {\n"
+"    'file': [\n"
+"      {\n"
+"        'key': 'file',\n"
+"        'components': [\n"
+"          {'key': 'webcam', 'defaultValue': True},\n"
+"          {'key': 'storage', 'defaultValue': 'base64'}\n"
+"        ]\n"
+"      }\n"
+"    ]\n"
+"  }\n"
+"}"
+msgstr ""
+
+#. module: formio
+#: code:addons/formio/models/formio_builder.py:247
+#, python-format
+msgid "{title} (state: {state} - version: {version})"
+msgstr "{title} (state: {state} - versão: {version})"

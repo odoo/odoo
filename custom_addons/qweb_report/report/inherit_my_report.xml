@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+ <data>
+        <template id="report_sale_inherit" inherit_id="qweb_report.report_sale_purchase_a4_portrait_inherit">
+	    <!-- Finds the first table with as class table table-condensed and gives the ability to modify it
+		 This will replace everything withing tr (including tr)-->
+	    <xpath expr="//table//thead//tr" position="replace">
+                    <tr style="background-color:lightgray; text-align:20px; font-size:25px;">
+                        <th>Sale Order No</th>
+						<th>Customer Name</th>
+						<th>Sales Person</th>
+						<th>Order Date</th>
+						<th>Status Order</th>
+						<th>Total Bill</th>
+                    </tr>
+	    </xpath>
+	    <!-- <xpath expr="//tbody[@class='sale_tbody']//tr//td[4]" position="replace">
+	    </xpath>
+	    <xpath expr="//tbody[@class='sale_tbody']//tr//td[3]" position="replace">
+	    </xpath>
+	    <xpath expr="//tbody[@class='sale_tbody']//tr//td[2]" position="replace">
+	    </xpath> -->
+        </template>
+    </data>
+</odoo>

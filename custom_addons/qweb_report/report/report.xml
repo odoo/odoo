@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_sale_a4_portrait_customer" model="ir.actions.report">
+            <field name="name">Sale a4 portrait customer</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">qweb_report.report_sale_purchase_a4_portrait</field>
+            <field name="report_file">qweb_report.report_sale_purchase_a4_portrait</field>
+            <field name="paperformat_id" ref="qweb_report.paperformat_a4_portrait" />
+            <field name="print_report_name">(object.name)</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_sale_a4_portrait_customer_inherit" model="ir.actions.report">
+            <field name="name">Sale a4 portrait customer inherit</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">qweb_report.report_sale_purchase_a4_portrait_inherit</field>
+            <field name="report_file">qweb_report.report_sale_purchase_a4_portrait_inherit</field>
+            <field name="paperformat_id" ref="qweb_report.paperformat_a4_portrait" />
+            <field name="print_report_name">(object.name)</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_sale_a4_portrait_both" model="ir.actions.report">
+            <field name="name">Sale customer supplier</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">qweb_report.report_sale_purchase_a4_portrait_both</field>
+            <field name="report_file">qweb_report.report_sale_purchase_a4_portrait_both</field>
+            <field name="paperformat_id" ref="qweb_report.paperformat_a4_portrait" />
+            <field name="print_report_name">'order Customer and Supplier - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_purchase_a4_portrait" model="ir.actions.report">
+            <field name="name">Purchase a4 portrait</field>
+            <field name="model">purchase.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">qweb_report.report_purchase_a4_portrait</field>
+            <field name="report_file">qweb_report.report_purchase_a4_portrait</field>
+            <field name="paperformat_id" ref="qweb_report.paperformat_a4_portrait" />
+            <field name="print_report_name">(object.name)</field>
+            <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_product_stock_inventory_wizard_action" model="ir.actions.report">
+            <field name="name">Stock/Inventory Product</field>
+            <field name="model">stock.inventory</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">qweb_report.report_product_stock_inventory_wizard</field>
+            <field name="report_file">qweb_report.report_product_stock_inventory_wizard</field>
+            <field name="paperformat_id" ref="qweb_report.paperformat_a4_portrait" />
+            <field name="print_report_name">'order Customer and Supplier '</field>
+            <field name="binding_model_id" ref="stock.model_stock_inventory"/>
+            <field name="binding_type">report</field>
+        </record>
+
+<!--        <record id="action_report_course_a4_landscape" model="ir.actions.report">-->
+<!--            <field name="name">course a4 landscape</field>-->
+<!--            <field name="model">school.course</field>-->
+<!--            <field name="report_type">qweb-pdf</field>-->
+<!--            <field name="report_name">school_crons.report_course_a4_landscape</field>-->
+<!--            <field name="report_file">school_crons.report_course_a4_landscape</field>-->
+<!--            <field name="paperformat_id" ref="school_crons.paperformat_a4_landscape" />-->
+<!--            <field name="print_report_name">(object.name)</field>-->
+<!--            <field name="binding_model_id" ref="model_school_course"/>-->
+<!--            <field name="binding_type">report</field>-->
+<!--        </record>-->
+
+    </data>
+</odoo>

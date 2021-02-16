@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <template id="assets_backend_formio_builder" name="formio_builder assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/css" href="/formio/static/src/css/formio_builder.css"/>
+            <script type="text/javascript" src="/formio/static/src/js/views/formio_builder_view.js"></script>
+            <script type="text/javascript" src="/formio/static/src/js/views/formio_builder_controller.js"></script>
+            <script type="text/javascript" src="/formio/static/src/js/views/formio_builder_renderer.js"></script>
+        </xpath>
+    </template>
+
+    <template id="formio_builder_embed" name="Form.io Builder - Embed">
+        &lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+                <t t-foreach="formio_css_assets" t-as="css">
+                    <link rel="stylesheet" type="text/css" t-att-href="css.url"/>
+                </t>
+                <t t-foreach="formio_js_assets" t-as="js">
+                    <script type="text/javascript" t-att-src="js.url"></script>
+                </t>
+                <link rel="stylesheet" href="/formio/static/src/css/formio_builder_embed.css"/>
+                
+                <!-- Odoo JS dependencies could cause clashes with Form.io JS -->
+                <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+                <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
+                <script type="text/javascript" src="/formio/static/src/js/odoo.jsonrpc.js"/>
+                <script type="text/javascript" src="/formio/static/src/js/builder/app.js"/>
+            </head>
+            <body>
+                <t t-if="len(languages) > 1">
+                    <div class="formio_languages">
+                        <t t-foreach="languages" t-as="lang">
+                            <button class="btn btn-sm btn-default" t-attf-onclick="setLanguage('{{ lang.formio_ietf_code }}')"><span t-field="lang.name"/></button>
+                        </t>
+                    </div>
+                </t>
+                <!-- Form shall be mounted here -->
+                <div id="formio_builder_app"/>
+                <input type="hidden" id="builder_id" name="builder_id" t-att-value="builder.id"/>
+            </body>
+        </html>
+    </template>
+</odoo>
