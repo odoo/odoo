@@ -51,10 +51,10 @@ def transpile_javascript(url, content):
 
 
 URL_RE = re.compile(r"""
-    /?(?P<module>\w+)    # /module name
-    /([\w/]*/)?static/   # ... /static/
+    /?(?P<module>\S+)    # /module name
+    /([\S/]*/)?static/   # ... /static/
     (?P<type>src|tests)  # src or test file
-    (?P<url>/[\w/]*)     # URL (/...)
+    (?P<url>/[\S/]*)     # URL (/...)
     """, re.VERBOSE)
 
 
@@ -78,6 +78,8 @@ def url_to_module_path(url):
         url = match["url"]
         if url.endswith(('/index.js', '/index')):
             url, _ = url.rsplit('/', 1)
+        if url.endswith('.js'):
+            url = url[:-3]
         if match["type"] == "src":
             return "@%s%s" % (match['module'], url)
         else:
@@ -535,11 +537,12 @@ def relative_path_to_module_path(url, path_rel):
 
 
 ODOO_MODULE_RE = re.compile(r"""
-    \/(\*|\/).*\s+                          # // or /*
-    @odoo-module\s+                         # @odoo-module
-    (alias=(?P<alias>\S+))?\s+              # alias=web.AbstractAction (optional)
-    (default=(?P<default>False|false|0))?   # default=False or false or 0 (optional)
-    """, re.VERBOSE)
+    \s*                                       # some starting space  
+    \/(\*|\/).*\s*                            # // or /*
+    @odoo-module                              # @odoo-module
+    (\s+alias=(?P<alias>\S+))?                # alias=web.AbstractAction (optional)
+    (\s+default=(?P<default>False|false|0))?  # default=False or false or 0 (optional)
+""", re.VERBOSE)
 
 
 def is_odoo_module(content):
