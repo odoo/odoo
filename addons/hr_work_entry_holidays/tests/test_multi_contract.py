@@ -8,14 +8,14 @@ from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHoliday
 
 class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
 
-    def setUp(cls):
-        super(TestWorkEntryHolidaysMultiContract, cls).setUp()
-        cls.leave_type = cls.env['hr.leave.type'].create({
+    def setUp(self):
+        super().setUp()
+        self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'allocation_type': 'no',
             'validity_start': False,
-            'work_entry_type_id': cls.work_entry_type_leave.id
+            'work_entry_type_id': self.work_entry_type_leave.id
         })
 
     def create_leave(self, start, end):

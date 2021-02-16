@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import date, datetime
-from odoo import api, fields, models
-from odoo.addons.resource.models.resource_mixin import timezone_datetime
+from datetime import datetime
+from odoo import fields, models
 from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
 from odoo.osv import expression
 

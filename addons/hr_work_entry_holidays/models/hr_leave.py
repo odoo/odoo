@@ -183,7 +183,7 @@ class HrLeave(models.Model):
         return res
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
-        """ If an employee is currently working full time but requests a leave next month
+        """ If an employee is currently working full time but asks for time off next month
             where he has a new contract working only 3 days/week. This should be taken into
             account when computing the number of days for the leave (2 weeks leave = 6 days).
             Override this method to get number of days according to the contract's calendar

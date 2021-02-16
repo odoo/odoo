@@ -95,4 +95,3 @@ class WorkIntervals(object):
                 enabled = not enabled
 
         return result
-
