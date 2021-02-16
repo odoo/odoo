@@ -8,6 +8,8 @@ class ReportOverdue(models.AbstractModel):
     _name = 'report.account.report_overdue'
 
     def _get_account_move_lines(self, partner_ids):
+        user_company = self.env.user.company_id
+        company_ids = self._context.get('company_ids') or [user_company.id]
         res = {x: [] for x in partner_ids}
         self.env.cr.execute("SELECT m.name AS move_id, l.date, l.name, l.ref, l.date_maturity, l.partner_id, l.blocked, l.amount_currency, l.currency_id, "
             "CASE WHEN at.type = 'receivable' "
@@ -25,7 +27,7 @@ class ReportOverdue(models.AbstractModel):
             "FROM account_move_line l "
             "JOIN account_account_type at ON (l.user_type_id = at.id) "
             "JOIN account_move m ON (l.move_id = m.id) "
-            "WHERE l.partner_id IN %s AND at.type IN ('receivable', 'payable') AND l.full_reconcile_id IS NULL GROUP BY l.date, l.name, l.ref, l.date_maturity, l.partner_id, at.type, l.blocked, l.amount_currency, l.currency_id, l.move_id, m.name", (((fields.date.today(), ) + (tuple(partner_ids),))))
+            "WHERE l.partner_id IN %s AND l.company_id IN %s AND at.type IN ('receivable', 'payable') AND l.full_reconcile_id IS NULL GROUP BY l.date, l.name, l.ref, l.date_maturity, l.partner_id, at.type, l.blocked, l.amount_currency, l.currency_id, l.move_id, m.name", (((fields.date.today(), ) + (tuple(partner_ids),) + (tuple(company_ids),))))
         for row in self.env.cr.dictfetchall():
             res[row.pop('partner_id')].append(row)
         return res
