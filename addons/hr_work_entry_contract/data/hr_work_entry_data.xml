@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Work Entry Type -->
+         <record id="work_entry_type_leave" model="hr.work.entry.type">
+            <field name="name">Generic Time Off</field>
+            <field name="code">LEAVE100</field>
+            <field name="color">3</field>
+            <field name="is_leave">True</field>
+        </record>
+
+        <record id="work_entry_type_compensatory" model="hr.work.entry.type">
+            <field name="name">Compensatory Time Off</field>
+            <field name="code">LEAVE105</field>
+            <field name="color">3</field>
+            <field name="is_leave">True</field>
+        </record>
+
+        <record id="work_entry_type_home_working" model="hr.work.entry.type">
+            <field name="name">Home Working</field>
+            <field name="code">WORK110</field>
+            <field name="color">2</field>
+            <field name="is_leave">True</field>
+        </record>
+
+        <record id="work_entry_type_unpaid_leave" model="hr.work.entry.type">
+            <field name="name">Unpaid</field>
+            <field name="color">5</field>
+            <field name="code">LEAVE90</field>
+            <field name="is_leave">True</field>
+        </record>
+
+        <record id="work_entry_type_sick_leave" model="hr.work.entry.type">
+            <field name="name">Sick Time Off</field>
+            <field name="code">LEAVE110</field>
+            <field name="is_leave">True</field>
+            <field name="color">5</field>
+        </record>
+
+         <record id="work_entry_type_legal_leave" model="hr.work.entry.type">
+            <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="code">LEAVE120</field>
+            <field name="is_leave">True</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="hr_work_entry.work_entry_type_attendance" model="hr.work.entry.type">
+            <field name="is_leave">False</field>
+        </record>
+
+    </data>
+</odoo>
