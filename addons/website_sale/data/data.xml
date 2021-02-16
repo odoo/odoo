@@ -59,9 +59,9 @@ FieldMonetary = model.env['ir.qweb.field.monetary']
 
 website = request.website.get_current_website()
 dynamic_filter = model.env.context.get('dynamic_filter')
-meta_data = model.env.context.get('meta_data')
 limit = model.env.context.get('limit')
 search_domain = model.env.context.get('search_domain')
+meta_data = dynamic_filter._get_filter_meta_data()
 
 domain = [('website_published', '=', True)] + website.website_domain() + (search_domain or [])
 products = ProductProduct.search(domain, limit=limit)
