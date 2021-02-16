@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <!-- Root Menus -->
+
+    <menuitem id="menu_hr_payroll_root" name="Payroll" sequence="45" web_icon="hr_payroll,static/description/icon.png"/>
+
+    <menuitem
+        id="menu_hr_payroll_work_entries_root"
+        name="Work Entries"
+        parent="menu_hr_payroll_root"
+        sequence="60"
+        groups="hr.group_hr_user"/>
+
+    <menuitem
+        id="menu_hr_payroll_configuration"
+        name="Configuration"
+        parent="menu_hr_payroll_root"
+        sequence="100"
+        groups="hr.group_hr_user"/>
+
+    <!-- **** Work Entries **** -->
+    <menuitem
+        id="menu_work_entry"
+        name="Work Entries"
+        action="hr_work_entry.hr_work_entry_action"
+        parent="menu_hr_payroll_work_entries_root"
+        sequence="25"/>
+
+    <menuitem
+        id="menu_work_entry_conflicts"
+        name="Conflicts"
+        action="hr_work_entry.hr_work_entry_action_conflict"
+        parent="menu_hr_payroll_work_entries_root"
+        sequence="50"/>
+
+    <!-- Work entries Configuration -->
+    <menuitem
+        id="menu_hr_work_entry_confirguration"
+        name="Work Entries"
+        parent="menu_hr_payroll_configuration"
+        sequence="50"
+    />
+    <menuitem
+        id="menu_hr_work_entry_type_view"
+        action="hr_work_entry.hr_work_entry_type_action"
+        parent="menu_hr_work_entry_confirguration"
+    />
+    <menuitem
+        id="menu_resource_calendar_view"
+        action="resource.action_resource_calendar_form"
+        parent="menu_hr_work_entry_confirguration"
+    />
+</odoo>

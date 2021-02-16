@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_work_entry_action_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="hr_work_entry.hr_work_entry_action"/>
+    </record>
+
+    <record id="hr_work_entry_action_conflict_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="hr_work_entry.hr_work_entry_action_conflict"/>
+    </record>
+
+    <record id="hr_work_entry_contract_view_calendar_inherit" model="ir.ui.view">
+        <field name="name">hr.work.entry.contract.view.calendar.inherit</field>
+        <field name="model">hr.work.entry</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_view_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="js_class">work_entries_calendar</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_gantt" model="ir.ui.view">
+        <field name="name">hr.work.entry.gantt</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <gantt js_class="work_entries_gantt"
+                   string="Work Entries"
+                   date_start="date_start"
+                   date_stop="date_stop"
+                   color="color"
+                   default_group_by='employee_id'
+                   decoration-secondary="state == 'validated'"
+                   decoration-warning="state == 'conflict'"
+                   scales="day,week,month"
+                   precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half'}"
+                   plan="0"
+                   sample="1">
+                <field name="color" invisible="1"/>
+                <field name="state"/>
+                <field name="employee_id"/>
+                <field name="name"/>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_contract_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.work.entry.contract.view.form.inherit</field>
+        <field name="model">hr.work.entry</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div attrs="{'invisible': [('state', '!=', 'conflict')]}">
+                    <div class="alert alert-warning mb-0" role="alert" attrs="{'invisible': ['!', ('work_entry_type_id', '=', False)]}" name="work_entry_undefined">
+                        This work entry cannot be validated. The work entry type is undefined.
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_work_entry_contract_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.contract.view.form.inherit</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='identification']" position="after">
+                <group>
+                    <field name="is_leave"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
