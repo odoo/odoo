@@ -74,6 +74,25 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             (datetime(2019, 11, 5, 8, 0), datetime(2019, 11, 7, 18, 0)),
         ])
 
+    def test_weekly_interval_2_week_start_sunday(self):
+        lang = self.env['res.lang']._lang_get(self.env.user.lang)
+        lang.week_start = '7'  # Sunday
+
+        self.event._apply_recurrence_values({
+            'interval': 2,
+            'rrule_type': 'weekly',
+            'tu': True,
+            'count': 2,
+            'event_tz': 'UTC',
+        })
+        recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
+        events = recurrence.calendar_event_ids
+        self.assertEventDates(events, [
+            (datetime(2019, 10, 22, 8, 0), datetime(2019, 10, 24, 18, 0)),
+            (datetime(2019, 11, 5, 8, 0), datetime(2019, 11, 7, 18, 0)),
+        ])
+        lang.week_start = '1'  # Monday
+
     def test_weekly_until(self):
         self.event._apply_recurrence_values({
             'rrule_type': 'weekly',
