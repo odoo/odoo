@@ -908,39 +908,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'name': 'partner',
             'email': 'partner@example.com',
         })
-        # channels user/partner
-        self.partner_channel_inbox = self.env['res.partner'].with_context(self._quick_create_ctx).create({
-            'name': 'partner_channel_inbox',
-            'email': 'partner_channel_inbox@example.com',
-        })
-        self.partner_channel_email = self.env['res.partner'].with_context(self._quick_create_ctx).create({
-            'name': 'partner_channel_email',
-            'email': 'partner_channel_email@example.com',
-        })
-        self.user_channel_inbox = self.env['res.users'].with_context(self._quick_create_ctx).create({
-            'name': 'user_channel_inbox',
-            'login': 'user_channel_inbox',
-            'email': 'user_channel_inbox@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
-        })
-        self.user_channel_email = self.env['res.users'].with_context(self._quick_create_ctx).create({
-            'name': 'user_channel_email',
-            'login': 'user_channel_email',
-            'email': 'user_channel_email@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
-        })
-        # channels
-        self.channel_inbox = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
-            'name': 'channel_inbox',
-            'channel_partner_ids': [(4, self.partner_channel_inbox.id), (4, self.user_channel_inbox.partner_id.id)]
-        })
-        self.channel_email = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
-            'name': 'channel_email',
-            'email_send': True,
-            'channel_partner_ids': [(4, self.partner_channel_email.id), (4, self.user_channel_email.partner_id.id)]
-        })
         self.vals = [{
             'datas': base64.b64encode(bytes("attachement content %s" % i, 'utf-8')),
             'name': 'fileText_test%s.txt' % i,
@@ -957,7 +924,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
     def test_complete_message_post(self):
         # aims to cover as much features of message_post as possible
         partner_ids = [self.user_inbox.partner_id.id, self.user_email.partner_id.id, self.partner.id]
-        channel_ids = [self.channel_inbox.id, self.channel_email.id]
         record = self.record.with_user(self.env.user)
         attachements = [  # not linear on number of attachements
             ('attach tuple 1', "attachement tupple content 1"),
@@ -974,7 +940,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 message_type='notification',
                 subtype_xmlid=None,
                 partner_ids=partner_ids,
-                channel_ids=channel_ids,
                 parent_id=False,
                 attachments=attachements,
                 attachment_ids=attachement_ids,

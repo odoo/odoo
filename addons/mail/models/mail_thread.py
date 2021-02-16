@@ -1732,7 +1732,7 @@ class MailThread(models.AbstractModel):
     def message_post(self, *,
                      body='', subject=None, message_type='notification',
                      email_from=None, author_id=None, parent_id=False,
-                     subtype_xmlid=None, subtype_id=False, partner_ids=None, channel_ids=None,
+                     subtype_xmlid=None, subtype_id=False, partner_ids=None,
                      attachments=None, attachment_ids=None,
                      add_sign=True, record_name=False,
                      **kwargs):
@@ -1747,8 +1747,6 @@ class MailThread(models.AbstractModel):
             :param int subtype_id: subtype_id of the message, used mainly use for
                 followers notification mechanism;
             :param list(int) partner_ids: partner_ids to notify in addition to partners
-                computed based on subtype / followers matching;
-            :param list(int) channel_ids: channel_ids to notify in addition to partners
                 computed based on subtype / followers matching;
             :param list(tuple(str,str), tuple(str,str, dict) or int) attachments : list of attachment tuples in the form
                 ``(name,content)`` or ``(name,content, info)``, where content is NOT base64 encoded
@@ -1767,15 +1765,16 @@ class MailThread(models.AbstractModel):
 
         # preliminary value safety check
         partner_ids = set(partner_ids or [])
-        channel_ids = set(channel_ids or [])
         if self._name == 'mail.thread' or not self.id or message_type == 'user_notification':
             raise ValueError(_('Posting a message should be done on a business document. Use message_notify to send a notification to an user.'))
+        if 'channel_ids' in kwargs:
+            raise ValueError(_("Posting a message with channels as listeners is not supported since Odoo 14.3+. Please update code accordingly."))
         if 'model' in msg_kwargs or 'res_id' in msg_kwargs:
             raise ValueError(_("message_post does not support model and res_id parameters anymore. Please call message_post on record."))
         if 'subtype' in kwargs:
             raise ValueError(_("message_post does not support subtype parameter anymore. Please give a valid subtype_id or subtype_xmlid value instead."))
-        if any(not isinstance(pc_id, int) for pc_id in partner_ids | channel_ids):
-            raise ValueError(_('message_post partner_ids and channel_ids must be integer list, not commands.'))
+        if any(not isinstance(pc_id, int) for pc_id in partner_ids):
+            raise ValueError(_('message_post partner_ids and must be integer list, not commands.'))
 
         self = self._fallback_lang() # add lang to context imediatly since it will be usefull in various flows latter.
 
@@ -1826,7 +1825,6 @@ class MailThread(models.AbstractModel):
             'parent_id': parent_id,
             'subtype_id': subtype_id,
             'partner_ids': partner_ids,
-            'channel_ids': channel_ids,
             'add_sign': add_sign,
             'record_name': record_name,
         })
@@ -2051,7 +2049,6 @@ class MailThread(models.AbstractModel):
             for x in ('from', 'to', 'cc', 'canned_response_ids'):
                 create_values.pop(x, None)
             create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
-            create_values['channel_ids'] = [Command.link(cid) for cid in create_values.get('channel_ids', [])]
             create_values_list.append(create_values)
         if 'default_child_ids' in self._context:
             ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
@@ -2088,11 +2085,6 @@ class MailThread(models.AbstractModel):
         if not rdata:
             return False
 
-        cids = msg_vals.get('channel_ids', []) if msg_vals else message.channel_ids.ids
-        channel_ids = [r['id'] for r in rdata['channels'] if r['id'] not in cids]
-        if channel_ids:
-            message.write({'channel_ids': [Command.set(channel_ids)]})
-
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
         if notify_by_email:
             self._notify_record_by_email(message, rdata, msg_vals=msg_vals, **kwargs)
@@ -2103,14 +2095,12 @@ class MailThread(models.AbstractModel):
         """ Notification method: inbox. Do two main things
 
           * create an inbox notification for users;
-          * create channel / message link (channel_ids field of mail.message);
           * send bus notifications;
 
         TDE/XDO TODO: flag rdata directly, with for example r['notif'] = 'ocn_client' and r['needaction']=False
         and correctly override notify_recipients
         """
-        channel_ids = [r['id'] for r in recipients_data['channels']]
-
+        bus_notifications = []
         inbox_pids = [r['id'] for r in recipients_data['partners'] if r['notif'] == 'inbox']
         if inbox_pids:
             notif_create_values = [{
@@ -2121,24 +2111,9 @@ class MailThread(models.AbstractModel):
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
 
-        bus_notifications = []
-        if inbox_pids or channel_ids:
-            message_format_values = False
-            if inbox_pids:
-                message_format_values = message.message_format()[0]
-                for partner_id in inbox_pids:
-                    bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
-            if channel_ids:
-                channels = self.env['mail.channel'].sudo().browse(channel_ids)
-                bus_notifications += channels._channel_message_notifications(message, message_format_values)
-                # Message from mailing channel should not make a notification in Odoo for users
-                # with notification "Handled by Email", but web client should receive the message.
-                # To do so, message is still sent from longpolling, but channel is marked as read
-                # in order to remove notification.
-                for channel in channels.filtered(lambda c: c.email_send):
-                    users = channel.channel_partner_ids.mapped('user_ids')
-                    for user in users.filtered(lambda u: u.notification_type == 'email'):
-                        channel.with_user(user).channel_seen(message.id)
+            message_format_values = message.message_format()[0]
+            for partner_id in inbox_pids:
+                bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
 
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
@@ -2375,7 +2350,6 @@ class MailThread(models.AbstractModel):
         msg_sudo = message.sudo()
         # get values from msg_vals or from message if msg_vals doen't exists
         pids = msg_vals.get('partner_ids', []) if msg_vals else msg_sudo.partner_ids.ids
-        cids = msg_vals.get('channel_ids', []) if msg_vals else msg_sudo.channel_ids.ids
         message_type = msg_vals.get('message_type') if msg_vals else msg_sudo.message_type
         subtype_id = msg_vals.get('subtype_id') if msg_vals else msg_sudo.subtype_id.id
         # is it possible to have record but no subtype_id ?
@@ -2403,33 +2377,6 @@ class MailThread(models.AbstractModel):
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='portal'))
                 else:  # has no user, is therefore customer
                     recipient_data['partners'].append(dict(pdata, notif=notif if notif else 'email', type='customer'))
-
-        # add partner ids in email channels
-        email_cids = [r['id'] for r in recipient_data['channels'] if r['notif'] == 'email']
-        if email_cids:
-            # we are doing a similar search in ocn_client
-            # Could be interesting to make everything in a single query.
-            # ocn_client: (searching all partners linked to channels of type chat).
-            # here      : (searching all partners linked to channels with notif email if email is not the author one)
-            # TDE FIXME: use email_sanitized
-            email_from = msg_vals.get('email_from') or message.email_from
-            email_from = self.env['res.partner']._parse_partner_name(email_from)[1]
-            exept_partner = [r['id'] for r in recipient_data['partners']]
-            if author_id:
-                exept_partner.append(author_id)
-            sql_query = """ select distinct on (p.id) p.id from res_partner p
-                            left join mail_channel_partner mcp on p.id = mcp.partner_id
-                            left join mail_channel c on c.id = mcp.channel_id
-                            left join res_users u on p.id = u.partner_id
-                                where (u.notification_type != 'inbox' or u.id is null)
-                                and (p.email != ANY(%s) or p.email is null)
-                                and c.id = ANY(%s)
-                                and p.id != ANY(%s)"""
-
-            self.env.cr.execute(sql_query, (([email_from], ), (email_cids, ), (exept_partner, )))
-            for partner_id in self._cr.fetchall():
-                # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
-                recipient_data['partners'].append({'id': partner_id[0], 'share': True, 'active': True, 'notif': 'email', 'type': 'channel_email', 'groups': []})
 
         return recipient_data
 

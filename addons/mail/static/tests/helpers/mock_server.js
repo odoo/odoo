@@ -969,15 +969,10 @@ MockServer.include({
                 moderation_status = 'pending_moderation';
             }
         }
-        let channel_ids = [];
-        if (moderation_status === 'accepted') {
-            channel_ids = [[4, channel.id]];
-        }
         const messageId = this._mockMailThreadMessagePost(
             'mail.channel',
             [id],
             Object.assign(kwargs, {
-                channel_ids,
                 message_type,
                 moderation_status,
             }),
