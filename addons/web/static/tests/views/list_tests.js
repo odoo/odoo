@@ -2299,6 +2299,39 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('groupby node with a button with modifiers using a many2one', async function (assert) {
+        assert.expect(5);
+
+        this.data.res_currency.fields.m2o = {string: "Currency M2O", type: "many2one", relation: "bar"};
+        this.data.res_currency.records[0].m2o = 1;
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree expand="1">
+                    <field name="foo"/>
+                    <groupby name="currency_id">
+                        <field name="m2o"/>
+                        <button string="Button 1" type="object" name="button_method" attrs='{"invisible": [("m2o", "=", false)]}'/>
+                    </groupby>
+                </tree>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                return this._super(...arguments);
+            },
+            groupBy: ['currency_id'],
+        });
+
+        assert.containsOnce(list, '.o_group_header:eq(0) button.o_invisible_modifier');
+        assert.containsOnce(list, '.o_group_header:eq(1) button:not(.o_invisible_modifier)');
+
+        assert.verifySteps(['web_read_group', 'read']);
+
+        list.destroy();
+    });
+
     QUnit.test('reload list view with groupby node', async function (assert) {
         assert.expect(2);
 
