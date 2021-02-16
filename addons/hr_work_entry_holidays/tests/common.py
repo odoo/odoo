@@ -75,6 +75,7 @@ class TestWorkEntryHolidaysBase(TestWorkEntryBase):
             'date_generated_to': datetime.strptime('2015-11-15', '%Y-%m-%d'),
         })
 
+    @classmethod
     def create_leave(cls, date_from=None, date_to=None):
         date_from = date_from or Datetime.today()
         date_to = date_to or Datetime.today() + relativedelta(days=1)

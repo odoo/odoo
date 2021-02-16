@@ -8,15 +8,15 @@ from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHoliday
 
 class TestPayslipHolidaysComputation(TestWorkEntryHolidaysBase):
 
-    def setUp(cls):
-        super(TestPayslipHolidaysComputation, cls).setUp()
+    def setUp(self):
+        super().setUp()
 
-        cls.leave_type = cls.env['hr.leave.type'].create({
+        self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
             'time_type': 'leave',
             'allocation_type': 'no',
             'validity_start': False,
-            'work_entry_type_id': cls.work_entry_type_leave.id
+            'work_entry_type_id': self.work_entry_type_leave.id
         })
 
     def test_work_data(self):

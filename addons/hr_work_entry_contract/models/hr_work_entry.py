@@ -4,9 +4,7 @@
 import pytz
 
 from collections import defaultdict
-from contextlib import contextmanager
 from itertools import chain
-from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
