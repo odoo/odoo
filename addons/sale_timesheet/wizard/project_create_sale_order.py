@@ -41,12 +41,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
                             'product_id': default_product.id,
                             'price_unit': default_product.lst_price
                         }) for e in employee_from_timesheet]
-                else:
-                    result['line_ids'] = [
-                        (0, 0, {
-                            'product_id': p.id,
-                            'price_unit': p.lst_price
-                        }) for p in project.task_ids.timesheet_product_id]
         return result
 
     project_id = fields.Many2one('project.project', "Project", domain=[('sale_line_id', '=', False)], help="Project for which we are creating a sales order", required=True)
@@ -54,7 +48,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string="Customer", required=True, help="Customer of the sales order")
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
 
-    pricing_type = fields.Selection(related="project_id.pricing_type")
     sale_order_id = fields.Many2one(
         'sale.order', string="Sales Order",
         domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
@@ -89,7 +82,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
         if not self.line_ids:
             raise UserError(_("At least one line should be filled."))
 
-        if self.pricing_type == 'employee_rate':
+        if self.line_ids.employee_id:
             # all employee having timesheet should be in the wizard map
             timesheet_employees = self.env['account.analytic.line'].search([('task_id', 'in', self.project_id.tasks.ids)]).mapped('employee_id')
             map_employees = self.line_ids.mapped('employee_id')
@@ -138,9 +131,9 @@ class ProjectCreateSalesOrder(models.TransientModel):
         return sale_order
 
     def _make_billable(self, sale_order):
-        if self.pricing_type == 'fixed_rate':
+        if not self.line_ids.employee_id:  # Then we configure the project with pricing type is equal to project rate
             self._make_billable_at_project_rate(sale_order)
-        else:
+        else:  # Then we configure the project with pricing type is equal to employee rate
             self._make_billable_at_employee_rate(sale_order)
 
     def _make_billable_at_project_rate(self, sale_order):
