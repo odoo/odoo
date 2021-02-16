@@ -1670,7 +1670,24 @@ class Meeting(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'date' in groupby:
             raise UserError(_('Group by date is not supported, use the calendar view instead.'))
-        return super(Meeting, self.with_context(virtual_id=False)).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        read_group_result = super(Meeting, self.with_context(virtual_id=False)).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        recurrent_events = self.env['calendar.event'].search([('recurrency', '=', True)] + domain)
+        if recurrent_events:
+            fname = groupby[0]
+            res_per_fname = {(res[fname][0] if fname == 'user_id' else res[fname]): res for res in read_group_result}
+            counted_once = []
+            for recurrent_event in recurrent_events:
+                event_id = recurrent_event.id.split('-')[0]
+                if event_id not in counted_once:
+                    # skip the first recurrence of the event since it has already been counted by `read_group`
+                    counted_once.append(event_id)
+                else:
+                    fname_value = getattr(recurrent_event, fname)
+                    if fname == 'user_id':
+                        fname_value = fname_value.id
+                    res_per_fname[fname_value][fname + '_count'] += 1
+                    res_per_fname[fname_value]['duration'] += recurrent_event.duration
+        return read_group_result
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
