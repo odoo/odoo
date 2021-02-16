@@ -1120,9 +1120,17 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
-  QUnit.test('ask for confirmation when leaving a "dirty" view', async function (assert) {
+  QUnit.test('save when leaving a "dirty" view', async function (assert) {
     assert.expect(4);
-    const webClient = await createWebClient({ testConfig });
+    const mockRPC = async (route, { args, method, model }) => {
+        if (model === 'partner' && method === 'write') {
+            assert.deepEqual(args, [
+                [1],
+                { foo: 'pinkypie', },
+            ]);
+        }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
     await doAction(webClient, 4);
     // open record in form view
     await testUtils.dom.click($(webClient.el).find(".o_kanban_record:first")[0]);
@@ -1133,21 +1141,7 @@ QUnit.module("ActionManager", (hooks) => {
     // go back to kanban view
     await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:first a"));
     await legacyExtraNextTick();
-    assert.strictEqual(
-      $(".modal .modal-body").text(),
-      "The record has been modified, your changes will be discarded. Do you want to proceed?",
-      "should display a modal dialog to confirm discard action"
-    );
-    // cancel
-    await testUtils.dom.click($(".modal .modal-footer button.btn-secondary"));
-    await legacyExtraNextTick();
-    assert.containsOnce(webClient, ".o_form_view", "should still be in form view");
-    // go back again to kanban view
-    await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:first a"));
-    await legacyExtraNextTick();
-    // confirm discard
-    await testUtils.dom.click($(".modal .modal-footer button.btn-primary"));
-    await legacyExtraNextTick();
+    assert.containsNone(document.body, '.modal', "should not display a modal dialog");
     assert.containsNone(webClient, ".o_form_view", "should no longer be in form view");
     assert.containsOnce(webClient, ".o_kanban_view", "should be in kanban view");
     webClient.destroy();
@@ -1577,6 +1571,7 @@ QUnit.module("ActionManager", (hooks) => {
     testConfig.serverData.models.partner.fields.bar.default = 1;
     testConfig.serverData.views["partner,false,form"] = `
       <form>
+        <field name="display_name"/>
         <field name="foo"/>
         <field name="bar" readonly="1"/>
       </form>`;
@@ -1603,25 +1598,23 @@ QUnit.module("ActionManager", (hooks) => {
       "PartnersNew"
     );
     // set form view dirty and open m2o record
+    await testUtils.fields.editInput($(webClient.el).find('input[name="display_name"]'), 'test');
     await testUtils.fields.editInput($(webClient.el).find("input[name=foo]"), "val");
     await testUtils.dom.click($(webClient.el).find(".o_form_uri:contains(First record)"));
-    await legacyExtraNextTick();
-    assert.containsOnce(document.body, ".modal"); // confirm discard dialog
-    // confirm discard changes
-    await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
     await legacyExtraNextTick();
     assert.containsOnce(webClient, ".o_form_view.o_form_readonly");
     assert.strictEqual(
       $(webClient.el).find(".o_control_panel .breadcrumb-item").text(),
-      "PartnersNewFirst record"
+      "PartnerstestFirst record"
     );
-    // go back to New using the breadcrumbs
+    // go back to test using the breadcrumbs
     await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:nth(1) a"));
     await legacyExtraNextTick();
-    assert.containsOnce(webClient, ".o_form_view.o_form_editable");
+    // should be readonly and so saved
+    assert.containsOnce(webClient, '.o_form_view.o_form_readonly');
     assert.strictEqual(
       $(webClient.el).find(".o_control_panel .breadcrumb-item").text(),
-      "PartnersNew"
+      "Partnerstest"
     );
     assert.verifySteps([
       "/wowl/load_menus",
@@ -1630,9 +1623,10 @@ QUnit.module("ActionManager", (hooks) => {
       "/web/dataset/search_read",
       "onchange",
       "get_formview_action",
+      "create", // FIXME: to check with mcm
       "load_views",
       "read",
-      "onchange",
+      "read",
     ]);
     webClient.destroy();
   });
@@ -1958,10 +1952,16 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
   });
   QUnit.test(
-    "Call twice clearUncommittedChanges in a row does not display twice the discard warning",
+    "Call twice clearUncommittedChanges in a row does not save twice",
     async function (assert) {
-      assert.expect(4);
-      const webClient = await createWebClient({ testConfig });
+      assert.expect(5);
+      let writeCalls = 0;
+      const mockRPC = async (route, { method }) => {
+          if (method === 'write') {
+              writeCalls += 1;
+          }
+      };
+      const webClient = await createWebClient({ testConfig, mockRPC });
       // execute an action and edit existing record
       await doAction(webClient, 3);
       await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -1973,13 +1973,12 @@ QUnit.module("ActionManager", (hooks) => {
       clearUncommittedChanges(webClient.env);
       await testUtils.nextTick();
       await legacyExtraNextTick();
-      assert.containsOnce(document.body, ".modal"); // confirm discard dialog
-      // confirm discard changes
-      await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
+      assert.containsNone(document.body, ".modal");
       clearUncommittedChanges(webClient.env);
       await testUtils.nextTick();
       await legacyExtraNextTick();
       assert.containsNone(document.body, ".modal");
+      assert.strictEqual(writeCalls, 1);
       webClient.destroy();
     }
   );
