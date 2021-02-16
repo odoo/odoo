@@ -914,7 +914,7 @@ var ViewEditor = Widget.extend({
      */
     _onSaveClick: function (ev) {
         const restore = dom.addButtonLoadingEffect(ev.currentTarget);
-        this._saveResources().guardedCatch(restore);
+        this._saveResources().then(restore).guardedCatch(restore);
     },
     /**
      * Called when the user wants to switch from xml to scss or vice-versa ->
