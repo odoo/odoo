@@ -1320,6 +1320,7 @@
             <field name="name">Portugal</field>
             <field name="code">pt</field>
             <field file="base/static/img/country_flags/pt.png" name="image" type="base64" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'"/>
             <field name="currency_id" ref="EUR" />
             <field eval="351" name="phone_code" />
             <field name="vat_label">VAT</field>
