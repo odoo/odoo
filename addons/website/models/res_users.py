@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, registry, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -73,9 +73,10 @@ class ResUsers(models.Model):
         to update them (have same partner_id), and move sub records to the main
         visitor (user one). Purpose is to try to keep a main visitor with as
         much sub-records (tracked pages, leads, ...) as possible. """
-        uid = super(ResUsers, cls).authenticate(db, login, password, user_agent_env)
-        if uid:
-            with cls.pool.cursor() as cr:
+
+        def process(cr):
+            uid = super(ResUsers, cls).authenticate(db, login, password, user_agent_env)
+            if uid:
                 env = api.Environment(cr, uid, {})
                 visitor_sudo = env['website.visitor']._get_visitor_from_request()
                 if visitor_sudo:
@@ -97,4 +98,10 @@ class ResUsers(models.Model):
                                 user_partner,
                                 update_values={'partner_id': user_partner.id})
                         visitor_sudo._update_visitor_last_visit()
-        return uid
+            return uid
+
+        if request and request.db and db == request.db:
+            return process(request.cr)
+        else:
+            with registry(db).cursor() as cr:
+                return process(cr)

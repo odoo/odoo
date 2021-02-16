@@ -22,7 +22,7 @@ import pytz
 from lxml import etree
 from lxml.builder import E
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, registry, SUPERUSER_ID, _
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
@@ -673,29 +673,28 @@ class Users(models.Model):
         return self._order
 
     @classmethod
-    def _login(cls, db, login, password, user_agent_env):
+    def _login(cls, cr, login, password, user_agent_env):
         if not password:
             raise AccessDenied()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
-            with cls.pool.cursor() as cr:
-                self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
-                with self._assert_can_auth():
-                    user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
-                    if not user:
-                        raise AccessDenied()
-                    user = user.with_user(user)
-                    user._check_credentials(password, user_agent_env)
-                    tz = request.httprequest.cookies.get('tz') if request else None
-                    if tz in pytz.all_timezones and (not user.tz or not user.login_date):
-                        # first login or missing tz -> set tz to browser tz
-                        user.tz = tz
-                    user._update_last_login()
+            self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
+            with self._assert_can_auth():
+                user = self.search(self._get_login_domain(login), order=self._get_login_order(), limit=1)
+                if not user:
+                    raise AccessDenied()
+                user = user.with_user(user)
+                user._check_credentials(password, user_agent_env)
+                tz = request.httprequest.cookies.get('tz') if request else None
+                if tz in pytz.all_timezones and (not user.tz or not user.login_date):
+                    # first login or missing tz -> set tz to browser tz
+                    user.tz = tz
+                user._update_last_login()
         except AccessDenied:
-            _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
+            _logger.info("Login failed for db:%s login:%s from %s", cr.dbname, login, ip)
             raise
 
-        _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
+        _logger.info("Login successful for db:%s login:%s from %s", cr.dbname, login, ip)
 
         return user.id
 
@@ -710,9 +709,10 @@ class Users(models.Model):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = cls._login(db, login, password, user_agent_env=user_agent_env)
-        if user_agent_env and user_agent_env.get('base_location'):
-            with cls.pool.cursor() as cr:
+
+        def process(cr):
+            uid = cls._login(cr, login, password, user_agent_env=user_agent_env)
+            if user_agent_env and user_agent_env.get('base_location'):
                 env = api.Environment(cr, uid, {})
                 if env.user.has_group('base.group_system'):
                     # Successfully logged in as system user!
@@ -724,7 +724,13 @@ class Users(models.Model):
                             ICP.set_param('web.base.url', base)
                     except Exception:
                         _logger.exception("Failed to update web.base.url configuration parameter")
-        return uid
+            return uid
+
+        if request and request.db and db == request.db:
+            return process(request.cr)
+        else:
+            with registry(db).cursor() as cr:
+                return process(cr)
 
     @classmethod
     @tools.ormcache('uid', 'passwd')
