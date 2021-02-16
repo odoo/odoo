@@ -14,7 +14,8 @@
         'mail_client_extension',
     ],
     'data': [
-        'views/crm_mail_client_extension_lead.xml'
+        'views/crm_mail_client_extension_lead.xml',
+        'views/crm_lead_views.xml'
     ],
     'installable': True,
     'application': False,
