@@ -32,6 +32,13 @@ class TestMailGroup(TestMail):
         cls.group_private = Channel.create({
             'name': 'Private',
             'public': 'private'})
+        # Auto-subscribe: group which is not default for user
+        cls.group_auto_subscribe = Channel.create({
+            'name': 'Auto-subscribe',
+            'public': 'groups',
+            'group_public_id': cls.env.ref('base.group_user').id,
+            'group_ids': [[0, 0, {'name': "Auto-subscribe"}]],
+        })
 
     @classmethod
     def tearDownClass(cls):
@@ -138,3 +145,17 @@ class TestMailGroup(TestMail):
             self.assertIn(
                 email['email_to'][0],
                 [formataddr((self.user_employee.name, self.user_employee.email)), formataddr((self.user_portal.name, self.user_portal.email))])
+
+    def test_mail_channel_auto_subscribe(self):
+        # Auto-subscribe users which in access group of mail channel
+        access_group_id = self.group_auto_subscribe.group_ids[0].id
+        new_user = self.env['res.users'].create({
+            'name': 'User for auto-subscribe',
+            'login': 'auto_subscribe',
+        })
+        new_user.write({'in_group_%i' % access_group_id: True})
+        members = self.env['mail.channel.partner'].search([
+            ('channel_id', '=', self.group_auto_subscribe.id),
+            ('partner_id', '=', new_user.partner_id.id),
+        ], limit=1)
+        self.assertEqual(new_user.partner_id, members.partner_id)
