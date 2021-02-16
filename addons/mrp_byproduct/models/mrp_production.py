@@ -28,6 +28,7 @@ class MrpProduction(models.Model):
                 'location_dest_id': production.location_dest_id.id,
                 'operation_id': sub_product.operation_id.id,
                 'production_id': production.id,
+                'warehouse_id': production.location_dest_id.get_warehouse().id,
                 'origin': production.name,
                 'unit_factor': qty1 / (production.product_qty - production.qty_produced),
                 'subproduct_id': sub_product.id
