@@ -3,6 +3,7 @@ odoo.define('base_automation.BaseAutomatioErrorDialogTests', function (require) 
 
     const CrashManager = require('web.CrashManager').CrashManager;
     const session = require('web.session');
+    const makeTestEnvironment = require("web.test_env");
 
     QUnit.module('base_automation', {}, function () {
 
@@ -32,6 +33,7 @@ odoo.define('base_automation.BaseAutomatioErrorDialogTests', function (require) 
             session.is_admin = true;
 
             let crashManager = new CrashManager();
+            crashManager.env = makeTestEnvironment();
             let dialog = crashManager.show_error(error);
 
             await dialog._opened;
@@ -56,6 +58,7 @@ odoo.define('base_automation.BaseAutomatioErrorDialogTests', function (require) 
                 },
             };
             let crashManager = new CrashManager();
+            crashManager.env = makeTestEnvironment();
             let dialog = crashManager.show_error(error);
 
             await dialog._opened;
