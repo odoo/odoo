@@ -11,13 +11,12 @@
                         <field name="project_id" readonly="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="partner_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
-                        <field name="pricing_type" invisible="1"/>
                     </group>
                 </group>
-                <group attrs="{'invisible': [('pricing_type', '!=', 'employee_rate')]}">
-                    <field name="line_ids" nolabel="1" attrs="{'required': [('pricing_type', '=', 'employee_rate')]}">
+                <group>
+                    <field name="line_ids" nolabel="1">
                         <tree editable="bottom">
-                            <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}" attrs="{'column_invisible': [('parent.pricing_type', '=', 'fixed_rate')], 'required': [('parent.pricing_type', '=', 'employee_rate')]}"/>
+                            <field name="employee_id" options="{'no_create_edit': True, 'no_create': True}"/>
                             <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
                             <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <field name="currency_id" invisible="1"/>
