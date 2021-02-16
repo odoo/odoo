@@ -78,6 +78,8 @@ class MassMailCommon(MailCommon, MassMailCase):
 
         cls.email_reply_to = 'MyCompany SomehowAlias <test.alias@test.mycompany.com>'
 
+        cls.env['base'].flush()
+
     @classmethod
     def _create_mailing_list(cls):
         """ Shortcut to create mailing lists. Currently hardcoded, maybe evolve
