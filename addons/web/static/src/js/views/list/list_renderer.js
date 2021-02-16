@@ -1116,6 +1116,12 @@ var ListRenderer = BasicRenderer.extend({
         if (!this._hasContent() && !!this.noContentHelp) {
             this._renderNoContentHelper();
         }
+
+        // display the filters,groups and favorites on top of modal
+        let model = this.el.closest('.modal.show .modal-body');
+        if (model) {
+            model.style.overflow = model.clientHeight < model.firstElementChild.clientHeight ? 'auto' : 'visible';
+        }
     },
     /**
      * Each line or cell can be decorated according to a few simple rules. The

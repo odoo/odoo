@@ -610,6 +610,73 @@ QUnit.module('Views', {
         parent.destroy();
     });
 
+    QUnit.test('display filters on top of modal body', async function (assert) {
+        assert.expect(6);
+
+        let records = [];
+        for(let i=1; i<=20; i++) {
+            records.push({ 'id': i,'name': 'display_name'+i });
+        }
+        this.data.partner.records = records;
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                'partner,false,list':
+                    '<tree string="Partner">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+                'partner,false,search':
+                    '<search>' +
+                        '<field name="foo" filter_domain="[(\'display_name\',\'ilike\',self), (\'foo\',\'ilike\',self)]"/>' +
+                        '<group expand="0" string="Group By">' +
+                            '<filter name="groupby_bar" context="{\'group_by\' : \'bar\'}"/>' +
+                            '<filter name="groupby_bar1" context="{\'group_by\' : \'bar\'}"/>' +
+                            '<filter name="groupby_bar2" context="{\'group_by\' : \'bar\'}"/>' +
+                            '<filter name="groupby_bar3" context="{\'group_by\' : \'bar\'}"/>' +
+                            '<filter name="groupby_bar4" context="{\'group_by\' : \'bar\'}"/>' +
+                        '</group>' +
+                    '</search>',
+            },
+        });
+
+        let dialog;
+        new dialogs.SelectCreateDialog(parent, {
+            res_model: 'partner',
+            context: {
+                search_default_groupby_bar: true,
+            },
+        }).open().then(function (result) {
+            dialog = result;
+        });
+
+        await testUtils.nextTick();
+
+        // check that the filter displays on top of modal
+        await testUtils.dom.click(dialog.el.querySelector('.o_group_by_menu .fa.fa-bars'));
+        assert.strictEqual(dialog.el.clientHeight < dialog.el.firstElementChild.clientHeight, false,
+            "element should not contain scrollbar");
+        assert.strictEqual(dialog.el.style.overflow, 'visible',
+            "element should contain visible property");
+
+        // check that removing the groups make content scrollable
+        await testUtils.dom.click(dialog.el.querySelector('.o_group_by_menu a'));
+        assert.strictEqual(dialog.el.clientHeight < dialog.el.firstElementChild.clientHeight, true,
+            "element should contain scrollbar");
+        assert.strictEqual(dialog.el.style.overflow, 'auto',
+            "element should not contain visible property");
+
+        // check that the filter displays on top of modal
+        await testUtils.dom.click(dialog.el.querySelector('.o_group_by_menu a'));
+        assert.strictEqual(dialog.el.clientHeight < dialog.el.firstElementChild.clientHeight, false,
+            "element should not contain scrollbar");
+        assert.strictEqual(dialog.el.style.overflow, 'visible',
+            "element should contain visible property");
+
+        parent.destroy();
+    });
+
 });
 
 });
