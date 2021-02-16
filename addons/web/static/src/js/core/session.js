@@ -381,7 +381,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {integer}
      */
     getTZOffset: function (date) {
-        return -new Date(date).getTimezoneOffset();
+        return moment(date).tz(this.user_context.tz)._offset;
     },
 
     //--------------------------------------------------------------------------
