@@ -23,11 +23,17 @@
         margin-right: -$o-horizontal-padding*2;
     }
 }
-
 @mixin o-form-nosheet-negative-margin {
     margin-left: -$o-horizontal-padding;
     margin-right: -$o-horizontal-padding;
 }
+
+@mixin o-td-label-style {
+    width: 0%;
+    padding: 0 15px 0 0;
+    min-width: 150px;
+}
+$o-form-label-margin-right: 0px;
 
 .o_form_view {
     background-color: $o-view-background-color;
@@ -546,9 +552,7 @@
 
             > tbody > tr > td {
                 &.o_td_label {
-                    width: 0%;
-                    padding: 0 15px 0 0;
-                    min-width: 150px;
+                    @include o-td-label-style;
                 }
                 vertical-align: top;
 
@@ -590,7 +594,22 @@
 
         .o_td_label .o_form_label {
             font-weight: bold;
-            margin-right: 0px;
+            margin-right: $o-form-label-margin-right;
+        }
+    }
+
+    .o_checkbox_optional_field {
+        display: flex;
+
+        @include media-breakpoint-down(sm) {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        > .o_form_label {
+            @include o-td-label-style;
+            margin-right: $o-form-label-margin-right;
+            font-weight: bold;
         }
     }
 
@@ -630,7 +649,7 @@
             margin-bottom: 0px;
         }
     }
-    td.o_td_label .o_form_label:not(.o_status) {
+    .o_td_label .o_form_label:not(.o_status), .o_checkbox_optional_field > .o_form_label {
         min-height: 33px;
     }
     td:not(.o_field_cell) .o_form_uri > span:first-child {

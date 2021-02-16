@@ -8,8 +8,8 @@
             <field name="priority">36</field>
             <field name="arch" type="xml">
                 <group name="purchase" position="inside">
-                    <label for="receipt_reminder_email" groups='purchase.group_send_reminder'/>
-                    <div name="receipt_reminder" class="o_row" groups='purchase.group_send_reminder'>
+                    <div name="receipt_reminder" colspan="2" class="o_checkbox_optional_field" groups='purchase.group_send_reminder'>
+                        <label for="receipt_reminder_email"/>
                         <field name="receipt_reminder_email"/>
                         <div attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
                             <field name="reminder_date_before_receipt" class="oe_inline"/>
