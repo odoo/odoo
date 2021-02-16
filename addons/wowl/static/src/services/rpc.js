@@ -77,11 +77,11 @@ export const rpcService = {
   deploy(env) {
     return async function (route, params = {}, settings) {
       if (this instanceof Component) {
-        if (this.__owl__.isDestroyed) {
+        if (this.__owl__.status === 5 /* DESTROYED */) {
           throw new Error("A destroyed component should never initiate a RPC");
         }
         const result = await jsonrpc(env, route, params, rpcId++, settings);
-        if (this instanceof Component && this.__owl__.isDestroyed) {
+        if (this instanceof Component && this.__owl__.status === 5 /* DESTROYED */) {
           return new Promise(() => {});
         }
         return result;

@@ -249,7 +249,7 @@ export class ViewAdapter extends ActionAdapter {
     } else {
       const view = new this.props.View(this.props.viewInfo, this.props.viewParams);
       this.widget = await view.getController(this);
-      if (this.__owl__.isDestroyed) {
+      if (this.__owl__.status === 5 /* DESTROYED */) {
         // the component might have been destroyed meanwhile, but if so, `this.widget` wasn't
         // destroyed by OwlCompatibility layer as it wasn't set yet, so destroy it now
         this.widget.destroy();
