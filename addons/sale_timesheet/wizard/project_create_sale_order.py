@@ -55,7 +55,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
 
     pricing_type = fields.Selection(related="project_id.pricing_type")
-    link_selection = fields.Selection([('create', 'Create a new sales order'), ('link', 'Link to an existing sales order')], required=True, default='create')
     sale_order_id = fields.Many2one(
         'sale.order', string="Sales Order",
         domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
@@ -63,7 +62,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
     line_ids = fields.One2many('project.create.sale.order.line', 'wizard_id', string='Lines')
     info_invoice = fields.Char(compute='_compute_info_invoice')
 
-    @api.depends('sale_order_id', 'link_selection')
+    @api.depends('sale_order_id')
     def _compute_info_invoice(self):
         for line in self:
             domain = self.env['sale.order.line']._timesheet_compute_delivered_quantity_domain()
@@ -76,54 +75,11 @@ class ProjectCreateSalesOrder(models.TransientModel):
             label = _("hours")
             if company_uom == self.env.ref('uom.product_uom_day'):
                 label = _("days")
-            if line.link_selection == 'create':
-                line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order.", amount=unit_amount, label=label)
-            else:
-                line.info_invoice = _("%(amount)s %(label)s will be added to the selected Sales Order.", amount=unit_amount, label=label)
+            line.info_invoice = _("%(amount)s %(label)s will be added to the new Sales Order.", amount=unit_amount, label=label)
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         self.sale_order_id = False
-
-    def action_link_sale_order(self):
-        task_no_sale_line = self.project_id.tasks.filtered(lambda task: not task.sale_line_id)
-        # link the project to the SO line
-        self.project_id.write({
-            'sale_line_id': self.sale_order_id.order_line[0].id,
-            'sale_order_id': self.sale_order_id.id,
-            'partner_id': self.partner_id.id,
-        })
-
-        if self.pricing_type == 'employee_rate':
-            lines_already_present = dict([(l.employee_id.id, l) for l in self.project_id.sale_line_employee_ids])
-            EmployeeMap = self.env['project.sale.line.employee.map'].sudo()
-
-            for wizard_line in self.line_ids:
-                if wizard_line.employee_id.id not in lines_already_present:
-                    EmployeeMap.create({
-                        'project_id': self.project_id.id,
-                        'sale_line_id': wizard_line.sale_line_id.id,
-                        'employee_id': wizard_line.employee_id.id,
-                    })
-                else:
-                    lines_already_present[wizard_line.employee_id.id].write({
-                        'sale_line_id': wizard_line.sale_line_id.id
-                    })
-
-            # assign SOL to timesheets
-            for map_entry in self.project_id.sale_line_employee_ids:
-                self.env['account.analytic.line'].search([('task_id', 'in', self.project_id.tasks.ids), ('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False)]).write({
-                    'so_line': map_entry.sale_line_id.id
-                })
-        else:
-            dict_product_sol = dict([(l.product_id.id, l.id) for l in self.sale_order_id.order_line])
-            # remove SOL for task without product
-            # and if a task has a product that match a product from a SOL, we put this SOL on task.
-            for task in task_no_sale_line:
-                if not task.timesheet_product_id:
-                    task.sale_line_id = False
-                elif task.timesheet_product_id.id in dict_product_sol:
-                    task.write({'sale_line_id': dict_product_sol[task.timesheet_product_id.id]})
 
     def action_create_sale_order(self):
         # if project linked to SO line or at least on tasks with SO line, then we consider project as billable.
@@ -313,23 +269,12 @@ class ProjectCreateSalesOrderLine(models.TransientModel):
     price_unit = fields.Float("Unit Price", help="Unit price of the sales order item.")
     currency_id = fields.Many2one('res.currency', string="Currency")
     employee_id = fields.Many2one('hr.employee', string="Employee", help="Employee that has timesheets on the project.")
-    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", compute='_compute_sale_line_id', store=True, readonly=False)
 
     _sql_constraints = [
         ('unique_employee_per_wizard', 'UNIQUE(wizard_id, employee_id)', "An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again."),
     ]
 
-    @api.onchange('product_id', 'sale_line_id')
+    @api.onchange('product_id')
     def _onchange_product_id(self):
-        if self.wizard_id.link_selection == 'link':
-            self.price_unit = self.sale_line_id.price_unit
-            self.currency_id = self.sale_line_id.currency_id
-        else:
-            self.price_unit = self.product_id.lst_price or 0
-            self.currency_id = self.product_id.currency_id
-
-    @api.depends('wizard_id.sale_order_id')
-    def _compute_sale_line_id(self):
-        for line in self:
-            if line.sale_line_id and line.sale_line_id.order_id != line.wizard_id.sale_order_id:
-                line.sale_line_id = False
+        self.price_unit = self.product_id.lst_price or 0
+        self.currency_id = self.product_id.currency_id
