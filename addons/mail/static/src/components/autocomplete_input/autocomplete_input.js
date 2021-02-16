@@ -29,7 +29,13 @@ class AutocompleteInput extends Component {
             args.classes = { 'ui-autocomplete': this.props.customClass };
         }
 
-        $(this.el).autocomplete(args);
+        const autoCompleteElem = $(this.el).autocomplete(args);
+        // Resize the autocomplete dropdown options to handle the long strings
+        // By setting the width of dropdown based on the width of the input element.
+        autoCompleteElem.data("ui-autocomplete")._resizeMenu = function () {
+            const ul = this.menu.element;
+            ul.outerWidth(this.element.outerWidth());
+        };
     }
 
     willUnmount() {
