@@ -87,7 +87,7 @@ models.Order = models.Order.extend({
     },
     export_as_JSON: function () {
         const json = super_order_model.export_as_JSON.apply(this, arguments);
-        if (this.pos.config.module_pos_hr) {
+        if (this.pos.config.module_pos_hr && this.employee) {
             json.employee_id = this.employee.id;
         }
         return json;
