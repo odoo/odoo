@@ -690,6 +690,7 @@ class MailCommon(common.SavepointCase, MailCase):
             signature='--\nErnest'
         )
         cls.partner_employee = cls.user_employee.partner_id
+        cls.partner_employee.flush()
 
     @classmethod
     def _create_portal_user(cls):
