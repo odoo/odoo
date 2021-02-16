@@ -165,6 +165,7 @@
                         viewType: 'groupby',
                     });
                     dp.groupData = groupDp.id;
+                    self._parseServerData(groupFields, groupDp, groupDp.data);
                 });
             });
         },
