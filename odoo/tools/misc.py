@@ -1335,7 +1335,8 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
 
         :param value: the time to format
         :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format (e.i.: 'full' format)
-        :param format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern
+        :param tz: name of the timezone  in which the given datetime should be localized
+        :param time_format: one of “full”, “long”, “medium”, or “short”, or a custom time pattern
         :param lang_code: ISO
 
         :rtype str
@@ -1343,12 +1344,25 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
     if not value:
         return ''
 
+    if isinstance(value, datetime.time):
+        localized_datetime = value
+    else:
+        if isinstance(value, str):
+            value = odoo.fields.Datetime.from_string(value)
+        tz_name = tz or env.user.tz or 'UTC'
+        utc_datetime = pytz.utc.localize(value, is_dst=False)
+        try:
+            context_tz = pytz.timezone(tz_name)
+            localized_datetime = utc_datetime.astimezone(context_tz)
+        except Exception:
+            localized_datetime = utc_datetime
+
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
     if not time_format:
         time_format = posix_to_ldml(lang.time_format, locale=locale)
 
-    return babel.dates.format_time(value, format=time_format, locale=locale)
+    return babel.dates.format_time(localized_datetime, format=time_format, locale=locale)
 
 
 def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):

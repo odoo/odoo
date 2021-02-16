@@ -5,6 +5,7 @@ import base64
 import logging
 
 from odoo import api, fields, models, _
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -36,6 +37,7 @@ class Attendee(models.Model):
     phone = fields.Char('Phone', related='partner_id.phone', help="Phone number of Invited Person")
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
+    mail_tz = fields.Selection(_tz_get, compute='_compute_mail_tz', help='Timezone used for displaying time in the mail template')
     # state
     state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
                              help="Status of the attendee's participation")
@@ -46,6 +48,10 @@ class Attendee(models.Model):
     def _compute_common_name(self):
         for attendee in self:
             attendee.common_name = attendee.partner_id.name or attendee.email
+
+    def _compute_mail_tz(self):
+        for attendee in self:
+            attendee.mail_tz = attendee.partner_id.tz
 
     @api.model_create_multi
     def create(self, vals_list):
