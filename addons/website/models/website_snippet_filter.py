@@ -60,23 +60,23 @@ class WebsiteSnippetFilter(models.Model):
         if self.website_id and self.env['website'].get_current_website() != self.website_id:
             return ''
 
-        meta_data = self._get_filter_meta_data()
-        records = self._prepare_values(meta_data, limit, search_domain)
+        records = self._prepare_values(limit, search_domain)
         is_sample = with_sample and not records
         if is_sample:
-            records = self._prepare_sample(meta_data)
+            records = self._prepare_sample()
         View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
-        escaped_records = self._record_to_escaped_values(meta_data, records)
+        escaped_records = self._record_to_escaped_values(records)
         content = View._render_template(template_key, dict(
             records=escaped_records,
             is_sample=is_sample,
-            to_generic=lambda record: self._to_generic(meta_data, records)
+            to_generic=self._to_generic,
         )).decode('utf-8')
         return [ET.tostring(el) for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
 
-    def _prepare_values(self, meta_data, limit=None, search_domain=None):
+    def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""
         self.ensure_one()
+
         limit = limit and min(limit, self.limit) or self.limit
         if self.filter_id:
             filter_sudo = self.filter_id.sudo()
@@ -91,7 +91,7 @@ class WebsiteSnippetFilter(models.Model):
                     order=','.join(literal_eval(filter_sudo.sort)) or None,
                     limit=limit
                 )
-                return self._filter_records_to_values(meta_data, records)
+                return self._filter_records_to_values(records)
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.filters' generated a MissingError in '%s'", domain, self._name)
                 return []
@@ -101,13 +101,12 @@ class WebsiteSnippetFilter(models.Model):
                     dynamic_filter=self,
                     limit=limit,
                     search_domain=search_domain,
-                    meta_data=meta_data,
                 ).sudo().run() or []
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
                 return []
 
-    def _to_generic(self, meta_data, records):
+    def _to_generic(self, records):
         """Converts a list of dictionary records into the structure used by generic templates for rendering:
 
             [{
@@ -123,32 +122,36 @@ class WebsiteSnippetFilter(models.Model):
                 'call_to_action_url': 'some/location'
             }, ... , ...]
 
-        @param meta_data: OrderedDict result of _get_filter_meta_data
         @param records: records as dictionaries of non-escaped values associated to field names
 
         @return List of Dict matching the rendering structure for generic templates
         """
+        meta_data = self._get_filter_meta_data()
+
         result = []
         for record in records:
-            data = self._get_rendering_data_structure()
+            data = {
+                'fields': OrderedDict({}),
+                'image_fields': OrderedDict({}),
+            }
             for field_name, field_widget in meta_data.items():
                 value = record[field_name]
                 if field_widget in ('binary', 'image'):
                     data['image_fields'][field_name] = value
                 else:
                     data['fields'][field_name] = value
-            data['call_to_action_url'] = record['call_to_action_url']
+            data['call_to_action_url'] = record.get('call_to_action_url')
             result.append(data)
         return result
 
-    def _record_to_escaped_values(self, meta_data, records):
+    def _record_to_escaped_values(self, records):
         """Converts a list of dictionary records into rendered values
 
-        @param meta_data: OrderedDict result of _get_filter_meta_data
         @param records: records as dictionaries of non-escaped values associated to field names
 
         @return List of Dict containing rendered values of each field
         """
+        meta_data = self._get_filter_meta_data()
         result = []
         for record in records:
             data = {}
@@ -171,7 +174,7 @@ class WebsiteSnippetFilter(models.Model):
                         value, options)
                 else:
                     data[field_name] = self.escape_falsy_as_empty(value)
-            data['call_to_action_url'] = record['call_to_action_url']
+            data['call_to_action_url'] = record.get('call_to_action_url')
             result.append(data)
         return result
 
@@ -185,15 +188,16 @@ class WebsiteSnippetFilter(models.Model):
         @return Tuple containing the field name and the field type
         """
         field_name, _, field_widget = field_name.partition(":")
-        field = model._fields.get(field_name) if model else None
-        if field:
-            field_type = field.type
-        elif 'image' in field_name:
-            field_type = 'image'
-        elif 'price' in field_name:
-            field_type = 'monetary'
-        else:
-            field_type = 'text'
+        if not field_widget:
+            field = model._fields.get(field_name) if model else None
+            if field:
+                field_type = field.type
+            elif 'image' in field_name:
+                field_type = 'image'
+            elif 'price' in field_name:
+                field_type = 'monetary'
+            else:
+                field_type = 'text'
         return field_name, field_widget or field_type
 
     def _get_filter_meta_data(self):
@@ -210,35 +214,35 @@ class WebsiteSnippetFilter(models.Model):
             meta_data[field_name] = field_widget
         return meta_data
 
-    def _prepare_sample(self, meta_data, length=4):
+    def _prepare_sample(self, length=4):
         """
         Generates sample data and returns it the right format for render.
 
-        @param meta_data: OrderedDict result of _get_filter_meta_data
         @param length: Number of sample records to generate
 
         @return Array of objets with a value associated to each name in field_names
         """
         if not length:
             return []
+
         sample = []
         model = self.env[self.filter_id.model_id] if self.filter_id else (
             self.action_server_id.model_id if self.action_server_id else None)
         sample_data = self._get_hardcoded_sample(model)
         for index in range(0, length):
             single_sample_data = sample_data[index % len(sample_data)].copy()
-            self._fill_sample(meta_data, single_sample_data, index)
+            self._fill_sample(single_sample_data, index)
             sample.append(single_sample_data)
         return sample
 
-    def _fill_sample(self, meta_data, sample, index):
+    def _fill_sample(self, sample, index):
         """
         Fills the missing fields of a sample
 
-        @param meta_data: OrderedDict result of _get_filter_meta_data
         @param sample: Data structure to fill with values for each name in field_names
         @param index: Index of the sample within the dataset
         """
+        meta_data = self._get_filter_meta_data()
         for field_name, field_widget in meta_data.items():
             if field_name not in sample:
                 if field_widget == 'binary':
@@ -252,6 +256,7 @@ class WebsiteSnippetFilter(models.Model):
                 else:
                     sample[field_name] = _('Sample %s', index + 1)
         sample['call_to_action_url'] = ''
+        return sample
 
     def _get_hardcoded_sample(self, model):
         """
@@ -263,24 +268,18 @@ class WebsiteSnippetFilter(models.Model):
         """
         return [{}]
 
-    @api.model
-    def _get_rendering_data_structure(self):
-        return {
-            'fields': OrderedDict({}),
-            'image_fields': OrderedDict({}),
-        }
-
-    def _filter_records_to_values(self, meta_data, records):
+    def _filter_records_to_values(self, records):
         """
-        Extract the fields from the data source and put them into a dictionary of values
+        Extract the fields from the data source 'records' and put them into a dictionary of values
 
-        @param meta_data: OrderedDict result of _get_filter_meta_data
         @param records: Model records returned by the filter
 
         @return List of dict associating the field value to each field name
         """
 
         self.ensure_one()
+        meta_data = self._get_filter_meta_data()
+
         values = []
         model = self.env[self.filter_id.model_id]
         Website = self.env['website']
