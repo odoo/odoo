@@ -101,6 +101,7 @@
                             attrs="{'invisible': [('type', 'not in',('normal','phantom'))]}"
                             groups="mrp.group_mrp_routings">
                                 <field name="operation_ids"
+                                    widget="many2many"
                                     attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
                                     groups="mrp.group_mrp_routings"
                                     context="{'bom_id_invisible': True, 'default_company_id': company_id, 'default_bom_id': id}"/>
