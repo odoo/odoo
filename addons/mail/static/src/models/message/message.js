@@ -124,6 +124,9 @@ function factory(dependencies) {
                     this.env.models['mail.notification'].convertData(notificationData)
                 )]];
             }
+            if ('oembed_ids' in data) {
+                data2.oembed = data.oembed_ids;
+            }
             if ('starred_partner_ids' in data) {
                 data2.isStarred = data.starred_partner_ids.includes(this.env.messaging.currentPartner.id);
             }
@@ -750,6 +753,7 @@ function factory(dependencies) {
             default: [],
             related: 'notifications.notification_status',
         }),
+        oembed: attr({ default: false }),
         /**
          * Origin thread of this message (if any).
          */

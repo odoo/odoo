@@ -23,7 +23,7 @@
                 <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_name">
                     <t t-esc="attachmentViewer.attachment.displayName"/>
                 </div>
-                <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton" t-on-click="_onClickDownload" role="button" title="Download">
+                <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton" t-on-click="_onClickDownload" role="button" title="Download" t-if="!attachmentViewer.attachment.oembed">
                     <i class="fa fa-download fa-fw" role="img"/>
                 </div>
                 <div class="o-autogrow"/>
@@ -55,6 +55,12 @@
                     <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo" t-on-click="_onClickVideo" controls="controls">
                         <source t-att-data-type="attachmentViewer.attachment.mimetype" t-att-src="attachmentViewer.attachment.defaultSource"/>
                     </video>
+                </t>
+                <t t-if="attachmentViewer.attachment.oembed">
+                    <t t-if="attachmentViewer.attachment.oembed.type == 'photo'">
+                        <img t-att-src="attachmentViewer.attachment.oembed.url" width="attachmentViewer.attachment.oembed.width" height="attachmentViewer.attachment.oembed.height" />
+                    </t>
+                    <t t-raw="attachmentViewer.attachment.oembed.html" t-else-if="attachmentViewer.attachment.oembed.html" />
                 </t>
             </div>
             <t t-if="attachmentViewer.attachment.fileType === 'image'">

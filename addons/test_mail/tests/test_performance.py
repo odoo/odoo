@@ -826,7 +826,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=17):
+        with self.assertQueryCount(emp=18):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:

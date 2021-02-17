@@ -34,6 +34,7 @@ class ComposerTextInput extends Component {
                 composerHasSuggestions: composer && composer.hasSuggestions,
                 composerIsLastStateChangeProgrammatic: composer && composer.isLastStateChangeProgrammatic,
                 composerIsLog: composer && composer.isLog,
+                composerPreview: composer && composer.preview,
                 composerTextInputContent: composer && composer.textInputContent,
                 composerTextInputCursorEnd: composer && composer.textInputCursorEnd,
                 composerTextInputCursorStart: composer && composer.textInputCursorStart,
@@ -222,13 +223,14 @@ class ComposerTextInput extends Component {
     /**
      * @private
      */
-    _onInputTextarea() {
+    async _onInputTextarea() {
         if (this._textareaLastInputValue !== this._textareaRef.el.value) {
             this.composer.handleCurrentPartnerIsTyping();
         }
         this._textareaLastInputValue = this._textareaRef.el.value;
         this._updateHeight();
         this.saveStateInStore();
+        this.composer.getLinkPreview();
     }
 
     /**

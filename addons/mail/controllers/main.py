@@ -87,7 +87,7 @@ class MailController(http.Controller):
                     #   _get_mail_redirect_suggested_company
                     #   - If no company, then redirect to the messaging
                     #   - Merge the suggested company with the companies on the cookie
-                    # - Make a new access test if it succeeds, redirect to the record. Otherwise, 
+                    # - Make a new access test if it succeeds, redirect to the record. Otherwise,
                     #   redirect to the messaging.
                     suggested_company = record_sudo._get_mail_redirect_suggested_company()
                     if not suggested_company:
@@ -292,3 +292,29 @@ class MailController(http.Controller):
         except:
             return {}
         return records._message_get_suggested_recipients()
+
+    @http.route('/mail/attachment_oembed', type='json', auth='user')
+    def attachment_oembed(self, url):
+        safari = request and request.httprequest.user_agent.browser == 'safari'
+        oEmbed = request.env['mail.oembed'].getoEmbedJson(url)
+        if oEmbed:
+            attachment = request.env['ir.attachment'].create({
+                'name': oEmbed.get('url'),
+                'url': oEmbed.get('url'),
+                'res_model': 'mail.compose.message',
+                'mimetype': 'application/json+oembed'
+            })
+            data = oEmbed.get('json')
+            request.env['mail.oembed'].sudo().create({
+                'attachment_id': attachment.id,
+                'json': data,
+                'type': data.get('type'),
+                'html': data.get('html'),
+                'url': data.get('url'),
+                'width': data.get('width'),
+                'height': data.get('height'),
+                'thumbnail_url': data.get('thumbnail_url'),
+                'thumbnail_width': data.get('thumbnail_width'),
+                'thumbnail_height': data.get('thumbnail_height'),
+            })
+            return attachment._attachment_format(safari=safari)[0]

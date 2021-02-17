@@ -22,6 +22,7 @@
                         'o-medium': props.imageSize === 'medium',
                         'o-small': props.imageSize === 'small',
                     }" t-att-href="attachmentUrl" t-att-style="imageStyle" t-att-data-mimetype="attachment.mimetype"
+                     t-if="!attachment.oembed or !attachment.oembed.thumbnail_url"
                 >
                     <t t-if="(props.showFilename or props.showExtension) and detailsMode === 'hover'">
                         <div class="o_Attachment_imageOverlay">
@@ -49,7 +50,7 @@
                                     </div>
                                 </t>
                                 <!-- Download button -->
-                                <t t-if="props.isDownloadable and !attachment.isUploading" t-key="'download'">
+                                <t t-if="props.isDownloadable and !attachment.isUploading and !attachment.oembed" t-key="'download'">
                                     <div class="o_Attachment_action o_Attachment_actionDownload" t-on-click="_onClickDownload" title="Download">
                                         <i class="fa fa-download"/>
                                     </div>
@@ -57,6 +58,9 @@
                             </div>
                         </div>
                     </t>
+                </div>
+                <div class="o_Attachment_image" t-on-click="_onClickImage" t-else="">
+                    <img t-att-src="attachmentUrl" t-att-alt="attachment.url" width="32" />
                 </div>
                 <!-- Attachment details -->
                 <t t-if="(props.showFilename or props.showExtension) and detailsMode === 'card'">
@@ -95,7 +99,7 @@
                             </div>
                         </t>
                         <!-- Download button -->
-                        <t t-if="props.isDownloadable and !attachment.isUploading">
+                        <t t-if="props.isDownloadable and !attachment.isUploading and !attachment.oembed">
                             <div class="o_Attachment_asideItem o_Attachment_asideItemDownload" t-on-click="_onClickDownload" title="Download">
                                 <i class="fa fa-download"/>
                             </div>

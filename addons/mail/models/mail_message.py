@@ -1042,6 +1042,7 @@ class Message(models.Model):
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
                 'record_name': record_name,
+                'oembed_ids': False,
             })
 
         return vals_list

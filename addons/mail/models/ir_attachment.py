@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import models, fields
 from odoo.exceptions import AccessError
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
+
+    oembed_ids = fields.One2many('mail.oembed', 'attachment_id', string='oEmbed data')
 
     def _post_add_create(self):
         """ Overrides behaviour when the attachment is created through the controller
@@ -35,7 +37,7 @@ class IrAttachment(models.Model):
                 except AccessError:
                     pass
 
-    def _attachment_format(self, main_attachment = None, safari = None):
+    def _attachment_format(self, main_attachment=None, safari=None):
         return [{
             'checksum': attachment.checksum,
             'id': attachment.id,
@@ -45,4 +47,6 @@ class IrAttachment(models.Model):
             'is_main': main_attachment == attachment,
             'res_id': attachment.res_id,
             'res_model': attachment.res_model,
+            'url': attachment.url,
+            'oembed': attachment.sudo().oembed_ids.read() or False
         } for attachment in self]

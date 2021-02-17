@@ -53,6 +53,11 @@ class Attachment extends Component {
         if (this.attachment.isUploading) {
             return '';
         }
+
+        if (this.attachment.oembed && this.attachment.oembed.thumbnail_url) {
+            return this.attachment.oembed.thumbnail_url;
+        }
+
         return this.env.session.url('/web/content', {
             id: this.attachment.id,
             download: true,
@@ -155,6 +160,7 @@ class Attachment extends Component {
     _onDeleteConfirmDialogClosed() {
         this.state.hasDeleteConfirmDialog = false;
     }
+
 }
 
 Object.assign(Attachment, {

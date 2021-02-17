@@ -909,6 +909,29 @@ function factory(dependencies) {
             }
             return false;
         }
+
+        async getLinkPreview() {
+            var urlRegexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+.~#?&'$//=;\u00C0-\u024F\u1E00-\u1EFF]*)/gi;
+            const urls = this.textInputContent.match(urlRegexp);
+            if (urls) {
+                const urlMap = this.attachments.map(att => att.url);
+                for (const url of urls) {
+                    if (!urlMap.includes(url)) {
+                        const attachment = await this.env.services.rpc({
+                            route: '/mail/attachment_oembed',
+                            params: {url},
+                        }, { shadow: true });
+
+                        if (attachment) {
+                            this.update({
+                                attachments: [['insert', attachment]]
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     Composer.fields = {
@@ -921,7 +944,7 @@ function factory(dependencies) {
             dependencies: [
                 'activeSuggestedCannedResponse',
                 'activeSuggestedChannel',
-                'activeSuggestedChannelCommand',
+
                 'activeSuggestedPartner',
                 'activeSuggestedRecordName',
             ],
