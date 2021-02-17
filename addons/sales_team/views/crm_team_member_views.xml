@@ -6,7 +6,7 @@
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
             <search string="Sales Person">
-                <field name="name"/>
+                <field name="user_id"/>
                 <field name="crm_team_id"/>
                 <separator/>
                 <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
