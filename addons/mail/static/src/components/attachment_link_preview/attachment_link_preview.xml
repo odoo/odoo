@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AttachmentLinkPreview" owl="1">
+        <div class="o_AttachmentLinkPreview rounded px-3 pt-3 pb-2 d-flex">
+            <t t-if="attachmentLinkPreviewView and attachmentLinkPreviewView.attachment">
+                <img t-if="attachmentLinkPreviewView.attachment.mimetype === 'application/o-linkpreview-with-thumbnail'" class="o_AttachmentLinkPreview_linkImage rounded mr-3 mb-2" t-att-src="attachmentLinkPreviewView.imageUrl" t-att-alt="attachmentLinkPreviewView.attachment.name"/>
+                <div t-if="attachmentLinkPreviewView.attachment.name" class="o_AttachmentLinkPreview_content">
+                    <a t-att-href="attachmentLinkPreviewView.attachment.url" class="o_AttachmentLinkPreview_title">
+                        <h3 class="o_AttachmentLinkPreview_Linktitle">
+                            <t t-esc="attachmentLinkPreviewView.attachment.name"/>
+                        </h3>
+                    </a>
+                    <p t-if="attachmentLinkPreviewView.attachment.description" class="o_AttachmentLinkPreview_description">
+                        <t t-esc="attachmentLinkPreviewView.attachment.description"/>
+                    </p>
+                </div>
+                <div class="o_AttachmentLinkPreview_aside">
+                    <button class="o_AttachmentLinkPreview_asideItem o_AttachmentLinkPreview_asideItemUnlink border-0" t-on-click="attachmentLinkPreviewView.onClickUnlink">
+                        <i class="fa fa-trash"/>
+                    </button>
+                </div>
+                <AttachmentDeleteConfirmDialog
+                    t-if="attachmentLinkPreviewView.hasDeleteConfirmDialog"
+                    attachmentLocalId="attachmentLinkPreviewView.attachment.localId"
+                    t-on-dialog-closed="attachmentLinkPreviewView.onDeleteConfirmDialogClosed"
+                />
+            </t>
+        </div>
+    </t>
+</templates>

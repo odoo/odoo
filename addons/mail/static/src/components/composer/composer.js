@@ -52,8 +52,7 @@ export class Composer extends Component {
      * @returns {mail.composer_view}
      */
     get composerView() {
-        return this.messaging && this.messaging.models['mail.composer_view'].get(this.props.composerViewLocalId);
-    }
+        return this.messaging && this.messaging.models['mail.composer_view'].get(this.props.composerViewLocalId);}
 
     /**
      * Returns whether the given node is self or a children of self, including

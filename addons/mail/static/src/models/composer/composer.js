@@ -1,12 +1,26 @@
 /** @odoo-module **/
 
+import { urlRegexp } from '@mail/js/utils';
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, replace, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
+
+        _created() {
+            this.onPaste = this.onPaste.bind(this);
+        }
+
+        /**
+         * Handles click on the save link.
+         *
+         * @param {MouseEvent} ev
+         */
+        onPaste(ev) {
+            this.getLinkPreview(ev.clipboardData.getData('text'));
+        }
 
         //----------------------------------------------------------------------
         // Private
@@ -127,6 +141,46 @@ function factory(dependencies) {
                 textInputCursorStart: clear(),
                 textInputSelectionDirection: clear(),
             });
+        }
+
+        /**
+         * Try to fetch link preview when urls are inserted inside the composer.
+         */
+        getLinkPreview(pastedText) {
+            const urls = pastedText.match(urlRegexp) || false;
+            if (!urls) {
+                return;
+            }
+            // Add attachment for urls that are not already in attachment
+            const existingUrls = this.attachments.map(att => att.url);
+            const filteredUrls = urls.filter(url => !existingUrls.includes(url));
+            for (const url of filteredUrls) {
+                this.env.services.rpc({
+                    route: '/mail/link_preview',
+                    params: { url, channel_id: this.activeThread.id },
+                }, { shadow: true }).then((attachment) => {
+                    if (!attachment) {
+                        return;
+                    }
+                    this.update({ attachments: insert(attachment) });
+                });
+
+            }
+        }
+
+        /**
+         * Remove attachment that are not inside the composer anymore
+         */
+        removeLinkPreview() {
+            const urls = this.textInputContent.match(urlRegexp) || false;
+            if (!urls) {
+                return;
+            }
+            for (const attachment of this.attachments) {
+                if (!urls.includes(attachment.url)) {
+                    attachment.remove();
+                }
+            }
         }
 
     }

@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+import requests
 
-from odoo import models
+from lxml import html
+from odoo import models, api
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools import image_process
+
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
@@ -49,14 +54,16 @@ class IrAttachment(models.Model):
 
     def _attachment_format(self, commands=False):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
-        res_list = []
+        attachments = []
         for attachment in self:
             res = {
                 'checksum': attachment.checksum,
+                'description': attachment.description,
                 'id': attachment.id,
                 'filename': attachment.name,
                 'name': attachment.name,
                 'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+                'url': attachment.url,
             }
             if commands:
                 res['originThread'] = [('insert', {
@@ -68,5 +75,70 @@ class IrAttachment(models.Model):
                     'res_id': attachment.res_id,
                     'res_model': attachment.res_model,
                 })
-            res_list.append(res)
-        return res_list
+            attachments.append(res)
+        return attachments
+
+    @api.model
+    def _get_data_from_url(self, url):
+        """
+        This will create attachment data based on what we can read from the URL.
+        If the URL is an HTML page, this will parse the OpenGraph meta data.
+        If the URL is an image, this will create an image attachment.
+        """
+        data = {}
+        request_image = None
+        try:
+            page = requests.get(url, timeout=1)
+        except requests.exceptions.RequestException:
+            return False
+
+        if page.status_code != requests.codes.ok:
+            return False
+        image_mimetype = [
+            'image/bmp',
+            'image/gif',
+            'image/jpeg',
+            'image/png',
+            'image/tiff',
+            'image/x-icon',
+        ]
+        if page.headers['Content-Type'] in image_mimetype:
+            image = image_process(
+                base64.b64encode(page.content),
+                size=(300, 300),
+                verify_resolution=True
+            )
+            data = {
+                'url': url,
+                'name': url,
+                'description': False,
+                'datas': image,
+                'mimetype': 'image/o-linkpreview-image',
+                'res_model': 'mail.compose.message',
+                'res_id': 0,
+            }
+            return data
+        elif 'text/html' in page.headers['Content-Type']:
+            tree = html.fromstring(page.content)
+            title = tree.xpath('//meta[@property="og:title"]/@content')
+            if title:
+                image = tree.xpath('//meta[@property="og:image"]/@content')
+                if image:
+                    request_image = requests.get(image[0], timeout=1)
+                    image = image_process(
+                        base64.b64encode(request_image.content),
+                        size=(300, 300),
+                        verify_resolution=True
+                    )
+                description = tree.xpath('//meta[@property="og:description"]/@content')
+                data = {
+                    'url': url,
+                    'name': title[0] if title else url,
+                    'datas': image if image else False,
+                    'description': description[0] if description else False,
+                    'mimetype': 'application/o-linkpreview-with-thumbnail' if image else 'application/o-linkpreview',
+                    'res_model': 'mail.compose.message',
+                    'res_id': 0,
+                }
+                return data
+        return False

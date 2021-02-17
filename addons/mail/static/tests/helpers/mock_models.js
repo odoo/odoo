@@ -27,6 +27,7 @@ export class MockModels {
                     create_date: { type: 'date' },
                     create_uid: { string: "Created By", type: "many2one", relation: 'res.users' },
                     datas: { string: "File Content (base64)", type: 'binary' },
+                    description: { string: 'description', type: 'text' },
                     mimetype: { string: "mimetype", type: 'char' },
                     name: { string: "attachment name", type: 'char', required: true },
                     res_id: { string: "res id", type: 'integer' },

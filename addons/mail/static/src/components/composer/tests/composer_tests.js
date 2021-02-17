@@ -2141,6 +2141,37 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     );
 });
 
+QUnit.test('Composer should ask for a link preview when a URL is pasted', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    const { createComposerComponent } = await this.start({
+        async mockRPC(route, args) {
+            if (route === '/mail/link_preview') {
+                assert.step('link_preview');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await createComposerComponent(thread.composer);
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        const ev = new ClipboardEvent('paste', { clipboardData: new DataTransfer() });
+        ev.clipboardData.setData('text', 'my text https://tenor.com/view/gato-gif-18532922');
+        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+    });
+
+    assert.verifySteps(['link_preview'], 'Composer should ask for a link preview');
+    assert.containsOnce(document.body, '.o_AttachmentLinkPreview', 'Composer should have an attachment link preview');
+});
+
 });
 });
 });

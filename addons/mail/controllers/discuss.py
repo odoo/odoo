@@ -559,3 +559,26 @@ class DiscussController(http.Controller):
         if guest_to_rename_sudo != guest and not request.env.user._is_admin():
             raise NotFound()
         guest_to_rename_sudo._update_name(name)
+
+    # --------------------------------------------------------------------------
+    # Link preview API
+    # --------------------------------------------------------------------------
+
+    @http.route('/mail/link_preview', type='json', auth='public')
+    def link_preview(self, url, channel_id):
+        channel_partner = request.env['mail.channel.partner']
+        if request.env.user._is_public():
+            channel_partner = request.env['mail.channel.partner']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(channel_id))
+        open_graph_data = request.env['ir.attachment']._get_data_from_url(url)
+
+        if channel_partner.env.user.share:
+            # Only generate the access token if absolutely necessary (= not for internal user).
+            open_graph_data['access_token'] = channel_partner.env['ir.attachment']._generate_access_token()
+
+        if open_graph_data:
+            attachment = request.env['ir.attachment'].sudo().create(open_graph_data)
+            attachment_formated = attachment._attachment_format(commands=True)[0]
+            if open_graph_data.get('access_token'):
+                attachment_formated['accessToken'] = open_graph_data['access_token']
+            return attachment_formated
+        return False

@@ -16,7 +16,6 @@ function factory(dependencies) {
             this.onClickDownload = this.onClickDownload.bind(this);
         }
 
-
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
@@ -40,6 +39,9 @@ function factory(dependencies) {
             if ('name' in data) {
                 data2.name = data.name;
             }
+            if ('description' in data) {
+                data2.description = data.description;
+            }
             // relation
             if ('res_id' in data && 'res_model' in data) {
                 data2.originThread = insert({
@@ -49,6 +51,9 @@ function factory(dependencies) {
             }
             if ('originThread' in data) {
                 data2.originThread = data.originThread;
+            }
+            if ('url' in data) {
+                data2.url = data.url;
             }
             return data2;
         }
@@ -183,6 +188,18 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeIsLinkPreview() {
+            const mimetype = [
+                'application/o-linkpreview-with-thumbnail',
+                'application/o-linkpreview',
+            ];
+            return mimetype.includes(this.mimetype);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsPdf() {
             return this.mimetype === 'application/pdf';
         }
@@ -200,6 +217,7 @@ function factory(dependencies) {
                 'image/svg+xml',
                 'image/tiff',
                 'image/x-icon',
+                'image/o-linkpreview-image',
             ];
             return imageMimetypes.includes(this.mimetype);
         }
@@ -295,14 +313,21 @@ function factory(dependencies) {
         /**
          * States the attachment cards that are displaying this attachment.
          */
-        attachmentCards: one2many('mail.attachment_card', {
+        attachmentCardsView: one2many('mail.attachment_card_view', {
             inverse: 'attachment',
             isCausal: true,
         }),
         /**
          * States the attachment images that are displaying this attachment.
          */
-        attachmentImages: one2many('mail.attachment_image', {
+        attachmentImagesView: one2many('mail.attachment_image_view', {
+            inverse: 'attachment',
+            isCausal: true,
+        }),
+        /**
+         * States the attachment link preview that are displaying this attachment.
+         */
+        attachmentLinkPreviewsView: one2many('mail.attachment_link_preview_view', {
             inverse: 'attachment',
             isCausal: true,
         }),
@@ -325,6 +350,7 @@ function factory(dependencies) {
         defaultSource: attr({
             compute: '_computeDefaultSource',
         }),
+        description: attr(),
         /**
          * States the OWL ref of the "dialog" window.
          */
@@ -354,6 +380,12 @@ function factory(dependencies) {
          */
         isImage: attr({
             compute: '_computeIsImage',
+        }),
+        /**
+         * Determines if the attachement has link preview informations.
+         */
+        isLinkPreview: attr({
+            compute: '_computeIsLinkPreview',
         }),
         is_main: attr(),
         /**

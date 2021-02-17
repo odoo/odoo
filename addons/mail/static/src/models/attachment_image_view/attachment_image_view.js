@@ -3,10 +3,11 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { markEventHandled, isEventHandled } from '@mail/utils/utils';
 
 function factory(dependencies) {
 
-    class AttachmentImage extends dependencies['mail.model'] {
+    class AttachmentImageview extends dependencies['mail.model'] {
 
         /**
          * @override
@@ -25,10 +26,13 @@ function factory(dependencies) {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.
          *
-         * @param {String} attachmentlistLocalId
+         * @param {MouseEvent} ev
          */
-        onClickImage() {
-            if (!this.attachment || !this.attachment.isViewable) {
+        onClickImage(ev) {
+            if (!this.attachment ||
+                !this.attachment.isViewable ||
+                isEventHandled(ev, 'attachmentImageView.onClickUnlink')
+            ) {
                 return;
             }
             this.messaging.dialogManager.update({
@@ -47,7 +51,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickUnlink(ev) {
-            ev.stopPropagation(); // prevents from opening viewer
+            markEventHandled(ev, 'attachmentImageView.onClickUnlink');
             if (!this.attachment) {
                 return;
             }
@@ -119,12 +123,12 @@ function factory(dependencies) {
         }
     }
 
-    AttachmentImage.fields = {
+    AttachmentImageview.fields = {
         /**
          * Determines the attachment of this attachment image..
          */
         attachment: many2one('mail.attachment', {
-            inverse: 'attachmentImages',
+            inverse: 'attachmentImagesView',
             readonly: true,
             required: true,
         }),
@@ -132,7 +136,7 @@ function factory(dependencies) {
          * States the attachmentList displaying this attachment image.
          */
         attachmentList: many2one('mail.attachment_list', {
-            inverse: 'attachmentImages',
+            inverse: 'attachmentImagesView',
             readonly: true,
             required: true,
         }),
@@ -164,10 +168,10 @@ function factory(dependencies) {
             required: true,
         }),
     };
-    AttachmentImage.identifyingFields = ['attachmentList', 'attachment'];
-    AttachmentImage.modelName = 'mail.attachment_image';
+    AttachmentImageview.identifyingFields = ['attachmentList', 'attachment'];
+    AttachmentImageview.modelName = 'mail.attachment_image_view';
 
-    return AttachmentImage;
+    return AttachmentImageview;
 }
 
-registerNewModel('mail.attachment_image', factory);
+registerNewModel('mail.attachment_image_view', factory);

@@ -6,7 +6,7 @@ import { insert, insertAndReplace, replace } from '@mail/model/model_field_comma
 
 function factory(dependencies) {
 
-    class AttachmentCard extends dependencies['mail.model'] {
+    class AttachmentCardView extends dependencies['mail.model'] {
 
         /**
          * @override
@@ -71,12 +71,12 @@ function factory(dependencies) {
 
     }
 
-    AttachmentCard.fields = {
+    AttachmentCardView.fields = {
         /**
          * Determines the attachment of this card.
          */
         attachment: many2one('mail.attachment', {
-            inverse: 'attachmentCards',
+            inverse: 'attachmentCardsView',
             readonly: true,
             required: true,
         }),
@@ -84,7 +84,7 @@ function factory(dependencies) {
          * States the attachmentList displaying this card.
          */
         attachmentList: many2one('mail.attachment_list', {
-            inverse: 'attachmentCards',
+            inverse: 'attachmentCardsView',
             readonly: true,
             required: true,
         }),
@@ -99,10 +99,10 @@ function factory(dependencies) {
             default: false,
         }),
     };
-    AttachmentCard.identifyingFields = ['attachmentList', 'attachment'];
-    AttachmentCard.modelName = 'mail.attachment_card';
+    AttachmentCardView.identifyingFields = ['attachmentList', 'attachment'];
+    AttachmentCardView.modelName = 'mail.attachment_card_view';
 
-    return AttachmentCard;
+    return AttachmentCardView;
 }
 
-registerNewModel('mail.attachment_card', factory);
+registerNewModel('mail.attachment_card_view', factory);

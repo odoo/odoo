@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -28,7 +28,11 @@ function factory(dependencies) {
             return clear();
         }
 
-        _computeAttachmentImages() {
+        /**
+         * @private
+         * @returns FieldCommand
+         */
+        _computeAttachmentImagesView() {
             return insertAndReplace(this.imageAttachments.map(attachment => {
                 return {
                     attachment: replace(attachment),
@@ -36,7 +40,23 @@ function factory(dependencies) {
             }));
         }
 
-        _computeAttachmentCards() {
+        /**
+         * @private
+         * @returns FieldCommand
+         */
+        _computeAttachmentLinkPreviewsView() {
+            return insertAndReplace(this.linkPreviewAttachments.map(attachment => {
+                return {
+                    attachment: link(attachment),
+                };
+            }));
+        }
+
+        /**
+         * @private
+         * @returns FieldCommand
+         */
+        _computeAttachmentCardsView() {
             return insertAndReplace(this.nonImageAttachments.map(attachment => {
                 return {
                     attachment: replace(attachment),
@@ -52,10 +72,17 @@ function factory(dependencies) {
         }
 
         /**
+         * @returns FieldCommand
+         */
+        _computeLinkPreviewAttachments() {
+            return replace(this.attachments.filter(attachment => attachment.isLinkPreview));
+        }
+
+        /**
          * @returns {mail.attachment[]}
          */
         _computeNonImageAttachments() {
-            return replace(this.attachments.filter(attachment => !attachment.isImage));
+            return replace(this.attachments.filter(attachment => !attachment.isImage && !attachment.isLinkPreview));
         }
 
         /**
@@ -78,16 +105,21 @@ function factory(dependencies) {
         /**
          * States the attachment cards that are displaying this nonImageAttachments.
          */
-        attachmentCards: one2many('mail.attachment_card', {
-            compute: '_computeAttachmentCards',
+        attachmentCardsView: one2many('mail.attachment_card_view', {
+            compute: '_computeAttachmentCardsView',
             inverse: 'attachmentList',
             isCausal: true,
         }),
         /**
          * States the attachment images that are displaying this imageAttachments.
          */
-        attachmentImages: one2many('mail.attachment_image', {
-            compute: '_computeAttachmentImages',
+        attachmentImagesView: one2many('mail.attachment_image_view', {
+            compute: '_computeAttachmentImagesView',
+            inverse: 'attachmentList',
+            isCausal: true,
+        }),
+        attachmentLinkPreviewsView: one2many('mail.attachment_link_preview_view', {
+            compute: '_computeAttachmentLinkPreviewsView',
             inverse: 'attachmentList',
             isCausal: true,
         }),
@@ -117,6 +149,12 @@ function factory(dependencies) {
          */
         imageAttachments: many2many('mail.attachment', {
             compute: '_computeImageAttachments',
+        }),
+        /**
+         * States the attachment that are link previews.
+         */
+        linkPreviewAttachments: many2many('mail.attachment', {
+            compute: '_computeLinkPreviewAttachments',
         }),
         message: many2one('mail.message', {
             related: 'messageView.message'

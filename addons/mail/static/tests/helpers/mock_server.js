@@ -117,6 +117,9 @@ MockServer.include({
             const { min_id, max_id, limit } = args;
             return this._mockRouteMailMessageStarredMessages(min_id, max_id, limit);
         }
+        if (route === '/mail/link_preview') {
+            return this._mockRouteMailLinkPreview(args.url);
+        }
         if (route === '/mail/read_followers') {
             return this._mockRouteMailReadFollowers(args);
         }
@@ -2077,4 +2080,17 @@ MockServer.include({
             starred_counter: this._getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };
     },
+    _mockRouteMailLinkPreview(url) {
+        const attachmentId = this._mockCreate('ir.attachment', {
+            // datas,
+            name: url,
+            description: "test description",
+            mimetype: "application/o-linkpreview",
+            res_id: 0,
+            res_model: "mail.compose.message",
+            url: url,
+        });
+        const attachment = this._getRecords('ir.attachment', [['id', '=', attachmentId]])[0];
+        return attachment;
+    }
 });
