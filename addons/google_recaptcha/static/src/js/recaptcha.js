@@ -38,7 +38,7 @@ const ReCaptcha = Class.extend({
     getToken: async function (action) {
         if (!this._publicKey) {
             return {
-                message: _t("No recaptcha public key set."),
+                message: _t("No recaptcha site key set."),
             };
         }
         await this._recaptchaReady;
@@ -48,7 +48,7 @@ const ReCaptcha = Class.extend({
             };
         } catch (e) {
             return {
-                error: _t("The recaptcha public key is invalid."),
+                error: _t("The recaptcha site key is invalid."),
             };
         }
     },
