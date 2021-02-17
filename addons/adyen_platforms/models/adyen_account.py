@@ -646,8 +646,6 @@ class AdyenPayout(models.Model):
             adyen_payout_id.next_scheduled_payout = date_utils.end_of(today, adyen_payout_id.payout_schedule)
 
     adyen_account_id = fields.Many2one('adyen.account', ondelete='cascade')
-    adyen_bank_account_id = fields.Many2one('adyen.bank.account', string='Bank Account',
-        help='The bank account to which the payout is to be made. If left blank, a bank account is automatically selected')
     name = fields.Char('Name', default='Default', required=True)
     code = fields.Char('Account Code')
     payout_schedule = fields.Selection(string='Schedule', selection=[
