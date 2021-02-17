@@ -1,0 +1,66 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+.o_AttachmentLinkPreview_linkImage {
+    float: left;
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+.o_AttachmentLinkPreview.o-isCompact {
+    .o_AttachmentLinkPreview_linkImage {
+        max-width: 50px;
+        max-height: 50px;
+        margin-right: 5px;
+        margin-bottom: 0;
+    }
+
+    .o_AttachmentLinkPreview_title {
+        width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+
+        .o_AttachmentLinkPreview_Linktitle {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+    }
+
+    .o_AttachmentLinkPreview_excerpt {
+        width: 200px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-bottom: 0;
+    }
+}
+
+.o_AttachmentLinkPreview_aside {
+    float: right;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_AttachmentLinkPreview_asideItemUnlink {
+    border: none;
+    background: transparent;
+}
+
+.o_AttachmentLinkPreview {
+    background-color: gray('300');
+    border-radius: 5px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+
+.o_AttachmentLinkPreview.o-isCompact {
+    padding: 5px;
+}

@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 from odoo.exceptions import AccessError
 from odoo.http import request
 
+
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
+
+    link_preview_ids = fields.One2many('mail.link.preview', 'attachment_id', string='link preview data')
 
     def _post_add_create(self):
         """ Overrides behaviour when the attachment is created through the controller
@@ -37,13 +40,31 @@ class IrAttachment(models.Model):
                     pass
 
     def _attachment_format(self):
-        safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
-        return [{
-            'checksum': attachment.checksum,
-            'id': attachment.id,
-            'filename': attachment.name,
-            'name': attachment.name,
-            'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-            'res_id': attachment.res_id,
-            'res_model': attachment.res_model,
-        } for attachment in self]
+        safari = request and request.httprequest.user_agent.browser == 'safari'
+        attachments = []
+        for attachment in self:
+            # This will rebuild the link preview that have been deleted by the
+            # cron when they are requested again
+            if attachment.url and not attachment.sudo().link_preview_ids:
+                opengraph = self.env['mail.link.preview'].get_open_graph_data(attachment.url)
+                if opengraph:
+                    self.env['mail.link.preview'].sudo().create({
+                        'attachment_id': attachment.id,
+                        'type': opengraph.get('type'),
+                        'url': opengraph.get('url'),
+                        'title': opengraph.get('title'),
+                        'image_url': opengraph.get('image'),
+                        'description': opengraph.get('description'),
+                    })
+            attachments.append({
+                'checksum': attachment.checksum,
+                'id': attachment.id,
+                'filename': attachment.name,
+                'name': attachment.name,
+                'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+                'res_id': attachment.res_id,
+                'res_model': attachment.res_model,
+                'url': attachment.url,
+                'link_preview': attachment.sudo().link_preview_ids._link_preview_format()
+            })
+        return attachments

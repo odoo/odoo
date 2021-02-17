@@ -206,6 +206,7 @@ export class ComposerTextInput extends Component {
         }
         this._textareaLastInputValue = this._textareaRef.el.value;
         this._updateHeight();
+        this.composer.getLinkPreview();
     }
 
     /**

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AttachmentLinkPreview" owl="1">
+        <div class="o_AttachmentLinkPreview" t-att-class="{'o-isCompact': props.isCompact}">
+            <t t-if="attachment">
+                <t t-if="attachment.linkPreview.image">
+                    <img t-att-src="attachment.linkPreview.image" class="o_AttachmentLinkPreview_linkImage"/>
+                </t>
+                <div class="o_AttachmentLinkPreview_aside">
+                    <button class="o_AttachmentLinkPreview_asideItem o_AttachmentLinkPreview_asideItemUnlink" t-att-class="{ 'o-pretty': attachment.isLinkedToComposer }" t-on-click="_onClickUnlink">
+                        <i class="fa fa-times"/>
+                    </button>
+                </div>
+                <t t-if="attachment.linkPreview.title">
+                    <div class="o_AttachmentLinkPreview_title">
+                        <a t-att-href="attachment.url">
+                            <h3 class="o_AttachmentLinkPreview_Linktitle">
+                                <t t-esc="attachment.linkPreview.title"/>
+                            </h3>
+                        </a>
+                    </div>
+                </t>
+                <t t-if="attachment.linkPreview.description">
+                    <p class="o_AttachmentLinkPreview_excerpt">
+                        <t t-esc="attachment.linkPreview.description"/>
+                    </p>
+                </t>
+                <t t-if="state.hasDeleteConfirmDialog">
+                    <AttachmentDeleteConfirmDialog
+                        attachmentLocalId="props.attachmentLocalId"
+                        t-on-dialog-closed="_onDeleteConfirmDialogClosed"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -22,7 +22,7 @@ export class AttachmentList extends Component {
 Object.assign(AttachmentList, {
     defaultProps: {
         isCompact: false,
-   },
+    },
     props: {
         areAttachmentsEditable: {
             type: Boolean,
