@@ -139,7 +139,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             onMounted(() => {
                 this.bufferHolderStack.push({
                     component: currentComponent,
-                    state: config.state ? config.state : { buffer: '' },
+                    state: config.state ? config.state : { buffer: '', toStartOver: false },
                     config,
                 });
                 this._setUp();
@@ -227,6 +227,9 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             if (input === undefined || input === null) return;
             let isFirstInput = isEmpty(this.state.buffer);
             if (input === this.decimalPoint) {
+                if (this.state.toStartOver) {
+                    this.state.buffer = '';
+                }
                 if (isFirstInput) {
                     this.state.buffer = '0' + this.decimalPoint;
                 } else if (!this.state.buffer.length || this.state.buffer === '-') {
@@ -246,6 +249,9 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
                     this.state.buffer = '';
                     this.isReset = false;
                     return;
+                }
+                if (this.state.toStartOver) {
+                    this.state.buffer = '';
                 }
                 const buffer = this.state.buffer;
                 if (isEmpty(buffer)) {
@@ -274,6 +280,9 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
                     inputValue + currentBufferValue
                 );
             } else if (!isNaN(parseInt(input, 10))) {
+                if (this.state.toStartOver) {  // when we want to erase the current buffer for a new value
+                    this.state.buffer = '';
+                }
                 if (isFirstInput) {
                     this.state.buffer = '' + input;
                 } else if (this.state.buffer.length > 12) {
@@ -288,6 +297,8 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
             // once an input is accepted and updated the buffer,
             // the buffer should not be in reset state anymore.
             this.isReset = false;
+            // it should not be in a start the buffer over state anymore.
+            this.state.toStartOver = false;
 
             this.trigger('buffer-update', this.state.buffer);
         }

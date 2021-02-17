@@ -9,7 +9,7 @@
                         <t t-esc="props.title" />
                     </header>
                     <div class="popup-input value active">
-                        <t t-esc="inputBuffer" />
+                        <span t-att-class="{ 'highlight': state.toStartOver }"><t t-esc="inputBuffer"/></span>
                     </div>
                     <div class="popup-numpad">
                         <button class="input-button number-char" t-on-mousedown.prevent="sendInput('1')">1</button>

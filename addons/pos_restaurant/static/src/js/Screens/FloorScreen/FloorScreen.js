@@ -95,6 +95,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 startingValue: selectedTable.seats,
                 cheap: true,
                 title: this.env._t('Number of Seats ?'),
+                isInputSelected: true,
             });
             if (!confirmed) return;
             const newSeatsNum = parseInt(inputNumber, 10) || selectedTable.seats;
