@@ -292,7 +292,6 @@ function factory(dependencies) {
             let postData = {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
                 body,
-                channel_ids: this.mentionedChannels.map(channel => channel.id),
                 message_type: 'comment',
                 partner_ids: this.recipients.map(partner => partner.id),
             };

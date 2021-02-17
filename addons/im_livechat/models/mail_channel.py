@@ -131,8 +131,8 @@ class MailChannel(models.Model):
             FROM mail_channel C
             WHERE NOT EXISTS (
                 SELECT *
-                FROM mail_message_mail_channel_rel R
-                WHERE R.mail_channel_id = C.id
+                FROM mail_message M
+                WHERE M.res_id = C.id AND m.model = 'mail.channel'
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
                 COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
                 < ((now() at time zone 'UTC') - interval %s)""", ("%s hours" % hours,))
@@ -177,7 +177,7 @@ class MailChannel(models.Model):
         if self.livechat_active:
             self.livechat_active = False
             # avoid useless notification if the channel is empty
-            if not self.channel_message_ids:
+            if not self.message_ids:
                 return
             # Notify that the visitor has left the conversation
             self.message_post(author_id=self.env.ref('base.partner_root').id,

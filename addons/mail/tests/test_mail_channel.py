@@ -206,7 +206,8 @@ class TestChannelInternals(MailCommon):
         with self.mock_mail_gateway():
             new_msg = channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertNotSentEmail()
-        self.assertEqual(new_msg.channel_ids, channel)
+        self.assertEqual(new_msg.model, self.test_channel._name)
+        self.assertEqual(new_msg.res_id, self.test_channel.id)
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
         self.assertEqual(new_msg.notified_partner_ids, self.env['res.partner'])
 
@@ -223,7 +224,8 @@ class TestChannelInternals(MailCommon):
                 channel = self.env['mail.channel'].browse(self.test_channel.ids)
                 new_msg = channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertNotSentEmail()
-        self.assertEqual(new_msg.channel_ids, self.test_channel)
+        self.assertEqual(new_msg.model, self.test_channel._name)
+        self.assertEqual(new_msg.res_id, self.test_channel.id)
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
         self.assertEqual(new_msg.notified_partner_ids, self.env['res.partner'])
 
@@ -320,12 +322,8 @@ class TestChannelInternals(MailCommon):
         channel.write({'channel_type': 'chat'})
         channel.action_follow()
 
-        msg_1 = self._add_messages(
-            self.test_channel, 'Body1', author=self.user_employee.partner_id,
-            channel_ids=[self.test_channel.id])
-        msg_2 = self._add_messages(
-            self.test_channel, 'Body2', author=self.user_employee.partner_id,
-            channel_ids=[self.test_channel.id])
+        msg_1 = self._add_messages(self.test_channel, 'Body1', author=self.user_employee.partner_id)
+        msg_2 = self._add_messages(self.test_channel, 'Body2', author=self.user_employee.partner_id)
 
         self.test_channel.channel_seen(msg_2.id)
         self.assertEqual(
@@ -440,12 +438,10 @@ class TestChannelModeration(MailCommon):
         msg_c1_emplo2 = self._add_messages(self.channel, 'Body21', author=self.partner_employee_2, moderation_status='pending_moderation')
 
         self._reset_bus()
-        self.assertFalse(msg_c1_admin1.channel_ids | msg_c1_admin2.channel_ids | msg_c1_emplo2.channel_ids)
 
         # accept
         with self.assertBus([(self.cr.dbname, 'mail.channel', self.channel.id)]):
             msg_c1_admin1.with_user(self.user_employee)._moderate('accept')
-        self.assertEqual(msg_c1_admin1.channel_ids, self.channel)
         self.assertEqual(msg_c1_admin1.moderation_status, 'accepted')
         self.assertEqual(msg_c1_admin2.moderation_status, 'pending_moderation')
 
@@ -455,9 +451,6 @@ class TestChannelModeration(MailCommon):
                 (self.cr.dbname, 'mail.channel', self.channel.id),
                 (self.cr.dbname, 'mail.channel', self.channel.id)]):
             (msg_c1_admin1 | msg_c1_emplo2).with_user(self.user_employee)._moderate('allow')
-        self.assertEqual(msg_c1_admin1.channel_ids, self.channel)
-        self.assertEqual(msg_c1_admin2.channel_ids, self.channel)
-        self.assertEqual(msg_c1_emplo2.channel_ids, self.channel)
         self.assertEqual(msg_c1_admin1.moderation_status, 'accepted')
         self.assertEqual(msg_c1_admin2.moderation_status, 'accepted')
         self.assertEqual(msg_c1_emplo2.moderation_status, 'accepted')
@@ -469,8 +462,6 @@ class TestChannelModeration(MailCommon):
         msg_c1_emplo2 = self._add_messages(self.channel, '<p>Body21</p>', author=self.partner_employee_2, moderation_status='pending_moderation')
         msg_c1_portal = self._add_messages(self.channel, '<p>Body12</p>', author=self.partner_portal, moderation_status='pending_moderation')
         id2, id4 = msg_c1_admin2.id, msg_c1_portal.id  # save ids because unlink will discard them
-
-        self.assertFalse(msg_c1_admin1.channel_ids | msg_c1_admin2.channel_ids | msg_c1_emplo2.channel_ids | msg_c1_portal.channel_ids)
 
         # test reject: should also send a rejection email
         with self.mock_mail_gateway():
@@ -670,5 +661,3 @@ class TestChannelModeration(MailCommon):
         self.assertFalse(msg_email1)
         self.assertEqual(msg_admin, pending_messages)
         self.assertEqual(accepted_messages, msg_moderator | msg_email2 | msg_notif)
-        self.assertFalse(msg_admin.channel_ids)
-        self.assertEqual(msg_email2.channel_ids, channel)

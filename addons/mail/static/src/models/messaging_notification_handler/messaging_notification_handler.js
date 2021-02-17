@@ -540,11 +540,10 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} param0
-         * @param {integer[]} [param0.channel_ids
          * @param {integer[]} [param0.message_ids=[]]
          * @param {integer} [param0.needaction_inbox_counter]
          */
-        _handleNotificationPartnerMarkAsRead({ channel_ids, message_ids = [], needaction_inbox_counter }) {
+        _handleNotificationPartnerMarkAsRead({ message_ids = [], needaction_inbox_counter }) {
             for (const message_id of message_ids) {
                 // We need to ignore all not yet known messages because we don't want them
                 // to be shown partially as they would be linked directly to mainCache

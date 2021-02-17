@@ -29,7 +29,7 @@ class MailChannel(models.Model):
         """
         description = ''.join(
             '%s: %s\n' % (message.author_id.name or self.anonymous_name, message.body)
-            for message in self.channel_message_ids.sorted('id')
+            for message in self.message_ids.sorted('id')
         )
         # if public user is part of the chat: consider lead to be linked to an
         # anonymous user whatever the participants. Otherwise keep only share

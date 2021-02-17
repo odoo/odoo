@@ -53,14 +53,12 @@ QUnit.test('marked as read thread notifications are ordered by last message date
     );
     this.data['mail.message'].records.push(
         {
-            channel_ids: [100],
             date: "2019-01-01 00:00:00",
             id: 42,
             model: 'mail.channel',
             res_id: 100,
         },
         {
-            channel_ids: [200],
             date: "2020-01-01 00:00:00",
             id: 43,
             model: 'mail.channel',
@@ -97,14 +95,12 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
     );
     this.data['mail.message'].records.push(
         {
-            channel_ids: [100],
             date: "2019-01-01 00:00:00",
             id: 42,
             model: 'mail.channel',
             res_id: 100,
         },
         {
-            channel_ids: [200],
             date: "2020-01-01 00:00:00",
             id: 43,
             model: 'mail.channel',
@@ -124,7 +120,6 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
         const messageData = {
             author_id: [7, "Demo User"],
             body: "<p>New message !</p>",
-            channel_ids: [100],
             date: "2020-03-23 10:00:00",
             id: 44,
             message_type: 'comment',

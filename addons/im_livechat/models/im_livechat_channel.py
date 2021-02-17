@@ -76,7 +76,7 @@ class ImLivechatChannel(models.Model):
     def _compute_nbr_channel(self):
         data = self.env['mail.channel'].read_group([
             ('livechat_channel_id', 'in', self._ids),
-            ('channel_message_ids', '!=', False)], ['__count'], ['livechat_channel_id'], lazy=False)
+            ('message_ids', '!=', False)], ['__count'], ['livechat_channel_id'], lazy=False)
         channel_count = {x['livechat_channel_id'][0]: x['__count'] for x in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
@@ -182,8 +182,7 @@ class ImLivechatChannel(models.Model):
 
         self.env.cr.execute("""SELECT COUNT(DISTINCT c.id), c.livechat_operator_id
             FROM mail_channel c
-            LEFT OUTER JOIN mail_message_mail_channel_rel r ON c.id = r.mail_channel_id
-            LEFT OUTER JOIN mail_message m ON r.mail_message_id = m.id
+            LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'mail.channel'
             WHERE c.channel_type = 'livechat' 
             AND c.livechat_operator_id in %s
             AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')

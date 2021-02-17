@@ -87,8 +87,6 @@ class TestGetMailChannel(TransactionCase):
             mail_channel = self.livechat_channel._open_livechat_mail_channel('Anonymous')
             mail_channels.append(mail_channel)
             # send a message to mark this channel as 'active'
-            self.env['mail.channel'].browse(mail_channel['id']).write({
-                'channel_message_ids': [(0, 0, {'body': 'cc'})]
-            })
+            self.env['mail.channel'].browse(mail_channel['id']).message_post(body='cc')
 
         return mail_channels

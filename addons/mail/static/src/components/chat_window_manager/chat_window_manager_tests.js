@@ -1013,7 +1013,8 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [20],
+            model: "mail.channel",
+            res_id: 20,
         });
     }
     await this.start();
@@ -1784,7 +1785,8 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [20],
+            model: "mail.channel",
+            res_id: 20,
         });
     }
     await this.start();
@@ -1866,7 +1868,8 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [20],
+            model: "mail.channel",
+            res_id: 20,
         });
     }
     await this.start();
@@ -2023,7 +2026,8 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
     for (let i = 0; i < 10; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [20],
+            model: "mail.channel",
+            res_id: 20,
         });
     }
     await this.start();
@@ -2121,7 +2125,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
      * 2 visible chat windows + hidden menu:
      *  10 + 325 + 5 + 325 + 10 + 200 + 5 = 875 < 900
      */
-    assert.expect(14);
+    assert.expect(17);
 
     // 3 channels are expected to be found in the messaging menu, each with a
     // random unique id that will be referenced in the test
@@ -2153,10 +2157,13 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
         },
         mockRPC(route, args) {
             if (args.method === 'message_fetch') {
-                // domain should be like [['channel_id', 'in', [X]]] with X the channel id
-                const channel_ids = args.kwargs.domain[0][2];
-                assert.strictEqual(channel_ids.length, 1, "messages should be fetched channel per channel");
-                assert.step(`rpc:message_fetch:${channel_ids[0]}`);
+                // domain should be like [['message_type', '=', 'user_notification'], ['model', '=', 'mail.channel'], ['res_id', '=', X]] with X the channel id
+                const channel_model = args.kwargs.domain[1][2];
+                const channel_id_field = args.kwargs.domain[2][0];
+                const channel_id = args.kwargs.domain[2][2];
+                assert.strictEqual(channel_model, "mail.channel", "messages should be on channel thread model");
+                assert.strictEqual(channel_id_field, "res_id", "messages should be fetched channel per channel using res_id field");
+                assert.step(`rpc:message_fetch:${channel_id}`);
             }
             return this._super(...arguments);
         },
@@ -2243,7 +2250,6 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
     ];
     this.data['mail.message'].records.push({
         body: "not empty",
-        channel_ids: [10],
         model: 'mail.channel',
         res_id: 10,
     });
@@ -2348,7 +2354,6 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     );
     this.data['mail.message'].records.push({
         body: "not empty",
-        channel_ids: [10],
         model: 'mail.channel',
         res_id: 10,
     });

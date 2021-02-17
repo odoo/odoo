@@ -125,7 +125,6 @@ class MockModels {
                     attachment_ids: { string: "Attachments", type: 'many2many', relation: 'ir.attachment', default: [] },
                     author_id: { string: "Author", type: 'many2one', relation: 'res.partner', default() { return this.currentPartnerId; } },
                     body: { string: "Contents", type: 'html', default: "<p></p>" },
-                    channel_ids: { string: "Channels", type: 'many2many', relation: 'mail.channel' },
                     date: { string: "Date", type: 'datetime' },
                     email_from: { string: "From", type: 'char' },
                     history_partner_ids: { string: "Partners with History", type: 'many2many', relation: 'res.partner' },

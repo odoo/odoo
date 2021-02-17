@@ -160,10 +160,8 @@ class MailThread(models.AbstractModel):
         if self.ids:
             # search for unread messages, directly in SQL to improve performances
             self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
-                                 RIGHT JOIN mail_message_mail_channel_rel rel
-                                 ON rel.mail_message_id = msg.id
                                  RIGHT JOIN mail_channel_partner cp
-                                 ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND
+                                 ON (cp.channel_id = msg.res_id AND cp.partner_id = %s AND
                                     (cp.seen_message_id IS NULL OR cp.seen_message_id < msg.id))
                                  WHERE msg.model = %s AND msg.res_id = ANY(%s) AND
                                         msg.message_type != 'user_notification' AND
