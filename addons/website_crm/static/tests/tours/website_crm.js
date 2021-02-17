@@ -38,5 +38,24 @@ odoo.define('website_crm.tour', function(require) {
         trigger: "#wrap:has(h1:contains('Thank You!'))"
     }]);
 
+    tour.register('website_crm_catch_logged_partner_info_tour', {
+        test: true,
+        url: '/contactus',
+    }, [{
+        content: "Complete Subject",
+        trigger: "input[name=name]",
+        run: "text Useless subject"
+    }, {
+        content: "Complete Subject",
+        trigger: "textarea[name=description]",
+        run: "text ### TOUR DATA PREFILL ###"
+    }, {
+        content: "Send the form",
+        trigger: ".s_website_form_send"
+    }, {
+        content: "Check we were redirected to the success page",
+        trigger: "#wrap:has(h1:contains('Thank You!'))"
+    }]);
+
     return {};
 });
