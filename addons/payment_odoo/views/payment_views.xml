@@ -18,7 +18,7 @@
                            readonly="1"
                            attrs="{'invisible': [('odoo_adyen_account_id', '=', False)]}"/>
                     <field name="odoo_adyen_payout_id"
-                           attrs="{'invisible': [('odoo_adyen_account_id', '=', False)], 'required':[('provider', '=', 'odoo'), ('state', '!=', 'disabled')]}"/>
+                           attrs="{'invisible': [('odoo_adyen_account_id', '=', False)], 'required': [('provider', '=', 'odoo'), ('state', '=', 'enabled')]}"/>
                 </group>
             </xpath>
         </field>

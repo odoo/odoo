@@ -17,10 +17,10 @@ class PaymentAcquirer(models.Model):
         string="Adyen Payout", comodel_name='adyen.payout', required_if_provider='odoo',
         domain='[("adyen_account_id", "=", odoo_adyen_account_id)]')
 
-    @api.constrains('provider', 'state')
+    @api.constrains('provider', 'state', 'odoo_adyen_payout_id', 'odoo_adyen_account_id')
     def _check_state_is_not_test(self):
-        if any(a.provider == 'odoo' and a.state == 'test' for a in self):
-            raise ValidationError(_("Odoo Payments is not available in test mode."))
+        if any(a.provider == 'odoo' and a.state == 'enabled' and not a.odoo_adyen_account_id and not a.odoo_adyen_payout_id for a in self):
+            raise ValidationError(_("Adyen and Payouts accounts are required."))
 
     def odoo_create_adyen_account(self):
         return self.env['adyen.account'].action_create_redirect()
@@ -28,7 +28,8 @@ class PaymentAcquirer(models.Model):
     def _odoo_get_api_url(self):
         self.ensure_one()
         proxy_url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.proxy_url')
-        return urls.url_join(proxy_url, 'v1/pay_by_link')
+        url = 'v1/pay_by_link' if self.state == 'enabled' else 'v1/test_pay_by_link'
+        return urls.url_join(proxy_url, url)
 
     def _odoo_compute_shopper_reference(self, partner_id):
         """ Compute a unique reference of the partner for Adyen.

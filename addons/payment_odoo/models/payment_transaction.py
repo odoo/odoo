@@ -56,7 +56,7 @@ class PaymentTransaction(models.Model):
                 self.partner_id.id
             ),
             'recurringProcessingModel': 'CardOnFile',
-            'storePaymentMethod': self.tokenize,  # True by default on Adyen side
+            'storePaymentMethod': self.tokenize and self.state == 'enabled',  # True by default on Adyen side
             # Since the Pay by Link API redirects the customer without any payload, we use the
             # /payment/status route directly as return url.
             'returnUrl': urls.url_join(base_url, '/payment/status'),
