@@ -1108,7 +1108,11 @@ class AccountMove(models.Model):
         final_batches = []
         for journal_group in grouped.values():
             for date_group in journal_group.values():
-                if not final_batches or final_batches[-1]['format'] != date_group['format']:
+                if (
+                    not final_batches
+                    or final_batches[-1]['format'] != date_group['format']
+                    or final_batches[-1]['format_values'] != date_group['format_values']
+                ):
                     final_batches += [date_group]
                 elif date_group['reset'] == 'never':
                     final_batches[-1]['records'] += date_group['records']
