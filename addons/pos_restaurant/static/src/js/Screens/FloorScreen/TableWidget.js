@@ -49,6 +49,9 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
                 'notify-skipped': notifications.skipped,
             };
         }
+        get customerCountDisplay() {
+            return `${this.env.pos.get_customer_count(this.props.table)}/${this.props.table.seats}`;
+        }
         _getNotifications() {
             const orders = this.env.pos.get_table_orders(this.props.table);
 
