@@ -43,7 +43,8 @@
                         <h1><field name="name" placeholder="e.g. NYC Shop"/></h1>
                     </div>
                     <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('has_active_session','=', False)]}" role="alert">
-                      A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
+                        A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
+                        <button class="btn" style="padding:0" name="open_existing_session_cb" type="object">Click here to close the session</button>
                     </div>
                     <div class="row mt16 o_settings_container">
                         <div id="company" class="col-12 col-lg-6 o_setting_box" groups="base.group_multi_company">
