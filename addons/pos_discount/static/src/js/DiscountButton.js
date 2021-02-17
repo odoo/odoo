@@ -16,6 +16,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
             const { confirmed, payload } = await this.showPopup('NumberPopup',{
                 title: this.env._t('Discount Percentage'),
                 startingValue: this.env.pos.config.discount_pc,
+                isInputSelected: true
             });
             if (confirmed) {
                 const val = Math.round(Math.max(0,Math.min(100,parseFloat(payload))));

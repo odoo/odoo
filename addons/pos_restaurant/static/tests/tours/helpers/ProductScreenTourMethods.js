@@ -45,6 +45,14 @@ odoo.define('pos_restaurant.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        clickGuestButton() {
+            return [
+                {
+                    content: 'click guest button',
+                    trigger: '.control-buttons .control-button span:contains("Guests")'
+                }
+            ]
+        }
     }
 
     class CheckExt extends Check {
@@ -61,6 +69,15 @@ odoo.define('pos_restaurant.tour.ProductScreenTourMethods', function (require) {
                     run: function () {}, // it's a check
                 },
             ];
+        }
+        guestNumberIs(numberInString) {
+            return [
+                {
+                    content: `guest number is ${numberInString}`,
+                    trigger: `.control-buttons .control-button span.control-button-number:contains(${numberInString})`,
+                    run: function () {}, // it's a check
+                }
+            ]
         }
     }
 
