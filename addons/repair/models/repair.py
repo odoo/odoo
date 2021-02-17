@@ -22,9 +22,10 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default='/',
+        default='New',
         copy=False, required=True,
-        states={'confirmed': [('readonly', True)]})
+        readonly=True)
+    description = fields.Char('Repair Description')
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
         domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
@@ -49,16 +50,16 @@ class Repair(models.Model):
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('confirmed', 'Confirmed'),
-        ('under_repair', 'Under Repair'),
         ('ready', 'Ready to Repair'),
+        ('under_repair', 'Under Repair'),
         ('2binvoiced', 'To be Invoiced'),
-        ('invoice_except', 'Invoice Exception'),
         ('done', 'Repaired'),
         ('cancel', 'Cancelled')], string='Status',
         copy=False, default='draft', readonly=True, tracking=True,
         help="* The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order.\n"
              "* The \'Confirmed\' status is used when a user confirms the repair order.\n"
              "* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed.\n"
+             "* The \'Under Repair\' status is used when the repair is ongoing.\n"
              "* The \'To be Invoiced\' status is used to generate the invoice before or after repairing done.\n"
              "* The \'Done\' status is set when repairing is completed.\n"
              "* The \'Cancelled\' status is used when user cancel repair order.")
@@ -74,7 +75,7 @@ class Repair(models.Model):
     guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
     operations = fields.One2many(
         'repair.line', 'repair_id', 'Parts',
-        copy=True, readonly=True, states={'draft': [('readonly', False)]})
+        copy=True)
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
         default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
@@ -98,7 +99,7 @@ class Repair(models.Model):
         help="Move created by the repair order")
     fees_lines = fields.One2many(
         'repair.fee', 'repair_id', 'Operations',
-        copy=True, readonly=True, states={'draft': [('readonly', False)]})
+        copy=True, readonly=False)
     internal_notes = fields.Text('Internal Notes')
     quotation_notes = fields.Text('Quotation Notes')
     user_id = fields.Many2one('res.users', string="Responsible", default=lambda self: self.env.user, check_company=True)
@@ -106,6 +107,7 @@ class Repair(models.Model):
         'res.company', 'Company',
         readonly=True, required=True, index=True,
         default=lambda self: self.env.company)
+    sale_order_id = fields.Many2one('sale.order', 'Sale Order', copy=False, help="Sale Order from which the product to be repaired comes from.")
     tag_ids = fields.Many2many('repair.tags', string="Tags")
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     repaired = fields.Boolean('Repaired', copy=False, readonly=True)
@@ -206,12 +208,8 @@ class Repair(models.Model):
 
     @api.model
     def create(self, vals):
-        # To avoid consuming a sequence number when clicking on 'Create', we preprend it if the
-        # the name starts with '/'.
-        vals['name'] = vals.get('name') or '/'
-        if vals['name'].startswith('/'):
-            vals['name'] = (self.env['ir.sequence'].next_by_code('repair.order') or '/') + vals['name']
-            vals['name'] = vals['name'][:-1] if vals['name'].endswith('/') and vals['name'] != '/' else vals['name']
+        # We generate a standard reference
+        vals['name'] = self.env['ir.sequence'].next_by_code('repair.order') or '/'
         return super(Repair, self).create(vals)
 
     def button_dummy(self):
@@ -495,6 +493,7 @@ class Repair(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
             raise UserError(_("Repair must be under repair in order to end reparation."))
+        self._check_product_tracking()
         for repair in self:
             repair.write({'repaired': True})
             vals = {'state': 'done'}
@@ -595,6 +594,15 @@ class Repair(models.Model):
             res[repair.id] = move.id
         return res
 
+    def _check_product_tracking(self):
+        invalid_lines = self.operations.filtered(lambda x: x.tracking != 'none' and not x.lot_id)
+        if invalid_lines:
+            products = invalid_lines.product_id
+            raise ValidationError(_(
+                "Serial number is required for operation lines with products: %s",
+                ", ".join(products.mapped('display_name')),
+            ))
+
 
 class RepairLine(models.Model):
     _name = 'repair.line'
@@ -649,16 +657,7 @@ class RepairLine(models.Model):
         ('cancel', 'Cancelled')], 'Status', default='draft',
         copy=False, readonly=True, required=True,
         help='The status of a repair line is set automatically to the one of the linked repair order.')
-
-    @api.constrains('lot_id', 'product_id')
-    def _check_product_tracking(self):
-        invalid_lines = self.filtered(lambda x: x.product_id.tracking != 'none' and not x.lot_id)
-        if invalid_lines:
-            products = invalid_lines.product_id
-            raise ValidationError(_(
-                "Serial number is required for operation lines with products: %s",
-                ", ".join(products.mapped('name')),
-            ))
+    tracking = fields.Selection(string='Product Tracking', related="product_id.tracking")
 
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'repair_id.invoice_method')
     def _compute_price_subtotal(self):

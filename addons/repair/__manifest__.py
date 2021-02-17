@@ -27,6 +27,7 @@ The following topics are covered by this module:
         'security/repair_security.xml',
         'wizard/repair_make_invoice_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
+        'views/stock_move_views.xml',
         'views/repair_views.xml',
         'report/repair_reports.xml',
         'report/repair_templates_repair_order.xml',
