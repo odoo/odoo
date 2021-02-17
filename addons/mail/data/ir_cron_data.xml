@@ -42,5 +42,17 @@
             <field name="state">code</field>
         </record>
 
+        <record id="ir_cron_delete_old_preview" model="ir.cron">
+            <field name="name">Mail: Delete old link preview</field>
+            <field name="model_id" ref="model_mail_link_preview"/>
+            <field name="state">code</field>
+            <field name="numbercall">-1</field>
+            <field name="code">model._cron_delete_old_preview()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
     </data>
 </odoo>

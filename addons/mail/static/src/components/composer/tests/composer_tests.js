@@ -2149,6 +2149,60 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     );
 });
 
+QUnit.test('Composer should ask for a link preview when a URL is inserted', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (route === '/mail/link_preview') {
+                assert.step('link_preview');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message https://tenor.com/view/oops-shrug-shoulder-grin-tom-and-jerry-show-gif-15479170");
+    });
+    assert.verifySteps(['link_preview'], 'Composer should ask for a link preview');
+    assert.containsOnce(document.body, '.o_AttachmentLinkPreview', 'Composer should have an attachment link preview');
+});
+
+QUnit.test('Composer should remove attachment link preview when the url is removed', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message https://tenor.com/view/oops-shrug-shoulder-grin-tom-and-jerry-show-gif-15479170");
+    });
+    assert.containsOnce(document.body, '.o_AttachmentLinkPreview', "Composer should have an attachment link preview");
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('selectAll', false);
+        document.execCommand('delete', false);
+    });
+    assert.containsNone(document.body, '.o_AttachmentLinkPreview', "Composer shouldn't have an attachment link preview");
+});
+
 });
 });
 });

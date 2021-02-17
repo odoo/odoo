@@ -2,6 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # core models (required for mixins)
+from . import mail_render_mixin
+from . import mail_composer_mixin
+from . import mail_message_subtype
+from . import mail_tracking_value
 from . import mail_alias
 from . import models
 
@@ -20,6 +24,7 @@ from . import mail_activity_type
 from . import mail_activity
 from . import mail_blacklist
 from . import mail_followers
+from . import mail_link_preview
 from . import mail_message_reaction
 from . import mail_message_subtype
 from . import mail_message

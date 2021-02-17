@@ -3,6 +3,7 @@
 import { link } from '@mail/model/model_field_command';
 import {
     afterEach,
+    afterNextRender,
     beforeEach,
     createRootMessagingComponent,
     start,
@@ -67,6 +68,46 @@ QUnit.test('auto layout with image', async function (assert) {
         document.querySelectorAll(`.o_AttachmentImage_aside`).length,
         0,
         "attachment should not have an aside element"
+    );
+});
+
+QUnit.test('clicking on the delete attachment button multiple times should do the rpc only once', async function (assert) {
+    assert.expect(2);
+    await this.start({
+        async mockRPC(route, args) {
+            if (route === '/mail/attachment/delete') {
+                assert.step('attachment_delete');
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    const attachment = this.messaging.models['mail.attachment'].create({
+        filename: "test.png",
+        id: 750,
+        mimetype: 'image/png',
+        name: "test.png",
+    });
+    const message = this.messaging.models['mail.message'].create({
+        attachments: link(attachment),
+        author: link(this.messaging.currentPartner),
+        body: "<p>Test</p>",
+        id: 100,
+    });
+    await this.createMessageComponent(message);
+
+    await afterNextRender(() => {
+        document.querySelector('.o_AttachmentImage_actionUnlink').click();
+    });
+
+    await afterNextRender(() => {
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+    });
+    assert.verifySteps(
+        ['attachment_delete'],
+        "The unlink method must be called once"
     );
 });
 

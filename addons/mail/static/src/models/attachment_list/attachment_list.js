@@ -37,6 +37,24 @@ function factory(dependencies) {
             }));
         }
 
+        _computeAttachmentLinkPreviews() {
+            return insertAndReplace(this.linkPreviewAttachments.map(attachment => {
+                return {
+                    attachmentList: link(this),
+                    attachment: link(attachment),
+                };
+            }));
+        }
+
+        _computeAttachmentLinkPreviews() {
+            return insertAndReplace(this.linkPreviewAttachments.map(attachment => {
+                return {
+                    attachmentList: link(this),
+                    attachment: link(attachment),
+                };
+            }));
+        }
+
         _computeAttachmentCards() {
             return insertAndReplace(this.nonImageAttachments.map(attachment => {
                 return {
@@ -57,7 +75,14 @@ function factory(dependencies) {
          * @returns {mail.attachment[]}
          */
         _computeNonImageAttachments() {
-            return replace(this.attachments.filter(attachment => !attachment.isImage));
+            return replace(this.attachments.filter(attachment => !attachment.isImage && !attachment.hasLinkPreview));
+        }
+
+        /**
+         * @returns {mail.attachment[]}
+         */
+        _computeLinkPreviewAttachments() {
+            return replace(this.attachments.filter(attachment => attachment.hasLinkPreview));
         }
 
         /**
@@ -91,6 +116,9 @@ function factory(dependencies) {
             compute: '_computeAttachmentImages',
             isCausal: true,
         }),
+        attachmentLinkPreviews: one2many('mail.attachment_link_preview', {
+            compute: '_computeAttachmentLinkPreviews',
+        }),
         /**
          * Link with a composer to handle attachments.
          */
@@ -102,6 +130,12 @@ function factory(dependencies) {
          */
         imageAttachments: one2many('mail.attachment', {
             compute: '_computeImageAttachments',
+        }),
+        /**
+         * States the attachment that are not an image.
+         */
+        linkPreviewAttachments: one2many('mail.attachment', {
+            compute: '_computeLinkPreviewAttachments',
         }),
         /**
          * Link with a message to handle attachments.

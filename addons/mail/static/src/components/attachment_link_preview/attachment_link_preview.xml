@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AttachmentLinkPreview" owl="1">
+        <div class="o_AttachmentLinkPreview" t-att-class="{'o-isCompact': props.isCompact}">
+            <t t-if="attachmentLinkPreview and attachmentLinkPreview.attachment">
+                <t t-if="attachmentLinkPreview.attachment.linkPreview.image">
+                    <img t-att-src="attachmentLinkPreview.attachment.linkPreview.image" class="o_AttachmentLinkPreview_linkImage"/>
+                </t>
+                <div class="o_AttachmentLinkPreview_aside">
+                    <button class="o_AttachmentLinkPreview_asideItem o_AttachmentLinkPreview_asideItemUnlink" t-att-class="{ 'o-pretty': attachmentLinkPreview.attachment.isLinkedToComposer }" t-on-click="attachmentLinkPreview.onClickUnlink">
+                        <i class="fa fa-trash"/>
+                    </button>
+                </div>
+                <t t-if="attachmentLinkPreview.attachment.linkPreview.title">
+                    <div class="o_AttachmentLinkPreview_title">
+                        <a t-att-href="attachmentLinkPreview.attachment.url">
+                            <h3 class="o_AttachmentLinkPreview_Linktitle">
+                                <t t-esc="attachmentLinkPreview.attachment.linkPreview.title"/>
+                            </h3>
+                        </a>
+                    </div>
+                </t>
+                <t t-if="attachmentLinkPreview.attachment.linkPreview.description">
+                    <p class="o_AttachmentLinkPreview_excerpt">
+                        <t t-esc="attachmentLinkPreview.attachment.linkPreview.description"/>
+                    </p>
+                </t>
+                <t t-if="attachmentLinkPreview.hasDeleteConfirmDialog">
+                    <AttachmentDeleteConfirmDialog
+                        attachmentLocalId="attachmentLinkPreview.attachment.localId"
+                        t-on-dialog-closed="attachmentLinkPreview.onDeleteConfirmDialogClosed"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

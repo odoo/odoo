@@ -117,6 +117,28 @@ MockServer.include({
             const { min_id, max_id, limit } = args;
             return this._mockRouteMailMessageStarredMessages(min_id, max_id, limit);
         }
+        if (route === '/mail/link_preview') {
+            return {
+                "checksum": false,
+                "id": 1102,
+                "filename": "https://tenor.com/view/gato-gif-18532922",
+                "name": "https://tenor.com/view/gato-gif-18532922",
+                "mimetype": "application/octet-stream",
+                "res_id": 0,
+                "res_model": "mail.compose.message",
+                "url": "https://tenor.com/view/gato-gif-18532922",
+                "link_preview": [
+                    {
+                        "type": "video.other",
+                        "url": "https://tenor.com/view/gato-gif-18532922",
+                        "title": "Gato GIF - Gato - Discover & Share GIFs",
+                        "image_url": "https://media1.tenor.com/images/fd1edd05b33d229e6e845c473042c088/tenor.gif?itemid=18532922",
+                        "image": "/mail/image/5",
+                        "description": "Click to view the GIF"
+                    }
+                ]
+            };
+        }
         if (route === '/mail/read_followers') {
             return this._mockRouteMailReadFollowers(args);
         }

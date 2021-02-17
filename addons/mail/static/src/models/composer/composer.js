@@ -885,6 +885,43 @@ function factory(dependencies) {
             });
         }
 
+        /**
+         * Try to fetch link preview when urls are inserted inside the composer.
+         */
+        async getLinkPreview() {
+            var urlRegexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+.~#?&'$//=;\u00C0-\u024F\u1E00-\u1EFF]*)/gi;
+            const urls = this.textInputContent.match(urlRegexp) || [];
+
+            // Remove attachment url that are not inside the composer anymore
+            for (const attachment of this.attachments) {
+                if (!urls.includes(attachment.url)) {
+                    attachment.remove();
+                }
+            }
+
+            if (urls) {
+                // Add attachment for urls that are not already in attachment
+                const existingUrls = this.attachments.map(att => att.url);
+                for (const url of urls) {
+                    if (!existingUrls.includes(url)) {
+                        const attachment = await this.env.services.rpc({
+                            route: '/mail/link_preview',
+                            params: { url },
+                        }, { shadow: true });
+
+                        if (attachment) {
+                            const attachmentModel = this.messaging.models['mail.attachment'].create(
+                                this.messaging.models['mail.attachment'].convertData(attachment)
+                            );
+                            this.update({
+                                attachments: link(attachmentModel),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     Composer.fields = {

@@ -63,6 +63,11 @@ function factory(dependencies) {
             if ('name' in data) {
                 data2.name = data.name;
             }
+
+            if ('link_preview' in data) {
+                data2.linkPreview = data.link_preview[0];
+            }
+
             // relation
             if ('res_id' in data && 'res_model' in data) {
                 data2.originThread = insert({
@@ -73,6 +78,11 @@ function factory(dependencies) {
             if ('originThread' in data) {
                 data2.originThread = data.originThread;
             }
+
+            if ('url' in data) {
+                data2.url = data.url;
+            }
+
             return data2;
         }
 
@@ -233,6 +243,21 @@ function factory(dependencies) {
                 return extension;
             }
             return clear();
+        }
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasLinkPreview() {
+            return !!this.url && !!this.linkPreview;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasLinkPreview() {
+            return !!this.url && !!this.linkPreview;
         }
 
         /**
@@ -400,6 +425,13 @@ function factory(dependencies) {
             compute: '_computeExtension',
         }),
         filename: attr(),
+        /**
+         * Determines if the attachement has link preview informations.
+         */
+        hasLinkPreview: attr({
+            compute: '_computeHasLinkPreview',
+            default: false,
+        }),
         id: attr({
             required: true,
         }),
@@ -468,6 +500,10 @@ function factory(dependencies) {
             default: '',
         }),
         name: attr(),
+        /**
+         * Contains the link preview information.
+         */
+        linkPreview: attr(),
         originThread: many2one('mail.thread', {
             inverse: 'originThreadAttachments',
         }),

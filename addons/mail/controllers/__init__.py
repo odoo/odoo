@@ -5,3 +5,4 @@ from . import bus
 from . import discuss
 from . import home
 from . import mail
+from . import link_preview
