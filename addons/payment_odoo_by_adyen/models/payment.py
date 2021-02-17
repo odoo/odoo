@@ -57,14 +57,14 @@ class AcquirerOdooByAdyen(models.Model):
         # fake a payment update
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         data = {
-            'adyen_uuid': self.odoo_adyen_account_id.adyen_uuid,
-            'payout': self.odoo_adyen_payout_id.code,
             'amount': self._odoo_adyen_format_amount(values['amount'], values['currency']),
             'reference': values['reference'],
             'shopperLocale': values.get('partner_lang'),
             'metadata': {
                 'merchant_signature': self._odoo_adyen_compute_signature(values['amount'],values['currency'],values['reference']),
                 'notification_url': urls.url_join(base_url, OdooByAdyenController._notification_url),
+                'adyen_uuid': self.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.odoo_adyen_payout_id.code,
             },
             'returnUrl': urls.url_join(self.get_base_url(), '/payment/process'),
         }
@@ -99,7 +99,6 @@ class TxOdooByAdyen(models.Model):
         # fake a payment update
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         data = {
-            'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             'amount': self.acquirer_id._odoo_adyen_format_amount(self.amount, self.currency_id),
             'reference': self.reference,
             'paymentMethod': {
@@ -111,6 +110,8 @@ class TxOdooByAdyen(models.Model):
             'metadata': {
                 'merchant_signature': self.acquirer_id._odoo_adyen_compute_signature(self.amount, self.currency_id, self.reference),
                 'notification_url': urls.url_join(base_url, OdooByAdyenController._notification_url),
+                'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             },
             'returnUrl': urls.url_join(self.get_base_url(), '/payment/process'),
         }
@@ -139,8 +140,8 @@ class TxOdooByAdyen(models.Model):
     def _odoo_adyen_form_get_invalid_parameters(self, data):
         invalid_parameters = []
 
-        if self.acquirer_reference and data.get('pspReference') != self.acquirer_reference:
-            invalid_parameters.append(('pspReference', data.get('pspReference'), self.acquirer_reference))
+        if self.acquirer_reference and data.get('originalReference') != self.acquirer_reference:
+            invalid_parameters.append(('originalReference', data.get('originalReference'), self.acquirer_reference))
 
         return invalid_parameters
 
@@ -169,7 +170,7 @@ class TxOdooByAdyen(models.Model):
 
         # Update status
         if data['success'] == 'true':
-            self.write({'acquirer_reference': data.get('pspReference')})
+            self.write({'acquirer_reference': data.get('originalReference')})
             self._set_transaction_done()
         else:
             self._set_transaction_pending()
