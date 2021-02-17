@@ -146,14 +146,14 @@ class GoogleService(models.AbstractModel):
             res.raise_for_status()
             status = res.status_code
 
-            if int(status) in (204, 404):  # Page not found, no response
+            if int(status) == 204:  # Page not found, no response
                 response = False
             else:
                 response = res.json()
 
             try:
-                ask_time = datetime.strptime(res.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
-            except:
+                ask_time = datetime.strptime(res.headers.get('date', ''), "%a, %d %b %Y %H:%M:%S %Z")
+            except ValueError:
                 pass
         except requests.HTTPError as error:
             if error.response.status_code in (204, 404):
