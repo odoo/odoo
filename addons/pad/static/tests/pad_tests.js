@@ -307,4 +307,63 @@ QUnit.module('pad widget', {
         delete FieldPad.prototype.isPadConfigured;
     });
 
+    QUnit.test('Quick Edition: click on the pad', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'task',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsOnce(form, '.o_form_readonly');
+
+        await testUtils.dom.click(form.$('.o_field_widget[name="description"]'));
+
+        assert.containsOnce(form, '.o_form_editable');
+
+        form.destroy();
+        delete FieldPad.prototype.isPadConfigured;
+    });
+
+    QUnit.test('Quick Edition: click on a link', async function (assert) {
+        assert.expect(2);
+
+        this.data.task.pad_get_content = function () {
+            return '<a href="https://www.example.com/">link</a>';
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'task',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="description" widget="pad"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsOnce(form, '.o_form_readonly');
+
+        await testUtils.dom.click(form.$('.o_field_widget[name="description"] a'));
+
+        assert.containsOnce(form, '.o_form_readonly');
+
+        form.destroy();
+        delete FieldPad.prototype.isPadConfigured;
+    });
 });
