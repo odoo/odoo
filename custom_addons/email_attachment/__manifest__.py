@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Email aTTACHMENT',
+    'name': 'Email Attachment',
     'version': '14.0.1.0.0',
     'summary': '--------------------',
     'sequence': 12,
@@ -12,10 +12,11 @@
             'base',
             'contacts',
             'qweb_report',
-            'stock',
     ],
     'website': 'https://www.xyz.com',
     'data': [
+        # 'wizard/purchase_report_email.xml',
+        'data/product_movement_report_email_template.xml',
     ],
     'installable': True,
     'application': True,
