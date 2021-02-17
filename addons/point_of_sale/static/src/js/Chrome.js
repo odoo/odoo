@@ -351,6 +351,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 body: this.env._t(
                     'Would you like to load demo data?'
                 ),
+                confirmText: this.env._t('Yes'),
+                cancelText: this.env._t('No')
             });
             if (confirmed) {
                 await this.rpc({
