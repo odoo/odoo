@@ -10,9 +10,13 @@ var _t = core._t;
 var FieldPad = AbstractField.extend({
     template: 'FieldPad',
     content: "",
-    events: {
+    events: _.extend({}, AbstractField.prototype.events, {
         'click .oe_pad_switch': '_onToggleFullScreen',
-    },
+    }),
+    isQuickEditable: true,
+    quickEditExclusion: [
+        '[href]',
+    ],
 
     /**
      * @override
@@ -174,6 +178,13 @@ var FieldPad = AbstractField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     * @private
+     */
+    _onKeydown: function () {
+        // managed by the pad.
+    },
     /**
      * @override
      * @private
