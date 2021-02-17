@@ -94,16 +94,16 @@
     bottom: 0;
     left: 50%;
     height: 20px;
-    width: 20px;
     line-height: 20px;
     font-size: 16px;
-    border-radius: 50%;
-    margin-left: -10px;
+    border-radius: 5px;
+    margin-left: -16px;
     margin-bottom: 4px;
     background: black;
     color: white;
     opacity: 0.2;
     z-index: 3;
+    padding: 0 4px;
 }
 .floor-map .table .label {
     display: block;
@@ -116,6 +116,9 @@
     outline: solid rgba(255,255,255,0.3);
     cursor: move;
     z-index: 50;
+}
+.floor-map .table.selected .table-seats {
+    margin-left: -12px;
 }
 .floor-map .edit-button.editing {
     position: absolute;
