@@ -13,6 +13,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
          * @param {Object} props
          * @param {Boolean} props.isPassword Show password popup.
          * @param {number|null} props.startingValue Starting value of the popup.
+         * @param {Boolean} props.isInputSelected Input is highlighted and will reset upon a change.
          *
          * Resolve to { confirmed, payload } when used with showPopup method.
          * @confirmed {Boolean}
@@ -26,7 +27,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
                 startingBuffer = this.props.startingValue.toString();
             }
-            this.state = useState({ buffer: startingBuffer });
+            this.state = useState({ buffer: startingBuffer, toStartOver: this.props.isInputSelected });
             NumberBuffer.use({
                 nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtEnter: 'accept-input',
