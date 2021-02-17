@@ -106,7 +106,6 @@ QUnit.test('message list desc order', async function (assert) {
     for (let i = 0; i <= 60; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [100],
             model: 'mail.channel',
             res_id: 100,
         });
@@ -204,7 +203,6 @@ QUnit.test('message list asc order', async function (assert) {
     for (let i = 0; i <= 60; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [100],
             model: 'mail.channel',
             res_id: 100,
         });
@@ -466,7 +464,6 @@ QUnit.test('show message subject if thread is mailing channel', async function (
     });
     this.data['mail.message'].records.push({
         body: "not empty",
-        channel_ids: [100],
         model: 'mail.channel',
         res_id: 100,
         subject: "Salutations, voyageur",
@@ -513,8 +510,9 @@ QUnit.test('[technical] new messages separator on posting message', async functi
     }];
     this.data['mail.message'].records.push({
         body: "first message",
-        channel_ids: [20],
         id: 10,
+        model: "mail.channel",
+        res_id: 20,
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -582,8 +580,9 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
     });
     this.data['mail.message'].records.push({
         body: "blah",
-        channel_ids: [20],
         id: 1,
+        model: "mail.channel",
+        res_id: 20,
     });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
@@ -724,7 +723,6 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     this.data['res.partner'].records.push({ id: 12, name: "Someone" });
     this.data['mail.message'].records.push({
         body: "not empty",
-        channel_ids: [11],
         id: 10,
         message_type: 'email',
         model: 'mail.channel',
@@ -825,7 +823,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
     for (let i = 0; i <= 10; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [20],
+            model: "mail.channel",
+            res_id: 20,
         });
     }
     await this.start();
@@ -896,7 +895,8 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     for (let i = 0; i <= 10; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [20],
+            model: "mail.channel",
+            res_id: 20,
         });
     }
     await this.start();
@@ -973,8 +973,9 @@ QUnit.test("delete all attachments of message without content should no longer d
     this.data['mail.message'].records.push(
         {
             attachment_ids: [143],
-            channel_ids: [11],
             id: 101,
+            model: "mail.channel",
+            res_id: 11,
         }
     );
     await this.start();
@@ -1031,8 +1032,9 @@ QUnit.test('delete all attachments of a message with some text content should st
         {
             attachment_ids: [143],
             body: "Some content",
-            channel_ids: [11],
             id: 101,
+            model: "mail.channel",
+            res_id: 11,
         },
     );
     await this.start();
@@ -1088,8 +1090,9 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
     this.data['mail.message'].records.push(
         {
             attachment_ids: [143],
-            channel_ids: [11],
             id: 101,
+            model: "mail.channel",
+            res_id: 11,
             tracking_value_ids: [6]
         },
     );
@@ -1573,8 +1576,9 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
     this.data['mail.channel'].records.push({ id: 11 });
     this.data['mail.message'].records.push(
         {
-            channel_ids: [11],
             id: 101,
+            model: "mail.channel",
+            res_id: 11,
         },
     );
     await this.start();
@@ -1621,8 +1625,9 @@ QUnit.test('message with subtype should be displayed (and not considered as empt
     });
     this.data['mail.message'].records.push(
         {
-            channel_ids: [11],
             id: 101,
+            model: "mail.channel",
+            res_id: 11,
             subtype_id: 10,
         },
     );
@@ -1673,12 +1678,14 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     for (let i = 0; i <= 30; i++) {
         this.data['mail.message'].records.push({
             body: "not empty",
-            channel_ids: [11],
+            model: "mail.channel",
+            res_id: 11,
         });
     }
     for (let i = 0; i <= 30; i++) {
         this.data['mail.message'].records.push({
-            channel_ids: [11],
+            model: "mail.channel",
+            res_id: 11,
         });
     }
     await this.start();
@@ -1900,8 +1907,9 @@ QUnit.test('failure on loading more messages should not alter message list displ
     this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
         return {
             body: 'coucou',
-            channel_ids: [20],
             id,
+            model: "mail.channel",
+            res_id: 20,
         };
     }));
     await this.start({
@@ -1950,8 +1958,9 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
         return {
             body: 'coucou',
-            channel_ids: [20],
             id,
+            model: "mail.channel",
+            res_id: 20,
         };
     }));
     await this.start({
@@ -2009,8 +2018,9 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     this.data['mail.message'].records = [...Array(90).keys()].map(id => {
         return {
             body: 'coucou',
-            channel_ids: [20],
             id,
+            model: "mail.channel",
+            res_id: 20,
         };
     });
     await this.start({

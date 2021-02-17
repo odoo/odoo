@@ -63,16 +63,6 @@ function factory(dependencies) {
             if ('body' in data) {
                 data2.body = data.body;
             }
-            if ('channel_ids' in data && data.channel_ids) {
-                const channels = data.channel_ids
-                    .map(channelId =>
-                        this.env.models['mail.thread'].findFromIdentifyingData({
-                            id: channelId,
-                            model: 'mail.channel',
-                        })
-                    ).filter(channel => !!channel);
-                data2.serverChannels = [['replace', channels]];
-            }
             if ('date' in data && data.date) {
                 data2.date = moment(str_to_datetime(data.date));
             }
@@ -545,7 +535,7 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         _computeThreads() {
-            const threads = [...this.serverChannels];
+            const threads = [];
             if (this.isHistory) {
                 threads.push(this.env.messaging.history);
             }
@@ -794,19 +784,11 @@ function factory(dependencies) {
                 'messagingModeration',
                 'messagingStarred',
                 'originThread',
-                'serverChannels',
             ],
             inverse: 'messages',
         }),
         tracking_value_ids: attr({
             default: [],
-        }),
-        /**
-         * All channels containing this message on the server.
-         * Equivalent of python field `channel_ids`.
-         */
-        serverChannels: many2many('mail.thread', {
-            inverse: 'messagesAsServerChannel',
         }),
     };
 

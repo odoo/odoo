@@ -139,9 +139,7 @@ function factory(dependencies) {
          * @return {Object}
          */
         static convertData(data) {
-            const data2 = {
-                messagesAsServerChannel: [],
-            };
+            const data2 = {};
             if ('model' in data) {
                 data2.model = data.model;
             }
@@ -171,12 +169,20 @@ function factory(dependencies) {
                 data2.isServerPinned = data.is_pinned;
             }
             if ('last_message' in data && data.last_message) {
-                data2.messagesAsServerChannel.push(['insert', { id: data.last_message.id }]);
-                data2.serverLastMessageId = data.last_message.id;
+                const messageData = this.env.models['mail.message'].convertData({
+                    id: data.last_message.id,
+                    model: data2.model,
+                    res_id: data2.id,
+                });
+                data2.serverLastMessage = [['insert', messageData]];
             }
             if ('last_message_id' in data && data.last_message_id) {
-                data2.messagesAsServerChannel.push(['insert', { id: data.last_message_id }]);
-                data2.serverLastMessageId = data.last_message_id;
+                const messageData = this.env.models['mail.message'].convertData({
+                    id: data.last_message_id,
+                    model: data2.model,
+                    res_id: data2.id,
+                });
+                data2.serverLastMessage = [['insert', messageData]];
             }
             if ('mass_mailing' in data) {
                 data2.mass_mailing = data.mass_mailing;
@@ -1247,7 +1253,7 @@ function factory(dependencies) {
             // By default trust the server up to the last message it used
             // because it's not possible to do better.
             let baseCounter = this.serverMessageUnreadCounter;
-            let countFromId = this.serverLastMessageId;
+            let countFromId = this.serverLastMessage ? this.serverLastMessage.id : 0;
             // But if the client knows the last seen message that the server
             // returned (and by assumption all the messages that come after),
             // the counter can be computed fully locally, ignoring potentially
@@ -1843,7 +1849,7 @@ function factory(dependencies) {
                 'lastSeenByCurrentPartnerMessageId',
                 'messagingCurrentPartner',
                 'orderedMessages',
-                'serverLastMessageId',
+                'serverLastMessage',
                 'serverMessageUnreadCounter',
             ],
         }),
@@ -1892,13 +1898,6 @@ function factory(dependencies) {
          */
         messagesAsOriginThreadIsNeedaction: attr({
             related: 'messagesAsOriginThread.isNeedaction',
-        }),
-        /**
-         * All messages that are contained on this channel on the server.
-         * Equivalent to the inverse of python field `channel_ids`.
-         */
-        messagesAsServerChannel: many2many('mail.message', {
-            inverse: 'serverChannels',
         }),
         /**
          * Contains the message fetched/seen indicators for all messages of this thread.
@@ -2077,15 +2076,13 @@ function factory(dependencies) {
             default: 'closed',
         }),
         /**
-         * Last message id considered by the server.
+         * Last message considered by the server.
          *
          * Useful to compute localMessageUnreadCounter field.
          *
          * @see localMessageUnreadCounter
          */
-        serverLastMessageId: attr({
-            default: 0,
-        }),
+        serverLastMessage: many2one('mail.message'),
         /**
          * Message unread counter coming from server.
          *
