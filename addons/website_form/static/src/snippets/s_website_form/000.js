@@ -155,13 +155,16 @@ odoo.define('website_form.s_website_form', function (require) {
                 form_values[$(this).find('input').attr('name')] = date.format(format);
             });
 
-            const tokenObj = await this._recaptcha.getToken('website_form');
-            if (tokenObj.token) {
-                form_values['recaptcha_token_response'] = tokenObj.token;
-            } else if (tokenObj.error) {
-                self.update_status('error', tokenObj.error);
-                return false;
+            if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+                const tokenObj = await this._recaptcha.getToken('website_form');
+                if (tokenObj.token) {
+                    form_values['recaptcha_token_response'] = tokenObj.token;
+                } else if (tokenObj.error) {
+                    self.update_status('error', tokenObj.error);
+                    return false;
+                }
             }
+
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
             .then(function (result_data) {
