@@ -383,8 +383,9 @@ var LivechatButton = Widget.extend({
                 attachment_ids: [],
                 author_id: this._livechat.getOperatorPID(),
                 body: this.options.default_message,
-                channel_ids: [this._livechat.getID()],
                 date: time.datetime_to_str(new Date()),
+                model: "mail.channel",
+                res_id: this._livechat.getID(),
             }, { prepend: true });
         }
     },

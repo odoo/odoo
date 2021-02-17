@@ -31,7 +31,7 @@ class WebsiteVisitor(models.Model):
     def _compute_session_count(self):
         sessions = self.env['mail.channel'].search([('livechat_visitor_id', 'in', self.ids)])
         session_count = dict.fromkeys(self.ids, 0)
-        for session in sessions.filtered(lambda c: c.channel_message_ids):
+        for session in sessions.filtered(lambda c: c.message_ids):
             session_count[session.livechat_visitor_id.id] += 1
         for visitor in self:
             visitor.session_count = session_count.get(visitor.id, 0)

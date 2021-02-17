@@ -138,8 +138,6 @@ class Message(models.Model):
     has_error = fields.Boolean(
         'Has error', compute='_compute_has_error', search='_search_has_error',
         help='Has error')
-    channel_ids = fields.Many2many(
-        'mail.channel', 'mail_message_mail_channel_rel', string='Channels')
     # notifications
     notification_ids = fields.One2many(
         'mail.notification', 'mail_message_id', 'Notifications',
@@ -292,47 +290,35 @@ class Message(models.Model):
             return ids
 
         pid = self.env.user.partner_id.id
-        author_ids, partner_ids, channel_ids, allowed_ids = set([]), set([]), set([]), set([])
+        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
         model_ids = {}
 
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self.flush(['model', 'res_id', 'author_id', 'message_type', 'partner_ids', 'channel_ids'])
+        self.flush(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
-        self.env['mail.channel'].flush(['channel_message_ids'])
-        self.env['mail.channel.partner'].flush(['channel_id', 'partner_id'])
         for sub_ids in self._cr.split_for_in_conditions(ids):
             self._cr.execute("""
                 SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.message_type,
-                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
-                                channel_partner.channel_id as channel_id
+                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id)
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
-                ON channel_rel.mail_message_id = m.id
-                LEFT JOIN "mail_channel" channel
-                ON channel.id = channel_rel.mail_channel_id
-                LEFT JOIN "mail_channel_partner" channel_partner
-                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
-
                 WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=list(sub_ids)))
-            for id, rmod, rid, author_id, message_type, partner_id, channel_id in self._cr.fetchall():
+            for msg_id, rmod, rid, author_id, message_type, partner_id in self._cr.fetchall():
                 if author_id == pid:
-                    author_ids.add(id)
+                    author_ids.add(msg_id)
                 elif partner_id == pid:
-                    partner_ids.add(id)
-                elif channel_id:
-                    channel_ids.add(id)
+                    partner_ids.add(msg_id)
                 elif rmod and rid and message_type != 'user_notification':
-                    model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(id)
+                    model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(msg_id)
 
         allowed_ids = self._find_allowed_doc_ids(model_ids)
 
-        final_ids = author_ids | partner_ids | channel_ids | allowed_ids
+        final_ids = author_ids | partner_ids | allowed_ids
 
         if count:
             return len(final_ids)
@@ -363,7 +349,6 @@ class Message(models.Model):
                 - author_id == pid, uid is the author OR
                 - uid is in the recipients (partner_ids) OR
                 - uid has been notified (needaction) OR
-                - uid is member of a listern channel (channel_ids.partner_ids) OR
                 - uid have read access to the related document if model, res_id
                 - otherwise: raise
             - create: if
@@ -417,31 +402,24 @@ class Message(models.Model):
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
 
-        self.flush(['model', 'res_id', 'author_id', 'parent_id', 'moderation_status', 'message_type', 'partner_ids', 'channel_ids'])
+        self.flush(['model', 'res_id', 'author_id', 'parent_id', 'moderation_status', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
-        self.env['mail.channel'].flush(['channel_message_ids', 'moderator_ids'])
-        self.env['mail.channel.partner'].flush(['channel_id', 'partner_id'])
+        self.env['mail.channel'].flush(['moderator_ids'])
         self.env['res.users'].flush(['moderation_channel_ids'])
 
         if operation == 'read':
             self._cr.execute("""
                 SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id,
                                 COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
-                                channel_partner.channel_id as channel_id, m.moderation_status,
+                                m.moderation_status,
                                 m.message_type as message_type
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
-                ON channel_rel.mail_message_id = m.id
-                LEFT JOIN "mail_channel" channel
-                ON channel.id = channel_rel.mail_channel_id
-                LEFT JOIN "mail_channel_partner" channel_partner
-                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
                 WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, ids=self.ids))
-            for mid, rmod, rid, author_id, parent_id, partner_id, channel_id, moderation_status, message_type in self._cr.fetchall():
+            for mid, rmod, rid, author_id, parent_id, partner_id, moderation_status, message_type in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,
                     'res_id': rid,
@@ -449,32 +427,26 @@ class Message(models.Model):
                     'parent_id': parent_id,
                     'moderation_status': moderation_status,
                     'moderator_id': False,
-                    'notified': any((message_values[mid].get('notified'), partner_id, channel_id)),
+                    'notified': any((message_values[mid].get('notified'), partner_id)),
                     'message_type': message_type,
                 }
         elif operation == 'write':
             self._cr.execute("""
                 SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id, m.moderation_status,
                                 COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
-                                channel_partner.channel_id as channel_id, channel_moderator_rel.res_users_id as moderator_id,
+                                channel_moderator_rel.res_users_id as moderator_id,
                                 m.message_type as message_type
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
-                ON channel_rel.mail_message_id = m.id
-                LEFT JOIN "mail_channel" channel
-                ON channel.id = channel_rel.mail_channel_id
-                LEFT JOIN "mail_channel_partner" channel_partner
-                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
                 LEFT JOIN "mail_channel" moderated_channel
                 ON m.moderation_status = 'pending_moderation' AND m.res_id = moderated_channel.id
                 LEFT JOIN "mail_channel_moderator_rel" channel_moderator_rel
                 ON channel_moderator_rel.mail_channel_id = moderated_channel.id AND channel_moderator_rel.res_users_id = %%(uid)s
                 WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, uid=self.env.user.id, ids=self.ids))
-            for mid, rmod, rid, author_id, parent_id, moderation_status, partner_id, channel_id, moderator_id, message_type in self._cr.fetchall():
+            for mid, rmod, rid, author_id, parent_id, moderation_status, partner_id, moderator_id, message_type in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,
                     'res_id': rid,
@@ -482,7 +454,7 @@ class Message(models.Model):
                     'parent_id': parent_id,
                     'moderation_status': moderation_status,
                     'moderator_id': moderator_id,
-                    'notified': any((message_values[mid].get('notified'), partner_id, channel_id)),
+                    'notified': any((message_values[mid].get('notified'), partner_id)),
                     'message_type': message_type,
                 }
         elif operation == 'create':
@@ -583,17 +555,11 @@ class Message(models.Model):
             # TDE: probably clean me
             parent_ids = [message.get('parent_id') for message in message_values.values()
                           if message.get('parent_id')]
-            self._cr.execute("""SELECT DISTINCT m.id, partner_rel.res_partner_id, channel_partner.partner_id FROM "%s" m
+            self._cr.execute("""SELECT DISTINCT m.id, partner_rel.res_partner_id FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
-                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
-                ON channel_rel.mail_message_id = m.id
-                LEFT JOIN "mail_channel" channel
-                ON channel.id = channel_rel.mail_channel_id
-                LEFT JOIN "mail_channel_partner" channel_partner
-                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
-                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, parent_ids,))
-            not_parent_ids = [mid[0] for mid in self._cr.fetchall() if any([mid[1], mid[2]])]
+                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, parent_ids,))
+            not_parent_ids = [mid[0] for mid in self._cr.fetchall() if mid[1]]
             notified_ids += [mid for mid, message in message_values.items()
                              if message.get('parent_id') in not_parent_ids]
 
@@ -774,30 +740,16 @@ class Message(models.Model):
         if not notifications:
             return
 
-        # notifies changes in messages through the bus.  To minimize the number of
-        # notifications, we need to group the messages depending on their channel_ids
-        groups = []
-        messages = notifications.mapped('mail_message_id')
-        current_channel_ids = messages[0].channel_ids
-        current_group = []
-        for record in messages:
-            if record.channel_ids == current_channel_ids:
-                current_group.append(record.id)
-            else:
-                groups.append((current_group, current_channel_ids))
-                current_group = [record.id]
-                current_channel_ids = record.channel_ids
-
-        groups.append((current_group, current_channel_ids))
-        current_group = [record.id]
-        current_channel_ids = record.channel_ids
-
         notifications.write({'is_read': True})
 
-        for (msg_ids, channel_ids) in groups:
-            # channel_ids in result is deprecated and will be removed in a future version
-            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids], 'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()}
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id.id), notification)
+        # notifies changes in messages through the bus.
+        self.env['bus.bus'].sendone(
+            (self._cr.dbname, 'res.partner', partner_id.id),
+            {'type': 'mark_as_read',
+             'message_ids': notifications.mapped('mail_message_id').ids,
+             'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()
+            }
+        )
 
     @api.model
     def unstar_all(self):
@@ -1127,7 +1079,6 @@ class Message(models.Model):
                     'author_id': (3, u'Administrator'),
                     'email_from': 'sacha@pokemon.com' # email address or False
                     'subtype_id': (1, u'Discussions'),
-                    'channel_ids': [], # list of channel ids
                     'date': '2015-06-30 08:22:33',
                     'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
                     'message_type': u'comment',
@@ -1164,7 +1115,7 @@ class Message(models.Model):
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
-            'channel_ids', 'partner_ids',  # recipients
+            'partner_ids',  # recipients
             'starred_partner_ids',  # list of partner ids for whom the message is starred
             'moderation_status',
         ]

@@ -5,7 +5,7 @@
         <field name="res_model">mail.channel</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="im_livechat.mail_channel_view_tree"/>
-        <field name="domain">[('livechat_visitor_id', '=', active_id), ('channel_message_ids', '!=', False)]</field>
+        <field name="domain">[('livechat_visitor_id', '=', active_id), ('message_ids', '!=', False)]</field>
         <field name="context">{
                 'search_default_livechat_visitor_id': [active_id],
                 'default_livechat_visitor_id': active_id,

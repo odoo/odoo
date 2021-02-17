@@ -59,9 +59,11 @@ class ImLivechatReportChannel(models.Model):
                     count(distinct C.livechat_operator_id) as nbr_speaker,
                     count(distinct M.id) as nbr_message,
                     CASE 
-                        WHEN EXISTS (select distinct M.author_id FROM mail_message M, mail_message_mail_channel_rel R 
-                                        WHERE M.author_id=C.livechat_operator_id AND R.mail_channel_id = C.id 
-                                        AND R.mail_message_id = M.id and C.livechat_operator_id = M.author_id)
+                        WHEN EXISTS (select distinct M.author_id FROM mail_message M
+                                        WHERE M.author_id=C.livechat_operator_id
+                                        AND M.res_id = C.id
+                                        AND M.model = 'mail.channel'
+                                        AND C.livechat_operator_id = M.author_id)
                         THEN 0
                         ELSE 1
                     END as is_without_answer,
@@ -88,10 +90,9 @@ class ImLivechatReportChannel(models.Model):
                     END as is_unrated,
                     C.livechat_operator_id as partner_id
                 FROM mail_channel C
-                    JOIN mail_message_mail_channel_rel R ON (C.id = R.mail_channel_id)
-                    JOIN mail_message M ON (M.id = R.mail_message_id)
+                    JOIN mail_message M ON (M.res_id = C.id AND m.model = 'mail.channel')
                     JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
-                    LEFT JOIN mail_message MO ON (R.mail_message_id = MO.id AND MO.author_id = C.livechat_operator_id)
+                    LEFT JOIN mail_message MO ON (M.res_id = C.id AND m.model = 'mail.channel' AND MO.author_id = C.livechat_operator_id)
                     LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'mail.channel' and Rate.parent_res_model = 'im_livechat.channel')
                     WHERE C.livechat_operator_id is not null
                 GROUP BY C.livechat_operator_id, C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid, Rate.rating
