@@ -983,7 +983,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
-        cache_value = self.convert_to_cache(value, records)
+        cache_value = self.convert_to_cache(value, records, validate=False)
         records = cache.get_records_different_from(records, self, cache_value)
         if not records:
             return records
