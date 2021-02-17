@@ -25,21 +25,21 @@
                              <field name="uom_type"/>
                              <label for="factor"
                                 attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <div attrs="{'invisible':[('uom_type','!=','smaller')]}" class="o_row">
+                            <div attrs="{'invisible':[('uom_type','!=','smaller')]}">
                                 <field name="factor"
                                     digits="[42,5]"
                                     attrs="{'readonly':[('uom_type','=','bigger')]}"/>
-                                <span class="oe_grey">
+                                <span class="oe_grey oe_inline">
                                     e.g: 1*(reference unit)=ratio*(this unit)
                                 </span>
                             </div>
                             <label for="factor_inv" 
                                 attrs="{'invisible':[('uom_type','!=','bigger')]}"/>                           
-                            <div attrs="{'invisible':[('uom_type','!=','bigger')]}" class="o_row">
+                            <div attrs="{'invisible':[('uom_type','!=','bigger')]}">
                                 <field name="factor_inv"
                                     digits="[42,5]"
                                     attrs="{'readonly':[('uom_type','!=','bigger')]}"/>
-                                <span class="oe_grey">
+                                <span class="oe_grey oe_inline">
                                     e.g: 1*(this unit)=ratio*(reference unit)
                                 </span>
                             </div>
