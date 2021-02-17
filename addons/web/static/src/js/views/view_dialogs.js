@@ -146,7 +146,7 @@ var FormViewDialog = ViewDialog.extend({
                         text: _t("Save & New"),
                         classes: "btn-primary",
                         click: function () {
-                            this._save().then(self.form_view.createRecord.bind(self.form_view, self.parentID));
+                            this._save(true).then(self.form_view.createRecord.bind(self.form_view, self.parentID));
                         },
                     });
                 }
@@ -259,7 +259,7 @@ var FormViewDialog = ViewDialog.extend({
      * @private
      * @returns {Deferred}
      */
-    _save: function () {
+    _save: function (saveAndNew) {
         var self = this;
         return this.form_view.saveRecord(this.form_view.handle, {
             stayInEdit: true,
@@ -270,7 +270,7 @@ var FormViewDialog = ViewDialog.extend({
             // record might have been changed by the save (e.g. if this was a new record, it has an
             // id now), so don't re-use the copy obtained before the save
             var record = self.form_view.model.get(self.form_view.handle);
-            self.on_saved(record, !!changedFields.length);
+            self.on_saved(record, !!changedFields.length, saveAndNew);
         });
     },
 });
@@ -456,13 +456,18 @@ var SelectCreateDialog = ViewDialog.extend({
     create_edit_record: function () {
         var self = this;
         var dialog = new FormViewDialog(this, _.extend({}, this.options, {
-            on_saved: function (record) {
+            on_saved: function (record, changed, saveAndNew) {
                 var values = [{
                     id: record.res_id,
                     display_name: record.data.display_name || record.data.name,
                 }];
                 self.on_selected(values);
-                self.close();
+                // don't close the dialog if Save & New is clicked from from dialog
+                // else SelectCreateDialog will destroyed and due to which Save & New
+                // dialog will not appear
+                if (!saveAndNew) {
+                    self.close();
+                }
             },
         })).open();
         return dialog;

@@ -309,6 +309,56 @@ QUnit.module('Views', {
         parent.destroy();
     });
 
+    QUnit.test('Create from SelectCreateDialog and Save & New should open new form dialog', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'instrument',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="name"/>' +
+                    '<field name="badassery"/>' +
+                '</form>',
+            archs: {
+                'badassery,false,form': '<form>' +
+                                            '<field name="level"/>' +
+                                        '</form>',
+
+                'badassery,false,list': '<tree>' +
+                                            '<field name="level"/>' +
+                                        '</tree>',
+
+                'badassery,false,search': '<search>' +
+                                                '<field name="level"/>' +
+                                            '</search>',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        var $modal = $('.modal-lg');
+        assert.equal($modal.length, 1, 'There should be one modal');
+
+        // click on Create button
+        $modal.find('.modal-footer button:eq(1)').click();
+        assert.equal($('.modal-lg').length, 2, 'There should be two modals');
+
+        var $formModal = $('.modal-lg:eq(1)');
+        $formModal.find('input[name="level"]').val('Bagha');
+        // Click on Save & New button should keep form dialog again and keep Select dialog open
+        $formModal.find('.modal-footer button:eq(1)').click();
+        assert.equal($('.modal-lg').length, 2, 'There should be two modal');
+        var m2mRecords = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_data_row');
+        assert.equal(m2mRecords.length, 1,
+            'should have 1 added record in many2many field');
+
+        $formModal = $('.modal-lg:eq(1)');
+        $formModal.find('.modal-footer button:eq(2)').click();
+        assert.equal($('.modal-lg').length, 1, 'There should be one modal');
+
+        form.destroy();
+    });
+
     QUnit.test('SelectCreateDialog cascade x2many in create mode', function (assert) {
         assert.expect(5);
 
