@@ -34,11 +34,11 @@
 ^FO100,100
 <t t-if="product.currency_id.position == 'after'">
 ^CI28
-^A0N,44,33^FH^FDPrice: <t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/><t t-esc="product.currency_id.symbol"/>^FS
+^A0N,44,33^FH^FDPrice: <t t-esc="product.lst_price" t-options='{"widget": "float", "precision": 2}'/><t t-esc="product.currency_id.symbol"/>^FS
 </t>
 <t t-if="product.currency_id.position == 'before'">
 ^CI28
-^A0N,44,33^FH^FDPrice: <t t-esc="product.currency_id.symbol"/><t t-esc="product.list_price" t-options='{"widget": "float", "precision": 2}'/>^FS
+^A0N,44,33^FH^FDPrice: <t t-esc="product.currency_id.symbol"/><t t-esc="product.lst_price" t-options='{"widget": "float", "precision": 2}'/>^FS
 </t>
 <t t-if="product.barcode">
 ^FO100,150^BY3
