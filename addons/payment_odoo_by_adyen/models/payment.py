@@ -20,14 +20,15 @@ class AcquirerOdooByAdyen(models.Model):
     provider = fields.Selection(selection_add=[
        ('odoo_adyen', 'Odoo Payments by Adyen')
     ], ondelete={'odoo_adyen': 'set default'})
-    odoo_adyen_account_id = fields.Many2one('adyen.account', required_if_provider='odoo_adyen', related='company_id.adyen_account_id')
-    odoo_adyen_payout_id = fields.Many2one('adyen.payout', required_if_provider='odoo_adyen', string='Adyen Payout', domain="[('adyen_account_id', '=', odoo_adyen_account_id)]")
+    odoo_adyen_account_id = fields.Many2one('adyen.account', related='company_id.adyen_account_id')
+    odoo_adyen_payout_id = fields.Many2one('adyen.payout', string='Adyen Payout', domain="[('adyen_account_id', '=', odoo_adyen_account_id)]")
 
-    @api.constrains('provider', 'state')
+    @api.constrains('provider', 'state', 'odoo_adyen_account_id', 'odoo_adyen_payout_id')
     def _check_odoo_adyen_test(self):
         for payment_acquirer in self:
-            if payment_acquirer.provider == 'odoo_adyen' and payment_acquirer.state == 'test':
-                raise ValidationError(_('Odoo Payments by Adyen is not available in test mode.'))
+            if payment_acquirer.provider == 'odoo_adyen' and payment_acquirer.state == 'enabled' \
+                    and not payment_acquirer.odoo_adyen_account_id and not payment_acquirer.odoo_adyen_payout_id:
+                raise ValidationError(_('Adyen and Payout accounts are required.'))
 
     def _get_feature_support(self):
         res = super(AcquirerOdooByAdyen, self)._get_feature_support()
@@ -69,7 +70,7 @@ class AcquirerOdooByAdyen(models.Model):
             'returnUrl': urls.url_join(self.get_base_url(), '/payment/process'),
         }
 
-        if self.save_token in ['ask', 'always']:
+        if self.save_token in ['ask', 'always'] and self.state == 'enabled':
             data.update({
                 'shopperReference': '%s_%s' % (self.odoo_adyen_account_id.adyen_uuid, values['partner_id']),
                 'storePaymentMethod': True,
@@ -84,7 +85,8 @@ class AcquirerOdooByAdyen(models.Model):
     def odoo_adyen_get_form_action_url(self):
         self.ensure_one()
         proxy_url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.proxy_url')
-        return urls.url_join(proxy_url, 'v1/pay_by_link')
+        uri = 'v1/pay_by_link' if self.state == 'enabled' else 'v1/test_pay_by_link'
+        return urls.url_join(proxy_url, uri)
 
     def odoo_adyen_create_account(self):
         return self.env['adyen.account'].action_create_redirect()
