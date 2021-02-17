@@ -46,8 +46,6 @@ class PaymentTransaction(models.Model):
             converted_amount, self.currency_id.name, self.reference
         )
         data = {
-            'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
-            'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
@@ -65,6 +63,8 @@ class PaymentTransaction(models.Model):
             'metadata': {
                 'merchant_signature': signature,
                 'notification_url': urls.url_join(base_url, OdooController._notification_url),
+                'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             },  # Proxy-specific data
         }
         return {
@@ -96,7 +96,6 @@ class PaymentTransaction(models.Model):
             converted_amount, self.currency_id.name, self.reference
         )
         data = {
-            'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             'amount': {
                 'value': converted_amount,
                 'currency': self.currency_id.name,
@@ -114,6 +113,8 @@ class PaymentTransaction(models.Model):
             'metadata': {
                 'merchant_signature': signature,
                 'notification_url': urls.url_join(base_url, OdooController._notification_url),
+                'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
+                'payout': self.acquirer_id.odoo_adyen_payout_id.code,
             },  # Proxy-specific data
         }
         response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payments', data)
@@ -168,7 +169,9 @@ class PaymentTransaction(models.Model):
             return
 
         # Handle the acquirer reference
-        if 'pspReference' in data:
+        if 'originalReference' in data:
+            self.acquirer_reference = data.get('originalReference')
+        elif 'pspReference' in data:
             self.acquirer_reference = data.get('pspReference')
 
         # Handle the payment state
