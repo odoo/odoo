@@ -1689,12 +1689,17 @@ var UrlWidget = InputField.extend({
 
     /**
      * In readonly, the widget needs to be a link with proper href and proper
-     * support for the design, which is achieved by the added classes.
+     * support for the design, which is achieved by the added classes, it will
+     * display nothing if there is no value as it doesn't make sense to display
+     * link with false value.
      *
      * @override
      * @private
      */
     _renderReadonly: function () {
+        if (!this.value) {
+            return;
+        }
         let href = this.value;
         if (this.value && !this.websitePath) {
             const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
