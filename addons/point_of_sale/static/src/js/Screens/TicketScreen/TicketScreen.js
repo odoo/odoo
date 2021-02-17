@@ -107,7 +107,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             return order.get_cardholder_name();
         }
         getEmployee(order) {
-            return order.employee.name;
+            return order.employee ? order.employee.name : '';
         }
         getStatus(order) {
             const screen = order.get_screen_data();
