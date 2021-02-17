@@ -4031,6 +4031,58 @@ QUnit.module('ActionManager', {
         assert.strictEqual($(".modal").length, 1, "It should display a modal");
         await testUtils.dom.click(`button[name="some_method"]`);
         assert.strictEqual($(".modal").length, 0, "It should have closed the modal");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('can execute act_window actions in target="new"', async function (assert) {
+        assert.expect(5);
+
+        this.actions.push({
+            id: 999,
+            name: 'A window action',
+            res_model: 'partner',
+            target: 'new',
+            type: 'ir.actions.act_window',
+            views: [[999, 'form']],
+        });
+        this.archs['partner,999,form'] = `
+            <form>
+                <button name="method" string="Call method" type="object" confirm="Are you sure?"/>
+            </form>`;
+        this.archs['partner,1000,form'] = `<form>Another action</form>`;
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'method') {
+                    return Promise.resolve({
+                        id: 1000,
+                        name: 'Another window action',
+                        res_model: 'partner',
+                        target: 'new',
+                        type: 'ir.actions.act_window',
+                        views: [[1000, 'form']],
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await actionManager.doAction(999);
+
+        assert.containsOnce(document.body, '.modal button[name=method]');
+
+        await testUtils.dom.click($('.modal button[name=method]'));
+
+        assert.containsN(document.body, '.modal', 2);
+        assert.strictEqual($('.modal:last .modal-body').text(), 'Are you sure?');
+
+        await testUtils.dom.click($('.modal:last .modal-footer .btn-primary'));
+        assert.containsOnce(document.body, '.modal');
+        assert.strictEqual($('.modal:last .modal-body').text().trim(), 'Another action');
+
         actionManager.destroy();
     });
 
