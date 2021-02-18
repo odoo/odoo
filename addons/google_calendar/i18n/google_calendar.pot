@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2021-01-22 08:05+0000\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2021-02-18 14:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,25 @@ msgstr ""
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/xml/google_calendar_popover.xml:0
+#, python-format
+msgid "Archive"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#, python-format
+msgid "Are you sure you want to archive this record ?"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
 msgstr ""
 
 #. module: google_calendar
@@ -114,6 +133,13 @@ msgid "Confirm"
 msgstr ""
 
 #. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#, python-format
+msgid "Confirmation"
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
 msgid "Created by"
 msgstr ""
@@ -139,6 +165,7 @@ msgid "Delete from the current Google Calendar account"
 msgstr ""
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
@@ -189,6 +216,12 @@ msgid "Google Calendar: synchronization"
 msgstr ""
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
+msgid "Google Synchronization stopped"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__id
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -213,6 +246,7 @@ msgid ""
 msgstr ""
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee____last_update
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event____last_update
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence____last_update
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset____last_update
@@ -294,11 +328,26 @@ msgstr ""
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
+msgid "Stop the Synchronization"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#, python-format
+msgid "Success"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#, python-format
 msgid "Sync with <b>Google</b>"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Synched with Google"
@@ -335,6 +384,13 @@ msgid "The account for the Google Calendar service is not configured."
 msgstr ""
 
 #. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#, python-format
+msgid "The synchronization with Google calendar was successfully stopped."
+msgstr ""
+
+#. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
@@ -362,6 +418,15 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
 msgid "Users"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#, python-format
+msgid ""
+"You are about to stop the synchronization of your calendar with Google. Are "
+"you sure you want to continue?"
 msgstr ""
 
 #. module: google_calendar
