@@ -112,6 +112,9 @@ class UoM(models.Model):
     def unlink(self):
         if self.filtered(lambda uom: uom.measure_type == 'time'):
             raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
+        reference_uom = self.filtered(lambda uom: uom.uom_type == 'reference' and uom.active)
+        if reference_uom:
+            raise ValidationError(_("UoM category %s should have a reference unit of measure. If you just created a new category, please record the 'reference' unit first.") % (reference_uom[0].category_id.name,))
         return super(UoM, self).unlink()
 
     @api.model
