@@ -2094,6 +2094,85 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     });
 });
 
+QUnit.test("highlight the message mentioning the current user inside the channel", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({
+        display_name: "Test Partner",
+        id: 7,
+    });
+    this.data['res.users'].records.push({ partner_id: 7 });
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records.push({
+        author_id: 7,
+        body: "hello @Admin",
+        id: 100,
+        model: 'mail.channel',
+        partner_ids: [this.data.currentPartnerId],
+        res_id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: link(thread),
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+    assert.hasClass(
+        document.querySelector(`.o_MessageList .o_Message`),
+        'o-highlighted',
+        "message should be highlighted"
+    );
+});
+
+QUnit.test("not highlighting the message if not mentioning the current user inside the channel", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({
+        display_name: "testPartner",
+        email: "testPartner@odoo.com",
+        id: 7,
+    });
+    this.data['res.users'].records.push({ partner_id: 7 });
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records.push({
+        author_id: this.data.currentPartnerId,
+        body: "hello @testPartner",
+        id: 100,
+        model: 'mail.channel',
+        partner_ids: [7],
+        res_id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: link(thread),
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+    assert.doesNotHaveClass(
+        document.querySelector(`.o_MessageList .o_Message`),
+        'o-highlighted',
+        "message should not be highlighted"
+    );
+});
+
 });
 });
 });

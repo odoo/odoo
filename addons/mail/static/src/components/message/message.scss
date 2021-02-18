@@ -5,7 +5,6 @@
 .o_Message {
     display: flex;
     flex: 0 0 auto;
-    padding: map-get($spacers, 2);
 }
 
 .o_Message_authorAvatar {
@@ -64,7 +63,9 @@
 
 .o_Message_core {
     min-width: 0; // allows this flex child to shrink more than its content
-    margin-inline-end: map-get($spacers, 3);
+    margin-top: map-get($spacers, 2);
+    margin-bottom: map-get($spacers, 2);
+    margin-inline-end: map-get($spacers, 4);
 }
 
 .o_Message_footer {
@@ -104,6 +105,10 @@
 .o_Message_headerDate {
     margin-inline-end: map-get($spacers, 2);
     font-size: 0.8em;
+}
+
+.o_Message_highlightIndicator {
+    width: $o-mail-discuss-message-highlight-indicator-width;
 }
 
 .o_Message_moderationAction {
@@ -151,6 +156,8 @@
     flex: 0 0 $o-mail-message-sidebar-width;
     max-width: $o-mail-message-sidebar-width;
     display: flex;
+    margin-top: map-get($spacers, 2);
+    margin-bottom: map-get($spacers, 2);
     margin-inline-end: map-get($spacers, 2);
     justify-content: center;
 
@@ -243,6 +250,10 @@
     &.o-has-message-selection:not(.o-selected) {
         opacity: 0.5;
     }
+
+    &.o-highlighted {
+        background-color: rgba($o-brand-primary, .1);
+    }
 }
 
 .o_Message_authorName {
@@ -306,6 +317,10 @@
 
 .o_Message_headerCommands:not(.o-mobile) {
     opacity: 0;
+}
+
+.o_Message_highlightIndicator.o-active {
+    background-color: $o-brand-primary;
 }
 
 .o_Message_originThread {

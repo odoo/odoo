@@ -110,6 +110,9 @@ function factory(dependencies) {
                     this.env.models['mail.notification'].convertData(notificationData)
                 ));
             }
+            if ('partner_ids' in data) {
+                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.env.messaging.currentPartner.id);
+            }
             if ('starred_partner_ids' in data) {
                 data2.isStarred = data.starred_partner_ids.includes(this.env.messaging.currentPartner.id);
             }
@@ -444,6 +447,18 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeIsHighlighted() {
+            return (
+                this.isCurrentPartnerMentioned &&
+                this.originThread &&
+                this.originThread.model === 'mail.channel'
+            );
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsModeratedByCurrentPartner() {
             return (
                 this.moderation_status === 'pending_moderation' &&
@@ -702,6 +717,23 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determine whether the current partner is mentioned.
+         */
+        isCurrentPartnerMentioned: attr({
+            default: false,
+        }),
+        /**
+         * Determine whether the message is highlighted.
+         */
+        isHighlighted: attr({
+            compute: '_computeIsHighlighted',
+            dependencies: [
+                'isCurrentPartnerMentioned',
+                'originThread',
+                'originThreadModel',
+            ],
+        }),
+        /**
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
@@ -745,6 +777,12 @@ function factory(dependencies) {
         originThreadIsModeratedByCurrentPartner: attr({
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        originThreadModel: attr({
+            related: 'originThread.model',
         }),
         /**
          * Serves as compute dependency for isSubjectSimilarToOriginThreadName
