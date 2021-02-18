@@ -658,6 +658,7 @@
                     <field name="repeat_show_week" invisible="1" />
                     <field name="repeat_show_month" invisible="1" />
                     <field name="recurrence_id" invisible="1" />
+                    <field name="allow_task_dependencies" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
@@ -798,6 +799,23 @@
                                     <field name="working_days_close" string="Days"/>
                                 </group>
                             </group>
+                        </page>
+                        <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
+                            <field name="depend_on_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="is_closed" invisible="1" />
+                                    <field name="name" />
+                                    <field name="project_id" optional="hide" />
+                                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                                    <field name="company_id" optional="hide" groups="base.group_multi_company" />
+                                    <field name="activity_ids" widget="list_activity" optional="hide"/>
+                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show" />
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="kanban_state" widget="state_selection" optional="hide" />
+                                    <field name="stage_id" optional="show" />
+                                    <button class="oe_link float-right" string="View Task" name="action_open_task_form" type="object"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     </sheet>
