@@ -465,7 +465,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onKeydown: function (ev) {
-        if (ev.which === $.ui.keyCode.ENTER && $(ev.target).is('textarea')) {
+        if (ev.which === $.ui.keyCode.ENTER) {
             ev.stopPropagation();
             return;
         }
