@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-25 13:06+0000\n"
-"PO-Revision-Date: 2021-01-25 13:06+0000\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2021-02-18 14:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,6 +83,15 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "%s days ago"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/basic/basic_model.js:0
+#, python-format
+msgid ""
+"'${referenceFieldName}' is unsynchronized\n"
+"                                     with '${modelFieldName}'."
 msgstr ""
 
 #. module: web
@@ -1496,7 +1505,6 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/translation_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
-#: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Discard"
 msgstr ""
@@ -2061,6 +2069,16 @@ msgstr ""
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "ID:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/basic/basic_model.js:0
+#, python-format
+msgid ""
+"If you change ${modelFieldName} or\n"
+"                                     ${referenceFieldName}, the synchronization\n"
+"                                     will be reapplied and the data will be modified."
 msgstr ""
 
 #. module: web
@@ -3029,6 +3047,12 @@ msgid "Pivot"
 msgstr ""
 
 #. module: web
+#: code:addons/web/controllers/pivot.py:0
+#, python-format
+msgid "Pivot %(title)s (%(model_name)s)"
+msgstr ""
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
@@ -3915,15 +3939,6 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/basic/basic_controller.js:0
-#, python-format
-msgid ""
-"The record has been modified, your changes will be discarded. Do you want to"
-" proceed?"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
@@ -4399,7 +4414,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
-#: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -4942,7 +4956,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker.xml:0
 #, python-format
-msgid "p-0 border-0 text-center text-monospace bg-transparent text-white"
+msgid "p-0 text-center text-monospace bg-transparent text-white"
 msgstr ""
 
 #. module: web

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
-"PO-Revision-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-02-18 14:28+0000\n"
+"PO-Revision-Date: 2021-02-18 14:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -484,6 +484,11 @@ msgid "Are you sure that the customer wants to  pay"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
+msgid "As soon as possible"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing (advised)"
 msgstr ""
@@ -602,7 +607,6 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
-#: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 #, python-format
 msgid "Barcode"
 msgstr ""
@@ -1516,6 +1520,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_move__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__display_name
@@ -1912,6 +1917,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_move__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__id
@@ -1961,6 +1967,14 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__picking_policy
+msgid ""
+"If you deliver all products at once, the delivery order will be scheduled "
+"based on the greatest product lead time. Otherwise, it will be based on the "
+"shortest."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Iface Customer Facing Display"
 msgstr ""
@@ -1997,6 +2011,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
 msgid "In real time"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Incorrect address for shipping"
 msgstr ""
 
 #. module: point_of_sale
@@ -2239,6 +2260,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner____last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_move____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse____last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category____last_update
@@ -2835,6 +2857,11 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Others"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
+msgid "POS Order"
 msgstr ""
 
 #. module: point_of_sale
@@ -3511,6 +3538,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__procurement_group_id
 msgid "Procurement Group"
 msgstr ""
 
@@ -3985,6 +4013,11 @@ msgid "Selectable Categ"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Sell products and deliver them later."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
@@ -4141,6 +4174,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__ship_later
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#, python-format
+msgid "Ship Later"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
+msgid "Shipping Policy"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderDetails.xml:0
@@ -4226,8 +4273,18 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "Specific route"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
+msgid "Spefic route for products delivered later."
 msgstr ""
 
 #. module: point_of_sale
@@ -4302,6 +4359,11 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_move
+msgid "Stock Move"
 msgstr ""
 
 #. module: point_of_sale
@@ -4631,6 +4693,13 @@ msgid "The sales journal of the point of sale %s must belong to its company."
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "The selected customer needs an address."
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -4907,6 +4976,11 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_ship
+msgid "To ship"
 msgstr ""
 
 #. module: point_of_sale
@@ -5212,6 +5286,8 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__warehouse_id
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Warehouse"
 msgstr ""
 
@@ -5235,6 +5311,11 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__weight
 msgid "Weighted Product"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
+msgid "When all products are ready"
 msgstr ""
 
 #. module: point_of_sale
@@ -5397,7 +5478,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
-msgid "You need to select the customer before you can invoice an order."
+msgid ""
+"You need to select the customer before you can invoice or ship an order."
 msgstr ""
 
 #. module: point_of_sale
@@ -5453,8 +5535,18 @@ msgid "discount"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
+msgid "e.g. Cash"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Company Address, Website"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "e.g. NYC Shop"
 msgstr ""
 
 #. module: point_of_sale
