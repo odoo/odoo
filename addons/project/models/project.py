@@ -737,6 +737,11 @@ class Task(models.Model):
     repeat_show_week = fields.Boolean(compute='_compute_repeat_visibility')
     repeat_show_month = fields.Boolean(compute='_compute_repeat_visibility')
 
+    @api.constrains('depend_on_ids')
+    def _check_no_cyclic_dependencies(self):
+        if not self._check_m2m_recursion('depend_on_ids'):
+            raise ValidationError(_("You cannot create cyclic dependency."))
+
     @api.model
     def _get_recurrence_fields(self):
         return ['repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until', 'repeat_number',
