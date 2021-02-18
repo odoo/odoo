@@ -13,10 +13,6 @@ tour.register('event_buy_tickets', {
             trigger: 'a[href*="/event"]:contains("Conference for Architects TEST"):first',
         },
         {
-            content: "Show available Tickets",
-            trigger: '.o_wevent_registration_btn',
-        },
-        {
             content: "Select 1 unit of `Standard` ticket type",
             extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference for Architects")))',
             trigger: 'select:eq(0)',

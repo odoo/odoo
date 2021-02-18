@@ -15,7 +15,7 @@
         </t>
         <span t-else="" class="font-weight-bold text-uppercase">Free</span>
     </xpath>
-    <xpath expr="//div[@id='price-range']" position="inside">
+    <xpath expr="//div[hasclass('o_wevent_price_range')]" position="inside">
         <span class="text-dark">
             From
             <span t-esc="event.event_ticket_ids[0].price_reduce" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
