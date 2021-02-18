@@ -453,6 +453,11 @@ class MailTemplate(models.Model):
 
         return multi_mode and results or results[res_ids[0]]
 
+    def _send_check_access(self, res_ids):
+        records = self.env[self.model].browse(res_ids)
+        records.check_access_rights('read')
+        records.check_access_rule('read')
+
     # ----------------------------------------
     # EMAIL
     # ----------------------------------------
@@ -469,8 +474,11 @@ class MailTemplate(models.Model):
         :param str notif_layout: optional notification layout to encapsulate the
             generated email;
         :returns: id of the mail.mail that was created """
+
+        # Grant access to send_mail only if access to related document
         self.ensure_one()
-        Mail = self.env['mail.mail']
+        self._send_check_access([res_id])
+
         Attachment = self.env['ir.attachment']  # TDE FIXME: should remove default_type from context
 
         # create a mail_mail based on values, without attachments
@@ -504,7 +512,7 @@ class MailTemplate(models.Model):
                 }
                 body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.thread']._replace_local_links(body)
-        mail = Mail.create(values)
+        mail = self.env['mail.mail'].sudo().create(values)
 
         # manage attachments
         for attachment in attachments:
