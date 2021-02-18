@@ -97,6 +97,7 @@
 # Caroline Renson <car@odoo.com>, 2021
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
+# Wilson Pujols <wpujols@capw.com.do>, 2021
 # 
 msgid ""
 msgstr ""
@@ -104,7 +105,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2021\n"
+"Last-Translator: Wilson Pujols <wpujols@capw.com.do>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -240,6 +241,8 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
+". Odoo debe calcular las entradas del diario antes de publicarlas en la "
+"moneda de su empresa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -409,7 +412,7 @@ msgstr "<em>Factura Borrador</em>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to settings"
-msgstr ""
+msgstr "-1 Volver a configuración"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -417,6 +420,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                                    Preview"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"Visualizar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
@@ -867,7 +872,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
+msgstr "<span>Esta es una vista previa de sus Términos y condiciones.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3823,6 +3828,8 @@ msgid ""
 "Could not compute any code for the copy automatically. Please create it "
 "manually."
 msgstr ""
+"No se pudo calcular ningún código para la copia automáticamente. Créelo "
+"manualmente."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -4675,7 +4682,7 @@ msgstr "Plazo y condiciones por defecto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms_html
 msgid "Default Terms and Conditions as a Web page"
-msgstr ""
+msgstr "Términos y condiciones predeterminados como página web"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__date_stop
@@ -4897,7 +4904,7 @@ msgstr "Descuento (%)"
 #: model:ir.model.fields,field_description:account.field_account_move__display_inactive_currency_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__display_inactive_currency_warning
 msgid "Display Inactive Currency Warning"
-msgstr ""
+msgstr "Mostrar advertencia en monedas inactivas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -5019,7 +5026,7 @@ msgstr "Mostrar en facturas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__preview_ready
 msgid "Display preview button"
-msgstr ""
+msgstr "Mostrar botón de vista previa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -6386,12 +6393,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In order to validate this bill, you must"
-msgstr ""
+msgstr "Para validar esta factura, debe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In order to validate this invoice, you must"
-msgstr ""
+msgstr "Para validar esta factura, debe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -6657,7 +6664,7 @@ msgstr "Día final del año fiscal inválido. "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
-msgstr ""
+msgstr "Invertir etiquetas"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7173,7 +7180,7 @@ msgstr "Cuenta de tránsito del diario"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
 msgid "Journal codes must be unique per company."
-msgstr ""
+msgstr "Los códigos de diario deben ser únicos por empresa."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -8629,7 +8636,7 @@ msgstr "Solo las declaraciones validadas se pueden restablecer a nuevas."
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "Oops"
-msgstr ""
+msgstr "Oops"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
@@ -11940,7 +11947,7 @@ msgstr "Campo técnico para obtener el dominio en el banco"
 #: model:ir.model.fields,help:account.field_account_move__display_inactive_currency_warning
 #: model:ir.model.fields,help:account.field_account_payment__display_inactive_currency_warning
 msgid "Technical field used for tracking the status of the currency"
-msgstr ""
+msgstr "Campo técnico utilizado para rastrear el estado de la moneda"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__journal_type
@@ -12153,6 +12160,9 @@ msgid ""
 "Technical field. True if the balance of this move line needs to be inverted "
 "when computing its total for each tag (for sales invoices, for example)."
 msgstr ""
+"Campo técnico. Verdadero si el saldo de esta línea de movimiento debe "
+"invertirse al calcular su total para cada etiqueta (para facturas de ventas,"
+" por ejemplo)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__display_currency_helper
@@ -12226,13 +12236,13 @@ msgstr "Términos y condiciones"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms_html
 msgid "Terms & Conditions as a Web page"
-msgstr ""
+msgstr "Términos y condiciones como página web"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
 #: model:ir.model.fields,field_description:account.field_res_config_settings__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Formato de términos y condiciones"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__narration
@@ -12245,12 +12255,12 @@ msgstr "Términos y condiciones"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
 msgid "Terms as Notes"
-msgstr ""
+msgstr "Términos como notas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
 msgid "Terms as Web Page"
-msgstr ""
+msgstr "Términos como página web"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -12690,12 +12700,13 @@ msgstr ""
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
 msgstr ""
+"La factura ya contiene líneas, no se actualizó desde el archivo adjunto."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr ""
+msgstr "La factura no es borrador, no se actualizó desde el archivo adjunto."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13070,7 +13081,7 @@ msgstr "La línea del informe para realizar un ajuste."
 #: code:addons/account/controllers/terms.py:0
 #, python-format
 msgid "The requested page is invalid, or doesn't exist anymore."
-msgstr ""
+msgstr "La página solicitada no es válida o ya no existe."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -14952,7 +14963,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot validate an invoice with an inactive currency: %s"
-msgstr ""
+msgstr "No puede validar una factura con una moneda inactiva: %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15047,12 +15058,12 @@ msgstr "[No establecido]"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the bill"
-msgstr ""
+msgstr "activar la moneda de la factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the invoice"
-msgstr ""
+msgstr "activar la moneda de la factura"
 
 #. module: account
 #. openerp-web
