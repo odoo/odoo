@@ -1208,7 +1208,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin,
         }
         data.__alreadyDone = true;
         new weWidgets.ImageCropWidget(this, data.media)
-            .appendTo(data.$editable);
+            .appendTo(data.$editable.parent());
     },
     /**
      * Called when a demand to open a link dialog is received on the bus.
