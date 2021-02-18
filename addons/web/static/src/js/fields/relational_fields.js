@@ -138,6 +138,11 @@ var FieldMany2One = AbstractField.extend({
         // list of last autocomplete suggestions
         this.suggestions = [];
 
+        // flag used to prevent from selecting the highlighted item in the autocomplete
+        // dropdown when the user leaves the many2one by pressing Tab (unless he
+        // manually selected the item using UP/DOWN keys)
+        this.ignoreTabSelect = false;
+
         // use a DropPrevious to properly handle related record quick creations,
         // and store a createDef to be able to notify the environment that there
         // is pending quick create operation
@@ -274,10 +279,19 @@ var FieldMany2One = AbstractField.extend({
                 });
             },
             select: function (event, ui) {
-                // we do not want the select event to trigger any additional
-                // effect, such as navigating to another field.
-                event.stopImmediatePropagation();
-                event.preventDefault();
+                // do not select anything if the input is empty and the user
+                // presses Tab (except if he manually highlighted an item with
+                // up/down keys)
+                if (!self.floating && event.key === "Tab" && self.ignoreTabSelect) {
+                    return false;
+                }
+
+                if (event.key === "Enter") {
+                    // on Enter we do not want any additional effect, such as
+                    // navigating to another field
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
+                }
 
                 var item = ui.item;
                 self.floating = false;
@@ -290,6 +304,11 @@ var FieldMany2One = AbstractField.extend({
             },
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
+                if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                    // the user manually selected an item by pressing up/down keys,
+                    // so select this item if he presses tab later on
+                    self.ignoreTabSelect = false;
+                }
             },
             open: function (event) {
                 self._onScroll = function (ev) {
@@ -300,6 +319,7 @@ var FieldMany2One = AbstractField.extend({
                 window.addEventListener('scroll', self._onScroll, true);
             },
             close: function (event) {
+                self.ignoreTabSelect = false;
                 // it is necessary to prevent ESC key from propagating to field
                 // root, to prevent unwanted discard operations.
                 if (event.which === $.ui.keyCode.ESCAPE) {
@@ -788,6 +808,9 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _onInputClick: function () {
+        if (this.autocomplete_bound && !this.$input.autocomplete("widget").is(":visible")) {
+            this.ignoreTabSelect = true;
+        }
         this._toggleAutoComplete();
     },
     /**
@@ -810,6 +833,14 @@ var FieldMany2One = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onInputKeyup: function (ev) {
+        const $autocomplete = this.$input.autocomplete("widget");
+        // close autocomplete if no autocomplete item is selected and user presses TAB
+        // s.t. we properly move to the next field in this case
+        if (ev.which === $.ui.keyCode.TAB &&
+                $autocomplete.is(":visible") &&
+                !$autocomplete.find('.ui-menu-item .ui-state-active').length) {
+            this.$input.autocomplete("close");
+        }
         if (ev.which === $.ui.keyCode.ENTER || ev.which === $.ui.keyCode.TAB) {
             // If we pressed enter or tab, we want to prevent _onInputFocusout from
             // executing since it would open a M2O dialog to request
@@ -819,6 +850,9 @@ var FieldMany2One = AbstractField.extend({
         }
         this.isDirty = true;
         if (this.$input.val() === "") {
+            if (ev.key === "Backspace" || ev.key === "Delete") { // Backspace or Delete
+                this.ignoreTabSelect = true;
+            }
             this.reinitialize(false);
         } else if (this._getDisplayName(this.m2o_value) !== this.$input.val()) {
             this.floating = true;
@@ -832,22 +866,6 @@ var FieldMany2One = AbstractField.extend({
     _onKeydown: function () {
         this.floating = false;
         this._super.apply(this, arguments);
-    },
-    /**
-     * Stops the left/right navigation move event if the cursor is not at the
-     * start/end of the input element. Stops any navigation move event if the
-     * user is selecting text.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onNavigationMove: function (ev) {
-        // TODO Maybe this should be done in a mixin or, better, the m2o field
-        // should be an InputField (but this requires some refactoring).
-        basicFields.InputField.prototype._onNavigationMove.apply(this, arguments);
-        if (this.mode === 'edit' && $(this.$input.autocomplete('widget')).is(':visible')) {
-            ev.stopPropagation();
-        }
     },
     /**
      * @private
