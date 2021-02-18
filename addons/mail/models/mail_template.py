@@ -191,7 +191,7 @@ class MailTemplate(models.Model):
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
-                    report_name = self._render_field('report_name', [res_id])[res_id]
+                    report_name = template._render_field('report_name', [res_id])[res_id]
                     report = template.report_template
                     report_service = report.report_name
 
