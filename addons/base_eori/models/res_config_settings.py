@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2019-2021 XCLUDE AB (http://www.xclude.se)
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-# @author Daniel Stenlöv <info@xclude.se>
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
 
