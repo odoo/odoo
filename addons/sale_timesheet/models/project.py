@@ -148,15 +148,6 @@ class Project(models.Model):
             if project.sale_line_id.is_expense:
                 raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
 
-    @api.onchange('allow_billable')
-    def _onchange_allow_billable(self):
-        if self.task_ids._get_timesheet() and self.allow_timesheets and not self.allow_billable:
-            message = _("All timesheet hours that are not yet invoiced will be removed from Sales Order on save. Discard to avoid the change.")
-            return {'warning': {
-                'title': _("Warning"),
-                'message': message
-            }}
-
     def write(self, values):
         res = super(Project, self).write(values)
         if 'allow_billable' in values and not values.get('allow_billable'):
