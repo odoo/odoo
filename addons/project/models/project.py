@@ -652,7 +652,7 @@ class Task(models.Model):
 
     # Task Dependencies fields
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
-    depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id", column2="depends_on_id", string="Blocked By")
+    depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id", column2="depends_on_id", string="Blocked By", domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
 
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
