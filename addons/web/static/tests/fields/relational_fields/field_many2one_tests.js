@@ -2574,7 +2574,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('pressing enter in a m2o in an editable list', async function (assert) {
-            assert.expect(9);
+            assert.expect(8);
             var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
@@ -2615,11 +2615,6 @@ QUnit.module('fields', {}, function () {
             var $input = list.$('td.o_data_cell input:first');
             var $dropdown = $input.autocomplete('widget');
             assert.ok($dropdown.is(':visible'), "autocomplete dropdown should be visible");
-            await testUtils.fields.triggerKeydown($input, 'tab');
-            assert.strictEqual($input[0], document.activeElement,
-                "input should still be focused");
-
-            // we now trigger again ENTER to make sure we can move to next line
             await testUtils.fields.triggerKeydown($input, 'tab');
 
             assert.notOk(document.contains($input[0]),
@@ -2698,7 +2693,7 @@ QUnit.module('fields', {}, function () {
             });
 
             var $input = form.$('.o_field_many2one input');
-            await testUtils.fields.editInput($input, "first");
+            await testUtils.fields.editAndTrigger($input, "first", ["keydown", "keyup"]);
             await testUtils.fields.triggerKey('down', $input, 'tab');
             await testUtils.fields.triggerKey('press', $input, 'tab');
             await testUtils.fields.triggerKey('up', $input, 'tab');
@@ -2719,6 +2714,80 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.modal').length, 0,
                 "there shouldn't be any modal in body");
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+        });
+
+        QUnit.test('leaving a many2one by pressing tab', async function (assert) {
+            assert.expect(3);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="trululu"/>
+                        <field name="display_name"/>
+                    </form>`,
+            });
+
+            const $input = form.$('.o_field_many2one input');
+            await testUtils.dom.click($input);
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), '', "no record should have been selected");
+
+            // open autocomplete dropdown and manually select item by UP/DOWN key and press TAB
+            await testUtils.dom.click($input);
+            await testUtils.fields.triggerKeydown($input, 'down');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), 'second record', "second record should have been selected");
+
+            // clear many2one and then open autocomplete, write something and press TAB
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'), '', ['keyup', 'blur']);
+            await testUtils.dom.triggerEvent($input, 'focus');
+            await testUtils.fields.editInput($input, 'se');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), 'second record', "first record should have been selected");
+
+            form.destroy();
+        });
+
+        QUnit.test('leaving an empty many2one by pressing tab (after backspace or delete)', async function (assert) {
+            assert.expect(4);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="trululu"/>
+                        <field name="display_name"/>
+                    </form>`,
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            const $input = form.$('.o_field_many2one input');
+            assert.ok($input.val(), "many2one should have value");
+
+            // simulate backspace to remove values and press TAB
+            await testUtils.fields.editInput($input, "");
+            await testUtils.fields.triggerKeyup($input, 'backspace');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), '', "no record should have been selected");
+
+            // reset a value
+            await testUtils.fields.many2one.clickOpenDropdown('trululu');
+            await testUtils.fields.many2one.clickItem('trululu', 'first record');
+            assert.ok($input.val(), "many2one should have value");
+
+            // simulate delete to remove values and press TAB
+            await testUtils.fields.editInput($input, "");
+            await testUtils.fields.triggerKeyup($input, 'delete');
+            await testUtils.fields.triggerKeydown($input, 'tab');
+            assert.strictEqual($input.val(), '', "no record should have been selected");
+
             form.destroy();
         });
 
