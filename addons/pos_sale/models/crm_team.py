@@ -25,7 +25,16 @@ class CrmTeam(models.Model):
         ], ['price_total:sum', 'config_id'], ['config_id'])
         rg_results = dict((d['config_id'][0], d['price_total']) for d in data)
         for team in self:
+<<<<<<< HEAD
             team.pos_order_amount_total = sum([
                 rg_results.get(config.id, 0.0)
                 for config in team.pos_config_ids
             ])
+=======
+            res = self.env['report.pos.order'].read_group(
+                [("config_id.crm_team_id", "=", team.id), ("session_id.state", "=", "opened")],
+                ["price_total"],
+                [],
+            )
+            team.pos_order_amount_total = sum(r["price_total"] for r in res if r["price_total"])
+>>>>>>> f9f88687318... temp
