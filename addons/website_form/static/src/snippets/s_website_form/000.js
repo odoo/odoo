@@ -28,6 +28,7 @@ odoo.define('website_form.s_website_form', function (require) {
         willStart: function () {
             const res = this._super(...arguments);
             if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+                this._recaptchaLoaded = true;
                 this._recaptcha.loadLibs();
             }
             return res;
@@ -155,7 +156,7 @@ odoo.define('website_form.s_website_form', function (require) {
                 form_values[$(this).find('input').attr('name')] = date.format(format);
             });
 
-            if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+            if (this._recaptchaLoaded) {
                 const tokenObj = await this._recaptcha.getToken('website_form');
                 if (tokenObj.token) {
                     form_values['recaptcha_token_response'] = tokenObj.token;
