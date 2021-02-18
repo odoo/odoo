@@ -32,15 +32,20 @@ odoo.define('website_event.ticket_details', function (require) {
         //--------------------------------------------------------------------------
 
         /**
+         * When the "Fold Tickets Details" option is active, this will be called each
+         * time the user expand or fold the tickets (o_wevent_registration_btn). This
+         * allows to show/hide elements depending on the folding state.
+         *
          * @private
          * @param {*} ev
          */
         _onTicketDetailsClick: function (ev){
             ev.preventDefault();
             if (this.foldedByDefault){
-                $(ev.currentTarget).toggleClass('btn-primary text-left pl-0');
-                $(ev.currentTarget).siblings().toggleClass('d-none');
-                this.$('.close').toggleClass('d-none');
+                let $target = $(ev.currentTarget);
+                $target.toggleClass('btn-primary');
+                $target.children().toggleClass('d-none');
+                $target.siblings('.o_wevent_registration_title, .o_wevent_price_range').toggleClass('d-none');
             }
         },
         /**
