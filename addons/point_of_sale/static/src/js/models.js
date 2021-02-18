@@ -1491,6 +1491,10 @@ exports.Orderline = Backbone.Model.extend({
     get_discount_str: function(){
         return this.discountStr;
     },
+    recompute_unit_price: function(quantity){
+        this.set_unit_price(this.product.get_price(this.order.pricelist, quantity));
+        this.order.fix_tax_included_price(this);
+    },
     // sets the quantity of the product. The quantity will be rounded according to the
     // product's unity of measure properties. Quantities greater than zero will not get
     // rounded to zero
@@ -1520,8 +1524,7 @@ exports.Orderline = Backbone.Model.extend({
 
         // just like in sale.order changing the quantity will recompute the unit price
         if(! keep_price && ! this.price_manually_set){
-            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
-            this.order.fix_tax_included_price(this);
+            this.recompute_unit_price(this.get_quantity());
         }
         this.trigger('change', this);
     },

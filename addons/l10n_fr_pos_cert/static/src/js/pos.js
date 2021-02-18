@@ -71,6 +71,12 @@ models.Orderline = models.Orderline.extend({
 
         return last_id === selectedLine.cid;
     },
+    recompute_unit_price: function(quantity){
+        // when the price is computed via pricelist we need to input the
+        // absolute quantity to get the correct unit price
+        quantity = quantity >= 0 ? quantity : -quantity
+        orderline_super.set_quantity.apply(selected_orderline, [quantity]);
+    },
     set_quantity: function (quantity, keep_price) {
         var current_quantity = this.get_quantity();
         var new_quantity = parseFloat(quantity) || 0;
@@ -101,7 +107,7 @@ models.Orderline = models.Orderline.extend({
                         });
 
                         if(selected_orderline.isLastLine() && current_total_quantity_remaining === 0 && current_total_quantity_remaining < qty_decrease) {
-                            orderline_super.set_quantity.apply(selected_orderline, [-qty_decrease, true]);
+                            orderline_super.set_quantity.apply(selected_orderline, [-qty_decrease]);
                         } else if (qty_decrease > current_total_quantity_remaining) {
                           this.pos.gui.show_popup("error", {
                               'title': _t("Order error"),
