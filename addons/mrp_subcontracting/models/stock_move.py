@@ -191,6 +191,7 @@ class StockMove(models.Model):
 
     def _update_subcontract_order_qty(self, new_quantity):
         for move in self:
+<<<<<<< HEAD
             quantity_to_remove = move.product_uom_qty - new_quantity
             productions = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[::-1]
             # Cancel productions until reach new_quantity
@@ -205,3 +206,13 @@ class StockMove(models.Model):
                         'mo_id': production.id,
                         'product_qty': production.product_uom_qty - quantity_to_remove
                     }).change_prod_qty()
+=======
+            quantity_change = quantity - move.product_uom_qty
+            production = move.move_orig_ids.production_id.filtered(lambda p: p.state != 'cancel')
+            if production:
+                self.env['change.production.qty'].with_context(skip_activity=True).create({
+                    'mo_id': production.id,
+                    'product_qty': production.product_uom_qty + quantity_change
+                }).change_prod_qty()
+
+>>>>>>> 98d94d868f3... temp
