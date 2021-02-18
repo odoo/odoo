@@ -91,6 +91,9 @@
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
 
-        <menuitem id="menu_ir_cron_act" action="ir_cron_act" parent="base.menu_automation"/>
+        <menuitem id="menu_ir_cron_act"
+            parent="base.menu_automation"
+            action="ir_cron_act"
+            sequence="2"/>
 
 </odoo>
