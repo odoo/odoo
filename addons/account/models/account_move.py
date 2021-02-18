@@ -2757,7 +2757,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
 
         if not self.product_id:
-            return self.price_unit
+            return (self.price_unit, self.move_id.company_id.currency_id)
         elif self.move_id.is_sale_document(include_receipts=True):
             # Out invoice.
             price_unit = self.product_id.lst_price
@@ -2765,12 +2765,12 @@ class AccountMoveLine(models.Model):
             # In invoice.
             price_unit = self.product_id.standard_price
         else:
-            return self.price_unit
+            return (self.price_unit, self.move_id.company_id.currency_id)
 
         if self.product_uom_id != self.product_id.uom_id:
             price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
 
-        return price_unit
+        return (price_unit, self.product_id.currency_id)
 
     def _get_computed_account(self):
         self.ensure_one()
@@ -3065,14 +3065,14 @@ class AccountMoveLine(models.Model):
             line.account_id = line._get_computed_account()
             line.tax_ids = line._get_computed_taxes()
             line.product_uom_id = line._get_computed_uom()
-            line.price_unit = line._get_computed_price_unit()
+            (line.price_unit, product_currency) = line._get_computed_price_unit()
 
             # price_unit and taxes may need to be adapted following Fiscal Position
             line._set_price_and_tax_after_fpos()
 
             # Convert the unit price to the invoice's currency.
             company = line.move_id.company_id
-            line.price_unit = company.currency_id._convert(line.price_unit, line.move_id.currency_id, company, line.move_id.date, round=False)
+            line.price_unit = product_currency._convert(line.price_unit, line.move_id.currency_id, company, line.move_id.date, round=False)
 
         if len(self) == 1:
             return {'domain': {'product_uom_id': [('category_id', '=', self.product_uom_id.category_id.id)]}}
@@ -3080,7 +3080,7 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_uom_id')
     def _onchange_uom_id(self):
         ''' Recompute the 'price_unit' depending of the unit of measure. '''
-        price_unit = self._get_computed_price_unit()
+        (price_unit, product_currency) = self._get_computed_price_unit()
 
         # See '_onchange_product_id' for details.
         taxes = self._get_computed_taxes()
@@ -3092,7 +3092,7 @@ class AccountMoveLine(models.Model):
 
         # Convert the unit price to the invoice's currency.
         company = self.move_id.company_id
-        self.price_unit = company.currency_id._convert(price_unit, self.move_id.currency_id, company, self.move_id.date, round=False)
+        self.price_unit = product_currency._convert(price_unit, self.move_id.currency_id, company, self.move_id.date, round=False)
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
