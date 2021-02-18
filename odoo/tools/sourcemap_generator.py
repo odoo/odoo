@@ -1,9 +1,10 @@
 from functools import lru_cache
+import json
 
 
 class SourceMapGenerator:
     """
-    The SourceMapGenerator creates the sourcemap maps the asset bundle to the js files.
+    The SourceMapGenerator creates the sourcemap maps the asset bundle to the js/css files.
 
     What is a sourcemap ? (https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map)
     In brief: a source map is what makes possible to debug your processed/compiled/minified code as if you were
@@ -82,6 +83,14 @@ class SourceMapGenerator:
             mapping["sourceRoot"] = self._source_root
 
         return mapping
+
+    def get_content(self):
+        """Generates the content of the sourcemap.
+
+        :return the content of the sourcemap as a string encoded in UTF-8.
+        """
+        # Store with XSSI-prevention prefix
+        return b")]}'\n" + json.dumps(self.to_json()).encode('utf8')
 
     def add_source(self, source_name, source_content, last_index, start_offset=0):
         """Adds a new source file in the sourcemap. All the lines of the source file will be mapped line by line
