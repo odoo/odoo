@@ -29,7 +29,14 @@
         flex: 0 1 auto;
         width: 350px;
         min-height: 50px;
-        max-height: 400px;
+        /**
+        * Note: Min() refers to CSS min() and not SCSS min().
+        *
+        * We want CSS min() and not SCSS min() because the former supports calc while the latter doesn't.
+        * To by-pass SCSS min() shadowing CSS min(), we rely on SCSS being case-sensitive while CSS isn't.
+        * As a result, Min() is ignored by SCSS while CSS interprets as its min() function.
+        */
+        max-height: Min(calc(100vh - 140px), 630px);
         z-index: 1100; // on top of chat windows
     }
 
