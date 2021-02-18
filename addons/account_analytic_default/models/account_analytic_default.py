@@ -75,8 +75,8 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
     def _compute_analytic_account(self):
         for record in self:
-            record.analytic_account_id = (record._origin or record).analytic_account_id
-            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids
+            record.analytic_account_id = record.analytic_account_id
+            record.analytic_tag_ids = record.analytic_tag_ids
             rec = self.env['account.analytic.default'].account_get(
                 product_id=record.product_id.id,
                 partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
