@@ -140,56 +140,41 @@ class AssetsBundle(object):
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
         response = []
-        if debug and 'assets' in debug:
-            if css and self.stylesheets:
-                is_css_preprocessed, old_attachments = self.is_css_preprocessed()
-                if not is_css_preprocessed:
-                    self.preprocess_css(debug=debug, old_attachments=old_attachments)
-                    if self.css_errors:
-                        msg = '\n'.join(self.css_errors)
-                        response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
-                        response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/css/bootstrap.css").to_node())
-                if not self.css_errors:
-                    for style in self.stylesheets:
-                        response.append(style.to_node())
-
-            if js and self.javascripts:
-                self.js(is_minified=False)
+        is_debug_assets = debug and 'assets' in debug
+        if css and self.stylesheets:
+            css_attachments = self.css(is_minified=not is_debug_assets) or []
+            for attachment in css_attachments:
+                if is_debug_assets:
+                    href = self.get_debug_asset_url(extra='rtl/' if self.user_direction == 'rtl' else '',
+                                                    name=css_attachments.name,
+                                                    extension='')
+                else:
+                    href = attachment.url
                 attr = OrderedDict([
-                    ["async", "async" if async_load else None],
-                    ["defer", "defer" if defer_load or lazy_load else None],
-                    ["type", "text/javascript"],
-                    ["data-src" if lazy_load else "src", self.get_debug_asset_url(name=self.name, extension=".js")],
+                    ["type", "text/css"],
+                    ["rel", "stylesheet"],
+                    ["href", href],
                     ['data-asset-xmlid', self.name],
                     ['data-asset-version', self.version],
                 ])
-                response.append(("script", attr, None))
-        else:
-            if css and self.stylesheets:
-                css_attachments = self.css() or []
-                for attachment in css_attachments:
-                    attr = OrderedDict([
-                        ["type", "text/css"],
-                        ["rel", "stylesheet"],
-                        ["href", attachment.url],
-                        ['data-asset-xmlid', self.name],
-                        ['data-asset-version', self.version],
-                    ])
-                    response.append(("link", attr, None))
-                if self.css_errors:
-                    msg = '\n'.join(self.css_errors)
-                    response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
+                response.append(("link", attr, None))
+            if self.css_errors:
+                msg = '\n'.join(self.css_errors)
+                response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
+                response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/css/bootstrap.css").to_node())
 
-            if js and self.javascripts:
-                attr = OrderedDict([
-                    ["async", "async" if async_load else None],
-                    ["defer", "defer" if defer_load or lazy_load else None],
-                    ["type", "text/javascript"],
-                    ["data-src" if lazy_load else "src", self.js(is_minified=True)[0].url],
-                    ['data-asset-xmlid', self.name],
-                    ['data-asset-version', self.version],
-                ])
-                response.append(("script", attr, None))
+        if js and self.javascripts:
+            js_attachment = self.js(is_minified=not is_debug_assets)
+            src = self.get_debug_asset_url(name=js_attachment.name, extension='') if is_debug_assets else js_attachment[0].url
+            attr = OrderedDict([
+                ["async", "async" if async_load else None],
+                ["defer", "defer" if defer_load or lazy_load else None],
+                ["type", "text/javascript"],
+                ["data-src" if lazy_load else "src", src],
+                ['data-asset-xmlid', self.name],
+                ['data-asset-version', self.version],
+            ])
+            response.append(("script", attr, None))
 
         return response
 
@@ -232,9 +217,6 @@ class AssetsBundle(object):
             **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, extension=extension)
         )
 
-    def _get_debug_asset_template_url(self):
-        return "/web/assets/{id}-{unique}/{extra}{name}{sep}{extension}"
-
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
         return f"/web/assets/debug/{extra}{name}{extension}"
 
@@ -250,7 +232,7 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         url = self.get_asset_url(
-            extra='%s' % ('rtl/' if extension == 'css' and self.user_direction == 'rtl' else ''),
+            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=self.name,
             sep='',
             extension='.%s' % extension
@@ -288,7 +270,7 @@ class AssetsBundle(object):
 
         url_pattern = self.get_asset_url(
             unique=unique,
-            extra='%s' % ('rtl/' if extension == 'css' and self.user_direction == 'rtl' else ''),
+            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=self.name,
             sep='',
             extension='.%s' % extension
@@ -314,7 +296,7 @@ class AssetsBundle(object):
 
         :return the ir.attachment records for a given bundle.
         """
-        assert extension in ('js', 'min.js', 'js.map', 'css')
+        assert extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map')
         ira = self.env['ir.attachment']
 
         # Set user direction in name to store two bundles
@@ -323,8 +305,8 @@ class AssetsBundle(object):
         # (this applies to css bundles only)
         fname = '%s.%s' % (self.name, extension)
         mimetype = (
-            'text/css' if extension == 'css' else
-            'application/json' if extension == 'js.map' else
+            'text/css' if extension in ['css', 'min.css'] else
+            'application/json' if extension in ['js.map', 'css.map'] else
             'application/javascript'
         )
         values = {
@@ -340,7 +322,7 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             id=attachment.id,
             unique=self.version,
-            extra='%s' % ('rtl/' if extension == 'css' and self.user_direction == 'rtl' else ''),
+            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=fname,
             sep='',  # included in fname
             extension=''
@@ -379,19 +361,13 @@ class AssetsBundle(object):
         return attachments[0]
 
     def js_with_sourcemap(self):
-        """Create/modify the ir.attachment representing the not-minified content of the bundleJS
-        and the ir.attachment representing the linked sourcemap.
-        To avoid the loss of break points in the development tool when the bundleJS
-        has to be rebuilt, the bundleJS url must not change so we will not include
-        'self.version' in the ir.attachment url.
-        If any ir.attachment exists for the bundleJS, we create a new one (bundleJS and sourcemap),
-        else, we modify the 'raw' in the existing ir.attachments.
+        """Create the ir.attachment representing the not-minified content of the bundleJS
+        and create/modify the ir.attachment representing the linked sourcemap.
 
         :return ir.attachment representing the un-minified content of the bundleJS
         """
         sourcemap_attachment = self.get_attachments('js.map') \
                                 or self.save_attachment('js.map', '')
-
         generator = SourceMapGenerator(
             source_root="/".join(
                 [".." for i in range(0, len(self.get_debug_asset_url(name=self.name).split("/")) - 2)]
@@ -414,40 +390,78 @@ class AssetsBundle(object):
             content_line_count += len(asset.content.split("\n")) + line_header
 
         content_bundle = ';\n'.join(content_bundle_list) + "\n//# sourceMappingURL=" + sourcemap_attachment.url
-
-        js_attachment = self.get_attachments('js')
-        if js_attachment:
-            js_attachment.write({
-                "raw": content_bundle.encode('utf8'),
-            })
-        else:
-            js_attachment = self.save_attachment('js', content_bundle)
+        js_attachment = self.save_attachment('js', content_bundle)
 
         generator._file = js_attachment.url
         sourcemap_attachment.write({
-            # Store with XSSI-prevention prefix
-            "raw": b")]}'\n" + json.dumps(generator.to_json()).encode('utf8'),
+            "raw": generator.get_content()
         })
 
         return js_attachment
 
-    def css(self):
-        attachments = self.get_attachments('css')
+    def css(self, is_minified=True):
+        extension = 'min.css' if is_minified else 'css'
+        attachments = self.get_attachments(extension)
         if not attachments:
             # get css content
             css = self.preprocess_css()
             if self.css_errors:
-                return self.get_attachments('css', ignore_version=True)
+                return self.get_attachments(extension, ignore_version=True)
 
-            # move up all @import rules to the top
             matches = []
             css = re.sub(self.rx_css_import, lambda matchobj: matches.append(matchobj.group(0)) and '', css)
-            matches.append(css)
-            css = u'\n'.join(matches)
 
-            self.save_attachment("css", css)
-            attachments = self.get_attachments('css')
+            if is_minified:
+                # move up all @import rules to the top
+                matches.append(css)
+                css = u'\n'.join(matches)
+
+                self.save_attachment(extension, css)
+                attachments = self.get_attachments(extension)
+            else:
+                return self.css_with_sourcemap(u'\n'.join(matches))
         return attachments
+
+    def css_with_sourcemap(self, content_import_rules):
+        """Create the ir.attachment representing the not-minified content of the bundleCSS
+        and create/modify the ir.attachment representing the linked sourcemap.
+
+        :param content_import_rules: string containing all the @import rules to put at the beginning of the bundle
+        :return ir.attachment representing the un-minified content of the bundleCSS
+        """
+        sourcemap_attachment = self.get_attachments('css.map') \
+                                or self.save_attachment('css.map', '')
+        debug_asset_url = self.get_debug_asset_url(name=self.name,
+                                                   extra='rtl/' if self.user_direction == 'rtl' else '')
+        generator = SourceMapGenerator(
+            source_root="/".join(
+                [".." for i in range(0, len(debug_asset_url.split("/")) - 2)]
+                ) + "/",
+        )
+        self.preprocess_css()
+
+        # adds the @import rules at the beginning of the bundle
+        content_bundle_list = [content_import_rules]
+        content_line_count = len(content_import_rules.split("\n"))
+        for asset in self.stylesheets:
+            if asset.content:
+                content = asset.with_header(asset.content)
+                if asset.url:
+                    generator.add_source(asset.url, content, content_line_count)
+                # comments all @import rules that have been added at the beginning of the bundle
+                content = re.sub(self.rx_css_import, lambda matchobj: f"/* {matchobj.group(0)} */", content)
+                content_bundle_list.append(content)
+                content_line_count += len(content.split("\n"))
+
+        content_bundle = '\n'.join(content_bundle_list) + f"\n//*# sourceMappingURL={sourcemap_attachment.url} */"
+        css_attachment = self.save_attachment('css', content_bundle)
+
+        generator._file = css_attachment.url
+        sourcemap_attachment.write({
+            "raw": generator.get_content(),
+        })
+
+        return css_attachment
 
     def dialog_message(self, message):
         """
@@ -587,26 +601,6 @@ class AssetsBundle(object):
                 asset_id = fragments.pop(0)
                 asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
                 asset._content = fragments.pop(0)
-
-                if debug:
-                    try:
-                        fname = os.path.basename(asset.url)
-                        url = asset.html_url
-                        with self.env.cr.savepoint():
-                            self.env['ir.attachment'].sudo().create(dict(
-                                raw=asset.content.encode('utf8'),
-                                mimetype='text/css',
-                                type='binary',
-                                name=fname,
-                                url=url,
-                                res_model=False,
-                                res_id=False,
-                            ))
-
-                        if self.env.context.get('commit_assetsbundle') is True:
-                            self.env.cr.commit()
-                    except psycopg2.Error:
-                        pass
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
