@@ -7,6 +7,7 @@
                 'o-clicked': state.isClicked,
                 'o-discussion': message and (message.is_discussion or message.is_notification),
                 'o-has-message-selection': threadView and threadView.threadViewer and threadView.threadViewer.selectedMessage,
+                'o-highlighted': message and message.isHighlighted,
                 'o-mobile': env.messaging.device.isMobile,
                 'o-not-discussion': message and !(message.is_discussion or message.is_notification),
                 'o-notification': message and message.message_type === 'notification',
@@ -16,6 +17,7 @@
             }" t-on-click="_onClick" t-att-data-message-local-id="message and message.localId"
         >
             <t t-if="message" name="rootCondition">
+                <div class="o_Message_highlightIndicator" t-att-class="{ 'o-active': message.isHighlighted }"/>
                 <div class="o_Message_sidebar" t-att-class="{ 'o-message-squashed': props.isSquashed }">
                     <t t-if="!props.isSquashed">
                         <div class="o_Message_authorAvatarContainer o_Message_sidebarItem">
