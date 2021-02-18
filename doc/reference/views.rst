@@ -447,9 +447,9 @@ calendar view are:
 
     you can add a filter and save the result in the defined model, the
     filter is added in the sidebar
-  * ``filter`` and ``color``
+  * ``filters`` and ``color``
 
-    use "True" to add this field in filter in the sidebar. You can specify
+    use "True" to add this field in ``filters`` in the sidebar. You can specify
     a ``color`` field used to colorize the checkbox.
 
 .. _reference/views/cohort:
