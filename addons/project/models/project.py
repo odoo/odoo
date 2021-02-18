@@ -650,6 +650,10 @@ class Task(models.Model):
     # customer portal: include comment and incoming emails in communication history
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
 
+    # Task Dependencies fields
+    allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
+    depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id", column2="depends_on_id", string="Blocked By")
+
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
     recurring_task = fields.Boolean(string="Recurrent")
@@ -1172,7 +1176,7 @@ class Task(models.Model):
                 if task.project_id.partner_id:
                     task.partner_id = task.project_id.partner_id
             else:
-                task.partner_id = task.project_id.partner_id or task.parent_id.partner_id 
+                task.partner_id = task.project_id.partner_id or task.parent_id.partner_id
 
     @api.depends('partner_id.email', 'parent_id.email_from')
     def _compute_email_from(self):
@@ -1392,6 +1396,16 @@ class Task(models.Model):
     # ------------
     # Actions
     # ------------
+
+    def action_open_task_form(self):
+        """ Opens the form view of the task """
+        return {
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'res_id': self.id,
+            'type': 'ir.actions.act_window',
+            'context': dict(self._context, create=False)
+        }
 
     def action_recurring_tasks(self):
         return {
