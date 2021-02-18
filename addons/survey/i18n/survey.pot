@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
-"PO-Revision-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2021-02-18 14:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -637,16 +637,6 @@ msgid "Badge"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
-msgid "Badge Description"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
-msgid "Badge Name"
-msgstr ""
-
-#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
 msgid "CERTIFICATE"
 msgstr ""
@@ -678,6 +668,12 @@ msgid "Certification Badge "
 msgstr ""
 
 #. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid "Certification Badge is not configured for the survey %(survey_name)s"
+msgstr ""
+
+#. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
 msgid "Certification Document"
 msgstr ""
@@ -697,11 +693,6 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Certification Template"
-msgstr ""
-
-#. module: survey
-#: model:ir.model.constraint,message:survey.constraint_survey_survey_give_badge_check
-msgid "Certification badge must be configured if Give Badge is set."
 msgstr ""
 
 #. module: survey
@@ -3011,6 +3002,16 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
 msgid "answered"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
+msgid "e.g. No one can solve challenges like you do"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
+msgid "e.g. Problem Solver"
 msgstr ""
 
 #. module: survey
