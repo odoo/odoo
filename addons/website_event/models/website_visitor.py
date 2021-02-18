@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class WebsiteVisitor(models.Model):
@@ -75,6 +76,11 @@ class WebsiteVisitor(models.Model):
             visitor_ids = []
 
         return [('id', 'in', visitor_ids)]
+
+    def _inactive_visitors_domain(self):
+        """ Visitors registered to events are considered always active and should not be deleted. """
+        domain = super()._inactive_visitors_domain()
+        return expression.AND([domain, [('event_registration_ids', '=', False)]])
 
     def _link_to_partner(self, partner, update_values=None):
         """ Propagate partner update to registration records """

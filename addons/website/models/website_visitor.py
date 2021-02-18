@@ -306,11 +306,27 @@ class WebsiteVisitor(models.Model):
 
         return target
 
-    def _cron_archive_visitors(self):
-        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 30))
+    def _cron_unlink_old_visitors(self):
+        """ Unlink inactive visitors (see '_inactive_visitors_domain' for details).
+
+        Visitors were previously archived but we came to the conclusion that archived visitors
+        have very little value and bloat the database for no reason. """
+
+        inactive_visitors = self.env['website.visitor'].sudo() \
+            .with_context(active_test=False) \
+            .search(self._inactive_visitors_domain())
+        inactive_visitors.unlink()
+
+    def _inactive_visitors_domain(self):
+        """ This method defines the domain of visitors that can be cleaned. By default visitors
+        not linked to any partner and not active for 'website.visitor.live.days' days (default being 60)
+        are considered as inactive.
+
+        This method is meant to be overridden by sub-modules to further refine inactivity conditions. """
+
+        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 60))
         deadline = datetime.now() - timedelta(days=delay_days)
-        visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', deadline)])
-        visitors_to_archive.write({'active': False})
+        return [('last_connection_datetime', '<', deadline), ('partner_id', '=', False)]
 
     def _update_visitor_timezone(self, timezone):
         """ We need to do this part here to avoid concurrent updates error. """
