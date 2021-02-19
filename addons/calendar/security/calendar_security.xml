@@ -2,31 +2,39 @@
 <odoo>
     <data noupdate="1">
 
-        <record id="calendar_event_rule_my" model="ir.rule">
-            <field name="name">Own events</field>
+        <record id="calendar_event_rule_for_read" model="ir.rule">
+            <field name="name">Event Read Permission</field>
             <field ref="model_calendar_event" name="model_id"/>
-            <field name="domain_force">[('partner_ids', 'in', user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
 
-        <record id="calendar_event_rule_employee" model="ir.rule">
+        <record id="calendar_event_rule_internal" model="ir.rule">
             <field ref="model_calendar_event" name="model_id"/>
-            <field name="name">All Calendar Event for employees</field>
-            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="name">Event for internal</field>
+            <field name="domain_force">[('privacy', 'in', ['internal', 'public'])]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="calendar_event_rule_owner" model="ir.rule">
+            <field ref="model_calendar_event" name="model_id"/>
+            <field name="name">All Calendar Event for owner</field>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
             <field eval="[(4,ref('base.group_user'))]" name="groups"/>
-        </record>
-
-        <record id="calendar_attendee_rule_my" model="ir.rule">
-            <field name="name">Own attendees</field>
-            <field ref="model_calendar_attendee" name="model_id"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
 
         <record id="calendar_event_rule_private" model="ir.rule">
             <field ref="model_calendar_event" name="model_id"/>
             <field name="name">Private events</field>
-            <field name="domain_force">['|', ('privacy', '!=', 'private'), '&amp;', ('privacy', '=', 'private'), ('partner_ids', 'in', user.partner_id.id)]</field>
+            <field name="domain_force">['|', ('privacy', '!=', 'private'), '&amp;', ('privacy', '=', 'private'), '|', ('partner_ids', 'in', user.partner_id.id), ('user_id', '=', user.id)]</field>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>

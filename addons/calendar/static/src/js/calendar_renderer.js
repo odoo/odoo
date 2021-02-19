@@ -26,6 +26,14 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
             });
             this.selectedStatusInfo = this.statusInfo[this.event.extendedProps.record.attendee_status];
         }
+
+        Promise.all([
+            self._rpc({model: self.modelName, method: 'check_access_rule', args: [parseInt(this.event.id), "write", false]}),
+            self._rpc({model: self.modelName, method: 'check_access_rule', args: [parseInt(this.event.id), "unlink", false]}),
+        ]).then(function (result) {
+            self.editable = result[0]
+            self.deletable = result[1]
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -43,33 +51,14 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
      * @return {boolean}
      */
     isEventDeletable() {
-        return this._super() && (this._isEventPrivate() ? this.isCurrentPartnerAttendee() : true);
-    },
-    /**
-     * @override
-     * @return {boolean}
-     */
-    isEventDetailsVisible() {
-        return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
+        return this.deletable;
     },
     /**
      * @override
      * @return {boolean}
      */
     isEventEditable() {
-        return this._isEventPrivate() ? this.isCurrentPartnerAttendee() : this._super();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @return {boolean}
-     */
-    _isEventPrivate() {
-        return this.event.extendedProps.record.privacy === 'private';
+        return this.editable;
     },
 
     //--------------------------------------------------------------------------

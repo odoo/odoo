@@ -814,8 +814,8 @@ class Meeting(models.Model):
             :param events: list of event values (dict)
             :return: tuple(my events, other events)
             """
-            my = [event for event in events if event.get('user_id') and event.get('user_id')[0] == self.env.uid]
-            others = [event for event in events if not event.get('user_id') or event.get('user_id')[0] != self.env.uid]
+            my = [event for event in events if (event.get('user_id') and event.get('user_id')[0] == self.env.uid) or self.env.user.partner_id.id in event.get('partner_ids')]
+            others = [event for event in events if not event.get('user_id') or (event.get('user_id')[0] != self.env.uid and self.env.user.partner_id.id not in event.get('partner_ids'))]
             return my, others
 
         def obfuscated(events):
