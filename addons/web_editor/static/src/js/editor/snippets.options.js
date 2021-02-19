@@ -1469,15 +1469,14 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      */
     async start() {
         await this._super(...arguments);
-        const iconEl = document.createElement('i');
         if (this.options.dataAttributes.buttonStyle) {
+            const iconEl = document.createElement('i');
             iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
+            $(this.containerEl).prepend(iconEl);
         } else {
-            iconEl.classList.add('fa', 'fa-fw', 'fa-refresh', 'mr-1');
-            this.el.classList.add('o_we_no_toggle');
+            this.el.classList.add('o_we_no_toggle', 'o_we_bg_success');
             this.containerEl.textContent = _t("Replace");
         }
-        $(this.containerEl).prepend(iconEl);
     },
 
     //--------------------------------------------------------------------------
