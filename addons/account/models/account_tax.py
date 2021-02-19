@@ -654,12 +654,12 @@ class AccountTaxRepartitionLine(models.Model):
         help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
-    @api.onchange('account_id')
+    @api.onchange('account_id', 'repartition_type')
     def _on_change_account_id(self):
-        if not self.account_id:
+        if not self.account_id or self.repartition_type == 'base':
             self.use_in_tax_closing = False
         else:
-            self.use_in_tax_closing = not(self.account_id.internal_group == 'income' or self.account_id.internal_group == 'expense')
+            self.use_in_tax_closing = self.account_id.internal_group not in ('income', 'expense')
 
     @api.constrains('invoice_tax_id', 'refund_tax_id')
     def validate_tax_template_link(self):
