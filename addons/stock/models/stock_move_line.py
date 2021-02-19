@@ -242,6 +242,7 @@ class StockMoveLine(models.Model):
                 else:
                     # TODO: make package levels less of a pain and fix this
                     package_level = ml.package_level_id
+                    package_level.move_ids.package_level_id = False
                     ml.package_level_id = False
                     package_level.unlink()
 
