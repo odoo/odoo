@@ -119,10 +119,6 @@ class Product(models.Model):
         services.virtual_available = 0.0
         services.free_qty = 0.0
 
-    def _product_available(self, field_names=None, arg=False):
-        """ Compatibility method """
-        return self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
-
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
@@ -660,11 +656,11 @@ class ProductTemplate(models.Model):
         self.has_available_route_ids = self.env['stock.location.route'].search_count([('product_selectable', '=', True)])
 
     @api.depends(
-        'product_variant_ids',
-        'product_variant_ids.stock_move_ids.product_qty',
-        'product_variant_ids.stock_move_ids.state',
+        'product_variant_ids.qty_available',
+        'product_variant_ids.virtual_available',
+        'product_variant_ids.incoming_qty',
+        'product_variant_ids.outgoing_qty',
     )
-    @api.depends_context('company')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
@@ -673,12 +669,10 @@ class ProductTemplate(models.Model):
             template.incoming_qty = res[template.id]['incoming_qty']
             template.outgoing_qty = res[template.id]['outgoing_qty']
 
-    def _product_available(self, name, arg):
-        return self._compute_quantities_dict()
-
     def _compute_quantities_dict(self):
-        # TDE FIXME: why not using directly the function fields ?
-        variants_available = self.with_context(active_test=False).mapped('product_variant_ids')._product_available()
+        variants_available = {
+            p['id']: p for p in self.with_context(active_test=False).product_variant_ids.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
+        }
         prod_available = {}
         for template in self:
             qty_available = 0
