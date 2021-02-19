@@ -2673,6 +2673,70 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('archive/unarchive handles returned action', async function (assert) {
+        assert.expect(6);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = { string: 'Active', type: 'boolean', default: true };
+
+        const actionManager = await createActionManager({
+            data: this.data,
+            actions: [{
+                id: 11,
+                name: 'Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [9, 'search'],
+            }],
+            archs: {
+                'foo,3,list': '<tree><field name="foo"/></tree>',
+                'foo,9,search': `
+                    <search>
+                        <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
+                    </search>`,
+                'bar,false,form': '<form><field name="display_name"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/foo/action_archive') {
+                    return Promise.resolve({
+                        'type': 'ir.actions.act_window',
+                        'name': _('Archive Action'),
+                        'res_model': 'bar',
+                        'view_mode': 'form',
+                        'target': 'new',
+                        'views': [[false, 'form']]
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                do_action: function (ev) {
+                    actionManager.doAction(ev.data.action, {});
+                },
+            },
+        });
+
+        await actionManager.doAction(11);
+
+        assert.isNotVisible(actionManager.$('.o_cp_sidebar > div'), 'sidebar should be invisible');
+        assert.containsN(actionManager, 'tbody td.o_list_record_selector', 4, "should have 4 records");
+
+        testUtils.dom.click(actionManager.$('tbody td.o_list_record_selector:first input'));
+
+        assert.isVisible(actionManager.$('.o_cp_sidebar > div'), 'sidebar should be visible');
+
+        testUtils.dom.click(actionManager.$('.o_cp_sidebar .o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(actionManager.$('.o_cp_sidebar a:contains(Archive)'));
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        assert.strictEqual($('.modal .modal-title').text().trim(), 'Archive Action',
+            "action wizard should have been opened");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('pager (ungrouped and grouped mode), default limit', async function (assert) {
         assert.expect(4);
 
@@ -7190,6 +7254,154 @@ QUnit.module('Views', {
         testUtils.mock.unpatch(BasicModel);
 
         assert.verifySteps(['clear_cache']); // triggered by the test environment on destroy
+    });
+
+    QUnit.test('list view move to previous page when all records from last page deleted', async function (assert) {
+        assert.expect(5);
+
+        var checkSearchRead = false;
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3">' +
+                '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (checkSearchRead && route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.limit, 3, "limit should 3");
+                    assert.notOk(args.offset, "offset should not be passed i.e. offset 0 by default");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+
+        await testUtils.nextTick();
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 4',
+        "should have 2 pages and current page should be first page");
+
+        // move to next page
+        await testUtils.dom.click(list.pager.$('.o_pager_next'));
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '4-4 / 4',
+        "should be on second page");
+
+        // delete a record
+        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
+        checkSearchRead = true;
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Delete)'));
+        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 3',
+            "should have 1 page only");
+
+        list.destroy();
+    });
+
+    QUnit.test('grouped list view move to previous page of group when all records from last page deleted', async function (assert) {
+        assert.expect(7);
+
+        var checkSearchRead = false;
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="2">' +
+                '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (checkSearchRead && route === '/web/dataset/search_read') {
+                    assert.strictEqual(args.limit, 2, "limit should 2");
+                    assert.notOk(args.offset, "offset should not be passed i.e. offset 0 by default");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+            groupBy: ['m2o'],
+        });
+
+        assert.strictEqual(list.$('th:contains(Value 1 (3))').length, 1,
+            "Value 1 should contain 3 records");
+        assert.strictEqual(list.$('th:contains(Value 2 (1))').length, 1,
+            "Value 2 should contain 1 record");
+
+        await testUtils.dom.click(list.$('th.o_group_name:nth(0)'));
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '1-2 / 3',
+            "should have 2 pages and current page should be first page");
+
+        // move to next page
+        await testUtils.dom.click(list.$('.o_group_header .o_pager_next'));
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '3-3 / 3',
+            "should be on second page");
+
+        // delete a record
+        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
+        checkSearchRead = true;
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Delete)'));
+        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+
+        assert.strictEqual(list.$('th.o_group_name:eq(0) .o_pager_counter').text().trim(), '',
+            "should be on first page now");
+
+        list.destroy();
+    });
+
+    QUnit.test('list view move to previous page when all records from last page archive/unarchived', async function (assert) {
+        assert.expect(9);
+
+        // add active field on foo model and make all records active
+        this.data.foo.fields.active = { string: 'Active', type: 'boolean', default: true };
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3"><field name="display_name"/></tree>',
+            viewOptions: {
+                hasSidebar: true,
+            },
+            mockRPC: function (route) {
+                if (route === '/web/dataset/call_kw/foo/action_archive') {
+                    this.data.foo.records[3].active = false;
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 4',
+            "should have 2 pages and current page should be first page");
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3,
+            "should have 3 records");
+
+        // move to next page
+        await testUtils.dom.click(list.pager.$('.o_pager_next'));
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '4-4 / 4',
+            "should be on second page");
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 1,
+            "should have 1 records");
+        assert.ok(list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
+
+        await testUtils.dom.click(list.$('tbody .o_data_row:first td.o_list_record_selector:first input'));
+        assert.ok(!list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
+
+        // archive all records of current page
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Archive)'));
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+
+        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3,
+            "should have 3 records");
+        assert.strictEqual(list.pager.$('.o_pager_counter').text().trim(), '1-3 / 3',
+            "should have 1 page only");
+
+        list.destroy();
     });
 
     QUnit.test('list should ask to scroll to top on page changes', async function (assert) {
