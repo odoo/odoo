@@ -47,17 +47,47 @@ QUnit.module('widgets', {
     beforeEach: async function () {
         this.session_mock_multi = {
             user_companies: {
-                current_company: [1, "Company 1"],
-                allowed_companies: [[1, "Company 1"], [2, "Company 2"], [3, "Company 3"]],
+                current_company: 1,
+                allowed_companies: {
+                    1: {
+                        id: 1,
+                        name: 'Company 1',
+                    },
+                    2: {
+                        id: 2,
+                        name: 'Company 2',
+                    },
+                    3: {
+                        id: 3,
+                        name: 'Company 3',
+                    },
+                },
             },
-            user_context: {allowed_company_ids: [1, 3]},
+            user_context: {
+                allowed_company_ids: [1, 3],
+            },
         };
         this.session_mock_single = {
             user_companies: {
-                current_company: [1, "Company 1"],
-                allowed_companies: [[1, "Company 1"], [2, "Company 2"], [3, "Company 3"]],
+                current_company: 1,
+                allowed_companies: {
+                    1: {
+                        id: 1,
+                        name: 'Company 1',
+                    },
+                    2: {
+                        id: 2,
+                        name: 'Company 2',
+                    },
+                    3: {
+                        id: 3,
+                        name: 'Company 3',
+                    },
+                },
             },
-            user_context: {allowed_company_ids: [1]},
+            user_context: {
+                allowed_company_ids: [1],
+            },
         };
     },
 
