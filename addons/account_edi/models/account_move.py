@@ -135,6 +135,61 @@ class AccountMove(models.Model):
     # Export Electronic Document
     ####################################################
 
+    def _prepare_edi_vals_to_export(self):
+        self.ensure_one()
+        sign = -1 if self.is_inbound(include_receipts=True) else 1
+
+        res = {
+            'record': self,
+            'invoice_line_vals_list': [],
+        }
+
+        # Invoice lines details.
+        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: not line.display_type), start=1):
+            res['invoice_line_vals_list'].append({
+                'index': index,
+                **line._prepare_edi_vals_to_export(),
+            })
+
+        # Tax details.
+        tax_detail_per_tax = {}
+        added_base_amount_keys = set()
+        for tax_detail in self.line_ids.tax_detail_ids:
+            tax = tax_detail.tax_repartition_line_id.tax_id
+            tax_detail_per_tax.setdefault(tax, {
+                'tax': tax,
+                'src_tax': tax_detail.tax_id,
+                'tax_base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+                'tag_ids': set(),
+            })
+            vals = tax_detail_per_tax[tax]
+
+            # Avoid adding multiple times the same base (e.g. with multiple repartition lines).
+            base_amount_key = (tax_detail.line_id, tax)
+            vals['tax_amount_currency'] += sign * tax_detail.tax_amount_currency
+            if base_amount_key not in added_base_amount_keys and not tax_detail.line_id.tax_line_id:
+                vals['tax_base_amount_currency'] += sign * tax_detail.tax_base_amount_currency
+            for tag in tax_detail.tag_ids:
+                vals['tag_ids'].add(tag.id)
+
+            added_base_amount_keys.add(base_amount_key)
+
+        res['tax_detail_vals_list'] = []
+        for tax_detail_vals in tax_detail_per_tax.values():
+            res['tax_detail_vals_list'].append({
+                **tax_detail_vals,
+                'tags': self.env['account.account.tag'].browse(tax_detail_vals['tag_ids']),
+            })
+
+        # Totals.
+        res.update({
+            'total_price_subtotal_wo_discount': sum(x['price_subtotal_wo_discount'] for x in res['invoice_line_vals_list']),
+            'total_price_discount': sum(x['price_discount'] for x in res['invoice_line_vals_list']),
+        })
+
+        return res
+
     def _update_payments_edi_documents(self):
         ''' Update the edi documents linked to the current journal entries. These journal entries must be linked to an
         account.payment of an account.bank.statement.line. This additional method is needed because the payment flow is
@@ -306,6 +361,42 @@ class AccountMoveLine(models.Model):
     ####################################################
     # Export Electronic Document
     ####################################################
+
+    def _prepare_edi_vals_to_export(self):
+        self.ensure_one()
+        sign = -1 if self.move_id.is_inbound(include_receipts=True) else 1
+
+        res = {'line': self}
+
+        res['price_unit_wo_discount'] = self.price_unit * (1 - (self.discount / 100.0))
+        res['price_subtotal_wo_discount'] = self.currency_id.round(self.price_unit * self.quantity)
+        res['price_subtotal_unit'] = self.currency_id.round(self.price_subtotal / self.quantity) if self.quantity else 0.0
+        res['price_discount'] = res['price_subtotal_wo_discount'] - self.price_subtotal
+
+        # Tax details.
+        tax_detail_per_tax = {}
+        for tax_detail in self.tax_detail_ids:
+            tax_detail_per_tax.setdefault(tax_detail.tax_repartition_line_id.tax_id, {
+                'tax': tax_detail.tax_repartition_line_id.tax_id,
+                'src_tax': tax_detail.tax_id,
+                'tax_base_amount_currency': 0.0,
+                'tax_amount_currency': 0.0,
+                'tag_ids': set(),
+            })
+            vals = tax_detail_per_tax[tax_detail.tax_repartition_line_id.tax_id]
+            vals['tax_base_amount_currency'] = sign * tax_detail.tax_base_amount_currency
+            vals['tax_amount_currency'] += sign * tax_detail.tax_amount_currency
+            for tag in tax_detail.tag_ids:
+                vals['tag_ids'].add(tag.id)
+
+        res['tax_detail_vals_list'] = []
+        for tax_detail_vals in tax_detail_per_tax.values():
+            res['tax_detail_vals_list'].append({
+                **tax_detail_vals,
+                'tags': self.env['account.account.tag'].browse(tax_detail_vals['tag_ids']),
+            })
+
+        return res
 
     def reconcile(self):
         # OVERRIDE
