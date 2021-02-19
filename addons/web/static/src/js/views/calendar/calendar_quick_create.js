@@ -32,7 +32,7 @@ var QuickCreate = Dialog.extend({
     init: function (parent, buttons, options, dataTemplate, dataCalendar) {
         this._buttons = buttons || false;
         this.options = options;
-
+        this.parentCalendar = parent;
         // Can hold data pre-set from where you clicked on agenda
         this.dataTemplate = dataTemplate || {};
         this.dataCalendar = dataCalendar;
@@ -65,6 +65,20 @@ var QuickCreate = Dialog.extend({
 
     focus: function () {
         this.$('input').focus();
+    },
+
+    destroy: function () {
+        // On quick create, remaining dialogs may be closed. We avoid to lose the selection for new quickcreate
+        // by checking that the dialog is not already destroyed.
+        if (!this.isDestroyed()) {
+            // remove selection when the dialog is closed
+            if (this.parentCalendar.renderer.state.scale === 'year') {
+                this.parentCalendar.renderer.calendar.view.unselect();
+            } else {
+                this.parentCalendar.renderer.calendar.unselect();
+            }
+        }
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
