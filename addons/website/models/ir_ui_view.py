@@ -45,6 +45,7 @@ class View(models.Model):
         for view in self:
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
 
+    @api.model_create_multi
     def create(self, vals_list):
         """
         SOC for ir.ui.view creation. If a view is created without a website_id,
@@ -55,18 +56,19 @@ class View(models.Model):
         if not website_id:
             return super().create(vals_list)
 
-        if 'website_id' not in vals_list:
-            # Automatic addition of website ID during view creation if not
-            # specified but present in the context
-            vals_list['website_id'] = website_id
-        else:
-            # If website ID specified, automatic check that it is the same as
-            # the one in the context. Otherwise raise an error.
-            new_website_id = vals_list['website_id']
-            if not new_website_id:
-                raise ValueError(f"Trying to create a generic view from a website {website_id} environment")
-            elif new_website_id != website_id:
-                raise ValueError(f"Trying to create a view for website {new_website_id} from a website {website_id} environment")
+        for vals in vals_list:
+            if 'website_id' not in vals:
+                # Automatic addition of website ID during view creation if not
+                # specified but present in the context
+                vals['website_id'] = website_id
+            else:
+                # If website ID specified, automatic check that it is the same as
+                # the one in the context. Otherwise raise an error.
+                new_website_id = vals['website_id']
+                if not new_website_id:
+                    raise ValueError(f"Trying to create a generic view from a website {website_id} environment")
+                elif new_website_id != website_id:
+                    raise ValueError(f"Trying to create a view for website {new_website_id} from a website {website_id} environment")
         return super().create(vals_list)
 
     def name_get(self):
