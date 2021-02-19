@@ -17,9 +17,12 @@ class Users(models.Model):
         'large': 10000,
     }
 
-    _populate_dependencies = ["res.partner"]
+    _populate_dependencies = ["res.groups", "res.partner"]
 
     def _populate_factories(self):
+        group_internal_user = self.env.ref('base.group_user').id
+        group_portal_user = self.env.ref('base.group_portal').id
+
         def generate_partner_id(iterator, *args):
             partner_factories = self.env['res.partner']._populate_factories()
             partner_generator = populate.chain_factories(partner_factories, self._name)
@@ -30,6 +33,9 @@ class Users(models.Model):
         def get_company_ids(values, **kwargs):
             return [(6, 0, [values['company_id']])]
 
+        def get_groups_id(values, counter, random):
+            return random.choices([group_internal_user, group_portal_user], [0.8, 0.2])
+
         return [
             ('active', populate.cartesian([True, False], [0.9, 0.1])),
             ('partner_id', generate_partner_id),
@@ -37,6 +43,7 @@ class Users(models.Model):
             ('company_ids', populate.compute(get_company_ids)),
             ('login', populate.constant('user_login_{counter}')),
             ('name', populate.constant('user_{counter}')),
+            ('groups_id', populate.compute(get_groups_id))
         ]
 
     def _populate(self, size):
