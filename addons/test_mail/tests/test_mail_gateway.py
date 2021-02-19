@@ -869,7 +869,7 @@ class TestMailgateway(TestMailCommon):
         })
         self.test_channel = self.env['mail.channel'].create({
             'name': 'Test',
-            'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.partner_1.id})],
+            'channel_partner_ids': [(4, self.partner_1.id)],
         })
         self.fake_email.write({
             'model': 'mail.channel',
