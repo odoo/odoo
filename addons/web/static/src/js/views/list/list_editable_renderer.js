@@ -468,11 +468,15 @@ ListRenderer.include({
      * prevent subsequent editions. These edits would be lost, because the list
      * view only saves records when unselecting a row.
      *
+     * @param {Object} [options]
+     * @param {boolean} [options.forceCreate=false] typically set to true when
+     *   record should forcefully saved even when it is not dirty, for e.g.
+     *   when ENTER is pressed on row or Save button is clicked
      * @returns {Promise} The promise resolves if the row was unselected (and
      *   possibly removed). If may be rejected, when the row is dirty and the
      *   user refuses to discard its changes.
      */
-    unselectRow: function () {
+    unselectRow: function (options) {
         // Protect against calling this method when no row is selected
         if (this.currentRow === null) {
             return Promise.resolve();
@@ -488,10 +492,26 @@ ListRenderer.include({
 
         toggleWidgets(true);
         return new Promise((resolve, reject) => {
-            this.trigger_up('save_line', {
-                recordID: recordID,
-                onSuccess: resolve,
-                onFailure: reject,
+            const record = this._getRecord(recordID);
+            this.commitChanges(recordID).then(() => {
+                if ((!options || !options.forceCreate) && !record.isDirty()) {
+                    this.trigger_up('mutexify', {
+                        action: () => {
+                            return this.trigger_up('discard_changes', {
+                                recordID: recordID,
+                                onSuccess: resolve,
+                                onFailure: reject,
+                            });
+                        },
+                    });
+                } else {
+                    this.trigger_up('save_line', {
+                        recordID: recordID,
+                        onSuccess: resolve,
+                        onFailure: reject,
+                        forceCreate: options && options.forceCreate,
+                    });
+                }
             });
         }).then(selectNextRow => {
             this._enableRecordSelectors();
@@ -1012,7 +1032,7 @@ ListRenderer.include({
             } else if (this.editable) {
                 // if for some reason (e.g. create feature is disabled) we can't add a new
                 // record, select the first record row
-                this.unselectRow().then(this.trigger_up.bind(this, 'add_record', {
+                this.unselectRow({ forceCreate: true }).then(this.trigger_up.bind(this, 'add_record', {
                     groupId: groupId,
                     onFail: this._selectCell.bind(this, borderRowIndex, cellIndex, cellOptions),
                 }));
@@ -1446,7 +1466,7 @@ ListRenderer.include({
 
         // but we do want to unselect current row
         var self = this;
-        this.unselectRow().then(function () {
+        return this.unselectRow().then(function () {
             self.trigger_up('add_record', {context: ev.currentTarget.dataset.context && [ev.currentTarget.dataset.context]}); // TODO write a test, the promise was not considered
         });
     },
@@ -1583,7 +1603,7 @@ ListRenderer.include({
                 // If the list is readonly and the current is the only record editable, we unselect the line
                 if (!this.editable && this.selection.length === 1 &&
                     this._getRecordID(this.currentRow) === ev.target.dataPointID) {
-                    this.unselectRow();
+                    this.unselectRow({ forceCreate: true });
                 } else {
                     this._moveToNextLine({ forceCreate: true });
                 }
@@ -1826,7 +1846,13 @@ ListRenderer.include({
             return;
         }
 
-        this.unselectRow();
+        const options = { forceCreate: false };
+        // if save button is clicked then save the record forcefully even if it is non dirty
+        if ([...event.target.classList].includes('o_list_button_save')) {
+            options['forceCreate'] = true;
+        }
+
+        this.unselectRow(options);
     },
 });
 

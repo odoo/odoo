@@ -69,7 +69,7 @@ tour.register('sale_matrix_tour', {
     run: 'click' // apply the matrix
 }, {
     trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
-    extra_trigger: ".o_sale_order",
+    extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("1.00")',
     run: 'text Agrolait'
 }, {
     trigger: ".ui-menu-item > a",

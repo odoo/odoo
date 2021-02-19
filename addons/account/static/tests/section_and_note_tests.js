@@ -89,6 +89,8 @@ QUnit.module('section_and_note', {
         // editing section should be input
         $tr1 = form.$('tr.o_data_row:eq(1)');
         await testUtils.dom.click($tr1.find('td.o_data_cell'));
+        await testUtils.nextTick();
+        $tr1 = form.$('tr.o_data_row:eq(1)');
         assert.containsOnce($tr1, 'td.o_data_cell input[name="name"]',
             "editing section should be input");
 

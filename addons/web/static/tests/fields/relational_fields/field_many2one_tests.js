@@ -2872,6 +2872,7 @@ QUnit.module('fields', {}, function () {
                 arch: '<form>' +
                     '<field name="p">' +
                     '<tree editable="bottom">' +
+                    '<field name="foo"/>' +
                     '<field name="trululu"/>' +
                     '</tree>' +
                     '</field>' +
@@ -2900,6 +2901,8 @@ QUnit.module('fields', {}, function () {
             domain = [['id', 'in', [10]]]; // domain for subrecord 1
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.dom.click(form.$('.o_field_widget[name=trululu] input'));
+            // add some value to foo field to make record dirty
+            await testUtils.fields.editInput(form.$('tr.o_selected_row input[name="foo"]'), 'new value');
 
             // add a second row with another domain for the m2o
             domain = [['id', 'in', [5]]]; // domain for subrecord 2
@@ -2908,7 +2911,7 @@ QUnit.module('fields', {}, function () {
 
             // check again the first row to ensure that the domain hasn't change
             domain = [['id', 'in', [10]]]; // domain for subrecord 1 should have been kept
-            await testUtils.dom.click(form.$('.o_data_row:first .o_data_cell'));
+            await testUtils.dom.click(form.$('.o_data_row:first .o_data_cell:eq(1)'));
             await testUtils.dom.click(form.$('.o_field_widget[name=trululu] input'));
 
             form.destroy();

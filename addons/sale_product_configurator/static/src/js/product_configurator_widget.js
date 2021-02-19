@@ -101,13 +101,13 @@ ProductConfiguratorWidget.include({
                 allowWarning: true,
                 onSuccess: function () {
                     // Leave edit mode of one2many list.
-                    unselectRow();
+                    unselectRow({ forceCreate: true });
                 }
             });
         } else if (!self._isConfigurableLine() && self._isConfigurableProduct()) {
             // Leave edit mode of current line if line was configured
             // only through the product configurator.
-            unselectRow();
+            unselectRow({ forceCreate: true });
         }
     },
 
