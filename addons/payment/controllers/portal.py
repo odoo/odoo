@@ -168,7 +168,13 @@ class WebsitePayment(http.Controller):
         if order_id:
             try:
                 order_id = int(order_id)
-                order = env['sale.order'].browse(order_id)
+                if partner_id:
+                    # `sudo` needed if the user is not connected.
+                    # A public user woudn't be able to read the sale order.
+                    # With `partner_id`, an access_token should be validated, preventing a data breach.
+                    order = env['sale.order'].sudo().browse(order_id)
+                else:
+                    order = env['sale.order'].browse(order_id)
                 values.update({
                     'currency': order.currency_id,
                     'amount': order.amount_total,
