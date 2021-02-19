@@ -214,7 +214,7 @@ class Channel(models.Model):
             if visibility != 'public':
                 channel.sudo().public = visibility
 
-        channels._subscribe_users()
+        channels._subscribe_users_automatically()
 
         # make channel listen itself: posting on a channel notifies the channel
         if not self._context.get('mail_channel_noautofollow'):
@@ -245,7 +245,7 @@ class Channel(models.Model):
         result = super(Channel, self).write(vals)
 
         if vals.get('group_ids'):
-            self._subscribe_users()
+            self._subscribe_users_automatically()
 
         # avoid keeping messages to moderate and accept them
         if vals.get('moderation') is False:
@@ -266,18 +266,22 @@ class Channel(models.Model):
     # MEMBERS MANAGEMENT
     # ------------------------------------------------------------
 
-    def _subscribe_users(self):
-        to_create = []
-        for mail_channel in self:
-            if mail_channel.group_ids:
-                partners_to_add = mail_channel.group_ids.users.partner_id - mail_channel.channel_partner_ids
-                to_create += [{
-                    'channel_id': mail_channel.id,
-                    'partner_id': partner.id,
-                } for partner in partners_to_add]
+    def _subscribe_users_automatically(self):
+        new_members = self._subscribe_users_automatically_get_members()
+        if new_members:
+            to_create = [
+                {'channel_id': channel_id, 'partner_id': partner_id}
+                for channel_id in new_members
+                for partner_id in new_members[channel_id]
+            ]
+            self.env['mail.channel.partner'].sudo().create(to_create)
 
-        if to_create:
-            self.env['mail.channel.partner'].create(to_create)
+    def _subscribe_users_automatically_get_members(self):
+        """ Return new members per channel ID """
+        return dict(
+            (channel.id, (channel.group_ids.users.partner_id - channel.channel_partner_ids).ids)
+            for channel in self
+        )
 
     def action_follow(self):
         self.ensure_one()
