@@ -4,6 +4,7 @@ odoo.define('web.crash_manager_tests', function (require) {
     const Bus = require('web.Bus');
     const testUtils = require('web.test_utils');
     const core = require('web.core');
+    const ajax = require('web.ajax');
     const createActionManager = testUtils.createActionManager;
     
 QUnit.module('Services', {}, function() {
@@ -46,6 +47,7 @@ QUnit.module('Services', {}, function() {
                 ]
             }
         });
+        await ajax.loadJS('/web/static/lib/stacktracejs/stacktrace.js');
         await testUtils.nextTick();
 
         var modal_selector = 'div.modal:contains("crash_manager_tests_warning_modal_text")';
