@@ -381,11 +381,6 @@ return AbstractRenderer.extend({
             data.title = this.state.context.default_name;
         }
         this.trigger_up('openCreate', this._convertEventToFC3Event(data));
-        if (this.state.scale === 'year') {
-            this.calendar.view.unselect();
-        } else {
-            this.calendar.unselect();
-        }
     },
     /**
      * Return the Object options for FullCalendar
