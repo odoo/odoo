@@ -2,14 +2,14 @@
 <odoo>
     <data>
         <template id="account_invoice_line_facturx_export">
-            <t t-set="line" t-value="line_values['line']"/>
+            <t t-set="line" t-value="line_vals['line']"/>
             <t  xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
                 xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
                 <ram:IncludedSupplyChainTradeLineItem>
                     <!-- Line number. -->
                     <ram:AssociatedDocumentLineDocument>
-                        <ram:LineID t-esc="line_values['index']"/>
+                        <ram:LineID t-esc="line_vals['index']"/>
                     </ram:AssociatedDocumentLineDocument>
 
                     <!-- Product. -->
@@ -28,8 +28,8 @@
                     <ram:SpecifiedLineTradeAgreement>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(line.price_unit, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(line.price_unit, record.currency_id)"/>
 
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
@@ -48,8 +48,8 @@
                     </ram:SpecifiedLineTradeDelivery>
 
                     <ram:SpecifiedLineTradeSettlement>
-                        <t t-foreach="line_values['tax_details']" t-as="tax_vals">
-                            <t t-set="tax" t-value="tax_vals['tax']"/>
+                        <t t-foreach="line_vals['tax_detail_vals_list']" t-as="tax_detail_vals">
+                            <t t-set="tax" t-value="tax_detail_vals['tax']"/>
                             <ram:ApplicableTradeTax t-if="tax.amount_type == 'percent'">
                                 <ram:RateApplicablePercent t-esc="tax.amount"/>
                             </ram:ApplicableTradeTax>
@@ -57,8 +57,8 @@
                         <!-- Subtotal. -->
                         <ram:SpecifiedTradeSettlementLineMonetarySummation>
                             <ram:LineTotalAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(line.price_subtotal, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(line.price_subtotal, record.currency_id)"/>
                         </ram:SpecifiedTradeSettlementLineMonetarySummation>
                     </ram:SpecifiedLineTradeSettlement>
 
@@ -94,7 +94,6 @@
         </template>
 
         <template id="account_invoice_facturx_export">
-            <t t-set="currency" t-value="record.currency_id or record.company_currency_id"/>
             <rsm:CrossIndustryInvoice
                 xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
@@ -124,7 +123,7 @@
 
                 <rsm:SupplyChainTradeTransaction>
                     <!-- Invoice lines. -->
-                    <t t-foreach="invoice_line_values" t-as="line_values">
+                    <t t-foreach="invoice_line_vals_list" t-as="line_vals">
                         <t t-call="account_edi_facturx.account_invoice_line_facturx_export"/>
                     </t>
 
@@ -183,18 +182,18 @@
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 
                         <!-- Tax Summary. -->
-                        <t t-foreach="tax_details" t-as="tax_vals">
-                            <t t-set="tax_line" t-value="tax_vals['line']"/>
+                        <t t-foreach="tax_detail_vals_list" t-as="tax_detail_vals">
+                            <t t-set="tax" t-value="tax_detail_vals['tax']"/>
                             <ram:ApplicableTradeTax>
                                 <ram:CalculatedAmount
-                                    t-att-currencyID="currency.name"
-                                    t-esc="format_monetary(tax_vals['tax_amount'], currency)"/>
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_monetary(tax_detail_vals['tax_amount_currency'], record.currency_id)"/>
                                 <ram:BasisAmount
-                                    t-att-currencyID="currency.name"
-                                    t-esc="format_monetary(tax_vals['tax_base_amount'], currency)"/>
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_monetary(tax_detail_vals['tax_base_amount_currency'], record.currency_id)"/>
                                 <ram:RateApplicablePercent
-                                    t-if="tax_line.tax_line_id.amount_type == 'percent'"
-                                    t-esc="tax_line.tax_line_id.amount"/>
+                                    t-if="tax.amount_type == 'percent'"
+                                    t-esc="tax.amount"/>
                             </ram:ApplicableTradeTax>
                         </t>
 
@@ -209,23 +208,23 @@
                         <!-- Summary. -->
                         <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
                             <ram:LineTotalAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_untaxed, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_untaxed, record.currency_id)"/>
                             <ram:TaxBasisTotalAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_untaxed, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_untaxed, record.currency_id)"/>
                             <ram:TaxTotalAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_tax, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_tax, record.currency_id)"/>
                             <ram:GrandTotalAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_total, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_total, record.currency_id)"/>
                             <ram:TotalPrepaidAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_total - record.amount_residual, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_total - record.amount_residual, record.currency_id)"/>
                             <ram:DuePayableAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_residual, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_residual, record.currency_id)"/>
                         </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
                     </ram:ApplicableHeaderTradeSettlement>
                 </rsm:SupplyChainTradeTransaction>

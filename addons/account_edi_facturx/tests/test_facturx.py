@@ -181,14 +181,14 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
             <xpath expr="//ApplicableHeaderTradeSettlement" position="replace">
                 <ApplicableHeaderTradeSettlement>
                     <ApplicableTradeTax>
-                        <CalculatedAmount currencyID="Gol">220.000</CalculatedAmount>
-                        <BasisAmount currencyID="Gol">1100.000</BasisAmount>
-                        <RateApplicablePercent>20.0</RateApplicablePercent>
-                    </ApplicableTradeTax>
-                    <ApplicableTradeTax>
                         <CalculatedAmount currencyID="Gol">100.000</CalculatedAmount>
                         <BasisAmount currencyID="Gol">1000.000</BasisAmount>
                         <RateApplicablePercent>10.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <ApplicableTradeTax>
+                        <CalculatedAmount currencyID="Gol">220.000</CalculatedAmount>
+                        <BasisAmount currencyID="Gol">1100.000</BasisAmount>
+                        <RateApplicablePercent>20.0</RateApplicablePercent>
                     </ApplicableTradeTax>
                     <SpecifiedTradePaymentTerms>
                         <DueDateDateTime>
