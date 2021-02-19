@@ -1326,7 +1326,7 @@ class MrpProduction(models.Model):
                 move.product_uom_qty = move.quantity_done
             # MRP do not merge move, catch the result of _action_done in order
             # to get extra moves.
-            moves_to_do = moves_to_do._action_done()
+            moves_to_do = moves_to_do._action_done(cancel_backorder=cancel_backorder)
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
 
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))

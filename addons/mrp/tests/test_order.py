@@ -179,6 +179,45 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [2, 11])
         self.assertEqual(mo.move_raw_ids.mapped('move_line_ids.qty_done'), [2, 11])
 
+    def test_under_consumption(self):
+        """ Consume less component quantity than the initial demand.
+            Before done:
+                p1, to consume = 1, consumed = 0
+                p2, to consume = 10, consumed = 5
+            After done:
+                p1, to consume = 1, consumed = 0, state = cancel
+                p2, to consume = 5, consumed = 5, state = done
+                p2, to consume = 5, consumed = 0, state = cancel
+        """
+        mo, _bom, _p_final, _p1, _p2 = self.generate_mo(qty_base_1=10, qty_final=1, qty_base_2=1)
+        mo.action_assign()
+        # check is_quantity_done_editable
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 0
+        details_operation_form.save()
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.edit(0) as ml:
+            ml.qty_done = 5
+        details_operation_form.save()
+
+        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 2)
+        self.assertEqual(mo.move_raw_ids[0].move_line_ids.mapped('qty_done'), [0])
+        self.assertEqual(mo.move_raw_ids[1].move_line_ids.mapped('qty_done'), [5])
+        self.assertEqual(mo.move_raw_ids[0].quantity_done, 0)
+        self.assertEqual(mo.move_raw_ids[1].quantity_done, 5)
+        mo.button_mark_done()
+        self.assertEqual(len(mo.move_raw_ids), 3)
+        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 1)
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [0, 5, 0])
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [1, 5, 5])
+        self.assertEqual(mo.move_raw_ids.mapped('state'), ['cancel', 'done', 'cancel'])
+        self.assertEqual(mo.move_raw_ids.mapped('move_line_ids.qty_done'), [5])
+
     def test_update_quantity_1(self):
         """ Build 5 final products with different consumed lots,
         then edit the finished quantity and update the Manufacturing
