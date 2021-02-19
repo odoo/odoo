@@ -4309,27 +4309,42 @@ class StockMove(TransactionCase):
             - some move are reserved
             - switching from a stockable product when qty_available is not zero
         """
-        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
-        move1 = self.env['stock.move'].create({
+        move_in = self.env['stock.move'].create({
             'name': 'test_customer',
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 5,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
-        move1._action_confirm()
-        move1._action_assign()
+        move_in._action_confirm()
+        move_in._action_assign()
 
+        # Check raise UserError(_("You can not change the type of a product that is currently reserved on a stock
         with self.assertRaises(UserError):
             self.product.type = 'consu'
-        move1._action_cancel()
+        move_in._action_cancel()
 
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
+
+        # Check raise UserError(_("Available quantity should be set to zero before changing type"))
         with self.assertRaises(UserError):
             self.product.type = 'consu'
 
-        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, -self.product.qty_available)
+        move_out = self.env['stock.move'].create({
+            'name': 'test_customer',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': self.product.qty_available,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        move_out.quantity_done = self.product.qty_available
+        move_out._action_done()
         self.product.type = 'consu'
 
         move2 = self.env['stock.move'].create({
