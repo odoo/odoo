@@ -10,7 +10,7 @@
                 <kanban>
                     <field name="id"/>
                     <field name="description"/>
-                    <field name="is_subscribed"/>
+                    <field name="is_member"/>
                     <field name="group_ids"/>
                     <field name="public"/>
                     <templates>
@@ -27,8 +27,8 @@
                                     <p class="oe_module_name">
                                         <field name="description"/>
                                     </p>
-                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',True), ('group_ids', '!=', [])]}" class="btn btn-primary float-right" name="channel_join_and_get_info">Join</button>
-                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',False), ('group_ids', '!=', [])]}" class="btn btn-secondary float-right" name="action_unfollow">Leave</button>
+                                    <button type="object" attrs="{'invisible':['|', ('is_member','=',True), ('group_ids', '!=', [])]}" class="btn btn-primary float-right" name="channel_join_and_get_info">Join</button>
+                                    <button type="object" attrs="{'invisible':['|', ('is_member','=',False), ('group_ids', '!=', [])]}" class="btn btn-secondary float-right" name="action_unfollow">Leave</button>
                                 </div>
                             </div>
                         </t>
