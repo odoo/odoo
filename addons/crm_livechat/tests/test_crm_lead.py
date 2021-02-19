@@ -35,10 +35,10 @@ class TestLivechatLead(TestCrmCommon):
             'name': 'Chat with Visitor',
             'channel_partner_ids': [(4, self.user_anonymous.partner_id.id)]
         })
-        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, channel.channel_last_seen_partner_ids, '/lead TestLead command')
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(
-            channel.channel_last_seen_partner_ids.partner_id,
+            channel.channel_partner_ids,
             self.user_sales_leads.partner_id | self.user_anonymous.partner_id
         )
         self.assertEqual(lead.name, 'TestLead command')
@@ -48,7 +48,7 @@ class TestLivechatLead(TestCrmCommon):
         channel.write({
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]
         })
-        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, channel.channel_last_seen_partner_ids, '/lead TestLead command')
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
         # portal: should be set as customer
@@ -56,10 +56,10 @@ class TestLivechatLead(TestCrmCommon):
             'name': 'Chat with Visitor',
             'channel_partner_ids': [(4, self.user_portal.partner_id.id)]
         })
-        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, channel.channel_last_seen_partner_ids, '/lead TestLead command')
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(
-            channel.channel_last_seen_partner_ids.partner_id,
+            channel.channel_partner_ids,
             self.user_sales_leads.partner_id | self.user_portal.partner_id
         )
         self.assertEqual(lead.partner_id, self.user_portal.partner_id)
@@ -68,10 +68,10 @@ class TestLivechatLead(TestCrmCommon):
         channel.write({
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]
         })
-        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, channel.channel_last_seen_partner_ids, '/lead TestLead command')
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
 
         self.assertEqual(
-            channel.channel_last_seen_partner_ids.partner_id,
+            channel.channel_partner_ids,
             self.user_sales_leads.partner_id | self.user_portal.partner_id | self.user_sales_manager.partner_id
         )
         self.assertEqual(lead.partner_id, self.user_portal.partner_id)
