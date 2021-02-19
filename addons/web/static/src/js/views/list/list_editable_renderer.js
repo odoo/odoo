@@ -1038,6 +1038,11 @@ ListRenderer.include({
                     this.columnWidths = false; // columns changed, so forget stored widths
                     break;
                 }
+                if (this.columns[i].tag === 'button' &&
+                    _.isArray(this.columns[i].attrs.modifiers.invisible)) {
+                    this.columnWidths = false; // column might change, so forget stored widths
+                    break;
+                }
             }
         } else {
             this.columnWidths = false; // columns changed, so forget stored widths

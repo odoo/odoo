@@ -8876,6 +8876,43 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('column widths are changed if there is a conditionally showed button column in o2m', async function (assert) {
+            assert.expect(3);
+
+            var longLabel = 'very '.repeat(200) + 'long'; // big label to force minimum size on button column
+
+            var form = await createView({
+                View: FormView,
+                model: 'user',
+                data: this.data,
+                arch: '<form>' +
+                          '<field name="partner_ids">' +
+                              '<tree limit="1">' +
+                                  '<field name="display_name" string="'+longLabel+'"/>' +
+                                  '<button name="do_it"'+
+                                      ' string="do it"' +
+                                      ' attrs="{\'invisible\': [(\'display_name\', \'like\', \'first\')]}"' +
+                                  '/>' +
+                              '</tree>' +
+                          '</field>' +
+                      '</form>',
+                res_id: 17,
+            });
+
+            var width = form.$('th[data-name="do_it"]')[0].offsetWidth;
+            assert.ok(width < 10, "column with no visible buttons takes no width");
+
+            await testUtils.dom.click(form.$('.o_field_widget[name="partner_ids"] .o_pager_next'));
+            width = form.$('th[data-name="do_it"]')[0].offsetWidth;
+            assert.ok(width > 20, "column with visible buttons is shown on page change");
+
+            await testUtils.dom.click(form.$('.o_field_widget[name="partner_ids"] .o_pager_previous'));
+            width = form.$('th[data-name="do_it"]')[0].offsetWidth;
+            assert.ok(width < 10, "going to previous page adapts button column with");
+
+            form.destroy();
+        });
+
         QUnit.test('column widths are kept when editing a record in o2m', async function (assert) {
             assert.expect(2);
 
