@@ -1491,7 +1491,7 @@ class IrModelAccess(models.Model):
         """ % access_mode, [model_name])
         return [('%s/%s' % x) if x[0] else x[1] for x in self._cr.fetchall()]
 
-    @tools.ormcache('self.env.uid', 'self.env.su')
+    @tools.ormcache('0 if self.env.su else self.env.uid')
     def _acl_map(self):
         """ Returns a mapping of model names to CRUD access rights.
 
