@@ -55,18 +55,18 @@ var WysiwygMultizone = Wysiwyg.extend({
             return self._saveElement(outerHTML, self.options.recordInfo, $el[0]);
         };
 
-        // Mega menu initialization: handle dropdown openings by hand
-        var $megaMenuToggles = this.$('.o_mega_menu_toggle');
-        $megaMenuToggles.removeAttr('data-toggle').dropdown('dispose');
-        $megaMenuToggles.on('click.wysiwyg_multizone', ev => {
+        // Dropdown menu initialization: handle dropdown openings by hand
+        var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
+        $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
+        $dropdownMenuToggles.on('click.wysiwyg_multizone', ev => {
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
             // behavior afterwards to keep manual control of it
             var dispose = ($els => $els.dropdown('dispose'));
 
-            // First hide all other mega menus
-            toggleDropdown($megaMenuToggles.not($toggle), false).then(dispose);
+            // First hide all other dropdown menus
+            toggleDropdown($dropdownMenuToggles.not($toggle), false).then(dispose);
 
             // Then toggle the clicked one
             toggleDropdown($toggle)
