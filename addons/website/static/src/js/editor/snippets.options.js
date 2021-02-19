@@ -10,6 +10,7 @@ const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wUtils = require('website.utils');
 require('website.s_popup_options');
+const weWidgets = require('wysiwyg.widgets');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -2585,6 +2586,37 @@ options.registry.ScrollButton = options.Class.extend({
                 return !!this.$button.parent().length;
         }
         return this._super(...arguments);
+    },
+});
+
+/**
+ * Allows for images to be replaced.
+ */
+options.registry.ReplaceImage = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        const $button = this.$el.find('we-button');
+        const $overlayArea = this.$overlay.find('.oe_snippet_remove');
+        $button.insertBefore($overlayArea);
+
+        return this._super(...arguments);
+    },
+    
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replaces the image.
+     *
+     * @see this.selectClass for parameters
+     */
+    replaceImage: async function () {
+        // TODO: simulates a double click on an image from summernote,
+        // to be refactored when the new editor is merged
+        this.$target.dblclick();
     },
 });
 
