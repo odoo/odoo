@@ -6340,14 +6340,14 @@ QUnit.module('basic_fields', {
             domain: [['id', '=', 1]],
         });
 
-        assert.containsOnce(kanban, '.o_kanban_record .o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsOnce(kanban, '.o_kanban_record .o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should be favorite');
         assert.strictEqual(kanban.$('.o_kanban_record .o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
             'the label should say "Remove from Favorites"');
 
         // click on favorite
         await testUtils.dom.click(kanban.$('.o_field_widget.o_favorite'));
-        assert.containsNone(kanban, '.o_kanban_record  .o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsNone(kanban, '.o_kanban_record  .o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should not be favorite');
         assert.strictEqual(kanban.$('.o_kanban_record  .o_field_widget.o_favorite > a').text(), ' Add to Favorites',
             'the label should say "Add to Favorites"');
@@ -6372,35 +6372,35 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should be favorite');
         assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
             'the label should say "Remove from Favorites"');
 
         // click on favorite
         await testUtils.dom.click(form.$('.o_field_widget.o_favorite'));
-        assert.containsNone(form, '.o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsNone(form, '.o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should not be favorite');
         assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Add to Favorites',
             'the label should say "Add to Favorites"');
 
         // switch to edit mode
         await testUtils.form.clickEdit(form);
-        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-star-o',
+        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-bookmark-o',
             'should not be favorite');
         assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Add to Favorites',
             'the label should say "Add to Favorites"');
 
         // click on favorite
         await testUtils.dom.click(form.$('.o_field_widget.o_favorite'));
-        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should be favorite');
         assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
             'the label should say "Remove from Favorites"');
 
         // save
         await testUtils.form.clickSave(form);
-        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsOnce(form, '.o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should be favorite');
         assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
             'the label should say "Remove from Favorites"');
@@ -6420,22 +6420,22 @@ QUnit.module('basic_fields', {
                   '</tree>',
         });
 
-        assert.containsOnce(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsOnce(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should be favorite');
 
         // switch to edit mode
         await testUtils.dom.click(list.$('tbody td:not(.o_list_record_selector)').first());
-        assert.containsOnce(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsOnce(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should be favorite');
 
         // click on favorite
         await testUtils.dom.click(list.$('.o_data_row:first .o_field_widget.o_favorite'));
-        assert.containsNone(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star',
+        assert.containsNone(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-bookmark',
             'should not be favorite');
 
         // save
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
-        assert.containsOnce(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star-o',
+        assert.containsOnce(list, '.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-bookmark-o',
             'should not be favorite');
 
         list.destroy();
