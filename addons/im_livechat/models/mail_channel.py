@@ -43,7 +43,7 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat' and channel.public == 'private':
                 notifications.append([channel.uuid, notifications[0][1]])
         if not message.author_id:
-            unpinned_channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: not cp.is_pinned)
+            unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
             if unpinned_channel_partner:
                 unpinned_channel_partner.write({'is_pinned': True})
                 notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
@@ -74,8 +74,14 @@ class MailChannel(models.Model):
     @api.model
     def channel_fetch_slot(self):
         values = super(MailChannel, self).channel_fetch_slot()
-        pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
-        values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('id', 'in', pinned_channels.ids)]).channel_info()
+        livechat_channels = self.env['mail.channel'].search([
+            ('channel_type', '=', 'livechat'),
+            ('channel_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('is_pinned', '=', True)])
+            ),
+        ])
+        values['channel_livechat'] = livechat_channels.channel_info()
         return values
 
     def _channel_get_livechat_visitor_info(self):

@@ -101,8 +101,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
-        Channel = request.env['mail.channel']
-        channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
         if channel:
             # limit the creation : only ONE rating per session
             values = {
@@ -144,8 +143,7 @@ class LivechatController(http.Controller):
             :param uuid: (string) the UUID of the livechat channel
             :param is_typing: (boolean) tells whether the website user is typing or not.
         """
-        Channel = request.env['mail.channel']
-        channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
         channel.notify_typing(is_typing=is_typing)
 
     @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")

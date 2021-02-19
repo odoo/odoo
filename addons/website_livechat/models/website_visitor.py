@@ -78,14 +78,14 @@ class WebsiteVisitor(models.Model):
         if mail_channel_vals_list:
             mail_channels = self.env['mail.channel'].create(mail_channel_vals_list)
             # Open empty chatter to allow the operator to start chatting with the visitor.
-            values = {
+            channel_members = self.env['mail.channel.partner'].sudo().search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('channel_id', 'in', mail_channels.ids),
+            ])
+            channel_members.write({
                 'fold_state': 'open',
                 'is_minimized': True,
-            }
-            mail_channels_uuid = mail_channels.mapped('uuid')
-            domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.uuid', 'in', mail_channels_uuid)]
-            channel_partners = self.env['mail.channel.partner'].search(domain)
-            channel_partners.write(values)
+            })
             mail_channels_info = mail_channels.channel_info('send_chat_request')
             notifications = []
             for mail_channel_info in mail_channels_info:

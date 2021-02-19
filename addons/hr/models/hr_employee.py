@@ -240,7 +240,7 @@ class HrEmployeePrivate(models.Model):
         if employee.department_id:
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
-            ])._subscribe_users()
+            ])._subscribe_users_automatically()
         return employee
 
     def write(self, vals):
@@ -258,7 +258,7 @@ class HrEmployeePrivate(models.Model):
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', department_id)
-            ])._subscribe_users()
+            ])._subscribe_users_automatically()
         return res
 
     def unlink(self):
