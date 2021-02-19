@@ -14,10 +14,6 @@ from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
-# Preload PIL with the minimal subset of image formats we need
-Image.preinit()
-Image._initialized = 2
-
 # Maps only the 6 first bits of the base64 data, accurate enough
 # for our purpose and faster than decoding the full blob first
 FILETYPE_BASE64_MAGICWORD = {
