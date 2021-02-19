@@ -443,6 +443,47 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('pager, ungrouped, deleting all records from last page should move to previous page', async function (assert) {
+        assert.expect(5);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<kanban class="o_kanban_test" limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div><a role="menuitem" type="delete" class="dropdown-item">Delete</a></div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3",
+            "should have 3 records on current page");
+        assert.strictEqual(cpHelpers.getPagerSize(kanban), "4",
+            "should have 4 records");
+
+        // move to next page
+        await cpHelpers.pagerNext(kanban);
+        assert.strictEqual(cpHelpers.getPagerValue(kanban), "4-4",
+            "should be on second page");
+
+        // delete a record
+        await testUtils.dom.click(kanban.$('.o_kanban_record:first a:first'));
+        await testUtils.dom.click($('.modal-footer button:first'));
+        assert.strictEqual(cpHelpers.getPagerValue(kanban), "1-3",
+            "should have 1 page only");
+        assert.strictEqual(cpHelpers.getPagerSize(kanban), "3",
+            "should have 4 records");
+
+        kanban.destroy();
+    });
+
     QUnit.test('create in grouped on m2o', async function (assert) {
         assert.expect(5);
 
