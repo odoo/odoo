@@ -2,14 +2,14 @@
 <odoo>
     <data>
         <template id="account_invoice_line_facturx_export">
-            <t t-set="line" t-value="line_values['line']"/>
+            <t t-set="line" t-value="line_vals['line']"/>
             <t  xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
                 xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
                 <ram:IncludedSupplyChainTradeLineItem>
                     <!-- Line number. -->
                     <ram:AssociatedDocumentLineDocument>
-                        <ram:LineID t-esc="line_values['index']"/>
+                        <ram:LineID t-esc="line_vals['index']"/>
                     </ram:AssociatedDocumentLineDocument>
 
                     <!-- Product. -->
@@ -34,41 +34,41 @@
                         <t t-set="net_amount" t-value="line.price_subtotal/line.quantity if line.quantity else 0"/>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
-                                t-esc="format_monetary(line_values['gross_price_total_unit'], currency)"/>
+                                t-esc="format_monetary(line.price_unit, record.currency_id)"/>
 
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
                                 <ram:ChargeIndicator>
                                     <udt:Indicator>false</udt:Indicator>
                                 </ram:ChargeIndicator>
-                                <ram:ActualAmount t-esc="format_monetary(line_values['price_discount_unit'], currency)"/>
+                                <ram:ActualAmount t-esc="format_monetary(line_vals['price_discount_unit'], record.currency_id)"/>
                             </ram:AppliedTradeAllowanceCharge>
                         </ram:GrossPriceProductTradePrice>
                         <!-- Line unit price, with discount applied -->
                         <ram:NetPriceProductTradePrice>
                             <ram:ChargeAmount
-                                t-esc="format_monetary(net_amount, currency)"/>
+                                t-esc="format_monetary(net_amount, record.currency_id)"/>
                         </ram:NetPriceProductTradePrice>
                     </ram:SpecifiedLineTradeAgreement>
 
                     <!-- Quantity. -->
                     <ram:SpecifiedLineTradeDelivery>
-                        <ram:BilledQuantity t-att-unitCode="line_values['unece_uom_code']" t-esc="line.quantity"/>
+                        <ram:BilledQuantity t-att-unitCode="line_vals['unece_uom_code']" t-esc="line.quantity"/>
                     </ram:SpecifiedLineTradeDelivery>
 
                     <ram:SpecifiedLineTradeSettlement>
-                        <t t-foreach="line_values['tax_details']" t-as="tax_vals">
-                            <t t-set="tax" t-value="tax_vals['tax']"/>
-                            <ram:ApplicableTradeTax t-if="tax.amount_type == 'percent'">
+                        <t t-foreach="tax_details['invoice_line_tax_details'][line]['tax_details'].values()"
+                           t-as="tax_detail_vals">
+                           <ram:ApplicableTradeTax t-if="tax_detail_vals['amount_type'] == 'percent'">
                                 <ram:TypeCode>VAT</ram:TypeCode>
-                                <ram:CategoryCode t-esc="tax_vals['unece_tax_category_code']"/>
-                                <ram:RateApplicablePercent t-esc="tax.amount"/>
+                                <ram:CategoryCode t-esc="tax_detail_vals['unece_tax_category_code']"/>
+                                <ram:RateApplicablePercent t-esc="tax_detail_vals['amount']"/>
                             </ram:ApplicableTradeTax>
                         </t>
                         <!-- Subtotal. -->
                         <ram:SpecifiedTradeSettlementLineMonetarySummation>
                             <ram:LineTotalAmount
-                                t-esc="format_monetary(line.price_subtotal, currency)"/>
+                                t-esc="format_monetary(line.price_subtotal, record.currency_id)"/>
                         </ram:SpecifiedTradeSettlementLineMonetarySummation>
                     </ram:SpecifiedLineTradeSettlement>
 
@@ -109,7 +109,6 @@
         </template>
 
         <template id="account_invoice_facturx_export">
-            <t t-set="currency" t-value="record.currency_id or record.company_currency_id"/>
             <rsm:CrossIndustryInvoice
                 xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
@@ -139,7 +138,7 @@
 
                 <rsm:SupplyChainTradeTransaction>
                     <!-- Invoice lines. -->
-                    <t t-foreach="invoice_line_values" t-as="line_values">
+                    <t t-foreach="invoice_line_vals_list" t-as="line_vals">
                         <t t-call="account_edi_facturx.account_invoice_line_facturx_export"/>
                     </t>
 
@@ -208,19 +207,23 @@
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 
                         <!-- Tax Summary. -->
-                        <t t-foreach="tax_details" t-as="tax_vals">
+                        <t t-foreach="tax_detail_vals_list" t-as="tax_detail_vals">
+                            <t t-set="tax" t-value="tax_detail_vals['tax']"/>
                             <ram:ApplicableTradeTax>
                                 <ram:CalculatedAmount
-                                    t-esc="format_monetary(tax_vals['tax_amount'], currency)"/>
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_monetary(tax_detail_vals['tax_amount_currency'], record.currency_id)"/>
                                 <ram:TypeCode>VAT</ram:TypeCode>
-                                <ram:ExemptionReason t-if="tax_vals['unece_tax_category_code'] == 'E'" t-esc="tax_vals['exemption_reason']"/>
-                                <ram:ExemptionReason t-if="tax_vals['unece_tax_category_code'] == 'G'" t-esc="'Export outside the EU'"/>
-                                <ram:ExemptionReason t-if="tax_vals['unece_tax_category_code'] == 'K'" t-esc="'Intra-community supply'"/>
+                                <ram:ExemptionReason t-if="tax_detail_vals['unece_tax_category_code'] == 'E'" t-esc="tax_detail_vals['exemption_reason']"/>
+                                <ram:ExemptionReason t-if="tax_detail_vals['unece_tax_category_code'] == 'G'" t-esc="'Export outside the EU'"/>
+                                <ram:ExemptionReason t-if="tax_detail_vals['unece_tax_category_code'] == 'K'" t-esc="'Intra-community supply'"/>
                                 <ram:BasisAmount
-                                    t-esc="format_monetary(tax_vals['tax_base_amount'], currency)"/>
-                                <ram:CategoryCode t-esc="tax_vals['unece_tax_category_code']"/>
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_monetary(tax_detail_vals['tax_base_amount_currency'], record.currency_id)"/>
+                                <ram:CategoryCode t-esc="tax_detail_vals['unece_tax_category_code']"/>
                                 <ram:RateApplicablePercent
-                                    t-esc="tax_vals['amount']"/>
+                                    t-if="tax.amount_type == 'percent'"
+                                    t-esc="tax.amount"/>
                             </ram:ApplicableTradeTax>
                         </t>
 
@@ -241,18 +244,23 @@
                         <!-- Summary. -->
                         <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
                             <ram:LineTotalAmount
-                                t-esc="format_monetary(record.amount_untaxed, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_untaxed, record.currency_id)"/>
                             <ram:TaxBasisTotalAmount
-                                t-esc="format_monetary(record.amount_untaxed, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_untaxed, record.currency_id)"/>
                             <ram:TaxTotalAmount
-                                t-att-currencyID="currency.name"
-                                t-esc="format_monetary(record.amount_tax, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_tax, record.currency_id)"/>
                             <ram:GrandTotalAmount
-                                t-esc="format_monetary(record.amount_total, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_total, record.currency_id)"/>
                             <ram:TotalPrepaidAmount
-                                t-esc="format_monetary(record.amount_total - record.amount_residual, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_total - record.amount_residual, record.currency_id)"/>
                             <ram:DuePayableAmount
-                                t-esc="format_monetary(record.amount_residual, currency)"/>
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(record.amount_residual, record.currency_id)"/>
                         </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
                     </ram:ApplicableHeaderTradeSettlement>
                 </rsm:SupplyChainTradeTransaction>

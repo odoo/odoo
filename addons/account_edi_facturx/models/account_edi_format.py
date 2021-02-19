@@ -88,11 +88,25 @@ class AccountEdiFormat(models.Model):
         # Create file content.
         seller_siret = 'siret' in invoice.company_id._fields and invoice.company_id.siret or invoice.company_id.company_registry
         buyer_siret = 'siret' in invoice.commercial_partner_id._fields and invoice.commercial_partner_id.siret
+        tax_detail_vals = invoice._prepare_edi_tax_details(
+                grouping_key_generator=lambda tax_values: {
+                    'unece_tax_category_code': tax_values['tax_id']._get_unece_category_code(invoice.commercial_partner_id, invoice.company_id),
+                    'amount': tax_values['tax_id'].amount,
+                    'amount_type': tax_values['tax_id'].amount_type,  # We need to check the type
+                }
+            )
+        # For compatibility with the old template that was not using a grouped tax details. Only used to get the tax amount.
+        # Done here to avoid adding a key in the base method that shouldn't be used. (the tax_amount key should be used)
+        tax_details = list(tax_detail_vals['tax_details'].values())
+        for line in tax_detail_vals['invoice_line_tax_details'].values():
+            tax_details.extend(list(line['tax_details'].values()))
+        for tax_detail in tax_details:
+            tax_detail['tax'] = tax_detail['group_tax_details'][0]['tax_id']
         template_values = {
-            'record': invoice,
+            **invoice._prepare_edi_vals_to_export(),
+            'tax_details': tax_detail_vals,
             'format_date': format_date,
             'format_monetary': format_monetary,
-            'invoice_line_values': [],
             'seller_specified_legal_organization': seller_siret,
             'buyer_specified_legal_organization': buyer_siret,
             # Chorus PRO fields
@@ -100,70 +114,6 @@ class AccountEdiFormat(models.Model):
             'contract_reference': 'contract_reference' in invoice._fields and invoice.contract_reference or '',
             'purchase_order_reference': 'purchase_order_reference' in invoice._fields and invoice.purchase_order_reference or '',
         }
-        # Tax lines.
-        # The old system was making one total "line" per tax in the xml, by using the tax_line_id.
-        # The new one is making one total "line" for each tax category and rate group.
-        aggregated_taxes_details = invoice._prepare_edi_tax_details(
-            grouping_key_generator=lambda tax_values: {
-                'unece_tax_category_code': tax_values['tax_id']._get_unece_category_code(invoice.commercial_partner_id, invoice.company_id),
-                'amount': tax_values['tax_id'].amount
-            }
-        )['tax_details']
-
-        balance_multiplicator = -1 if invoice.is_inbound() else 1
-        # Map the new keys from the backported _prepare_edi_tax_details into the old ones for compatibility with the old
-        # template. Also apply the multiplication here for consistency between the old and new template.
-        for tax_detail in aggregated_taxes_details.values():
-            tax_detail['tax_base_amount'] = balance_multiplicator * tax_detail['base_amount_currency']
-            tax_detail['tax_amount'] = balance_multiplicator * tax_detail['tax_amount_currency']
-
-            # The old template would get the amount from a tax line given to it, while
-            # the new one would get the amount from the dictionary returned by _prepare_edi_tax_details directly.
-            # As the line was only used to get the tax amount, giving it any line with the same amount will give a correct
-            # result even if the tax line doesn't make much sense as this is a total that is not linked to a specific tax.
-            # I don't have a solution for 0% taxes, we will give an empty line that will allow to render the xml, but it
-            # won't be completely correct. (The RateApplicablePercent will be missing for that line)
-            tax_detail['line'] = invoice.line_ids.filtered(lambda l: l.tax_line_id and l.tax_line_id.amount == tax_detail['amount'])[:1]
-
-        # Invoice lines.
-        for i, line in enumerate(invoice.invoice_line_ids.filtered(lambda l: not l.display_type)):
-            price_unit_with_discount = line.price_unit * (1 - (line.discount / 100.0))
-            taxes_res = line.tax_ids.with_context(force_sign=line.move_id._get_tax_force_sign()).compute_all(
-                price_unit_with_discount,
-                currency=line.currency_id,
-                quantity=line.quantity,
-                product=line.product_id,
-                partner=invoice.partner_id,
-                is_refund=line.move_id.move_type in ('in_refund', 'out_refund'),
-            )
-
-            if line.discount == 100.0:
-                gross_price_subtotal = line.currency_id.round(line.price_unit * line.quantity)
-            else:
-                gross_price_subtotal = line.currency_id.round(line.price_subtotal / (1 - (line.discount / 100.0)))
-            line_template_values = {
-                'line': line,
-                'index': i + 1,
-                'tax_details': [],
-                'net_price_subtotal': taxes_res['total_excluded'],
-                'price_discount_unit': (gross_price_subtotal - line.price_subtotal) / line.quantity if line.quantity else 0.0,
-                'unece_uom_code': line.product_id.product_tmpl_id.uom_id._get_unece_code(),
-            }
-
-            for tax_res in taxes_res['taxes']:
-                tax = self.env['account.tax'].browse(tax_res['id'])
-                tax_category_code = tax._get_unece_category_code(invoice.commercial_partner_id, invoice.company_id)
-                line_template_values['tax_details'].append({
-                    'tax': tax,
-                    'tax_amount': tax_res['amount'],
-                    'tax_base_amount': tax_res['base'],
-                    'unece_tax_category_code': tax_category_code,
-                })
-                line_template_values['gross_price_total_unit'] = line._prepare_edi_vals_to_export()['gross_price_total_unit']
-
-            template_values['invoice_line_values'].append(line_template_values)
-
-        template_values['tax_details'] = list(aggregated_taxes_details.values())
 
         xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
         xml_content += self.env.ref('account_edi_facturx.account_invoice_facturx_export')._render(template_values)

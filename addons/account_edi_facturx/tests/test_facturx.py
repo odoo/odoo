@@ -190,66 +190,49 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
         })
 
         applied_xpath = '''
-                    <xpath expr="//AppliedTradeAllowanceCharge/ActualAmount" position="replace">
-                        <ActualAmount>50.000</ActualAmount>
-                    </xpath>
-                    <xpath expr="//NetPriceProductTradePrice/ChargeAmount" position="replace">
-                        <ChargeAmount>200.000</ChargeAmount>
-                    </xpath>
-                    <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
-                        <SpecifiedLineTradeSettlement>
-                            <ApplicableTradeTax>
-                                <TypeCode>VAT</TypeCode>
-                                <CategoryCode>S</CategoryCode>
-                                <RateApplicablePercent>10.0</RateApplicablePercent>
-                            </ApplicableTradeTax>
-                            <ApplicableTradeTax>
-                                <TypeCode>VAT</TypeCode>
-                                <CategoryCode>S</CategoryCode>
-                                <RateApplicablePercent>20.0</RateApplicablePercent>
-                            </ApplicableTradeTax>
-                            <SpecifiedTradeSettlementLineMonetarySummation>
-                                <LineTotalAmount>1000.000</LineTotalAmount>
-                            </SpecifiedTradeSettlementLineMonetarySummation>
-                        </SpecifiedLineTradeSettlement>
-                    </xpath>
-                    <xpath expr="//ApplicableHeaderTradeSettlement" position="replace">
-                        <ApplicableHeaderTradeSettlement>
-                        <InvoiceCurrencyCode>Gol</InvoiceCurrencyCode>
-                            <ApplicableTradeTax>
-                                <CalculatedAmount>100.000</CalculatedAmount>
-                                <TypeCode>VAT</TypeCode>
-                                <BasisAmount>1000.000</BasisAmount>
-                                <CategoryCode>S</CategoryCode>
-                                <RateApplicablePercent>10.0</RateApplicablePercent>
-                            </ApplicableTradeTax>
-                            <ApplicableTradeTax>
-                                <CalculatedAmount>220.000</CalculatedAmount>
-                                <TypeCode>VAT</TypeCode>
-                                <BasisAmount>1100.000</BasisAmount>
-                                <CategoryCode>S</CategoryCode>
-                                <RateApplicablePercent>20.0</RateApplicablePercent>
-                            </ApplicableTradeTax>
-                            <BillingSpecifiedPeriod>
-                                <StartDateTime>
-                                    <DateTimeString format="102">20170101</DateTimeString>
-                                </StartDateTime>
-                            </BillingSpecifiedPeriod>
-                            <SpecifiedTradePaymentTerms>
-                                <DueDateDateTime>
-                                    <DateTimeString format="102">20170101</DateTimeString>
-                                </DueDateDateTime>
-                            </SpecifiedTradePaymentTerms>
-                            <SpecifiedTradeSettlementHeaderMonetarySummation>
-                                <LineTotalAmount>1000.000</LineTotalAmount>
-                                <TaxBasisTotalAmount>1000.000</TaxBasisTotalAmount>
-                                <TaxTotalAmount currencyID="Gol">320.000</TaxTotalAmount>
-                                <GrandTotalAmount>1320.000</GrandTotalAmount>
-                                <TotalPrepaidAmount>0.000</TotalPrepaidAmount>
-                                <DuePayableAmount>1320.000</DuePayableAmount>
-                            </SpecifiedTradeSettlementHeaderMonetarySummation>
-                        </ApplicableHeaderTradeSettlement>
-                    </xpath>
+            <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
+                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+            </xpath>
+            <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
+                <SpecifiedLineTradeSettlement>
+                    <ApplicableTradeTax>
+                        <RateApplicablePercent>10.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <ApplicableTradeTax>
+                        <RateApplicablePercent>20.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <SpecifiedTradeSettlementLineMonetarySummation>
+                        <LineTotalAmount currencyID="Gol">1000.000</LineTotalAmount>
+                    </SpecifiedTradeSettlementLineMonetarySummation>
+                </SpecifiedLineTradeSettlement>
+            </xpath>
+            <xpath expr="//ApplicableHeaderTradeSettlement" position="replace">
+                <ApplicableHeaderTradeSettlement>
+                    <ApplicableTradeTax>
+                        <CalculatedAmount currencyID="Gol">100.000</CalculatedAmount>
+                        <BasisAmount currencyID="Gol">1000.000</BasisAmount>
+                        <RateApplicablePercent>10.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <ApplicableTradeTax>
+                        <CalculatedAmount currencyID="Gol">220.000</CalculatedAmount>
+                        <BasisAmount currencyID="Gol">1100.000</BasisAmount>
+                        <RateApplicablePercent>20.0</RateApplicablePercent>
+                    </ApplicableTradeTax>
+                    <SpecifiedTradePaymentTerms>
+                        <DueDateDateTime>
+                            <DateTimeString>20170101</DateTimeString>
+                        </DueDateDateTime>
+                    </SpecifiedTradePaymentTerms>
+                    <SpecifiedTradeSettlementHeaderMonetarySummation>
+                        <LineTotalAmount currencyID="Gol">1000.000</LineTotalAmount>
+                        <TaxBasisTotalAmount currencyID="Gol">1000.000</TaxBasisTotalAmount>
+                        <TaxTotalAmount currencyID="Gol">320.000</TaxTotalAmount>
+                        <GrandTotalAmount currencyID="Gol">1320.000</GrandTotalAmount>
+                        <TotalPrepaidAmount currencyID="Gol">0.000</TotalPrepaidAmount>
+                        <DuePayableAmount currencyID="Gol">1320.000</DuePayableAmount>
+                    </SpecifiedTradeSettlementHeaderMonetarySummation>
+                </ApplicableHeaderTradeSettlement>
+            </xpath>
         '''
 
         self.assert_generated_file_equal(self.invoice, self.expected_invoice_facturx_values, applied_xpath)
