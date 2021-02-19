@@ -182,22 +182,22 @@ class TestChannelInternals(MailCommon):
     @users('employee')
     def test_channel_members(self):
         channel = self.env['mail.channel'].browse(self.test_channel.ids)
-        self.assertEqual(channel.message_channel_ids, channel)
+        self.assertEqual(channel.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.env['res.partner'])
 
         channel._action_add_members(self.test_partner)
-        self.assertEqual(channel.message_channel_ids, channel)
+        self.assertEqual(channel.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.test_partner)
 
         channel._action_remove_members(self.test_partner)
-        self.assertEqual(channel.message_channel_ids, channel)
+        self.assertEqual(channel.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.env['res.partner'])
 
         channel.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertEqual(channel.message_channel_ids, channel)
+        self.assertEqual(channel.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.env['res.partner'])
 
@@ -247,20 +247,12 @@ class TestChannelInternals(MailCommon):
 
         # test mailing with with inbox notification type
         self.user_admin.write({'notification_type': 'inbox'})
+        self.user_admin.flush()
         with self.mock_mail_gateway():
             with self.with_user('employee'):
                 channel = self.env['mail.channel'].browse(self.test_channel.ids)
                 channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.partner_employee, [self.test_partner])
-
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    def test_channel_recipients_noalias(self):
-        """ Posting a message on a classic channel should work like classic post """
-        self.test_channel.write({'alias_name': False})
-        self.test_channel.message_subscribe([self.user_employee.partner_id.id, self.test_partner.id, self.partner_employee_nomail.id])
-        with self.mock_mail_gateway():
-            self.test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
 
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
