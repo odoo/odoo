@@ -59,8 +59,6 @@ class Channel(models.Model):
         'mail.message', 'mail_message_mail_channel_rel',
         string='Channel Messages')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
-    is_subscribed = fields.Boolean(
-        'Is Subscribed', compute='_compute_is_subscribed')
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
@@ -106,11 +104,6 @@ class Channel(models.Model):
         membership_ids = memberships.mapped('channel_id')
         for record in self:
             record.is_member = record in membership_ids
-
-    @api.depends('channel_partner_ids')
-    def _compute_is_subscribed(self):
-        for channel in self:
-            channel.is_subscribed = self.env.user.partner_id in channel.channel_partner_ids
 
     @api.depends('moderator_ids')
     def _compute_is_moderator(self):
