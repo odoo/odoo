@@ -362,7 +362,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     },
 
     setCompanies: function (main_company_id, company_ids) {
-        var hash = $.bbq.getState()
+        var hash = $.bbq.getState();
         hash.cids = company_ids.sort(function(a, b) {
             if (a === main_company_id) {
                 return -1;
