@@ -13,6 +13,7 @@
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # Dong <dong@freshoo.cn>, 2020
 # Shiping Lv <lvshiping@sina.com>, 2020
+# as co02 <asco02@163.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
@@ -23,7 +24,6 @@
 # Jerry Pan <panjianyu@inspur.com>, 2020
 # Manga Tsang <mts@odoo.com>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# as co02 <asco02@163.com>, 2020
 # mao luo <dooms21day@163.com>, 2020
 # zilin wu <binggue@qq.com>, 2020
 # Martin Trigaux, 2020
@@ -2161,7 +2161,7 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
-"从常规设置安装会计科目表\n"
+"从基本设置安装会计科目表\n"
 "                开票/会计应用程序将创建银行和现金支付\n"
 "                方法自动化。"
 
@@ -2298,7 +2298,7 @@ msgstr ""
 msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
-msgstr "禁止修改未过账POS订单税金。修改税金前必须关闭POS会话。"
+msgstr "禁止修改未过账POS订单税。修改税前必须关闭POS会话。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2317,7 +2317,7 @@ msgstr "日记账"
 #: model:ir.model,name:point_of_sale.model_account_move
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
@@ -2739,7 +2739,7 @@ msgstr "未开票"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Notes"
-msgstr "便签"
+msgstr "备注"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3480,7 +3480,7 @@ msgstr "POS管理组"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr "销售点经营类型"
+msgstr "销售点作业类型"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -4479,7 +4479,7 @@ msgstr "起始余额"
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #, python-format
 msgid "State"
-msgstr "省/ 州"
+msgstr "状态"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4605,7 +4605,7 @@ msgstr "拿钱进/出"
 #: model:ir.model,name:point_of_sale.model_account_tax
 #, python-format
 msgid "Tax"
-msgstr "税金"
+msgstr "税"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -5205,7 +5205,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type

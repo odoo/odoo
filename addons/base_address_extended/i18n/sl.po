@@ -1,13 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_address_extended
+# 	* base_address_extended
+# 
+# Translators:
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
+# matjaz k <matjaz@mentis.si>, 2021
+# Boris Kodelja <boris@hbs.si>, 2021
+# Jasmina Macur <jasmina@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,27 +32,38 @@ msgstr ""
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Podjetja"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Stik"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
 msgid "Country"
+msgstr "Država"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
+msgid "Door"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number2
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number2
-#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
 msgid "Door Number"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,help:base_address_extended.field_res_country_street_format
+#: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
 msgid ""
 "Format to use for streets belonging to this country.\n"
 "\n"
@@ -56,30 +74,48 @@ msgid ""
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number
-#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
+msgid "House"
+msgstr ""
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
 msgid "House Number"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country_street_format
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company____last_update
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country____last_update
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
 msgid "Street Format"
 msgstr ""
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_name
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_name
-#: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Naziv ulice"
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr " Naziv ulice..."
 
 #. module: base_address_extended
 #: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
@@ -87,8 +123,8 @@ msgid "Street format..."
 msgstr ""
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:60
-#: code:addons/base_address_extended/models/base_address_extended.py:126
+#: code:addons/base_address_extended/models/res_partner.py:0
+#: code:addons/base_address_extended/models/res_partner.py:0
 #, python-format
 msgid "Unrecognized field %s in street format."
 msgstr ""

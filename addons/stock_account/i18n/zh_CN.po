@@ -6,7 +6,6 @@
 # Martin Trigaux, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # 苏州远鼎 <tiexinliu@126.com>, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # keecome <7017511@qq.com>, 2020
@@ -93,7 +92,7 @@ msgstr "会计日期"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_form_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr "会计凭证"
+msgstr "会计分录"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -150,7 +149,7 @@ msgstr "取消"
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
-msgstr "找不到产品%s的库存入库科目。 在处理此操作之前，您必须在产品类别或产品上进行一个定义。"
+msgstr "找不到产品%s的库存入库科目。 在处理此作业之前，您必须在产品类别或产品上进行一个定义。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -159,7 +158,7 @@ msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
 "on the product category, or on the location, before processing this "
 "operation."
-msgstr "找不到产品%s的库存出库库科目。 在处理此操作之前，您必须在产品类别或产品上进行定义。"
+msgstr "找不到产品%s的库存出库库科目。 在处理此作业之前，您必须在产品类别或产品上进行定义。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -186,7 +185,7 @@ msgstr "配置设置"
 msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
-msgstr "配置错误。 请在产品或其类别上配置价格差异科目来处理此操作。"
+msgstr "配置错误。 请在产品或其类别上配置价格差异科目来处理此作业。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -380,7 +379,7 @@ msgstr "日记账"
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "日记账分录"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
@@ -571,7 +570,7 @@ msgstr "剩余价值"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退货"
+msgstr "退回拣货"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -747,7 +746,7 @@ msgstr "总价值"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -839,7 +838,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存评估时，所有外发库存移动的对应会计分录将在此帐户中过帐，\n"
+"在进行自动库存评估时，所有外发库存凭证的对应会计分录将在此帐户中过帐，\n"
 "               除非在目的地设置了特定的评估帐户。 这是此类别中所有产品的默认值。\n"
 "                它也可以直接在每个产品上设置。"
 
@@ -882,7 +881,7 @@ msgstr ""
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "你没有在产品类别中定义任何输入评估账户。你必须在处理此操作之前定义一个。"
+msgstr "你没有在产品类别中定义任何输入评估账户。你必须在处理此作业之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -901,7 +900,7 @@ msgstr "没有在产品类别中设置库存日记账，检查是否安装科目
 msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "您没有在您的产品类别中定义任何库存评估账户。 处理此操作之前，您必须定义一个。"
+msgstr "您没有在您的产品类别中定义任何库存评估账户。 处理此作业之前，您必须定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

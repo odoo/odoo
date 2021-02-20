@@ -16,7 +16,6 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
 # Jussi Lehto <jussi@gulfeo.com>, 2020
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2020
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2020
 # Marko Happonen <marko.happonen@sprintit.fi>, 2020
@@ -28,6 +27,7 @@
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2020
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -849,7 +849,7 @@ msgstr "Automaattinen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate Orders"
-msgstr "Automatisoidut tilaukset"
+msgstr "Automatisoi tilauksia"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -886,7 +886,7 @@ msgstr "Saatavilla oleva määrä"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr "Saatavilla oleva määrä pitää olla 0 ennen kuin voi vaihtaa tyyppiä"
+msgstr "Saatavilla oleva määrä pitää olla 0 ennen kuin tyyppiä voi vaihtaa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -908,7 +908,7 @@ msgstr "Jälkitoimituksen vahvistus"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "Jälkitoimitus vahvistus rivi"
+msgstr "Jälkitoimituksen vahvistusrivi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
@@ -1675,7 +1675,7 @@ msgstr "Määräaika"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Deadline exceed or/and by the scheduled"
-msgstr "Määräaika ylitetty ja/tai ajoitettu"
+msgstr "Määräaika ylitetty ja/tai nyt"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -3712,7 +3712,7 @@ msgstr "Merkitse tehtäväksi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Max Quantity"
-msgstr "Maksimi määrä"
+msgstr "Maksimimäärä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__message_has_error
@@ -3744,7 +3744,7 @@ msgstr "Maksutapa"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
-msgstr "Minimi määrä"
+msgstr "Minimimäärä"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -3827,7 +3827,7 @@ msgstr "Monivaiheiset reitit"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
-msgstr "Moninkertainen määrä"
+msgstr "Monikerran määrä"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3932,7 +3932,7 @@ msgstr "Tälle erälle ei tehty mitään toimintoa."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr "Tyotetta ei löydy. Tehdään uusi!"
+msgstr "Tuotetta ei löydy. Tehdään uusi!"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -3952,7 +3952,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid "No reordering rule found"
-msgstr "Uudelleentilaus sääntöä ei löydy"
+msgstr "Uudelleentilauksen sääntöä ei löydy"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -4258,7 +4258,7 @@ msgstr "Alkuperäinen Siirto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr "Alkuperäinen uudelleen tilaus sääntö"
+msgstr "Alkuperäinen uudelleentilaussääntö"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5468,7 +5468,7 @@ msgstr "Varattu varastosta"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "Reserving a negative quantity is not allowed."
-msgstr "Negatiivisen saldon varaaminen ei ole sallittu."
+msgstr "Negatiivisen määrän varaaminen ei ole sallittu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_procurement_jit
@@ -5560,7 +5560,7 @@ msgstr "Reitti"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_company_id
 msgid "Route Company"
-msgstr "Yrityksen reitti"
+msgstr "Reitin yritys"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -8148,4 +8148,20 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You can't desactivate the multi-location if you have more than once "
+"warehouse by company"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Creating a new warehouse will automatically activate the Storage Locations "
+"setting"
 msgstr ""

@@ -1,13 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_buckaroo
+# 	* payment_buckaroo
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2021
+# matjaz k <matjaz@mentis.si>, 2021
+# Jasmina Macur <jasmina@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,31 +24,36 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:141
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; več najdenih naročil"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:139
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nobenega naročila ni bilo najdenega"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:148
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:137
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "Buckaroo: received data for reference %s"
 msgstr ""
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:131
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid ""
 "Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
@@ -48,26 +61,44 @@ msgid ""
 msgstr ""
 
 #. module: payment_buckaroo
-#: model_terms:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr ""
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Ponudnik plačilne storitve"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Plačilna transakcija"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Ponudnik"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
-msgstr ""
+msgstr "Tajni ključ"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
-msgstr ""
+msgstr "Ključ spletne strani"
