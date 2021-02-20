@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 PG_CONCURRENCY_ERRORS_TO_RETRY = (errorcodes.LOCK_NOT_AVAILABLE, errorcodes.SERIALIZATION_FAILURE, errorcodes.DEADLOCK_DETECTED)
 MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 
+# MOVE to controller RPC
 def dispatch(method, params):
     (db, uid, passwd ) = params[0], int(params[1]), params[2]
 
@@ -41,6 +42,7 @@ def dispatch(method, params):
         res = fn(db, uid, *params)
     return res
 
+# MOVE TO HTTP
 def check(f):
     @wraps(f)
     def wrapper(___dbname, *args, **kwargs):
@@ -151,6 +153,8 @@ def check(f):
 
     return wrapper
 
+
+# MOVE to controller RPC and registry
 def execute_cr(cr, uid, obj, method, *args, **kw):
     odoo.api.Environment.reset()  # clean cache etc if we retry the same transaction
     recs = odoo.api.Environment(cr, uid, {}).get(obj)
@@ -164,9 +168,11 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     return result
 
 
+# MOVE to controller RPC
 def execute_kw(db, uid, obj, method, args, kw=None):
     return execute(db, uid, obj, method, *args, **kw or {})
 
+# MOVE to controller RPC
 @check
 def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db

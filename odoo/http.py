@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
-import engineio
 #----------------------------------------------------------
 # Odoo HTTP layer
 #----------------------------------------------------------
 import ast
 import collections
-
 import datetime
 import functools
 import hashlib
 import hmac
 import inspect
+import json
 import logging
 import mimetypes
 import os
@@ -25,7 +24,6 @@ import zlib
 
 import babel.core
 import psycopg2
-import json
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
 import werkzeug.exceptions
@@ -35,6 +33,7 @@ import werkzeug.urls
 import werkzeug.wrappers
 import werkzeug.wsgi
 
+# remove after the debian 11 release, 10 still uses 0.14.
 try:
     # Since werkzeug >= 0.15 proxy has moved to middleware and doesn't trust
     # host header by default. We emulate < 0.15 behaviour.
@@ -44,6 +43,7 @@ except ImportError:
     # werkzeug < 0.15
     from werkzeug.contrib.fixers import ProxyFix
 
+# Optional psutil, not packaged on windows
 try:
     import psutil
 except ImportError:
@@ -58,16 +58,32 @@ from .tools.func import lazy_property
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 
+#----------------------------------------------------------
+# Logging
+#----------------------------------------------------------
+
 _logger = logging.getLogger(__name__)
 _logger_rpc_request = logging.getLogger(__name__ + '.rpc.request')
 _logger_rpc_response = logging.getLogger(__name__ + '.rpc.response')
 _logger_rpc_request_flag = _logger_rpc_request.isEnabledFor(logging.DEBUG)
 _logger_rpc_response_flag = _logger_rpc_response.isEnabledFor(logging.DEBUG) # should rather be named rpc content
 
+#----------------------------------------------------------
+# Lib fixes
+#----------------------------------------------------------
 
+# Add potentially missing (older ubuntu) font mime types
+mimetypes.add_type('application/font-woff', '.woff')
+mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
+mimetypes.add_type('application/x-font-ttf', '.ttf')
+# Add potentially wrong (detected on windows) svg mime types
+mimetypes.add_type('image/svg+xml', '.svg')
+
+# To remove when corrected in Babel
+babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
 #----------------------------------------------------------
-# Constants
+# Const
 #----------------------------------------------------------
 
 # Cache for static content from the filesystem is set to one week.
@@ -76,9 +92,6 @@ STATIC_CACHE = 3600 * 24 * 7
 # Cache for content where the url uniquely identify the content (usually using
 # a hash) may use what google page speed recommends (1 year)
 STATIC_CACHE_LONG = 3600 * 24 * 365
-
-# To remove when corrected in Babel
-babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
 """ Debug mode is stored in session and should always be a string.
     It can be activated with an URL query string `debug=<mode>` where
@@ -157,7 +170,8 @@ def serialize_exception(e):
 #----------------------------------------------------------
 # Thread local global request object
 _request_stack = werkzeug.local.LocalStack()
-request = _request_stack() # global proxy that always redirect to the current request object.
+# global proxy that always redirect to the thread local request object.
+request = _request_stack()
 
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
@@ -186,10 +200,12 @@ class Response(werkzeug.wrappers.Response):
         self.set_default(template, qcontext, uid)
 
     def set_default(self, template=None, qcontext=None, uid=None):
+        # TODO is needed ?
         self.template = template
         self.qcontext = qcontext or dict()
         self.qcontext['response_template'] = self.template
         self.uid = uid
+        # TODO remove ? self.endpoint is needed because of this
         # Support for Cross-Origin Resource Sharing
         if request.endpoint and 'cors' in request.endpoint.routing:
             self.headers.set('Access-Control-Allow-Origin', request.endpoint.routing['cors'])
@@ -205,6 +221,7 @@ class Response(werkzeug.wrappers.Response):
         return self.template is not None
 
     def render(self):
+        # WHY lazy qweb again ?
         """ Renders the Response's template, returns the result
         """
         env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
@@ -219,7 +236,12 @@ class Response(werkzeug.wrappers.Response):
             self.response.append(self.render())
             self.template = None
 
+class DBRequest(object):
+    # Move checked call
+    pass
+
 class WebRequest(object):
+
     """ Odoo Web request.
 
     :param httprequest: a wrapped werkzeug Request object
@@ -227,8 +249,7 @@ class WebRequest(object):
 
     .. attribute:: httprequest
 
-        the original :class:`werkzeug.wrappers.Request` object provided to the
-        request
+        the original :class:`werkzeug.wrappers.Request` object
 
     .. attribute:: params
 
@@ -238,9 +259,7 @@ class WebRequest(object):
     def __init__(self, httprequest):
         self.httprequest = httprequest
         self.httpresponse = None
-        self.disable_db = False # TODO remove
-        self.endpoint = None
-        self.endpoint_arguments = None
+        self.disable_db = False # TODO db remove
         self.auth_method = None
         self._request_type = None
         self._cr = None
@@ -251,7 +270,7 @@ class WebRequest(object):
         # prevents transaction commit, use when you catch an exception during handling
         self._failed = None
 
-        # TODO
+        # TODO db handling
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in odoo.http.application
         if self.db:
@@ -276,6 +295,7 @@ class WebRequest(object):
 
     @property
     def uid(self):
+        # TODO Remove
         return self._uid
 
     @uid.setter
@@ -285,6 +305,7 @@ class WebRequest(object):
 
     @property
     def context(self):
+        # Remove
         """ :class:`~collections.Mapping` of context values for the current request """
         if self._context is None:
             self._context = frozendict(self.session.context)
@@ -324,6 +345,7 @@ class WebRequest(object):
 
     @lazy_property
     def session(self):
+        # TODO makz session lazy
         """ :class:`OpenERPSession` holding the HTTP session data for the
         current http session
         """
@@ -335,7 +357,6 @@ class WebRequest(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         _request_stack.pop()
-
         if self._cr:
             try:
                 if exc_type is None and not self._failed:
@@ -354,10 +375,7 @@ class WebRequest(object):
     #------------------------------------------------------
     # Common helpers
     #------------------------------------------------------
-    def _call_function(self, *args, **kwargs):
-        if self.endpoint_arguments:
-            kwargs.update(self.endpoint_arguments)
-
+    def _call_function(self, endpoint, *args, **kwargs):
         first_time = True
 
         # Correct exception handling and concurency retry
@@ -370,7 +388,7 @@ class WebRequest(object):
                 self._cr.rollback()
                 self.env.clear()
             first_time = False
-            result = self.endpoint(*a, **kw)
+            result = endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
                 result.flatten()
@@ -385,7 +403,7 @@ class WebRequest(object):
 
         if self.db:
             return checked_call(self.db, *args, **kwargs)
-        return self.endpoint(*args, **kwargs)
+        return endpoint(*args, **kwargs)
 
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
@@ -453,10 +471,10 @@ class WebRequest(object):
         #        error['message'] = "Odoo Session Expired"
         #    return self._json_response(error=error)
 
-    def rpc_debug_pre(self, params, model=None, method=None):
+    def rpc_debug_pre(self, endpoint, params, model=None, method=None):
         # For Odoo service RPC params is a list or a tuple, for call_kw style it is a dict
         if _logger_rpc_request_flag or _logger_rpc_response_flag:
-            endpoint = self.endpoint.method.__name__
+            name = endpoint.method.__name__
             model = model or params.get('model')
             method = method or params.get('method')
 
@@ -472,8 +490,8 @@ class WebRequest(object):
             start_memory = 0
             if psutil:
                 start_memory = memory_info(psutil.Process(os.getpid()))
-            _logger_rpc_request.debug('%s: request %s.%s: %s', endpoint, model, method, pprint.pformat(params))
-            return (endpoint, model, method, start_time, start_memory)
+            _logger_rpc_request.debug('%s: request %s.%s: %s', name, model, method, pprint.pformat(params))
+            return (name, model, method, start_time, start_memory)
 
     def rpc_debug_post(self, t0, result):
         if _logger_rpc_request_flag or _logger_rpc_response_flag:
@@ -610,7 +628,7 @@ class WebRequest(object):
         hm_expected = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
-    def http_dispatch(self):
+    def http_dispatch(self, endpoint, args, auth):
         """ Handle ``http`` request type.
 
         Matched routing arguments, query string and form parameters (including
@@ -628,6 +646,8 @@ class WebRequest(object):
         params = collections.OrderedDict(self.httprequest.args)
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
+        # include args from route path parsing
+        params.update(args)
 
         params.pop('session_id', None)
         self.params = params
@@ -635,16 +655,17 @@ class WebRequest(object):
         # TODO check else because this revert XMO 9e27956aa960dc9eea442418c83f5b3941b0c447
         # Check if it works with nodb
         # Reply to CORS requests if allowed
-        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+        if self.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors'):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
                 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
             }
             return Response(status=200, headers=headers)
 
-        # Check for CSRF token for relevent requests
+
+        # Check for CSRF token for relevant requests
         if request.httprequest.method not in ('GET', 'HEAD', 'OPTIONS', 'TRACE') and request.endpoint.routing.get('csrf', True):
-            token = self.params.pop('csrf_token', None)
+            token = params.pop('csrf_token', None)
             if not self.validate_csrf(token):
                 if token is not None:
                     _logger.warning("CSRF validation failed on path '%s'", request.httprequest.path)
@@ -653,7 +674,7 @@ class WebRequest(object):
                 raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
 
         # Handle normal requests
-        r = self._call_function(**self.params)
+        r = self._call_function(endpoint, **params)
         if not r:
             r = Response(status=204)  # no content
         return r
@@ -661,21 +682,21 @@ class WebRequest(object):
     #------------------------------------------------------
     # JSON-RPC2
     #------------------------------------------------------
-    def _json_response(self, result=None, error=None):
-        response = { 'jsonrpc': '2.0', 'id': self.request_id }
+    def _json_response(self, result=None, error=None, request_id=None):
+        status = 200
+        response = { 'jsonrpc': '2.0', 'id': request_id }
         if error is not None:
             response['error'] = error
+            status = error.pop('http_status', 200)
         if result is not None:
             response['result'] = result
 
         body = json.dumps(response, default=date_utils.json_default)
+        headers = [('Content-Type', 'application/json'), ('Content-Length', len(body))]
 
-        return Response(
-            body, status=error and error.pop('http_status', 200) or 200,
-            headers=[('Content-Type', 'application/json'), ('Content-Length', len(body))]
-        )
+        return Response(body, status=status, headers=headers)
 
-    def json_dispatch(self):
+    def json_dispatch(self, endpoint, args, auth):
         """ Parser handler for `JSON-RPC 2 <http://www.jsonrpc.org/specification>`_ over HTTP
 
         * ``method`` is ignored
@@ -695,50 +716,40 @@ class WebRequest(object):
           <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
 
         """
-        # Fake JSON-RPC2 where id and params are www-form encoded instead of plain JSON
-        # TODO decide yes or not ? because it is a CSRF security issue
-        if self.httprequest.content_type == "application/x-www-form-urlencoded":
-            self.request_id = self.httprequest.values.get('id')
-            try:
-                www_form_params = self.httprequest.values.get('params')
-                params = json.loads(www_form_params)
-            except ValueError:
-                _logger.info('%s: JSON-RPC www-form error parsing params: %r', self.httprequest.path, www_form_params)
-                raise werkzeug.exceptions.BadRequest()
+        json_request = self.httprequest.get_data().decode(self.httprequest.charset)
+        try:
+            self.jsonrequest = json.loads(json_request)
+        except ValueError:
+            _logger.info('%s: Invalid JSON data: %r', self.httprequest.path, json_request)
+            raise werkzeug.exceptions.BadRequest()
+        request_id = self.jsonrequest.get("id")
+        params = dict(self.jsonrequest.get("params", {}))
 
-        # Regular JSON-RPC2
-        else:
-            json_request = self.httprequest.get_data().decode(self.httprequest.charset)
-            try:
-                self.jsonrequest = json.loads(json_request)
-            except ValueError:
-                _logger.info('%s: Invalid JSON data: %r', self.httprequest.path, json_request)
-                raise werkzeug.exceptions.BadRequest()
-            self.request_id = self.jsonrequest.get("id")
-            params = dict(self.jsonrequest.get("params", {}))
-
+        # Includes args from route path parsing
+        params.update(args)
+        # remove ?
         self.params = params
-        self.context = self.params.pop('context', dict(self.session.context))
+
+        self.context = params.pop('context', dict(self.session.context))
 
         # Call the endpoint
-        t0 = self.rpc_debug_pre(self.params)
-        result = self._call_function(**self.params)
+        t0 = self.rpc_debug_pre(endpoint, params)
+        result = self._call_function(endpoint, **params)
         self.rpc_debug_post(t0, result)
 
-        return self._json_response(result)
+        return self._json_response(result, request_id=request_id)
 
     #------------------------------------------------------
     # Entry point
     #------------------------------------------------------
     def dispatch(self, endpoint, args, auth='none'):
-        self.endpoint = endpoint # move as args
-        self.endpoint_arguments = args
-        self.auth_method = auth
-
-        if self.endpoint.routing['type'] == 'http':
-            return self.http_dispatch()
-        elif self.endpoint.routing['type'] == 'json':
-            return self.json_dispatch()
+        # save endpoint in self.endpoint for cors in response
+        self.endpoint = endpoint
+        # args are deducted by the route path parsing
+        if endpoint.routing['type'] == 'http':
+            return self.http_dispatch(endpoint, args, auth)
+        elif endpoint.routing['type'] == 'json':
+            return self.json_dispatch(endpoint, args, auth)
 
 #----------------------------------------------------------
 # Controller and routes
@@ -783,10 +794,6 @@ def route(route=None, **kw):
 
         Odoo implements token-based `CSRF protection
         <https://en.wikipedia.org/wiki/CSRF>`_.
-
-        CSRF protection is enabled by default and applies to *UNSAFE*
-        HTTP methods as defined by :rfc:`7231` (all methods other than
-        ``GET``, ``HEAD``, ``TRACE`` and ``OPTIONS``).
 
         CSRF protection is implemented by checking requests using
         unsafe methods for a value called ``csrf_token`` as part of
@@ -1130,15 +1137,8 @@ def session_gc(session_store):
 #----------------------------------------------------------
 # WSGI Layer
 #----------------------------------------------------------
-# Add potentially missing (older ubuntu) font mime types
-mimetypes.add_type('application/font-woff', '.woff')
-mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
-mimetypes.add_type('application/x-font-ttf', '.ttf')
-# Add potentially missing (detected on windows) svg mime types
-mimetypes.add_type('image/svg+xml', '.svg')
-
 class Websocket(object):
-
+    pass
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):
@@ -1373,41 +1373,12 @@ class Root(object):
             return e(environ, start_response)
 
     def __call__(self, environ, start_response):
-        """ WSGI entry point."""
-        #const socket = new WebSocket('ws://localhost:8069/ws');
-
-        if environ['PATH_INFO']=='/ws':
-            pass
-
-#            class Input(object):
-#                def __init__(self, socket):
-#                    self.socket = socket
-#                def get_socket(self):
-#                    return self.socket
-#            eio = engineio.Server()
-#            #@eio.on('connect')
-#            #@eio.on('connect')
-#            @eio.on('connect')
-#            def on_connect(sid, environ):
-#                print('A client connected!', sid, environ)
-#
-#            @eio.on('message')
-#            def on_message(sid, data):
-#                print('I received a message!')
-#
-#            @eio.on('disconnect')
-#            def on_disconnect(sid):
-#                print('Client disconnected!')
-#            environ['eventlet.input'] = Input(environ['wsgi.input'])
-#            #import pudb; pu.db
-#            r = eio.handle_request(environ, start_response)
-#            print (r, "DONE")
-#            return r
-
         # Lazy load addons
         if not self._loaded:
             self._loaded = True
             self.load_addons()
+        """ WSGI entry point.
+        """
 
         with odoo.api.Environment.manage():
             result = self.dispatch(environ, start_response)
