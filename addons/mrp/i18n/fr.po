@@ -5220,6 +5220,15 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Vous avez consommé une quantité différente de celle prévue pour les produits suivants.\n"
+"<b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+" Merci de confirmer le changement.\n"
+"</b>\n"
+"<b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"Veuillez vérifier la consommation de vos composants ou demander à un responsable de valider \n"
+"<span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">cet ordre de fabrication</span>\n"
+"<span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">ces ordres de fabrication</span>.\n"
+"</b>"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:0

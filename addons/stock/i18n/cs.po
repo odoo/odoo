@@ -12,7 +12,7 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # Ladislav Tomm <tomm@helemik.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# Jiří Podhorecký, 2020
+# trendspotter, 2020
 # milda dvorak <milda.dvorak@optimal4.cz>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
@@ -6191,6 +6191,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #, python-format
 msgid "Stock On Hand"
 msgstr "Skladem "
@@ -8084,4 +8085,20 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You can't desactivate the multi-location if you have more than once "
+"warehouse by company"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Creating a new warehouse will automatically activate the Storage Locations "
+"setting"
 msgstr ""

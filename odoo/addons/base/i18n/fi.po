@@ -30,6 +30,7 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021\n"
+"Last-Translator: Antti Oksman <antti.oksman@web-veistamo.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4544,6 +4545,9 @@ msgid ""
 "Show your company address/partner address on Google Maps. Configure an API key in the Website settings.\n"
 "    "
 msgstr ""
+"\n"
+"Näytä yrityken/kumppanin osoite Google Mapsissa. Aseta API avain verkkosivun asetukissa.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -6802,6 +6806,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Yrityksen Osoite</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Laskutus Osoite</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Toimitus Osoite</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Muu Osoite</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Yksityinen Osoite</b>\n"
+"<b attrs=\"{'invisible': [('type', '!=', False)]}\">Osoite</b>\n"
+"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -11812,6 +11824,8 @@ msgid ""
 "Determines where the customer/company name should be placed, i.e. after or "
 "before the address."
 msgstr ""
+"Määrittelee minne asiakaan/yrityksen nimi sijoitetaan, esim. ennen tai "
+"jälkeen osoitteen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -22967,7 +22981,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_google_map
 msgid "Show your company address on Google Maps"
-msgstr ""
+msgstr "Näytä yrityksesi osoite Google Mapsissa"
 
 #. module: base
 #: model:res.country,name:base.sl

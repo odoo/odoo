@@ -545,7 +545,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Incoterm</span>"
-msgstr "<span class=\"o_form_label\">Vaikimisi tarnetingimused</span>"
+msgstr "<span class=\"o_form_label\">Vaikimisi tarnetingimus</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -853,7 +853,7 @@ msgstr "<strong>Kanded sorteeritud:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm: </strong>"
-msgstr "<strong>Tarnetingimused: </strong>"
+msgstr "<strong>Tarnetingimus: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4494,7 +4494,7 @@ msgstr "Vaikimisi tulukonto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm of your company"
-msgstr "Vaikimisi incoterm sinu ettevõttes"
+msgstr "Vaikimisi tarnetingimus teie ettevõttes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
@@ -4540,7 +4540,7 @@ msgstr "Analüütilise konto vaikimisi lõppkuupäev."
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__incoterm_id
 msgid "Default incoterm"
-msgstr "Vaikimisi incoterm"
+msgstr "Vaikimisi tarnetingimus"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__date_start
@@ -6338,9 +6338,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
-"Rahvusvahelised tarnetingimused on müügi tingimused. Neid kasutatakse "
-"transaktsiooni kulude ja vastutuse jagamiseks ostja ja müüja vahel ning "
-"näitab, et ettevõtted rakendavad kõrgetasemelist transpordi praktikaid."
+"Rahvusvahelised tarnetingimused on hulk müügitermineid. Neid kasutatakse "
+"tehingute kulude ja vastutuse jagamiseks ostja ja müüja vahel ning näitab, "
+"et ettevõtted rakendavad kõrgetasemelist transpordi praktikaid."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -11481,6 +11481,9 @@ msgid ""
 "not both at the same time. invoice_tax_id and refund_tax_id should not be "
 "set together."
 msgstr ""
+"Maksu jaotusviisi mallid peaksid rakenduma kas arvetele või hüvitistele, "
+"mitte mõlemile samaaegselt. invoice_tax ja refund_tax ei tohiks olla "
+"määratud samaaegselt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -11723,6 +11726,10 @@ msgid ""
 "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
+"Tehniline väli mida kasutatakse et sundida peale keerukaid järjestuse viise mida süsteem muidu ei mõistaks.\n"
+"See on regulaarväljend mis võib sisaldada kõiki järgnevaid hõivegruppe: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
+"Prefix* grupid on eraldajad aastale, kuule ja tegelikule kasvavale järjekorra numbrile (seq).\n"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__exclude_from_invoice_tab
@@ -11738,7 +11745,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__user_id
 #: model:ir.model.fields,help:account.field_account_payment__user_id
 msgid "Technical field used to fit the generic behavior in mail templates."
-msgstr ""
+msgstr "Tehniline väli kirjeldamaks meili mallides üldist käitumist."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -11748,6 +11755,8 @@ msgid ""
 "Technical field used to have a dynamic domain on journal / taxes in the form"
 " view."
 msgstr ""
+"Tehniline väli, võimaldab kasutada dünaamilist valdkonda registris / "
+"maksudes, vormivaates."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
@@ -11765,6 +11774,8 @@ msgid ""
 "Technical field used to indicate the user can edit the wizard content such "
 "as the amount."
 msgstr ""
+"Tehniline väli osundamaks kasutajale abimehe muutmise võimalusi, näiteks "
+"koguseid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__can_group_payments
@@ -11792,6 +11803,8 @@ msgstr ""
 msgid ""
 "Technical field used to know on which lines the taxes must be recomputed."
 msgstr ""
+"Tehniline väli osundamaks millistel ridadel tuleb teha maksudes "
+"ümberarvutusi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__show_partner_bank_account
