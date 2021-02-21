@@ -279,6 +279,7 @@ class IrHttp(models.AbstractModel):
             # regenerate its EndPoint. The routing map should be static.
             routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
             for url, endpoint, routing in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+                #print("cls._generate_routing_rules", url, endpoint, routing)
                 xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
                 kw = {k: routing[k] for k in xtra_keys if k in routing}
                 rule = werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw)

@@ -304,13 +304,15 @@ class Response(werkzeug.wrappers.Response):
             self.response.append(self.render())
             self.template = None
 
+class Websocket(object):
+    pass
+
 class DBRequest(object):
     # Move checked call
     pass
 
-class WebRequest(object):
-
-    """ Odoo Web request.
+class Request(object):
+    """ Odoo request.
 
     :param httprequest: a wrapped werkzeug Request object
     :type httprequest: :class:`werkzeug.wrappers.BaseRequest`
@@ -457,7 +459,7 @@ class WebRequest(object):
                 self._cr.rollback()
                 self.env.clear()
             first_time = False
-            _logger.info("CALLL function",stack_info=True)
+            #_logger.info("CALLL function",stack_info=True)
             result = endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
@@ -749,8 +751,8 @@ class WebRequest(object):
             if p.kind == inspect.Parameter.VAR_KEYWORD:
                 # **kwargs catchall is defined
                 break
-            elif p.kind in (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY):
-                params_names -= p.name
+            elif p.kind in (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY) and p.name in params_names:
+                params_names.remove(p.name)
         else:
             ignored = ['<%s=%s>' % (name, params.pop(name)) for name in params_names]
             _logger.debug("<function %s.%s> called ignoring args %s" % (endpoint.__module__, endpoint.__name__, ', '.join(ignored)))
@@ -828,6 +830,10 @@ class WebRequest(object):
         return self._json_response(result, request_id=request_id)
 
     #------------------------------------------------------
+    # JSON-RPC2
+    #------------------------------------------------------
+
+    #------------------------------------------------------
     # Entry point
     #------------------------------------------------------
     def dispatch(self, endpoint, args, auth='none'):
@@ -839,18 +845,15 @@ class WebRequest(object):
         elif endpoint.routing['type'] == 'json':
             return self.json_dispatch(endpoint, args, auth)
 
-class Websocket(object):
-    pass
-
 #----------------------------------------------------------
 # Controller and routes
 #----------------------------------------------------------
 addons_manifest = {}
-controllers_per_module = collections.defaultdict(list)
+controllers = collections.defaultdict(list)
 
 def route(route=None, **kw):
-    """Decorator marking the decorated method as being a handler for
-    requests. The method must be part of a subclass of ``Controller``.
+    """Decorator marking the decorated method as being a handler for requests.
+    The method must be part of a subclass of ``Controller``.
 
     :param route: string or array. The route part that will determine which
                   http requests will match the decorated method. Can be a
@@ -866,9 +869,9 @@ def route(route=None, **kw):
                    the current request will perform using the shared Public user.
                  * ``none``: The method is always active, even if there is no
                    database. Mainly used by the framework and authentication
-                   modules. There request code will not have any facilities to access
-                   the database nor have any configuration indicating the current
-                   database nor the current user.
+                   modules. There request code will not have any facilities to
+                   access the current user.
+
     :param methods: A sequence of http methods this route applies to. If not
                     specified, all methods are allowed.
     :param cors: The Access-Control-Allow-Origin cors directive value.
@@ -897,7 +900,7 @@ def route(route=None, **kw):
 
         * if the form is generated in Python, a csrf token is
           available via :meth:`request.csrf_token()
-          <odoo.http.WebRequest.csrf_token`, the
+          <odoo.http.Request.csrf_token`, the
           :data:`~odoo.http.request` object is available by default
           in QWeb (python) templates, it may have to be added
           explicitly if you are not using QWeb.
@@ -936,84 +939,46 @@ class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
 
-        # flag old-style methods with req as first argument
-        for k, v in attrs.items():
-            if inspect.isfunction(v) and hasattr(v, 'original_func'):
-                # Set routing type on original functions
-                routing_type = v.routing.get('type')
-                parent = [claz for claz in bases if isinstance(claz, ControllerType) and hasattr(claz, k)]
-                parent_routing_type = getattr(parent[0], k).original_func.routing_type if parent else routing_type or 'http'
-                if routing_type is not None and routing_type is not parent_routing_type:
-                    routing_type = parent_routing_type
-                    _logger.warning("Subclass re-defines <function %s.%s.%s> with different type than original."
-                                    " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
-                v.original_func.routing_type = routing_type or parent_routing_type
-
         # store the controller in the controllers list
-        name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
-        class_path = name_class[0].split(".")
-        if not class_path[:2] == ["odoo", "addons"]:
-            module = ""
-        else:
-            # we want to know all modules that have controllers
+        name = "%s.%s" % (cls.__module__, cls.__name__)
+        class_path = name.split(".")
+        if class_path[:2] == ["odoo", "addons"]:
             module = class_path[2]
-        # but we only store controllers directly inheriting from Controller
-        if not "Controller" in globals() or not Controller in bases:
-            return
-        controllers_per_module[module].append(name_class)
+            controllers[module].append(cls)
+            _logger.info('controller %r %r %r', module, name, bases)
 
 Controller = ControllerType('Controller', (object,), {})
 
-class EndPoint(object):
-    def __init__(self, method, routing):
-        self.method = method
-        self.original = getattr(method, 'original_func', method)
-        self.routing = routing
-        self.arguments = {}
-
-    def __call__(self, *args, **kw):
-        return self.method(*args, **kw)
-
 def _generate_routing_rules(modules, nodb_only, converters=None):
-    def get_subclasses(klass):
-        def valid(c):
-            return c.__module__.startswith('odoo.addons.') and c.__module__.split(".")[2] in modules
-        subclasses = klass.__subclasses__()
-        result = []
-        for subclass in subclasses:
-            if valid(subclass):
-                result.extend(get_subclasses(subclass))
-        if not result and valid(klass):
-            result = [klass]
-        return result
-
+    classes = []
     for module in modules:
-        if module not in controllers_per_module:
-            continue
+        classes += controllers.get(module, [])
+    # process the controllers in reverse order of override
+    classes.sort(key=lambda c: len(c.__bases__), reverse=True)
+    # ingore inner nodes of the of the controllers inheritance tree,
+    ignore = set()
+    for cls in classes:
+        o = cls()
+        for name, method in inspect.getmembers(o, inspect.ismethod):
+            fullname = "%s.%s.%s" % (cls.__module__, cls.__name__, name)
+            if fullname not in ignore:
+                routing = {'type':'http', 'auth':'user', 'methods':None, 'routes':None}
 
-        for _, cls in controllers_per_module[module]:
-            subclasses = list(unique(c for c in get_subclasses(cls) if c is not cls))
-            if subclasses:
-                name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
-                cls = type(name, tuple(reversed(subclasses)), {})
+                # browse inner (non leaf) inheritance to collect routing and ignore
+                bases = list(cls.__bases__)
+                inner = set()
+                for base in bases:
+                    m = getattr(base, name, None)
+                    if m:
+                        inner.add("%s.%s.%s" % (base.__module__, base.__name__, name))
+                    routing.update(getattr(m, 'routing', {}))
 
-            o = cls()
-            members = inspect.getmembers(o, inspect.ismethod)
-            for _, mv in members:
-                if hasattr(mv, 'routing'):
-                    routing = dict(type='http', auth='user', methods=None, routes=None)
-                    methods_done = list()
-                    # update routing attributes from subclasses(auth, methods...)
-                    for claz in reversed(mv.__self__.__class__.mro()):
-                        fn = getattr(claz, mv.__name__, None)
-                        if fn and hasattr(fn, 'routing') and fn not in methods_done:
-                            methods_done.append(fn)
-                            routing.update(fn.routing)
+                routing.update(getattr(method, 'routing', {}))
+                if routing['routes']:
+                    ignore |= inner
                     if not nodb_only or routing['auth'] == "none":
-                        assert routing['routes'], "Method %r has not route defined" % mv
-                        endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
-                            yield (url, endpoint, routing)
+                            yield (url, method, routing)
 
 #----------------------------------------------------------
 # HTTP Sessions
@@ -1200,6 +1165,7 @@ class Root(object):
     """Root WSGI application for Odoo.  """
     def __init__(self):
         self.statics = None
+        #self.nodb mapping route
 
     @lazy_property
     def session_store(self):
@@ -1242,7 +1208,7 @@ class Root(object):
         self.statics = statics
 
     def setup_thread(self, httprequest):
-        # cleanup db/uid trackers - they're set in WebRequest or in for
+        # cleanup db/uid trackers - they're set in Request or in for
         # servie rpc in odoo.service.*.dispatch().
         # /!\ The cleanup cannot be done at the end of this `application`
         # method because werkzeug still produces relevant logging
@@ -1272,8 +1238,7 @@ class Root(object):
         # Check if session.db is legit
         if db:
             if db not in db_filter([db], httprequest=httprequest):
-                _logger.warning("Logged into database '%s', but dbfilter "
-                             "rejects it; logging session out.", db)
+                _logger.warning("Logged into database '%s', but dbfilter rejects it; logging session out.", db)
                 httprequest.session.logout()
                 db = None
 
@@ -1341,11 +1306,6 @@ class Root(object):
         result = request.dispatch(func, arguments, "none")
         return result
 
-    def dispatch(self, environ, start_response):
-        """
-        Performs the actual WSGI dispatching for the application.
-        """
-
     def __call__(self, environ, start_response):
         """ WSGI entry point.  """
         # FIXME: is checking for the presence of HTTP_X_FORWARDED_HOST really useful?  we're ignoring the user configuration, and that means we won't support the standardised Forwarded header once werkzeug supports it
@@ -1366,7 +1326,7 @@ class Root(object):
             self.setup_session(httprequest)
             self.setup_db(httprequest)
             self.setup_lang(httprequest)
-            request = WebRequest(httprequest)
+            request = Request(httprequest)
 
             with odoo.api.Environment.manage():
                 with request:
@@ -1436,11 +1396,6 @@ class Root(object):
         except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
 
-
-def db_list(force=False, httprequest=None):
-    dbs = odoo.service.db.list_dbs(force)
-    return db_filter(dbs, httprequest=httprequest)
-
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
     h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
@@ -1457,6 +1412,10 @@ def db_filter(dbs, httprequest=None):
         exposed_dbs = set(db.strip() for db in odoo.tools.config['db_name'].split(','))
         dbs = sorted(exposed_dbs.intersection(dbs))
     return dbs
+
+def db_list(force=False, httprequest=None):
+    dbs = odoo.service.db.list_dbs(force)
+    return db_filter(dbs, httprequest=httprequest)
 
 def db_monodb(httprequest=None):
     """
