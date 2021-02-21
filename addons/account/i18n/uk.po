@@ -11,7 +11,7 @@
 # Sergey Doroshenko <sdoroshenko@artwebny.com>, 2019
 # Bohdan Lisnenko, 2019
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7919,6 +7919,12 @@ msgid "Original Bills"
 msgstr "Оригінальні рахунки"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr "Базова валюта"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Одержувач платежу"
@@ -8194,7 +8200,7 @@ msgstr "Інформація платежу"
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Payment Journal:"
-msgstr "Журналі платежів:"
+msgstr "Журнал платежів:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -8999,8 +9005,8 @@ msgid ""
 "Reference of the document used to issue this payment. Eg. check number, file"
 " name, etc."
 msgstr ""
-"Довідка про документ, що використовується для випуски цього платежу. "
-"Наприклад, номер перевірки, назва файлу і т.д."
+"Довідка про документ, що використовується для випуску цього платежу. "
+"Наприклад, номер чеку, назва файлу і т.д."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_in_refund_type
@@ -10759,7 +10765,7 @@ msgid ""
 "Technical field used to have a dynamic domain on journal / taxes in the form"
 " view."
 msgstr ""
-"Технічне поле, яке використовується для динамічного домену на жрналі / "
+"Технічне поле, яке використовується для динамічного домену на журналі / "
 "податках у формі перегляду."
 
 #. module: account
@@ -11267,8 +11273,14 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "В журналі власником банківського рахунку має бути компанія (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
+"Власником журналу банківського рахунку типу \"Банк\" повинна бути компанія (%s).\n"
+"Однак власником \"%s\" є \"%s\".\n"
+"Виберіть інший банківський рахунок або змініть власника \"%s\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code

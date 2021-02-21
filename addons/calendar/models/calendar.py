@@ -203,6 +203,7 @@ class Attendee(models.Model):
                 email_values = {
                     'model': None,  # We don't want to have the mail in the tchatter while in queue!
                     'res_id': None,
+                    'author_id': attendee.event_id.user_id.partner_id.id or self.env.user.partner_id.id,
                 }
                 if ics_file:
                     email_values['attachment_ids'] = [
@@ -210,7 +211,8 @@ class Attendee(models.Model):
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
-                    mail_ids.append(invitation_template.with_context(no_document=True).send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
+                    # sudo is needed when the current user hasn't been added to the loop (i.e. neither in attendees, nor in owner)
+                    mail_ids.append(invitation_template.with_context(no_document=True).sudo().send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
                 else:
                     mail_ids.append(invitation_template.send_mail(attendee.id, email_values=email_values, notif_layout='mail.mail_notification_light'))
 
@@ -1122,6 +1124,9 @@ class Meeting(models.Model):
 
         if 'id' not in order_fields:
             order_fields.append('id')
+
+        # code does not handle '!' operator
+        domain = expression.distribute_not(expression.normalize_domain(domain))
 
         leaf_evaluations = None
         recurrent_ids = [meeting.id for meeting in self if meeting.recurrency and meeting.rrule]

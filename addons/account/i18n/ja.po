@@ -10,7 +10,7 @@
 # ook rio <riokoko5@gmail.com>, 2019
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2019
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2019
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2019
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2019
 # kent_ocean <ke.tanabe@gmail.com>, 2019
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
@@ -7634,6 +7634,12 @@ msgid "Original Bills"
 msgstr "オリジナル手形"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "オリジネーター支払い"
@@ -10817,8 +10823,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "ジャーナルの銀行口座の保有者は、会社(%s)でなければなりません。"
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -12412,7 +12421,7 @@ msgstr "この台帳はストリクトモードであるため、投稿された
 msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
-msgstr "すでに会計仕訳がある仕訳の項目％sを変更することはできません。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -9,7 +9,7 @@
 # e772023659fe6e4b37f82cb41b34237b, 2019
 # Takuya Sawada <takuya@tuntunkun.com>, 2019
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2019
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2019
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2019
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2019
 # 森岡広道 <hiromichi.morioka@pro-spire.co.jp>, 2019
 # Martin Trigaux, 2019
@@ -18,8 +18,8 @@
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2019
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
 # Hau Dao <hau@quartile.co>, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Noma Yuki, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6615,6 +6615,7 @@ msgstr "プロダクト数変更"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -7033,8 +7034,7 @@ msgid ""
 "You can not change the type of a product that is currently reserved on a "
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
-msgstr ""
-"現在在庫移動で予約されている商品のタイプを変更することはできません。タイプを変更する必要がある場合は、最初に在庫移動を予約解除する必要があります。"
+msgstr "在庫移動に引き当てられたプロダクトのタイプは変更できません。タイプの変更が必要な場合、先に在庫移動の引当を解除してください。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0

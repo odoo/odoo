@@ -5,8 +5,9 @@ from psycopg2 import IntegrityError
 
 from odoo.tests import tagged
 from odoo.addons.test_mail.tests import common
-from odoo.tools.misc import mute_logger
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
+from odoo.tools.misc import mute_logger
 
 
 @tagged('mail_followers')
@@ -94,6 +95,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_noforce(self):
+        """ Calling message_subscribe without subtypes on an existing subscription should not do anything (default < existing) """
         test_record = self.test_record.with_user(self.user_employee)
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
@@ -106,6 +108,22 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+
+    def test_followers_multiple_subscription_update(self):
+        """ Calling message_subscribe with subtypes on an existing subscription should replace them (new > existing) """
+        test_record = self.test_record.with_user(self.user_employee)
+        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_mg_def.id, self.mt_cl_def.id])
+        self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
+        follower = self.env['mail.followers'].search([
+            ('res_model', '=', 'mail.test.simple'),
+            ('res_id', '=', test_record.id),
+            ('partner_id', '=', self.user_employee.partner_id.id)])
+        self.assertEqual(follower, test_record.message_follower_ids)
+        self.assertEqual(follower.subtype_ids, self.mt_mg_def | self.mt_cl_def)
+
+        # remove one subtype `mt_mg_def` and set new subtype `mt_al_def`
+        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_cl_def.id, self.mt_al_def.id])
+        self.assertEqual(follower.subtype_ids, self.mt_cl_def | self.mt_al_def)
 
     def test_followers_no_DID(self):
         """Test that a follower cannot suffer from dissociative identity disorder.

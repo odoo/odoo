@@ -1378,14 +1378,31 @@ actual arch.
             noupdate behavior on views having an ir.model.data.
         """
         if self.type == 'qweb':
-            # Update also specific views
             for cow_view in self._get_specific_views():
                 authorized_vals = {}
                 for key in values:
-                    if cow_view[key] == self[key]:
+                    if key != 'inherit_id' and cow_view[key] == self[key]:
                         authorized_vals[key] = values[key]
-                cow_view.write(authorized_vals)
+                # if inherit_id update, replicate change on cow view but
+                # only if that cow view inherit_id wasn't manually changed
+                inherit_id = values.get('inherit_id')
+                if inherit_id and self.inherit_id.id != inherit_id and \
+                   cow_view.inherit_id.key == self.inherit_id.key:
+                    self._load_records_write_on_cow(cow_view, inherit_id, authorized_vals)
+                else:
+                    cow_view.with_context(no_cow=True).write(authorized_vals)
         super(View, self)._load_records_write(values)
+
+    def _load_records_write_on_cow(self, cow_view, inherit_id, values):
+        # for modules updated before `website`, we need to
+        # store the change to replay later on cow views
+        if not hasattr(self.pool, 'website_views_to_adapt'):
+            self.pool.website_views_to_adapt = []
+        self.pool.website_views_to_adapt.append((
+            cow_view.id,
+            inherit_id,
+            values,
+        ))
 
 
 class ResetViewArchWizard(models.TransientModel):

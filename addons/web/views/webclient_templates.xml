@@ -441,7 +441,7 @@
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
         </xpath>
-        <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
+        <xpath expr="//head/script[@id='web.layout.odooscript'] | //head/script[last()]" position="after">
             <script type="text/javascript">
                 odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
             </script>

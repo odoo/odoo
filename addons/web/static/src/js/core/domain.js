@@ -224,15 +224,26 @@ var Domain = collections.Tree.extend({
      * representation of the Python prefix-array representation of this domain.
      *
      * @static
-     * @param {Array|string} domain
+     * @param {Array|string|undefined} domain
      * @returns {string}
      */
     arrayToString: function (domain) {
         if (_.isString(domain)) return domain;
-        return JSON.stringify(domain || [])
-            .replace(/null/g, "None")
-            .replace(/false/g, "False")
-            .replace(/true/g, "True");
+        const parts = (domain || []).map(part => {
+            if (_.isArray(part)) { // e.g. ['name', 'ilike', 'foo'] or ['is_active', '=', true]
+                return "[" + part.map(c => {
+                    switch (c) {
+                        case null: return "None";
+                        case true: return "True";
+                        case false: return "False";
+                        default: return JSON.stringify(c);
+                    }
+                }).join(',') + "]";
+            } else { // e.g. '|' or '&'
+                return JSON.stringify(part);
+            }
+        });
+        return "[" + parts.join(',') + "]";
     },
     /*
      * @param {string} fieldName

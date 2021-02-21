@@ -910,6 +910,13 @@ var FormRenderer = BasicRenderer.extend({
                         tab.$page.removeClass('active');
                         self.inactiveNotebooks.push(renderedTabs);
                     }
+                    if (!modifiers.invisible) {
+                        // make first page active if there is only one page to display
+                        var $visibleTabs = $headers.find('li:not(.o_invisible_modifier)');
+                        if ($visibleTabs.length === 1) {
+                            self.inactiveNotebooks.push(renderedTabs);
+                        }
+                    }
                 },
             });
         });

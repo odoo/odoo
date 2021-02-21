@@ -654,9 +654,9 @@ class PosSession(models.Model):
         ).mapped('move_lines')
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
-            ( stock_output_lines[account_id].filtered(lambda aml: not aml.reconciled)
+            ( stock_output_lines[account_id]
             | stock_account_move_lines.filtered(lambda aml: aml.account_id == account_id)
-            ).reconcile()
+            ).filtered(lambda aml: not aml.reconciled).reconcile()
         return data
 
     def _get_extra_move_lines_vals(self):

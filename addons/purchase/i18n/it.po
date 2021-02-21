@@ -5,7 +5,6 @@
 # Translators:
 # Lorenzo Battistini <lb@takobi.online>, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
-# Tiziano Zambelli <zstiziano@gmail.com>, 2019
 # Franco Tampieri <franco@tampieri.info>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # Martin Trigaux, 2019
@@ -21,7 +20,7 @@
 # Giovanni <giovanni@gslab.it>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -258,7 +257,7 @@ msgstr "<strong>Prodotto</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Purchase Representative:</strong>"
-msgstr ""
+msgstr "<strong>Referente acquisti:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -723,7 +722,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr "Definisci termini e condizioni..."
+msgstr "Indica termini e condizioni..."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1033,7 +1032,7 @@ msgstr "Fatture manuali"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
 msgid "Manual Received Qty"
-msgstr ""
+msgstr "Q.tà ricevuta manualmente"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -1089,7 +1088,7 @@ msgstr "Importo minimo"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr "L'ammontare minimo per il quale è richiesta una doppia validazione"
+msgstr "Ammontare minimo per il quale è richiesta una doppia convalida"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
@@ -1556,7 +1555,7 @@ msgstr "Acquisti"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Unione acquisti e fatture fornitore"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1646,7 +1645,7 @@ msgstr "RdP e acquisti"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
-msgstr ""
+msgstr "Rapporto tra la valuta dell'ordine di vendita e quella dell'azienda"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1671,7 +1670,7 @@ msgstr "Q.tà ricevuta"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Metodo q.tà ricevuta"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2217,10 +2216,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
-"Fornitori fatture possono essere pre-generati sulla base di acquisto\n"
-"ordini o ricevute. Questo consente di controllare le bollette\n"
-"si riceve dal fornitore secondo il progetto\n"
-"documento in Odoo."
+"Le fatture fornitore possono essere pregenerate in base agli\n"
+"                    ordini di acquisto o alle ricezioni. Ciò consente di tenere\n"
+"                    sotto controllo le fatture ricevute dal fornitore in conformità\n"
+"                    con il documento in bozza di Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -2287,6 +2286,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Deve essere definito un prodotto per tutto ciò che viene venduto o acquistato,\n"
+"                che sia un prodotto stoccabile, un consumabile o un servizio."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -2294,6 +2295,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Deve essere definito un prodotto per tutto ciò che viene venduto o acquistato,\n"
+"            che sia un prodotto stoccabile, un consumabile o un servizio."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2310,3 +2313,5 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"Impossibile cambiare il tipo di riga in un ordine di acquisto. Eliminare "
+"invece la riga attuale e crearne una nuova del tipo corretto."

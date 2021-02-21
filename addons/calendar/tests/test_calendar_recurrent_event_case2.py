@@ -205,3 +205,12 @@ class TestRecurrentEvent(common.TransactionCase):
         ])
         base_ids = [calendar_id2real_id(meeting.id, with_date=False) for meeting in meetings]
         self.assertIn(ev.id, base_ids, "Event does match the domain")
+
+        meetings = self.CalendarEvent.with_context({'virtual_id': True}).search(['!', ['id', 'in', []]])
+        all_meetings = self.CalendarEvent.with_context({'virtual_id': True}).search([])
+        self.assertEqual(meetings, all_meetings, "All events match the domain")
+
+        recurrent_ids = ['{}-20180706110000'.format(ev.id), '{}-20180629110000'.format(ev.id)]
+        meetings = self.CalendarEvent.with_context({'virtual_id': True}).search(['!', ['id', 'in', recurrent_ids[:1]]])
+        excluded_meetings = (all_meetings - meetings).ids
+        self.assertEqual(excluded_meetings, recurrent_ids, "Recurrent event is excluded by the domain")

@@ -38,6 +38,37 @@ var range = $.summernote.core.range;
 var eventHandler = $.summernote.eventHandler;
 var renderer = $.summernote.renderer;
 
+// Summernote uses execCommand and, worth, obsolete queryCommandState function
+// to customize the edited content. Here we try to hack the function to solve
+// some problems by making the DOM and style easier to understand for the
+// base function for the duration of their executions. This won't obviously
+// solves all problems but this is an improvement while waiting for the new
+// Odoo editor coming in future versions.
+function protectCommand(callback) {
+    return function () {
+        var rng = range.create();
+        var $sc = (rng && rng.sc) ? $(rng.sc).parents(':o_editable').last() : $();
+        var $ec = (rng && rng.ec) ? $(rng.ec).parents(':o_editable').last() : $();
+        $sc.addClass('o_we_command_protector');
+        $ec.addClass('o_we_command_protector');
+        var restore = function () {
+            $sc.removeClass('o_we_command_protector');
+            $ec.removeClass('o_we_command_protector');
+        };
+        var result;
+        try {
+            result = callback.apply(this, arguments);
+        } catch (err) {
+            restore();
+            throw err;
+        }
+        restore();
+        return result;
+    };
+}
+document.execCommand = protectCommand(document.execCommand);
+document.queryCommandState = protectCommand(document.queryCommandState);
+
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
@@ -497,10 +528,15 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
             onUpload: $editable.data('callbacks').onUpload,
             noVideos: options && options.noVideos,
         },
-        onSave: function (media) {
-            if(media && !document.body.contains(media)) {
-            r.insertNode(media);
-            };
+        onSave: function (newMedia) {
+            if (!newMedia) {
+                return;
+            }
+            if (media) {
+                $(media).replaceWith(newMedia);
+            } else {
+                r.insertNode(newMedia);
+            }
         },
     });
     return new $.Deferred().reject();

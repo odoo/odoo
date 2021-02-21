@@ -2000,7 +2000,7 @@ class TestStockValuation(SavepointCase):
         move5.move_line_ids.qty_done = 30.0
         move5._action_done()
 
-        self.assertEqual(move5.stock_valuation_layer_ids.value, -477.6)
+        self.assertEqual(move5.stock_valuation_layer_ids.value, -477.5)
 
         # Receives 10 units but assign them to an owner, the valuation should not be impacted.
         move6 = self.env['stock.move'].create({
@@ -2019,6 +2019,24 @@ class TestStockValuation(SavepointCase):
         move6._action_done()
 
         self.assertEqual(move6.stock_valuation_layer_ids.value, 0)
+
+        # Sale 50 units @ $19.50 per unit (no stock anymore)
+        move7 = self.env['stock.move'].create({
+            'name': '50 units @ $19.50 per unit',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 50.0,
+        })
+        move7._action_confirm()
+        move7._action_assign()
+        move7.move_line_ids.qty_done = 50.0
+        move7._action_done()
+
+        self.assertEqual(move7.stock_valuation_layer_ids.value, -796.0)
+        self.assertAlmostEqual(self.product1.quantity_svl, 0.0)
+        self.assertAlmostEqual(self.product1.value_svl, 0.0)
 
     def test_average_perpetual_2(self):
         self.product1.categ_id.property_cost_method = 'average'

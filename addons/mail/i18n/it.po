@@ -7,11 +7,11 @@
 # Pietro Della Notte <pdellanotte@gmail.com>, 2019
 # Romica Paun <roa@odoo.com>, 2019
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2019
+# Lorenzo Battistini <lb@takobi.online>, 2019
 # Christian <chris@effeci.info>, 2019
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2019
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Lorenzo Battistini <lb@takobi.online>, 2019
 # David Minneci <david@numeko.it>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # Martin Trigaux, 2019
@@ -24,7 +24,7 @@
 # efraimbiffi <eab@odoo.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -292,10 +292,9 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
-"<p>I canali facilitano l'organizzazione delle informazioni attraverso "
-"argomenti e gruppi differenti.</p> <p>Prova a <b>creare il tuo primo "
-"canale</b> (ad es. vendite, marketing, prodotto XYZ, festa dopo il lavoro, "
-"ecc).</p>"
+"<p>I canali facilitano l'organizzazione delle informazioni tra argomenti e "
+"gruppi diversi.</p> <p>Prova a <b>creare il primo canale</b> (es. vendite, "
+"marketing, prodotto XYZ, festa dopo il lavoro ecc...).</p>"
 
 #. module: mail
 #. openerp-web
@@ -523,6 +522,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Le azioni possono attivare comportamenti specifici, come aprire una vista "
+"calendario o segnare come completato il caricamento di un documento in modo "
+"automatico"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -874,8 +876,8 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures. You won't be "
 "able to re-send these mails later!"
 msgstr ""
-"Sei sicuro di voler cancellare %s le email con errori di invio. Non potrai "
-"più inviare di nuovo queste email più tardi."
+"Eliminare veramente %s errori di consegna? In seguito non sarà più possibile"
+" reinviare queste e-mail."
 
 #. module: mail
 #. openerp-web
@@ -2000,7 +2002,7 @@ msgstr "Modifica partner"
 #: code:addons/mail/static/src/js/followers.js:0
 #, python-format
 msgid "Edit Subscription of "
-msgstr "Modifica l'iscrizione a"
+msgstr "Modifica iscrizione a"
 
 #. module: mail
 #. openerp-web
@@ -2467,6 +2469,7 @@ msgstr "Stai seguendo"
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
+"I seguenti inviti non sono validi, i gruppi utente non corrispondono: %s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -3041,7 +3044,7 @@ msgstr "Lingua"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__fetched_message_id
 msgid "Last Fetched"
-msgstr ""
+msgstr "Ultimi prelevati"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview____last_update
@@ -4252,8 +4255,8 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
-"Una volta che il messaggio è stato stellato, puoi tornare a controllarlo qui"
-" in ogni momento."
+"Dopo aver segnato il messaggio come preferito, è possibile tornare qui ed "
+"esaminarlo in qualsiasi momento."
 
 #. module: mail
 #. openerp-web
@@ -4662,7 +4665,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "Post your message on the thread"
-msgstr "Pubblicare il messaggio sulla conversazione"
+msgstr "Pubblica il messaggio nella discussione"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
@@ -6392,9 +6395,7 @@ msgstr ""
 msgid ""
 "You are the administrator of this channel. Are you sure you want to "
 "unsubscribe?"
-msgstr ""
-"Sei l'amministratore di questo canale. Sei sicuro di voler annullare la tua "
-"iscrizione?"
+msgstr "Annullare veramente l'iscrizione come amministratore del canale?"
 
 #. module: mail
 #. openerp-web
@@ -6441,8 +6442,8 @@ msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr ""
-"Non è possibile cancellare questi gruppi in quanto il gruppo Tutta l'Azienda"
-" è richiesto da altri moduli."
+"Impossibile eliminare i gruppi, il gruppo per l'intera azienda è richiesto "
+"da altri moduli."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -6478,7 +6479,7 @@ msgstr "Sei stato assegnato a "
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
 msgid "You have been invited to: %s"
-msgstr ""
+msgstr "È stato ricevuto un invito per: %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
@@ -6521,7 +6522,7 @@ msgstr "Hai rimosso la puntina per la tua conversazione con <b>%s</b>."
 #: code:addons/mail/static/src/js/services/mail_notification_manager.js:0
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
-msgstr "Hai annullato l'iscrizione a <b>%s</b>."
+msgstr "Iscrizione a <b>%s</b> annullata."
 
 #. module: mail
 #. openerp-web

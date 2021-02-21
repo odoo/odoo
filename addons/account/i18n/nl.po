@@ -20,7 +20,7 @@
 # Antoine Gilard <ang@odoo.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # 
 msgid ""
@@ -7945,6 +7945,12 @@ msgid "Original Bills"
 msgstr "Originele facturen"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Herkomst van betaling"
@@ -11279,8 +11285,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "De rekeninghouder van het bankdagboek moet het bedrijf zijn (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code

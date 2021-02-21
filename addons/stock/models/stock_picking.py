@@ -724,7 +724,7 @@ class Picking(models.Model):
                                                     'company_id': pick.company_id.id,
                                                    })
                     ops.move_id = new_move.id
-                    new_move._action_confirm()
+                    new_move = new_move._action_confirm()
                     todo_moves |= new_move
                     #'qty_done': ops.qty_done})
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
@@ -944,7 +944,9 @@ class Picking(models.Model):
         """
         quantity_todo = {}
         quantity_done = {}
-        for move in self.mapped('move_lines'):
+        # If a preceding move has been canceled and propagated state to its
+        # destination move, we don't take quantities into account
+        for move in self.mapped('move_lines').filtered(lambda m: m.state != "cancel"):
             quantity_todo.setdefault(move.product_id.id, 0)
             quantity_done.setdefault(move.product_id.id, 0)
             quantity_todo[move.product_id.id] += move.product_uom_qty

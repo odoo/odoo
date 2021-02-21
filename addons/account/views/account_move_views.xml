@@ -153,6 +153,7 @@
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="amount_currency" groups="base.group_multi_currency" optional="hide"/>
+                    <field name="always_set_currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="tag_ids" widget="many2many_tags" width="0.5" optional="hide"/>
                     <field name="full_reconcile_id" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
@@ -188,6 +189,7 @@
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
+                    <field name="always_set_currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Original Currency"/>
                     <field name="currency_id" readonly="1" invisible="1" />
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
@@ -1158,7 +1160,6 @@
         <act_window
             id="action_move_line_select_tax_audit"
             name="Journal Items for Tax Audit"
-            context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
             view_id="account.view_move_line_tax_audit_tree"/>
 

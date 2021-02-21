@@ -392,12 +392,14 @@ class ComputeProtected(models.Model):
         for record in self:
             record.bar = record.foo
 
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
     _description = 'Test New API Compute Inversse'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
+    baz = fields.Char()
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -409,6 +411,11 @@ class ComputeInverse(models.Model):
         self._context.get('log', []).append('inverse')
         for record in self:
             record.foo = record.bar
+
+    @api.constrains('bar', 'baz')
+    def _check_constraint(self):
+        if self._context.get('log_constraint'):
+            self._context.get('log', []).append('constraint')
 
 
 class MultiComputeInverse(models.Model):
@@ -509,6 +516,22 @@ class ComputeRecursive(models.Model):
                 rec.display_name = rec.parent.display_name + " / " + rec.name
             else:
                 rec.display_name = rec.name
+
+
+class ComputeRecursiveTree(models.Model):
+    _name = 'test_new_api.recursive.tree'
+    _description = 'Test New API Recursive with one2many field'
+
+    name = fields.Char(required=True)
+    parent_id = fields.Many2one('test_new_api.recursive.tree', ondelete='cascade')
+    children_ids = fields.One2many('test_new_api.recursive.tree', 'parent_id')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'children_ids.display_name')
+    def _compute_display_name(self):
+        for rec in self:
+            children_names = rec.mapped('children_ids.display_name')
+            rec.display_name = '%s(%s)' % (rec.name, ', '.join(children_names))
 
 
 class ComputeCascade(models.Model):

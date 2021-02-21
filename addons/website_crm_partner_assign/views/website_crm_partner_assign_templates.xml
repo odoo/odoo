@@ -532,7 +532,9 @@
                         <div class="col-lg-5 mb-4 mb-lg-0">
                             <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
                                 <h5 class="mb-0">
-                                    <span class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at
+                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
+                                    <span t-else="" class="text-nowrap" t-esc="opportunity.planned_revenue"/>
+                                    <span> at </span>
                                     <span class="badge badge-info badge-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
                                 <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>

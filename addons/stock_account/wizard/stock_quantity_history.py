@@ -10,7 +10,7 @@ class StockQuantityHistory(models.TransientModel):
         active_model = self.env.context.get('active_model')
         if active_model == 'stock.valuation.layer':
             action = self.env.ref('stock_account.stock_valuation_layer_action').read()[0]
-            action['domain'] = [('create_date', '<=', self.inventory_datetime)]
+            action['domain'] = [('create_date', '<=', self.inventory_datetime), ('product_id.type', '=', 'product')]
             action['display_name'] = str(self.inventory_datetime)
             return action
 

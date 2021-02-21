@@ -2000,8 +2000,8 @@ exports.Orderline = Backbone.Model.extend({
         var taxtotal = 0;
 
         var product =  this.get_product();
-        var taxes_ids = product.taxes_id;
         var taxes =  this.pos.taxes;
+        var taxes_ids = _.filter(product.taxes_id, t => t in this.pos.taxes_by_id);
         var taxdetail = {};
         var product_taxes = [];
 
@@ -2187,7 +2187,9 @@ exports.Paymentline = Backbone.Model.extend({
     set_amount: function(value){
         this.order.assert_editable();
         this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
-        this.pos.send_current_order_to_customer_facing_display();
+        if (this.pos.config.iface_customer_facing_display) {
+            this.pos.send_current_order_to_customer_facing_display();
+        }
         this.trigger('change',this);
     },
     // returns the amount of money on this paymentline
