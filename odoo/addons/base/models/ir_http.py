@@ -373,9 +373,7 @@ class IrHttp(models.AbstractModel):
 
         return status, content, filename, mimetype, filehash
 
-    def _binary_record_content(
-            self, record, field='datas', filename=None,
-            filename_field='name', default_mimetype='application/octet-stream'):
+    def _binary_record_content(self, record, field='datas', filename=None, filename_field='name', default_mimetype='application/octet-stream'):
 
         model = record._name
         mimetype = 'mimetype' in record and record.mimetype or False
@@ -443,10 +441,7 @@ class IrHttp(models.AbstractModel):
 
         return (status, headers, content)
 
-    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='name', download=False,
-                       mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None):
+    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='name', download=False, mimetype=None, default_mimetype='application/octet-stream', access_token=None):
         """ Get file, attachment or downloadable content
 
         If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
@@ -477,12 +472,9 @@ class IrHttp(models.AbstractModel):
         if record._name == 'ir.attachment':
             status, content, filename, mimetype, filehash = self._binary_ir_attachment_redirect_content(record, default_mimetype=default_mimetype)
         if not content:
-            status, content, filename, mimetype, filehash = self._binary_record_content(
-                record, field=field, filename=filename, filename_field=filename_field,
-                default_mimetype='application/octet-stream')
+            status, content, filename, mimetype, filehash = self._binary_record_content( record, field=field, filename=filename, filename_field=filename_field, default_mimetype='application/octet-stream')
 
-        status, headers, content = self._binary_set_headers(
-            status, content, filename, mimetype, unique, filehash=filehash, download=download)
+        status, headers, content = self._binary_set_headers( status, content, filename, mimetype, unique, filehash=filehash, download=download)
 
         return status, headers, content
 

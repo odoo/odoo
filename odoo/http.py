@@ -29,6 +29,7 @@ import werkzeug.datastructures
 import werkzeug.exceptions
 import werkzeug.local
 import werkzeug.routing
+import werkzeug.security
 import werkzeug.urls
 import werkzeug.wrappers
 import werkzeug.wsgi
@@ -165,6 +166,73 @@ def serialize_exception(e):
         tmp["exception_type"] = "except_orm"
     return tmp
 
+def send_file(content, filename=None, mimetype=None, mtime=None, as_attachment=False, cache_timeout=STATIC_CACHE):
+    """Send file, str or bytes content with mime and cache handling.
+
+    Sends the contents of a file to the client.  Using werkzeug file_wrapper
+    support.
+
+    If filename of content.name is provided it will try to guess the mimetype
+    for you, but you can also explicitly provide one.
+
+    :param content : fileobject to read from or str or bytes.
+    :param filename: optional if content has a 'name' attribute, used for attachment name and mimetype guess (i.e. io.BytesIO)
+    :param mimetype: the mimetype of the file if provided, otherwise auto detection happens based on the name.
+    :param mtime: optional if content has a 'name' attribute, last modification time used for contitional response.
+    :param as_attachment: set to `True` if you want to send this file with a ``Content-Disposition: attachment`` header.
+    :param cache_timeout: set to `False` to disable etags and conditional response handling (last modified and etags)
+    """
+
+    # REM for odo i removed the unsafe path api
+    if isinstance(content, str):
+        content = content.encode('utf8')
+    if isinstance(content, bytes):
+        content = io.BytesIO(content)
+
+    # Only used when filename or mtime argument is not provided
+    path = getattr(content, 'name', 'file.bin')
+
+    if not filename:
+        filename = os.path.basename(path)
+
+    if not mimetype:
+        mimetype = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+
+    if not mtime:
+        try:
+            mtime = datetime.datetime.fromtimestamp(os.path.getmtime(path))
+        except Exception:
+            pass
+
+    content.seek(0, 2)
+    size = content.tell()
+    content.seek(0)
+
+    data = werkzeug.wsgi.wrap_file(request.httprequest.environ, content)
+
+    r = Response(data, mimetype=mimetype, direct_passthrough=True)
+    r.content_length = size
+
+    if as_attachment:
+        r.headers.add('Content-Disposition', 'attachment', filename=filename or 'file.bin')
+
+
+    if cache_timeout:
+        if mtime:
+            r.last_modified = mtime
+        crc = zlib.adler32(filename.encode('utf-8') if isinstance(filename, str) else filename) & 0xffffffff
+        etag = 'odoo-%s-%s-%s' % ( mtime, size, crc)
+        if not werkzeug.http.is_resource_modified(request.httprequest.environ, etag, last_modified=mtime):
+            r = werkzeug.wrappers.Response(status=304)
+        else:
+            r.cache_control.public = True
+            r.cache_control.max_age = cache_timeout
+            # expires is deprecated
+            #r.expires = int(time.time() + cache_timeout)
+            r.set_etag(etag)
+    _logger.info("response %s", r)
+    return r
+
 #----------------------------------------------------------
 # Request and Response
 #----------------------------------------------------------
@@ -277,6 +345,8 @@ class WebRequest(object):
             threading.current_thread().dbname = self.db
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
+        # TODO remove
+        self.endpoint = None
 
     @property
     def cr(self):
@@ -1126,35 +1196,10 @@ def session_gc(session_store):
 #----------------------------------------------------------
 # WSGI Layer
 #----------------------------------------------------------
-
-class DisableCacheMiddleware(object):
-    def __init__(self, app):
-        self.app = app
-
-    def __call__(self, environ, start_response):
-        def start_wrapped(status, headers):
-            req = werkzeug.wrappers.Request(environ)
-            root.setup_session(req)
-            if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
-
-                if "assets" in req.session.debug and (".js" in req.base_url or ".css" in req.base_url):
-                    new_headers = [('Cache-Control', 'no-store')]
-                else:
-                    new_headers = [('Cache-Control', 'no-cache')]
-
-                for k, v in headers:
-                    if k.lower() != 'cache-control':
-                        new_headers.append((k, v))
-
-                start_response(status, new_headers)
-            else:
-                start_response(status, headers)
-        return self.app(environ, start_wrapped)
-
 class Root(object):
     """Root WSGI application for Odoo.  """
     def __init__(self):
-        self._loaded = False
+        self.statics = None
 
     @lazy_property
     def session_store(self):
@@ -1176,7 +1221,6 @@ class Root(object):
     def load_addons(self):
         """ Load all addons from addons path containing static files and
         controllers and configure them.  """
-        # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
         for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
@@ -1193,12 +1237,25 @@ class Root(object):
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
                         addons_manifest[module] = manifest
-                        statics['/%s/static' % module] = path_static
+                        statics['/%s/static/' % module] = path_static
+        _logger.info("HTTP Configured static files")
+        self.statics = statics
 
-        if statics:
-            _logger.info("HTTP Configuring static files")
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
-        self.dispatch = DisableCacheMiddleware(app)
+    def setup_thread(self, httprequest):
+        # cleanup db/uid trackers - they're set in WebRequest or in for
+        # servie rpc in odoo.service.*.dispatch().
+        # /!\ The cleanup cannot be done at the end of this `application`
+        # method because werkzeug still produces relevant logging
+        # afterwards
+        current_thread = threading.current_thread()
+        if hasattr(current_thread, 'uid'):
+            del current_thread.uid
+        if hasattr(current_thread, 'dbname'):
+            del current_thread.dbname
+        current_thread.url = httprequest.url
+        current_thread.query_count = 0
+        current_thread.query_time = 0
+        current_thread.perf_t0 = time.time()
 
     def setup_session(self, httprequest):
         # recover or create session
@@ -1288,96 +1345,97 @@ class Root(object):
         """
         Performs the actual WSGI dispatching for the application.
         """
+
+    def __call__(self, environ, start_response):
+        """ WSGI entry point.  """
+        # FIXME: is checking for the presence of HTTP_X_FORWARDED_HOST really useful?  we're ignoring the user configuration, and that means we won't support the standardised Forwarded header once werkzeug supports it
+        #dispatch = self.dispatch
+        #if odoo.tools.config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
+        #    dispatch = ProxyFix(self.dispatch)
+
+        # Lazy load addons for statics
+        if not self.statics:
+            self.load_addons()
+
+        httprequest = werkzeug.wrappers.Request(environ)
+        httprequest.app = self
+        httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
+
         try:
-            httprequest = werkzeug.wrappers.Request(environ)
-            httprequest.app = self
-            httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
-
-            # cleanup db/uid trackers - they're set in WebRequest or in for
-            # servie rpc in odoo.service.*.dispatch().
-            # /!\ The cleanup cannot be done at the end of this `application`
-            # method because werkzeug still produces relevant logging
-            # afterwards
-            current_thread = threading.current_thread()
-            if hasattr(current_thread, 'uid'):
-                del current_thread.uid
-            if hasattr(current_thread, 'dbname'):
-                del current_thread.dbname
-            current_thread.url = httprequest.url
-            current_thread.query_count = 0
-            current_thread.query_time = 0
-            current_thread.perf_t0 = time.time()
-
+            self.setup_thread(httprequest)
             self.setup_session(httprequest)
             self.setup_db(httprequest)
             self.setup_lang(httprequest)
-
             request = WebRequest(httprequest)
 
-            with request:
-                db = request.session.db
-                if db:
-                    try:
-                        odoo.registry(db).check_signaling()
-                        with odoo.tools.mute_logger('odoo.sql_db'):
-                            ir_http = request.registry['ir.http']
-                    except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
-                        # psycopg2 error or attribute error while constructing
-                        # the registry. That means either
-                        # - the database probably does not exists anymore
-                        # - the database is corrupted
-                        # - the database version doesnt match the server version
-                        # Log the user out and fall back to nodb
-                        request.session.logout()
-                        if request.httprequest.path == '/web':
-                            # TODO check
-                            # result = werkzeug.utils.redirect('/web/database/selector')
-                            # Internal Server Error
-                            raise
+            with odoo.api.Environment.manage():
+                with request:
+                    # TODO DisableCacheMiddleware(app)
+                    #req = werkzeug.wrappers.Request(environ)
+                    #self.setup_session(req)
+                    #if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
+                    #    #if "assets" in req.session.debug and (".js" in req.base_url or ".css" in req.base_url):
+                    #    #    new_headers = [('Cache-Control', 'no-store')]
+                    #    #else:
+                    #    #    new_headers = [('Cache-Control', 'no-cache')]
+                    #    for k, v in headers:
+                    #        if k.lower() != 'cache-control':
+                    #            new_headers.append((k, v))
+
+                    # Serve statics
+                    path_info = werkzeug.wsgi.get_path_info(environ)
+                    for prefix, directory in self.statics.items():
+                        #_logger.info('checj %s %s',path_info, static)
+                        if path_info.startswith(prefix):
+                            suffix = path_info[len(prefix):]
+                            filename = werkzeug.security.safe_join(directory, suffix)
+                            _logger.info('SERVICE %s',filename)
+                            try:
+                                content = open(filename, "rb")
+                            except Exception:
+                                return werkzeug.exceptions.NotFound("File not found.\n")(environ, start_response)
+                            response = send_file(content) # Honor DisableCacheMiddleware
+                            return response(environ, start_response)
+
+                    # Serve dynamic
+                    db = request.session.db
+                    if db:
+                        try:
+                            odoo.registry(db).check_signaling()
+                            with odoo.tools.mute_logger('odoo.sql_db'):
+                                ir_http = request.registry['ir.http']
+                        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+                            # psycopg2 error or attribute error while constructing
+                            # the registry. That means either
+                            # - the database probably does not exists anymore
+                            # - the database is corrupted
+                            # - the database version doesnt match the server version
+                            # Log the user out and fall back to nodb
+                            request.session.logout()
+                            if request.httprequest.path == '/web':
+                                # TODO check
+                                # result = werkzeug.utils.redirect('/web/database/selector')
+                                # Internal Server Error
+                                raise
+                            else:
+                                # If requesting /web this will loop
+                                result = self.dispatch_nodb(request)
                         else:
-                            # If requesting /web this will loop
-                            result = self.dispatch_nodb(request)
+                            result = ir_http._dispatch()
                     else:
-                        result = ir_http._dispatch()
-                else:
-                    result = self.dispatch_nodb(request)
+                        result = self.dispatch_nodb(request)
 
+                    if not result:
+                        result = ''
 
-                #print('-'*80)
-                #print(httprequest, result)
-                response = self.get_response(httprequest, result)
-                #print(httprequest, response)
-                self.save_session(httprequest, response)
+                    response = self.get_response(httprequest, result)
+                    self.save_session(httprequest, response)
 
-
-            return response(environ, start_response)
+                    return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
 
-    def __call__(self, environ, start_response):
-        """ WSGI entry point.
-        """
-        # MOVE to dipatch own self fix WITH STATIC DAGTA
-        # FIXME: is checking for the presence of HTTP_X_FORWARDED_HOST really useful?
-        #        we're ignoring the user configuration, and that means we won't
-        #        support the standardised Forwarded header once werkzeug supports
-        #        it
-        dispatch = self.dispatch
-        if odoo.tools.config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
-            dispatch = ProxyFix(self.dispatch)
-        # Lazy load addons
-        if not self._loaded:
-            self._loaded = True
-            self.load_addons()
-
-        with odoo.api.Environment.manage():
-            result = dispatch(environ, start_response)
-            if result is not None:
-                return result
-
-        # We never returned from the loop.
-        return werkzeug.exceptions.NotFound("No handler found.\n")(environ, start_response)
 
 def db_list(force=False, httprequest=None):
     dbs = odoo.service.db.list_dbs(force)
@@ -1425,101 +1483,6 @@ def db_monodb(httprequest=None):
         return dbs[0]
     return None
 
-def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None, add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
-    """This is a modified version of Flask's send_file()
-
-    Sends the contents of a file to the client. This will use the
-    most efficient method available and configured.  By default it will
-    try to use the WSGI server's file_wrapper support.
-
-    By default it will try to guess the mimetype for you, but you can
-    also explicitly provide one.  For extra security you probably want
-    to send certain files as attachment (HTML for instance).  The mimetype
-    guessing requires a `filename` or an `attachment_filename` to be
-    provided.
-
-    Please never pass filenames to this function from user sources without
-    checking them first.
-
-    :param filepath_or_fp: the filename of the file to send.
-                           Alternatively a file object might be provided
-                           in which case `X-Sendfile` might not work and
-                           fall back to the traditional method.  Make sure
-                           that the file pointer is positioned at the start
-                           of data to send before calling :func:`send_file`.
-    :param mimetype: the mimetype of the file if provided, otherwise
-                     auto detection happens.
-    :param as_attachment: set to `True` if you want to send this file with
-                          a ``Content-Disposition: attachment`` header.
-    :param filename: the filename for the attachment if it differs from the file's filename or
-                     if using file object without 'name' attribute (eg: E-tags with StringIO).
-    :param mtime: last modification time to use for contitional response.
-    :param add_etags: set to `False` to disable attaching of etags.
-    :param conditional: set to `False` to disable conditional responses.
-
-    :param cache_timeout: the timeout in seconds for the headers.
-    """
-    if isinstance(filepath_or_fp, str):
-        if not filename:
-            filename = os.path.basename(filepath_or_fp)
-        file = open(filepath_or_fp, 'rb')
-        if not mtime:
-            mtime = os.path.getmtime(filepath_or_fp)
-    else:
-        file = filepath_or_fp
-        if not filename:
-            filename = getattr(file, 'name', None)
-
-    file.seek(0, 2)
-    size = file.tell()
-    file.seek(0)
-
-    if mimetype is None and filename:
-        mimetype = mimetypes.guess_type(filename)[0]
-    if mimetype is None:
-        mimetype = 'application/octet-stream'
-
-    headers = werkzeug.datastructures.Headers()
-    if as_attachment:
-        if filename is None:
-            raise TypeError('filename unavailable, required for sending as attachment')
-        headers.add('Content-Disposition', 'attachment', filename=filename)
-        headers['Content-Length'] = size
-
-    data = werkzeug.wsgi.wrap_file(request.httprequest.environ, file)
-    rv = Response(data, mimetype=mimetype, headers=headers, direct_passthrough=True)
-
-    if isinstance(mtime, str):
-        try:
-            server_format = odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            mtime = datetime.datetime.strptime(mtime.split('.')[0], server_format)
-        except Exception:
-            mtime = None
-    if mtime is not None:
-        rv.last_modified = mtime
-
-    rv.cache_control.public = True
-    if cache_timeout:
-        rv.cache_control.max_age = cache_timeout
-        rv.expires = int(time.time() + cache_timeout)
-
-    if add_etags and filename and mtime:
-        rv.set_etag('odoo-%s-%s-%s' % (
-            mtime,
-            size,
-            zlib.adler32(
-                filename.encode('utf-8') if isinstance(filename, str)
-                else filename
-            ) & 0xffffffff
-        ))
-        if conditional:
-            rv = rv.make_conditional(request.httprequest)
-            # make sure we don't send x-sendfile for servers that
-            # ignore the 304 status code for x-sendfile.
-            if rv.status_code == 304:
-                rv.headers.pop('x-sendfile', None)
-    return rv
-
 def content_disposition(filename):
     filename = odoo.tools.ustr(filename)
     escaped = werkzeug.urls.url_quote(filename, safe='')
@@ -1559,5 +1522,3 @@ def set_header_field(headers, name, value):
 
 #  main wsgi handler
 application = root = Root()
-
-#

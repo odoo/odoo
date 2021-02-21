@@ -102,6 +102,7 @@ class DriverController(http.Controller):
         Downloads the log file
         """
         if tools.config['logfile']:
-            res = send_file(tools.config['logfile'], mimetype="text/plain", as_attachment=True)
+            content = open(tools.config['logfile'],'rb')
+            res = send_file(content, mimetype="text/plain", as_attachment=True)
             res.headers['Cache-Control'] = 'no-cache'
             return res

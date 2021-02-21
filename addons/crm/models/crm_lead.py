@@ -619,6 +619,7 @@ class Lead(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
+        raise 1
         """ Override to support ordering on activity_date_deadline_my.
 
         Ordering through web client calls search_read with an order parameter set.
