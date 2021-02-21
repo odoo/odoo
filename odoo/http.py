@@ -377,7 +377,6 @@ class WebRequest(object):
     #------------------------------------------------------
     def _call_function(self, endpoint, *args, **kwargs):
         first_time = True
-
         # Correct exception handling and concurency retry
         @service_model.check
         def checked_call(___dbname, *a, **kw):
@@ -388,6 +387,7 @@ class WebRequest(object):
                 self._cr.rollback()
                 self.env.clear()
             first_time = False
+            _logger.info("CALLL function",stack_info=True)
             result = endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
@@ -673,10 +673,28 @@ class WebRequest(object):
                     _logger.warning("""No CSRF token provided for path '%s' https://www.odoo.com/documentation/13.0/reference/http.html#csrf for more details.""", request.httprequest.path)
                 raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
 
-        # Handle normal requests
+        # ignore undefined extra args (utm, debug, ...)
+        params_names = set(params)
+        for p in inspect.signature(endpoint).parameters.values():
+            if p.kind == inspect.Parameter.VAR_KEYWORD:
+                # **kwargs catchall is defined
+                break
+            elif p.kind in (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY):
+                params_names -= p.name
+        else:
+            ignored = ['<%s=%s>' % (name, params.pop(name)) for name in params_names]
+            _logger.debug("<function %s.%s> called ignoring args %s" % (endpoint.__module__, endpoint.__name__, ', '.join(ignored)))
+
         r = self._call_function(endpoint, **params)
         if not r:
             r = Response(status=204)  # no content
+        elif isinstance(r, (bytes, str)):
+            r = Response(response)
+        elif isinstance(r, werkzeug.exceptions.HTTPException):
+            r = r.get_response(request.httprequest.environ)
+        elif isinstance(r, werkzeug.wrappers.BaseResponse):
+            r = Response.force_type(r)
+            r.set_default()
         return r
 
     #------------------------------------------------------
@@ -829,7 +847,7 @@ def route(route=None, **kw):
 
     """
     routing = kw.copy()
-    assert 'type' not in routing or routing['type'] in ("http", "json")
+    assert routing.get('type','http') in ("http", "json")
     def decorator(f):
         if route:
             if isinstance(route, list):
@@ -837,40 +855,8 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
-
-        @functools.wraps(f)
-        def response_wrap(*args, **kw):
-            # if controller cannot be called with extra args (utm, debug, ...), call endpoint ignoring them
-            params = inspect.signature(f).parameters.values()
-            is_kwargs = lambda p: p.kind == inspect.Parameter.VAR_KEYWORD
-            if not any(is_kwargs(p) for p in params):  # missing **kw
-                is_keyword_compatible = lambda p: p.kind in (
-                    inspect.Parameter.POSITIONAL_OR_KEYWORD,
-                    inspect.Parameter.KEYWORD_ONLY)
-                fargs = {p.name for p in params if is_keyword_compatible(p)}
-                ignored = ['<%s=%s>' % (k, kw.pop(k)) for k in list(kw) if k not in fargs]
-                if ignored:
-                    _logger.info("<function %s.%s> called ignoring args %s" % (f.__module__, f.__name__, ', '.join(ignored)))
-
-            response = f(*args, **kw)
-            if isinstance(response, Response) or f.routing_type == 'json':
-                return response
-
-            if isinstance(response, (bytes, str)):
-                return Response(response)
-
-            if isinstance(response, werkzeug.exceptions.HTTPException):
-                response = response.get_response(request.httprequest.environ)
-            if isinstance(response, werkzeug.wrappers.BaseResponse):
-                response = Response.force_type(response)
-                response.set_default()
-                return response
-
-            _logger.warning("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
-            return response
-        response_wrap.routing = routing
-        response_wrap.original_func = f
-        return response_wrap
+        f.routing = routing
+        return f
     return decorator
 
 class ControllerType(type):
@@ -1302,11 +1288,6 @@ class Root(object):
         Performs the actual WSGI dispatching for the application.
         """
         try:
-
-
-
-
-
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
@@ -1360,6 +1341,7 @@ class Root(object):
                 else:
                     result = self.dispatch_nodb(request)
 
+
                 #print('-'*80)
                 #print(httprequest, result)
                 response = self.get_response(httprequest, result)
@@ -1373,12 +1355,12 @@ class Root(object):
             return e(environ, start_response)
 
     def __call__(self, environ, start_response):
+        """ WSGI entry point.
+        """
         # Lazy load addons
         if not self._loaded:
             self._loaded = True
             self.load_addons()
-        """ WSGI entry point.
-        """
 
         with odoo.api.Environment.manage():
             result = self.dispatch(environ, start_response)
