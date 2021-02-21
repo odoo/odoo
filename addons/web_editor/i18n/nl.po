@@ -3,19 +3,22 @@
 # 	* web_editor
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Cas Vissers <casvissers@brahoo.nl>, 2019
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Eric Geens <ericgeens@yahoo.com>, 2017
+# Martin Trigaux, 2021
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
+# Cas Vissers <casvissers@brahoo.nl>, 2021
+# Cécile Collart <cco@odoo.com>, 2021
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:28+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,24 +28,24 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "%d (Original)"
-msgstr "%d (Origineel)"
+msgid "%dpx (Original)"
+msgstr "%dpx (Origineel)"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "%d (Suggested)"
-msgstr "%d (Voorgesteld)"
+msgid "%dpx (Suggested)"
+msgstr "%dpx (Aanbevolen)"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/ace.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%spx"
+msgstr "%spx"
 
 #. module: web_editor
 #. openerp-web
@@ -84,7 +87,7 @@ msgstr "(TITLE Tag)"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "(URL or Embed)"
-msgstr "(URL of embedded)"
+msgstr "(URL of insluiten)"
 
 #. module: web_editor
 #. openerp-web
@@ -94,9 +97,24 @@ msgid "(YouTube, Vimeo, Vine, Instagram, DailyMotion or Youku)"
 msgstr "(YouTube, Vimeo, Vine, Instagram, DailyMotion of Youku)"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "1977"
+msgstr "1977"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "<i class=\"fa fa-warning\"/> External Image"
+msgstr "<i class=\"fa fa-warning\"/> Externe afbeelding"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "<i class=\"fa fa-th-large\"/> First Panel"
-msgstr "<i class=\"fa fa-th-large\"/> Eerste paneel"
+msgid "<span>Blocks</span>"
+msgstr "<span>Blokken</span>"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "<span>Style</span>"
+msgstr "<span>Stijl</span>"
 
 #. module: web_editor
 #. openerp-web
@@ -132,6 +150,13 @@ msgstr "Toevoegen"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Add URL"
+msgstr "URL Toevoegen"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media.js:0
 #, python-format
 msgid "Add as document"
@@ -155,10 +180,19 @@ msgstr "Document toevoegen"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media.js:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Add image"
 msgstr "Afbeelding toevoegen"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Aden"
+msgstr "Aden"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Airy & Zigs"
+msgstr "Luchtig & Zigs"
 
 #. module: web_editor
 #. openerp-web
@@ -183,6 +217,13 @@ msgstr "Rechts uitlijnen"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "All"
+msgstr "Alle"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "All SCSS Files"
@@ -194,6 +235,24 @@ msgstr "Alle SCSS bestanden"
 #, python-format
 msgid "All images have been loaded"
 msgstr "Alle afbeeldingen zijn geladen"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Apply"
+msgstr "Toepassen"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid ""
+"Are you sure you want to delete the snippet: ${$snippet.attr('name')} ?"
+msgstr ""
+"Weet u zeker dat u deze snippet wilt verwijderen: ${$snippet.attr('name')} ?"
 
 #. module: web_editor
 #. openerp-web
@@ -215,13 +274,6 @@ msgid "Assets Utils"
 msgstr "Asset tools"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Assign a focal point that will always be visible"
-msgstr "Wijs een focuspunt toe dat altijd zichtbaar is"
-
-#. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_attachment
 msgid "Attachment"
 msgstr "Bijlage"
@@ -235,8 +287,20 @@ msgstr "Bijlage URL"
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
+msgid "Autoconvert to relative link"
+msgstr "Automatisch omvormen naar relatieve link"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
 msgid "Autoplay"
 msgstr "Automatisch afspelen"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Background"
+msgstr "Achtergrond"
 
 #. module: web_editor
 #. openerp-web
@@ -246,65 +310,67 @@ msgid "Background Color"
 msgstr "Achtergrondkleur"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Background Image Sizing"
-msgstr "Achtergrondafbeelding schalen"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background height"
-msgstr "Achtergrond hoogte"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background position"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Background Position"
 msgstr "Achtergrond positie"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background repeat"
-msgstr "Achtergrond herhalen"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background size"
-msgstr "Achtergrond grootte"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background width"
-msgstr "Achtergrond breedte"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Blobs"
+msgstr "Bobbels"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Block"
-msgstr "Blok"
+msgstr "Blokkeer"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "Blocks"
-msgstr "Blokken"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Blocks & Rainy"
+msgstr "Blokken & regenachtig"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Blur"
+msgstr "Vervagen"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 #, python-format
 msgid "Bold"
 msgstr "Vet"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Brannan"
+msgstr "Brannan"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Brightness"
+msgstr "Helderheid"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Button"
+msgstr "Knop"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: web_editor
 #. openerp-web
@@ -351,7 +417,7 @@ msgstr "Klik in de pagina om ze te personaliseren"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
+#: code:addons/web_editor/static/src/xml/ace.xml:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Close"
@@ -372,9 +438,8 @@ msgid "Code View"
 msgstr "Code weergave"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_color_widget
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Color"
 msgstr "Kleur"
 
@@ -387,7 +452,13 @@ msgstr "Kolom"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Combinations"
+msgstr "Conbinaties"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg_colorpicker.xml:0
 #, python-format
 msgid "Common colors"
@@ -395,10 +466,22 @@ msgstr "Algemene kleuren"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Contain"
-msgstr "Container"
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "Bevestiging"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Contrast"
+msgstr "Contrast"
 
 #. module: web_editor
 #. openerp-web
@@ -409,8 +492,13 @@ msgstr "Kopieer uw URL of uw insluitcode hier"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
+msgid "Could not install module <strong>%s</strong>"
+msgstr "Kan module niet installeren <strong>%s</strong>"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Cover"
 msgstr "Omslag"
 
@@ -427,17 +515,25 @@ msgstr "Aangemaakt op"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
 #, python-format
 msgid "Crop Image"
-msgstr "Crop afbeelding"
+msgstr "Afbeelding bijsnijden"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
 #, python-format
 msgid "Custom"
 msgstr "Aangepast"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Custom %s"
+msgstr "Aangepast %s"
 
 #. module: web_editor
 #. openerp-web
@@ -455,7 +551,7 @@ msgstr "Dailymotion"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/summernote.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/root.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Default"
@@ -463,10 +559,17 @@ msgstr "Standaard"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
-msgid "Define if/how the background image will be repeated"
-msgstr "Definieer of en hoe de achtergrond afbeelding herhaald moet worden"
+msgid "Default + Rounded"
+msgstr "Standaard + afgerond"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Delete %s"
+msgstr "Verwijderen %s"
 
 #. module: web_editor
 #. openerp-web
@@ -478,18 +581,46 @@ msgstr "Omschrijving"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/dialog.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Discard"
 msgstr "Negeren"
 
 #. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_http__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_contact__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_date__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_datetime__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_duration__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_float__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_html__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_integer__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_many2one__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_monetary__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_qweb__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_relative__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_selection__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_text__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_translation__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_assets__display_name
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Do you want to install the %s App?"
+msgstr "Wilt u de app %s installeren?"
 
 #. module: web_editor
 #. openerp-web
@@ -522,9 +653,27 @@ msgstr "Sleep een afbeelding naar hier"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Duplicate Container"
 msgstr "Dupliceer container"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Dynamic Colors"
+msgstr "Dynamische kleuren"
+
+#. module: web_editor
+#: code:addons/web_editor/controllers/main.py:0
+#, python-format
+msgid "ERROR: couldn't get download urls from media library."
+msgstr "FOUT: kan geen download-URL's ophalen uit mediabibliotheek."
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "EarlyBird"
+msgstr "Vroege vogel"
 
 #. module: web_editor
 #. openerp-web
@@ -532,7 +681,24 @@ msgstr "Dupliceer container"
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Wijzigen"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Edit image"
+msgstr "Afbeelding bewerken"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/ace.xml:0
+#, python-format
+msgid ""
+"Editing a built-in file through this editor is not advised, as it will "
+"prevent it from being updated during future App upgrades."
+msgstr ""
+"Het bewerken van een ingebouwd bestand via deze editor wordt niet "
+"aangeraden, omdat dit voorkomt dat deze wordt ge-update tijdens toekomstige "
+"app-upgrades."
 
 #. module: web_editor
 #. openerp-web
@@ -550,11 +716,32 @@ msgstr "Bestand / Afbeelding"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Fill"
+msgstr "Vullen"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Fill + Rounded"
+msgstr "Vullen + afgerond"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Filter"
 msgstr "Filter"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "First Panel"
+msgstr "Eerste paneel"
 
 #. module: web_editor
 #. openerp-web
@@ -562,6 +749,13 @@ msgstr "Filter"
 #, python-format
 msgid "Flat"
 msgstr "Vast"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
+#, python-format
+msgid "Flexible"
+msgstr "Flexibel"
 
 #. module: web_editor
 #. openerp-web
@@ -624,14 +818,7 @@ msgstr "Lettertype grootte"
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Format"
-msgstr "Formatteer"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
-#, python-format
-msgid "Free"
-msgstr "Gratis"
+msgstr "Inspringen"
 
 #. module: web_editor
 #. openerp-web
@@ -646,6 +833,17 @@ msgstr "Volledig scherm"
 #, python-format
 msgid "Fullscreen"
 msgstr "Volledig scherm"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid ""
+"Get the perfect image by searching in our library of copyright free photos "
+"and illustrations."
+msgstr ""
+"Krijg de perfecte afbeelding door te zoeken in onze bibliotheek met "
+"auteursrechtvrije foto's en illustraties."
 
 #. module: web_editor
 #. openerp-web
@@ -754,19 +952,32 @@ msgstr "Verberg deel knop"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Horizontal"
-msgstr "Horizontaal"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/backend/field_html.js:0
 #, python-format
 msgid "Html"
 msgstr "HTML"
 
 #. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_http__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_contact__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_date__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_datetime__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_duration__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_float__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_html__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_integer__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_many2one__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_monetary__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_qweb__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_relative__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_selection__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_text__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_translation__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_assets__id
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__id
 msgid "ID"
@@ -777,20 +988,12 @@ msgstr "ID"
 #: code:addons/web_editor/static/src/js/editor/editor.js:0
 #, python-format
 msgid ""
-"If you discard the current edition, all unsaved changes will be lost. You "
-"can cancel to return to the edition mode."
+"If you discard the current edits, all unsaved changes will be lost. You can "
+"cancel to return to edit mode."
 msgstr ""
-"Indien u de huidige versie weggooit zullen alle niet bewaarde wijzigingen "
-"verloren gaan. U kan dit annuleren om terug te gaan naar de wijzig modus."
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-#, python-format
-msgid ""
-"If you edit and save this file, you will never receive updates from Odoo "
-"anymore unless you reset your customizations."
-msgstr ""
+"Als u de huidige bewerkingen verwijdert, gaan alle niet-opgeslagen "
+"wijzigingen verloren. U kunt annuleren om terug te keren naar de "
+"bewerkingsmodus."
 
 #. module: web_editor
 #. openerp-web
@@ -800,23 +1003,21 @@ msgid ""
 "If you reset this file, all your customizations will be lost as it will be "
 "reverted to the default file."
 msgstr ""
-"Indien u dit bestand reset, gaan al uw aanpassingen verloren aangezien het "
+"Indien u dit bestand reset, gaan al uw aanpassingen verloren omdat deze "
 "wordt gereset naar het standaard bestand."
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
-msgid ""
-"If you want to crop it, please first download it from the original source "
-"and upload it in Odoo."
-msgstr ""
-"Als u wilt bijsnijden, download dan eerst het originele bronbestand en "
-"upload het in Odoo."
+msgid "Illustrations"
+msgstr "Illustraties"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 #, python-format
 msgid "Image"
 msgstr "Afbeelding"
@@ -852,17 +1053,15 @@ msgstr "Breedte afbeelding"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
-#, python-format
-msgid "Improve your Image"
-msgstr "Verbeter uw afbeelding"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Indent"
 msgstr "Inspringen"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Inkwell"
+msgstr "Inktpot"
 
 #. module: web_editor
 #. openerp-web
@@ -894,17 +1093,31 @@ msgstr "Video invoegen"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Instagram"
-msgstr "Instagram"
+msgid "Install"
+msgstr "Installeren"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Install"
-msgstr "Installeren"
+msgid "Install %s"
+msgstr "Installeer %s"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Install in progress"
+msgstr "Installatie in behandeling"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Invisible Elements"
+msgstr "Onzichtbare elementen"
 
 #. module: web_editor
 #. openerp-web
@@ -936,13 +1149,6 @@ msgstr "Rechtvaardig vol"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
-#, python-format
-msgid "Keep Original"
-msgstr "Bewaar origineel"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Keyboard shortcuts"
@@ -957,6 +1163,26 @@ msgid "Large"
 msgstr "Groot"
 
 #. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_http____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_contact____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_date____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_datetime____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_duration____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_float____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_html____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_image____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_integer____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_many2one____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_monetary____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_qweb____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_relative____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_selection____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_text____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_translation____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_ui_view____last_update
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_assets____last_update
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub____last_update
 msgid "Last Modified on"
@@ -982,6 +1208,7 @@ msgstr "Lijnhoogte"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
 #, python-format
 msgid "Link"
 msgstr "Link"
@@ -1015,12 +1242,31 @@ msgid "Loop"
 msgstr "Loop"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Maven"
+msgstr "Maven"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Medium"
-msgstr "Gemiddeld"
+msgstr "Kanaal"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "More info about this app."
+msgstr "Meer info over deze app."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "My Images"
+msgstr "Mijn afbeeldingen"
 
 #. module: web_editor
 #. openerp-web
@@ -1029,6 +1275,13 @@ msgstr "Gemiddeld"
 #, python-format
 msgid "Name"
 msgstr "Naam"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "No"
+msgstr "Nee"
 
 #. module: web_editor
 #. openerp-web
@@ -1046,16 +1299,17 @@ msgstr "Geen afbeeldingen gevonden."
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "No repeat"
-msgstr "Niet herhalen"
+msgid "No location to drop in"
+msgstr "Geen locatie om in te plaatsen"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "None"
 msgstr "Geen"
@@ -1063,16 +1317,10 @@ msgstr "Geen"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Normal"
 msgstr "Normaal"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Ok"
-msgstr "Ok"
 
 #. module: web_editor
 #. openerp-web
@@ -1105,17 +1353,17 @@ msgstr "Open in nieuw venster"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Optimize"
 msgstr "Optimaliseren"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "Options"
-msgstr "Opties"
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Optimized"
+msgstr "Geoptimaliseerd"
 
 #. module: web_editor
 #. openerp-web
@@ -1130,6 +1378,16 @@ msgstr "Of kies een voorinstelling:"
 #, python-format
 msgid "Ordered list"
 msgstr "Geordende lijst"
+
+#. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__original_id
+msgid "Original (unoptimized, unresized) attachment"
+msgstr "Originele (niet geoptimaliseerd, grootte niet aangepast) bijlage"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Origins"
+msgstr "Orginelen"
 
 #. module: web_editor
 #. openerp-web
@@ -1149,15 +1407,15 @@ msgstr "Uitlijning"
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
-msgid "Outline-Rounded"
-msgstr "Afgeronde uitlijning"
+msgid "Outline + Rounded"
+msgstr "Omtrek + afgerond"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Padding"
-msgstr "Padding"
+msgstr "Buffer"
 
 #. module: web_editor
 #. openerp-web
@@ -1186,24 +1444,51 @@ msgstr "Pictogram"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Preview"
 msgstr "Voorbeeld"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
+#, python-format
+msgid "Primary"
+msgstr "Primair"
+
+#. module: web_editor
+#: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__c
+msgid "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
+msgstr "Wat is die pannenkoek, tabernakel aan het doen?"
+
+#. module: web_editor
+#: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__a
+msgid "Qu'il n'est pas arrivé à Toronto"
+msgstr "Dat hij niet in Toronto is aangekomen"
+
+#. module: web_editor
+#: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__b
+msgid "Qu'il était supposé arriver à Toronto"
+msgstr "Dat hij in Toronto zou aankomen"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Quality"
 msgstr "Kwaliteit"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Quick Upload"
-msgstr "Snel upload"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid ""
+"Quality options are unavailable for external images. If you want to change "
+"this image's quality, please first download it from the original source and "
+"upload it in Odoo."
+msgstr ""
+"Kwaliteitsopties zijn niet beschikbaar voor externe afbeeldingen. Als u de "
+"kwaliteit van deze afbeelding wilt veranderen, download deze dan eerst van "
+"de originele bron en upload deze in Odoo."
 
 #. module: web_editor
 #. openerp-web
@@ -1325,14 +1610,15 @@ msgstr "Reduceer de grootte zoveel mogelijk om de performantie te verhogen."
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Remove"
-msgstr "Verwijderen"
+msgstr "Verwijder"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Remove Block"
-msgstr "Verwijder blokkering"
+msgstr "Verwijder blok"
 
 #. module: web_editor
 #. openerp-web
@@ -1350,35 +1636,27 @@ msgstr "Verwijder afbeelding"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Repeat"
-msgstr "Herhaal"
+msgid "Rename %s"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Repeat pattern"
+msgstr "Herhaal patroon"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "Repeat both"
-msgstr "Beide herhalen"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Repeat x"
-msgstr "Herhaal x"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Repeat y"
-msgstr "Herhaal y"
+msgid "Replace"
+msgstr "Vervangen"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Reset"
 msgstr "Reset"
@@ -1386,17 +1664,10 @@ msgstr "Reset"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Reset Image"
 msgstr "Reset afbeelding"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#, python-format
-msgid "Reset to default"
-msgstr "Terugzetten naar standaard"
 
 #. module: web_editor
 #. openerp-web
@@ -1449,13 +1720,6 @@ msgstr "Roteer rechts"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Rounded"
-msgstr "Afgerond"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "SCSS (CSS)"
@@ -1469,8 +1733,12 @@ msgid "SCSS file: %s"
 msgstr "SCSS bestand: %s"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Saturation"
+msgstr "Verzadiging"
+
+#. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/dialog.js:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
@@ -1479,7 +1747,23 @@ msgstr "Opslaan"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Save and Install"
+msgstr "Opslaan en installeren"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Save and Reload"
+msgstr "Opslaan en opnieuw laden"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Search"
@@ -1487,6 +1771,7 @@ msgstr "Zoek"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Search Contact"
@@ -1514,6 +1799,18 @@ msgid "Search an image"
 msgstr "Zoek een afbeelding"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "Search..."
+msgstr "Zoek..."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
+#, python-format
+msgid "Secondary"
+msgstr "Ten tweede"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media_dialog.js:0
 #, python-format
@@ -1528,29 +1825,16 @@ msgid "Select from files"
 msgstr "Selecteer van bestanden"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Sepia"
+msgstr "Sepia"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/common/ace.js:0
 #, python-format
 msgid "Server error"
 msgstr "Server fout"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Set the starting position of the background image."
-msgstr "Stel de startpositie van de achtergrondafbeelding in."
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid ""
-"Sets the width and height of the background image in percent of the parent "
-"element."
-msgstr ""
-"Stelt de breedte en hoogte van de achtergrondafbeelding in in percentage van"
-" het bovenliggende element."
 
 #. module: web_editor
 #. openerp-web
@@ -1560,7 +1844,20 @@ msgid "Shadow"
 msgstr "Schaduw"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Shape"
+msgstr "Vorm"
+
+#. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Show optimized images"
+msgstr "Toon geoptimaliseerde afbeeldingen"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
@@ -1596,7 +1893,7 @@ msgstr "Doorstrepen"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Style"
-msgstr "Stijl"
+msgstr "Opmaak"
 
 #. module: web_editor
 #. openerp-web
@@ -1604,6 +1901,13 @@ msgstr "Stijl"
 #, python-format
 msgid "Subscript"
 msgstr "Onderschrift"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Suggestions"
+msgstr "Suggesties"
 
 #. module: web_editor
 #. openerp-web
@@ -1617,7 +1921,7 @@ msgstr "Superscript"
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Table"
-msgstr "Tafel"
+msgstr "Tabel"
 
 #. module: web_editor
 #. openerp-web
@@ -1625,6 +1929,13 @@ msgstr "Tafel"
 #, python-format
 msgid "Template ID: %s"
 msgstr "Sjabloon ID: %s"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Text"
+msgstr "Tekst"
 
 #. module: web_editor
 #. openerp-web
@@ -1684,7 +1995,7 @@ msgid ""
 "               following pages or views:"
 msgstr ""
 "De afbeelding kan niet worden verwijderd omdat het wordt gebruikt in de \n"
-"volgende pagina's of weergaven:"
+"                volgende pagina's of weergaven:"
 
 #. module: web_editor
 #. openerp-web
@@ -1702,11 +2013,17 @@ msgstr "De aangeboden url is niet correct"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg_colorpicker.xml:0
 #, python-format
 msgid "Theme colors"
 msgstr "Thema kleuren"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "This block is outdated"
+msgstr "Dit blok is verouderd"
 
 #. module: web_editor
 #. openerp-web
@@ -1731,7 +2048,7 @@ msgstr "Dit bestand is gekoppeld aan het huidige record."
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
 #, python-format
 msgid "This image is an external image"
 msgstr "Deze afbeelding is een externe afbeelding"
@@ -1745,10 +2062,53 @@ msgstr "Dit verminderd de kwaliteit om de performantie te verhogen."
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
 #, python-format
-msgid "This type of image is not supported for cropping."
-msgstr "Dit soort afbeelding is niet ondersteund om te croppen."
+msgid ""
+"This type of image is not supported for cropping.<br/>If you want to crop "
+"it, please first download it from the original source and upload it in Odoo."
+msgstr ""
+"Dit type afbeelding wordt niet ondersteund voor bijsnijden.<br/> Als u het "
+"wilt bijsnijden, download het dan eerst van de originele bron en upload het "
+"in Odoo."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Title"
+msgstr "Titel"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"To apply this change, we need to save all your previous modifications and "
+"reload the page."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid ""
+"To make changes, drop this block and use the new options in the last "
+"version."
+msgstr ""
+"Om wijzigingen aan te brengen, verwijdert u dit blok en gebruikt u de nieuwe"
+" opties in de laatste versie."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"To save a snippet, we need to save all your previous modifications and "
+"reload the page."
+msgstr ""
+"Om een fragment op te slaan, moeten we al je eerdere wijzigingen opslaan en "
+"de pagina opnieuw laden."
 
 #. module: web_editor
 #. openerp-web
@@ -1756,6 +2116,11 @@ msgstr "Dit soort afbeelding is niet ondersteund om te croppen."
 #, python-format
 msgid "To what URL should this link go?"
 msgstr "Naar welke URL moet deze link gaan?"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Toaster"
+msgstr "Toaster"
 
 #. module: web_editor
 #. openerp-web
@@ -1766,6 +2131,7 @@ msgstr "Tooltip"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/backend.xml:0
 #: code:addons/web_editor/static/src/xml/backend.xml:0
 #, python-format
 msgid "Translate"
@@ -1794,6 +2160,13 @@ msgstr "Transparante kleuren"
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
+msgid "Type"
+msgstr "Soort"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
 msgid "URL or Email"
 msgstr "URL of e-mail"
 
@@ -1802,7 +2175,7 @@ msgstr "URL of e-mail"
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Underline"
-msgstr "Onderlij"
+msgstr "Onderstrepen"
 
 #. module: web_editor
 #. openerp-web
@@ -1847,11 +2220,9 @@ msgid "Upload an image"
 msgstr "Upload een afbeelding"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Vertical"
-msgstr "Vertikaal"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Valencia"
+msgstr "Valencia"
 
 #. module: web_editor
 #. openerp-web
@@ -1893,7 +2264,7 @@ msgstr ""
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_ui_view
 msgid "View"
-msgstr "Bekijk"
+msgstr "Weergave"
 
 #. module: web_editor
 #. openerp-web
@@ -1910,11 +2281,14 @@ msgid "Vimeo"
 msgstr "Vimeo"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Vine.co"
-msgstr "Vine.co"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Walden"
+msgstr "Walden"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Wavy"
+msgstr "Wavy"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_web_editor_converter_test_sub
@@ -1929,6 +2303,7 @@ msgstr "Web Editor Converter Test"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Width"
 msgstr "Breedte"
@@ -1946,7 +2321,19 @@ msgstr "XML (HTML)"
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Xl"
-msgstr "Xl"
+msgstr "X-Groot"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Xpro"
+msgstr "Xpro"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Yes"
+msgstr "Ja"
 
 #. module: web_editor
 #. openerp-web
@@ -1956,6 +2343,7 @@ msgid ""
 "You can upload documents with the button located in the top left of the "
 "screen."
 msgstr ""
+"U kan documenten uploaden met de knop in de rechterbovenhoek van het scherm."
 
 #. module: web_editor
 #. openerp-web
@@ -1964,14 +2352,8 @@ msgstr ""
 msgid ""
 "You can upload images with the button located in the top left of the screen."
 msgstr ""
-
-#. module: web_editor
-#: code:addons/web_editor/controllers/main.py:0
-#, python-format
-msgid ""
-"You cannot change the quality, the width or the name of an URL attachment."
-msgstr ""
-"U kan de kwaliteit, breedte of de naam van een URL bijlage niet wijzigen."
+"U kan afbeeldingen uploaden met de knop in de rechterbovenhoek van het "
+"scherm."
 
 #. module: web_editor
 #: code:addons/web_editor/controllers/main.py:0
@@ -2008,6 +2390,11 @@ msgid "Zoom Out"
 msgstr "Uitzoomen"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "add"
+msgstr "toevoegen"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
@@ -2015,14 +2402,19 @@ msgid "and"
 msgstr "en"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "auto"
 msgstr "auto"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "darken"
+msgstr "donker maken"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "exclusion"
+msgstr "uitsluiten"
 
 #. module: web_editor
 #. openerp-web
@@ -2039,6 +2431,21 @@ msgid "https://www.odoo.com/mydocument"
 msgstr "https://www.odoo.com/mijndocument"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "lighten"
+msgstr "lichter maken"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "multiply"
+msgstr "vermenigvuldiger"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "overlay"
+msgstr "overlay"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
@@ -2047,8 +2454,58 @@ msgid "px"
 msgstr "px"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "screen"
+msgstr "scherm"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "videos"
 msgstr "videos"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Color filter"
+msgstr "⌙ Kleurfilter"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Colors"
+msgstr "⌙ Kleuren"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Dyn. Colors"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Flip"
+msgstr "⌙ Flip"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Height"
+msgstr "⌙ Hoogte"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Image"
+msgstr "⌙ Afbeelding"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Position"
+msgstr "⌙ Positie"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Shape"
+msgstr "⌙ Vorm"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Width"
+msgstr "⌙ Breedte"

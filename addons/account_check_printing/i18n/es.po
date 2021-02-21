@@ -3,19 +3,32 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Cristian Salamea <ovnicraft@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
-# Massiel Acuna <mac@odoo.com>, 2019
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Angel Moya - PESOL <angel.moya@pesol.es>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Raquel Iciarte <ric@odoo.com>, 2017
+# Gustavo Valverde, 2017
+# Alejandro Die Sanchis <marketing@domatix.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Antonio Trueba, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2019
+# Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
+# Martin Trigaux, 2020
+# Juan Pablo Mora <jpm@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Juan Pablo Mora <jpm@odoo.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,22 +41,6 @@ msgstr ""
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Secuencia de numeración de cheques"
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid "A check memo cannot exceed 60 characters."
-msgstr "El memorándum del cheque no puede exceder los 60 caracteres."
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "Plantilla de Plan de Cuentas"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
-msgid "Account Reconciliation widget"
-msgstr "Widget de reconciliación de cuenta"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -79,7 +76,7 @@ msgstr "Disposición del cheque"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr ""
+msgstr "Verificar margen izquierdo"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
@@ -99,7 +96,7 @@ msgstr "Comprueba la impresión del método de pago seleccionado"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr ""
+msgstr "Verificar margen derecho"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
@@ -110,7 +107,13 @@ msgstr "Secuencia de los cheques"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr ""
+msgstr "Comprobar margen superior"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Check numbers can only consist of digits"
+msgstr "Números de cheque solo pueden consistir de digitos"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -126,7 +129,7 @@ msgstr "Cheque a imprimir"
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Revisiones"
+msgstr "Cheques"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -151,14 +154,14 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
-msgid "Company Country code"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
 msgstr "Opciones de Configuración"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -171,12 +174,31 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_move__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Ir al panel de configuración"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_move__id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -196,7 +218,18 @@ msgid "Journal"
 msgstr "Diario"
 
 #. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal____last_update
+#: model:ir.model.fields,field_description:account_check_printing.field_account_move____last_update
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
+#: model:ir.model.fields,field_description:account_check_printing.field_res_company____last_update
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
@@ -217,6 +250,21 @@ msgid "Manual Numbering"
 msgstr "Numeración manual"
 
 #. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+msgstr ""
+"Manual: Reciba pagos en efectivo, cheque o cualquier otro método fuera de Odoo.\n"
+"Electrónico: Reciba el pago automáticamente a través de un medio de pagos solicitando una transacción de una tarjeta guardada por el cliente al comprar o suscribirse en línea (token de pago).\n"
+"Cheque: Pague una factura con un cheque e imprímalo desde Odoo.\n"
+"Remesa: Agrupe varios cheques de clientes a la vez generando una remesa para enviar a su banco. Al codificar los estados de cuenta en Odoo, se sugiere conciliar la transacción con la remesa. Para habilitar la remesa, el módulo account_batch_payment (enterprise) debe estar instalado.\n"
+"Transferencia de crédito SEPA: Pague la factura de un archivo de transferencia de crédito SEPA que envíe a su banco. Para habilitar la transferencia de crédito SEPA, el módulo account_sepa (enterprise) debe estar instalado."
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
@@ -233,12 +281,19 @@ msgstr "Nº del próximo cheque"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "El siguiente número de verificación solo debe contener números."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
 msgid "None"
 msgstr "Ninguno"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
+msgid "Payment Method"
+msgstr "Método de pago"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -263,6 +318,22 @@ msgid ""
 msgstr "Por favor, introduzca el número del siguiente cheque pre-impreso."
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
+msgid "Preferred Payment Method"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
+msgid ""
+"Preferred payment method when paying this vendor. This is used to filter "
+"vendor bills by preferred payment method to register payments in mass. Use "
+"cases: create bank files for batch wires, check runs."
+msgstr ""
+
+#. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Print"
 msgstr "Imprimir"
@@ -281,7 +352,7 @@ msgstr "Imprimir cheques"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr ""
+msgstr "Imprimir etiqueta de fecha"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -292,19 +363,9 @@ msgid "Print Pre-numbered Checks"
 msgstr "Imprimir cheques pre-numerados"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_payment_register
-msgid "Register Payment"
-msgstr "Registrar pago"
-
-#. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Reset Amount in Words"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr ""
+msgstr "Margen derecho"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -317,9 +378,22 @@ msgstr ""
 "Para desactivar la función de impresión, seleccione 'Ninguno'."
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Sent"
+msgstr "Enviado"
+
+#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
 msgstr "Número de secuencia del próximo cheque impreso."
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid ""
+"Something went wrong with Check Layout, please select another layout in "
+"Invoicing/Accounting Settings and try again."
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -331,13 +405,12 @@ msgstr ""
 "método de pago."
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
 msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
+"The following numbers are already used:\n"
+"%s"
 msgstr ""
-"EL código ISO del país en dos caracteres.\n"
-"Puede utilizar este campo para la búsqueda rápida."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -374,7 +447,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid ""
-"This option allows you to print the date label on the check as per CPA. "
+"This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
 
@@ -391,24 +464,14 @@ msgid "Unmark Sent"
 msgstr "Desmarcar enviados"
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Void Check"
+msgstr ""
+
+#. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"You have to choose a check layout. For this, go in Apps, search for 'Checks "
-"layout' and install one."
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
-msgid "check in middle"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
-msgid "check on bottom"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
-msgid "check on top"
+"You have to choose a check layout. For this, go in Invoicing/Accounting "
+"Settings, search for 'Checks layout' and set one."
 msgstr ""

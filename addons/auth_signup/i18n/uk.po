@@ -3,16 +3,21 @@
 # 	* auth_signup
 # 
 # Translators:
+# Roman Kozlovskyi <krzroman@gmail.com>, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2018
 # Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +39,11 @@ msgstr ""
 #, python-format
 msgid "%s connected"
 msgstr "%s підключено"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
+msgid "<i title=\"Close\" class=\"small fa fa-times\"/>"
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -348,8 +358,11 @@ msgid ""
 "                            </a>\n"
 "                        </div>\n"
 "                        If you do not expect this, you can safely ignore this email.<br/><br/>\n"
-"                        Thanks,<br/>\n"
-"                        ${user.signature | safe}<br/>\n"
+"                        Thanks,\n"
+"                        % if user.signature:\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -509,12 +522,15 @@ msgid ""
 "                        Your login is <strong>${object.email}</strong><br/>\n"
 "                        To gain access to your account, you can use the following link:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a href=\"/web/login?${ctx['auth_login']}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a href=\"/web/login?auth_login=${object.email}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        Thanks,<br/><br/>\n"
-"                        ${user.signature | safe}<br/>\n"
+"                        Thanks,<br/>\n"
+"                        % if user.signature:\n"
+"                            <br/>\n"
+"                            ${user.signature | safe}\n"
+"                        % endif\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -725,6 +741,14 @@ msgid "Default Access Rights"
 msgstr "Права доступу за замовчуванням"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
+msgid "Display Name"
+msgstr "Відобразити назву"
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
 msgstr "Не маєте облікового запису?"
@@ -746,10 +770,26 @@ msgid "HTTP Routing"
 msgstr "Маршрутизація HTTP"
 
 #. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
 msgstr "Невірний вхід токену"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_ir_http____last_update
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner____last_update
+#: model:ir.model.fields,field_description:auth_signup.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни на"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -810,14 +850,15 @@ msgid "Reset password: invalid username or email"
 msgstr "Скидання паролю: невірне ім’я чи ел. пошта"
 
 #. module: auth_signup
+#: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid "Send Reset Password Instructions"
-msgstr "Відправити інструкції по скиданню паролю"
+msgid "Send Password Reset Instructions"
+msgstr "Надіслати інструкцію зі скидання паролю"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Відправити лист із запрошенням"
+msgstr "Відправили лист із запрошенням"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -834,19 +875,19 @@ msgstr "Протермінування реєстрації"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr "Токен реєстрації"
+msgstr "Талон реєстрації"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Тип токену реєстрації"
+msgstr "Тип талону реєстрації"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
-msgstr "Токен реєстрації є вірним"
+msgstr "Талон реєстрації є вірним"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
@@ -864,13 +905,13 @@ msgstr "Реєстрація незапрошених користувачів �
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr "Токен реєстрації '%s' вже не є вірним"
+msgstr "Талон реєстрації '%s' вже не є вірним"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr "Токен реєстрації '%s' не є вірним"
+msgstr "Талон реєстрації '%s' не є вірним"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -909,8 +950,8 @@ msgstr "Форма не була належним чином заповнена.
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
-msgid "This is his first connection. Wish him welcome"
-msgstr "Це його перше з'єднання. Привітайте його"
+msgid "This is their first connection. Wish them luck."
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -941,10 +982,16 @@ msgid "Welcome to ${object.company_id.name}!"
 msgstr "Вітаємо в ${object.company_id.name}!"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "You cannot perform this action on an archived user."
+msgstr "Ви не можете виконати цю дію на архівованому користувачі."
+
+#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Ваша ел. пошта"
+msgstr "Ваша електронна пошта"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

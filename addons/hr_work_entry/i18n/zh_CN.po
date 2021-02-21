@@ -3,29 +3,35 @@
 # 	* hr_work_entry
 # 
 # Translators:
-# Jeanphy <hzh0292@qq.com>, 2019
-# Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
-# Lisa Zhang <lzh@odoo.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
+# Lisa Zhang <lzh@odoo.com>, 2019
+# Jerry Pan <panjianyu@inspur.com>, 2019
+# v2exerer <9010446@qq.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Martin Trigaux, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2019-12-16 11:04+0000\n"
+"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_work_entry
+#: code:addons/hr_work_entry/models/hr_employee.py:0
+#, python-format
+msgid "%s work entries"
+msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -40,10 +46,16 @@ msgid "Active"
 msgstr "有效"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Archived"
 msgstr "已归档"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
+msgid "Attendance"
+msgstr "出勤"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
@@ -70,11 +82,6 @@ msgstr "颜色"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
 msgid "Company"
 msgstr "公司"
-
-#. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__confirmed
-msgid "Confirmed"
-msgstr "已确认"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
@@ -107,13 +114,27 @@ msgstr "创建时间"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Current Month"
+msgstr "当前月份"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Date"
 msgstr "日期"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Department"
+msgstr "部门"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -128,6 +149,7 @@ msgid "Dropdown menu"
 msgstr "下拉菜单"
 
 #. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_employee
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -137,7 +159,7 @@ msgstr "员工"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
 msgid "From"
-msgstr "来自"
+msgstr "始于"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
@@ -150,9 +172,12 @@ msgid "HR Work Entry Type"
 msgstr "人力资源工作类型"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
@@ -164,9 +189,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type____last_update
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance____last_update
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves____last_update
 msgid "Last Modified on"
 msgstr "最后更改日"
 
@@ -190,15 +218,15 @@ msgid "Me"
 msgstr "我"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "My Entries"
-msgstr "我的分录"
-
-#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
 msgid "Name"
 msgstr "名称"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Note: Validated work entries cannot be modified."
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
@@ -234,6 +262,11 @@ msgid "Solve conflicts first"
 msgstr ""
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Start Date"
+msgstr "开始日期"
+
+#. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
 msgid "Starting time should be before end time."
 msgstr ""
@@ -241,7 +274,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
 msgid "State"
-msgstr "状态"
+msgstr "州/省"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
@@ -264,16 +297,19 @@ msgid "Validated"
 msgstr "已验证"
 
 #. module: hr_work_entry
-#. openerp-web
-#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
-#, python-format
-msgid "We found some conflicts,"
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
+msgid "Validated work entries cannot overlap"
 msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
 msgid "Work Detail"
 msgstr "工作细节"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+msgid "Work Entries"
+msgstr "工作条目"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
@@ -319,11 +355,4 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
-msgstr ""
-
-#. module: hr_work_entry
-#. openerp-web
-#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
-#, python-format
-msgid "click here to revise them"
 msgstr ""

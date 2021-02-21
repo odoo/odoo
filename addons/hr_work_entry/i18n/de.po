@@ -1,27 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_work_entry
-#
+# 
 # Translators:
-# Leon Grill <leg@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Wolfgang Taferner, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# Kevin Harrings <kha@odoo.com>, 2020
+# Martin Trigaux, 2020
+# Chris Egal <sodaswed@web.de>, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2019-12-16 11:04+0000\n"
+"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
-"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_work_entry
+#: code:addons/hr_work_entry/models/hr_employee.py:0
+#, python-format
+msgid "%s work entries"
+msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -36,6 +45,7 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Archived"
@@ -44,12 +54,12 @@ msgstr "Archiviert"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
 msgid "Attendance"
-msgstr "Arbeitstag"
+msgstr "Anwesenheit"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
 msgid "Beginning"
-msgstr ""
+msgstr "Anfang"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
@@ -71,11 +81,6 @@ msgstr "Farbe"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
 msgid "Company"
 msgstr "Unternehmen"
-
-#. module: hr_work_entry
-#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__confirmed
-msgid "Confirmed"
-msgstr "Bestätigt"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
@@ -108,13 +113,27 @@ msgstr "Erstellt am"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Current Month"
+msgstr "Aktueller Monat"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Date"
 msgstr "Datum"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__department_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Department"
+msgstr "Abteilung"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -129,6 +148,7 @@ msgid "Dropdown menu"
 msgstr "Dropdownmenu"
 
 #. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_employee
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -151,9 +171,12 @@ msgid "HR Work Entry Type"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
 msgstr "ID"
 
@@ -165,9 +188,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry____last_update
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type____last_update
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance____last_update
+#: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves____last_update
 msgid "Last Modified on"
 msgstr "Letzte Änderung am"
 
@@ -191,15 +217,15 @@ msgid "Me"
 msgstr "Ich"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
-msgid "My Entries"
-msgstr "Eigene Buchungen"
-
-#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
 msgid "Name"
 msgstr "Name"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Note: Validated work entries cannot be modified."
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
@@ -210,7 +236,7 @@ msgstr "Periode"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
+msgstr "Ressourcen Abwesenheitsdetail"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -233,6 +259,11 @@ msgstr "Sequenz"
 #, python-format
 msgid "Solve conflicts first"
 msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
+msgid "Start Date"
+msgstr "Startdatum"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
@@ -265,16 +296,19 @@ msgid "Validated"
 msgstr "Bestätigt"
 
 #. module: hr_work_entry
-#. openerp-web
-#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
-#, python-format
-msgid "We found some conflicts,"
+#: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
+msgid "Validated work entries cannot overlap"
 msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
 msgid "Work Detail"
 msgstr "Arbeitsdetail"
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+msgid "Work Entries"
+msgstr "Arbeitseinträge"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
@@ -320,11 +354,4 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
-msgstr ""
-
-#. module: hr_work_entry
-#. openerp-web
-#: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
-#, python-format
-msgid "click here to revise them"
 msgstr ""

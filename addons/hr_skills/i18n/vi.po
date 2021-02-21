@@ -3,21 +3,18 @@
 # 	* hr_skills
 # 
 # Translators:
-# Martin Trigaux, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Minh Nguyen <ndminh210994@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Martin Trigaux, 2020
+# fanha99 <fanha99@hotmail.com>, 2020
+# Duy BQ <duybq86@gmail.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2019-03-20 14:57+0000\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +39,7 @@ msgstr ""
 #. module: hr_skills
 #: model:ir.model.fields.selection,name:hr_skills.selection__hr_resume_line__display_type__classic
 msgid "Classic"
-msgstr ""
+msgstr "Cổ điển"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_uid
@@ -52,7 +49,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__create_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr "Tạo bởi"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__create_date
@@ -88,12 +85,15 @@ msgid "Description"
 msgstr "Mô tả"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -110,22 +110,28 @@ msgid "Employee"
 msgstr "Nhân viên"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
+#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_skills
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type____last_update
+#: model:ir.model.fields,field_description:hr_skills.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối"
 
@@ -153,7 +159,7 @@ msgstr "Cập nhật gần đây vào"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__skill_level_ids
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 msgid "Levels"
-msgstr ""
+msgstr "Cấp độ"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__name
@@ -222,20 +228,10 @@ msgid "Resumé line of an employee"
 msgstr ""
 
 #. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_search
-msgid "Resumé line type"
-msgstr ""
-
-#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__resume_line_ids
 msgid "Resumé lines"
-msgstr ""
-
-#. module: hr_skills
-#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_search
-msgid "Résume"
 msgstr ""
 
 #. module: hr_skills
@@ -300,13 +296,13 @@ msgstr "Các kĩ năng"
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
-msgid "The skill %s and skill type %s doesn't match"
+msgid "The skill %(name)s and skill type %(type)s doesn't match"
 msgstr ""
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
-msgid "The skill level %s is not valid for skill type: %s "
+msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
 
 #. module: hr_skills
@@ -317,7 +313,7 @@ msgstr "Ngày bắt đầu phải trước ngày kết thúc."
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Title"
-msgstr "Xưng hô"
+msgstr "Tiêu đề"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
@@ -343,3 +339,13 @@ msgstr ""
 #: model:ir.model,name:hr_skills.model_res_users
 msgid "Users"
 msgstr "Người dùng"
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
+msgid "e.g. Languages"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
+msgid "e.g. Odoo Inc."
+msgstr ""

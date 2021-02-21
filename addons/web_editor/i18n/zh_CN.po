@@ -3,35 +3,40 @@
 # 	* web_editor
 # 
 # Translators:
-# SHOM <shanmuxin@yeah.net>, 2019
-# Gary Wei <Gary.wei@elico-corp.com>, 2019
-# ChinaMaker <liuct@chinamaker.net>, 2019
-# John An <johnxan@163.com>, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# v2exerer <9010446@qq.com>, 2019
-# Xia Fajin <xia.fajin@elico-corp.com>, 2019
-# Xu Lei <xulei8@qq.com>, 2019
-# fausthuang, 2019
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# bf2549c5415a9287249cba2b8a5823c7, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
-# diaojiaolou <124412206@qq.com>, 2019
+# mrshelly <mrshelly@hotmail.com>, 2016
+# e2f <projects@e2f.com>, 2018
 # keecome <7017511@qq.com>, 2019
-# Lisa Zhang <lzh@odoo.com>, 2019
-# snow wang <147156565@qq.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# Martin Trigaux, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
-# Manga Tsang <mts@odoo.com>, 2019
+# Lisa Zhang <lzh@odoo.com>, 2019
+# Jeanphy <hzh0292@qq.com>, 2020
+# snow wang <147156565@qq.com>, 2020
+# Manga Tsang <mts@odoo.com>, 2020
+# as co02 <asco02@163.com>, 2020
+# diaojiaolou <124412206@qq.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
+# Martin Trigaux, 2021
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# v2exerer <9010446@qq.com>, 2021
+# SHOM <shanmuxin@yeah.net>, 2021
+# Xia Fajin <xia.fajin@elico-corp.com>, 2021
+# Gary Wei <Gary.wei@elico-corp.com>, 2021
+# Lei Xu <xulei8@qq.com>, 2021
+# fausthuang, 2021
+# bf2549c5415a9287249cba2b8a5823c7, 2021
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:28+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Manga Tsang <mts@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,24 +46,24 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "%d (Original)"
+msgid "%dpx (Original)"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "%d (Suggested)"
+msgid "%dpx (Suggested)"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/ace.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%spx"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -95,7 +100,7 @@ msgstr "(TITLE 标签)"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "(URL or Embed)"
-msgstr "（网址或嵌入）"
+msgstr "（URL 或嵌入）"
 
 #. module: web_editor
 #. openerp-web
@@ -105,9 +110,24 @@ msgid "(YouTube, Vimeo, Vine, Instagram, DailyMotion or Youku)"
 msgstr "(YouTube, Vimeo, Vine, Instagram, DailyMotion 或 优酷)"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "1977"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "<i class=\"fa fa-warning\"/> External Image"
+msgstr ""
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "<i class=\"fa fa-th-large\"/> First Panel"
-msgstr "<i class=\"fa fa-th-large\"/> 首个面板"
+msgid "<span>Blocks</span>"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "<span>Style</span>"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -141,17 +161,24 @@ msgstr "添加"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Add URL"
+msgstr "添加URL"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media.js:0
 #, python-format
 msgid "Add as document"
-msgstr ""
+msgstr "添加为文档"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media.js:0
 #, python-format
 msgid "Add as image"
-msgstr ""
+msgstr "添加为图像"
 
 #. module: web_editor
 #. openerp-web
@@ -164,9 +191,18 @@ msgstr ""
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media.js:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Add image"
+msgstr "添加图像"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Aden"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Airy & Zigs"
 msgstr ""
 
 #. module: web_editor
@@ -192,6 +228,13 @@ msgstr "居右"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "All"
+msgstr "全部"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "All SCSS Files"
@@ -202,6 +245,23 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "All images have been loaded"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Apply"
+msgstr "应用"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid ""
+"Are you sure you want to delete the snippet: ${$snippet.attr('name')} ?"
 msgstr ""
 
 #. module: web_editor
@@ -224,13 +284,6 @@ msgid "Assets Utils"
 msgstr "资产单位"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Assign a focal point that will always be visible"
-msgstr "指定一个总是可见的焦点"
-
-#. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_attachment
 msgid "Attachment"
 msgstr "附件"
@@ -244,8 +297,20 @@ msgstr "附件网址"
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
+msgid "Autoconvert to relative link"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
 msgid "Autoplay"
 msgstr "自动播放"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Background"
+msgstr "背景"
 
 #. module: web_editor
 #. openerp-web
@@ -255,65 +320,67 @@ msgid "Background Color"
 msgstr "背景颜色"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Background Image Sizing"
-msgstr "图像尺寸"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Background Position"
+msgstr ""
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background height"
-msgstr "背景高度"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background position"
-msgstr "背景位置"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background repeat"
-msgstr "背景重复"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background size"
-msgstr "背景尺寸"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Background width"
-msgstr "背景宽度"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Blobs"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Block"
-msgstr "阻塞"
+msgstr "块"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "Blocks"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Blocks & Rainy"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Blur"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 #, python-format
 msgid "Bold"
 msgstr "加粗"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Brannan"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Brightness"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Button"
+msgstr "按钮"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Cancel"
+msgstr "取消"
 
 #. module: web_editor
 #. openerp-web
@@ -334,7 +401,7 @@ msgstr "居中"
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.js:0
 #, python-format
 msgid "Change media description and tooltip"
-msgstr "更改媒体说明和工具提示"
+msgstr "更改媒体说明和提示"
 
 #. module: web_editor
 #. openerp-web
@@ -348,7 +415,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/editor/summernote.js:0
 #, python-format
 msgid "Checklist"
-msgstr ""
+msgstr "勾选"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
@@ -358,7 +425,7 @@ msgstr ""
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
+#: code:addons/web_editor/static/src/xml/ace.xml:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Close"
@@ -379,9 +446,8 @@ msgid "Code View"
 msgstr "代码视图"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_color_widget
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "Color"
 msgstr "颜色"
 
@@ -390,11 +456,17 @@ msgstr "颜色"
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Column"
-msgstr "列"
+msgstr "栏位"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Combinations"
+msgstr "组合"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg_colorpicker.xml:0
 #, python-format
 msgid "Common colors"
@@ -402,29 +474,46 @@ msgstr "通用颜色"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Contain"
-msgstr "包含"
+msgid "Confirm"
+msgstr "确认"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "确认"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Contrast"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Copy-paste your URL or embed code here"
-msgstr "复制粘贴您的网址或在这里嵌入代码"
+msgstr "复制粘贴您的URL或在这里嵌入代码"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
+msgid "Could not install module <strong>%s</strong>"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "Cover"
-msgstr "封面"
+msgstr "覆盖"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__create_date
@@ -434,17 +523,25 @@ msgstr "创建时间"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
 #, python-format
 msgid "Crop Image"
 msgstr "裁剪图片"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
 #, python-format
 msgid "Custom"
 msgstr "自定义"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Custom %s"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -462,7 +559,7 @@ msgstr "Dailymotion"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/summernote.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/root.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Default"
@@ -470,10 +567,17 @@ msgstr "默认"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
-msgid "Define if/how the background image will be repeated"
-msgstr "定义背景图像是否／如何重复"
+msgid "Default + Rounded"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Delete %s"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -485,14 +589,35 @@ msgstr "说明"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/dialog.js:0
+#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Discard"
 msgstr "丢弃"
 
 #. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_http__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_contact__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_date__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_datetime__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_duration__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_float__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_html__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_image__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_integer__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_many2one__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_monetary__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_qweb__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_relative__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_selection__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_text__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_translation__display_name
+#: model:ir.model.fields,field_description:web_editor.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_assets__display_name
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__display_name
 msgid "Display Name"
@@ -500,10 +625,17 @@ msgstr "显示名称"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Do you want to install the %s App?"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Document"
-msgstr "文档"
+msgstr "单据"
 
 #. module: web_editor
 #. openerp-web
@@ -529,9 +661,27 @@ msgstr "这里拖进来一张图像"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Duplicate Container"
 msgstr "复制的容器"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Dynamic Colors"
+msgstr ""
+
+#. module: web_editor
+#: code:addons/web_editor/controllers/main.py:0
+#, python-format
+msgid "ERROR: couldn't get download urls from media library."
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "EarlyBird"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -540,6 +690,20 @@ msgstr "复制的容器"
 #, python-format
 msgid "Edit"
 msgstr "编辑"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Edit image"
+msgstr "编辑图像"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/ace.xml:0
+#, python-format
+msgid ""
+"Editing a built-in file through this editor is not advised, as it will "
+"prevent it from being updated during future App upgrades."
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -557,11 +721,32 @@ msgstr "文件 / 图像"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Fill"
+msgstr "填充"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Fill + Rounded"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Filter"
 msgstr "筛选"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "First Panel"
+msgstr "第一面板"
 
 #. module: web_editor
 #. openerp-web
@@ -569,6 +754,13 @@ msgstr "筛选"
 #, python-format
 msgid "Flat"
 msgstr "普通"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
+#, python-format
+msgid "Flexible"
+msgstr "灵活"
 
 #. module: web_editor
 #. openerp-web
@@ -635,13 +827,6 @@ msgstr "格式"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
-#, python-format
-msgid "Free"
-msgstr "空闲"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Full Screen"
@@ -653,6 +838,15 @@ msgstr "全屏"
 #, python-format
 msgid "Fullscreen"
 msgstr "全屏"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid ""
+"Get the perfect image by searching in our library of copyright free photos "
+"and illustrations."
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -759,19 +953,32 @@ msgstr "隐藏分享按钮"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Horizontal"
-msgstr "水平"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/backend/field_html.js:0
 #, python-format
 msgid "Html"
 msgstr "HTML"
 
 #. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_http__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_contact__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_date__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_datetime__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_duration__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_float__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_html__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_image__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_integer__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_many2one__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_monetary__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_qweb__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_relative__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_selection__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_text__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_translation__id
+#: model:ir.model.fields,field_description:web_editor.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_assets__id
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__id
 msgid "ID"
@@ -782,17 +989,8 @@ msgstr "ID"
 #: code:addons/web_editor/static/src/js/editor/editor.js:0
 #, python-format
 msgid ""
-"If you discard the current edition, all unsaved changes will be lost. You "
-"can cancel to return to the edition mode."
-msgstr "如果丢弃当前版本，则所有未保存的更改都将丢失。 您可以丢弃以返回到编辑模式。"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/ace.xml:0
-#, python-format
-msgid ""
-"If you edit and save this file, you will never receive updates from Odoo "
-"anymore unless you reset your customizations."
+"If you discard the current edits, all unsaved changes will be lost. You can "
+"cancel to return to edit mode."
 msgstr ""
 
 #. module: web_editor
@@ -802,20 +1000,20 @@ msgstr ""
 msgid ""
 "If you reset this file, all your customizations will be lost as it will be "
 "reverted to the default file."
-msgstr "如果你重置此文件，你的所有自定义将丢失，因为它将被还原为默认文件。"
+msgstr "如果您重置此文件，所有您的自定义将丢失，因为它将被还原为默认文件。"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
-msgid ""
-"If you want to crop it, please first download it from the original source "
-"and upload it in Odoo."
-msgstr "如果你想裁剪它，请先从原始资源下载它并上传到Odoo。"
+msgid "Illustrations"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 #, python-format
 msgid "Image"
 msgstr "图像"
@@ -823,19 +1021,19 @@ msgstr "图像"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_ir_attachment__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "图片高度"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Image Preview"
-msgstr ""
+msgstr "图像预览"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_ir_attachment__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "图片来源"
 
 #. module: web_editor
 #. openerp-web
@@ -847,14 +1045,7 @@ msgstr "图像网址"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_ir_attachment__image_width
 msgid "Image Width"
-msgstr ""
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
-#, python-format
-msgid "Improve your Image"
-msgstr ""
+msgstr "图像宽度"
 
 #. module: web_editor
 #. openerp-web
@@ -862,6 +1053,11 @@ msgstr ""
 #, python-format
 msgid "Indent"
 msgstr "缩进"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Inkwell"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -893,17 +1089,31 @@ msgstr "插入视频"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Instagram"
-msgstr "Instagram"
+msgid "Install"
+msgstr "安装"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Install"
-msgstr "安装"
+msgid "Install %s"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Install in progress"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Invisible Elements"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -935,13 +1145,6 @@ msgstr "两端对齐"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
-#, python-format
-msgid "Keep Original"
-msgstr "保留原件"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Keyboard shortcuts"
@@ -953,23 +1156,43 @@ msgstr "键盘快捷键"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Large"
-msgstr "大"
+msgstr "大的"
 
 #. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_http____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_contact____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_date____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_datetime____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_duration____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_float____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_html____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_image____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_integer____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_many2one____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_monetary____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_qweb____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_relative____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_selection____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_qweb_field_text____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_translation____last_update
+#: model:ir.model.fields,field_description:web_editor.field_ir_ui_view____last_update
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_assets____last_update
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub____last_update
 msgid "Last Modified on"
-msgstr "最后更改日"
+msgstr "最后修改日"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__write_date
 msgid "Last Updated on"
-msgstr "更新时间"
+msgstr "最后更新时间"
 
 #. module: web_editor
 #. openerp-web
@@ -981,6 +1204,7 @@ msgstr "行高"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
 #, python-format
 msgid "Link"
 msgstr "链接"
@@ -990,14 +1214,14 @@ msgstr "链接"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Link Label"
-msgstr "连接标签"
+msgstr "行标签"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
 #, python-format
 msgid "Link to"
-msgstr "连接到"
+msgstr "链接到"
 
 #. module: web_editor
 #. openerp-web
@@ -1014,12 +1238,31 @@ msgid "Loop"
 msgstr "循环"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Maven"
+msgstr ""
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Medium"
-msgstr "媒介"
+msgstr "普通"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "More info about this app."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "My Images"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1028,6 +1271,13 @@ msgstr "媒介"
 #, python-format
 msgid "Name"
 msgstr "名称"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "No"
+msgstr "否"
 
 #. module: web_editor
 #. openerp-web
@@ -1045,16 +1295,17 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "No repeat"
-msgstr "不重复"
+msgid "No location to drop in"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "None"
 msgstr "无"
@@ -1062,16 +1313,10 @@ msgstr "无"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Normal"
 msgstr "一般"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Ok"
-msgstr "确定"
 
 #. module: web_editor
 #. openerp-web
@@ -1104,17 +1349,17 @@ msgstr "在新窗口中打开"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Optimize"
 msgstr "优化"
 
 #. module: web_editor
-#: model_terms:ir.ui.view,arch_db:web_editor.snippets
-msgid "Options"
-msgstr "选项"
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Optimized"
+msgstr "优化"
 
 #. module: web_editor
 #. openerp-web
@@ -1129,6 +1374,16 @@ msgstr ""
 #, python-format
 msgid "Ordered list"
 msgstr "有序列表"
+
+#. module: web_editor
+#: model:ir.model.fields,field_description:web_editor.field_ir_attachment__original_id
+msgid "Original (unoptimized, unresized) attachment"
+msgstr "原始（未优化，未调整大小）附件"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Origins"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1148,8 +1403,8 @@ msgstr "轮廓"
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
-msgid "Outline-Rounded"
-msgstr "轮廓-圆"
+msgid "Outline + Rounded"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1185,23 +1440,47 @@ msgstr "小图片"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Preview"
 msgstr "预览"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
+#, python-format
+msgid "Primary"
+msgstr "首要的"
+
+#. module: web_editor
+#: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__c
+msgid "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
+msgstr ""
+
+#. module: web_editor
+#: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__a
+msgid "Qu'il n'est pas arrivé à Toronto"
+msgstr ""
+
+#. module: web_editor
+#: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__b
+msgid "Qu'il était supposé arriver à Toronto"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Quality"
 msgstr "质量"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Quick Upload"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid ""
+"Quality options are unavailable for external images. If you want to change "
+"this image's quality, please first download it from the original source and "
+"upload it in Odoo."
 msgstr ""
 
 #. module: web_editor
@@ -1329,9 +1608,10 @@ msgstr "移除"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Remove Block"
-msgstr "移除块"
+msgstr "删除块"
 
 #. module: web_editor
 #. openerp-web
@@ -1349,35 +1629,27 @@ msgstr "移除图像"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Repeat"
-msgstr "重复"
+msgid "Rename %s"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Repeat pattern"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
-msgid "Repeat both"
-msgstr "都重复"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Repeat x"
-msgstr "重复 x"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Repeat y"
-msgstr "重复 y"
+msgid "Replace"
+msgstr "替换"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Reset"
 msgstr "重置"
@@ -1385,17 +1657,10 @@ msgstr "重置"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Reset Image"
 msgstr "重置图像"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
-#, python-format
-msgid "Reset to default"
-msgstr "设置为默认"
 
 #. module: web_editor
 #. openerp-web
@@ -1444,14 +1709,7 @@ msgstr "向左旋转"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Rotate Right"
-msgstr "向右旋转"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Rounded"
-msgstr "圆"
+msgstr "右转"
 
 #. module: web_editor
 #. openerp-web
@@ -1468,8 +1726,12 @@ msgid "SCSS file: %s"
 msgstr "SCSS 文件: %s"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Saturation"
+msgstr ""
+
+#. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js:0
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/dialog.js:0
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
@@ -1478,7 +1740,23 @@ msgstr "保存"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Save and Install"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Save and Reload"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Search"
@@ -1486,6 +1764,7 @@ msgstr "搜索"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Search Contact"
@@ -1513,6 +1792,18 @@ msgid "Search an image"
 msgstr ""
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
+msgid "Search..."
+msgstr "搜索..."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js:0
+#, python-format
+msgid "Secondary"
+msgstr "次要的"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media_dialog.js:0
 #, python-format
@@ -1527,27 +1818,16 @@ msgid "Select from files"
 msgstr "从文件中选择"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Sepia"
+msgstr ""
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/common/ace.js:0
 #, python-format
 msgid "Server error"
 msgstr "服务器错误"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Set the starting position of the background image."
-msgstr "设置背景图像的起始位置。"
-
-#. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid ""
-"Sets the width and height of the background image in percent of the parent "
-"element."
-msgstr "设置背景图像的宽度和高度，以父元素的百分比表示。"
 
 #. module: web_editor
 #. openerp-web
@@ -1557,12 +1837,25 @@ msgid "Shadow"
 msgstr "阴影"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Shape"
+msgstr "图形"
+
+#. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Show optimized images"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Size"
-msgstr "大小"
+msgstr "尺寸："
 
 #. module: web_editor
 #. openerp-web
@@ -1604,6 +1897,13 @@ msgstr "下标"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
+msgid "Suggestions"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #, python-format
 msgid "Superscript"
@@ -1622,6 +1922,13 @@ msgstr "桌台"
 #, python-format
 msgid "Template ID: %s"
 msgstr "模板ID： %s"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Text"
+msgstr "文本"
 
 #. module: web_editor
 #. openerp-web
@@ -1676,15 +1983,15 @@ msgid ""
 "The image could not be deleted because it is used in the\n"
 "               following pages or views:"
 msgstr ""
-"图像不能被删除，因为已经用于\n"
-"               以下的页面或视图:"
+"图像不能被删除,因为已经用于\n"
+"               页面或视图:"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/media.js:0
 #, python-format
 msgid "The provided url does not reference any supported video"
-msgstr "提供的网址不存在参考任何支持的视频"
+msgstr "提供的网址不存在任何支持的视频"
 
 #. module: web_editor
 #. openerp-web
@@ -1695,11 +2002,17 @@ msgstr "提供的网址无效"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/rte.summernote.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg_colorpicker.xml:0
 #, python-format
 msgid "Theme colors"
 msgstr "主题颜色"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "This block is outdated"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1724,7 +2037,7 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
 #, python-format
 msgid "This image is an external image"
 msgstr "这个图像是一个外部图像"
@@ -1738,10 +2051,46 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: code:addons/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js:0
 #, python-format
-msgid "This type of image is not supported for cropping."
-msgstr "这种类型的图像不支持裁剪。"
+msgid ""
+"This type of image is not supported for cropping.<br/>If you want to crop "
+"it, please first download it from the original source and upload it in Odoo."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid "Title"
+msgstr "称谓"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"To apply this change, we need to save all your previous modifications and "
+"reload the page."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/snippets.xml:0
+#, python-format
+msgid ""
+"To make changes, drop this block and use the new options in the last "
+"version."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"To save a snippet, we need to save all your previous modifications and "
+"reload the page."
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1751,14 +2100,20 @@ msgid "To what URL should this link go?"
 msgstr "此网址链接指向哪里？"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Toaster"
+msgstr ""
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Tooltip"
-msgstr "工具提示"
+msgstr "提示"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/xml/backend.xml:0
 #: code:addons/web_editor/static/src/xml/backend.xml:0
 #, python-format
 msgid "Translate"
@@ -1787,8 +2142,15 @@ msgstr ""
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
+msgid "Type"
+msgstr "类型"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#, python-format
 msgid "URL or Email"
-msgstr "网址或EMail"
+msgstr "网址或电子邮件"
 
 #. module: web_editor
 #. openerp-web
@@ -1840,11 +2202,9 @@ msgid "Upload an image"
 msgstr "上传图像"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
-msgid "Vertical"
-msgstr "竖直"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Valencia"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1902,11 +2262,14 @@ msgid "Vimeo"
 msgstr "Vimeo"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "Vine.co"
-msgstr "Vine.co"
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Walden"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "Wavy"
+msgstr ""
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_web_editor_converter_test_sub
@@ -1921,6 +2284,7 @@ msgstr "Web编辑器转换器测试"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 #, python-format
 msgid "Width"
 msgstr "宽度"
@@ -1941,6 +2305,18 @@ msgid "Xl"
 msgstr "Xl"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "Xpro"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "Yes"
+msgstr "是"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
@@ -1955,13 +2331,6 @@ msgstr ""
 #, python-format
 msgid ""
 "You can upload images with the button located in the top left of the screen."
-msgstr ""
-
-#. module: web_editor
-#: code:addons/web_editor/controllers/main.py:0
-#, python-format
-msgid ""
-"You cannot change the quality, the width or the name of an URL attachment."
 msgstr ""
 
 #. module: web_editor
@@ -1999,6 +2368,11 @@ msgid "Zoom Out"
 msgstr "缩小"
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "add"
+msgstr "添加"
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
@@ -2006,14 +2380,19 @@ msgid "and"
 msgstr "与"
 
 #. module: web_editor
-#. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#: code:addons/web_editor/static/src/xml/editor.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 msgid "auto"
 msgstr "自动"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "darken"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "exclusion"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -2030,6 +2409,21 @@ msgid "https://www.odoo.com/mydocument"
 msgstr ""
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "lighten"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "multiply"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "overlay"
+msgstr ""
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
@@ -2038,8 +2432,58 @@ msgid "px"
 msgstr "px "
 
 #. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
+msgid "screen"
+msgstr ""
+
+#. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "videos"
 msgstr "视频"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Color filter"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Colors"
+msgstr "⌙ 颜色"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Dyn. Colors"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Flip"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Height"
+msgstr "⌙ 高度"
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Image"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Position"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Shape"
+msgstr ""
+
+#. module: web_editor
+#: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
+msgid "⌙ Width"
+msgstr "⌙ 宽"

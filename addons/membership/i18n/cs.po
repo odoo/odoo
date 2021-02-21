@@ -3,19 +3,20 @@
 # 	* membership
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
-# milda dvorak <milda.dvorak@optimal4.cz>, 2019
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# trendspotter, 2020
+# milda dvorak <milda.dvorak@optimal4.cz>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2020
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: milda dvorak <milda.dvorak@optimal4.cz>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,9 +222,13 @@ msgid "Date until which membership remains active."
 msgstr "Datum, do kterého členství zůstává aktivní."
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__display_name
+#: model:ir.model.fields,field_description:membership.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__display_name
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__display_name
+#: model:ir.model.fields,field_description:membership.field_product_template__display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership__display_name
+#: model:ir.model.fields,field_description:membership.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
@@ -289,9 +294,13 @@ msgid "Group by..."
 msgstr "Seskupit podle..."
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move__id
+#: model:ir.model.fields,field_description:membership.field_account_move_line__id
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__id
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__id
+#: model:ir.model.fields,field_description:membership.field_product_template__id
 #: model:ir.model.fields,field_description:membership.field_report_membership__id
+#: model:ir.model.fields,field_description:membership.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -359,8 +368,8 @@ msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move
-msgid "Journal Entries"
-msgstr "Položky deníku"
+msgid "Journal Entry"
+msgstr "Položka deníku"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move_line
@@ -368,9 +377,13 @@ msgid "Journal Item"
 msgstr "Položka deníku"
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_account_move____last_update
+#: model:ir.model.fields,field_description:membership.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_invoice____last_update
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line____last_update
+#: model:ir.model.fields,field_description:membership.field_product_template____last_update
 #: model:ir.model.fields,field_description:membership.field_report_membership____last_update
+#: model:ir.model.fields,field_description:membership.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Naposled změněno"
 
@@ -480,6 +493,7 @@ msgstr "Výrobek členství"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
 msgstr "Výrobky členství"
@@ -524,6 +538,11 @@ msgstr "Členství"
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Month"
 msgstr "Měsíc"
+
+#. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr "Zatím žádná data!"
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
@@ -574,6 +593,11 @@ msgstr "Partner je volný člen."
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
 msgid "Pending Amount"
 msgstr "Čekající částka"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Product Name"
+msgstr "Název výrobku"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template

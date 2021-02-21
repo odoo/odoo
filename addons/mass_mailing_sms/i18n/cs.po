@@ -3,18 +3,22 @@
 # 	* mass_mailing_sms
 # 
 # Translators:
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# Martin Trigaux, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Martin Trigaux, 2020
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
+# Jakub Lohnisky <jakub@lepremier.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# trendspotter, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-01 12:10+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2021-02-18 14:29+0000\n"
+"PO-Revision-Date: 2019-12-16 11:05+0000\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,16 +28,15 @@ msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
-msgid "+32 495 85 85 77, +33 545 55 55 55"
+msgid ""
+"+32 495 85 85 77\n"
+"+33 545 55 55 55"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
-msgid ""
-"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This "
-"number is blacklisted for SMS Marketing\" aria-label=\"Phone Blacklisted\" "
-"attrs=\"{'invisible': [('phone_blacklisted', '=', False)]}\" "
-"groups=\"base.group_user\"/>"
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "24H Stats of %(mailing_type)s \"%(mailing_name)s\""
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -42,6 +45,8 @@ msgid ""
 "<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
 " 'sms')]}\">SMS Text Message could not be sent.</span>"
 msgstr ""
+"<span name=\"failed_text_sms\" attrs=\"{'invisible': [('mailing_type', '!=',"
+" 'sms')]}\">Textovou zprávu SMS nelze odeslat.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -50,6 +55,9 @@ msgid ""
 "'!=', 'sms')]}\">SMS Text Message have been ignored and will not be "
 "sent.</span>"
 msgstr ""
+"<span name=\"ignored_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">Textové zprávy SMS byly ignorovány a nebudou "
+"odeslány.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -57,6 +65,8 @@ msgid ""
 "<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', "
 "'!=', 'sms')]}\">This SMS marketing is scheduled for </span>"
 msgstr ""
+"<span name=\"next_departure_text\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">Tento SMS marketing je naplánován na </span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -64,12 +74,31 @@ msgid ""
 "<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
 "'!=', 'sms')]}\">SMS Text Message are in queue and will be sent soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text_sms\" attrs=\"{'invisible': [('mailing_type', "
+"'!=', 'sms')]}\">Textové zprávy SMS jsou ve frontě a budou brzy "
+"odeslány.</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', "
+"'sms')]}\">SMS Text Message have been sent.</span>"
+msgstr ""
+"<span name=\"sent_sms\" attrs=\"{'invisible': [('mailing_type', '!=', "
+"'sms')]}\">Textová zpráva SMS byla odeslána.</span>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form
 msgid ""
 "<span name=\"trace_type_name_sms\" attrs=\"{'invisible': [('trace_type', "
 "'!=', 'sms')]}\">This sms</span>"
+msgstr ""
+"<span name=\"trace_type_name_sms\" attrs=\"{'invisible': [('trace_type', "
+"'!=', 'sms')]}\">Toto sms</span>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_list_view_kanban
+msgid "<span>Valid SMS Recipients</span>"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -79,15 +108,45 @@ msgid ""
 "                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
 "                        </strong>"
 msgstr ""
+"<strong>\n"
+"                           Zdá se, že nemáte dostatek kreditů za IAP. Kliknutím sem zakoupíte kredity.\n"
+"                        </strong>"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"<strong>\n"
+"                            It appears your SMS account is not registered. Click here to set up your account.\n"
+"                        </strong>"
+msgstr ""
+"<strong>\n"
+"                            Zdá se, že váš účet SMS není zaregistrován. Kliknutím sem nastavíte svůj účet.\n"
+"                        </strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This SMS could not be sent.</strong>"
-msgstr ""
+msgstr "<strong>This SMS could not be sent.</strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "<strong>This number appears to be invalid.</strong>"
+msgstr "<strong>Toto číslo se zdá být neplatné.</strong>"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction
+msgid "Action Needed"
+msgstr "Vyžaduje akci"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
+msgid "Attachment Count"
+msgstr "Počet příloh"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "BOUNCED (%i)"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -95,15 +154,37 @@ msgstr ""
 #, python-format
 msgid ""
 "Blacklist through SMS Marketing unsubscribe (mailing ID: %s - model: %s)"
-msgstr ""
+msgstr "Blacklist přes SMS Marketing odhlásit (poštovní ID: %s - model: %s)"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_blacklist
 msgid "Blacklisted"
+msgstr "Na černé listině"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefon na černé listině je mobilní"
+
+#. module: mass_mailing_sms
+#: model:ir.ui.menu,name:mass_mailing_sms.phone_blacklist_menu
+msgid "Blacklisted Phone Numbers"
+msgstr "Telefonní čísla na černé listině"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefon na černé listině je telefon"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "CLICKED (%i)"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__utm_campaign_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 msgid "Campaign"
 msgstr "Kampaň"
 
@@ -118,19 +199,14 @@ msgid "Cancel"
 msgstr "Zrušit"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "Clicked"
-msgstr "Kliknuto"
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_sms_test__numbers
+msgid "Carriage-return-separated list of phone numbers"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_code
 msgid "Code"
 msgstr "Kód"
-
-#. module: mass_mailing_sms
-#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_sms_test__numbers
-msgid "Comma-separated list of phone numbers"
-msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_configuration
@@ -140,12 +216,11 @@ msgstr "Konfigurace"
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_list_action_sms
 msgid "Contact Lists"
-msgstr ""
+msgstr "Seznamy kontaktů"
 
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_contact_action_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mailing_contact_menu_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_tree_sms
 msgid "Contacts"
 msgstr "Kontakty"
 
@@ -153,22 +228,22 @@ msgstr "Kontakty"
 #: model:ir.ui.menu,name:mass_mailing_sms.mailing_list_menu_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_contacts
 msgid "Contacts Lists"
-msgstr ""
+msgstr "Seznamy kontaktů"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid "Create a new SMS Marketing"
-msgstr ""
+msgstr "Vytvořte nový SMS marketing"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_contact_action_sms
 msgid "Create a new contact"
-msgstr ""
+msgstr "Vytvořte nový kontakt"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
 msgid "Create a new contacts list"
-msgstr ""
+msgstr "Vytvořte nový seznam kontaktů"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__create_uid
@@ -181,7 +256,15 @@ msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_res_users__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
@@ -192,35 +275,73 @@ msgid "Duplicate"
 msgstr "Duplikovat"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
-msgid "Exclude Blacklisted Phone"
-msgstr ""
+#: code:addons/mass_mailing_sms/models/res_users.py:0
+#, python-format
+msgid "Email Marketing"
+msgstr "Emailový marketing"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
-msgid "Extended Filters..."
-msgstr "Rozšířené filtry…"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
+msgid "Exclude Blacklisted Phone"
+msgstr "Vyloučit telefon na černé listině"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Typ poruchy"
 
 #. module: mass_mailing_sms
-#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
-#, python-format
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized
 msgid ""
-"Following numbers are not correctly encoded: %s, example : \"+32 495 85 85 "
-"77, +33 545 55 55 55\""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
 msgstr ""
+"Pole slouží k ukládání sanitovaného telefonního čísla. Pomáhá urychlit "
+"vyhledávání a srovnávání."
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
-msgid "Group By..."
-msgstr "Seskupit podle…"
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
+msgid "Followers"
+msgstr "Sledující"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Sledující (Kanály)"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sledující (Partneři)"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid ""
+"For an Email, Subject your Recipients will see in their inbox.\n"
+"                    For an SMS Text Message, internal Title of the Message."
+msgstr ""
+"U e-mailu předmět, který vaši příjemci uvidí v doručené poště.\n"
+"                    U textové zprávy SMS interní název zprávy."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_subject
+msgid ""
+"For an email, the subject your recipients will see in their inbox.\n"
+"For an SMS, the internal title of the message."
+msgstr ""
+"V případě e-mailu se předmět, který vaši příjemci uvidí, zobrazí v doručené poště.\n"
+"U SMS interní název zprávy."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__id
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_res_users__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__id
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__id
 msgid "ID"
 msgstr "ID"
 
@@ -231,30 +352,96 @@ msgid ""
 "related sms.sms can be deleted separately from its statistics. However the "
 "ID is needed for several action and controllers."
 msgstr ""
+"ID souvisejících sms.sms. Toto pole je celočíselné pole, protože související"
+" sms.sms lze odstranit odděleně od jeho statistik. ID je však potřeba pro "
+"několik akcí a řadičů."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Pokud je dezinfikované telefonní číslo na černé listině, kontakt již nebude "
+"dostávat hromadné zprávy SMS ze žádného seznamu"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
+msgid ""
+"Immediately send the SMS Mailing instead of queuing up. Use at your own "
+"risk."
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_allow_unsubscribe
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
+msgstr "Zahrnout odkaz pro odhlášení"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
 msgstr ""
+"Označuje, zda je dezinfikované telefonní číslo na černé listině číslo "
+"mobilního telefonu. Pomáhá rozlišit, které číslo je na černé listině, když "
+"je v modelu pole pro mobil i telefon."
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Označuje, zda je dezinfikované telefonní číslo na černé listině telefonním "
+"číslem. Pomáhá rozlišit, které číslo je na černé listině, když je v modelu "
+"pole pro mobil i telefon."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "Nedostatečný kredit"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_insufficient_credit
 msgid "Insufficient IAP credits"
-msgstr ""
+msgstr "Nedostatečné kredity IAP"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
 msgid "Insufficient credits"
-msgstr ""
+msgstr "Nedostatečné kredity"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_is_follower
+msgid "Is Follower"
+msgstr "je Sledující"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact____last_update
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list____last_update
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing____last_update
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test____last_update
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace____last_update
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_res_users____last_update
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer____last_update
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms____last_update
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign____last_update
 msgid "Last Modified on"
 msgstr "Naposled změněno"
 
@@ -267,6 +454,16 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__write_date
 msgid "Last Updated on"
 msgstr "Naposled upraveno"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Launch"
+msgstr "Spuštění"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Launch Now"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
@@ -282,7 +479,7 @@ msgstr "Mailing"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_contact
 msgid "Mailing Contact"
-msgstr ""
+msgstr "Poštovní kontakt"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_list
@@ -292,12 +489,17 @@ msgstr "seznam adres"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_trace
 msgid "Mailing Statistics"
-msgstr ""
+msgstr "Statistiky pošty"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__mailing_type
 msgid "Mailing Type"
-msgstr ""
+msgstr "Typ pošty"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Hlavní příloha"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_mailing
@@ -306,26 +508,24 @@ msgid "Mass Mailing"
 msgstr "Hromadná pošta"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
-msgid "Mass Mailing Campaign"
-msgstr "Hromadná kampaň"
-
-#. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_graph
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_pivot
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
-msgid "Mass Mailing Statistics"
-msgstr ""
-
-#. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_ids
 msgid "Mass SMS"
-msgstr ""
+msgstr "Hromadné SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error
+msgid "Message Delivery error"
+msgstr "Chyba při doručování zpráv"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_ids
+msgid "Messages"
+msgstr "Zprávy"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "Chybějící číslo"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile
@@ -335,7 +535,7 @@ msgstr "mobilní"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_search_sms
 msgid "My SMS Marketing"
-msgstr ""
+msgstr "Můj SMS marketing"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_number
@@ -347,36 +547,78 @@ msgstr "Číslo"
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 #, python-format
 msgid "Number %s not found"
-msgstr ""
+msgstr "Číslo %snenalezeno"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Počet akcí"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_utm_campaign__mailing_sms_count
 msgid "Number of Mass SMS"
-msgstr ""
+msgstr "Počet hromadných SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_error_counter
+msgid "Number of errors"
+msgstr "Počet chyb"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Počet zpráv, které vyžadují akci"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Počet zpráv s chybou při doručení"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Počet nepřečtených zpráv"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__numbers
 msgid "Number(s)"
-msgstr ""
+msgstr "Čísla"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr ""
+msgstr "Odchozí SMS"
 
 #. module: mass_mailing_sms
-#: model:ir.ui.menu,name:mass_mailing_sms.phone_blacklist_menu
-msgid "Phone Blacklist"
-msgstr ""
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "Telefon na černé listině"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Telefon / mobil"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
 msgid "Please enter your phone number"
+msgstr "Zadejte své telefonní číslo"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "RECEIVED (%i)"
 msgstr ""
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "Put in Queue"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+msgid "Recipients"
+msgstr "Příjemci"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "Report for %(expected)i %(mailing_type)s Sent"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -396,30 +638,42 @@ msgstr "SMS"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__body_plaintext
 msgid "SMS Body"
+msgstr "Tělo SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_list__contact_count_sms
+msgid "SMS Contacts"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid "SMS Content"
-msgstr ""
+msgstr "Obsah SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručení SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id_int
 msgid "SMS ID (tech)"
-msgstr ""
+msgstr "SMS ID (technologie)"
 
 #. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/res_users.py:0
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_mailing_action_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_mass_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_root
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+#, python-format
 msgid "SMS Marketing"
 msgstr "SMS Marketing"
 
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_trace_report_action_sms
 msgid "SMS Marketing Analysis"
-msgstr ""
+msgstr "Analýza SMS marketingu"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
@@ -427,12 +681,14 @@ msgid ""
 "SMS Marketing Statistics allows you to check different mailing related information like number of sent SMS or bounced SMS.\n"
 "                You can sort out your analysis by different groups to get accurate grained analysis."
 msgstr ""
+"Statistiky SMS marketingu vám umožňují kontrolovat různé informace související s poštovními službami, jako je počet odeslaných SMS nebo odražených SMS.\n"
+"                Analýzu můžete třídit podle různých skupin, abyste získali přesnou analýzu."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "SMS Subscription"
-msgstr ""
+msgstr "SMS předplatné"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_template_id
@@ -440,25 +696,36 @@ msgid "SMS Template"
 msgstr "SMS šablona"
 
 #. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
+#, python-format
+msgid "SMS Text Message"
+msgstr "SMS textová zpráva"
+
+#. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "SMS Trace"
-msgstr ""
+msgstr "Trasování SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_tree_sms
 msgid "SMS Traces"
-msgstr ""
+msgstr "Trasy SMS"
 
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
 msgid "STOP SMS : %s"
-msgstr ""
+msgstr "STOP SMS : %s"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
-msgid "Scheduled Period"
-msgstr "Plánovaný cyklus"
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
+msgid "Sanitized Number"
+msgstr "Sanitizované číslo"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
+msgid "Scheduled"
+msgstr "Naplánováno"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -468,12 +735,7 @@ msgstr "Odeslat"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid "Send Directly"
-msgstr ""
-
-#. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "Send Now"
-msgstr "Odeslat nyní"
+msgstr "Odeslat přímo"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
@@ -483,29 +745,19 @@ msgstr "Odeslat SMS"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "Odeslat průvodce SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid "Send a Sample SMS"
-msgstr ""
+msgstr "Pošlete ukázkovou SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
 msgid ""
-"Send a sample SMS for testing purpose to the numbers below (comma-separated "
-"list)."
+"Send a sample SMS for testing purpose to the numbers below (carriage-return-"
+"separated list)."
 msgstr ""
-
-#. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid "Sent"
-msgstr "Odesláno"
-
-#. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
-msgid "Sent By"
-msgstr "Odeslal"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_server
@@ -513,9 +765,9 @@ msgid "Server Error"
 msgstr "Chyba serveru"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_report_view_search
-msgid "State"
-msgstr "Stav"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Skip Queue"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_sms__mailing_trace_ids
@@ -525,42 +777,72 @@ msgstr "Statistiky"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_sms_test
 msgid "Test SMS Mailing"
-msgstr ""
+msgstr "Vyzkoušejte zasílání SMS zpráv"
 
 #. module: mass_mailing_sms
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_sms_test_action
 msgid "Test SMS Marketing"
+msgstr "Vyzkoušejte SMS marketing"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
+#, python-format
+msgid "Test SMS could not be sent to %s:<br>%s"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Test SMS marketing"
+msgstr "Vyzkoušejte SMS marketing"
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
+#, python-format
+msgid "Test SMS successfully sent to %s"
+msgstr ""
+
+#. module: mass_mailing_sms
+#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
+#, python-format
+msgid "The following numbers are not correctly encoded: %s"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
-msgid "There is no recipients selected."
+msgid "There are no recipients selected."
 msgstr "Nejsou vybráni žádní příjemci."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "There was an error when trying to unsubscribe"
-msgstr ""
+msgstr "Při pokusu o odhlášení došlo k chybě"
 
 #. module: mass_mailing_sms
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_form
 msgid ""
-"This will schedule an SMS marketing to all recipients. Do you still want to "
-"proceed ?"
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"Toto telefonní číslo je pro SMS Marketing na černé listině. Kliknutím "
+"zrušíte seznam zakázaných položek."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "This will send SMS to all recipients now. Do you still want to proceed ?"
+msgstr "To nyní pošle SMS všem příjemcům. Stále chcete pokračovat?"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "This will send SMS to all recipients. Do you still want to proceed ?"
 msgstr ""
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_subject
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
+msgid "Title"
+msgstr "Název"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__trace_type
@@ -573,9 +855,39 @@ msgid "UTM Campaign"
 msgstr "UTM kampaň"
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
+msgid "UX Field to propose to Register the SMS IAP account"
+msgstr "Pole UX navrhne registraci účtu SMS IAP"
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_has_insufficient_credit
 msgid "UX Field to propose to buy IAP credits"
-msgstr ""
+msgstr "UX Field navrhne nákup kreditů za IAP"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_unread
+msgid "Unread Messages"
+msgstr "Nepřečtené zprávy"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Počítadlo nepřečtených zpráv"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_acc
+msgid "Unregistered Account"
+msgstr "Neregistrovaný účet"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
+msgid "Unregistered IAP account"
+msgstr "Neregistrovaný účet IAP"
+
+#. module: mass_mailing_sms
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
+msgid "Unregistered account"
+msgstr "Neregistrovaný účet"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -586,27 +898,39 @@ msgstr "Odhlásit mě"
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Unsupported %s for mass SMS"
-msgstr ""
+msgstr "Nepodporováno %spro hromadné SMS"
 
 #. module: mass_mailing_sms
-#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
-msgid "Use at your own risks."
-msgstr ""
+#: model:ir.model,name:mass_mailing_sms.model_res_users
+msgid "Users"
+msgstr "Uživatelé"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Valid SMS Recipients"
-msgstr ""
+msgstr "Platní příjemci SMS"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__website_message_ids
+msgid "Website Messages"
+msgstr "Zprávy Webové stránky"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__website_message_ids
+msgid "Website communication history"
+msgstr "Historie komunikace webové stránky"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "Chybný formát čísla"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid "You can easily send SMS to any contact saved in other Odoo apps."
 msgstr ""
+"SMS můžete snadno odeslat libovolnému kontaktu uloženému v jiných aplikacích"
+" Odoo."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
@@ -614,13 +938,15 @@ msgid ""
 "You don't need to import your contacts lists, you can easily\n"
 "            send SMS to any contact saved in other Odoo apps."
 msgstr ""
+"Nemusíte importovat své seznamy kontaktů, můžete snadno\n"
+"            posílat SMS na jakýkoli kontakt uložený v jiných aplikacích Odoo."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully blacklisted"
-msgstr ""
+msgstr "byl úspěšně uveden na černou listinu"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_number
 msgid "has been successfully removed from"
-msgstr ""
+msgstr "byl úspěšně odebrán z"
