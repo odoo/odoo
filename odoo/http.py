@@ -769,6 +769,9 @@ class WebRequest(object):
         elif endpoint.routing['type'] == 'json':
             return self.json_dispatch(endpoint, args, auth)
 
+class Websocket(object):
+    pass
+
 #----------------------------------------------------------
 # Controller and routes
 #----------------------------------------------------------
@@ -1123,8 +1126,6 @@ def session_gc(session_store):
 #----------------------------------------------------------
 # WSGI Layer
 #----------------------------------------------------------
-class Websocket(object):
-    pass
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):
@@ -1357,21 +1358,26 @@ class Root(object):
     def __call__(self, environ, start_response):
         """ WSGI entry point.
         """
+        # MOVE to dipatch own self fix WITH STATIC DAGTA
+        # FIXME: is checking for the presence of HTTP_X_FORWARDED_HOST really useful?
+        #        we're ignoring the user configuration, and that means we won't
+        #        support the standardised Forwarded header once werkzeug supports
+        #        it
+        dispatch = self.dispatch
+        if odoo.tools.config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
+            dispatch = ProxyFix(self.dispatch)
         # Lazy load addons
         if not self._loaded:
             self._loaded = True
             self.load_addons()
 
         with odoo.api.Environment.manage():
-            result = self.dispatch(environ, start_response)
+            result = dispatch(environ, start_response)
             if result is not None:
                 return result
 
         # We never returned from the loop.
         return werkzeug.exceptions.NotFound("No handler found.\n")(environ, start_response)
-
-#  main wsgi handler
-root = Root()
 
 def db_list(force=False, httprequest=None):
     dbs = odoo.service.db.list_dbs(force)
@@ -1419,8 +1425,7 @@ def db_monodb(httprequest=None):
         return dbs[0]
     return None
 
-def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None,
-              add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
+def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None, add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
     """This is a modified version of Flask's send_file()
 
     Sends the contents of a file to the client. This will use the
@@ -1482,8 +1487,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
         headers['Content-Length'] = size
 
     data = werkzeug.wsgi.wrap_file(request.httprequest.environ, file)
-    rv = Response(data, mimetype=mimetype, headers=headers,
-                                    direct_passthrough=True)
+    rv = Response(data, mimetype=mimetype, headers=headers, direct_passthrough=True)
 
     if isinstance(mtime, str):
         try:
@@ -1553,14 +1557,7 @@ def set_header_field(headers, name, value):
     dictheaders[name] = value
     return list(dictheaders.items())
 
-def application(environ, start_response):
-    # FIXME: is checking for the presence of HTTP_X_FORWARDED_HOST really useful?
-    #        we're ignoring the user configuration, and that means we won't
-    #        support the standardised Forwarded header once werkzeug supports
-    #        it
-    if odoo.tools.config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
-        return ProxyFix(root)(environ, start_response)
-    else:
-        return root(environ, start_response)
+#  main wsgi handler
+application = root = Root()
 
 #
