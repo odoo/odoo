@@ -202,6 +202,14 @@ Object.assign(ThreadView, {
             type: String,
             optional: true,
         },
+        /**
+         * Function returns the exact scrollable element from the parent
+         * to manage proper scroll heights which affects the load more messages.
+         */
+        getScrollableElement: {
+            type: Function,
+            optional: true,
+        },
         showComposerAttachmentsExtensions: Boolean,
         showComposerAttachmentsFilenames: Boolean,
         threadViewLocalId: String,
