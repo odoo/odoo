@@ -11,7 +11,7 @@ Adds validation for both EU and GB EORI Numbers.
     """,
     'author': 'XCLUDE AB',
     'website': 'https://www.xclude.se',
-    'depends': ['account', 'contacts'],    
+    'depends': ['account'],    
     'data': [
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
