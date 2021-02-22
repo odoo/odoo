@@ -58,6 +58,7 @@
                 'login_number': login_number,
                 'debug': debug,
             })"/>;
+            odoo._modules = <t t-raw="get_modules_order()"/>;
         </script>
 
         <t t-call="point_of_sale.assets_common"/>
