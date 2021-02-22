@@ -8,15 +8,7 @@ from odoo.addons.bus.models.bus import dispatch
 class BusController(Controller):
     """ Examples:
     openerp.jsonRpc('/longpolling/poll','call',{"channels":["c1"],last:0}).then(function(r){console.log(r)});
-    openerp.jsonRpc('/longpolling/send','call',{"channel":"c1","message":"m1"});
-    openerp.jsonRpc('/longpolling/send','call',{"channel":"c2","message":"m2"});
     """
-
-    @route('/longpolling/send', type="json", auth="public")
-    def send(self, channel, message):
-        if not isinstance(channel, str):
-            raise Exception("bus.Bus only string channels are allowed.")
-        return request.env['bus.bus'].sendone(channel, message)
 
     # override to add channels
     def _poll(self, dbname, channels, last, options):
