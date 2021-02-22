@@ -376,3 +376,34 @@ $o-theme-font-configs: (
         'url': 'Arvo:300,300i,400,400i,700,700i',
     ),
 ) !default;
+
+//------------------------------------------------------------------------------
+// Mixins
+//------------------------------------------------------------------------------
+
+@mixin o-ribbon-right() {
+    @include o-position-absolute($top: 0, $right: 0);
+    padding: 0.5rem $ribbon-padding;
+    // 0.708 is 1 - cos(45deg)
+    // Transforms are applied right-to-left
+    // Cannot use matrix because of the use of % values.
+    transform: translateX(calc(-0.708 * (100% - #{2 * $ribbon-padding}))) rotate(45deg) translateX(calc(100% - #{$ribbon-padding}));
+    transform-origin: top right;
+};
+
+@mixin o-ribbon-left() {
+    @include o-position-absolute($top: 0, $left: 0);
+    padding: 0.5rem $ribbon-padding;
+    transform: translateX(calc(0.708 * (100% - #{2 * $ribbon-padding}) - 100%)) rotate(-45deg) translateX($ribbon-padding);
+    transform-origin: top right;
+};
+
+@mixin o-tag-right() {
+    @include o-position-absolute($top: 0, $right: 0);
+    padding: 0.25rem 1rem;
+};
+
+@mixin o-tag-left() {
+    @include o-position-absolute($top: 0, $left: 0);
+    padding: 0.25rem 1rem;
+};
