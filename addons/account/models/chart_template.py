@@ -210,6 +210,7 @@ class AccountChartTemplate(models.Model):
                     created = self.env[model]._load_records([{
                         'xml_id': "account.%s" % xml_id if '.' not in xml_id else xml_id,
                         'values': record,
+                        'noupdate': True,
                     } for xml_id, record in data.items()])
                     self._post_create_demo_data(created)
         except Exception:
