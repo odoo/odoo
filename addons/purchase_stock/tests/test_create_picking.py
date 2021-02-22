@@ -90,6 +90,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(self.po.state, 'to approve', 'Purchase: PO state should be "to approve".')
 
         # PO approved by manager
+        self.po.env.user.groups_id += self.env.ref("purchase.group_purchase_manager")
         self.po.button_approve()
         self.assertEqual(self.po.state, 'purchase', 'PO state should be "Purchase".')
 
