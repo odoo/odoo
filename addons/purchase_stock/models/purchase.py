@@ -221,7 +221,7 @@ class PurchaseOrder(models.Model):
 
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
-        for order in self:
+        for order in self.filtered(lambda po: po.state in ('purchase', 'done')):
             if any(product.type in ['product', 'consu'] for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))

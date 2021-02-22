@@ -373,6 +373,7 @@ class PurchaseOrder(models.Model):
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     def button_approve(self, force=False):
+        self = self.filtered(lambda order: order._approval_allowed())
         self.write({'state': 'purchase', 'date_approve': fields.Datetime.now()})
         self.filtered(lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
@@ -387,11 +388,7 @@ class PurchaseOrder(models.Model):
                 continue
             order._add_supplier_to_product()
             # Deal with double validation process
-            if order.company_id.po_double_validation == 'one_step'\
-                    or (order.company_id.po_double_validation == 'two_step'\
-                        and order.amount_total < self.env.company.currency_id._convert(
-                            order.company_id.po_double_validation_amount, order.currency_id, order.company_id, order.date_order or fields.Date.today()))\
-                    or order.user_has_groups('purchase.group_purchase_manager'):
+            if order._approval_allowed():
                 order.button_approve()
             else:
                 order.write({'state': 'to approve'})
@@ -708,6 +705,17 @@ class PurchaseOrder(models.Model):
                 order.mail_reminder_confirmed = True
                 date = confirmed_date or self.date_planned.date()
                 order.message_post(body="%s confirmed the receipt will take place on %s." % (order.partner_id.name, date))
+
+    def _approval_allowed(self):
+        """Returns whether the order qualifies to be approved by the current user"""
+        self.ensure_one()
+        return (
+            self.company_id.po_double_validation == 'one_step'
+            or (self.company_id.po_double_validation == 'two_step'
+                and self.amount_total < self.env.company.currency_id._convert(
+                    self.company_id.po_double_validation_amount, self.currency_id, self.company_id,
+                    self.date_order or fields.Date.today()))
+            or self.user_has_groups('purchase.group_purchase_manager'))
 
     def _confirm_reception_mail(self):
         for order in self:
