@@ -17,9 +17,8 @@ class IrActionsReport(models.Model):
         result = super()._postprocess_pdf_report(record, buffer)
 
         if record._name == 'account.move':
-            edi_document = record.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'efff_1')
-            if edi_document:
-                edi_attachment = edi_document[0].attachment_id
+            edi_attachment = record.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'efff_1').attachment_id
+            if edi_attachment:
                 old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
                 tree = etree.fromstring(old_xml)
                 document_currency_code_elements = tree.xpath("//*[local-name()='DocumentCurrencyCode']")
