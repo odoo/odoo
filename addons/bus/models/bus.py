@@ -70,7 +70,7 @@ class ImBus(models.Model):
         self.sendmany([[channel, message]])
 
     @api.model
-    def poll(self, channels, last=0, options=None):
+    def _poll(self, channels, last=0, options=None):
         if options is None:
             options = {}
         # first poll return the notification in the 'buffer'
@@ -120,7 +120,7 @@ class ImDispatch(object):
         # immediatly returns if past notifications exist
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            notifications = env['bus.bus'].poll(channels, last, options)
+            notifications = env['bus.bus']._poll(channels, last, options)
 
         # immediatly returns in peek mode
         if options.get('peek'):
@@ -139,7 +139,7 @@ class ImDispatch(object):
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    notifications = env['bus.bus'].poll(channels, last, options)
+                    notifications = env['bus.bus']._poll(channels, last, options)
             except Exception:
                 # timeout
                 pass
