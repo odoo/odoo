@@ -30,6 +30,70 @@ window.addEventListener('unhandledrejection', ev =>
 let active = true;
 
 /**
+ * Format the traceback of an error.  Basically, we just add the error message
+ * in the traceback if necessary (Chrome already does it by default, but not
+ * other browser. yay for non standard APIs)
+ *
+ * @param {Error} error 
+ * @returns {string}
+ */
+function formatTraceback(error) {
+    const traceback = error.stack;
+    // Error.prototype.stack is non-standard.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+    // However, most engines provide an implementation.
+    // In particular, Chrome formats the contents of Error.stack
+    // https://v8.dev/docs/stack-trace-api#compatibility
+    const browserDetection = new BrowserDetection();
+    if (browserDetection.isBrowserChrome()) {
+        return error.stack;
+    } else {
+        return `${_t("Error:")} ${error.message}\n${error.stack}`;
+    }
+}
+
+/**
+ * Returns an annotated traceback from an error. This is asynchronous because
+ * it needs to fetch the sourcemaps for each script involved in the error,
+ * then compute the correct file/line numbers and add the information to the
+ * correct line.
+ * 
+ * @param {Error} error 
+ * @returns {Promise<string>}
+ */
+async function annotateTraceback(error) {
+    const traceback = formatTraceback(error);
+    await ajax.loadJS('/web/static/lib/stacktracejs/stacktrace.js');
+    const frames = await StackTrace.fromError(error);
+    const lines = traceback.split('\n');
+    if (lines[lines.length-1].trim() === "") {
+        // firefox traceback have an empty line at the end
+        lines.splice(-1);
+    }
+
+    // Chrome stacks contains some lines with (index 0) which apparently
+    // corresponds to some native functions (at least Promise.all). We need to
+    // ignore them because they will not correspond to a stackframe.
+    const skips = lines.filter(l => l.includes("(index 0")).length;
+    const offset = lines.length - frames.length - skips;
+    let lineIndex = offset;
+    let frameIndex = 0;
+    while (frameIndex < frames.length) {
+        const line = lines[lineIndex];
+        if (line.includes("(index 0)")) {
+            lineIndex++;
+            continue;
+        }
+        const frame = frames[frameIndex];
+        const info = ` (${frame.fileName}:${frame.lineNumber})`;
+        lines[lineIndex] = line + info;
+        lineIndex++;
+        frameIndex++;
+    }
+    return lines.join('\n');
+}
+
+/**
  * An extension of Dialog Widget to render the warnings and errors on the website.
  * Extend it with your template of choice like ErrorDialog/WarningDialog
  */
@@ -37,7 +101,6 @@ var CrashManagerDialog = Dialog.extend({
     xmlDependencies: (Dialog.prototype.xmlDependencies || []).concat(
         ['/web/static/src/xml/crash_manager.xml']
     ),
-    jsLibs: ['/web/static/lib/stacktracejs/stacktrace.js'],
 
     /**
      * @param {Object} error
@@ -53,24 +116,58 @@ var CrashManagerDialog = Dialog.extend({
         this.traceback = error.traceback;
         core.bus.off('close_dialogs', this);
     },
+
     willStart: async function () {
-        await this._super(...arguments);
-        if (config.isDebug('assets') && this.error.data && this.error.data.jsError) {
-            // annotate the stacktrace with correct file/line number information
-            const frames = await StackTrace.fromError(this.error.data.jsError);
-            const lines = this.traceback.split('\n');
-            if (lines[lines.length-1].trim() === "") {
-                // firefox traceback have an empty line at the end
-                lines.splice(-1);
+        await this._super()
+        const jsError = this.error.data && this.error.data.jsError;
+        if (jsError) {
+            if (config.isDebug('assets')) {
+                this.traceback = await annotateTraceback(jsError);
+            } else {
+                this.traceback = formatTraceback(jsError);
             }
-            const offset = lines.length - frames.length;
-            for (let i = 0; i < frames.length; i++) {
-                const info = ` (${frames[i].fileName}:${frames[i].lineNumber})`;
-                lines[offset + i] = lines[offset + i] + info;
-            }
-            this.traceback = lines.join('\n');
         }
     },
+
+    start: async function () {
+        await this._super();
+        const message = this.message;
+        const traceback = this.traceback;
+
+        if (!traceback) {
+            return;
+        }
+        this.$(".o_error_detail").on("shown.bs.collapse", function (e) {
+            e.target.scrollTop = e.target.scrollHeight;
+        });
+
+        const $clipboardBtn = this.$(".o_clipboard_button");
+        $clipboardBtn.tooltip({title: _t("Copied !"), trigger: "manual", placement: "left"});
+        this.clipboard = new window.ClipboardJS($clipboardBtn[0], {
+            text: function () {
+                return (_t("Error") + ":\n" + message + "\n\n" + traceback).trim();
+            },
+            // Container added because of Bootstrap modal that give the focus to another element.
+            // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
+            // https://github.com/zenorocha/clipboard.js/issues/155
+            container: this.el,
+        });
+        this.clipboard.on("success", function (e) {
+            _.defer(function () {
+                $clipboardBtn.tooltip("show");
+                _.delay(function () {
+                    $clipboardBtn.tooltip("hide");
+                }, 800);
+            });
+        });
+    },
+    destroy() {
+        if (this.clipboard) {
+            this.$(".o_clipboard_button").tooltip('dispose');
+            this.clipboard.destroy();
+        }
+        this._super();
+    }
 });
 
 var ErrorDialog = CrashManagerDialog.extend({
@@ -120,7 +217,6 @@ var CrashManager = AbstractService.extend({
             'odoo.exceptions.Warning': _lt("Warning"),
         };
 
-        this.browserDetection = new BrowserDetection();
         this._super.apply(this, arguments);
 
         // crash manager integration
@@ -167,21 +263,11 @@ var CrashManager = AbstractService.extend({
         // promise has been rejected due to a crash
         core.bus.on('crash_manager_unhandledrejection', this, function (ev) {
             if (ev.reason && ev.reason instanceof Error) {
-                // Error.prototype.stack is non-standard.
-                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
-                // However, most engines provide an implementation.
-                // In particular, Chrome formats the contents of Error.stack
-                // https://v8.dev/docs/stack-trace-api#compatibility
-                let traceback;
-                if (self.browserDetection.isBrowserChrome()) {
-                    traceback = ev.reason.stack;
-                } else {
-                    traceback = `${_t("Error:")} ${ev.reason.message}\n${ev.reason.stack}`;
-                }
+                let traceback = ev.reason.stack;
                 self.show_error({
                     type: _t("Odoo Client Error"),
                     message: '',
-                    data: {debug: _t('Traceback:') + "\n" + traceback},
+                    data: {debug: _t('Traceback:') + "\n" + traceback, jsError: ev.reason},
                 });
             } else {
                 // the rejection is not due to an Error, so prevent the browser
@@ -275,41 +361,6 @@ var CrashManager = AbstractService.extend({
         var dialog = new dialogClass(this, {
             title: _.str.capitalize(error.type) || _t("Odoo Error"),
         }, error);
-
-
-        // When the dialog opens, initialize the copy feature and destroy it when the dialog is closed
-        var $clipboardBtn;
-        var clipboard;
-        dialog.opened(function () {
-            // When the full traceback is shown, scroll it to the end (useful for better python error reporting)
-            dialog.$(".o_error_detail").on("shown.bs.collapse", function (e) {
-                e.target.scrollTop = e.target.scrollHeight;
-            });
-
-            $clipboardBtn = dialog.$(".o_clipboard_button");
-            $clipboardBtn.tooltip({title: _t("Copied !"), trigger: "manual", placement: "left"});
-            clipboard = new window.ClipboardJS($clipboardBtn[0], {
-                text: function () {
-                    return (_t("Error") + ":\n" + error.message + "\n\n" + error.data.debug).trim();
-                },
-                // Container added because of Bootstrap modal that give the focus to another element.
-                // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
-                // https://github.com/zenorocha/clipboard.js/issues/155
-                container: dialog.el,
-            });
-            clipboard.on("success", function (e) {
-                _.defer(function () {
-                    $clipboardBtn.tooltip("show");
-                    _.delay(function () {
-                        $clipboardBtn.tooltip("hide");
-                    }, 800);
-                });
-            });
-        });
-        dialog.on("closed", this, function () {
-            $clipboardBtn.tooltip('dispose');
-            clipboard.destroy();
-        });
 
         return dialog.open();
     },
