@@ -495,7 +495,7 @@ class Registry(Mapping):
             if spec is None:
                 sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
                 model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
-            elif spec != (conname, table2, column2, deltype):
+            elif (spec[1], spec[2], spec[3]) != (table2, column2, deltype):
                 sql.drop_constraint(cr, table1, spec[0])
                 sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
                 model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
