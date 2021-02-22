@@ -711,7 +711,13 @@ define([
       var rng = range.create().expand(dom.isAnchor);
 
       // Get the first anchor on range(for edit).
-      var $anchor = $(list.head(rng.nodes(dom.isAnchor)));
+      var anchor = list.head(rng.nodes(dom.isAnchor));
+      const $anchor = $(anchor);
+
+      if ($anchor.length && !rng.nodes()[0].isSameNode(anchor)) {
+        rng = range.createFromNode(anchor);
+        rng.select();
+      }
 
       // Check if the target is a button element.
       let isButton = false;
