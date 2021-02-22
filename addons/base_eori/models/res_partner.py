@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 from zeep import Client
 import requests
 import json
-
+    
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
@@ -25,7 +25,6 @@ class ResPartner(models.Model):
             company = self.env.company
 
         if company.eori_validation:
-
             for partner in self:
                 if not partner.eori_number:
                     continue
@@ -33,11 +32,12 @@ class ResPartner(models.Model):
 
                 if not self._validate_eori(eori_country, eori_number):
                     raise ValidationError(_('Please verify EORI Number.'))
+
     @api.model
     def _validate_eori(self, country_code, eori_number):
-        #TODO: Make a format validation of eoir_number.
+        #TODO: Make a format validation of eori_number.
         try:
-            if country_code.upper() == 'GB' or country_code.upper() == 'XI':
+            if country_code.upper() == 'GB' or country_code.upper() == 'XI' or country_code.upper() == 'XU':
                 return self._validate_eori_gb(country_code.upper() + eori_number)
             else: #TODO: Check if country in EU.
                 return self._validate_eori_eu(country_code.upper() + eori_number)
@@ -59,11 +59,9 @@ class ResPartner(models.Model):
     @api.model
     @tools.ormcache('eori')
     def _validate_eori_gb(self, eori):
-        # GB Validation
-        url = 'https://api.service.hmrc.gov.uk/customs/eori/lookup/check-multiple-eori'
+        # GB Validation     
+        resp = requests.post('https://api.service.hmrc.gov.uk/customs/eori/lookup/check-multiple-eori', data=json.dumps({'eoris': [eori]}))
 
-        task = json.dumps({'eoris': [eori]})
-        resp = requests.post(url, data=task)
         if resp.status_code != 200: 
             raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
 
