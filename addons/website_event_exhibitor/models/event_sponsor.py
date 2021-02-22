@@ -40,7 +40,7 @@ class Sponsor(models.Model):
         sanitize_attributes=False, sanitize_form=True, translate=html_translate,
         readonly=False, store=True)
     # contact information
-    partner_id = fields.Many2one('res.partner', 'Partner', required=True)
+    partner_id = fields.Many2one('res.partner', 'Partner', required=True, auto_join=True)
     partner_name = fields.Char('Name', related='partner_id.name')
     partner_email = fields.Char('Email', related='partner_id.email')
     partner_phone = fields.Char('Phone', related='partner_id.phone')
