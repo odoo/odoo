@@ -13,28 +13,6 @@
             <field name="type_tax_use">sale</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_2A3_ingrs_local_vnts')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_2A3_ingrs_local_vnts')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
-            ]"/>
         </record>
 
         <record id="tax_0_purch" model="account.tax.template">
@@ -79,32 +57,6 @@
             <field name="type_tax_use">sale</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030102'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030102'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_18_sale_incl" model="account.tax.template">
@@ -117,32 +69,6 @@
             <field name="type_tax_use">sale</field>
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030102'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_2b6_grvd')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030102'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_18_casilla')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_tip_sale" model="account.tax.template">
@@ -189,30 +115,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080101'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080101'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_18_purch_incl" model="account.tax.template">
@@ -225,30 +127,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080101'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080101'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_16_purch" model="account.tax.template">
@@ -499,30 +377,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080102'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080102'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_18_purch_serv_incl" model="account.tax.template">
@@ -535,30 +389,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080102'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080102'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_18_importation" model="account.tax.template">
@@ -571,30 +401,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080103'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_imptcn')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_11080103'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_pgdo_imptcn')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_18_of_10" model="account.tax.template">
@@ -788,32 +594,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030203'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030203'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
-                }),
-            ]"/>
         </record>
 
         <record id="ret_100_tax_person" model="account.tax.template">
@@ -826,32 +606,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030202'),
-                    'minus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_retcn_prsn')],
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_21030202'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_retcn_prsn')],
-                }),
-            ]"/>
         </record>
 
         <record id="ret_30_tax_moral" model="account.tax.template">
@@ -1303,30 +1057,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_51010500'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_51010500'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
         </record>
 
         <record id="tax_18_serv_cost" model="account.tax.template">
@@ -1338,30 +1068,6 @@
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
-            <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_51010500'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                    'account_id': ref('do_niif_51010500'),
-                    'plus_report_line_ids': [ref('account_tax_report_itbs_pgdo_locales')],
-                }),
-            ]"/>
         </record>
 
     </data>
