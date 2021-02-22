@@ -15,7 +15,7 @@ class AccountMove(models.Model):
             return float_repr(amount, self.currency_id.decimal_places)
 
         return {
-            'invoice': self,
+            **self._prepare_edi_vals_to_export(),
             'ubl_version': 2.1,
             'type_code': 380 if self.move_type == 'out_invoice' else 381,
             'payment_means_code': 42 if self.journal_id.bank_account_id else 31,
