@@ -17,6 +17,11 @@
             @include print-variable('o-palette-#{$index}-#{$name}', $color);
         }
     }
+
+    // Need info about the base grays which are used to compute the final grays
+    @each $name, $color in $o-base-gray-color-palette {
+        @include print-variable('base-#{$name}', $color);
+    }
 }
 
 // EDITOR TOP BAR AND POPOVER
