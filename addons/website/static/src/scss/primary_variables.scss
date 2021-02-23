@@ -16,6 +16,11 @@ $o-base-color-palette: map-merge($o-base-color-palette, (
 // automatically replaced with corresponsing color of chosen color palette.
 $o-user-color-palette: () !default;
 
+// By default, all user gray color palette values are null. Each null value
+// is automatically replaced with corresponsing color of chosen gray color
+// palette.
+$o-user-gray-color-palette: () !default;
+
 // By default, all user theme color palette values are null. Each null value
 // is automatically replaced with corresponsing color of chosen theme color
 // palette.
@@ -250,6 +255,11 @@ $o-base-website-values-palette: (
 
     'layout': 'full', // 'full' / 'boxed'
     'color-palettes-number': null, // Default to the individual variables for each color palette type
+
+    // Gray configuration values which are used to generate the customized grays
+    // on the JavaScript side.
+    'gray-hue': 210,
+    'gray-extra-saturation': 0,
 
     'btn-primary-outline': false,
     'btn-secondary-outline': false,

@@ -27,6 +27,7 @@ class Assets(models.AbstractModel):
         """
         if 'color-palettes-number' in values:
             self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_common')
+            self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_common')
             # Do not reset all theme colors for compatibility (not removing alpha -> epsilon colors)
             self.make_scss_customization('/website/static/src/scss/options/colors/user_theme_color_palette.scss', {
                 'success': 'null',
