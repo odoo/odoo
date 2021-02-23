@@ -35,7 +35,7 @@ tour.register('shop_buy_product', {
             id: 'add_cart_step',
             content: "click on add to cart",
             extra_trigger: 'label:contains(Steel) input:propChecked',
-            trigger: '#product_detail form[action^="/shop/cart/update"] .btn-primary',
+            trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
         },
         {
             content: "add suggested",

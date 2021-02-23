@@ -17,7 +17,7 @@ tour.register("a_shop_custom_attribute_value", {
     trigger: 'span.text-danger span:contains(750)',
     run: function (){}, // check
 }, {
-    trigger: 'b.oe_price span:contains(600)',
+    trigger: 'span.oe_price span:contains(600)',
     run: function (){}, // check
 }, {
     id: 'add_cart_step',

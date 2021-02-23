@@ -100,10 +100,12 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 }
             }
 
+            let $form = $elem.closest('form');
+            $form = $form.length ? $form : $('#product_details > form');
             this.selectOrCreateProduct(
-                $elem.closest('form'),
+                $form,
                 productId,
-                $elem.closest('form').find('.product_template_id').val(),
+                $form.find('.product_template_id').val(),
                 false
             ).then(function (productId) {
                 productId = parseInt(productId, 10) || parseInt($elem.data('product-product-id'), 10);
@@ -252,7 +254,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
 });
 
 publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandlerMixin, {
-    selector: '.oe_website_sale',
+    selector: '.js_sale',
     events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',

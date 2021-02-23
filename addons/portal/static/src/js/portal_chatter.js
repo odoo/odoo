@@ -52,6 +52,7 @@ var PortalChatter = publicWidget.Widget.extend({
             'hash': false,
             'pid': false,
             'domain': [],
+            'two_columns': false,
         });
 
         this.set('messages', []);

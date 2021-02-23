@@ -122,8 +122,8 @@ class TestUi(odoo.tests.HttpCase):
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
-        p = root.xpath('//div[@id="product_attributes_simple"]/p')[0]
-        text = etree.tostring(p, encoding='unicode', method='text')
+        tr_varieties_simple_att = root.xpath('//div[@id="product_attributes_simple"]//tr')[0]
+        text = etree.tostring(tr_varieties_simple_att, encoding='unicode', method='text')
         self.assertEqual(text.replace(' ', '').replace('\n', ''), "GrapeVarieties:CabernetSauvignon,Merlot,CabernetFranc,PetitVerdot")
 
         # Case product page with "Product attributes table" enabled

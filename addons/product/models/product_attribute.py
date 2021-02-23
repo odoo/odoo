@@ -32,6 +32,7 @@ class ProductAttribute(models.Model):
     product_tmpl_ids = fields.Many2many('product.template', string="Related Products", compute='_compute_products', store=True)
     display_type = fields.Selection([
         ('radio', 'Radio'),
+        ('pills', 'Pills'),
         ('select', 'Select'),
         ('color', 'Color')], default='radio', required=True, help="The display type used in the Product Configurator.")
 
