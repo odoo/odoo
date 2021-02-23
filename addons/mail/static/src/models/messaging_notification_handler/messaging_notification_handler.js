@@ -87,9 +87,6 @@ function factory(dependencies) {
                             return;
                         }
                         return this._handleNotificationPartner(Object.assign({}, message));
-                    default:
-                        console.warn(`mail.messaging_notification_handler: Unhandled notification "${model}"`);
-                        return;
                 }
             });
             await this.async(() => Promise.all(proms));
