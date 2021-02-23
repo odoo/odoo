@@ -237,7 +237,8 @@ class CurrencyRate(models.Model):
 
     name = fields.Date(string='Date', required=True, index=True,
                            default=lambda self: fields.Date.today())
-    rate = fields.Float(digits=0, default=1.0, group_operator="avg", help='The rate of the currency to the currency of rate 1')
+    rate = fields.Float(digits=0, compute="_compute_rate", store=True, readonly=False, group_operator="avg",
+        help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
@@ -247,16 +248,25 @@ class CurrencyRate(models.Model):
         ('currency_rate_check', 'CHECK (rate>0)', 'The currency rate must be strictly positive.'),
     ]
 
+    def _get_latest_rate(self):
+        return self.search([
+            ('currency_id', '=', self.currency_id.id),
+            ('company_id', '=', self.company_id.id or self.env.company.id),
+            ('name', '<=', self.name or fields.Date.today()),
+        ], order="name desc", limit=1)
+
+    @api.depends('currency_id', 'company_id', 'name')
+    def _compute_rate(self):
+        for currency_rate in self:
+            latest_rate = currency_rate._get_latest_rate()
+            currency_rate.rate = latest_rate.rate if latest_rate else 1.0
+
     @api.onchange('rate')
     def _onchange_rate_warning(self):
         if not self.currency_id.id:
             return
 
-        latest_rate = self.search([
-            ('currency_id', '=', self.currency_id.id),
-            ('company_id', '=', self.company_id.id or self.env.company.id),
-            ('name', '<=', self.name or fields.Date.today()),
-        ], order="name desc", limit=1)
+        latest_rate = self._get_latest_rate()
         if latest_rate and latest_rate.rate:
             diff = (latest_rate.rate - self.rate) / latest_rate.rate
             if abs(diff) > 0.2:
