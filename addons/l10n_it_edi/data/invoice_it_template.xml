@@ -172,7 +172,17 @@
                                 <RiferimentoNormativo t-if="tax_line.tax_line_id.l10n_it_has_exoneration" t-esc="tax_line.tax_line_id.l10n_it_law_reference"/>
                             </DatiRiepilogo>
                         </t>
-
+                        <!-- 0% tax lines -->
+                        <t t-foreach="tax_map" t-as="tax">
+                            <DatiRiepilogo>
+                                <AliquotaIVA t-esc="format_numbers(tax.amount)"/>
+                                <Natura t-if="tax.l10n_it_has_exoneration" t-esc="tax.l10n_it_kind_exoneration"/>
+                                <ImponibileImporto t-esc="format_monetary(tax_map[tax], currency)"/>
+                                <Imposta t-esc="format_monetary(0.00, currency)"/>
+                                <EsigibilitaIVA t-if="not tax.l10n_it_has_exoneration or tax.l10n_it_kind_exoneration=='N6'" t-esc="tax.l10n_it_vat_due_date"/>
+                                <RiferimentoNormativo t-if="tax.l10n_it_has_exoneration" t-esc="tax.l10n_it_law_reference"/>
+                            </DatiRiepilogo>
+                        </t>
                     </DatiBeniServizi>
                     <DatiPagamento>
                         <t t-set="payments" t-value="record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))"/>
