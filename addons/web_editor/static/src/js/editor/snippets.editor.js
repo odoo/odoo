@@ -903,6 +903,7 @@ var SnippetsMenu = Widget.extend({
         'click .oe_snippet': '_onSnippetClick',
         'click .o_install_btn': '_onInstallBtnClick',
         'click .o_we_add_snippet_btn': '_onBlocksTabClick',
+        'click .o_we_customize_snippet_btn': '_onOptionsTabClick',
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
         'click #snippet_custom .o_rename_btn': '_onRenameBtnClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
@@ -1023,6 +1024,9 @@ var SnippetsMenu = Widget.extend({
             })[0]
         );
 
+        this.emptyOptionsTabContent = document.createElement('div');
+        this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
+        this.emptyOptionsTabContent.append(_t("Select a block on your page to style it."));
         this.options.getScrollOptions = this._getScrollOptions.bind(this);
 
         // Fetch snippet templates and compute it
@@ -2148,7 +2152,7 @@ var SnippetsMenu = Widget.extend({
      * the new content of the customizePanel
      * @param {this.tabs.VALUE} [tab='blocks'] - the tab to select
      */
-    _updateLeftPanelContent: function ({content, tab}) {
+    _updateLeftPanelContent: function ({content, tab, ...options}) {
         clearTimeout(this._textToolsSwitchingTimeout);
         this._closeWidgets();
 
@@ -2164,12 +2168,9 @@ var SnippetsMenu = Widget.extend({
         this.$('.o_snippet_search_filter').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.$('#o_scroll').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.customizePanel.classList.toggle('d-none', tab === this.tabs.BLOCKS);
-        this.textEditorPanelEl.classList.toggle('d-none', tab !== this.tabs.OPTIONS);
-
+        this.textEditorPanelEl.classList.toggle('d-none', tab !== this.tabs.OPTIONS || !!options.forceEmptyTab);
         this.$('.o_we_add_snippet_btn').toggleClass('active', tab === this.tabs.BLOCKS);
-        this.$('.o_we_customize_snippet_btn').toggleClass('active', tab === this.tabs.OPTIONS)
-                                             .prop('disabled', tab !== this.tabs.OPTIONS);
-
+        this.$('.o_we_customize_snippet_btn').toggleClass('active', tab === this.tabs.OPTIONS);
     },
     /**
      * Scrolls to given snippet.
@@ -2431,6 +2432,18 @@ var SnippetsMenu = Widget.extend({
                 tab: this.tabs.BLOCKS,
             });
         });
+    },
+    /**
+     * @private
+     */
+    _onOptionsTabClick: function (ev) {
+        if (!ev.currentTarget.classList.contains('active')) {
+            this._updateLeftPanelContent({
+                content: this.emptyOptionsTabContent,
+                tab: this.tabs.OPTIONS,
+                forceEmptyTab: true,
+            });
+        }
     },
     /**
      * @private
