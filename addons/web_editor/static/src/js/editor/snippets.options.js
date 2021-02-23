@@ -3592,7 +3592,10 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     async _loadImageInfo() {
         this.img = new Image();
-        Object.entries(this.$target[0].dataset).forEach(([key, value]) => {
+        Object.entries(this.$target[0].dataset).filter(([key]) =>
+            // Avoid copying dynamic editor attributes
+            !['oeId','oeModel', 'oeField', 'oeXpath', 'noteId'].includes(key)
+        ).forEach(([key, value]) => {
             this.img.dataset[key] = value;
         });
         const src = getBgImageURL(this.$target[0]);
