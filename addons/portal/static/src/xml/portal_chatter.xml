@@ -134,16 +134,21 @@
     </t>
 
     <t t-name="portal.Chatter">
-        <div class="o_portal_chatter p-0">
-            <div class="o_portal_chatter_header">
-                <t t-call="portal.chatter_message_count"/>
+        <t t-set="two_columns" t-value="widget.options['two_columns']"/>
+        <div t-attf-class="o_portal_chatter p-0 #{two_columns and 'row' or ''}">
+            <div t-attf-class="#{two_columns and 'col-lg-5' or ''}">
+                <div class="o_portal_chatter_header">
+                    <t t-call="portal.chatter_message_count"/>
+                </div>
+                <hr t-if="widget.options['allow_composer']"/>
+                <div class="o_portal_chatter_composer"/>
             </div>
-            <hr t-if="widget.options['allow_composer']"/>
-            <div class="o_portal_chatter_composer"/>
-            <hr/>
-            <t t-call="portal.chatter_messages"/>
-            <div class="o_portal_chatter_footer">
-                <t t-call="portal.pager"/>
+            <hr t-if="!two_columns"/>
+            <div t-attf-class="#{two_columns and 'offset-lg-1 col-lg-6' or ''}">
+                <t t-call="portal.chatter_messages"/>
+                <div class="o_portal_chatter_footer">
+                    <t t-call="portal.pager"/>
+                </div>
             </div>
         </div>
     </t>

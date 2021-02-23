@@ -11,7 +11,7 @@
                 <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
                     <div t-foreach="props.attributes" t-as="attribute" class="attribute">
                         <div class="attribute_name" t-esc="attribute.name"/>
-                        <RadioProductAttribute t-if="attribute.display_type === 'radio'" attribute="attribute"/>
+                        <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                         <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
                         <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
                     </div>
