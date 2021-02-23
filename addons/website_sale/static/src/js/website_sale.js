@@ -152,6 +152,8 @@ var VariantMixin = require('sale.VariantMixin');
 var wSaleUtils = require('website_sale.utils');
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 require("web.zoomodoo");
+const {extraMenuUpdateCallbacks} = require('website.content.menu');
+const dom = require('web.dom');
 
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
@@ -819,6 +821,38 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     _onClickDeleteProduct: function (ev) {
         ev.preventDefault();
         $(ev.currentTarget).closest('tr').find('.js_quantity').val(0).trigger('change');
+    },
+});
+
+publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
+    selector: '#o-carousel-product',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this._updateCarouselPosition();
+        extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$target.css('top', '');
+        this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _updateCarouselPosition() {
+        this.$target.css('top', dom.scrollFixedOffset() + 5);
     },
 });
 });

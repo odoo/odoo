@@ -1791,7 +1791,7 @@
 
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
-        <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
+        <div id="o-carousel-product" class="carousel slide position-sticky" data-ride="carousel" data-interval="0">
             <div class="carousel-outer position-relative">
                 <div class="carousel-inner h-100">
                     <t t-foreach="product_images" t-as="product_image">
