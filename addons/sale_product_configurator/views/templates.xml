@@ -163,13 +163,11 @@
                         <img t-else="" t-att-src="'/web/image/product.template/%s/image_128' % product.id"  class="variant_image" alt="Product Image"/>
                     </td>
                     <td class='td-product_name' colspan="2">
-                        <div class="float-left">
+                        <div class="mb-3">
                             <strong class="product-name product_display_name" t-esc="combination_info['display_name']"/>
                             <div class="text-muted small" t-field="product.description_sale"/>
                         </div>
-                        <div class="float-right">
-                            <t t-call="sale.variants"/>
-                        </div>
+                        <t t-call="sale.variants"/>
                     </td>
                     <td class="text-center td-qty d-none">
                         <t t-call='sale_product_configurator.product_quantity_config' />

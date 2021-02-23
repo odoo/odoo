@@ -18,10 +18,11 @@
     </t>
 
     <t t-name="portal_rating.rating_card">
+        <t t-set="two_columns" t-value="widget.options['two_columns']"/>
         <div class="row o_website_rating_card_container justify-content-center">
-            <div class="col-lg-3" t-if="!_.isEmpty(widget.get('rating_card_values'))">
-                <p><strong>Average</strong></p>
-                <div class="o_website_rating_avg text-center">
+            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-3'}" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+                <p t-if="!two_columns"><strong>Average</strong></p>
+                <div t-attf-class="o_website_rating_avg #{two_columns and 'mb-2' or 'text-center'}">
                     <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
                     <t t-call="portal_rating.rating_stars_static">
                         <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
@@ -29,8 +30,9 @@
                     <t t-call="portal.chatter_message_count"/>
                 </div>
             </div>
-            <div class="col-lg-6" t-if="!_.isEmpty(widget.get('rating_card_values'))">
-                <p><strong>Details</strong></p>
+            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-6'}" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+                <hr t-if="two_columns"/>
+                <p t-if="!two_columns"><strong>Details</strong></p>
                 <div class="o_website_rating_progress_bars">
                     <table class="o_website_rating_progress_table">
                         <t t-foreach="widget.get('rating_card_values')['percent']" t-as="percent">
@@ -49,8 +51,8 @@
                                 </td>
                                 <td class="o_website_rating_table_reset">
                                     <button class="btn btn-link o_website_rating_select_text" t-att-data-star="percent['num']">
-                                        <i class="fa fa-times d-block d-sm-none" role="img" aria-label="Remove Selection"/>
-                                        <span class="d-none d-sm-block">Remove Selection</span>
+                                        <i t-attf-class="fa fa-times d-block #{!two_columns and 'd-sm-none' or ''}" role="img" aria-label="Remove Selection"/>
+                                        <span t-attf-class="d-none #{!two_columns and 'd-sm-block' or ''}">Remove Selection</span>
                                     </button>
                                 </td>
                             </tr>
