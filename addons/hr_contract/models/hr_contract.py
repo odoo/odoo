@@ -165,7 +165,10 @@ class Contract(models.Model):
             self._assign_open_contract()
         if vals.get('state') == 'close':
             for contract in self:
-                contract.date_end = max(date.today(), contract.date_start)
+                date_end = max(date.today(), contract.date_start)
+                if contract.date_end:
+                    date_end = min(date_end, contract.date_end)
+                contract.date_end = date_end
 
         calendar = vals.get('resource_calendar_id')
         if calendar and (self.state == 'open' or (self.state == 'draft' and self.kanban_state == 'done')):
