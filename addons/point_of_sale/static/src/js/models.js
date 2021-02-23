@@ -1788,7 +1788,9 @@ exports.Orderline = Backbone.Model.extend({
         var taxes_ids = this.get_product().taxes_id;
         var taxes = [];
         for (var i = 0; i < taxes_ids.length; i++) {
-            taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
+            if (this.pos.taxes_by_id[taxes_ids[i]]) {
+                taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
+            }
         }
         return taxes;
     },
