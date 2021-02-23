@@ -8,6 +8,7 @@
     var viewUpdateCount = 0;
     var testedApps;
     var testedMenus;
+    var blackListedMenus = ['account.menu_action_account_bank_journal_form'];
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
@@ -127,6 +128,7 @@
         var menuDescription = element.innerText.trim() + " " + element.dataset.menuXmlid;
         console.log("Testing menu", menuDescription);
         testedMenus.push(element.dataset.menuXmlid);
+        if (blackListedMenus.includes(element.dataset.menuXmlid)) return Promise.resolve(); // Skip black listed menus
         var startActionCount = clientActionCount;
         _click($(element));
         var isModal = false;
