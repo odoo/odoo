@@ -3356,7 +3356,7 @@ const SnippetOptionWidget = Widget.extend({
      */
     _toggleCollapseEl(collapseEl, show) {
         collapseEl.classList.toggle('active', show);
-        collapseEl.querySelector('.o_we_collapse_toggler').classList.toggle('active', show);
+        collapseEl.querySelector('we-toggler.o_we_collapse_toggler').classList.toggle('active', show);
     },
 
     //--------------------------------------------------------------------------
@@ -3368,7 +3368,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Event} ev
      */
     _onCollapseTogglerClick(ev) {
-        const currentCollapseEl = ev.currentTarget.parentNode;
+        const currentCollapseEl = ev.currentTarget.closest('we-collapse');
         this._toggleCollapseEl(currentCollapseEl);
         for (const collapseEl of currentCollapseEl.querySelectorAll('we-collapse')) {
             this._toggleCollapseEl(collapseEl, false);

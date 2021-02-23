@@ -1213,6 +1213,20 @@
             <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning"/>
             <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger"/>
         </we-row>
+        <we-collapse>
+            <we-row string="Grays" class="o_we_gray_preview o_we_collapse_toggler">
+                <t t-foreach="9" t-as="i">
+                    <t t-set="grayCode" t-value="str((9 - i) * 100)"/>
+                    <span t-attf-title="Gray #{grayCode}"
+                          t-attf-variable="#{grayCode}"
+                          t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"/>
+                </t>
+            </we-row>
+            <we-range string="⌙ Hue" data-customize-website-variable="" data-min="0" data-max="360"
+                data-variable="gray-hue" class="o_we_slider_tint"/>
+            <we-range string="⌙ Saturation" data-customize-website-variable="" data-min="-20" data-max="100"
+                data-variable="gray-extra-saturation"/>
+        </we-collapse>
     </div>
     <div data-js="OptionsTab" data-selector="website-settings" data-no-check="true">
         <we-row string="Theme">

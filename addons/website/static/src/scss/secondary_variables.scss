@@ -116,6 +116,16 @@ $-palette-default: o-safe-nth($o-color-palettes, $o-color-palette-number, ());
 $-actual-user-color-palette: map-merge($-palette-default, o-map-omit($o-user-color-palette));
 $o-color-palettes: append($o-color-palettes, $-actual-user-color-palette);
 
+// Gray palette
+// ------------
+
+// By default, most user gray palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default color
+// palette.
+$-palette-default: o-safe-nth($o-gray-color-palettes, $o-gray-color-palette-number, ());
+$-actual-user-gray-color-palette: map-merge($-palette-default, o-map-omit($o-user-gray-color-palette));
+$o-gray-color-palettes: append($o-gray-color-palettes, $-actual-user-gray-color-palette);
+
 // Theme color palette
 // -------------------
 
@@ -151,6 +161,7 @@ $o-theme-color-palettes: append($o-theme-color-palettes, $-actual-user-theme-col
 // color palettes.
 $o-original-color-palette-number: $o-color-palette-number;
 $o-color-palette-number: length($o-color-palettes);
+$o-gray-color-palette-number: length($o-gray-color-palettes);
 $o-theme-color-palette-number: length($o-theme-color-palettes);
 
 $o-we-auto-contrast-exclusions: () !default;

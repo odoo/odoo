@@ -10,7 +10,6 @@ const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wUtils = require('website.utils');
 require('website.s_popup_options');
-const weWidgets = require('wysiwyg.widgets');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -489,6 +488,10 @@ options.Class.include({
             case 'color':
                 await this._customizeWebsiteColor(widgetValue, params);
                 break;
+            default:
+                if (params.customCustomization) {
+                    await params.customCustomization.call(this, widgetValue, params);
+                }
         }
 
         if (params.reload || config.isDebug('assets')) {
@@ -512,19 +515,31 @@ options.Class.include({
     /**
      * @private
      */
-    _customizeWebsiteColor: async function (color, params) {
+    async _customizeWebsiteColor(color, params) {
+        await this._customizeWebsiteColors({[params.color]: color}, params);
+    },
+    /**
+     * @private
+     */
+     async _customizeWebsiteColors(colors, params) {
+        colors = colors || {};
+
         const baseURL = '/website/static/src/scss/options/colors/';
         const colorType = params.colorType ? (params.colorType + '_') : '';
         const url = `${baseURL}user_${colorType}color_palette.scss`;
 
-        if (color) {
-            if (weUtils.isColorCombinationName(color)) {
-                color = parseInt(color);
-            } else if (!ColorpickerWidget.isCSSColor(color)) {
-                color = `'${color}'`;
+        const finalColors = {};
+        for (const [colorName, color] of Object.entries(colors)) {
+            finalColors[colorName] = color;
+            if (color) {
+                if (weUtils.isColorCombinationName(color)) {
+                    finalColors[colorName] = parseInt(color);
+                } else if (!ColorpickerWidget.isCSSColor(color)) {
+                    finalColors[colorName] = `'${color}'`;
+                }
             }
         }
-        return this._makeSCSSCusto(url, {[params.color]: color});
+        return this._makeSCSSCusto(url, finalColors);
     },
     /**
      * @private
@@ -794,11 +809,77 @@ options.registry.BackgroundVideo = options.Class.extend({
 });
 
 options.registry.OptionsTab = options.Class.extend({
+    GRAY_PARAMS: ['gray-hue', 'gray-extra-saturation'],
+
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        this.grayParams = {};
+        this.grays = {};
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUI() {
+        await this._super(...arguments);
+
+        // The bg-XXX classes have been updated (and could be updated by another
+        // option like changing color palette) -> remove the inline style that
+        // was added for gray previews.
+        this.$el.find(".o_we_gray_preview").each((_, e) => {
+            e.style.removeProperty("background-color");
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    async customizeWebsiteVariable(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        if (!this.GRAY_PARAMS.includes(params.variable)) {
+            return;
+        }
+
+        // Difference with other "normal" variable: gray parameters are used
+        // *on the JS side* to compute the grays that will be saved in the
+        // database. We indeed need those grays to be computed here for faster
+        // previews so this allows to not duplicate most of the logic. Also,
+        // this gives flexibility to maybe allow full customization of grays in
+        // customizations and themes. Also, this allows to ease migration if the
+        // computation here was to change: the user grays would still be
+        // unchanged as saved in the database.
+
+        this.grayParams[params.variable] = parseInt(widgetValue);
+        for (let i = 1; i < 10; i++) {
+            const key = (100 * i).toString();
+            this.grays[key] = this._buildGray(key);
+        }
+
+        // Preview UI update
+        this.$el.find(".o_we_gray_preview").each((_, e) => {
+            e.style.setProperty("background-color", this.grays[e.getAttribute('variable')], "important");
+        });
+
+        // Save all computed (JS side) grays in database
+        await this._customizeWebsite(previewMode, undefined, Object.assign({}, params, {
+            customCustomization: () => { // TODO this could be prettier
+                return this._customizeWebsiteColors(this.grays, Object.assign({}, params, {
+                    colorType: 'gray',
+                }));
+            },
+        }));
+    },
     /**
      * @see this.selectClass for parameters
      */
@@ -930,6 +1011,20 @@ options.registry.OptionsTab = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @param {String} id
+     * @returns {String} the adjusted color of gray
+     */
+    _buildGray(id) {
+        const gray = weUtils.getCSSVariableValue(`base-${id}`);
+        const grayRGB = ColorpickerWidget.convertCSSColorToRgba(gray);
+        const hsl = ColorpickerWidget.convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
+        const adjustedGrayRGB = ColorpickerWidget.convertHslToRgb(this.grayParams['gray-hue'],
+            Math.min(Math.max(hsl.saturation + this.grayParams['gray-extra-saturation'], 0), 100),
+            hsl.lightness);
+        return ColorpickerWidget.convertRgbaToCSSColor(adjustedGrayRGB.red, adjustedGrayRGB.green, adjustedGrayRGB.blue);
+    },
+    /**
      * @override
      */
     async _checkIfWidgetsUpdateNeedWarning(widgets) {
@@ -958,6 +1053,14 @@ options.registry.OptionsTab = options.Class.extend({
                 return "NONE";
             }
             return weUtils.getCSSVariableValue('body-image-type');
+        }
+        if (methodName === 'customizeWebsiteVariable'
+                && this.GRAY_PARAMS.includes(params.variable)) {
+            // Small hack to save the initially returned value to be able to
+            // compute the grays
+            const value = await this._super(...arguments);
+            this.grayParams[params.variable] = parseInt(value);
+            return value;
         }
         return this._super(...arguments);
     },
@@ -2619,7 +2722,7 @@ options.registry.ReplaceImage = options.Class.extend({
 
         return this._super(...arguments);
     },
-    
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
