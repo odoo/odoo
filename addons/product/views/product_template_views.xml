@@ -29,7 +29,7 @@
                 <attribute name="name">Product Template</attribute>
             </xpath>
             <field name="categ_id" position="after">
-                <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                <field name="default_code"/>
                 <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
             </field>
 
