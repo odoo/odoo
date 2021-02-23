@@ -95,6 +95,7 @@
                     </button>
                 </div>
                 <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Hired" attrs="{'invisible': [('date_closed', '=', False)]}" />
                 <field name="kanban_state" widget="kanban_state_selection"/>
                 <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
@@ -123,6 +124,7 @@
                     <group>
                         <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         <field name="user_id" domain="[('share', '=', False)]"/>
+                        <field name="date_closed" attrs="{'invisible': [('date_closed', '=', False)]}" />
                         <field name="priority" widget="priority"/>
                         <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
@@ -282,6 +284,7 @@
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id" class="o_kanban_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1">
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
+                <field name="date_closed"/>
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="user_id"/>
@@ -299,6 +302,10 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
+                            <field name="date_closed" invisible="1"/>
+                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('date_closed', '=', False)]}">
+                                <span class="bg-success">Hired</span>
+                            </div>
                             <span class="badge badge-pill badge-danger pull-right mr-4" attrs="{'invisible': [('active', '=', True)]}">Refused</span>
                             <div class="o_dropdown_kanban dropdown">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu" data-display="static">
@@ -695,6 +702,7 @@ action = act
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="fold"/>
+                <field name="hired_stage"/>
             </tree>
         </field>
     </record>
@@ -739,6 +747,16 @@ action = act
                     </group>
                     <group name="stage_details">
                         <field name="fold"/>
+                        <field name="hired_stage"/>
+                        <field name="is_warning_visible" invisible="1"/>
+                        <span attrs="{'invisible': [('is_warning_visible', '=', False)]}">
+                            <span
+                                class="fa fa-exclamation-triangle text-danger pl-3">
+                            </span>
+                            <span class="text-danger">
+                                All applications will lose their hired date and hired status.
+                            </span>
+                        </span>
                         <field name="job_ids" widget="many2many_tags"/>
                     </group>
                 </group>
