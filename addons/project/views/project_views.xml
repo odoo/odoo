@@ -232,13 +232,11 @@
             <field name="arch" type="xml">
                 <form string="Project" delete="0">
                     <header>
-                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only" groups="project.group_project_manager"/>
+                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only" groups="project.group_project_manager"
+                        attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-file-text-o">
-                            <field string="Documents" name="doc_count" widget="statinfo"/>
-                        </button>
                         <button class="oe_stat_button" type="action"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
@@ -517,6 +515,7 @@
                     <field name="analytic_account_id"/>
                     <field name="date"/>
                     <field name="doc_count"/>
+                    <field name="privacy_visibility"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
@@ -569,9 +568,6 @@
                                                 <div role="menuitem">
                                                     <a name="%(action_project_task_burndown_chart_report)d" type="action">Burndown Chart</a>
                                                 </div>
-                                                <div role="menuitem" t-if="record.analytic_account_id.raw_value" groups="analytic.group_analytic_accounting">
-                                                    <a name="action_view_account_analytic_line" type="object">Profitability</a>
-                                                </div>
                                             </div>
                                         </div>
                                         <div class="o_kanban_card_manage_settings row" groups="project.group_project_manager">
@@ -579,7 +575,7 @@
                                                 <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                             </div>
                                             <div role="menuitem" class="col-4">
-                                                <a class="dropdown-item" role="menuitem" name="%(portal.portal_share_action)d" type="action">Share</a>
+                                                <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(portal.portal_share_action)d" type="action">Share</a>
                                                 <a class="dropdown-item" role="menuitem" type="edit">Edit</a>
                                             </div>
                                         </div>
@@ -852,7 +848,7 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="name" string = "Task Title"/>
+                        <field name="name" string = "Task Title" placeholder="e.g. New Design"/>
                         <field name="user_id" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False)]"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
@@ -982,7 +978,7 @@
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                     <field name="kanban_state" widget="state_selection" optional="hide" readonly="1"/>
-                    <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
+                    <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="not context.get('default_project_id')"/>
                     <field name="recurrence_id" invisible="1" />
                 </tree>
             </field>

@@ -17,6 +17,14 @@ $canceled-color: gray;
         text-align: right;
         float: none;
         width: auto;
+        box-shadow: unset;
+        margin-left: -$o-horizontal-padding - 1;
+        @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
+            margin-left: (-$o-horizontal-padding*2) - 1;
+        }
+        > .btn.oe_stat_button {
+            border-bottom: 1px solid #ced4da;
+        }
     }
 
     .o_profitability_wrapper {
