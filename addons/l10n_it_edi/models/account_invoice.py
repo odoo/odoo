@@ -223,6 +223,13 @@ class AccountMove(models.Model):
         pdf = base64.b64encode(pdf)
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
+        # tax map for 0% taxes which have no tax_line_id
+        tax_map = dict()
+        for line in self.line_ids:
+            for tax in line.tax_ids:
+                if tax.amount == 0.0:
+                    tax_map[tax] = tax_map.get(tax, 0.0) + line.price_subtotal
+
         # Create file content.
         template_values = {
             'record': self,
@@ -240,6 +247,7 @@ class AccountMove(models.Model):
             'document_type': document_type,
             'pdf': pdf,
             'pdf_name': pdf_name,
+            'tax_map': tax_map,
         }
         content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
         return content
