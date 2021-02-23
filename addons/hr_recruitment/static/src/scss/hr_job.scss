@@ -89,6 +89,32 @@
     }
 }
 
+.o_kanban_view {
+    &.o_kanban_applicant {
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+
+            span {
+                background-color: $o-brand-odoo;
+                padding: 5px;
+                font-size: x-small;
+                z-index: unset;
+                height: auto;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -$o-kanban-dashboard-vpadding;
+
+            span {
+                top: 10px;
+                left: 20px;
+            }
+        }
+    }
+}
+
 .o_kanban_view .oe_kanban_card {
     .o_kanban_state_with_padding {
         padding-left:7%;

@@ -63,12 +63,15 @@ class RecruitmentStage(models.Model):
     fold = fields.Boolean(
         "Folded in Kanban",
         help="This stage is folded in the kanban view when there are no records in that stage to display.")
+    hired_stage = fields.Boolean('Hired Stage',
+        help="If checked, this stage is used to determine the hire date of an applicant")
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda self: _('Blocked'), translate=True, required=True)
     legend_done = fields.Char(
         'Green Kanban Label', default=lambda self: _('Ready for Next Stage'), translate=True, required=True)
     legend_normal = fields.Char(
         'Grey Kanban Label', default=lambda self: _('In Progress'), translate=True, required=True)
+    is_warning_visible = fields.Boolean(compute='_compute_is_warning_visible')
 
     @api.model
     def default_get(self, fields):
@@ -78,6 +81,15 @@ class RecruitmentStage(models.Model):
             self = self.with_context(context)
         return super(RecruitmentStage, self).default_get(fields)
 
+    @api.depends('hired_stage')
+    def _compute_is_warning_visible(self):
+        applicant_data = self.env['hr.applicant'].read_group([('stage_id', 'in', self.ids)], ['stage_id'], 'stage_id')
+        applicants = dict((data['stage_id'][0], data['stage_id_count']) for data in applicant_data)
+        for stage in self:
+            if stage._origin.hired_stage and not stage.hired_stage and applicants.get(stage._origin.id):
+                stage.is_warning_visible = True
+            else:
+                stage.is_warning_visible = False
 
 class RecruitmentDegree(models.Model):
     _name = "hr.recruitment.degree"
@@ -117,7 +129,7 @@ class Applicant(models.Model):
     user_id = fields.Many2one(
         'res.users', "Recruiter", compute='_compute_user',
         tracking=True, store=True, readonly=False)
-    date_closed = fields.Datetime("Closed", compute='_compute_date_closed', store=True, index=True)
+    date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, index=True, readonly=False, tracking=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
@@ -273,12 +285,12 @@ class Applicant(models.Model):
         for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile and not a.partner_id.mobile):
             applicant.partner_id.mobile = applicant.partner_mobile
 
-    @api.depends('stage_id')
+    @api.depends('stage_id.hired_stage')
     def _compute_date_closed(self):
         for applicant in self:
-            if applicant.stage_id and applicant.stage_id.fold:
+            if applicant.stage_id and applicant.stage_id.hired_stage and not applicant.date_closed:
                 applicant.date_closed = fields.datetime.now()
-            else:
+            if not applicant.stage_id.hired_stage:
                 applicant.date_closed = False
 
     @api.model
