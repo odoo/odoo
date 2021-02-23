@@ -108,10 +108,7 @@ class Project(models.Model):
     @api.depends('sale_order_id', 'partner_id', 'pricing_type')
     def _compute_display_create_order(self):
         for project in self:
-            show = True
-            if not project.partner_id or project.pricing_type == 'task_rate' or not project.allow_billable or project.sale_order_id:
-                show = False
-            project.display_create_order = show
+            project.display_create_order = project.partner_id and project.pricing_type == 'task_rate'
 
     @api.depends('allow_timesheets', 'allow_billable')
     def _compute_timesheet_product_id(self):
