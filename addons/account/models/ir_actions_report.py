@@ -29,5 +29,7 @@ class IrActionsReport(models.Model):
             return None
         res = super(IrActionsReport, self)._postprocess_pdf_report(record, buffer)
         if self.model == 'account.move' and record.state == 'posted' and record.is_sale_document(include_receipts=True):
-            self.retrieve_attachment(record).register_as_main_attachment(force=False)
+            attachment = self.retrieve_attachment(record)
+            if attachment:
+                attachment.register_as_main_attachment(force=False)
         return res
