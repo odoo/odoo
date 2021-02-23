@@ -161,8 +161,6 @@ class ResPartnerIndustry(models.Model):
     def _populate_factories(self):
         return [
             ('active', populate.cartesian([False, True], [0.1, 0.9])),
-            ('name', populate.cartesian(
-                [False, 'Industry name', 'Industry name {counter}'],
-                [0.08, 0.01, 0.9])),
+            ('name', populate.constant('Industry name {counter}')),
             ('full_name', populate.iterate([False, 'Industry full name %s']))
         ]
