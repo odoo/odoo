@@ -102,9 +102,6 @@ class SaleOrder(models.Model):
 
     def action_view_project_ids(self):
         self.ensure_one()
-        if len(self.project_ids) == 1 and self.project_overview:
-            return self.project_id.action_view_account_analytic_line()
-
         view_form_id = self.env.ref('project.edit_project').id
         view_kanban_id = self.env.ref('project.view_project_kanban').id
         action = {

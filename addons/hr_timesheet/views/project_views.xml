@@ -246,9 +246,6 @@
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
                     </div>
                 </xpath>
-                <xpath expr="//div[a[@name='action_view_account_analytic_line']]" position="attributes">
-                    <attribute name="t-if">record.analytic_account_id.raw_value and !record.allow_timesheets.raw_value</attribute>
-                </xpath>
             </field>
         </record>
 
