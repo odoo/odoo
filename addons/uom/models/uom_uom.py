@@ -111,6 +111,11 @@ class UoM(models.Model):
         uom_categ_wtime = self.env.ref('uom.uom_categ_wtime')
         if any(uom.category_id.id in (uom_categ_unit + uom_categ_wtime).ids and uom.uom_type == 'reference' for uom in self):
             raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
+        # UoM with external IDs shouldn't be deleted since they will most probably break the app somewhere else.
+        # For example, in addons/product/models/product_template.py, cubic meters are used in `_get_volume_uom_id_from_ir_config_parameter()`,
+        # meters in `_get_length_uom_id_from_ir_config_parameter()`, and so on.
+        if self.env['ir.model.data'].search_count([('model', '=', self._name), ('res_id', 'in', self.ids)]):
+            raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
         return super(UoM, self).unlink()
 
     @api.model
