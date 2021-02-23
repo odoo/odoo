@@ -18,7 +18,7 @@ class Project(models.Model):
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     sale_order_id = fields.Many2one('sale.order', 'Sales Order',
         compute="_compute_sale_order_id", store=True, readonly=False,
-        domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id)]",
+        domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id), ('state', 'in', ['sale', 'done'])]",
         copy=False, help="Sales order to which the project is linked.")
     project_overview = fields.Boolean('Show Project Overview', compute='_compute_project_overview')
 
