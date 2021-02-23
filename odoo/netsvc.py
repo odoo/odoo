@@ -101,13 +101,17 @@ class DBFormatter(logging.Formatter):
     def format(self, record):
         record.pid = os.getpid()
         record.dbname = getattr(threading.current_thread(), 'dbname', '?')
+        self.color(record)
         return logging.Formatter.format(self, record)
 
+    def color(self, record):
+        pass
+
 class ColoredFormatter(DBFormatter):
-    def format(self, record):
+    def color(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
-        return DBFormatter.format(self, record)
+        record.pid = COLOR_PATTERN % (30 + DEFAULT, 40 + record.pid % 7, record.pid)
 
 _logger_init = False
 def init_logger():
