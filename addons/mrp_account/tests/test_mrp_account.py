@@ -143,32 +143,29 @@ class TestMrpAccount(TestMrpCommon):
         self.product_screw.standard_price = 0.1
         self.product_table_leg.tracking = 'none'
         self.product_table_sheet.tracking = 'none'
-        inventory = self.env['stock.inventory'].create({
-            'name': 'Inventory Product Table',
-            'line_ids': [(0, 0, {
-                'product_id': self.product_table_sheet.id,  # tracking serial
-                'product_uom_id': self.product_table_sheet.uom_id.id,
-                'product_qty': 20,
-                'location_id': self.source_location_id
-            }), (0, 0, {
-                'product_id': self.product_table_leg.id,  # tracking lot
-                'product_uom_id': self.product_table_leg.uom_id.id,
-                'product_qty': 20,
-                'location_id': self.source_location_id
-            }), (0, 0, {
-                'product_id': self.product_bolt.id,
-                'product_uom_id': self.product_bolt.uom_id.id,
-                'product_qty': 20,
-                'location_id': self.source_location_id
-            }), (0, 0, {
-                'product_id': self.product_screw.id,
-                'product_uom_id': self.product_screw.uom_id.id,
-                'product_qty': 200000,
-                'location_id': self.source_location_id
-            }),
-            ]
+        # Inventory Product Table
+        quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product_table_sheet.id,  # tracking serial
+            'inventory_quantity': 20,
+            'location_id': self.source_location_id,
         })
-        inventory.action_validate
+        quants |= self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product_table_leg.id,  # tracking lot
+            'inventory_quantity': 20,
+            'location_id': self.source_location_id,
+        })
+        quants |= self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product_bolt.id,
+            'inventory_quantity': 20,
+            'location_id': self.source_location_id,
+        })
+        quants |= self.env['stock.quant'].create({
+            'product_id': self.product_screw.id,
+            'inventory_quantity': 200000,
+            'location_id': self.source_location_id,
+        })
+        quants.action_apply_inventory()
+
         bom = self.mrp_bom_desk.copy()
         bom.operation_ids = False
         production_table_form = Form(self.env['mrp.production'])

@@ -80,22 +80,18 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         })
 
     def test_landed_cost_on_mrp(self):
-        inventory = self.env['stock.inventory'].create({
-            'name': 'Initial inventory',
-            'line_ids': [(0, 0, {
-                'product_id': self.product_component1.id,
-                'product_uom_id': self.product_component1.uom_id.id,
-                'product_qty': 500,
-                'location_id': self.warehouse_1.lot_stock_id.id
-            }), (0, 0, {
-                'product_id': self.product_component2.id,
-                'product_uom_id': self.product_component2.uom_id.id,
-                'product_qty': 500,
-                'location_id': self.warehouse_1.lot_stock_id.id
-            })]
+        # Initial inventory
+        quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product_component1.id,
+            'inventory_quantity': 500,
+            'location_id': self.warehouse_1.lot_stock_id.id,
         })
-        inventory.action_start()
-        inventory.action_validate()
+        quants |= self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product_component2.id,
+            'inventory_quantity': 500,
+            'location_id': self.warehouse_1.lot_stock_id.id,
+        })
+        quants.action_apply_inventory()
 
         man_order_form = Form(self.env['mrp.production'].with_user(self.allow_user))
         man_order_form.product_id = self.product_refrigerator
@@ -120,8 +116,6 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         mo_form = Form(man_order.with_user(self.allow_user))
         mo_form.qty_producing = 2
         man_order = mo_form.save()
-
-
         man_order.button_mark_done()
 
         landed_cost = Form(self.env['stock.landed.cost'].with_user(self.allow_user)).save()

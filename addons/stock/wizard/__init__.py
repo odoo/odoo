@@ -4,6 +4,7 @@
 from . import stock_assign_serial_numbers
 from . import stock_picking_return
 from . import stock_change_product_qty
+from . import stock_inventory_conflict
 from . import stock_scheduler_compute
 from . import stock_immediate_transfer
 from . import stock_backorder_confirmation
@@ -14,3 +15,4 @@ from . import product_replenish
 from . import stock_track_confirmation
 from . import stock_package_destination
 from . import stock_orderpoint_snooze
+from . import stock_request_count

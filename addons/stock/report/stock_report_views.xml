@@ -23,12 +23,12 @@
         </record>
         <record id="action_report_inventory" model="ir.actions.report">
             <field name="name">Count Sheet</field>
-            <field name="model">stock.inventory</field>
+            <field name="model">stock.quant</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_inventory</field>
             <field name="report_file">stock.report_inventory</field>
-            <field name="print_report_name">'Inventory - %s' % (object.name)</field>
-            <field name="binding_model_id" ref="model_stock_inventory"/>
+            <field name="print_report_name">'Count Sheet'</field>
+            <field name="binding_model_id" ref="model_stock_quant"/>
             <field name="binding_type">report</field>
         </record>
         <record id="action_report_quant_package_barcode" model="ir.actions.report">

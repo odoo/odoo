@@ -849,7 +849,7 @@ class ProductTemplate(models.Model):
             'stock.group_stock_multi_locations',
             'stock.group_production_lot',
             'stock.group_tracking_owner',
-            'product.group_stock_packaging'
+            'product.group_tracking_lot'
         ]
         if (self.env.user.user_has_groups(','.join(advanced_option_groups))):
             return self.action_open_quants()

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
-import uuid
+
 
 class TestTraceability(TestMrpCommon):
     TRACKING_TYPES = ['none', 'serial', 'lot']
@@ -24,21 +24,39 @@ class TestTraceability(TestMrpCommon):
         consumed_lot = self._create_product('lot')
         consumed_serial = self._create_product('serial')
         stock_id = self.env.ref('stock.stock_location_stock').id
-        inventory_adjustment = self.env['stock.inventory'].create({
-            'name': 'Initial Inventory',
-            'location_ids': [(4, stock_id)],
+        Lot = self.env['stock.production.lot']
+        # create inventory
+        quants = self.env['stock.quant'].create({
+            'location_id': stock_id,
+            'product_id': consumed_no_track.id,
+            'inventory_quantity': 3
         })
-        inventory_adjustment.action_start()
-        inventory_adjustment.write({
-            'line_ids': [
-                (0,0, {'product_id': consumed_no_track.id, 'product_qty': 3, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_lot.id, 'product_qty': 3, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'L1', 'product_id': consumed_lot.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S1', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S2', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
-                (0,0, {'product_id': consumed_serial.id, 'product_qty': 1, 'prod_lot_id': self.env['stock.production.lot'].create({'name': 'S3', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id, 'location_id': stock_id}),
-            ]
+        quants |= self.env['stock.quant'].create({
+            'location_id': stock_id,
+            'product_id': consumed_lot.id,
+            'inventory_quantity': 3,
+            'lot_id': Lot.create({'name': 'L1', 'product_id': consumed_lot.id, 'company_id': self.env.company.id}).id
         })
-        inventory_adjustment.action_validate()
+        quants |= self.env['stock.quant'].create({
+            'location_id': stock_id,
+            'product_id': consumed_serial.id,
+            'inventory_quantity': 1,
+            'lot_id': Lot.create({'name': 'S1', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id
+        })
+        quants |= self.env['stock.quant'].create({
+            'location_id': stock_id,
+            'product_id': consumed_serial.id,
+            'inventory_quantity': 1,
+            'lot_id': Lot.create({'name': 'S2', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id
+        })
+        quants |= self.env['stock.quant'].create({
+            'location_id': stock_id,
+            'product_id': consumed_serial.id,
+            'inventory_quantity': 1,
+            'lot_id': Lot.create({'name': 'S3', 'product_id': consumed_serial.id, 'company_id': self.env.company.id}).id
+        })
+        quants.action_apply_inventory()
+
         for finished_product in [finished_no_track, finished_lot, finished_serial]:
             bom = self.env['mrp.bom'].create({
                 'product_id': finished_product.id,
@@ -78,9 +96,7 @@ class TestTraceability(TestMrpCommon):
                 ml.qty_done = 1
             details_operation_form.save()
 
-
             mo.button_mark_done()
-
             self.assertEqual(mo.state, 'done', "Production order should be in done state.")
 
             # Check results of traceability
@@ -89,9 +105,7 @@ class TestTraceability(TestMrpCommon):
                 'model': 'mrp.production',
             })
             lines = self.env['stock.traceability.report'].with_context(context).get_lines()
-
             self.assertEqual(len(lines), 1, "Should always return 1 line : the final product")
-
             final_product = lines[0]
             self.assertEqual(final_product['unfoldable'], True, "Final product should always be unfoldable")
 
@@ -101,7 +115,6 @@ class TestTraceability(TestMrpCommon):
                 'model_id': final_product['model_id'],
                 'model_name': final_product['model'],
             })
-
             self.assertEqual(len(lines), 3, "There should be 3 lines. 1 for untracked, 1 for lot, and 1 for serial")
 
             for line in lines:

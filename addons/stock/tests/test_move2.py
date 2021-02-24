@@ -1146,14 +1146,12 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(move1.move_line_ids.product_qty, 1)
 
-        inventory = self.env['stock.inventory'].create({
-            'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
+        inventory_quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location,
+            'product_id': self.productA.id,
+            'inventory_quantity': 2
         })
-        inventory.action_start()
-        inventory.line_ids.product_qty = 2
-        inventory.action_validate()
+        inventory_quant.action_apply_inventory()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1202,15 +1200,13 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(move1.move_line_ids.product_qty, 1)
 
-        inventory = self.env['stock.inventory'].create({
-            'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
+        inventory_quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location,
+            'product_id': self.productA.id,
+            'inventory_quantity': 2,
+            'lot_id': lot1.id
         })
-        inventory.action_start()
-        inventory.line_ids.prod_lot_id = lot1
-        inventory.line_ids.product_qty = 2
-        inventory.action_validate()
+        inventory_quant.action_apply_inventory()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1262,20 +1258,13 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(move1.move_line_ids.product_qty, 1)
 
-        inventory = self.env['stock.inventory'].create({
-            'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
-        })
-        inventory.action_start()
-        self.env['stock.inventory.line'].create({
-            'inventory_id': inventory.id,
-            'location_id': inventory.location_ids[0].id,
-            'prod_lot_id': lot2.id,
+        inventory_quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location,
             'product_id': self.productA.id,
-            'product_qty': 1,
+            'inventory_quantity': 1,
+            'lot_id': lot2.id
         })
-        inventory.action_validate()
+        inventory_quant.action_apply_inventory()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')
@@ -1329,20 +1318,13 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(move1.move_line_ids), 1)
         self.assertEqual(move1.move_line_ids.product_qty, 1)
 
-        inventory = self.env['stock.inventory'].create({
-            'name': 'remove product1',
-            'location_ids': [(4, self.stock_location)],
-            'product_ids': [(4, self.productA.id)],
-        })
-        inventory.action_start()
-        self.env['stock.inventory.line'].create({
-            'inventory_id': inventory.id,
-            'location_id': inventory.location_ids[0].id,
-            'prod_lot_id': serial2.id,
+        inventory_quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location,
             'product_id': self.productA.id,
-            'product_qty': 1,
+            'inventory_quantity': 1,
+            'lot_id': serial2.id
         })
-        inventory.action_validate()
+        inventory_quant.action_apply_inventory()
         delivery_order.action_assign()
         self.assertEqual(delivery_order.state, 'assigned')
         self.assertEqual(move1.state, 'assigned')

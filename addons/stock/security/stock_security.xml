@@ -129,18 +129,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
-    <record model="ir.rule" id="stock_inventory_line_comp_rule">
-        <field name="name">Inventory Line multi-company</field>
-        <field name="model_id" ref="model_stock_inventory_line"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record model="ir.rule" id="stock_inventory_comp_rule">
-        <field name="name">Inventory multi-company</field>
-        <field name="model_id" ref="model_stock_inventory"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
     <record model="ir.rule" id="stock_warehouse_orderpoint_rule">
         <field name="name">stock_warehouse.orderpoint multi-company</field>
         <field name="model_id" search="[('model','=','stock.warehouse.orderpoint')]" model="ir.model"/>

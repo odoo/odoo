@@ -99,13 +99,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
-        inventory = self.env['stock.inventory'].create({
-            'name': 'add product2',
-            'location_ids': [(4, self.stock_location.id)],
-            'product_ids': [(4, self.product2.id)],
-        })
-        inventory.action_start()
-
         lot1 = self.env['stock.production.lot'].create({
             'name': '1001',
             'product_id': self.product2.id,
@@ -117,24 +110,18 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'company_id': self.env.company.id,
         })
 
-        self.env['stock.inventory.line'].create([
-            {
-            'inventory_id': inventory.id,
-            'location_id': self.stock_location.id,
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product2.id,
-            'prod_lot_id': lot1.id,
-            'product_qty': 1
-            },
-            {
-            'inventory_id': inventory.id,
+            'inventory_quantity': 1,
             'location_id': self.stock_location.id,
+            'lot_id': lot1.id
+        }).action_apply_inventory()
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product2.id,
-            'prod_lot_id': lot2.id,
-            'product_qty': 1
-            },
-        ])
-
-        inventory.action_validate()
+            'inventory_quantity': 1,
+            'location_id': self.stock_location.id,
+            'lot_id': lot2.id
+        }).action_apply_inventory()
 
         # create pos order with the two SN created before
 

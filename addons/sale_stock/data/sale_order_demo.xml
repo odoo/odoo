@@ -134,30 +134,22 @@
             <value eval="{'scheduled_date': (datetime.now() + relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')}"/>
         </function>
 
-        <record id="stock_inventory_customizable_desk_update" model="stock.inventory">
-            <field name="name">Inventory for new Customizable Desks</field>
-        </record>
 
-        <record id="stock_inventory_line_7e" model="stock.inventory.line">
+        <!-- Inventory for new Customizable Desks -->
+        <record id="stock_inventory_7e" model="stock.quant">
             <field name="product_id" ref="sale.product_product_4e"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_customizable_desk_update"/>
-            <field name="product_qty">65.0</field>
+            <field name="inventory_quantity">65.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-        <record id="stock_inventory_line_7f" model="stock.inventory.line">
+        <record id="stock_inventory_7f" model="stock.quant">
             <field name="product_id" ref="sale.product_product_4f"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_customizable_desk_update"/>
-            <field name="product_qty">70.0</field>
+            <field name="inventory_quantity">70.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-
-        <function model="stock.inventory" name="action_start">
-            <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_customizable_desk_update'))]]" model="stock.inventory" name="search"/>
-        </function>
-        <function model="stock.inventory" name="action_validate">
-            <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_customizable_desk_update'))]]" model="stock.inventory" name="search"/>
+        <function model="stock.quant" name="action_apply_inventory">
+            <function eval="[[('id', 'in', (ref('stock_inventory_7e'),
+                                            ref('stock_inventory_7f'),
+                                            ))]]" model="stock.quant" name="search"/>
         </function>
     </data>
 </odoo>

@@ -39,5 +39,5 @@ class ProductChangeQuantity(models.TransientModel):
             'product_id': self.product_id.id,
             'location_id': warehouse.lot_stock_id.id,
             'inventory_quantity': self.new_quantity,
-        })
+        })._apply_inventory()
         return {'type': 'ir.actions.act_window_close'}

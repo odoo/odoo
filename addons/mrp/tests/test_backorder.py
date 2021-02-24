@@ -55,7 +55,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
                 'product_id': product.id,
                 'inventory_quantity': 100,
                 'location_id': production.location_src_id.id,
-            })
+            })._apply_inventory()
         production.action_assign()
         self.assertEqual(production.state, 'confirmed')
         self.assertEqual(production.reserve_visible, False)

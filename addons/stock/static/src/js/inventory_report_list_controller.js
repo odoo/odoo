@@ -1,13 +1,10 @@
 odoo.define('stock.InventoryReportListController', function (require) {
 "use strict";
 
-var core = require('web.core');
 var ListController = require('web.ListController');
 
-var qweb = core.qweb;
-
-
 var InventoryReportListController = ListController.extend({
+    buttons_template: 'StockInventoryReport.Buttons',
 
     // -------------------------------------------------------------------------
     // Public
@@ -24,11 +21,9 @@ var InventoryReportListController = ListController.extend({
     renderButtons: function ($node) {
         this._super.apply(this, arguments);
         if (this.context.no_at_date) {
-            return;
+            this.$buttons.find('button.o_button_at_date').hide();
         }
-        var $buttonToDate = $(qweb.render('InventoryReport.Buttons'));
-        $buttonToDate.on('click', this._onOpenWizard.bind(this));
-        this.$buttons.prepend($buttonToDate);
+        this.$buttons.on('click', '.o_button_at_date', this._onOpenWizard.bind(this));
     },
 
     // -------------------------------------------------------------------------

@@ -53,7 +53,7 @@
                             </div>
                             <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'active_picking_id': picking_id, 'default_company_id': company_id}" attrs="{'invisible': [('lot_id', '=', False),('lot_name', '!=', False)]}"/>
                             <field name="lot_name" groups="stock.group_production_lot" attrs="{'invisible': ['|',('lot_id', '!=', False),('lot_name', '=', False)]}"/>
-                            <field name="package_id" string="Source Package" groups="product.group_stock_packaging"/>
+                            <field name="package_id" string="Source Package" groups="stock.group_tracking_lot"/>
                             <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
                         </group>
@@ -73,6 +73,10 @@
                 <field name="product_id"/>
                 <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/>
                 <field name="location_dest_id" string="Destination Location" groups="stock.group_stock_multi_locations"/>
+                <field name="lot_id" string="Lot/Serial Number" groups="stock.group_production_lot"/>
+                <field name="package_id" string="Source Package" groups="stock.group_tracking_lot"/>
+                <field name="result_package_id" string="Destination Package" groups="stock.group_tracking_lot"/>
+                <field name="owner_id" string="Owner" groups="stock.group_tracking_owner"/>
                 <separator/>
                 <filter string="To Do" name="todo" domain="[('state', 'not in', ['done', 'draft'])]"/>
                 <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
@@ -86,6 +90,8 @@
                 <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', (context_today() - relativedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
                 <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', (context_today() - relativedelta(months=3)).strftime('%%Y-%%m-%%d'))]"/>
                 <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', (context_today() - relativedelta(years=1)).strftime('%%Y-%%m-%%d'))]"/>
+                <separator/>
+                <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>

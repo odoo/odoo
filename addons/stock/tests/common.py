@@ -16,8 +16,6 @@ class TestStockCommon(common.TransactionCase):
         cls.StockQuantObj = cls.env['stock.quant']
         cls.PickingObj = cls.env['stock.picking']
         cls.MoveObj = cls.env['stock.move']
-        cls.InvObj = cls.env['stock.inventory']
-        cls.InvLineObj = cls.env['stock.inventory.line']
         cls.LotObj = cls.env['stock.production.lot']
 
         # Model Data

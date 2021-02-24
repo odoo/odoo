@@ -9,6 +9,8 @@
             <search string="Quants">
                 <field name="product_id"/>
                 <field name="location_id"/>
+                <field name="user_id"/>
+                <field name="inventory_date"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
@@ -22,6 +24,9 @@
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
                     <separator/>
                     <filter name="filter_in_date" date="in_date"/>
+                    <separator/>
+                    <filter name="my_count" string="My Counts" domain="[('user_id', '=', uid)]"/>
+                    <filter name="to_count" string="To Count" domain="[('inventory_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
                 </group>
                 <group expand='0' string='Group by...'>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
@@ -109,6 +114,7 @@
         </field>
     </record>
 
+    <!-- Inventory Report + Update Quantity (via product) view -->
     <record model="ir.ui.view" id="view_stock_quant_tree_editable">
         <field name="name">stock.quant.tree.editable</field>
         <field name="model">stock.quant</field>
@@ -120,7 +126,6 @@
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"
-                       invisible="context.get('single_product', False)"
                        readonly="context.get('single_product', False)" force_save="1"
                        options="{'no_create': True}"/>
                 <field name="location_id" attrs="{'readonly': [('id', '!=', False)]}"
@@ -138,10 +143,9 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"
                        attrs="{'readonly': [('id', '!=', False)]}"
                        options="{'no_create': True}"/>
-                <field name="quantity" string="On Hand Quantity"
-                       invisible="1"/>
-                <field name="inventory_quantity" string="On Hand Quantity" decoration-danger="inventory_quantity &lt; 0"
+                <field name="inventory_quantity" string="Updated On Hand Quantity" decoration-danger="inventory_quantity &lt; 0"
                        readonly="0"/>
+                <field name="quantity" string="On Hand Quantity"/>
                 <field name="available_quantity" optional="show"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company" optional="show"/>
@@ -163,7 +167,7 @@
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="available_quantity"/>
-                <field name="quantity"/>
+                <field name="quantity" string="On Hand Quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
@@ -330,6 +334,50 @@
         </field>
     </record>
 
+    <!-- Inventory Adjustments view -->
+    <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable">
+        <field name="name">stock.quant.inventory.tree.editable</field>
+        <field name="model">stock.quant</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" editable="bottom" create="1" edit="1" import="0" js_class="singleton_list" sample="1">
+                <field name="id" invisible="1"/>
+                <field name="tracking" invisible="1"/>
+                <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('hide_location', False)" options="{'no_create': True}"/>
+                <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}" readonly="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
+                <field name="lot_id" groups="stock.group_production_lot"
+                    attrs="{'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])]}"
+                    invisible="context.get('hide_lot', False)"
+                    context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                <field name="package_id" groups="stock.group_tracking_lot" attrs="{'readonly': [('id', '!=', False)]}"/>
+                <field name="owner_id" groups="stock.group_tracking_owner" attrs="{'readonly': [('id', '!=', False)]}" options="{'no_create': True}"/>
+                <field name="available_quantity" string="Available Quantity" decoration-danger="available_quantity &lt; 0" optional="hidden"/>
+                <field name="quantity" optional="show" string="On Hand Quantity"/>
+                <field name="product_uom_id" groups="uom.group_uom" string="UoM"/>
+                <field name="inventory_quantity" decoration-muted="inventory_quantity == 0"/>
+                <field name="inventory_diff_quantity" string="Difference" decoration-muted="inventory_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
+                <field name="inventory_date" optional="show"/>
+                <field name="user_id" string="User" optional="show"/>
+                <field name='company_id' groups="base.group_multi_company" optional="hide"/>
+                <button name="action_apply_inventory" type="object" string="Apply" class="btn btn-link" icon="fa-save" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
+                <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" attrs="{'invisible': ['|',  '|', ('quantity', '=', 0.0), ('inventory_diff_quantity', '!=', 0), ('inventory_quantity', '!=', 0)]}"/>
+                <button name="action_inventory_history" type="object" class="btn btn-link" icon="fa-history" string="History"/>
+                <button name="action_set_inventory_quantity_to_zero" type="object" string="Reset" class="btn" icon="fa-times" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_view_inventory_tree"> <!-- Menu + python -->
+        <field name="name">Inventory</field>
+        <field name="model_id" ref="model_stock_quant"/>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+        <field name="code">
+            action = model.action_view_inventory()
+        </field>
+    </record>
+
+    <menuitem id="menu_action_inventory_tree" name="Inventory Adjustments" parent="menu_stock_warehouse_mgmt" sequence="30" action="action_view_inventory_tree" />
     <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
     <menuitem id="menu_valuation" name="Inventory Report"
               parent="stock.menu_warehouse_report" sequence="100"

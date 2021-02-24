@@ -136,13 +136,13 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'product_id': self.product.id,
             'inventory_quantity': 5.0,
             'location_id': self.warehouse.lot_stock_id.id,
-        })
+        }).action_apply_inventory()
         self.product.standard_price = 1.0
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': self.product.id,
             'inventory_quantity': 10.0,
             'location_id': self.warehouse.lot_stock_id.id,
-        })
+        }).action_apply_inventory()
         self.assertEqual(self.product.value_svl, 30, "Value should be (5*5 + 5*1) = 30")
         self.assertEqual(self.product.quantity_svl, 10)
 
