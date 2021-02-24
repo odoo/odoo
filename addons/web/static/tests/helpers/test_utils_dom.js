@@ -81,16 +81,20 @@ odoo.define('web.test_utils_dom', function (require) {
         dragover: { constructor: DragEvent, processParameters: onlyBubble },
         drop: { constructor: DragEvent, processParameters: onlyBubble },
 
-        touchstart: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchend: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchmove: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchcancel: { constructor: TouchEvent, processParameters: touchEventCancelMapping },
-
         input: { constructor: InputEvent, processParameters: onlyBubble },
 
         compositionstart: { constructor: CompositionEvent, processParameters: onlyBubble },
         compositionend: { constructor: CompositionEvent, processParameters: onlyBubble },
     };
+
+    if (typeof TouchEvent === 'function') {
+        Object.assign(EVENT_TYPES, {
+            touchstart: {constructor: TouchEvent, processParameters: touchEventMapping},
+            touchend: {constructor: TouchEvent, processParameters: touchEventMapping},
+            touchmove: {constructor: TouchEvent, processParameters: touchEventMapping},
+            touchcancel: {constructor: TouchEvent, processParameters: touchEventCancelMapping},
+        });
+    }
 
     /**
      * Check if an object is an instance of EventTarget.
