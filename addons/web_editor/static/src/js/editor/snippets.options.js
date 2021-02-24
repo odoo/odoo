@@ -2443,6 +2443,12 @@ const SnippetOptionWidget = Widget.extend({
      * @type {boolean}
      */
     forceNoDeleteButton: false,
+    /**
+     * The option needs the handles overlay to be displayed on the snippet.
+     *
+     * @type {boolean}
+     */
+    displayHandles: false,
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -3516,6 +3522,8 @@ const registry = {};
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 registry.sizing = SnippetOptionWidget.extend({
+    displayHandles: true,
+
     /**
      * @override
      */
