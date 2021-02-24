@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { loadJS } from "web.ajax";
-
+import BrowserDetection from "web.BrowserDetection";
 /**
  * Format the traceback of an error.  Basically, we just add the error message
  * in the traceback if necessary (Chrome already does it by default, but not
