@@ -20,8 +20,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         cls.StockMove = cls.env['stock.move']
         cls.UoM = cls.env['uom.uom']
         cls.MrpProduction = cls.env['mrp.production']
-        cls.Inventory = cls.env['stock.inventory']
-        cls.InventoryLine = cls.env['stock.inventory.line']
+        cls.Quant = cls.env['stock.quant']
         cls.ProductCategory = cls.env['product.category']
 
         cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
@@ -405,19 +404,11 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # Need 20 kg product c to produce 20 unit product D.
         # --------------------------------------------------
 
-        inventory = self.Inventory.create({
-            'name': 'Inventory Product KG',
-            'product_ids': [(4, product_c.id)]})
-
-        inventory.action_start()
-        self.assertFalse(inventory.line_ids, "Inventory line should not created.")
-        self.InventoryLine.create({
-            'inventory_id': inventory.id,
-            'product_id': product_c.id,
-            'product_uom_id': self.uom_kg.id,
-            'product_qty': 20,
-            'location_id': self.company_data['default_warehouse'].lot_stock_id.id})
-        inventory.action_validate()
+        self.Quant.with_context(inventory_mode=True).create({
+            'product_id': product_c.id, # uom = uom_kg
+            'inventory_quantity': 20,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+        }).action_apply_inventory()
 
         # --------------------------------------------------
         # Assign product c to manufacturing order of product D.
@@ -453,19 +444,12 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # ------------------------------
         # Need product C ( 20 kg + 6 kg + 1502.5 gm = 27.5025 kg)
         # -------------------------------------------------------
-        inventory = self.Inventory.create({
-            'name': 'Inventory Product C KG',
-            'product_ids': [(4, product_c.id)]})
 
-        inventory.action_start()
-        self.assertFalse(inventory.line_ids, "Inventory line should not created.")
-        self.InventoryLine.create({
-            'inventory_id': inventory.id,
-            'product_id': product_c.id,
-            'product_uom_id': self.uom_kg.id,
-            'product_qty': 27.5025,
-            'location_id': self.company_data['default_warehouse'].lot_stock_id.id})
-        inventory.action_validate()
+        self.Quant.with_context(inventory_mode=True).create({
+            'product_id': product_c.id, # uom = uom_kg
+            'inventory_quantity': 27.51, # round up due to kg.rounding = 0.01
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+        }).action_apply_inventory()
 
         # Assign product to manufacturing order of product A.
         # ---------------------------------------------------

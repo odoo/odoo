@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import calendar
+
 from collections import defaultdict, OrderedDict
 from datetime import timedelta
 
@@ -63,8 +66,8 @@ class Location(models.Model):
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
-    cyclic_inventory_frequency = fields.Integer("Inventory Frequency (Days)", default=0, help=" When different than 0, inventory adjustments for products stored at this location will be created automatically at the defined frequency.")
-    last_inventory_date = fields.Datetime("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
+    cyclic_inventory_frequency = fields.Integer("Inventory Frequency (Days)", default=0, help=" When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency.")
+    last_inventory_date = fields.Date("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
     next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
     warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
@@ -109,7 +112,7 @@ class Location(models.Model):
             if location.company_id and location.usage in ['internal', 'transit'] and location.cyclic_inventory_frequency > 0:
                 try:
                     if location.last_inventory_date:
-                        days_until_next_inventory = location.cyclic_inventory_frequency - (fields.Date.today() - location.last_inventory_date.date()).days
+                        days_until_next_inventory = location.cyclic_inventory_frequency - (fields.Date.today() - location.last_inventory_date).days
                         if days_until_next_inventory <= 0:
                             location.next_inventory_date = fields.Date.today() + timedelta(days=1)
                         else:
@@ -231,6 +234,35 @@ class Location(models.Model):
                 qty_by_location[values['location_id'][0]] += values['quantity']
 
         return putaway_rules._get_putaway_location(product, quantity, package, qty_by_location) or self
+
+    def _get_next_inventory_date(self):
+        """ Used to get the next inventory date for a quant located in this location. It is
+        based on:
+        1. Does the location have a cyclic inventory set?
+        2. If not 1, then is there an annual inventory date set (for its company)?
+        3. If not 1 and 2, then quants have no next inventory date."""
+        if self.usage not in ['internal', 'transit']:
+            return False
+        next_inventory_date = False
+        if self.next_inventory_date:
+            next_inventory_date = self.next_inventory_date
+        elif self.company_id.annual_inventory_month:
+            today = fields.Date.today()
+            annual_inventory_month = int(self.company_id.annual_inventory_month)
+            # Manage 0 and negative annual_inventory_day
+            annual_inventory_day = max(self.company_id.annual_inventory_day, 1)
+            max_day = calendar.monthrange(today.year, annual_inventory_month)[1]
+            # Manage annual_inventory_day bigger than last_day
+            annual_inventory_day = min(annual_inventory_day, max_day)
+            next_inventory_date = today.replace(
+                month=annual_inventory_month, day=annual_inventory_day)
+            if next_inventory_date <= today:
+                # Manage leap year with the february
+                max_day = calendar.monthrange(today.year + 1, annual_inventory_month)[1]
+                annual_inventory_day = min(annual_inventory_day, max_day)
+                next_inventory_date = next_inventory_date.replace(
+                    day=annual_inventory_day, year=today.year + 1)
+        return next_inventory_date
 
     def should_bypass_reservation(self):
         self.ensure_one()

@@ -130,7 +130,7 @@ class StockMove(models.Model):
         help='If checked, when this move is cancelled, cancel the linked move too')
     delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time', compute="_compute_delay_alert_date", store=True)
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', compute='_compute_picking_type_id', store=True, check_company=True)
-    inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
+    is_inventory = fields.Boolean('Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
     move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=['|', ('product_qty', '=', 0.0), ('qty_done', '!=', 0.0)])
     origin_returned_move_id = fields.Many2one(
@@ -1507,13 +1507,13 @@ class StockMove(models.Model):
         # Cancel moves where necessary ; we should do it before creating the extra moves because
         # this operation could trigger a merge of moves.
         for move in moves:
-            if move.quantity_done <= 0:
+            if move.quantity_done <= 0 and not move.is_inventory:
                 if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0 or cancel_backorder:
                     move._action_cancel()
 
         # Create extra moves where necessary
         for move in moves:
-            if move.state == 'cancel' or move.quantity_done <= 0:
+            if move.state == 'cancel' or (move.quantity_done <= 0 and not move.is_inventory):
                 continue
 
             moves_ids_todo |= move._create_extra_move().ids

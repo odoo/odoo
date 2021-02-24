@@ -62,6 +62,7 @@ class StockMoveLine(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
     state = fields.Selection(related='move_id.state', store=True, related_sudo=False)
     is_initial_demand_editable = fields.Boolean(related='move_id.is_initial_demand_editable')
+    is_inventory = fields.Boolean(related='move_id.is_inventory')
     is_locked = fields.Boolean(related='move_id.is_locked', default=True, readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
@@ -511,7 +512,7 @@ class StockMoveLine(models.Model):
                             # checkboxes on the picking type, he's allowed to enter tracked
                             # products without a `lot_id`.
                             continue
-                    elif ml.move_id.inventory_id:
+                    elif ml.is_inventory:
                         # If an inventory adjustment is linked, the user is allowed to enter
                         # tracked products without a `lot_id`.
                         continue
@@ -520,7 +521,7 @@ class StockMoveLine(models.Model):
                         ml_ids_tracked_without_lot.add(ml.id)
             elif qty_done_float_compared < 0:
                 raise UserError(_('No negative quantities allowed'))
-            else:
+            elif not ml.is_inventory:
                 ml_ids_to_delete.add(ml.id)
 
         if ml_ids_tracked_without_lot:

@@ -474,19 +474,12 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     def adjust_inventory(cls, products, quantities):
         """ Adjust inventory of the given products
         """
-        inventory = cls.env['stock.inventory'].create({
-            'name': 'Inventory adjustment'
-        })
         for product, qty in zip(products, quantities):
-            cls.env['stock.inventory.line'].create({
+            cls.env['stock.quant'].with_context(inventory_mode=True).create({
                 'product_id': product.id,
-                'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
-                'inventory_id': inventory.id,
-                'product_qty': qty,
+                'inventory_quantity': qty,
                 'location_id': cls.stock_location_components.id,
-            })
-        inventory._action_start()
-        inventory.action_validate()
+            }).action_apply_inventory()
 
     def open_new_session(self):
         """ Used to open new pos session in each configuration.

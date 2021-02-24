@@ -60,7 +60,7 @@ class TestProcurement(TestMrpCommon):
             'product_id': self.product_2.id,
             'inventory_quantity': 48,
             'location_id': self.warehouse.lot_stock_id.id,
-        })
+        }).action_apply_inventory()
         produce_product_4.action_assign()
         self.assertEqual(produce_product_4.product_qty, 8, "Wrong quantity of finish product.")
         self.assertEqual(produce_product_4.product_uom_id, self.uom_dozen, "Wrong quantity of finish product.")
@@ -84,7 +84,7 @@ class TestProcurement(TestMrpCommon):
             'product_id': self.product_2.id,
             'inventory_quantity': 12,
             'location_id': self.warehouse.lot_stock_id.id,
-        })
+        }).action_apply_inventory()
         production_product_6.action_assign()
 
         # ------------------------------------

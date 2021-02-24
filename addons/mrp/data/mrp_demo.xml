@@ -509,67 +509,55 @@
 
         <!-- Initital Inventory -->
 
-        <record id="stock_inventory_drawer" model="stock.inventory">
-            <field name="name">Inventory: Drawer</field>
-        </record>
-
-        <record id="stock_inventory_drawer_lot0" model="stock.inventory.line">
+        <record id="stock_inventory_drawer_lot0" model="stock.quant">
             <field name="product_id" ref="product.product_product_27"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_drawer"/>
-            <field name="product_qty">50</field>
-            <field name="prod_lot_id" ref="lot_product_27_0"/>
+            <field name="inventory_quantity">50.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+            <field name="lot_id" ref="lot_product_27_0"/>
         </record>
-        <record id="stock_inventory_drawer_lot1" model="stock.inventory.line">
+        <record id="stock_inventory_drawer_lot1" model="stock.quant">
             <field name="product_id" ref="product.product_product_27"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_drawer"/>
-            <field name="product_qty">40</field>
-            <field name="prod_lot_id" ref="lot_product_27_1"/>
+            <field name="inventory_quantity">40.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+            <field name="lot_id" ref="lot_product_27_1"/>
         </record>
-        <record id="stock_inventory_line_product_drawer_drawer" model="stock.inventory.line">
+        <record id="stock_inventory_product_drawer_drawer" model="stock.quant">
             <field name="product_id" ref="product_product_drawer_drawer"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_drawer"/>
-            <field name="product_qty">50</field>
-            <field name="prod_lot_id" ref="lot_product_product_drawer_drawer_0"/>
+            <field name="inventory_quantity">50.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+            <field name="lot_id" ref="lot_product_product_drawer_drawer_0"/>
         </record>
-        <record id="stock_inventory_line_product_drawer_case" model="stock.inventory.line">
+        <record id="stock_inventory_product_drawer_case" model="stock.quant">
             <field name="product_id" ref="product_product_drawer_case"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_drawer"/>
-            <field name="product_qty">50</field>
-            <field name="prod_lot_id" ref="lot_product_product_drawer_case_0"/>
+            <field name="inventory_quantity">50.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+            <field name="lot_id" ref="lot_product_product_drawer_case_0"/>
         </record>
-
-        <record id="stock_inventory_line_product_wood_panel" model="stock.inventory.line">
+        <record id="stock_inventory_product_wood_panel" model="stock.quant">
             <field name="product_id" ref="product_product_wood_panel"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_drawer"/>
-            <field name="product_qty">50</field>
+            <field name="inventory_quantity">50.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-        <record id="stock_inventory_line_product_ply" model="stock.inventory.line">
+        <record id="stock_inventory_product_ply" model="stock.quant">
             <field name="product_id" ref="product_product_wood_ply"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_drawer"/>
-            <field name="product_qty">20</field>
+            <field name="inventory_quantity">20.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-        <record id="stock_inventory_line_product_wear" model="stock.inventory.line">
+        <record id="stock_inventory_product_wear" model="stock.quant">
             <field name="product_id" ref="product_product_wood_wear"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_drawer"/>
-            <field name="product_qty">30</field>
+            <field name="inventory_quantity">30.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
 
-        <function model="stock.inventory" name="_action_done">
-            <function eval="[[('state','=','draft'), ('id', '=', ref('stock_inventory_drawer'))]]" model="stock.inventory" name="search"/>
+        <function model="stock.quant" name="action_apply_inventory">
+            <function eval="[[('id', 'in', (ref('stock_inventory_drawer_lot0'),
+                                            ref('stock_inventory_drawer_lot1'),
+                                            ref('stock_inventory_product_drawer_drawer'),
+                                            ref('stock_inventory_product_drawer_case'),
+                                            ref('stock_inventory_product_wood_panel'),
+                                            ref('stock_inventory_product_ply'),
+                                            ref('stock_inventory_product_wear'),
+                                            ))]]" model="stock.quant" name="search"/>
         </function>
 
         <!-- BoM -->

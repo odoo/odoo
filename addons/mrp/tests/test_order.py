@@ -43,22 +43,16 @@ class TestMrpOrder(TestMrpCommon):
         consume strictly what's needed. """
         self.product_1.type = 'product'
         self.product_2.type = 'product'
-        inventory = self.env['stock.inventory'].create({
-            'name': 'Initial inventory',
-            'line_ids': [(0, 0, {
-                'product_id': self.product_1.id,
-                'product_uom_id': self.product_1.uom_id.id,
-                'product_qty': 500,
-                'location_id': self.warehouse_1.lot_stock_id.id
-            }), (0, 0, {
-                'product_id': self.product_2.id,
-                'product_uom_id': self.product_2.uom_id.id,
-                'product_qty': 500,
-                'location_id': self.warehouse_1.lot_stock_id.id
-            })]
-        })
-        inventory.action_start()
-        inventory.action_validate()
+        self.env['stock.quant'].create({
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': self.product_1.id,
+            'inventory_quantity': 500
+        }).action_apply_inventory()
+        self.env['stock.quant'].create({
+            'location_id': self.warehouse_1.lot_stock_id.id,
+            'product_id': self.product_2.id,
+            'inventory_quantity': 500
+        }).action_apply_inventory()
 
         test_date_planned = Dt.now() - timedelta(days=1)
         test_quantity = 2.0
@@ -107,7 +101,7 @@ class TestMrpOrder(TestMrpCommon):
         backorder.save().action_close_mo()
         self.assertEqual(man_order.state, 'done', "Production order should be done.")
 
-    def test_production_avialability(self):
+    def test_production_availability(self):
         """ Checks the availability of a production order through mutliple calls to `action_assign`.
         """
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
@@ -132,7 +126,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_2.id,
             'inventory_quantity': 2.0,
             'location_id': self.stock_location_14.id
-        })
+        }).action_apply_inventory()
 
         production_2.action_assign()
         # check sub product availability state is partially available
@@ -143,7 +137,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': self.product_2.id,
             'inventory_quantity': 5.0,
             'location_id': self.stock_location_14.id
-        })
+        }).action_apply_inventory()
 
         production_2.action_assign()
         # check sub product availability state is assigned

@@ -89,10 +89,10 @@ class MrpStockReport(models.TransientModel):
             res_model = 'stock.picking'
             res_id = picking_id.id
             ref = picking_id.name
-        elif move_line.move_id.inventory_id:
-            res_model = 'stock.inventory'
-            res_id = move_line.move_id.inventory_id.id
-            ref = 'Inv. Adj.: ' + move_line.move_id.inventory_id.name
+        elif move_line.move_id.is_inventory:
+            res_model = 'stock.move'
+            res_id = move_line.move_id.id
+            ref = 'Inventory Adjustment'
         elif move_line.move_id.scrapped and move_line.move_id.scrap_ids:
             res_model = 'stock.scrap'
             res_id = move_line.move_id.scrap_ids[0].id

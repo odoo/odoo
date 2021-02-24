@@ -10,44 +10,29 @@
         <field name="company_id" ref="base.main_company"/>
     </record>
 
-    <!-- Resource: stock.inventory -->
-    <record id="stock_inventory_1" model="stock.inventory">
-        <field name="name">Starting Inventory</field>
-    </record>
-
-    <!-- Resource: stock.inventory.line -->
-    <record id="stock_inventory_line_0" model="stock.inventory.line">
+    <!-- Starting inventory -->
+    <record id="stock_inventory_batch_1" model="stock.quant">
         <field name="product_id" ref="product.consu_delivery_01"/>
-        <field name="product_uom_id" ref="uom.product_uom_unit"/>
-        <field name="inventory_id" ref="stock_picking_batch.stock_inventory_1"/>
-        <field name="product_qty">10.0</field>
+        <field name="inventory_quantity">10.0</field>
         <field name="location_id" ref="stock.stock_location_stock"/>
     </record>
-
-    <record id="stock_inventory_line_1" model="stock.inventory.line">
+    <record id="stock_inventory_batch_2" model="stock.quant">
         <field name="product_id" ref="product.consu_delivery_02"/>
-        <field name="product_uom_id" ref="uom.product_uom_unit"/>
-        <field name="inventory_id" ref="stock_picking_batch.stock_inventory_1"/>
-        <field name="product_qty">10.0</field>
+        <field name="inventory_quantity">18.0</field>
         <field name="location_id" ref="stock.stock_location_stock"/>
     </record>
-
-    <record id="stock_inventory_line_3" model="stock.inventory.line">
+    <record id="stock_inventory_batch_3" model="stock.quant">
         <field name="product_id" ref="product.consu_delivery_03"/>
-        <field name="product_uom_id" ref="uom.product_uom_unit"/>
-        <field name="inventory_id" ref="stock_picking_batch.stock_inventory_1"/>
-        <field name="product_qty">20.0</field>
+        <field name="inventory_quantity">20.0</field>
         <field name="location_id" ref="stock.stock_location_stock"/>
     </record>
 
-    <!-- Inventory start -->
-    <function model="stock.inventory" name="_action_start">
-        <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_1'))]]" model="stock.inventory" name="search"/>
-    </function>
-    <!-- Inventory validate -->
-    <function model="stock.inventory" name="action_validate">
-        <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_1'))]]" model="stock.inventory" name="search"/>
-    </function>
+        <function model="stock.quant" name="action_apply_inventory">
+            <function eval="[[('id', 'in', (ref('stock_inventory_batch_1'),
+                                            ref('stock_inventory_batch_2'),
+                                            ref('stock_inventory_batch_3'),
+                                            ))]]" model="stock.quant" name="search"/>
+        </function>
 
     <!-- Add picking -->
     <record id="Picking_A" model="stock.picking">

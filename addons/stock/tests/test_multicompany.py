@@ -27,7 +27,7 @@ class TestMultiCompany(TransactionCase):
             'company_ids': [(6, 0, [cls.company_a.id, cls.company_b.id])]
         })
         cls.user_b = cls.env['res.users'].create({
-            'name': 'user company a with access to company b',
+            'name': 'user company b with access to company a',
             'login': 'user b',
             'groups_id': [(6, 0, [group_user.id, group_stock_manager.id])],
             'company_id': cls.company_b.id,
@@ -103,60 +103,45 @@ class TestMultiCompany(TransactionCase):
             shared_partner.with_user(self.user_b).property_stock_customer = self.stock_location_a
 
     def test_inventory_1(self):
-        """Create an inventory in Company A for a product limited to Company A and, as a user of company
-        B, start the inventory and set its counted quantity to 10 before validating. The inventory
-        lines and stock moves should belong to Company A. The inventory loss location used should be
-        the one of Company A.
+        """Create a quant (inventory adjustment) in Company A for a product limited to Company A and
+        as a user of company B, apply the inventory adjustment and set its counted quantity to 10
+        before validating. The quant and stock moves should belong to Company A.
         """
         product = self.env['product.product'].create({
             'type': 'product',
             'company_id': self.company_a.id,
             'name': 'Product limited to company A',
         })
-        inventory = self.env['stock.inventory'].with_user(self.user_a).create({})
-        self.assertEqual(inventory.company_id, self.company_a)
-        inventory.with_user(self.user_b).action_start()
-        inventory.with_user(self.user_b).line_ids = [(0, 0, {
-            'product_qty': 10,
-            'product_id': product.id,
+        inventory_quant = self.env['stock.quant'].with_user(self.user_a).with_context(inventory_mode=True).create({
             'location_id': self.stock_location_a.id,
-        })]
-        inventory.with_user(self.user_b).action_validate()
-        self.assertEqual(inventory.line_ids.company_id, self.company_a)
-        self.assertEqual(inventory.move_ids.company_id, self.company_a)
-        self.assertEqual(inventory.move_ids.location_id.company_id, self.company_a)
+            'product_id': product.id,
+            'inventory_quantity': 0
+        })
+        self.assertEqual(inventory_quant.company_id, self.company_a)
+        inventory_quant.with_user(self.user_b).inventory_quantity = 10
+        inventory_quant.with_user(self.user_b).action_apply_inventory()
+        last_move_id = self.env['stock.move'].search([('is_inventory', '=', True)])[-1]
+        self.assertEqual(inventory_quant.company_id, self.company_a)
+        self.assertEqual(last_move_id.company_id, self.company_a)
+        self.assertEqual(last_move_id.quantity_done, 10)
+        self.assertEqual(last_move_id.location_id.company_id, self.company_a)
 
     def test_inventory_2(self):
-        """Create an empty inventory in Company A and check it is not possible to use products limited
-        to Company B in it.
+        """Try to create a quant (inventory adjustment) in Company A and check it is not possible to use
+        products limited to Company B in it.
         """
         product = self.env['product.product'].create({
             'name': 'product limited to company b',
             'company_id': self.company_b.id,
             'type': 'product'
         })
-        inventory = self.env['stock.inventory'].with_user(self.user_a).create({})
-        inventory.with_user(self.user_a).action_start()
-        inventory.with_user(self.user_a).line_ids = [(0, 0, {
-            'product_id': product.id,
-            'product_qty': 10,
-            'location_id': self.stock_location_a.id,
-        })]
-        with self.assertRaises(UserError):
-            inventory.with_user(self.user_a).action_validate()
 
-    def test_inventory_3(self):
-        """As a user of Company A, check it is not possible to start an inventory adjustment for
-        a product limited to Company B.
-        """
-        product = self.env['product.product'].create({
-            'name': 'product limited to company b',
-            'company_id': self.company_b.id,
-            'type': 'product'
-        })
-        inventory = self.env['stock.inventory'].with_user(self.user_a).create({'product_ids': [(4, product.id)]})
         with self.assertRaises(UserError):
-            inventory.with_user(self.user_a).action_start()
+            self.env['stock.quant'].with_user(self.user_a).with_context(inventory_mode=True).create({
+                'location_id': self.stock_location_a.id,
+                'product_id': product.id,
+                'inventory_quantity': 10
+        })
 
     def test_picking_1(self):
         """As a user of Company A, create a picking and use a picking type of Company B, check the

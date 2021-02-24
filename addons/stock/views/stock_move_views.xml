@@ -90,7 +90,7 @@
                     <field name="product_uom_qty"/>
                     <field name="quantity_done"/>
                     <field name="reserved_availability"/>
-                    <field name="inventory_id"/>
+                    <field name="is_inventory"/>
                     <field name="state"/>
                     <field name="name"/>
                     <field name="product_uom"/>
@@ -108,11 +108,11 @@
                                             attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
                                 </div>
                                 <div class="o_kanban_record_body">
-                                    <div attrs="{'invisible': [('inventory_id', '=', False)]}">
+                                    <div attrs="{'invisible': [('is_inventory', '=', False)]}">
                                         <span>Initial Demand <field name="product_uom_qty"/></span><br/>
                                         <span>Quantity Done <field name="quantity_done"/></span>
                                     </div>
-                                    <div attrs="{'invisible': [('inventory_id', '!=', False)]}">
+                                    <div attrs="{'invisible': [('is_inventory', '!=', False)]}">
                                         <span>Quantity Done <field name="quantity_done"/>/<field name="reserved_availability"/></span>
                                     </div>
                                 </div>
@@ -346,6 +346,7 @@
                     <separator/>
                     <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
                     <filter string="Outgoing" name="outgoing" domain="[('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
+                    <filter string="Inventory" name="inventory" domain="[('is_inventory', '=', True)]"/>
                     <separator/>
                     <filter string="Date" name="today" date="date" help="Scheduled or processing date"/>
                     <group expand="0" string="Group By">
