@@ -98,7 +98,7 @@ class ImLivechatChannel(models.Model):
             :returns : the ir.action 'action_view_rating' with the correct domain
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_view_livechat_rating')
+        action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_livechat')
         action['domain'] = [('parent_res_id', '=', self.id), ('parent_res_model', '=', 'im_livechat.channel')]
         return action
 
@@ -183,7 +183,7 @@ class ImLivechatChannel(models.Model):
         self.env.cr.execute("""SELECT COUNT(DISTINCT c.id), c.livechat_operator_id
             FROM mail_channel c
             LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'mail.channel'
-            WHERE c.channel_type = 'livechat' 
+            WHERE c.channel_type = 'livechat'
             AND c.livechat_operator_id in %s
             AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             GROUP BY c.livechat_operator_id

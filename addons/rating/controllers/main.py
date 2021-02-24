@@ -39,9 +39,9 @@ class Rating(http.Controller):
         if not rating:
             return request.not_found()
         rate_names = {
-            5: _("satisfied"),
-            3: _("not satisfied"),
-            1: _("highly dissatisfied")
+            5: _("Satisfied"),
+            3: _("Okay"),
+            1: _("Dissatisfied")
         }
         rating.write({'rating': rate, 'consumed': True})
         lang = rating.partner_id.lang or get_lang(request.env).code

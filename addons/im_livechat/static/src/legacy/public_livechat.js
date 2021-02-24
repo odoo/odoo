@@ -505,11 +505,13 @@ var Feedback = Widget.extend({
             rate: this.rating,
             reason: reason,
         };
-        this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function () {
+        this.dp.add(session.rpc('/im_livechat/feedback', args)).then(function (response) {
             var emoji = RATING_TO_EMOJI[self.rating] || "??";
-            var content = _.str.sprintf(_t("Rating: %s"), emoji);
-            if (reason) {
-                content += " \n" + reason;
+            if (!reason) {
+                var content = _.str.sprintf(_t("Rating: %s"), emoji);
+            }
+            else {
+                var content = "Rating reason: \n" + reason;
             }
             self.trigger('send_message', { content: content, isFeedback: true });
         });
@@ -555,6 +557,7 @@ var Feedback = Widget.extend({
 
         // only display textearea if bad smiley selected
         if (this.rating !== 5) {
+            this._sendFeedback();
             this.$('.o_livechat_rating_reason').show();
         } else {
             this.$('.o_livechat_rating_reason').hide();
