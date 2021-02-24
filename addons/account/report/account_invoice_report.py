@@ -38,7 +38,7 @@ class AccountInvoiceReport(models.Model):
     categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity")
+    commercial_partner_id = fields.Many2one('res.partner', string='Partner Company', help="Commercial Entity", readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     price_total = fields.Float(string='Untaxed Total', readonly=True)
@@ -66,8 +66,8 @@ class AccountInvoiceReport(models.Model):
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account', readonly=True)
     residual = fields.Float(string='Due Amount', readonly=True)
     user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
-    country_id = fields.Many2one('res.country', string="Partner Company's Country")
-    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', groups="analytic.group_analytic_accounting")
+    country_id = fields.Many2one('res.country', string="Partner Company's Country", readonly=True)
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', groups="analytic.group_analytic_accounting", readonly=True)
     amount_total = fields.Float(string='Total', readonly=True)
 
     _order = 'date desc'
