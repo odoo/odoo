@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_inventory_request_count_form_view_inherit_stock_account" model="ir.ui.view">
+        <field name="name">stock.request.count.form.view.inherit.stock.account</field>
+        <field name="model">stock.request.count</field>
+        <field name="inherit_id" ref="stock.stock_inventory_request_count_form_view"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="accounting_date"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -22,19 +22,11 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         })
 
     def _inv_adj_two_units(self):
-        inventory = self.env['stock.inventory'].create({
-            'name': 'test',
-            'location_ids': [(4, self.company_data['default_warehouse'].lot_stock_id.id)],
-            'product_ids': [(4, self.product.id)],
-        })
-        inventory.action_start()
-        self.env['stock.inventory.line'].create({
-            'inventory_id': inventory.id,
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,  # tracking serial
+            'inventory_quantity': 2,
             'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_id': self.product.id,
-            'product_qty': 2,
-        })
-        inventory.action_validate()
+        }).action_apply_inventory()
 
     def _so_and_confirm_two_units(self):
         sale_order = self.env['sale.order'].create({

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_inventory_conflict_form_view" model="ir.ui.view">
+        <field name="name">stock.inventory.conflict.form.view</field>
+        <field name="model">stock.inventory.conflict</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    <strong>Some moves were made since your last inventory count. Plese count the inventory quantity again.</strong>
+                </div>
+                <div>
+                    <br/>
+                    <field name="quant_ids" invisible="1"/>
+                    <field name="quant_to_fix_ids" style="margin-top:10px;">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="id" invisible="1"/>
+                            <field name="tracking" invisible="1"/>
+                            <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('single_product', False)" readonly="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
+                            <field name="location_id" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('hide_location', False)" options="{'no_create': True}"/>
+                            <field name="lot_id" groups="stock.group_production_lot" attrs="{
+                                'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])],
+                                'required': [('tracking', '!=', 'none')]
+                            }" invisible="context.get('hide_lot', False)" context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                            <field name="package_id" groups="stock.group_tracking_lot" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner" attrs="{'readonly': [('id', '!=', False)]}" options="{'no_create': True}"/>
+                            <field name="quantity" string="Quantity"/>
+                            <field name="inventory_quantity" string="Counted Quantity" decoration-muted="inventory_quantity == 0" readonly="0"/>
+                            <field name="inventory_diff_quantity" string="Difference" decoration-muted="inventory_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
+                            <field name='company_id' groups="base.group_multi_company" optional="show"/>
+                        </tree>
+                    </field>
+                </div>
+                <footer>
+                    <button name="action_validate" string="Confirm" type="object" class="btn-primary"/>
+                    <button name="cancel_button" string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

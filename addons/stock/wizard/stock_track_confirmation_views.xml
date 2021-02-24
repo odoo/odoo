@@ -4,13 +4,14 @@
         <field name="name">stock.track.confirmation.view.form</field>
         <field name="model">stock.track.confirmation</field>
         <field name="arch" type="xml">
-            <form string="Lots or serial numbers were not provided to tracked products">
-                <field name="inventory_id" invisible="1"/>
+            <form string="Lots or serial numbers were not provided for tracked products">
+                <field name="product_ids" invisible="1"/>
+                <field name="quant_ids" invisible="1"/>
                 <p>Some products of the inventory adjustment are tracked. Are you sure you don't want to specify a serial or lot number for them?</p>
-                <strong>Product(s) tracked: </strong>
+                <strong>Tracked product(s):</strong>
                 <field name="tracking_line_ids" readonly="1">
                     <tree>
-                        <field name="product_id"/>
+                        <field name="product_display_name"/>
                         <field name="tracking"/>
                     </tree>
                 </field>

@@ -19,28 +19,29 @@ class TestWarehouse(TestStockCommon):
             'inventory_quantity': 50.0,
             'location_id': self.warehouse_1.lot_stock_id.id,
         })
-        inventory = self.env['stock.inventory'].with_user(self.user_stock_manager).create({
-            'name': 'Starting for product_1',
-            'location_ids': [(4, self.warehouse_1.lot_stock_id.id)],
-            'product_ids': [(4, self.product_1.id)],
-        })
-        inventory.action_start()
-        # As done in common.py, there is already an inventory line existing
-        self.assertEqual(len(inventory.line_ids), 1)
-        self.assertEqual(inventory.line_ids.theoretical_qty, 50.0)
-        self.assertEqual(inventory.line_ids.product_id, self.product_1)
-        self.assertEqual(inventory.line_ids.product_uom_id, self.product_1.uom_id)
+        product_1_quant.action_apply_inventory()
 
-        # Update the line, set to 35
-        inventory.line_ids.write({'product_qty': 35.0})
-        inventory.action_validate()
+        # Make sure the inventory was successful
+        move_in_id = self.env['stock.move'].search([('is_inventory', '=', True), ('product_id', '=', self.product_1.id)])
+        self.assertEqual(len(move_in_id), 1)
+        self.assertEqual(move_in_id.product_qty, 50.0)
+        self.assertEqual(product_1_quant.quantity, 50.0)
+        self.assertEqual(move_in_id.product_uom, self.product_1.uom_id)
+        self.assertEqual(move_in_id.state, 'done')
+
+        # Update the inventory, set to 35
+        product_1_quant.inventory_quantity = 35.0
+        product_1_quant.action_apply_inventory()
 
         # Check related move and quants
-        self.assertIn(inventory.name, inventory.move_ids.name)
-        self.assertEqual(inventory.move_ids.product_qty, 15.0)
-        self.assertEqual(inventory.move_ids.location_id, self.warehouse_1.lot_stock_id)
-        self.assertEqual(inventory.move_ids.location_dest_id, self.product_1.property_stock_inventory)  # Inventory loss
-        self.assertEqual(inventory.move_ids.state, 'done')
+        move_ids = self.env['stock.move'].search([('is_inventory', '=', True), ('product_id', '=', self.product_1.id)])
+        self.assertEqual(len(move_ids), 2)
+        move_out_id = move_ids[-1]
+        self.assertEqual(move_out_id.product_qty, 15.0)
+        self.assertEqual(move_out_id.location_id, self.warehouse_1.lot_stock_id)
+        self.assertEqual(move_out_id.location_dest_id, self.product_1.property_stock_inventory)  # Inventory loss
+        self.assertEqual(move_out_id.state, 'done')
+
         quants = self.env['stock.quant']._gather(self.product_1, self.product_1.property_stock_inventory)
         self.assertEqual(len(quants), 1)  # One quant created for inventory loss
 
@@ -219,25 +220,21 @@ class TestWarehouse(TestStockCommon):
         picking_out._action_done()
 
         # Make an inventory adjustment to set the quantity to 0
-        inventory = self.env['stock.inventory'].create({
-            'name': 'Starting for product_1',
-            'location_ids': [(4, stock_location.id)],
-            'product_ids': [(4, productA.id)],
-        })
-        inventory.action_start()
-        self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
-        self.assertEqual(inventory.line_ids.theoretical_qty, -1, "Theoretical quantity should be -1.")
-        inventory.line_ids.product_qty = 0  # Put the quantity back to 0
-        inventory.action_validate()
+        quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
+        self.assertEqual(len(quant), 1, "Wrong number of quants created.")
+        self.assertEqual(quant.quantity, -1, "Theoretical quantity should be -1.")
+        # Put the quantity back to 0
+        quant.inventory_quantity = 0
+        quant.action_apply_inventory()
 
         # The inventory adjustment should have created one
-        self.assertEqual(len(inventory.move_ids), 1)
-        quantity = inventory.move_ids.mapped('product_qty')
-        self.assertEqual(quantity, [1], "Moves created with wrong quantity.")
-        location_ids = inventory.move_ids.mapped('location_id').ids
-        self.assertEqual(set(location_ids), {location_loss.id})
+        move = self.env['stock.move'].search([('product_id', '=', productA.id), ('is_inventory', '=', True)])
+        self.assertEqual(len(move), 1)
+        self.assertEqual(move.product_qty, 1, "Moves created with wrong quantity.")
+        self.assertEqual(move.location_id.id, location_loss.id)
 
         # There should be no quant in the stock location
+        self.env['stock.quant']._quant_tasks()
         quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(sum(quants.mapped('quantity')), 0)
 

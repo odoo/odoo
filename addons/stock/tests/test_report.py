@@ -78,7 +78,7 @@ class TestReports(TestReportsCommon):
             'product_id': product.id,
             'location_id': stock.id,
             'inventory_quantity': 50
-        })
+        }).action_apply_inventory()
         self.env['stock.move'].flush()
         report_records_today = self.env['report.stock.quantity'].read_group(
             [('product_id', '=', product.id), ('date', '=', date.today())],
@@ -200,12 +200,12 @@ class TestReports(TestReportsCommon):
             'product_id': product.id,
             'location_id': stock.id,
             'inventory_quantity': 50
-        })
+        }).action_apply_inventory()
         self.env['stock.quant'].with_context(inventory_mode=True).create({
             'product_id': product.id,
             'location_id': stock_without_wh.id,
             'inventory_quantity': 50
-        })
+        }).action_apply_inventory()
         move = self.env['stock.move'].create({
             'name': 'Move outside warehouse',
             'location_id': stock.id,
