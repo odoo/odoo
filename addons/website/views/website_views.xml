@@ -363,10 +363,6 @@
                                     <hr t-if="record.url.value"/>
                                     <button role="button" type="edit" t-if="record.url.value" class="btn btn-secondary">Live Preview</button>
                                 </div>
-                                <i states="installed" t-if="record.is_installed_on_current_website.raw_value"
-                                    class="fa fa-check position-absolute p-1 m-2 rounded-circle bg-primary shadow"
-                                    style="top: 0; right: 0;"
-                                    role="img" aria-label="Installed" title="Installed"/>
                             </div>
                             <div class="o_theme_preview_bottom clearfix">
                                 <h5 t-if="record.display_name.value" class="text-uppercase float-left">
