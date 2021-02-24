@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
+from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.tools import float_compare, date_utils, email_split, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
+from odoo.addons.account.exceptions import (
+    ImbalanceMoveValidationError,
+    UniqueSequenceValidationError,
+    UniqueReferenceValidationError,
+)
 
 from datetime import date, timedelta
 from collections import defaultdict
@@ -15,15 +20,6 @@ import ast
 import json
 import re
 import warnings
-
-class ImbalanceJournalEntryError(UserError):
-    """Specialized UserError raised by `_check_balanced` method."""
-
-    def __init__(self, message, move_ids, imbalance_amounts):
-        super().__init__(message)
-        self.move_ids = move_ids
-        self.imbalance_amounts = imbalance_amounts
-
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
@@ -1621,8 +1617,7 @@ class AccountMove(models.Model):
         ''', [tuple(moves.ids)])
         res = self._cr.fetchall()
         if res:
-            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
-                                    'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
+            raise UniqueSequenceValidationError(self.browse(r[0] for r in res))
 
     @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date')
     def _check_duplicate_supplier_reference(self):
@@ -1654,9 +1649,7 @@ class AccountMove(models.Model):
         ''', [tuple(moves.ids)])
         duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
         if duplicated_moves:
-            raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
-                duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {'ref': m.ref, 'partner': m.partner_id.display_name, 'date': format_date(self.env, m.date)})
-            ))
+            raise UniqueReferenceValidationError(duplicated_moves)
 
     def _check_balanced(self):
         ''' Assert the move is fully balanced debit = credit.
@@ -1685,9 +1678,7 @@ class AccountMove(models.Model):
 
         query_res = self._cr.fetchall()
         if query_res:
-            ids = [res[0] for res in query_res]
-            sums = [res[1] for res in query_res]
-            raise ImbalanceJournalEntryError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums), ids, sums)
+            raise ImbalanceMoveValidationError(self.browse([r[0] for r in query_res]))
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
@@ -2774,7 +2765,7 @@ class AccountMove(models.Model):
 
     def action_switch_invoice_into_refund_credit_note(self):
         if any(move.move_type not in ('in_invoice', 'out_invoice') for move in self):
-            raise ValidationError(_("This action isn't available for this document."))
+            raise UserError(_("This action isn't available for this document."))
 
         for move in self:
             reversed_move = move._reverse_move_vals({}, False)

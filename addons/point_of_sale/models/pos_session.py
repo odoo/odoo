@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 
-from odoo.addons.account.models.account_move import ImbalanceJournalEntryError
+from odoo.addons.account.exceptions import ImbalanceMoveValidationError
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -324,7 +324,7 @@ class PosSession(models.Model):
                 else:
                     self.move_id.unlink()
 
-            except ImbalanceJournalEntryError as error:
+            except ImbalanceMoveValidationError as error:
                 # Creating the account move is just part of a big database transaction
                 # when closing a session. There are other database changes that will happen
                 # before attempting to create the account move, such as, creating the picking
@@ -334,7 +334,7 @@ class PosSession(models.Model):
                 # close session wizard.
                 self.env.cr.rollback()
                 # When closing a session, single account move is checked which resulted to
-                # `ImbalanceJournalEntryError`. Thus, there should only be one value in imbalance_amounts
+                # `ImbalanceMoveValidationError`. Thus, there should only be one value in imbalance_amounts
                 # which is what we need.
                 if len(error.imbalance_amounts) != 1:
                     raise UserError(_("Single imbalance amount that matches the pos session's account move is expected."))

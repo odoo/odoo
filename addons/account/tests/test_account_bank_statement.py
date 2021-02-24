@@ -2,7 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError
 from odoo import fields
 
 from unittest.mock import patch
