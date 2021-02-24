@@ -20,7 +20,11 @@ odoo.define('google_calendar.GoogleCalendarPopover', function(require) {
             ev.preventDefault();
             this.trigger_up('archive_event', {id: this.event.id});
         },
+<<<<<<< HEAD
     });
+=======
+    })
+>>>>>>> a62256902fc... temp
 
     return GoogleCalendarPopover;
 });

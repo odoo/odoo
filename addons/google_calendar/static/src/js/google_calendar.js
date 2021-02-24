@@ -75,18 +75,29 @@ const GoogleCalendarModel = CalendarModel.include({
 
     archiveRecords: function (ids, model) {
         return this._rpc({
+<<<<<<< HEAD
                 model: model,
                 method: 'action_archive',
                 args: [ids],
                 context: session.user_context,
             });
+=======
+            model: model,
+            method: 'action_archive',
+            args: [ids],
+            context: session.user_context,
+        });
+>>>>>>> a62256902fc... temp
     },
 })
 
 const GoogleCalendarController = CalendarController.include({
     custom_events: _.extend({}, CalendarController.prototype.custom_events, {
         syncGoogleCalendar: '_onGoogleSyncCalendar',
+<<<<<<< HEAD
         stopGoogleSynchronization: '_onStopGoogleSynchronization',
+=======
+>>>>>>> a62256902fc... temp
         archiveRecord: '_onArchiveRecord',
     }),
 
@@ -134,6 +145,7 @@ const GoogleCalendarController = CalendarController.include({
         }).then(event.data.on_always, event.data.on_always);
     },
 
+<<<<<<< HEAD
     _onStopGoogleSynchronization: function (event) {
         var self = this;
         Dialog.confirm(this, _t("You are about to stop the synchronization of your calendar with Google. Are you sure you want to continue?"), {
@@ -169,6 +181,13 @@ const GoogleCalendarController = CalendarController.include({
         Dialog.confirm(this, _t("Are you sure you want to archive this record ?"), {
             confirm_callback: function () {
                 self.model.archiveRecords([event.data.id], self.modelName).then(function () {
+=======
+    _onArchiveRecord: function (ev) {
+        var self = this;
+        Dialog.confirm(this, _t("Are you sure you want to archive this record ?"), {
+            confirm_callback: function () {
+                self.model.archiveRecords([ev.data.id], self.modelName).then(function () {
+>>>>>>> a62256902fc... temp
                     self.reload();
                 });
             }
@@ -184,6 +203,10 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
     events: _.extend({}, CalendarRenderer.prototype.events, {
         'click .o_google_sync_button': '_onGoogleSyncCalendar',
         'click .o_stop_google_sync_button': '_onStopGoogleSynchronization',
+    }),
+    
+    custom_events: _.extend({}, CalendarRenderer.prototype.custom_events, {
+        archive_event: '_onArchiveEvent',
     }),
 
     //--------------------------------------------------------------------------
@@ -281,10 +304,17 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
         });
     },
 
+<<<<<<< HEAD
     _onArchiveEvent: function (event) {
         this._unselectEvent();
         this.trigger_up('archiveRecord', {id: parseInt(event.data.id, 10)});
     },
+=======
+    _onArchiveEvent: function (ev) {
+        this._unselectEvent();
+        this.trigger_up('archiveRecord', {id: parseInt(ev.data.id, 10)});
+    }
+>>>>>>> a62256902fc... temp
 });
 
 return {

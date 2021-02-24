@@ -10,8 +10,13 @@ odoo.define('microsoft_calendar.MicrosoftCalendarPopover', function(require) {
 
         /**
          * We only want one 'Archive' button in the popover
+<<<<<<< HEAD
          * so if Google Sync is active, it takes precedence
          * over this popover.
+=======
+         * so if Google Sync is also active, it takes precedence
+         * over this popvoer.
+>>>>>>> a62256902fc... temp
          */
         isMEventSyncedAndArchivable() {
             if (this.event.extendedProps.record.google_id === undefined) {
