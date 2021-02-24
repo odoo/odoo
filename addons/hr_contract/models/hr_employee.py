@@ -66,7 +66,7 @@ class Employee(models.Model):
         """
         Returns the contracts of all employees between date_from and date_to
         """
-        return self.search([])._get_contracts(date_from, date_to, states=states)
+        return self.search(['|', ('active', '=', True), ('active', '=', False)])._get_contracts(date_from, date_to, states=states)
 
     def write(self, vals):
         res = super(Employee, self).write(vals)
