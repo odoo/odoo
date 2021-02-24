@@ -207,6 +207,14 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'previous_statement_id': bnk1.id,
         }])
 
+        bnk3.balance_end_real += 1000
+        self.assertRecordValues(bnk4, [{
+            'balance_start': 1175.0,
+            'balance_end_real': 275.0,
+            'balance_end': 1275.0,
+            'previous_statement_id': bnk1.id,
+        }])
+
         # Delete BNK3 and BNK1.
         (bnk3 + bnk1).unlink()
         self.assertRecordValues(bnk2, [{
