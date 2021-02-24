@@ -580,6 +580,10 @@ class WebsiteSale(ProductConfiguratorController):
 
         return error, error_message
 
+    def _validate_with_external_services(self, order, errors, error_msg):
+        # Overridden
+        return errors, error_msg
+
     def _checkout_form_save(self, mode, checkout, all_values):
         Partner = request.env['res.partner']
         if mode[0] == 'new':
@@ -696,8 +700,13 @@ class WebsiteSale(ProductConfiguratorController):
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
 
+                errors, error_msg = self._validate_with_external_services(order, errors, error_msg)
+
                 order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
-                if not errors:
+                if errors:
+                    errors['error_message'] = error_msg
+                    values = kw
+                else:
                     return request.redirect(kw.get('callback') or '/shop/confirm_order')
 
         country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
