@@ -80,12 +80,12 @@ class HrEmployeeBase(models.AbstractModel):
                 ('holiday_status_id.active', '=', True),
                 ('state', '=', 'validate'),
             ])
-            employee.allocation_count = sum(allocations.mapped('number_of_days'))
+            employee.allocation_count = float_round(sum(allocations.mapped('number_of_days')), precision_digits=2)
             employee.allocation_display = "%g" % employee.allocation_count
 
     def _compute_total_allocation_used(self):
         for employee in self:
-            employee.allocation_used_count = employee.allocation_count - employee.remaining_leaves
+            employee.allocation_used_count = float_round(employee.allocation_count - employee.remaining_leaves, precision_digits=2)
             employee.allocation_used_display = "%g" % employee.allocation_used_count
 
     def _compute_presence_state(self):
