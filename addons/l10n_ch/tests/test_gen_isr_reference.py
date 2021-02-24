@@ -44,8 +44,10 @@ class TestGenISRReference(AccountTestInvoicingCommon):
         self.invoice.name = "INV/01234567890"
 
         expected_isr = "000000000000000012345678903"
+        expected_isr_spaced = "00 00000 00000 00001 23456 78903"
         expected_optical_line = "0100001307807>000000000000000012345678903+ 010001628>"
         self.assertEqual(self.invoice.l10n_ch_isr_number, expected_isr)
+        self.assertEqual(self.invoice.l10n_ch_isr_number_spaced, expected_isr_spaced)
         self.assertEqual(self.invoice.l10n_ch_isr_optical_line, expected_optical_line)
 
     def test_qrr(self):
@@ -54,7 +56,9 @@ class TestGenISRReference(AccountTestInvoicingCommon):
         self.invoice.name = "INV/01234567890"
 
         expected_isr = "000000000000000012345678903"
+        expected_isr_spaced = "00 00000 00000 00001 23456 78903"
         self.assertEqual(self.invoice.l10n_ch_isr_number, expected_isr)
+        self.assertEqual(self.invoice.l10n_ch_isr_number_spaced, expected_isr_spaced)
         # No need to check optical line, we have no use for it with QR-bill
 
     def test_isr_long_reference(self):
@@ -63,8 +67,10 @@ class TestGenISRReference(AccountTestInvoicingCommon):
         self.invoice.name = "INV/123456789012345678901234567890"
 
         expected_isr = "567890123456789012345678901"
+        expected_isr_spaced = "56 78901 23456 78901 23456 78901"
         expected_optical_line = "0100001307807>567890123456789012345678901+ 010001628>"
         self.assertEqual(self.invoice.l10n_ch_isr_number, expected_isr)
+        self.assertEqual(self.invoice.l10n_ch_isr_number_spaced, expected_isr_spaced)
         self.assertEqual(self.invoice.l10n_ch_isr_optical_line, expected_optical_line)
 
     def test_missing_isr_subscription_num(self):
@@ -73,6 +79,7 @@ class TestGenISRReference(AccountTestInvoicingCommon):
         self.invoice.partner_bank_id = self.bank_acc_isr
 
         self.assertFalse(self.invoice.l10n_ch_isr_number)
+        self.assertFalse(self.invoice.l10n_ch_isr_number_spaced)
         self.assertFalse(self.invoice.l10n_ch_isr_optical_line)
 
     def test_missing_isr_subscription_num_in_wrong_field(self):
@@ -82,12 +89,14 @@ class TestGenISRReference(AccountTestInvoicingCommon):
         self.invoice.partner_bank_id = self.bank_acc_isr
 
         self.assertFalse(self.invoice.l10n_ch_isr_number)
+        self.assertFalse(self.invoice.l10n_ch_isr_number_spaced)
         self.assertFalse(self.invoice.l10n_ch_isr_optical_line)
 
     def test_no_bank_account(self):
         self.invoice.partner_bank_id = False
 
         self.assertFalse(self.invoice.l10n_ch_isr_number)
+        self.assertFalse(self.invoice.l10n_ch_isr_number_spaced)
         self.assertFalse(self.invoice.l10n_ch_isr_optical_line)
 
     def test_wrong_currency(self):
@@ -95,4 +104,5 @@ class TestGenISRReference(AccountTestInvoicingCommon):
         self.invoice.currency_id = self.env.ref("base.BTN")
 
         self.assertFalse(self.invoice.l10n_ch_isr_number)
+        self.assertFalse(self.invoice.l10n_ch_isr_number_spaced)
         self.assertFalse(self.invoice.l10n_ch_isr_optical_line)
