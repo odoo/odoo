@@ -237,6 +237,11 @@ QUnit.config.urlConfig.push({
 });
 
 QUnit.begin(function() {
+    if (odoo.__DEBUG__.services["@web/js/core/error_utils"]) {
+        const errorUtils = odoo.__DEBUG__.services["@web/js/core/error_utils"];
+        const { annotateTraceback } = errorUtils
+        QUnit.annotateTraceback = annotateTraceback
+    }
     if (QUnit.config.failfast) {
         QUnit.testDone(function(details) {
             if (details.failed > 0) {
