@@ -24,7 +24,7 @@ function factory(dependencies) {
          */
         async start() {
             this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
-            this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
+            // this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
             await this.async(() => this.initializer.start());
             this.notificationHandler.start();
             this.update({ isInitialized: true });

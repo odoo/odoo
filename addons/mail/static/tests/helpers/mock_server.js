@@ -172,9 +172,6 @@ MockServer.include({
             const ids = args.args[0];
             return this._mockMailChannelChannelJoinAndGetInfo(ids);
         }
-        if (args.model === 'mail.channel' && args.method === 'channel_minimize') {
-            return;
-        }
         if (args.model === 'mail.channel' && args.method === 'channel_seen') {
             const channel_ids = args.args[0];
             const last_message_id = args.args[1] || args.kwargs.last_message_id;
@@ -574,6 +571,7 @@ MockServer.include({
     _mockMailChannel_channelChannelNotifications(ids, partner_ids) {
         const notifications = [];
         for (const partner_id of partner_ids) {
+            // TODO SEB fix the whole mock server and JS bus stuff
             const user = this._getRecords('res.users', [['partner_id', 'in', partner_id]])[0];
             if (!user) {
                 continue;

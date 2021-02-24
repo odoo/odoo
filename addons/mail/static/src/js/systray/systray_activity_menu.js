@@ -24,7 +24,7 @@ var ActivityMenu = Widget.extend({
     },
     start: function () {
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
-        Component.env.bus.on('activity_updated', this, this._updateCounter);
+        Component.env.bus.on('mail.activity_updated', this, notification => this._updateCounter(notification.payload));
         this._updateCounter();
         this._updateActivityPreview();
         return this._super();
@@ -87,17 +87,16 @@ var ActivityMenu = Widget.extend({
     /**
      * update counter based on activity status(created or Done)
      * @private
-     * @param {Object} [data] key, value to decide activity created or deleted
-     * @param {String} [data.type] notification type
-     * @param {Boolean} [data.activity_deleted] when activity deleted
-     * @param {Boolean} [data.activity_created] when activity created
+     * @param {Object} [payload]
+     * @param {boolean} [payload.activity_deleted] when activity deleted
+     * @param {boolean} [payload.activity_created] when activity created
      */
-    _updateCounter: function (data) {
-        if (data) {
-            if (data.activity_created) {
+    _updateCounter: function ({ activity_created, activity_deleted } = {}) {
+        if (activity_created || activity_deleted) {
+            if (activity_created) {
                 this.activityCounter ++;
             }
-            if (data.activity_deleted && this.activityCounter > 0) {
+            if (activity_deleted && this.activityCounter > 0) {
                 this.activityCounter --;
             }
             this.$('.o_notification_counter').text(this.activityCounter);

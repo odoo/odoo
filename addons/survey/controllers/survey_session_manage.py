@@ -108,11 +108,14 @@ class UserInputSession(http.Controller):
                 'session_question_id': next_question.id,
                 'session_question_start_time': fields.Datetime.now() + relativedelta(seconds=1)
             })
-            request.env['bus.bus'].sendone(survey.access_token, {
-                'question_start': now.timestamp(),
-                'type': 'next_question'
-            })
-
+            # TODO SEB fix handler to use new format
+            request.env['bus.bus']._send_notifications([{
+                'target': survey,
+                'type': 'survey.next_question',
+                'payload': {
+                    'question_start': now.timestamp(),
+                },
+            }])
             template_values = self._prepare_manage_session_values(survey)
             template_values['is_rpc_call'] = True
             return request.env.ref('survey.user_input_session_manage_content')._render(template_values)

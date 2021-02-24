@@ -10,13 +10,12 @@
     ],
     'installable': True,
     'assets': {
-        'web.assets_backend': [
-            'bus/static/src/**/*',
-        ],
-        'web.assets_frontend': [
-            'bus/static/src/js/longpolling_bus.js',
-            'bus/static/src/js/crosstab_bus.js',
-            'bus/static/src/js/services/bus_service.js',
+        'web.assets_common': [
+            'bus/static/src/js/main.js',
+            'bus/static/src/services/crosstab_communication.js',
+            'bus/static/src/services/localstorage_communication.js',
+            'bus/static/src/services/longpolling_communication.js',
+            'bus/static/src/services/server_communication.js',
         ],
         'web.qunit_suite_tests': [
             'bus/static/tests/bus_tests.js',

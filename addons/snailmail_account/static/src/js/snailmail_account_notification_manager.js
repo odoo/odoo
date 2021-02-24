@@ -12,18 +12,27 @@ var SnailmailAccountNotificationManager =  AbstractService.extend({
      */
     start: function () {
         this._super.apply(this, arguments);
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
     },
 
-    _onNotification: function (notifs) {
-        var self = this;
-        _.each(notifs, function (notif) {
-            var model = notif[0][1];
-            var type = notif[1].type;
-            if (model === 'res.partner' && type === 'snailmail_invalid_address') {
-                self.do_warn(notif[1].title,  notif[1].message);
+    /**
+     * @private
+     * @param {Object[]} notifications
+     * @param {any} [notifications[].payload]
+     * @param {string} notifications[].type
+     */
+    _handleNotifications(notifications) {
+        const { _t } = owl.Component.env;
+        for (const { payload, type } of notifications) {
+            if (type === 'snailmail_account.invalid_address') {
+                const { invalid_addresses_count } = payload;
+                const message = _.sprintf(
+                    _t("%s of the selected partner(s) had an invalid address. The corresponding followups were not sent."),
+                    owl.utils.escape(invalid_addresses_count),
+                );
+                this.displayNotification({ message, title: _t("Invalid Addresses") });
             }
-        });
+        }
     }
 
 });

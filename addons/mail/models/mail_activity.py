@@ -381,6 +381,7 @@ class MailActivity(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         activities = super(MailActivity, self).create(vals_list)
+        notifications = []
         for activity in activities:
             need_sudo = False
             try:  # in multicompany, reading the partner might break
@@ -403,9 +404,14 @@ class MailActivity(models.Model):
 
             self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[partner_id])
             if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_created': True})
+                notifications.append({
+                    'target': activity.user_id.partner_id,
+                    'type': 'mail.activity_updated',
+                    'payload': {
+                        'activity_created': True,
+                    },
+                })
+        self.env['bus.bus']._send_notifications(notifications)
         return activities
 
     def write(self, values):
@@ -420,26 +426,42 @@ class MailActivity(models.Model):
                 to_check._check_access_assignation()
                 if not self.env.context.get('mail_activity_quick_update', False):
                     user_changes.action_notify()
+            notifications = []
             for activity in user_changes:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
                 if activity.date_deadline <= fields.Date.today():
-                    self.env['bus.bus'].sendone(
-                        (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                        {'type': 'activity_updated', 'activity_created': True})
+                    notifications.append({
+                        'target': activity.user_id.partner_id,
+                        'type': 'mail.activity_updated',
+                        'payload': {
+                            'activity_created': True,
+                        },
+                    })
             for activity in user_changes:
                 if activity.date_deadline <= fields.Date.today():
                     for partner in pre_responsibles:
-                        self.env['bus.bus'].sendone(
-                            (self._cr.dbname, 'res.partner', partner.id),
-                            {'type': 'activity_updated', 'activity_deleted': True})
+                        notifications.append({
+                            'target': partner,
+                            'type': 'mail.activity_updated',
+                            'payload': {
+                                'activity_deleted': True,
+                            },
+                        })
+            self.env['bus.bus']._send_notifications(notifications)
         return res
 
     def unlink(self):
+        notifications = []
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_deleted': True})
+                notifications.append({
+                    'target': activity.user_id.partner_id,
+                    'type': 'mail.activity_updated',
+                    'payload': {
+                        'activity_deleted': True,
+                    },
+                })
+        self.env['bus.bus']._send_notifications(notifications)
         return super(MailActivity, self).unlink()
 
     def name_get(self):

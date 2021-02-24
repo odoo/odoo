@@ -3226,7 +3226,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
             model: 'res.partner',
             res_id: 20,
         };
-        const notifications = [[['my-db', 'ir.needaction', 3], data]];
+        const notifications = [[['my-db', 'res_partner', 3], data]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.ok(
@@ -3268,7 +3268,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
             model: 'res.partner',
             res_id: 20,
         };
-        const notifications2 = [[['my-db', 'ir.needaction', 3], data2]];
+        const notifications2 = [[['my-db', 'res_partner', 3], data2]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications2);
     });
     assert.strictEqual(

@@ -84,9 +84,12 @@ class Invite(models.TransientModel):
                 document._notify_record_by_email(message, partners_data, send_after_commit=False)
                 # in case of failure, the web client must know the message was
                 # deleted to discard the related failure notification
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                    {'type': 'deletion', 'message_ids': message.ids}
-                )
+                self.env['bus.bus']._send_notifications({
+                    'target': self.env.user.partner_id,
+                    'type': 'mail.message_deleted',
+                    'payload': {
+                        'message_ids': message.ids,
+                    },
+                })
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}

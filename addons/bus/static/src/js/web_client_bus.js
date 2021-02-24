@@ -32,8 +32,8 @@ odoo.define('bus.WebClient', function (require) {
             document.querySelectorAll('*[data-asset-bundle]').forEach(el => {
                 this._assets[el.getAttribute('data-asset-bundle')] = el.getAttribute('data-asset-version');
             });
-            this.call('bus_service', 'onNotification', this, this._onNotification);
-            this.call('bus_service', 'addChannel', 'bundle_changed');
+            this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
+            // TODO SEB double check broadcast on non-id channel like (res.partner, false)
             return shown;
         },
 
@@ -88,22 +88,31 @@ odoo.define('bus.WebClient', function (require) {
         //--------------------------------------------------------------------------
 
         /**
-         * Reacts to bus's notification
-         *
          * @private
-         * @param {Array} notifications: list of received notifications
+         * @param {Object[]} notifications
+         * @param {any} [notifications[].payload]
+         * @param {string} notifications[].type
          */
-        _onNotification(notifications) {
-            for (const notif of notifications) {
-                if (notif[0][1] === 'bundle_changed') {
-                    const bundleXmlId = notif[1][0];
-                    const bundleVersion = notif[1][1];
-                    if (bundleXmlId in this._assets && bundleVersion !== this._assets[bundleXmlId]) {
-                        this._displayBundleChangedNotification();
+        _handleNotifications(notifications) {
+            for (const notification of notifications) {
+                const { payload, type } = notification;
+                switch (type) {
+                    case 'base.bundle_changed':
+                        this._handleNotificationBundleChanged(payload);
                         break;
-                    }
                 }
             }
-        }
+        },
+        /**
+         * @private
+         * @param {Object} payload
+         * @param {string} payload.name
+         * @param {string} payload.version
+         */
+        _handleNotificationBundleChanged({ name, version }) {
+            if (name in this._assets && version !== this._assets[name]) {
+                this._displayBundleChangedNotification();
+            }
+        },
     });
 });

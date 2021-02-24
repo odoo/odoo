@@ -50,6 +50,7 @@ var CalendarNotification = Notification.extend({
 
 WebClient.include({
     display_calendar_notif: function(notifications) {
+        // TODO SEB fix this to new payload
         var self = this;
         var last_notif_timer = 0;
 
@@ -102,14 +103,18 @@ WebClient.include({
         // in which the current user is involved is created, edited or deleted
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
-        this.call('bus_service', 'onNotification', this, function (notifications) {
-            _.each(notifications, (function (notification) {
-                if (notification[0][1] === 'calendar.alarm') {
-                    this.display_calendar_notif(notification[1]);
-                }
-            }).bind(this));
-        });
+
+        this.call('bus_service', 'addListener',  notifications => this._handleNotifications(notifications));
         return this._super.apply(this, arguments).then(this.get_next_calendar_notif.bind(this));
+    },
+    _handleNotifications(notifications) {
+        for (const { payload, type } of notifications) {
+            switch (type) {
+                case 'calendar.alarm':
+                    this.display_calendar_notif(payload);
+                    break;
+            }
+        }
     },
 });
 

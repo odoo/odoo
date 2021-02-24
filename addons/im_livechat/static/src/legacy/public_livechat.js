@@ -104,7 +104,7 @@ var LivechatButton = Widget.extend({
                     setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000);
             }
         }
-        this.call('bus_service', 'onNotification', this, this._onNotification);
+        this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
         if (this.options.button_background_color) {
             this.$el.css('background-color', this.options.button_background_color);
         }
@@ -175,10 +175,12 @@ var LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Array} notification
+     * @param {Object} notification
+     * @param {any} [notification.payload]
+     * @param {string} notification.type
      */
-    _handleNotification: function (notification) {
-        const [livechatUUID, notificationData] = notification;
+    _handleNotification({ payload, type }) {
+        // TODO SEB fix all this mess
         if (this._livechat && (livechatUUID === this._livechat.getUUID())) {
             if (notificationData._type === 'history_command') { // history request
                 const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
@@ -271,6 +273,7 @@ var LivechatButton = Widget.extend({
                         self._sendWelcomeMessage();
                     }
                     self._renderMessages();
+                    // TODO SEB allow add channel with proper id + uuid as token
                     self.call('bus_service', 'addChannel', self._livechat.getUUID());
                     self.call('bus_service', 'startPolling');
 
@@ -396,6 +399,17 @@ var LivechatButton = Widget.extend({
 
     /**
      * @private
+     * @param {Object[]} notifications
+     * @param {any} [notifications[].payload]
+     * @param {string} notifications[].type
+     */
+    _handleNotifications(notifications) {
+        for (const notification of notifications) {
+            this._handleNotification(notification);
+        }
+    },
+    /**
+     * @private
      * @param {OdooEvent} ev
      */
     _onCloseChatWindow: function (ev) {
@@ -410,16 +424,6 @@ var LivechatButton = Widget.extend({
         } else {
             this._closeChat();
         }
-    },
-    /**
-     * @private
-     * @param {Array[]} notifications
-     */
-    _onNotification: function (notifications) {
-        var self = this;
-        _.each(notifications, function (notification) {
-            self._handleNotification(notification);
-        });
     },
     /**
      * @private

@@ -89,8 +89,14 @@ class WebsiteVisitor(models.Model):
             mail_channels_info = mail_channels.channel_info('send_chat_request')
             notifications = []
             for mail_channel_info in mail_channels_info:
-                notifications.append([(self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info])
-            self.env['bus.bus'].sendmany(notifications)
+                notifications.append({
+                    'target': operator.partner_id,
+                    'type': 'channel_info',
+                    'payload': {
+                        'channel': mail_channel_info,
+                    },
+                })
+            self.env['bus.bus']._send_notifications(notifications)
 
     def _link_to_partner(self, partner, update_values=None):
         """ Adapt partner in members of related livechats """

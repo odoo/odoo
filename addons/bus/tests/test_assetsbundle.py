@@ -14,11 +14,10 @@ class BusWebTests(odoo.tests.HttpCase):
           i.e. their hash has been recomputed and differ from the attachment's
         - The interface deals with those bus messages by displaying one notification
         """
-        db_name = self.env.registry.db_name
-        bundle_xml_ids = ('web.assets_common', 'web.assets_backend')
+        bundle_names = ['web.assets_common', 'web.assets_backend']
 
         domain = []
-        for bundle in bundle_xml_ids:
+        for bundle in bundle_names:
             domain = expression.OR([
                 domain,
                 [('name', 'ilike', bundle + '%')]
@@ -27,25 +26,24 @@ class BusWebTests(odoo.tests.HttpCase):
         self.env['ir.attachment'].search(domain).unlink()
         self.env.registry._clear_cache()
 
-        sendones = []
-        def patched_sendone(self, channel, message):
+        sent_notifications = []
+
+        def patched__send_notifications(self, channel, message):
             """ Control API and number of messages posted to the bus linked to
             bundle_changed events """
             if channel[1] == 'bundle_changed':
-                sendones.append((channel, message))
+                sent_notifications.append((channel, message))
 
-        self.patch(type(self.env['bus.bus']), 'sendone', patched_sendone)
+        self.patch(type(self.env['bus.bus']), '_send_notifications', patched__send_notifications)
 
         self.start_tour('/web', "bundle_changed_notification", login='admin', timeout=180)
 
-        # One sendone for each asset bundle and for each CSS / JS
-        self.assertEqual(
-            len(sendones),
-            4,
-            'Received %s' % '\n'.join('%s - %s' % (tmp[0], tmp[1]) for tmp in sendones)
-        )
-        for (channel, message) in sendones:
-            self.assertEqual(channel, (db_name, 'bundle_changed'))
-            self.assertEqual(len(message), 2)
-            self.assertTrue(message[0] in bundle_xml_ids)
-            self.assertTrue(isinstance(message[1], str))
+        # One sent_notifications for each asset bundle and for each CSS / JS
+        self.assertEqual(len(sent_notifications), 4)
+        for notifications in sent_notifications:
+            self.assertEqual(len(notifications), 1)
+            notification = notifications[0]
+            self.assertTrue(notification['type'], 'base.bundle_changed')
+            self.assertEqual(notification['target'], self.env['res.partner'])
+            self.assertTrue(notification['payload']['name'] in bundle_names)
+            self.assertTrue(isinstance(notification['payload']['version'], str))

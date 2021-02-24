@@ -120,16 +120,16 @@ class ResUsers(models.Model):
 
     def _notify_inviter(self):
         for user in self:
-            invite_partner = user.create_uid.partner_id
-            if invite_partner:
-                # notify invite user that new user is connected
-                title = _("%s connected", user.name)
-                message = _("This is their first connection. Wish them luck.")
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', invite_partner.id),
-                    {'type': 'user_connection', 'title': title,
-                     'message': message, 'partner_id': user.partner_id.id}
-                )
+            inviting_partner = user.create_uid.partner_id
+            if inviting_partner:
+                # notify inviting user that new user is connected
+                self.env['bus.bus']._send_notifications([{
+                    'target': inviting_partner,
+                    'type': 'auth_signup.first_user_connection',
+                    'payload': {
+                        'partner': user.partner_id.mail_partner_format(),
+                    },
+                }])
 
     def _create_user_from_template(self, values):
         template_user_id = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))

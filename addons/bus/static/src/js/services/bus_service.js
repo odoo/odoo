@@ -89,13 +89,12 @@ var BusService =  CrossTab.extend(ServicesMixin, {
         }
     },
     /**
-     * Register listeners on notifications received on this bus service
+     * Adds listeners on notifications received on this bus service.
      *
-     * @param {Object} receiver
      * @param {function} func
      */
-    onNotification: function () {
-        this.on.apply(this, ["notification"].concat(Array.prototype.slice.call(arguments)));
+    addListener(func) {
+        this.on('notification', undefined, func);
     },
 
     //--------------------------------------------------------------------------

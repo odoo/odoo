@@ -50,7 +50,7 @@ QUnit.module('Bus', {
         var widget = new Widget(parent);
         await widget.appendTo($('#qunit-fixture'));
 
-        widget.call('bus_service', 'onNotification', this, function (notifications) {
+        widget.call('bus_service', 'addListener', notifications => {
             assert.step('notification - ' + notifications.toString());
         });
         widget.call('bus_service', 'addChannel', 'lambda');
@@ -165,7 +165,7 @@ QUnit.module('Bus', {
         var master = new Widget(parentMaster);
         await master.appendTo($('#qunit-fixture'));
 
-        master.call('bus_service', 'onNotification', master, function (notifications) {
+        master.call('bus_service', 'addListener', notifications => {
             assert.step('master - notification - ' + notifications.toString());
         });
         master.call('bus_service', 'addChannel', 'lambda');
@@ -190,7 +190,7 @@ QUnit.module('Bus', {
         var slave = new Widget(parentSlave);
         await slave.appendTo($('#qunit-fixture'));
 
-        slave.call('bus_service', 'onNotification', slave, function (notifications) {
+        slave.call('bus_service', 'addListener', notifications => {
             assert.step('slave - notification - ' + notifications.toString());
         });
         slave.call('bus_service', 'addChannel', 'lambda');
@@ -243,7 +243,7 @@ QUnit.module('Bus', {
         var master = new Widget(parentMaster);
         await master.appendTo($('#qunit-fixture'));
 
-        master.call('bus_service', 'onNotification', master, function (notifications) {
+        master.call('bus_service', 'addListener', notifications => {
             assert.step('master - notification - ' + notifications.toString());
         });
         master.call('bus_service', 'addChannel', 'lambda');
@@ -275,7 +275,7 @@ QUnit.module('Bus', {
         var slave = new Widget(parentSlave);
         await slave.appendTo($('#qunit-fixture'));
 
-        slave.call('bus_service', 'onNotification', slave, function (notifications) {
+        slave.call('bus_service', 'addListener', notifications => {
             assert.step('slave - notification - ' + notifications.toString());
         });
         slave.call('bus_service', 'addChannel', 'lambda');

@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import html_escape
+
 
 
 class MailChannel(models.Model):
@@ -34,31 +36,33 @@ class MailChannel(models.Model):
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
             should be added to the notification, since the user cannot be listining to the channel.
         """
-        livechat_channels = self.filtered(lambda x: x.channel_type == 'livechat')
-        other_channels = self.filtered(lambda x: x.channel_type != 'livechat')
-        notifications = super(MailChannel, livechat_channels)._channel_message_notifications(message.with_context(im_livechat_use_username=True)) + \
-                        super(MailChannel, other_channels)._channel_message_notifications(message, message_format)
-        for channel in self:
-            # add uuid for private livechat channels to allow anonymous to listen
-            if channel.channel_type == 'livechat' and channel.public == 'private':
-                notifications.append([channel.uuid, notifications[0][1]])
-        if not message.author_id:
-            unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
-            if unpinned_channel_partner:
-                unpinned_channel_partner.write({'is_pinned': True})
-                notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
-        return notifications
+        # TODO SEB clean this mess, probably not needed after proper changes
+
+        # livechat_channels = self.filtered(lambda x: x.channel_type == 'livechat')
+        # other_channels = self.filtered(lambda x: x.channel_type != 'livechat')
+        # notifications = super(MailChannel, livechat_channels)._channel_message_notifications(message.with_context(im_livechat_use_username=True)) + \
+        #                 super(MailChannel, other_channels)._channel_message_notifications(message, message_format)
+        # for channel in self:
+        #     # add uuid for private livechat channels to allow anonymous to listen
+        #     if channel.channel_type == 'livechat' and channel.public == 'private':
+        #         notifications.append([channel.uuid, notifications[0][1]])
+        # if not message.author_id:
+        #     unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
+        #     if unpinned_channel_partner:
+        #         unpinned_channel_partner.write({'is_pinned': True})
+        #         notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
+        # return notifications
 
     def channel_fetch_message(self, last_id=False, limit=20):
         """ Override to add the context of the livechat username."""
         channel = self.with_context(im_livechat_use_username=True) if self.channel_type == 'livechat' else self
         return super(MailChannel, channel).channel_fetch_message(last_id=last_id, limit=limit)
 
-    def channel_info(self, extra_info=False):
+    def channel_info(self):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)
         """
-        channel_infos = super(MailChannel, self).channel_info(extra_info)
+        channel_infos = super(MailChannel, self).channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self:
             # add the last message date
@@ -150,23 +154,26 @@ class MailChannel(models.Model):
         return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
 
     def _execute_command_history(self, **kwargs):
-        notification = []
-        notification_values = {
-            '_type': 'history_command',
-        }
-        notification.append([self.uuid, dict(notification_values)])
-        return self.env['bus.bus'].sendmany(notification)
+        # TODO SEB fix handler for new channel format
+        self.env['bus.bus']._send_notifications({
+            'target': self,
+            'type': 'im_livechat.history_command',
+        } for channel in self)
 
     def _send_history_message(self, pid, page_history):
+        self.ensure_one()
         message_body = _('No history found')
         if page_history:
-            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (page, page) for page in page_history]
+            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (html_escape(page), html_escape(page)) for page in page_history]
             message_body = '<span class="o_mail_notification"><ul>%s</ul></span>' % (''.join(html_links))
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', pid), {
-            'body': message_body,
-            'channel_ids': self.ids,
-            'info': 'transient_message',
-        })
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env['res.partner'].browse(pid),
+            'type': 'mail.transient_message',
+            'payload': {
+                'body': message_body,
+                'channel_ids': self.ids,
+            },
+        }])
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor has left the conversation.')

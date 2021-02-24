@@ -334,12 +334,18 @@ class Channel(models.Model):
         self.message_unsubscribe(partner.ids)
         if partner not in self.with_context(active_test=False).channel_partner_ids:
             return True
-        channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
+        channel_info = self.channel_info()[0]  # must be computed before leaving the channel (access rights)
         result = self.write({'channel_partner_ids': [Command.unlink(partner.id)]})
         # side effect of unsubscribe that wasn't taken into account because
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), channel_info)
+        self.env['bus.bus']._send_notifications([{
+            'target': partner,
+            'type': 'mail.channel_unsubscribe',
+            'payload': {
+                'channel': channel_info,
+            },
+        }])
         if not self.email_send:
             notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', self.id, self.name)
             # post 'channel left' message as root since the partner just unsubscribed from the channel
@@ -733,7 +739,7 @@ class Channel(models.Model):
             :param partner_ids : the partner to notify
         """
         notifications = self._channel_channel_notifications(partner_ids)
-        self.env['bus.bus'].sendmany(notifications)
+        self.env['bus.bus']._send_notifications(notifications)
 
     def _channel_channel_notifications(self, partner_ids):
         """ Generate the bus notifications of current channel for the given partner ids
@@ -748,7 +754,13 @@ class Channel(models.Model):
                     allowed_company_ids=user_id.company_ids.ids
                 )
                 for channel_info in user_channels.channel_info():
-                    notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
+                    notifications.append({
+                        'target': partner,
+                        'type': 'mail.channel_info',
+                        'payload': {
+                            'channel': channel_info,
+                        },
+                    })
         return notifications
 
     def _channel_message_notifications(self, message, message_format=False):
@@ -759,10 +771,14 @@ class Channel(models.Model):
         message_format = message_format or message.message_format()[0]
         notifications = []
         for channel in self:
-            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), dict(message_format)])
-            # add uuid to allow anonymous to listen
-            if channel.public == 'public':
-                notifications.append([channel.uuid, dict(message_format)])
+            notifications.append({
+                'target': channel,
+                'type': 'mail.channel_new_message',
+                'payload': {
+                    'channel_id': channel.id,
+                    'message': dict(message_format),
+                },
+            })
         return notifications
 
     # ------------------------------------------------------------
@@ -793,7 +809,7 @@ class Channel(models.Model):
 
         return partner_infos
 
-    def channel_info(self, extra_info=False):
+    def channel_info(self):
         """ Get the informations header for the current channels
             :returns a list of channels values
             :rtype : list(dict)
@@ -827,8 +843,6 @@ class Channel(models.Model):
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
             }
-            if extra_info:
-                info['info'] = extra_info
 
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
@@ -935,43 +949,27 @@ class Channel(models.Model):
         return channel.channel_info()[0]
 
     @api.model
-    def channel_get_and_minimize(self, partners_to):
-        channel = self.channel_get(partners_to)
-        if channel:
-            self.channel_minimize(channel['uuid'])
-        return channel
-
-    @api.model
-    def channel_fold(self, uuid, state=None):
+    def channel_fold(self, uuid, state):
         """ Update the fold_state of the given session. In order to syncronize web browser
             tabs, the change will be broadcast to himself (the current user channel).
             Note: the user need to be logged
             :param state : the new status of the session for the current user.
         """
         domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.uuid', '=', uuid)]
-        for session_state in self.env['mail.channel.partner'].search(domain):
-            if not state:
-                state = session_state.fold_state
-                if session_state.fold_state == 'open':
-                    state = 'folded'
-                else:
-                    state = 'open'
-            session_state.write({
+        notifications = []
+        for channel_partner in self.env['mail.channel.partner'].search(domain):
+            channel_partner.write({
                 'fold_state': state,
                 'is_minimized': bool(state != 'closed'),
             })
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), session_state.channel_id.channel_info()[0])
-
-    @api.model
-    def channel_minimize(self, uuid, minimized=True):
-        values = {
-            'fold_state': minimized and 'open' or 'closed',
-            'is_minimized': minimized
-        }
-        domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.uuid', '=', uuid)]
-        channel_partners = self.env['mail.channel.partner'].search(domain, limit=1)
-        channel_partners.write(values)
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_partners.channel_id.channel_info()[0])
+            notifications.append({
+                'target': self.env.user.partner_id,
+                'type': 'mail.channel_fold_state_changed',
+                'payload': {
+                    'channel': channel_partner.channel_id.channel_info()[0],
+                },
+            })
+        self.env['bus.bus']._send_notifications(notifications)
 
     @api.model
     def channel_pin(self, uuid, pinned=False):
@@ -981,19 +979,27 @@ class Channel(models.Model):
 
     def _execute_channel_pin(self, pinned=False):
         """ Hook for website_livechat channel unpin and cleaning """
-        self.ensure_one()
-        channel_partners = self.env['mail.channel.partner'].search(
-            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), self.channel_info('unsubscribe' if not pinned else False)[0])
-        if channel_partners:
-            channel_partners.write({'is_pinned': pinned})
+        channel_partners = self.env['mail.channel.partner'].search([
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ('channel_id', 'in', self.ids),
+        ])
+        channel_partners.write({'is_pinned': pinned})
+        channel_info_list = channel_partners.channel_id.channel_info()
+        self.env['bus.bus']._send_notifications(
+            {
+                'target': self.env.user.partner_id,
+                'type': 'mail.channel_is_pinned_changed',
+                'payload': {
+                    'channel': channel_info,
+                },
+            }
+            for channel_info in channel_info_list
+        )
 
-    def channel_seen(self, last_message_id=None):
+    def channel_seen(self, last_message_id):
         """
         Mark channel as seen by updating seen message id of the current logged partner
-        :param last_message_id: the id of the message to be marked as seen, last message of the
-        thread by default. This param SHOULD be required, the default behaviour is DEPRECATED and
-        kept only for compatibility reasons.
+        :param last_message_id: the id of the message to be marked as seen
         """
         self.ensure_one()
         domain = ["&", ("model", "=", "mail.channel"), ("res_id", "in", self.ids)]
@@ -1005,16 +1011,16 @@ class Channel(models.Model):
 
         self._set_last_seen_message(last_message)
 
-        data = {
-            'info': 'channel_seen',
-            'last_message_id': last_message.id,
+        payload = {
+            'channel_id': self.id,
             'partner_id': self.env.user.partner_id.id,
+            'last_message_id': last_message.id,
         }
-        if self.channel_type == 'chat':
-            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
-        else:
-            data['channel_id'] = self.id
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), data)
+        self.env['bus.bus']._send_notifications([{
+            'target': self if self.channel_type != 'channel' else self.env.user.partner_id,
+            'type': 'mail.channel_seen',
+            'payload': payload,
+        }])
         return last_message.id
 
     def _set_last_seen_message(self, last_message):
@@ -1039,12 +1045,13 @@ class Channel(models.Model):
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
         """
+        notifications = []
         for channel in self:
             if not channel.message_ids.ids:
                 return
             if channel.channel_type != 'chat':
                 return
-            last_message_id = channel.message_ids.ids[0] # zero is the index of the last message
+            last_message_id = channel.message_ids.ids[0]  # zero is the index of the last message
             channel_partner = self.env['mail.channel.partner'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
             if channel_partner.fetched_message_id.id == last_message_id:
                 # last message fetched by user is already up-to-date
@@ -1052,13 +1059,16 @@ class Channel(models.Model):
             channel_partner.write({
                 'fetched_message_id': last_message_id,
             })
-            data = {
-                'id': channel_partner.id,
-                'info': 'channel_fetched',
-                'last_message_id': last_message_id,
-                'partner_id': self.env.user.partner_id.id,
-            }
-            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', channel.id), data]])
+            notifications.append({
+                'target': channel,
+                'type': 'mail.channel_fetched',
+                'payload': {
+                    'id': channel_partner.id,
+                    'last_message_id': last_message_id,
+                    'partner_id': self.env.user.partner_id.id,
+                },
+            })
+        self.env['bus.bus']._send_notifications(notifications)
 
     @api.model
     def channel_set_custom_name(self, channel_id, name=False):
@@ -1072,17 +1082,19 @@ class Channel(models.Model):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the current user is typing or not
         """
-        notifications = []
-        for channel in self:
-            data = {
-                'info': 'typing_status',
-                'is_typing': is_typing,
-                'partner_id': self.env.user.partner_id.id,
-                'partner_name': self.env.user.partner_id.name,
+        self.env['bus.bus']._send_notifications(
+            {
+                'target': channel,
+                'type': 'mail.channel_typing_status',
+                'payload': {
+                    'channel_id': channel.id,
+                    'is_typing': is_typing,
+                    'partner_id': self.env.user.partner_id.id,
+                    'partner_name': self.env.user.partner_id.name,
+                }
             }
-            notifications.append([(self._cr.dbname, 'mail.channel', channel.id), data]) # notify backend users
-            notifications.append([channel.uuid, data]) # notify frontend users
-        self.env['bus.bus'].sendmany(notifications)
+            for channel in self
+        )
 
     # ------------------------------------------------------------
     # IM VIEW SPECIFIC (Slack Client Action)
@@ -1139,7 +1151,13 @@ class Channel(models.Model):
             self._send_guidelines(self.env.user.partner_id)
 
         channel_info = self.channel_info('join')[0]
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env.user.partner_id,
+            'type': 'mail.channel_join',
+            'payload': {
+                'channel': channel_info,
+            },
+        }])
         return channel_info
 
     @api.model
@@ -1158,8 +1176,14 @@ class Channel(models.Model):
         })
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', new_channel.id, new_channel.name)
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-        channel_info = new_channel.channel_info('creation')[0]
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
+        channel_info = new_channel.channel_info()[0]
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env.user.partner_id,
+            'type': 'mail.channel_create',
+            'payload': {
+                'channel': channel_info,
+            },
+        }])
         return channel_info
 
     @api.model
@@ -1241,14 +1265,15 @@ class Channel(models.Model):
     def _send_transient_message(self, partner_to, content):
         """ Notifies partner_to that a message (not stored in DB) has been
             written in this channel """
-        self.env['bus.bus'].sendone(
-            (self._cr.dbname, 'res.partner', partner_to.id),
-            {'body': "<span class='o_mail_notification'>" + content + "</span>",
-             'info': 'transient_message',
-             'model': self._name,
-             'res_id': self.id,
-            }
-        )
+        self.env['bus.bus']._send_notifications([{
+            'target': partner_to,
+            'type': 'transient_message',
+            'payload': {
+                'body': "<span class='o_mail_notification'>" + content + "</span>",
+                'model': 'mail.channel',
+                'res_id': self.id,
+            },
+        }])
 
     def _define_command_help(self):
         return {'help': _("Show a helper message")}

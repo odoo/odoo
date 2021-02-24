@@ -2113,13 +2113,16 @@ class MailThread(models.AbstractModel):
                 'notification_status': 'sent',
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
-
             message_format_values = message.message_format()[0]
             for partner_id in inbox_pids:
-                bus_notifications.append([(self._cr.dbname, 'ir.needaction', partner_id), dict(message_format_values)])
-
-        if bus_notifications:
-            self.env['bus.bus'].sudo().sendmany(bus_notifications)
+                bus_notifications.append({
+                    'target': self.env['res.partner'].browse(partner_id),
+                    'type': 'mail.inbox_new_message',
+                    'payload': {
+                        'message': dict(message_format_values),
+                    },
+                })
+        self.env['bus.bus'].sudo()._send_notifications(bus_notifications)
 
     def _notify_record_by_email(self, message, recipients_data, msg_vals=False,
                                 model_description=False, mail_auto_delete=True, check_existing=False,
@@ -2259,7 +2262,7 @@ class MailThread(models.AbstractModel):
                 _context = self._context
 
                 @self.env.cr.postcommit.add
-                def send_notifications():
+                def _send_notifications():
                     db_registry = registry(dbname)
                     with api.Environment.manage(), db_registry.cursor() as cr:
                         env = api.Environment(cr, SUPERUSER_ID, _context)

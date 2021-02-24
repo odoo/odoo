@@ -28,7 +28,6 @@ class MailChatController(BusController):
                     channels.append((request.db, 'mail.channel', mail_channel.id))
                 # personal and needaction channel
                 channels.append((request.db, 'res.partner', partner_id))
-                channels.append((request.db, 'ir.needaction', partner_id))
         return super(MailChatController, self)._poll(dbname, channels, last, options)
 
     # --------------------------

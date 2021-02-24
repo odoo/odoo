@@ -16,7 +16,6 @@ var ServicesMixin = require('web.ServicesMixin');
  */
 var LongpollingBus = Bus.extend(ServicesMixin, {
     // constants
-    PARTNERS_PRESENCE_CHECK_PERIOD: 30000,  // don't check presence more than once every 30s
     ERROR_RETRY_DELAY: 10000, // 10 seconds
     POLL_ROUTE: '/longpolling/poll',
 
@@ -195,7 +194,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
                 self._poll();
             } else {
                 // random delay to avoid massive longpolling
-                self._pollRetryTimeout = setTimeout(self._poll, self.ERROR_RETRY_DELAY + (Math.floor((Math.random()*20)+1)*1000));
+                self._pollRetryTimeout = setTimeout(self._poll, self.ERROR_RETRY_DELAY + (Math.floor((Math.random() * 20) + 1) * 1000));
             }
         });
     },
@@ -238,10 +237,11 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
     _onPoll: function (notifications) {
         var self = this;
         var notifs = _.map(notifications, function (notif) {
+            this.env.bus.trigger(notif.type, notif.payload);
             if (notif.id > self._lastNotificationID) {
                 self._lastNotificationID = notif.id;
             }
-            return [notif.channel, notif.message];
+            return notif.message;
         });
         this.trigger("notification", notifs);
         return notifs;

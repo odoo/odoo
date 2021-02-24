@@ -297,53 +297,57 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * - -> The fadeInOutDelay will be 200ms (600ms delay + 200ms * 2 fade in fade out)
      *
      * @private
-     * @param {Array[]} notifications structured as specified by the bus feature
+     * @param {Object[]} notifications
+     * @param {any} [notifications[].payload]
+     * @param {string} notifications[].type
      */
-    _onNotification: function (notifications) {
-        var nextPageEvent = false;
-        if (notifications && notifications.length !== 0) {
-            notifications.forEach(function (notification) {
-                if (notification.length >= 2) {
-                    var event = notification[1];
-                    if (event.type === 'next_question' ||
-                        event.type === 'end_session') {
-                        nextPageEvent = event;
+    _handleNotifications(notifications) {
+        // TODO SEB factorize this properly
+        for (const { payload, type } of notifications) {
+            switch (type) {
+                case 'end_session':
+                    if (this.options.isStartScreen) {
+                        // can happen when triggering the same survey session multiple times
+                        // we received an "old" end_session event that needs to be ignored
+                        break;
                     }
-                }
-            });
-        }
+                    this.fadeInOutDelay = 400;
 
-        if (this.options.isStartScreen && nextPageEvent.type === 'end_session') {
-            // can happen when triggering the same survey session multiple times
-            // we received an "old" end_session event that needs to be ignored
-            return;
-        }
+                    this.$('.o_survey_main_title:visible').fadeOut(400);
 
-        if (nextPageEvent) {
-            if (nextPageEvent.type === 'next_question') {
-                var serverDelayMS = moment.utc().valueOf() - moment.unix(nextPageEvent.question_start).utc().valueOf();
-                if (serverDelayMS < 0) {
-                    serverDelayMS = 0;
-                } else if (serverDelayMS > 1000) {
-                    serverDelayMS = 1000;
-                }
-                this.fadeInOutDelay = (1000 - serverDelayMS) / 2;
-            } else {
-                this.fadeInOutDelay = 400;
+                    this.preventEnterSubmit = false;
+                    this.readonly = false;
+                    this._nextScreen(
+                        this._rpc({
+                            route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
+                        }), {
+                            initTimer: true,
+                            isFinish: true,
+                        }
+                    );
+                    break;
+                case 'next_question':
+                    var serverDelayMS = moment.utc().valueOf() - moment.unix(payload.question_start).utc().valueOf();
+                    if (serverDelayMS < 0) {
+                        serverDelayMS = 0;
+                    } else if (serverDelayMS > 1000) {
+                        serverDelayMS = 1000;
+                    }
+                    this.fadeInOutDelay = (1000 - serverDelayMS) / 2;
+                    this.$('.o_survey_main_title:visible').fadeOut(400);
+
+                    this.preventEnterSubmit = false;
+                    this.readonly = false;
+                    this._nextScreen(
+                        this._rpc({
+                            route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
+                        }), {
+                            initTimer: true,
+                            isFinish: false,
+                        }
+                    );
+                    break;
             }
-
-            this.$('.o_survey_main_title:visible').fadeOut(400);
-
-            this.preventEnterSubmit = false;
-            this.readonly = false;
-            this._nextScreen(
-                this._rpc({
-                    route: `/survey/next_question/${this.options.surveyToken}/${this.options.answerToken}`,
-                }), {
-                    initTimer: true,
-                    isFinish: nextPageEvent.type === 'end_session'
-                }
-            );
         }
     },
 
@@ -865,8 +869,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                      }
                 }, 2000);
             }
-
-            this.call('bus_service', 'onNotification', this, this._onNotification);
+            this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
         }
     },
 

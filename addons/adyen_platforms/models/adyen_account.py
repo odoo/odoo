@@ -689,10 +689,14 @@ class AdyenPayout(models.Model):
         })
         balances = next(account_balance['detailBalance']['balance'] for account_balance in response['balancePerAccount'] if account_balance['accountCode'] == self.code)
         if notify and not balances:
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                {'type': 'simple_notification', 'title': _('No pending balance'), 'message': _('No balance is currently awaitng payout.')}
-            )
+            self.env['bus.bus']._send_notifications([{
+                'target': self.env.user.partner_id,
+                'type': 'mail.simple_notification',
+                'payload': {
+                    'title': _('No pending balance'),
+                    'message': _('No balance is currently awaiting payout.'),
+                },
+            }])
         for balance in balances:
             response = self.adyen_account_id._adyen_rpc('payout_request', {
                 'accountCode': self.code,
@@ -705,10 +709,14 @@ class AdyenPayout(models.Model):
                 value = round(balance['value'] / (10 ** currency_id.decimal_places), 2) # Convert from minor units
                 amount = str(value) + currency_id.symbol if currency_id.position == 'after' else currency_id.symbol + str(value)
                 message = _('Successfully sent payout request for %s', amount)
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                    {'type': 'simple_notification', 'title': _('Payout Request sent'), 'message': message}
-                )
+                self.env['bus.bus']._send_notifications([{
+                    'target': self.env.user.partner_id,
+                    'type': 'mail.simple_notification',
+                    'payload': {
+                        'title': _('Payout Request sent'),
+                        'message': message,
+                    },
+                }])
 
     def _fetch_transactions(self, page=1):
         response = self.adyen_account_id._adyen_rpc('get_transactions', {

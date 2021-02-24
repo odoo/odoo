@@ -725,74 +725,76 @@ class Message(models.Model):
         # not really efficient method: it does one db request for the
         # search, and one for each message in the result set is_read to True in the
         # current notifications from the relation.
-        partner_id = self.env.user.partner_id.id
         notif_domain = [
-            ('res_partner_id', '=', partner_id),
+            ('res_partner_id', '=', self.env.user.partner_id.id),
             ('is_read', '=', False)]
         if domain:
             messages = self.search(domain)
             messages.set_message_done()
-            return messages.ids
+            return
 
         notifications = self.env['mail.notification'].sudo().search(notif_domain)
         notifications.write({'is_read': True})
 
-        ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
-
-        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids], 'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
-
-        return ids
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env.user.partner_id,
+            'type': 'mail.inbox_mark_all_messages_as_read',
+        }])
 
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
-        partner_id = self.env.user.partner_id
-
         notifications = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
-            ('res_partner_id', '=', partner_id.id),
+            ('res_partner_id', '=', self.env.user.partner_id.id),
             ('is_read', '=', False)])
-
         if not notifications:
             return
-
         notifications.write({'is_read': True})
-
-        # notifies changes in messages through the bus.
-        self.env['bus.bus'].sendone(
-            (self._cr.dbname, 'res.partner', partner_id.id),
-            {'type': 'mark_as_read',
-             'message_ids': notifications.mapped('mail_message_id').ids,
-             'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()
-            }
-        )
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env.user.partner_id,
+            'type': 'mail.inbox_mark_all_messages_as_read',
+            'payload': {
+                'message_ids': notifications.mail_message_id.ids,
+                'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count(),
+            },
+        }])
 
     @api.model
     def unstar_all(self):
         """ Unstar messages for the current partner. """
         partner_id = self.env.user.partner_id.id
-
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
         starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
-
-        ids = [m.id for m in starred_messages]
-        notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env.user.partner_id,
+            'type': 'mail.message_toggle_star',
+            'payload': {
+                'message_ids': starred_messages.ids,
+                'starred': False,
+            },
+        }])
 
     def toggle_message_starred(self):
         """ Toggle messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
         """
+        # TODO SEB should make this deterministic by passing the target starred state as param.
         # a user should always be able to star a message he can read
+        self.check_access_rights('read')
         self.check_access_rule('read')
         starred = not self.starred
         if starred:
             self.sudo().write({'starred_partner_ids': [Command.link(self.env.user.partner_id.id)]})
         else:
             self.sudo().write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
-
-        notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env.user.partner_id,
+            'type': 'mail.message_toggle_star',
+            'payload': {
+                'message_ids': self.ids,
+                'starred': starred,
+            },
+        }])
 
     # --------------------------------------------------
     # MODERATION API
@@ -902,11 +904,13 @@ class Message(models.Model):
 
         notifications = []
         for partner_id, message_ids in partner_to_pid.items():
-            notifications.append([
-                (self._cr.dbname, 'res.partner', partner_id),
-                {'type': 'deletion', 'message_ids': sorted(list(message_ids))}  # sorted to make deterministic for tests
-            ])
-        self.env['bus.bus'].sendmany(notifications)
+            notifications.append({
+                'target': self.env['res.partner'].browse(partner_id),
+                'type': 'mail.message_deleted',
+                'payload': {
+                    'message_ids': sorted(list(message_ids))}  # sorted to make deterministic for tests
+            })
+        self.env['bus.bus']._send_notifications(notifications)
         self.unlink()
 
     def _notify_pending_by_chat(self):
@@ -920,16 +924,14 @@ class Message(models.Model):
         partners = self.env['mail.channel'].browse(self.res_id).mapped('moderator_ids.partner_id')
         notifications = []
         for partner in partners:
-            notifications.append([
-                (self._cr.dbname, 'res.partner', partner.id),
-                {'type': 'moderator', 'message': message}
-            ])
-        if self.author_id not in partners:
-            notifications.append([
-                (self._cr.dbname, 'res.partner', self.author_id.id),
-                {'type': 'author', 'message': message}
-            ])
-        self.env['bus.bus'].sendmany(notifications)
+            notifications.append({
+                'target': partner,
+                'type': 'mail.message_pending_moderation',
+                'payload': {
+                    'message': message,
+                },
+            })
+        self.env['bus.bus']._send_notifications(notifications)
 
     @api.model
     def _notify_moderators(self):
@@ -1171,11 +1173,16 @@ class Message(models.Model):
                     continue
                 else:
                     messages |= message
-        updates = [[
-            (self._cr.dbname, 'res.partner', author.id),
-            {'type': 'message_notification_update', 'elements': self.env['mail.message'].concat(*author_messages)._message_notification_format()}
+        notifications = [[
+            {
+                'target': author,
+                'type': 'mail.message_notification_update',
+                'payload': {
+                    self.env['mail.message'].concat(*author_messages)._message_notification_format()
+                },
+            }
         ] for author, author_messages in groupby(messages.sorted('author_id'), itemgetter('author_id'))]
-        self.env['bus.bus'].sendmany(updates)
+        self.env['bus.bus']._send_notifications(notifications)
 
     # ------------------------------------------------------
     # TOOLS

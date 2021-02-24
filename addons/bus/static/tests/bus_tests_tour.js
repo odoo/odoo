@@ -14,7 +14,13 @@ odoo.define("bus.tour", function (require) {
                 webClient._getBundleNotificationDelay = () => 0;
                 this.call('bus_service', 'trigger',
                     'notification',
-                    [[['db_name', 'bundle_changed'], ['web.assets_backend', 'hash']]]
+                    [{
+                        payload: {
+                            name: 'web.assets_backend',
+                            version: 'hash',
+                        },
+                        type: 'base.bundle_changed',
+                    }]
                 );
                 webClient._getBundleNotificationDelay = _delayFn;
             }

@@ -79,11 +79,11 @@ class AccountInvoiceSend(models.TransientModel):
 
     def notify_invalid_addresses(self):
         self.ensure_one()
-        self.env['bus.bus'].sendone(
-            (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-            {'type': 'snailmail_invalid_address', 'title': _("Invalid Addresses"),
-            'message': _("%s of the selected invoice(s) had an invalid address and were not sent", self.invalid_addresses)}
-        )
+        self.env['bus.bus']._send_notifications([{
+            'target': self.env.user.partner_id,
+            'type': 'snailmail_account.invalid_address',
+            'payload': {'invalid_addresses_count': self.invalid_addresses},
+        }])
 
     def invalid_addresses_action(self):
         return {

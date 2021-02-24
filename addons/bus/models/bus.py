@@ -31,23 +31,48 @@ def hashable(key):
 
 
 class ImBus(models.Model):
-
+    # TODO SEB rename bus.message
     _name = 'bus.bus'
     _description = 'Communication Bus'
 
+    # TODO SEB make channel an arbitrary string, usually built from record str (model, id)
     channel = fields.Char('Channel')
+    # TODO SEB split message in type and payload
     message = fields.Char('Message')
 
     @api.autovacuum
     def _gc_messages(self):
-        timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT*2)
+        timeout_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=TIMEOUT * 2)
         domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         return self.sudo().search(domain).unlink()
 
     @api.model
-    def sendmany(self, notifications):
+    def _send_notifications(self, notifications):
+        """Send notifications on the bus. `notifications` param should be an
+        iterable of which the items are dictionaries with the following keys:
+        {
+            'target': the record target of the notification. Clients should
+                listen on the records that interests them. An empty record set
+                can be used as a broadcast. Multiple records are not supported.
+            'type': string to distinguish the purpose of one notification
+                compared to another. Its value should be determined by business
+                needs. By convention it should be prefixed by the module name
+                that makes use of it.
+            'payload': payload that is determined by business needs.
+                `json.dump()` must be able to serialize this payload.
+                As a guideline two notifications of the same type should
+                typically have a similar payload.
+        }
+        """
+        if not notifications:
+            return
         channels = set()
-        for channel, message in notifications:
+        for notification in notifications:
+            channel = (self.env.cr.dbname, notification['target']._name, notification['target'].id)
+            message = {
+                'type': notification['type'],
+                'payload': notification['payload'],
+            }
             channels.add(channel)
             values = {
                 "channel": json_dump(channel),
@@ -66,16 +91,10 @@ class ImBus(models.Model):
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
 
     @api.model
-    def sendone(self, channel, message):
-        self.sendmany([[channel, message]])
-
-    @api.model
-    def _poll(self, channels, last=0, options=None):
-        if options is None:
-            options = {}
+    def _poll(self, channels, last=0):
         # first poll return the notification in the 'buffer'
         if last == 0:
-            timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
+            timeout_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:  # else returns the unread notifications
             domain = [('id', '>', last)]
@@ -120,7 +139,7 @@ class ImDispatch(object):
         # immediatly returns if past notifications exist
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            notifications = env['bus.bus']._poll(channels, last, options)
+            notifications = env['bus.bus']._poll(channels, last)
 
         # immediatly returns in peek mode
         if options.get('peek'):
@@ -139,7 +158,7 @@ class ImDispatch(object):
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    notifications = env['bus.bus']._poll(channels, last, options)
+                    notifications = env['bus.bus']._poll(channels, last)
             except Exception:
                 # timeout
                 pass
