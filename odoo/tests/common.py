@@ -938,7 +938,7 @@ class ChromeBrowser:
         self._logger.warning("Chrome executable not found")
         raise unittest.SkipTest("Chrome executable not found")
 
-    def _spawn_chrome(self, cmd):
+    def _chrome_without_limit(self, cmd):
         if os.name == 'posix' and platform.system() != 'Darwin':
             # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
             # the memory reservation algorithm requires more than 8GiB of
@@ -950,7 +950,10 @@ class ChromeBrowser:
             preexec = None
 
         # pylint: disable=subprocess-popen-preexec-fn
-        proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=preexec)
+        return subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=preexec)
+
+    def _spawn_chrome(self, cmd):
+        proc = self._chrome_without_limit(cmd)
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
             time.sleep(CHECK_BROWSER_SLEEP)
@@ -1009,6 +1012,7 @@ class ChromeBrowser:
         self._logger.info('Browser version: %s', version['Browser'])
         infos = self._json_command('', get_key=0)  # Infos about the first tab
         self.ws_url = infos['webSocketDebuggerUrl']
+        self.dev_tools_frontend_url = infos.get('devtoolsFrontendUrl')
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
     def _json_command(self, command, timeout=3, get_key=None):
@@ -1618,16 +1622,18 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, watch=False, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
         - wait for ready object to be available
         - eval(code) inside the page
+        - open another chrome window to watch code execution if watch is True
 
         To signal success test do: console.log('test successful')
         To signal test failure raise an exception or call console.error
         """
+
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
 
@@ -1636,7 +1642,11 @@ class HttpCase(TransactionCase):
             timeout = timeout * 1.5
 
         self.start_browser()
-
+        if watch and self.browser.dev_tools_frontend_url:
+            _logger.warning('watch mode is only suitable for local testing')
+            debug_front_end = f'http://127.0.0.1:{self.browser.devtools_port}{self.browser.dev_tools_frontend_url}'
+            self.browser._chrome_without_limit([self.browser.executable, debug_front_end])
+            time.sleep(3)
         try:
             self.authenticate(login, login)
             # Flush and clear the current transaction.  This is useful in case
