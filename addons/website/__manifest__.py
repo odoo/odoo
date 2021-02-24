@@ -75,6 +75,7 @@
         'views/snippets/s_mega_menu_multi_menus.xml',
         'views/snippets/s_mega_menu_menu_image_menu.xml',
         'views/snippets/s_google_map.xml',
+        'views/snippets/s_map.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/website_views.xml',
