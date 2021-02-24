@@ -6,6 +6,7 @@ from odoo.tools import float_compare, date_utils, email_split, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
 from odoo.addons.account.exceptions import (
     ImbalanceMoveValidationError,
+    SequenceMixinValidationError,
     UniqueSequenceValidationError,
     UniqueReferenceValidationError,
 )
@@ -1068,73 +1069,22 @@ class AccountMove(models.Model):
         def journal_key(move):
             return (move.journal_id, move.journal_id.refund_sequence and move.move_type)
 
-        def date_key(move):
-            return (move.date.year, move.date.month)
+        def order_key(move):
+            return (move.date, move.ref or '', move.id)
 
-        grouped = defaultdict(  # key: journal_id, move_type
-            lambda: defaultdict(  # key: first adjacent (date.year, date.month)
-                lambda: {
-                    'records': self.env['account.move'],
-                    'format': False,
-                    'format_values': False,
-                    'reset': False
-                }
-            )
-        )
-        self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
-        highest_name = self[0]._get_last_sequence() if self else False
+        to_compute = self.filtered(lambda m: (not m.name or m.name == '/') and m.posted_before)
+        try:
+            draft_with_name = self.filtered(lambda m: m.name and m.name != '/' and not m.posted_before)
+            draft_with_name._constrains_date_sequence()
+        except SequenceMixinValidationError as smve:
+            to_compute += smve.records
 
-        # Group the moves by journal and month
-        for move in self:
-            if not highest_name and move == self[0] and not move.posted_before:
-                # In the form view, we need to compute a default sequence so that the user can edit
-                # it. We only check the first move as an approximation (enough for new in form view)
-                pass
-            elif (move.name and move.name != '/') or move.state != 'posted':
-                try:
-                    if not move.posted_before:
-                        move._constrains_date_sequence()
-                    # Has already a name or is not posted, we don't add to a batch
-                    continue
-                except ValidationError:
-                    # Has never been posted and the name doesn't match the date: recompute it
-                    pass
-            group = grouped[journal_key(move)][date_key(move)]
-            if not group['records']:
-                # Compute all the values needed to sequence this whole group
-                move._set_next_sequence()
-                group['format'], group['format_values'] = move._get_sequence_format_param(move.name)
-                group['reset'] = move._deduce_sequence_number_reset(move.name)
-            group['records'] += move
+        if self and not self[0].id and self[0] not in to_compute and not self[0]._get_last_sequence():
+            # In the form view, we need to compute a default sequence so that the user can edit
+            # it. We only check the first move as an approximation (enough for new in form view)
+            to_compute += self[0]
 
-        # Fusion the groups depending on the sequence reset and the format used because `seq` is
-        # the same counter for multiple groups that might be spread in multiple months.
-        final_batches = []
-        for journal_group in grouped.values():
-            for date_group in journal_group.values():
-                if (
-                    not final_batches
-                    or final_batches[-1]['format'] != date_group['format']
-                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
-                ):
-                    final_batches += [date_group]
-                elif date_group['reset'] == 'never':
-                    final_batches[-1]['records'] += date_group['records']
-                elif (
-                    date_group['reset'] == 'year'
-                    and final_batches[-1]['records'][0].date.year == date_group['records'][0].date.year
-                ):
-                    final_batches[-1]['records'] += date_group['records']
-                else:
-                    final_batches += [date_group]
-
-        # Give the name based on previously computed values
-        for batch in final_batches:
-            for move in batch['records']:
-                move.name = batch['format'].format(**batch['format_values'])
-                batch['format_values']['seq'] += 1
-            batch['records']._compute_split_sequence()
-
+        to_compute._set_next_sequence_batch(grouping_key=journal_key, order_key=order_key)
         self.filtered(lambda m: not m.name).name = '/'
 
     @api.depends('journal_id', 'date')

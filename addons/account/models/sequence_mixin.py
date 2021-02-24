@@ -2,18 +2,15 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.misc import format_date
+from odoo.addons.account.exceptions import SequenceMixinValidationError
 
 import re
 from psycopg2 import sql
+from collections import defaultdict
 
 
 class SequenceMixin(models.AbstractModel):
-    """Mechanism used to have an editable sequence number.
-
-    Be careful of how you use this regarding the prefixes. More info in the
-    docstring of _get_last_sequence.
-    """
+    """Mechanism used to have an editable sequence number."""
 
     _name = 'sequence.mixin'
     _description = "Automatic sequence"
@@ -56,6 +53,7 @@ class SequenceMixin(models.AbstractModel):
             'sequence.mixin.constraint_start_date',
             '1970-01-01'
         ))
+        failed = self.env[self._name]
         for record in self:
             date = fields.Date.to_date(record[record._sequence_date_field])
             sequence = record[record._sequence_field]
@@ -65,14 +63,9 @@ class SequenceMixin(models.AbstractModel):
                     format_values['year'] and format_values['year'] != date.year % 10**len(str(format_values['year']))
                     or format_values['month'] and format_values['month'] != date.month
                 ):
-                    raise ValidationError(_(
-                        "The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-                        "You might want to clear the field %(sequence_field)s before proceeding with the change of the date.",
-                        date=format_date(self.env, date),
-                        sequence=sequence,
-                        date_field=record._fields[record._sequence_date_field]._description_string(self.env),
-                        sequence_field=record._fields[record._sequence_field]._description_string(self.env),
-                    ))
+                    failed += record
+        if failed:
+            raise SequenceMixinValidationError(failed)
 
     @api.depends(lambda self: [self._sequence_field])
     def _compute_split_sequence(self):
@@ -149,15 +142,10 @@ class SequenceMixin(models.AbstractModel):
     def _get_last_sequence(self, relaxed=False):
         """Retrieve the previous sequence.
 
-        This is done by taking the number with the greatest alphabetical value within
-        the domain of _get_last_sequence_domain. This means that the prefix has a
-        huge importance.
-        For instance, if you have INV/2019/0001 and INV/2019/0002, when you rename the
-        last one to FACT/2019/0001, one might expect the next number to be
-        FACT/2019/0002 but it will be INV/2019/0002 (again) because INV > FACT.
-        Therefore, changing the prefix might not be convenient during a period, and
-        would only work when the numbering makes a new start (domain returns by
-        _get_last_sequence_domain is [], i.e: a new year).
+        First we look at the last (with the highest `id`) prefix used for the domain defined.
+        Then we take the highest number with the same prefix in the samme domain defined.
+        This will lock the row with the highest number, preventing giving two sequences at the same
+        time.
 
         :param field_name: the field that contains the sequence.
         :param relaxed: this should be set to True when a previous request didn't find
@@ -253,3 +241,75 @@ class SequenceMixin(models.AbstractModel):
 
         self[self._sequence_field] = format.format(**format_values)
         self._compute_split_sequence()
+
+    def _set_next_sequence_batch(self, grouping_key, date_key=None, order_key=None):
+        """Set the next sequence on multiple documents at once.
+
+        The method `_set_next_sequence` is quite slow because it has to perform multiple SQL
+        queries. This method reduces that by doing one query per group/date.
+        :param grouping_key (function<Model,Any>): key used to dispatch the records in different
+            batches.
+        :param date_key (function<Model,Any>): key used to dispatch the batches in different date
+            zones. Date zones that have the same format will be regroupped before assigning the
+            sequence number.
+        """
+        if date_key is None:
+            def date_key(record):
+                date = record[record._sequence_date_field]
+                return (date.year, date.month)
+
+        if order_key is None:
+            def order_key(record):
+                return (record[record._sequence_date_field], record.id)
+
+        grouped = defaultdict(  # key: grouping_key
+            lambda: defaultdict(  # key: date_key
+                lambda: {
+                    'records': self.env[self._name],
+                    'format': False,
+                    'format_values': False,
+                    'reset': False
+                }
+            )
+        )
+        for record in self.sorted(order_key):
+            group = grouped[grouping_key(record)][date_key(record)]
+            if not group['records']:
+                # Compute all the values needed to sequence this whole group
+                record._set_next_sequence()
+                seq = record[record._sequence_field]
+                group['format'], group['format_values'] = record._get_sequence_format_param(seq)
+                group['reset'] = record._deduce_sequence_number_reset(seq)
+            group['records'] += record
+
+        # Merge the groups depending on the sequence reset and the format used.
+        # This is needed to reassemble in the same batch yearly and continuous sequences that have
+        # been split in multiple batches above because `seq` is the same counter for multiple
+        # groups that might be spread in multiple months.
+        final_batches = []
+        for journal_group in grouped.values():
+            for date_group in journal_group.values():
+                if (
+                    not final_batches
+                    or final_batches[-1]['format'] != date_group['format']
+                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
+                ):
+                    final_batches += [date_group]
+                elif date_group['reset'] == 'never':
+                    final_batches[-1]['records'] += date_group['records']
+                elif (
+                    date_group['reset'] == 'year'
+                    and (
+                        final_batches[-1]['records'][0][self._sequence_date_field].year
+                        == date_group['records'][0][self._sequence_date_field].year)
+                ):
+                    final_batches[-1]['records'] += date_group['records']
+                else:
+                    final_batches += [date_group]
+
+        # Give the name based on previously computed values
+        for batch in final_batches:
+            for record in batch['records']:
+                record[record._sequence_field] = batch['format'].format(**batch['format_values'])
+                batch['format_values']['seq'] += 1
+            batch['records']._compute_split_sequence()
