@@ -151,7 +151,7 @@ class AccountMove(models.Model):
             return res
 
         for record in self:
-            if record.name and record.invoice_partner_bank_id and record.invoice_partner_bank_id.l10n_ch_postal:
+            if record.l10n_ch_isr_number:
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
             else:
                 record.l10n_ch_isr_number_spaced = False
