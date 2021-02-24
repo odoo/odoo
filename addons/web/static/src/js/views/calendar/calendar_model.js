@@ -443,7 +443,7 @@ return AbstractModel.extend({
             droppable: true,
             navLinks: false,
             eventLimit: this.eventLimit, // allow "more" link when too many events
-            snapMinutes: 15,
+            snapDuration: this.data.context.calendar_slot_duration || "00:30:00",
             longPressDelay: 500,
             eventResizableFromStart: true,
             nowIndicator: true,
