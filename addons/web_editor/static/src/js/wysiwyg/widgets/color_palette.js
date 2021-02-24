@@ -274,7 +274,9 @@ const ColorPaletteWidget = Widget.extend({
         }
         this._buildCustomColors();
         this._markSelectedColor();
-        this.colorPicker.setSelectedColor(colorInfo.color);
+        if (this.colorPicker) {
+            this.colorPicker.setSelectedColor(colorInfo.color);
+        }
     },
     /**
      * Mark the selected color
