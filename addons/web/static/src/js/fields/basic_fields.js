@@ -1753,7 +1753,6 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
 });
 
 var URLCopyClipboard = FieldChar.extend(CopyClipboard, {
-    description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardChar',
     className: 'o_field_copy o_text_overflow o_field_copy_url',
     events: _.extend({}, FieldChar.prototype.events, {
