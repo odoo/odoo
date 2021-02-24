@@ -397,6 +397,33 @@ class TestMailgateway(TestMailCommon):
         # Check if default (hardcoded) value is in the mail content
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], body_content='The following email sent to')
 
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_message_process_alias_config_bounced_to(self):
+        """ Check bounce message contains the bouncing alias, not a generic "to" """
+        self.alias.write({'alias_contact': 'partners'})
+        bounce_message_with_alias = "The following email sent to %s cannot be accepted because this is a private email address." % self.alias.display_name.lower()
+
+        # Bounce is To
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, 'groups@example.com',
+                cc='other@gmail.com', subject='Should Bounce')
+        self.assertIn(bounce_message_with_alias, self._mails[0].get('body'))
+
+        # Bounce is CC
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, 'other@gmail.com',
+                cc='groups@example.com', subject='Should Bounce')
+        self.assertIn(bounce_message_with_alias, self._mails[0].get('body'))
+
+        # Bounce is part of To
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, 'other@gmail.com, groups@example.com',
+                subject='Should Bounce')
+        self.assertIn(bounce_message_with_alias, self._mails[0].get('body'))
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_defaults(self):
         """ Test alias defaults and inner values """
