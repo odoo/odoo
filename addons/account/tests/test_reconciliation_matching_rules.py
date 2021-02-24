@@ -743,7 +743,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         move = self.env['account.move'].create({
             'move_type': 'entry',
             'date': '2017-01-01',
-            'journal_id': self.company_data['default_journal_sale'].id,
+            'journal_id': self.company_data['default_journal_misc'].id,
             'line_ids': [
                 # Rate is 2 GOL = 1 USD in 2017.
                 # The statement line will consider this line equivalent to 600 DAR.
