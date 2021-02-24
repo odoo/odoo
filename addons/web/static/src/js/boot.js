@@ -261,7 +261,8 @@
                     jobs.splice(jobs.indexOf(job), 1);
                 } catch (e) {
                     job.error = e;
-                    console.error('Error while loading ' + job.name + ': '+ e.stack);
+                    console.error(e);
+                    console.error(`Error while loading ${job.name}: ${e.message}`);
                 }
                 if (!job.error) {
                     Promise.resolve(jobExec).then(
