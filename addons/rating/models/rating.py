@@ -56,8 +56,8 @@ class Rating(models.Model):
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
     rating_text = fields.Selection([
         ('satisfied', 'Satisfied'),
-        ('not_satisfied', 'Not satisfied'),
-        ('highly_dissatisfied', 'Highly dissatisfied'),
+        ('okay', 'Okay'),
+        ('dissatisfied', 'Dissatisfied'),
         ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one(
@@ -119,9 +119,9 @@ class Rating(models.Model):
             if rating.rating >= RATING_LIMIT_SATISFIED:
                 rating.rating_text = 'satisfied'
             elif rating.rating >= RATING_LIMIT_OK:
-                rating.rating_text = 'not_satisfied'
+                rating.rating_text = 'okay'
             elif rating.rating >= RATING_LIMIT_MIN:
-                rating.rating_text = 'highly_dissatisfied'
+                rating.rating_text = 'dissatisfied'
             else:
                 rating.rating_text = 'no_rating'
 
