@@ -203,16 +203,19 @@ msgid "AFIP Concept"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "AFIP POS Address"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid "AFIP POS Number"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_system
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
 msgid "AFIP POS System"
 msgstr ""
@@ -1007,6 +1010,7 @@ msgid "Sequence"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_sequence_ids
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_sequence_ids
 msgid "Sequences"
 msgstr ""
@@ -1120,11 +1124,13 @@ msgid "This field is required in order to print the invoice report properly"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "This is the address used for invoice reports of this POS"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid ""
 "This is the point of sale number assigned by AFIP in order to generate "
@@ -1143,8 +1149,29 @@ msgid "Type of gross income: exempt, local, multilateral"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_share_sequences
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_share_sequences
 msgid "Unified Book"
+msgstr ""
+
+#. module: l10n_ar
+#: model:product.product,uom_name:l10n_ar.product_product_arancel
+#: model:product.product,uom_name:l10n_ar.product_product_cero
+#: model:product.product,uom_name:l10n_ar.product_product_exento
+#: model:product.product,uom_name:l10n_ar.product_product_no_gravado
+#: model:product.product,uom_name:l10n_ar.product_product_quote_despacho
+#: model:product.product,uom_name:l10n_ar.product_product_servicio_de_guarda
+#: model:product.product,uom_name:l10n_ar.product_product_tasa_estadistica
+#: model:product.product,uom_name:l10n_ar.product_product_telefonia
+#: model:product.template,uom_name:l10n_ar.product_product_arancel_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_cero_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_exento_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_no_gravado_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_quote_despacho_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_servicio_de_guarda_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_tasa_estadistica_product_template
+#: model:product.template,uom_name:l10n_ar.product_product_telefonia_product_template
+msgid "Units"
 msgstr ""
 
 #. module: l10n_ar
@@ -1164,6 +1191,7 @@ msgid "UpApP"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_share_sequences
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_share_sequences
 msgid "Use same sequence for documents with the same letter"
 msgstr ""
@@ -1233,6 +1261,12 @@ msgstr ""
 #: code:addons/l10n_ar/models/account_fiscal_position.py:0
 #, python-format
 msgid "Warning"
+msgstr ""
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/res_partner.py:0
+#, python-format
+msgid "We were not able to sanitize the identification number"
 msgstr ""
 
 #. module: l10n_ar
