@@ -86,12 +86,12 @@ class HrEmployeeBase(models.AbstractModel):
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
         rg_results = dict((d['employee_id'][0], d['number_of_days']) for d in data)
         for employee in self:
-            employee.allocation_count = rg_results.get(employee.id, 0.0)
+            employee.allocation_count = float_round(rg_results.get(employee.id, 0.0), precision_digits=2)
             employee.allocation_display = "%g" % employee.allocation_count
 
     def _compute_total_allocation_used(self):
         for employee in self:
-            employee.allocation_used_count = employee.allocation_count - employee.remaining_leaves
+            employee.allocation_used_count = float_round(employee.allocation_count - employee.remaining_leaves, precision_digits=2)
             employee.allocation_used_display = "%g" % employee.allocation_used_count
 
     def _compute_presence_state(self):
