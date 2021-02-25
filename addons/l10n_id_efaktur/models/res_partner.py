@@ -34,4 +34,4 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     l10n_id_tax_address = fields.Char('Tax Address', related='company_id.partner_id.l10n_id_tax_address', readonly=False)
-    l10n_id_tax_name = fields.Char('Tax Name', related='company_id.partner_id.l10n_id_tax_address', readonly=False)
+    l10n_id_tax_name = fields.Char('Tax Name', related='company_id.partner_id.l10n_id_tax_name', readonly=False)
