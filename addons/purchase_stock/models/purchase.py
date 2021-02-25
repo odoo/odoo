@@ -29,7 +29,7 @@ class PurchaseOrder(models.Model):
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, copy=False,
         help="Completion date of the first receipt order.")
-    on_time_rate = fields.Float(related='partner_id.on_time_rate')
+    on_time_rate = fields.Float(related='partner_id.on_time_rate', compute_sudo=False)
 
     @api.depends('order_line.move_ids.returned_move_ids',
                  'order_line.move_ids.state',
