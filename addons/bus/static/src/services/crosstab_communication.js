@@ -3,58 +3,87 @@ const { EventBus } = owl.core;
 
 /**
  * Allows communication from/to other tabs.
+ * Prefer using `bus.server_communication` whenever it is possible because
+ * cross-tab is limited to the current browser, so if the goal is to sync all
+ * tabs of the current user, this class would fail to sync other browsers and
+ * other devices.
  */
-export const busCrosstabCommunication = {
-    name: 'bus.crosstab_communication',
-    dependencies: ['bus.localstorage_communication'],
-    deploy(env) {
-        const {
-            services: {
-                'bus.localstorage_communication': localStorageCommunication,
-            },
-        } = env;
+export class CrossTabCommunication {
+
+    constructor(env) {
+        this.env = env;
         /**
          * Bus that handles the communication of messages to registered clients.
          */
-        const clientBus = new EventBus();
+        this._clientBus = new EventBus();
         /**
-         * Registers the localSotrage handlers. Current implementation of
-         * cross-tab communication relies on localSotrage but this is subject to
-         * change in the future.
+         * Arbitrary key this service is using to communicate with localStorage.
          */
-        localStorageCommunication.on('bus.crosstab_communication', (type, message) => {
-            clientBus.trigger(type, message);
+        this._localStorageType = 'bus.crosstab_communication';
+
+        this._handleLocalStorageMessage = this._handleLocalStorageMessage.bind(this);
+        // Current implementation of cross-tab relies on localStorage.
+        this.env.services['bus.localstorage_communication'].registerHandler(this._localStorageType, this._handleLocalStorageMessage);
+    }
+
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    /**
+     * Registers a new handler.
+     *
+     * @param {string} type of the messages to catch with this handler.
+     * @param {function} handler will be called when a message is
+     *  received from another tab.
+     */
+    registerHandler(type, handler) {
+        this._clientBus.on(type, handler, handler);
+    }
+
+    /**
+     * Sends a message to other tabs.
+     *
+     * @param {string} type of the messages to send.
+     * @param {*} payload that will be sent. `JSON.stringify()` must be
+     *  able to serialize this payload.
+     */
+    sendMessage(type, payload) {
+        this.env.services['bus.localstorage_communication'].sendMessage(this._localStorageType, {
+            payload,
+            type,
         });
-        return {
-            /**
-             * Registers a new handler.
-             *
-             * @param {string} type of the messages to catch with this handler.
-             * @param {function} handler will be called when a message is
-             *  received from another tab.
-             */
-            on(type, handler) {
-                clientBus.on(type, handler, handler);
-            },
-            /**
-             * Unregisters an existing handler.
-             *
-             * @param {string} type for which the handler must be unregistered
-             * @param {function} handler to unregister
-             */
-            off(type, handler) {
-                clientBus.off(type, handler);
-            },
-            /**
-             * Sends a message to other tabs.
-             *
-             * @param {string} type of the messages to send.
-             * @param {*} message that will be sent. `JSON.stringify()` must be
-             *  able to serialize this message.
-             */
-            trigger(type, message) {
-                localStorageCommunication.trigger(type, message);
-            },
-        };
-    },
+    }
+
+    /**
+     * Unregisters an existing handler.
+     *
+     * @param {string} type for which the handler must be unregistered
+     * @param {function} handler to unregister
+     */
+    unregisterHandler(type, handler) {
+        this._clientBus.off(type, handler);
+    }
+
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Handles message from localStorage.
+     *
+     * @param {Object} message
+     * @param {*} message.payload
+     * @param {string} message.type
+     */
+    _handleLocalStorageMessage({ payload, type }) {
+        this._clientBus.trigger(type, payload);
+    }
+
+}
+
+export const crossTabCommunicationService = {
+    name: 'bus.crosstab_communication',
+    dependencies: ['bus.localstorage_communication'],
+    deploy: env => new CrossTabCommunication(env),
 };

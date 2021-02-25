@@ -16,6 +16,7 @@
             'bus/static/src/services/localstorage_communication.js',
             'bus/static/src/services/longpolling_communication.js',
             'bus/static/src/services/server_communication.js',
+            'bus/static/src/services/user_presence.js',
         ],
         'web.qunit_suite_tests': [
             'bus/static/tests/bus_tests.js',

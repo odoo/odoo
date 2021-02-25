@@ -1,17 +1,19 @@
 /** @odoo-module **/
-import { busCrosstabCommunication } from "@bus/services/crosstab_communication";
-import { busLocalstorageCommunication } from "@bus/services/localstorage_communication";
-import { longpollingCommunicationService } from "@bus/services/longpolling_communication";
-import { busServerCommunication } from "@bus/services/server_communication";
+import { crossTabCommunicationService } from '@bus/services/crosstab_communication';
+import { localStorageCommunicationService } from '@bus/services/localstorage_communication';
+import { longpollingCommunicationService } from '@bus/services/longpolling_communication';
+import { serverCommunicationService } from '@bus/services/server_communication';
+import { userPresenceService } from '@bus/services/user_presence';
 
-import env from "web.commonEnv";
+import env from 'web.commonEnv';
 
-// deployment order is important
+// deployment order is important (should respect dependencies of services)
 const services = [
-    busLocalstorageCommunication,
-    busCrosstabCommunication,
+    localStorageCommunicationService,
+    crossTabCommunicationService,
+    userPresenceService,
     longpollingCommunicationService,
-    busServerCommunication,
+    serverCommunicationService,
 ];
 
 for (const { deploy, name } of services) {

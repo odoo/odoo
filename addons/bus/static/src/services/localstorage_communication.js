@@ -6,50 +6,77 @@ const { EventBus } = owl.core;
  * `localStorage`. Prefer using `bus.crosstab_communication` instead for
  * functional needs.
  */
-export const busLocalstorageCommunication = {
-    name: 'bus.localstorage_communication',
-    dependencies: [],
-    deploy(env) {
+export class LocalStorageCommunication {
+
+    constructor(env) {
         /**
          * Bus that handles the communication of messages to registered clients.
          */
-        const clientBus = new EventBus();
+        this._clientBus = new EventBus();
         /**
-         * Forwards from another tab to current tab.
+         * Arbitrary key this service is using to communicate with localStorage.
          */
-        const handleCrosstab = (type, message) => {
-            clientBus.trigger(type, message);
-        };
-        return {
-            /**
-             * Registers a new handler.
-             *
-             * @param {string} type of the messages to catch with this handler.
-             * @param {function} handler will be called when a message is
-             *  received from another tab.
-             */
-            on(type, handler) {
-                clientBus.on(type, handler, handler);
-            },
-            /**
-             * Unregisters an existing handler.
-             *
-             * @param {string} type for which the handler must be unregistered
-             * @param {function} handler to unregister
-             */
-            off(type, handler) {
-                clientBus.off(type, handler);
-            },
-            /**
-             * Sends a message to other tabs.
-             *
-             * @param {string} type of the messages to send.
-             * @param {*} message that will be sent. `JSON.stringify()` must be
-             *  able to serialize this message.
-             */
-            trigger(type, message) {
+        this._localStorageKey = 'bus.localstorage_communication';
+        this._handleStorageChange = this._handleStorageChange.bind(this);
+        window.addEventListener('storage', this._handleStorageChange);
+    }
 
-            },
-        };
-    },
+    // -------------------------------------------------------------------------
+    // Public
+    // -------------------------------------------------------------------------
+
+    /**
+     * Registers a new handler.
+     *
+     * @param {string} type of the messages to catch with this handler.
+     * @param {function} handler will be called when a message is
+     *  received from another tab.
+     */
+    registerHandler(type, handler) {
+        this._clientBus.on(type, handler, handler);
+    }
+
+    /**
+     * Sends a message to other tabs.
+     *
+     * @param {string} type of the messages to send.
+     * @param {*} payload that will be sent. `JSON.stringify()` must be
+     *  able to serialize this payload.
+     */
+    sendMessage(type, payload) {
+        window.localStorage.setItem(this._localStorageKey, JSON.stringify({ payload, type }));
+    }
+
+    /**
+     * Unregisters an existing handler.
+     *
+     * @param {string} type for which the handler must be unregistered
+     * @param {function} handler to unregister
+     */
+    unregisterHandler(type, handler) {
+        this._clientBus.off(type, handler);
+    }
+
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {StorageEvent} ev
+     */
+    _handleStorageChange(ev) {
+        const { key, newValue } = ev;
+        if (key !== this._localStorageKey) {
+            return;
+        }
+        const { payload, type } = JSON.parse(newValue);
+        this._clientBus.trigger(type, payload);
+    }
+}
+
+export const localStorageCommunicationService = {
+    name: 'bus.localstorage_communication',
+    dependencies: [],
+    deploy: env => new LocalStorageCommunication(env),
 };

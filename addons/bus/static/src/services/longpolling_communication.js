@@ -86,6 +86,22 @@ export class LongpollingCommunication {
     // -------------------------------------------------------------------------
 
     /**
+     * Notifies the currently registered handlers.
+     *
+     * @param {*} busMessage
+     */
+    _notifyHandlers(busMessage) {
+        for (const handler of this._handlers) {
+            // Isolate each handler on its own stack to prevent any
+            // potential issue in one of them to influence any
+            // other. This also allows to restart the longpolling
+            // request as soon as possible, without having to wait
+            // for all handlers to terminate.
+            setTimeout(() => handler(busMessage));
+        }
+    }
+
+    /**
      * @private
      */
     async _poll() {
@@ -98,6 +114,7 @@ export class LongpollingCommunication {
             try {
                 this._currentRpcPromise = this.env.services.rpc({
                     params: {
+                        // TODO SEB handle new channels (only for livechat?)
                         channels: [],
                         last_bus_message_id: this._lastBusMessageId,
                     },
@@ -118,14 +135,7 @@ export class LongpollingCommunication {
             if (busMessages) {
                 for (const busMessage of busMessages) {
                     this._lastBusMessageId = Math.max(busMessage.id, this._lastBusMessageId);
-                    for (const handler of this._handlers) {
-                        // Isolate each handler on its own stack to prevent any
-                        // potential issue in one of them to influence any
-                        // other. This also allows to restart the longpolling
-                        // request as soon as possible, without having to wait
-                        // for all handlers to terminate.
-                        setTimeout(() => handler(busMessage));
-                    }
+                    this._notifyHandlers(busMessage);
                 }
             }
             if (hasError) {
