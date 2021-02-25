@@ -269,7 +269,7 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'commercial_partner_id')
     def _compute_sale_order_id(self):
         for task in self:
             if not task.allow_billable:
@@ -279,6 +279,8 @@ class ProjectTask(models.Model):
                     task.sale_order_id = task.sale_line_id.sudo().order_id
                 elif task.project_id.sale_order_id:
                     task.sale_order_id = task.project_id.sale_order_id
+                if task.commercial_partner_id != task.sale_order_id.partner_id.commercial_partner_id:
+                    task.sale_order_id = False
                 if task.sale_order_id and not task.partner_id:
                     task.partner_id = task.sale_order_id.partner_id
 
