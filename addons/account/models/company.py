@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tests.common import Form
@@ -104,11 +105,10 @@ class ResCompany(models.Model):
     account_invoice_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account invoice onboarding panel", default='not_done')
     account_dashboard_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account dashboard onboarding panel", default='not_done')
     invoice_terms = fields.Html(string='Default Terms and Conditions', translate=True)
-    terms_type = fields.Selection([('plain', 'Terms as Notes'), ('html', 'Terms as Web Page')],
+    terms_type = fields.Selection([('plain', 'Add a Note'), ('html', 'Add a link to a Web Page')],
                                   string='Terms & Conditions format', default='plain')
     invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
-                                     default="""<h1 style="text-align: center; ">Terms &amp; Conditions</h1>
-                                     <p>Your conditions...</p>""")
+                                     compute='_compute_invoice_terms_html', store=True, readonly=False)
 
     account_setup_bill_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bill step", default='not_done')
 
@@ -182,6 +182,15 @@ class ResCompany(models.Model):
         for record in self:
             foreign_vat_fpos = self.env['account.fiscal.position'].search([('company_id', '=', record.id), ('foreign_vat', '!=', False)])
             record.account_enabled_tax_country_ids = foreign_vat_fpos.country_id + record.account_fiscal_country_id
+
+    @api.depends('terms_type')
+    def _compute_invoice_terms_html(self):
+        term_template = self.env.ref("account.account_default_terms_and_conditions", False)
+        if not term_template:
+            return
+
+        for company in self.filtered(lambda company: is_html_empty(company.invoice_terms_html) and company.terms_type == 'html'):
+            company.invoice_terms_html = term_template._render({'company_name': company.name, 'company_country': company.country_id.name}, engine='ir.qweb')
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations

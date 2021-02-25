@@ -200,3 +200,15 @@ class ResConfigSettings(models.TransientModel):
             # We display the preview button only if the terms_type is html in the setting but also on the company
             # to avoid landing on an error page (see terms.py controller)
             setting.preview_ready = self.env.company.terms_type == 'html' and setting.terms_type == 'html'
+
+    def action_update_terms(self):
+        self.ensure_one()
+        return {
+            'name': _('Update Terms & Conditions'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'view_id': self.env.ref("account.res_company_view_form_terms", False).id,
+            'target': 'new',
+            'res_id': self.company_id.id,
+        }
