@@ -319,6 +319,7 @@ class PosSession(models.Model):
             self._check_if_no_draft_orders()
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
+                self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_lines)
             try:
                 data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
             except AccessError as e:
