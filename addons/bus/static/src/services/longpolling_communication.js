@@ -22,6 +22,11 @@ export class LongpollingCommunication {
          */
         this._currentRpcPromise;
         /**
+         * Reference to the current retry `setTimeout` identifier. Useful to be
+         * able to cancel it if the longpolling.
+         */
+        this._retryTimeoutId;
+        /**
          * Id of the last bus message that was fetched. Useful to only fetch new
          * bus messages.
          */
@@ -67,6 +72,7 @@ export class LongpollingCommunication {
      */
     stop() {
         this._isActive = false;
+        clearTimeout(this._retryTimeoutId);
         if (this._currentRpcPromise) {
             this._currentRpcPromise.abort();
         }
@@ -125,7 +131,14 @@ export class LongpollingCommunication {
                 });
                 busMessages = await this._currentRpcPromise;
             } catch (error) {
-                if (error.message !== "XmlHttpRequestError abort") {
+                // ajax.js is using exception to communicate actual information
+                if (error.message === "XmlHttpRequestError abort") {
+                    // Necessary to prevent other parts of the code from
+                    // handling this as a "business exception".
+                    // Note that Firefox will still report this as an
+                    // "Uncaught (in promise)" even though it is caught here.
+                    error.event.preventDefault();
+                } else {
                     console.error(error);
                     hasError = true;
                 }
@@ -143,7 +156,9 @@ export class LongpollingCommunication {
                 // deny of service if there are many other clients that would
                 // otherwise all retry at the same time.
                 const delay = 10000 + Math.random() * 20000;
-                await new Promise(resolve => setTimeout(resolve, delay));
+                await new Promise(resolve => {
+                    this._retryTimeoutId = setTimeout(resolve, delay);
+                });
             }
         }
     }

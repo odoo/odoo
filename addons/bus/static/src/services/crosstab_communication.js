@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 const { EventBus } = owl.core;
 
 /**

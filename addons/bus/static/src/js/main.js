@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { crossTabCommunicationService } from '@bus/services/crosstab_communication';
 import { localStorageCommunicationService } from '@bus/services/localstorage_communication';
 import { longpollingCommunicationService } from '@bus/services/longpolling_communication';

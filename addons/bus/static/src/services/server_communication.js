@@ -1,6 +1,10 @@
 /** @odoo-module **/
+
 const { EventBus } = owl.core;
 
+/**
+ * Allows communication from the server.
+ */
 export class ServerCommunication {
 
     constructor(env) {
@@ -23,16 +27,26 @@ export class ServerCommunication {
          */
         this._clientBus = new EventBus();
         /**
-         * Arbitrary key this service is using to communicate with other tabs.
+         * Arbitrary key this service is using to communicate bus messages with
+         * other tabs. Bus message are messages whose goal is to be forwarded to
+         * business code.
          */
-        this._crosstabType = 'bus.server_communication';
+        this._crosstabTypeForBusMessage = 'bus.server_communication_message';
+        /**
+         * Arbitrary key this service is using to communicate service messages
+         * with other tabs. Service messages are messages whose goal is to
+         * ensure the proper working of this service.
+         */
+        this._crosstabTypeForServiceMessage = 'bus.server_communication_service';
 
-        this._handleBusMessageFromLongpolling = this._handleBusMessageFromLongpolling.bind(this);
         this._handleBusMessageFromCrosstab = this._handleBusMessageFromCrosstab.bind(this);
+        this._handleBusMessageFromLongpolling = this._handleBusMessageFromLongpolling.bind(this);
+        this._handleServiceMessageFromCrosstab = this._handleServiceMessageFromCrosstab.bind(this);
         this._handleUserPresenceChange = this._handleUserPresenceChange.bind(this);
+        this.env.services['bus.crosstab_communication'].registerHandler(this._crosstabTypeForBusMessage, this._handleBusMessageFromCrosstab);
+        this.env.services['bus.crosstab_communication'].registerHandler(this._crosstabTypeForServiceMessage, this._handleServiceMessageFromCrosstab);
         this.env.services['bus.longpolling_communication'].registerHandler(this._handleBusMessageFromLongpolling);
-        this.env.services['bus.crosstab_communication'].registerHandler(this._crosstabType, this._handleBusMessageFromCrosstab);
-        // this.env.services['bus.user_presence'].registerHandler(this._handleUserPresenceChange);
+        this.env.services['bus.user_presence'].registerHandler(this._handleUserPresenceChange);
 
         this._selectCommunicationType();
     }
@@ -75,16 +89,31 @@ export class ServerCommunication {
     // -------------------------------------------------------------------------
 
     /**
+     * Selects the most appropriate communication type.
+     *
+     * The currently visible tab should always use longpolling because it is the
+     * most reactive option (if the longpolling is on a non-visible tab it might
+     * be throttled by the browser and slow down everything).
+     *
+     * Non-visible tabs should use cross-tab if there is at least one visible
+     * tab.
+     *
+     * If there are no visible tab, all the non-visible tabs must decide between
+     * themselves which one is going to use longpolling.
+     *
      * @private
      */
     _selectCommunicationType() {
         // TODO SEB better handle longpolling/crosstab switch
         if (this.env.services['bus.user_presence'].isCurrentPageVisible()) {
-            console.log('selecting longpolling');
+            console.warn('selecting longpolling');
             this._communicationType = 'longpolling';
             this.env.services['bus.longpolling_communication'].start(this._lastBusMessageId);
+            // this.env.services['bus.crosstab_communication'].sendMessage(this._crosstabTypeForServiceMessage, 'new_visible_tab');
         } else {
-            console.log('selecting crosstab');
+            console.warn('selecting crosstab');
+            // if there is another tab currently active as longpolling, use crosstab
+            // if there is no other tab doing longpolling: must decide...
             this._communicationType = 'crosstab';
             this.env.services['bus.longpolling_communication'].stop();
         }
@@ -129,7 +158,17 @@ export class ServerCommunication {
             console.warn(`bus.server_communication message received while longpolling was inactive: ${busMessage}`);
         }
         this._handleBusMessage(busMessage);
-        this.env.services['bus.crosstab_communication'].sendMessage(this._crosstabType, busMessage);
+        this.env.services['bus.crosstab_communication'].sendMessage(this._crosstabTypeForBusMessage, busMessage);
+    }
+
+    /**
+     * Handles a new service message received from cross-tab.
+     *
+     * @private
+     * @param {*} serviceMessage
+     */
+    _handleServiceMessageFromCrosstab(serviceMessage) {
+        this._selectCommunicationType();
     }
 
     /**
@@ -142,9 +181,6 @@ export class ServerCommunication {
     }
 }
 
-/**
- * Allows communication from the server.
- */
 export const serverCommunicationService = {
     name: 'bus.server_communication',
     dependencies: [
