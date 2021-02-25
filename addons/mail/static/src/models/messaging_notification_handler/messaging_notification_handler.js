@@ -449,9 +449,10 @@ function factory(dependencies) {
          * @param {Object} data.message
          */
         _handleNotificationPartnerAuthor(data) {
-            this.env.models['mail.message'].insert(
+            const message = this.env.models['mail.message'].insert(
                 this.env.models['mail.message'].convertData(data.message)
             );
+            this._notifyThreadViewsMessageReceived(message);
         }
 
         /**
