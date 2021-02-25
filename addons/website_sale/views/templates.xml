@@ -1122,14 +1122,14 @@
         </div>
         <t t-if="website_sale_order and website_sale_order.website_order_line">
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                <div class="row mb8 cart_line">
+                <div class="form-row mb8 cart_line">
                     <div class="col-3 text-center">
                         <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
-                            <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded mb-2" t-att-alt="line.name_short"/>
+                            <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded mb-2 img-fluid" t-att-alt="line.name_short"/>
                         </span>
                         <span t-else=""
                             t-field="line.product_id.image_128"
-                            t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max mb-2'}"
+                            t-options="{'widget': 'image', 'qweb_img_responsive': True, 'class': 'rounded o_image_64_max mb-2'}"
                         />
                     </div>
                     <div class="col-9">
