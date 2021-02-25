@@ -1556,3 +1556,39 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         statement_line = statement.line_ids
 
         self.assertRecordValues(statement_line, [{'is_reconciled': True, 'amount_residual': 0.0}])
+
+    def test_bank_statement_line_analytic(self):
+        ''' Ensure the analytic lines are generated during the reconciliation. '''
+        analytic_account = self.env['account.analytic.account'].create({'name': 'analytic_account'})
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': "line",
+                    'amount': 100.0,
+                }),
+            ],
+        })
+        statement_line = statement.line_ids
+
+        statement_line.reconcile([{
+            'balance': -100.0,
+            'account_id': self.company_data['default_account_revenue'].id,
+            'name': "write-off",
+            'analytic_account_id': analytic_account.id,
+        }])
+
+        # Check the analytic account is there.
+        self.assertRecordValues(statement_line.line_ids.sorted('balance'), [
+            {'balance': -100.0, 'analytic_account_id': analytic_account.id},
+            {'balance': 100.0,  'analytic_account_id': False},
+        ])
+
+        # Check the analytic lines.
+        self.assertRecordValues(statement_line.line_ids.analytic_line_ids, [
+            {'amount': 100.0, 'account_id': analytic_account.id},
+        ])
