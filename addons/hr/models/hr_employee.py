@@ -91,6 +91,7 @@ class HrEmployeePrivate(models.Model):
     emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user", tracking=True)
     km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
 
+    job_id = fields.Many2one(tracking=True)
     image_1920 = fields.Image()
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
