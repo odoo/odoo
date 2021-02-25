@@ -2019,6 +2019,7 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     tagName: 'we-range',
     events: {
         'change input': '_onInputChange',
+        'input input': '_onInputInput',
     },
 
     /**
@@ -2083,6 +2084,14 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     _onInputChange(ev) {
         this._value = ev.target.value;
         this._onUserValueChange(ev);
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onInputInput(ev) {
+        this._value = ev.target.value;
+        this._onUserValuePreview(ev);
     },
     /**
      * @private
