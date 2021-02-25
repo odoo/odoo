@@ -22,6 +22,19 @@ export function useService(serviceName) {
 }
 
 /**
+ * Ensures a bus event listener is attached and cleared the proper way.
+ *
+ * @param {EventBus} bus
+ * @param {string} eventName
+ * @param {Callback} callback
+ */
+export function useBus(bus, eventName, callback) {
+  const component = Component.current;
+  hooks.onMounted(() => bus.on(eventName, component, callback));
+  hooks.onWillUnmount(() => bus.off(eventName, component));
+}
+
+/**
  * Focus a given selector as soon as it appears in the DOM and if it was not
  * displayed before. If the selected target is an input|textarea, set the selection
  * at the end.

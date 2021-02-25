@@ -1,5 +1,6 @@
 /** @odoo-module **/
-
+const { Component, core, hooks, useState } = owl;
+import { useBus } from "../../core/hooks";
 import { ParentClosingMode } from "./dropdown_item";
 
 const { Component, core, hooks, useState } = owl;
@@ -10,8 +11,8 @@ export class Dropdown extends Component {
     this.state = useState({ open: this.props.startOpen, groupIsOpen: this.props.startOpen });
     // Close on outside click listener
     hooks.useExternalListener(window, "click", this.onWindowClicked);
-    // Listen to siblings state
-    Dropdown.bus.on("state-changed", this, this.onSiblingDropdownStateChanged);
+    // Listen to siblings states
+    useBus(Dropdown.bus, "state-changed", this.onSiblingDropdownStateChanged);
     hooks.onWillStart(() => {
       if ((this.state.open || this.state.groupIsOpen) && this.props.beforeOpen) {
         return this.props.beforeOpen();
