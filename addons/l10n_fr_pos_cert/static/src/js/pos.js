@@ -77,7 +77,8 @@ models.Orderline = models.Orderline.extend({
         if (
             this.pos.is_french_country() && !this.reward_id &&
             (new_quantity < current_quantity || new_quantity === 0 && current_quantity === 0 && quantity === "remove") &&
-            !(new_quantity === 0 && current_quantity === 1 && this.isLastLine())
+            !(new_quantity === 0 && current_quantity === 1 && this.isLastLine()) &&
+            this._set_quantity_origin_ctx !== "splitbill"
         ) {
             var quantity_to_decrease = current_quantity - new_quantity;
             this.pos.gui.show_popup("number", {

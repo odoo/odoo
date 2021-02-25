@@ -65,7 +65,9 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
                 split.line = line.clone();
                 neworder.add_orderline(split.line);
             }
+            split.line._set_quantity_origin_ctx = 'splitbill';
             split.line.set_quantity(split.quantity, 'do not recompute unit price');
+            split.line._set_quantity_origin_ctx = undefined;
         }else if( split.line ) {
             neworder.remove_orderline(split.line);
             split.line = null;
@@ -102,7 +104,9 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
         for(var id in splitlines){
             var split = splitlines[id];
             var line  = order.get_orderline(parseInt(id));
+            line._set_quantity_origin_ctx = 'splitbill';
             line.set_quantity(line.get_quantity() - split.quantity, 'do not recompute unit price');
+            line._set_quantity_origin_ctx = undefined;
             if(Math.abs(line.get_quantity()) < 0.00001){
                 order.remove_orderline(line);
             }
