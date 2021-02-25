@@ -51,6 +51,10 @@
                                 <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
                                 <field name="price_unit" widget="monetary"/>
+                                <field name="is_total_cost_computed" invisible="1"/>
+                                <field name="total_cost" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                                <field name="margin" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="monetary"/>
+                                <field name="margin_percent" attrs="{'invisible': [('is_total_cost_computed','=', False)]}" optional="hide" widget="percentage"/>
                                 <field name="discount" string="Disc.%" widget="monetary"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
@@ -93,6 +97,15 @@
                                 class="oe_subtotal_footer_separator"
                                 widget="monetary"
                                 attrs="{'invisible': [('amount_paid','=', 'amount_total')]}"/>
+                            <label for="margin"/>
+                            <div class="text-nowrap">
+                                <field name="margin" class="oe_inline" attrs="{'invisible': [('is_total_cost_computed','=', False)]}"/>
+                                <span class="oe_inline" attrs="{'invisible': [('is_total_cost_computed','=', False)]}">
+                                    (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
+                                </span>
+                                <span attrs="{'invisible': [('is_total_cost_computed','=', True)]}">TBD</span>
+                            </div>
+                            <field name="is_total_cost_computed" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <div class="oe_clear"/>
@@ -189,6 +202,8 @@
         <field name="arch" type="xml">
             <pivot string="PoS Orders" sample="1">
                 <field name="date_order" type="row"/>
+                <field name="margin"/>
+                <field name="margin_percent" invisible="1"/>
                 <field name="amount_total" type="measure"/>
             </pivot>
         </field>
