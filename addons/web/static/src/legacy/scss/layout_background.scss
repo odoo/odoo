@@ -1,5 +1,5 @@
 
-.o_background_footer, .o_background_header, .o_report_layout_background {
+.o_background_footer, .o_background_header, .o_report_layout_striped {
     color: gray('700');
 }
 .o_background_header {
@@ -31,13 +31,13 @@
         }
     }
 }
-.o_report_layout_background {
-    background-image: url(/base/static/img/bg_background_template.jpg);
+.o_layout_background {
     background-size: cover;
     background-position: bottom center;
     background-repeat: no-repeat;
-    min-height: 620px;
-    
+    min-height: 620px
+}
+.o_report_layout_striped {
     strong {
         color: $o-default-report-secondary-color;
     }

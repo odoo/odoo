@@ -24,13 +24,30 @@ class BaseDocumentLayout(models.TransientModel):
     _name = 'base.document.layout'
     _description = 'Company Document Layout'
 
+    @api.model
+    def _default_report_footer(self):
+        company = self.env.company
+        footer_fields = filter(None, [company.phone, company.email, company.website, company.vat])
+        return ' '.join(footer_fields)
+
+    @api.model
+    def _default_company_details(self):
+        company = self.env.company
+        return (
+            f'{company.name}\n'
+            f'{company.street}\n'
+            f'{company.city} {company.state_id.name} {company.zip}\n'
+            f'{company.country_id.name}\n'
+        )
+
     company_id = fields.Many2one(
         'res.company', default=lambda self: self.env.company, required=True)
 
     logo = fields.Binary(related='company_id.logo', readonly=False)
     preview_logo = fields.Binary(related='logo', string="Preview logo")
     report_header = fields.Html(related='company_id.report_header', readonly=False)
-    report_footer = fields.Html(related='company_id.report_footer', readonly=False)
+    report_footer = fields.Html(related='company_id.report_footer', readonly=False, default=_default_report_footer)
+    company_details = fields.Html(related='company_id.company_details', readonly=False, default=_default_company_details)
 
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
@@ -44,6 +61,9 @@ class BaseDocumentLayout(models.TransientModel):
     custom_colors = fields.Boolean(compute="_compute_custom_colors", readonly=False)
     logo_primary_color = fields.Char(compute="_compute_logo_colors")
     logo_secondary_color = fields.Char(compute="_compute_logo_colors")
+
+    layout_background = fields.Selection(related='company_id.layout_background', readonly=False)
+    layout_background_image = fields.Binary(related='company_id.layout_background_image', readonly=False)
 
     report_layout_id = fields.Many2one('report.layout')
 
@@ -82,17 +102,22 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = wizard.extract_image_primary_secondary_colors(wizard_for_image.logo)
 
-    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer')
+    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
-
         styles = self._get_asset_style()
 
         for wizard in self:
             if wizard.report_layout_id:
-                preview_css = self._get_css_for_preview(styles, wizard.id)
-                ir_ui_view = wizard.env['ir.ui.view']
-                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {'company': wizard, 'preview_css': preview_css})
+                # guarantees that bin_size is always set to False,
+                # so the logo always contains the bin data instead of the binary size
+                if wizard.env.context.get('bin_size'):
+                    wizard_with_logo = wizard.with_context(bin_size=False)
+                else:
+                    wizard_with_logo = wizard
+                preview_css = self._get_css_for_preview(styles, wizard_with_logo.id)
+                ir_ui_view = wizard_with_logo.env['ir.ui.view']
+                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {'company': wizard_with_logo, 'preview_css': preview_css})
             else:
                 wizard.preview = False
 
@@ -101,7 +126,9 @@ class BaseDocumentLayout(models.TransientModel):
         for wizard in self:
             wizard.logo = wizard.company_id.logo
             wizard.report_header = wizard.company_id.report_header
-            wizard.report_footer = wizard.company_id.report_footer
+            # company_details and report_footer can store empty strings (set by the user) or false (meaning the user didn't set a value). Since both are falsy values, we use isinstance of string to differentiate them
+            wizard.report_footer = wizard.company_id.report_footer if isinstance(wizard.company_id.report_footer, str) else wizard.report_footer
+            wizard.company_details = wizard.company_id.company_details if isinstance(wizard.company_id.company_details, str) else wizard.company_details
             wizard.paperformat_id = wizard.company_id.paperformat_id
             wizard.external_report_layout_id = wizard.company_id.external_report_layout_id
             wizard.font = wizard.company_id.font
