@@ -30,6 +30,12 @@ class ResConfigSettings(models.TransientModel):
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
                                         related='website_id.cart_abandoned_delay', readonly=False)
     cart_add_on_page = fields.Boolean("Stay on page after adding to cart", related='website_id.cart_add_on_page', readonly=False)
+    terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
+
+    @api.depends('website_id')
+    def _compute_terms_url(self):
+        for record in self:
+            record.terms_url = '%s/terms' % record.website_id.get_base_url()
 
     @api.model
     def get_values(self):
@@ -70,3 +76,11 @@ class ResConfigSettings(models.TransientModel):
             self.update({
                 'group_product_pricelist': True,
             })
+
+    def action_update_terms(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/terms?enable_editor=1',
+            'target': 'self',
+        }

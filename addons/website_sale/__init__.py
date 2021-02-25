@@ -6,7 +6,7 @@ from . import models
 from . import wizard
 from . import report
 
-def pre_init_hook(cr):
+def _post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     terms_conditions = env['ir.config_parameter'].get_param('account.use_invoice_terms')
     if not terms_conditions:
