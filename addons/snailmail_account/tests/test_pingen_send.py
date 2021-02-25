@@ -76,6 +76,6 @@ class TestPingenSend(HttpCase):
 
     def test_pingen_send_invoice(self):
         self.render_and_send('external_layout_standard')
-        self.render_and_send('external_layout_background')
+        self.render_and_send('external_layout_striped')
         self.render_and_send('external_layout_boxed')
-        self.render_and_send('external_layout_clean')
+        self.render_and_send('external_layout_bold')
