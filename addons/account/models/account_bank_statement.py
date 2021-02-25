@@ -1268,6 +1268,10 @@ class AccountBankStatementLine(models.Model):
             if len(rec_overview_partners) == 1:
                 self.line_ids.write({'partner_id': rec_overview_partners.pop()})
 
+        # Refresh analytic lines.
+        self.move_id.line_ids.analytic_line_ids.unlink()
+        self.move_id.line_ids.create_analytic_lines()
+
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
