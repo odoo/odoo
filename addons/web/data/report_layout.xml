@@ -2,10 +2,10 @@
 <odoo>
     <data>
 
-         <record id="report_layout_background" model="report.layout">
-            <field name="name">Background</field>
+         <record id="report_layout_striped" model="report.layout">
+            <field name="name">Striped</field>
             <field name="sequence">5</field>
-            <field name="view_id" ref="web.external_layout_background"/>
+            <field name="view_id" ref="web.external_layout_striped"/>
             <field name="image">/web/static/img/preview_background.png</field>
             <field name="pdf">/web/static/pdf/preview_background.pdf</field>
         </record>
@@ -25,10 +25,10 @@
             <field name="image">/web/static/img/preview_boxed.png</field>
             <field name="pdf">/web/static/pdf/preview_boxed.pdf</field>
         </record>
-        <record id="report_layout_clean" model="report.layout">
-            <field name="name">Clean</field>
+        <record id="report_layout_bold" model="report.layout">
+            <field name="name">Bold</field>
             <field name="sequence">4</field>
-            <field name="view_id" ref="web.external_layout_clean"/>
+            <field name="view_id" ref="web.external_layout_bold"/>
             <field name="image">/web/static/img/preview_clean.png</field>
             <field name="pdf">/web/static/pdf/preview_clean.pdf</field>
         </record>

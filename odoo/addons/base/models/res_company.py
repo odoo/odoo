@@ -63,6 +63,7 @@ class Company(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Html(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
+    company_details = fields.Html(string='Company Details', help="Header text displayed at the top of all reports.")
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
@@ -93,6 +94,8 @@ class Company(models.Model):
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()
+    layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
+    layout_background_image = fields.Binary("Background Image")
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
