@@ -288,24 +288,23 @@
                                     <label for="use_invoice_terms"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
-                                        Show standard terms &amp; conditions on invoices/orders
+                                        Add your terms &amp; conditions at the bottom of invoices/orders/quotations
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('use_invoice_terms','=',False)]}">
                                         <div class="mt16">
                                             <field name="terms_type" class="o_light_label" widget="radio"/>
-                                            <div class="d-flex">
+                                            <div>
                                                 <field name="invoice_terms"
                                                        attrs="{'invisible': [('terms_type', '=', 'html')]}"
-                                                       class="oe_account_terms"
-                                                       placeholder="Insert your terms &amp; conditions here..."/>
-                                                <field name="invoice_terms_html"
-                                                       attrs="{'invisible': [('terms_type', '=', 'plain')]}"
-                                                       class="oe_account_terms"
+                                                       class="oe_account_terms mt-5 w-100"
                                                        placeholder="Insert your terms &amp; conditions here..."/>
                                             </div>
+                                            <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}">
+                                                <button name="action_update_terms" icon="fa-arrow-right" type="object" string="Update Terms" class="btn-link"/>
+                                            </div>
                                             <field name="preview_ready" invisible="1"/>
-                                            <div attrs="{'invisible': [('preview_ready', '=', False)]}">
-                                                <a href="/terms">
+                                            <div class="mt4 ml-1" attrs="{'invisible': [('preview_ready', '=', False)]}">
+                                                <a class="btn-link" href="/terms" role="button">
                                                     <i class="fa fa-arrow-right"></i>
                                                     Preview
                                                 </a>

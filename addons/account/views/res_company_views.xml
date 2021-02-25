@@ -11,4 +11,22 @@
             </xpath>
         </field>
     </record>
+
+    <record id="res_company_view_form_terms" model="ir.ui.view">
+        <field name="name">res.company.view.form.terms</field>
+        <field name="model">res.company</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="invoice_terms_html" class="oe_account_terms" nolabel="1"/>
+                </group>
+                <footer>
+                    <button string="Save" special="save" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
 </odoo>
