@@ -54,6 +54,18 @@ class TestMailingListMerge(MassMailCommon):
             self.assertFalse(any(contact.opt_out for contact in new))
 
     @users('user_marketing')
+    def test_mailing_list_contact_copy_in_context_of_mailing_list(self):
+        MailingContact = self.env['mailing.contact']
+        contact_1 = MailingContact.create({
+            'name': 'Sam',
+            'email': 'gamgee@shire.com',
+            'subscription_list_ids': [(0, 0, {'list_id': self.mailing_list_3.id})],
+        })
+        # Copy the contact with default_list_ids in context, which should not raise anything
+        contact_2 = contact_1.with_context(default_list_ids=self.mailing_list_3.ids).copy()
+        self.assertEqual(contact_1.list_ids, contact_2.list_ids, 'Should copy the existing mailing list(s)')
+
+    @users('user_marketing')
     def test_mailing_list_merge(self):
         # TEST CASE: Merge A,B into the existing mailing list C
         # The mailing list C contains the same email address than 'Norbert' in list B
