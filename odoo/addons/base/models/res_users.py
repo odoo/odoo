@@ -1073,7 +1073,7 @@ class GroupsView(models.Model):
                 else:
                     # application separator with boolean fields
                     app_name = app.name or 'Other'
-                    xml3.append(E.separator(string=app_name, colspan="4", **attrs))
+                    xml3.append(E.separator(string=_(app_name), colspan="4", **attrs))
                     attrs['attrs'] = user_type_readonly
                     for g in gs:
                         field_name = name_boolean_group(g.id)

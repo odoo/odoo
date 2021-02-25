@@ -444,6 +444,13 @@ class GettextAlias(object):
                     # Try to use ir.translation to benefit from global cache if possible
                     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
                     res = env['ir.translation']._get_source(None, ('code','sql_constraint'), lang, source)
+
+                    # Adicionado pela Multidados por Erro de Tradução do Odoo
+                    # nas Categorias, acertando o Parametro para Localização
+                    # nas Traduções
+                    if lang and res == source:
+                        res = env['ir.translation']._get_source(
+                            'ir.module.category,name', ('model'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
             else:
@@ -657,7 +664,7 @@ class PoFile(object):
             u"msgid %s\n"
             u"msgstr %s\n\n"
         ) % (
-            quote(pycompat.text_type(source)), 
+            quote(pycompat.text_type(source)),
             quote(pycompat.text_type(trad))
         )
         self.buffer.write(msg)
@@ -911,7 +918,7 @@ def trans_generate(lang, modules, cr):
             constraints = getattr(cls, '_local_' + cons_type, [])
             for constraint in constraints:
                 push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
-            
+
     cr.execute(query_models, query_param)
 
     for (_, model, module) in cr.fetchall():
