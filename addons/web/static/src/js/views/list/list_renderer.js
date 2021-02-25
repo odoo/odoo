@@ -1109,7 +1109,7 @@ var ListRenderer = BasicRenderer.extend({
             if (document.body.contains(this.el)) {
                 this.pagers.forEach(pager => pager.on_attach_callback());
             }
-            if (this.optionalColumns.length) {
+            if (this._shouldRenderOptionalColumnsDropdown()) {
                 this.el.classList.add('o_list_optional_columns');
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
@@ -1163,6 +1163,13 @@ var ListRenderer = BasicRenderer.extend({
         const maximum = Math.min(currentMinimum + limit - 1, size);
         const singlePage = (1 === currentMinimum) && (maximum === size);
         return !singlePage;
+    },
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _shouldRenderOptionalColumnsDropdown: function () {
+        return this.optionalColumns.length;
     },
     /**
      * Update the footer aggregate values.  This method should be called each
