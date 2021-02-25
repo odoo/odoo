@@ -142,6 +142,7 @@ class PosOrder(models.Model):
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
             pos_order._create_order_picking()
+            pos_order._compute_total_cost_in_real_time()
 
         if pos_order.to_invoice and pos_order.state == 'paid':
             pos_order.action_pos_order_invoice()
@@ -230,6 +231,10 @@ class PosOrder(models.Model):
     amount_paid = fields.Float(string='Paid', states={'draft': [('readonly', False)]},
         readonly=True, digits=0, required=True)
     amount_return = fields.Float(string='Returned', digits=0, required=True, readonly=True)
+    margin = fields.Monetary(string="Margin", compute='_compute_margin')
+    margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
+    is_total_cost_computed = fields.Boolean(compute='_compute_is_total_cost_computed',
+        help="Allows to know if all the total cost of the order lines have already been computed")
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
@@ -290,6 +295,45 @@ class PosOrder(models.Model):
     def _compute_currency_rate(self):
         for order in self:
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+
+    @api.depends('lines.is_total_cost_computed')
+    def _compute_is_total_cost_computed(self):
+        for order in self:
+            order.is_total_cost_computed = not False in order.lines.mapped('is_total_cost_computed')
+
+    def _compute_total_cost_in_real_time(self):
+        """
+        Compute the total cost of the order when it's processed by the server. It will compute the total cost of all the lines
+        if it's possible. If a margin of one of the order's lines cannot be computed (because of session_id.update_stock_at_closing),
+        then the margin of said order is not computed (it will be computed when closing the session).
+        """
+        for order in self:
+            lines = order.lines
+            if not order._should_create_picking_real_time():
+                storable_fifo_avco_lines = lines.filtered(lambda l: l._is_product_storable_fifo_avco())
+                lines -= storable_fifo_avco_lines
+            stock_moves = order.picking_ids.move_lines
+            lines._compute_total_cost(stock_moves)
+
+    def _compute_total_cost_at_session_closing(self, stock_moves):
+        """
+        Compute the margin at the end of the session. This method should be called to compute the remaining lines margin
+        containing a storable product with a fifo/avco cost method and then compute the order margin
+        """
+        for order in self:
+            storable_fifo_avco_lines = order.lines.filtered(lambda l: l._is_product_storable_fifo_avco())
+            storable_fifo_avco_lines._compute_total_cost(stock_moves)
+
+    @api.depends('lines.margin', 'is_total_cost_computed')
+    def _compute_margin(self):
+        for order in self:
+            if order.is_total_cost_computed:
+                order.margin = sum(order.lines.mapped('margin'))
+                amount_untaxed = order.currency_id.round(sum(line.price_subtotal for line in order.lines))
+                order.margin_percent = not float_is_zero(amount_untaxed, order.currency_id.rounding) and order.margin / amount_untaxed or 0
+            else:
+                order.margin = 0
+                order.margin_percent = 0
 
     @api.onchange('payment_ids', 'lines')
     def _onchange_amount_all(self):
@@ -566,12 +610,15 @@ class PosOrder(models.Model):
 
         return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
 
+    def _should_create_picking_real_time(self):
+        return not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice)
+
     def _create_order_picking(self):
         self.ensure_one()
         if self.to_ship:
             self.lines._launch_stock_rule_from_pos_order_lines()
         else:
-            if not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice):
+            if self._should_create_picking_real_time():
                 picking_type = self.config_id.picking_type_id
                 if self.partner_id.property_stock_customer:
                     destination_id = self.partner_id.property_stock_customer.id
@@ -600,6 +647,7 @@ class PosOrder(models.Model):
             'amount_tax': -self.amount_tax,
             'amount_total': -self.amount_total,
             'amount_paid': 0,
+            'is_total_cost_computed': False
         }
 
     def refund(self):
@@ -770,6 +818,10 @@ class PosOrderLine(models.Model):
         readonly=True, required=True)
     price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
         readonly=True, required=True)
+    margin = fields.Monetary(string="Margin", compute='_compute_margin')
+    margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
+    total_cost = fields.Float(string='Total cost', digits='Product Price', readonly=True)
+    is_total_cost_computed = fields.Boolean(help="Allows to know if the total cost has already been computed or not")
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
@@ -801,6 +853,7 @@ class PosOrderLine(models.Model):
             'price_subtotal': -self.price_subtotal,
             'price_subtotal_incl': -self.price_subtotal_incl,
             'pack_lot_ids': PosOrderLineLot,
+            'is_total_cost_computed': False
         }
 
     @api.model
@@ -951,6 +1004,36 @@ class PosOrderLine(models.Model):
                 # Trigger the Scheduler for Pickings
                 pickings_to_confirm.action_confirm()
         return True
+
+    def _is_product_storable_fifo_avco(self):
+        self.ensure_one()
+        return self.product_id.type == 'product' and self.product_id.cost_method in ['fifo', 'average']
+
+    def _compute_total_cost(self, stock_moves):
+        """
+        Compute the total cost of the order lines.
+        :param stock_moves: recordset of `stock.move`, used for fifo/avco lines
+        """
+        for line in self.filtered(lambda l: not l.is_total_cost_computed):
+            product = line.product_id
+            if line._is_product_storable_fifo_avco() and stock_moves:
+                product_cost = product._compute_average_price(0, line.qty, stock_moves.filtered(lambda ml: ml.product_id == product))
+            else:
+                product_cost = product.standard_price
+            line.total_cost = line.qty * product.cost_currency_id._convert(
+                from_amount=product_cost,
+                to_currency=line.currency_id,
+                company=line.company_id or self.env.company,
+                date=line.order_id.date_order or fields.Date.today(),
+                round=False,
+            )
+            line.is_total_cost_computed = True
+
+    @api.depends('price_subtotal', 'total_cost')
+    def _compute_margin(self):
+        for line in self:
+            line.margin = line.price_subtotal - line.total_cost
+            line.margin_percent = not float_is_zero(line.price_subtotal, line.currency_id.rounding) and line.margin / line.price_subtotal or 0
 
 
 class PosOrderLineLot(models.Model):
