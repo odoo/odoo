@@ -380,7 +380,7 @@ class Http(models.AbstractModel):
                 # in the view, either the error is in a child view or the code
                 # contains branding (<div t-att-data="request.browse('ok')"/>).
                 et = view.with_context(inherit_branding=False)._get_combined_arch()
-                node = et.xpath(exception.path)
+                node = et.xpath(exception.path) if exception.path else et
                 line = node is not None and etree.tostring(node[0], encoding='unicode')
                 if line:
                     values['view'] = View._views_get(exception_template).filtered(
