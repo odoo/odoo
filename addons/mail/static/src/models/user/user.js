@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/user/user.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, one2one } = require('mail/static/src/model/model_field.js');
+const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -14,7 +15,7 @@ function factory(dependencies) {
         _willDelete() {
             if (this.env.messaging) {
                 if (this === this.env.messaging.currentUser) {
-                    this.env.messaging.update({ currentUser: [['unlink']] });
+                    this.env.messaging.update({ currentUser: unlink() });
                 }
             }
             return super._willDelete(...arguments);
@@ -36,14 +37,14 @@ function factory(dependencies) {
             }
             if ('partner_id' in data) {
                 if (!data.partner_id) {
-                    data2.partner = [['unlink']];
+                    data2.partner = unlink();
                 } else {
                     const partnerNameGet = data['partner_id'];
                     const partnerData = {
                         display_name: partnerNameGet[1],
                         id: partnerNameGet[0],
                     };
-                    data2.partner = [['insert', partnerData]];
+                    data2.partner = insert(partnerData);
                 }
             }
             return data2;

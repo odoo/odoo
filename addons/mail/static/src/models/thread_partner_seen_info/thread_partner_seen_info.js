@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/thread_partner_seen_info/thread_partner_seen
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one } = require('mail/static/src/model/model_field.js');
+const { insert } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -25,7 +26,7 @@ function factory(dependencies) {
          * @returns {mail.partner|undefined}
          */
         _computePartner() {
-            return [['insert', { id: this.partnerId }]];
+            return insert({ id: this.partnerId });
         }
 
         /**
@@ -33,10 +34,10 @@ function factory(dependencies) {
          * @returns {mail.thread|undefined}
          */
         _computeThread() {
-            return [['insert', {
+            return insert({
                 id: this.channelId,
                 model: 'mail.channel',
-            }]];
+            });
         }
 
     }

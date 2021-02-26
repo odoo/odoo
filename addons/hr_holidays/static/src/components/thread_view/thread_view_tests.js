@@ -4,6 +4,7 @@ odoo.define('hr_holidays/static/src/components/thread_view/thread_view_tests.js'
 const components = {
     ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
+const { link } = require('mail/static/src/model/model_field_command.js');
 const {
     afterEach,
     beforeEach,
@@ -65,7 +66,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
     assert.containsOnce(

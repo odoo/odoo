@@ -6,6 +6,7 @@ const {
     registerFieldPatchModel,
 } = require('mail/static/src/model/model_core.js');
 const { many2one } = require('mail/static/src/model/model_field.js');
+const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
 
 registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/thread/thread.js', {
 
@@ -20,12 +21,9 @@ registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/threa
         const data2 = this._super(data);
         if ('visitor' in data) {
             if (data.visitor) {
-                data2.visitor = [[
-                    'insert',
-                    this.env.models['website_livechat.visitor'].convertData(data.visitor)
-                ]];
+                data2.visitor = insert(this.env.models['website_livechat.visitor'].convertData(data.visitor));
             } else {
-                data2.visitor = [['unlink']];
+                data2.visitor = unlink();
             }
         }
         return data2;

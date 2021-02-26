@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/messaging/messaging.js', function (require) 
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { create } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -162,7 +163,7 @@ function factory(dependencies) {
     Messaging.fields = {
         cannedResponses: one2many('mail.canned_response'),
         chatWindowManager: one2one('mail.chat_window_manager', {
-            default: [['create']],
+            default: create(),
             inverse: 'messaging',
             isCausal: true,
             readonly: true,
@@ -171,17 +172,17 @@ function factory(dependencies) {
         currentPartner: one2one('mail.partner'),
         currentUser: one2one('mail.user'),
         device: one2one('mail.device', {
-            default: [['create']],
+            default: create(),
             isCausal: true,
             readonly: true,
         }),
         dialogManager: one2one('mail.dialog_manager', {
-            default: [['create']],
+            default: create(),
             isCausal: true,
             readonly: true,
         }),
         discuss: one2one('mail.discuss', {
-            default: [['create']],
+            default: create(),
             inverse: 'messaging',
             isCausal: true,
             readonly: true,
@@ -195,7 +196,7 @@ function factory(dependencies) {
          */
         inbox: one2one('mail.thread'),
         initializer: one2one('mail.messaging_initializer', {
-            default: [['create']],
+            default: create(),
             inverse: 'messaging',
             isCausal: true,
             readonly: true,
@@ -204,12 +205,12 @@ function factory(dependencies) {
             default: false,
         }),
         locale: one2one('mail.locale', {
-            default: [['create']],
+            default: create(),
             isCausal: true,
             readonly: true,
         }),
         messagingMenu: one2one('mail.messaging_menu', {
-            default: [['create']],
+            default: create(),
             inverse: 'messaging',
             isCausal: true,
             readonly: true,
@@ -219,12 +220,12 @@ function factory(dependencies) {
          */
         moderation: one2one('mail.thread'),
         notificationGroupManager: one2one('mail.notification_group_manager', {
-            default: [['create']],
+            default: create(),
             isCausal: true,
             readonly: true,
         }),
         notificationHandler: one2one('mail.messaging_notification_handler', {
-            default: [['create']],
+            default: create(),
             inverse: 'messaging',
             isCausal: true,
             readonly: true,

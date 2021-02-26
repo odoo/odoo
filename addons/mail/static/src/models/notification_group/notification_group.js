@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/notification_group/notification_group.js', f
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -52,12 +53,12 @@ function factory(dependencies) {
          */
         _computeThread() {
             if (this.res_id) {
-                return [['insert', {
+                return insert({
                     id: this.res_id,
                     model: this.res_model,
-                }]];
+                });
             }
-            return [['unlink']];
+            return unlink();
         }
 
         /**

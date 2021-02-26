@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/follower_list_menu/follower_list_menu_te
 const components = {
     FollowerListMenu: require('mail/static/src/components/follower_list_menu/follower_list_menu.js'),
 };
+const { insert, link } = require('mail/static/src/model/model_field_command.js');
 const {
     afterEach,
     afterNextRender,
@@ -255,15 +256,15 @@ QUnit.test('click on remove follower', async function (assert) {
         model: 'res.partner',
     });
     await this.env.models['mail.follower'].create({
-        followedThread: [['link', thread]],
+        followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
-        partner: [['insert', {
+        partner: insert({
             email: "bla@bla.bla",
             id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
-        }]],
+        }),
     });
     await this.createFollowerListMenuComponent(thread);
 

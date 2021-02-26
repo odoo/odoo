@@ -4,7 +4,7 @@ odoo.define('mail/static/src/models/message/message.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+const { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
 const { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
@@ -24,7 +24,7 @@ function factory(dependencies) {
          */
         static checkAll(thread, threadStringifiedDomain) {
             const threadCache = thread.cache(threadStringifiedDomain);
-            threadCache.update({ checkedMessages: [['link', threadCache.messages]] });
+            threadCache.update({ checkedMessages: link(threadCache.messages) });
         }
 
         /**
@@ -36,28 +36,24 @@ function factory(dependencies) {
             const data2 = {};
             if ('attachment_ids' in data) {
                 if (!data.attachment_ids) {
-                    data2.attachments = [['unlink-all']];
+                    data2.attachments = unlinkAll();
                 } else {
-                    data2.attachments = [
-                        ['insert-and-replace', data.attachment_ids.map(attachmentData =>
-                            this.env.models['mail.attachment'].convertData(attachmentData)
-                        )],
-                    ];
+                    data2.attachments = insertAndReplace(data.attachment_ids.map(attachmentData =>
+                        this.env.models['mail.attachment'].convertData(attachmentData)
+                    ));
                 }
             }
             if ('author_id' in data) {
                 if (!data.author_id) {
-                    data2.author = [['unlink-all']];
+                    data2.author = unlinkAll();
                 } else if (data.author_id[0] !== 0) {
                     // partner id 0 is a hack of message_format to refer to an
                     // author non-related to a partner. display_name equals
                     // email_from, so this is omitted due to being redundant.
-                    data2.author = [
-                        ['insert', {
-                            display_name: data.author_id[1],
-                            id: data.author_id[0],
-                        }],
-                    ];
+                    data2.author = insert({
+                        display_name: data.author_id[1],
+                        id: data.author_id[0],
+                    });
                 }
             }
             if ('body' in data) {
@@ -101,7 +97,7 @@ function factory(dependencies) {
                 if ('module_icon' in data) {
                     originThreadData.moduleIcon = data.module_icon;
                 }
-                data2.originThread = [['insert', originThreadData]];
+                data2.originThread = insert(originThreadData);
             }
             if ('moderation_status' in data) {
                 data2.moderation_status = data.moderation_status;
@@ -110,9 +106,9 @@ function factory(dependencies) {
                 data2.isNeedaction = data.needaction_partner_ids.includes(this.env.messaging.currentPartner.id);
             }
             if ('notifications' in data) {
-                data2.notifications = [['insert', data.notifications.map(notificationData =>
+                data2.notifications = insert(data.notifications.map(notificationData =>
                     this.env.models['mail.notification'].convertData(notificationData)
-                )]];
+                ));
             }
             if ('starred_partner_ids' in data) {
                 data2.isStarred = data.starred_partner_ids.includes(this.env.messaging.currentPartner.id);
@@ -236,7 +232,7 @@ function factory(dependencies) {
          */
         static uncheckAll(thread, threadStringifiedDomain) {
             const threadCache = thread.cache(threadStringifiedDomain);
-            threadCache.update({ checkedMessages: [['unlink', threadCache.messages]] });
+            threadCache.update({ checkedMessages: unlink(threadCache.messages) });
         }
 
         /**
@@ -330,9 +326,9 @@ function factory(dependencies) {
         toggleCheck(thread, threadStringifiedDomain) {
             const threadCache = thread.cache(threadStringifiedDomain);
             if (threadCache.checkedMessages.includes(this)) {
-                threadCache.update({ checkedMessages: [['unlink', this]] });
+                threadCache.update({ checkedMessages: unlink(this) });
             } else {
-                threadCache.update({ checkedMessages: [['link', this]] });
+                threadCache.update({ checkedMessages: link(this) });
             }
         }
 
@@ -372,9 +368,9 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeFailureNotifications() {
-            return [['replace', this.notifications.filter(notifications =>
+            return replace(this.notifications.filter(notifications =>
                 ['exception', 'bounce'].includes(notifications.notification_status)
-            )]];
+            ));
         }
 
         /**
@@ -492,7 +488,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return [['link', this.env.messaging]];
+            return link(this.env.messaging);
         }
 
         /**
@@ -551,7 +547,7 @@ function factory(dependencies) {
             if (this.originThread) {
                 threads.push(this.originThread);
             }
-            return [['replace', threads]];
+            return replace(threads);
         }
 
     }
