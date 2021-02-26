@@ -218,7 +218,7 @@ class AlarmManager(models.AbstractModel):
         notifications = []
         users = self.env['res.users'].search([('partner_id', 'in', tuple(partner_ids))])
         for user in users:
-            notif = self.with_user(user).get_next_notif()
+            notif = self.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).get_next_notif()
             notifications.append([(self._cr.dbname, 'calendar.alarm', user.partner_id.id), notif])
         if len(notifications) > 0:
             self.env['bus.bus'].sendmany(notifications)
