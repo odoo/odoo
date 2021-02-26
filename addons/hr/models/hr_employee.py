@@ -106,11 +106,8 @@ class HrEmployeePrivate(models.Model):
     barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
     pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
-    departure_reason = fields.Selection([
-        ('fired', 'Fired'),
-        ('resigned', 'Resigned'),
-        ('retired', 'Retired')
-    ], string="Departure Reason", groups="hr.group_hr_user", copy=False, tracking=True)
+    departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason", groups="hr.group_hr_user",
+                                          copy=False, tracking=True, ondelete='restrict')
     departure_description = fields.Text(string="Additional Information", groups="hr.group_hr_user", copy=False, tracking=True)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
@@ -273,7 +270,7 @@ class HrEmployeePrivate(models.Model):
         res = super(HrEmployeePrivate, self).toggle_active()
         unarchived_employees = self.filtered(lambda employee: employee.active)
         unarchived_employees.write({
-            'departure_reason': False,
+            'departure_reason_id': False,
             'departure_description': False,
             'departure_date': False
         })

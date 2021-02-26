@@ -111,7 +111,7 @@
                                             <!-- is overridden in other hr related modules -->
                                         </group>
                                         <group name="departure" string="Departure" attrs="{'invisible': [('active', '=', True)]}">
-                                            <field name="departure_reason"/>
+                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
                                             <field name="departure_description"/>
                                             <field name="departure_date"/>
                                         </group>
