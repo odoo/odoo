@@ -212,6 +212,15 @@ screens.NumpadWidget.include({
     },
 });
 
+screens.ActionButtonWidget.include({
+    start: function(event) {
+        this._super(event);
+        if (this.pos.is_french_country() && this.$el.hasClass('order-split')) {
+            this.$el.prop("hidden", true);
+            this.$el.hide();
+        }
+    },
+});
 
 
 });
