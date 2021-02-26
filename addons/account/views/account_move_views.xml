@@ -186,25 +186,26 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" expand="context.get('expand', False)" multi_edit="1">
                     <field name="date" optional="show" readonly="1"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
+                    <field name="journal_id" options="{'no_open': True, 'no_create': True}" optional="hide"/>
                     <field name="move_id" optional="show"/>
                     <field name="account_id" optional="show" options="{'no_open': True, 'no_create': True}"
                            domain="[('company_id', '=', company_id)]"
                            groups="account.group_account_readonly"/>
                     <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" optional="show" readonly="1"/>
+                    <field name="partner_id" optional="hide" readonly="1"/>
                     <field name="ref" optional="hide"/>
                     <field name="name"/>
                     <field name="reconciled" invisible="1"/>
-                    <field name="matching_number" string="Matching" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                     <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
+                    <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
-                    <field name="amount_currency" readonly="1" groups="base.group_multi_currency"/>
+                    <field name="matching_number" string="Matching" optional="show"/>
                     <field name="currency_id" readonly="1" invisible="1" />
                     <field name="company_currency_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
@@ -236,8 +237,6 @@
             <field name="arch" type="xml">
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="partner_id" position="attributes"><attribute name="optional">hide</attribute></field>
-                <field name="matching_number" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="tax_ids" position="attributes"><attribute name="optional">show</attribute></field>
                 <field name="tax_tag_ids" position="attributes"><attribute name="optional">show</attribute></field>
             </field>
@@ -252,7 +251,6 @@
                 <field name="date" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="move_id" position="attributes"><attribute name="optional">hide</attribute></field>
                 <field name="ref" position="attributes"><attribute name="optional">show</attribute></field>
-                <field name="matching_number" position="attributes"><attribute name="optional">hide</attribute></field>
             </field>
         </record>
 
