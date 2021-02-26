@@ -278,6 +278,20 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone_sanitized, partner_mobile_sanitized,
                          'Lead: phone_sanitized computed field on mobile')
 
+        # for email_from, if only formatting differs, warning should not appear and
+        # email on partner should not be updated
+        lead_form.email_from = '"Hermes Conrad" <%s>' % partner_email_normalized
+        self.assertFalse(lead_form.partner_email_update)
+        lead_form.save()
+        self.assertEqual(partner.email, partner_email)
+
+        # for phone, if only formatting differs, warning should not appear and
+        # phone on partner should not be updated
+        lead_form.phone = partner_phone_sanitized
+        self.assertFalse(lead_form.partner_phone_update)
+        lead_form.save()
+        self.assertEqual(partner.phone, partner_phone)
+
         # LEAD/PARTNER SYNC: lead updates partner
         new_email = '"John Zoidberg" <john.zoidberg@test.example.com>'
         new_email_normalized = 'john.zoidberg@test.example.com'
