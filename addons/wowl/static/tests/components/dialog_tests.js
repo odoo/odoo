@@ -206,15 +206,22 @@ QUnit.test("dialog without header/footer", async function (assert) {
   assert.containsNone(target, ".o_dialog footer");
 });
 QUnit.test("dialog size can be chosen", async function (assert) {
-  assert.expect(2);
+  assert.expect(5);
   class Parent extends owl.Component {}
   Parent.components = { Dialog };
   Parent.template = owl.tags.xml`
-            <Dialog size="'modal-xl'"/>
-        `;
+    <div>
+      <Dialog contentClass="'xl'" size="'modal-xl'"/>
+      <Dialog contentClass="'lg'"/>
+      <Dialog contentClass="'md'" size="'modal-md'"/>
+      <Dialog contentClass="'sm'" size="'modal-sm'"/>
+    </div>`;
   parent = await mount(Parent, { env, target });
-  assert.containsOnce(target, ".o_dialog");
-  assert.hasClass(target.querySelector(".o_dialog .modal-dialog"), "modal-xl");
+  assert.containsN(target, ".o_dialog", 4);
+  assert.containsOnce(target, target.querySelectorAll(".o_dialog .modal-dialog.modal-xl .xl"));
+  assert.containsOnce(target, target.querySelectorAll(".o_dialog .modal-dialog.modal-lg .lg"));
+  assert.containsOnce(target, target.querySelectorAll(".o_dialog .modal-dialog.modal-md .md"));
+  assert.containsOnce(target, target.querySelectorAll(".o_dialog .modal-dialog.modal-sm .sm"));
 });
 QUnit.test("dialog can be rendered on fullscreen", async function (assert) {
   assert.expect(2);

@@ -12,7 +12,7 @@ Here are its props
 | `fullscreen`   | boolean | false      | a class `o_modal_full` is added on the element "div.modal"                                                                                                                     |
 | `renderFooter` | boolean | true       | the footer contains a slot `buttons` and a default button `OK`                                                                                                                 |
 | `renderHeader` | boolean | true       | the header contains a title and a button `x` for "closing" dialog                                                                                                              |
-| `size`         | string  | "modal-lg" | used to set the dialog size (available suffix: "xl", "lg", "sm")                                                                                                               |
+| `size`         | string  | "modal-lg" | used to set the dialog size (available suffix: "xl", "lg", "md", sm")                                                                                                          |
 | `title`        | string  | "Odoo"     |                                                                                                                                                                                |
 | `technical`    | boolean | true       | a class `o_technical_modal` is added on the element "div.modal". If set to false, the modal will have the standard frontend style (use this for non-editor frontend features). |
 

@@ -63,13 +63,13 @@ export class Dialog extends Component {
 
 Dialog.components = { Portal };
 Dialog.props = {
-  contentClass: { type: String, optional: 1 },
+  contentClass: { type: String, optional: true },
   fullscreen: Boolean,
   renderFooter: Boolean,
   renderHeader: Boolean,
   size: {
     type: String,
-    validate: (s) => ["modal-xl", "modal-lg", "modal-sm"].includes(s),
+    validate: (s) => ["modal-xl", "modal-lg", "modal-md", "modal-sm"].includes(s),
   },
   technical: Boolean,
   title: String,
