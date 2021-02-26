@@ -1,9 +1,12 @@
 /** @odoo-module **/
-import { click, getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
+import { click, getFixture, makeFakeRPCService, makeTestEnv, mount, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
 import { dialogManagerService } from "../../src/services/dialog_manager";
 const { Component, tags } = owl;
 import { Dialog } from "../../src/components/dialog/dialog";
+import { notificationService } from '../../src/notifications/notification_service';
+import { crashManagerService } from '../../src/crash_manager/crash_manager_service';
+
 let env;
 let serviceRegistry;
 let target;
@@ -97,4 +100,39 @@ QUnit.test("rendering with two dialogs", async (assert) => {
       : _b.textContent,
     "Sauron"
   );
+});
+
+QUnit.test("dialog component crashes", async (assert) => {
+  assert.expect(4);
+
+  class FailingDialog extends Component {
+    constructor() {
+      super(...arguments);
+      throw new Error('Some Error');
+    }
+  }
+  FailingDialog.template = tags.xml`<Dialog title="'Error'"/>`;
+  FailingDialog.components =  { Dialog };
+
+  const rpc = makeFakeRPCService();
+  serviceRegistry.add(rpc.name, rpc);
+  serviceRegistry.add(notificationService.name, notificationService);
+  serviceRegistry.add(crashManagerService.name, crashManagerService);
+  env = await makeTestEnv({ serviceRegistry });
+
+  pseudoWebClient = await mount(PseudoWebClient, { target, env });
+
+  const qunitUnhandledReject = QUnit.onUnhandledRejection;
+  QUnit.onUnhandledRejection = (reason) => {
+    assert.step('error');
+  };
+
+  env.services[dialogManagerService.name].open(FailingDialog);
+  await nextTick();
+  assert.verifySteps(['error']);
+  assert.containsOnce(pseudoWebClient, '.modal');
+  assert.containsOnce(pseudoWebClient, '.modal .o_dialog_error');
+
+  QUnit.onUnhandledRejection = qunitUnhandledReject;
+  pseudoWebClient.destroy();
 });
