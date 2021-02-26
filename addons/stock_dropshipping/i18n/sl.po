@@ -1,13 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_dropshipping
+# 	* stock_dropshipping
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
+# matjaz k <matjaz@mentis.si>, 2021
+# Boris Kodelja <boris@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:19+0000\n"
+"Last-Translator: Boris Kodelja <boris@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,31 +23,58 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_res_company
+msgid "Companies"
+msgstr "Podjetja"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_rule__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: stock_dropshipping
 #: model:stock.location.route,name:stock_dropshipping.route_drop_shipping
-msgid "Drop Shipping"
-msgstr ""
-
-#. module: stock_dropshipping
-#: model:stock.picking.type,name:stock_dropshipping.picking_type_dropship
 msgid "Dropship"
-msgstr ""
+msgstr "Dropship"
 
 #. module: stock_dropshipping
-#: model:ir.model,name:stock_dropshipping.model_procurement_rule
-msgid "Procurement Rule"
-msgstr ""
+#: model:ir.model.fields,field_description:stock_dropshipping.field_procurement_group__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_dropshipping
+#: model:ir.model.fields,field_description:stock_dropshipping.field_procurement_group____last_update
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line____last_update
+#: model:ir.model.fields,field_description:stock_dropshipping.field_res_company____last_update
+#: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:stock_dropshipping.field_stock_rule____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_procurement_group
+msgid "Procurement Group"
+msgstr "Oskrbovalna skupina"
 
 #. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Postavka nabavnega naloga"
 
 #. module: stock_dropshipping
-#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line_sale_line_id
-msgid "Sale Line"
-msgstr ""
+#: model:ir.model,name:stock_dropshipping.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Postavka prodajnega naloga"
 
 #. module: stock_dropshipping
-#: model:procurement.rule,name:stock_dropshipping.procurement_rule_drop_shipping
-msgid "Vendor → Customer"
+#: model:ir.model,name:stock_dropshipping.model_stock_rule
+msgid "Stock Rule"
 msgstr ""

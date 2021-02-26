@@ -154,7 +154,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-                $form.on('click', 'button .a-submit', () => {
+                // o_we_selected_image has not always been removed when
+                // saving a post so we need the line below to remove it if it is present.
+                $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
+                $form.on('click', 'button, .a-submit', () => {
+                    $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
                     wysiwyg.save();
                 });
             });

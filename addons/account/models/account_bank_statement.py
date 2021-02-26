@@ -188,7 +188,13 @@ class AccountBankStatement(models.Model):
     @api.depends('balance_start', 'previous_statement_id')
     def _compute_is_valid_balance_start(self):
         for bnk in self:
-            bnk.is_valid_balance_start = float_is_zero(bnk.balance_start - bnk.previous_statement_id.balance_end_real, precision_digits=bnk.currency_id.decimal_places)
+            bnk.is_valid_balance_start = (
+                bnk.currency_id.is_zero(
+                    bnk.balance_start - bnk.previous_statement_id.balance_end_real
+                )
+                if bnk.previous_statement_id
+                else True
+            )
 
     @api.depends('date', 'journal_id')
     def _get_previous_statement(self):
@@ -706,7 +712,7 @@ class AccountBankStatementLine(models.Model):
             **counterpart_vals,
             'name': counterpart_vals.get('name', move_line.name if move_line else ''),
             'move_id': self.move_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_id.id or (move_line.partner_id.id if move_line else False),
             'currency_id': currency_id,
             'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
             'debit': balance if balance > 0.0 else 0.0,
@@ -771,8 +777,10 @@ class AccountBankStatementLine(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('currency_id', 'amount', 'foreign_currency_id', 'amount_currency',
-                 'move_id.line_ids', 'move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids')
+    @api.depends('journal_id', 'currency_id', 'amount', 'foreign_currency_id', 'amount_currency',
+                 'move_id.line_ids.account_id', 'move_id.line_ids.amount_currency',
+                 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.currency_id',
+                 'move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids')
     def _compute_is_reconciled(self):
         ''' Compute the field indicating if the statement lines are already reconciled with something.
         This field is used for display purpose (e.g. display the 'cancel' button on the statement lines).
@@ -1159,6 +1167,12 @@ class AccountBankStatementLine(models.Model):
 
                 counterpart_vals['account_id'] = open_balance_account.id
                 counterpart_vals['partner_id'] = partner.id
+            else:
+                if self.amount > 0:
+                    open_balance_account = self.company_id.partner_id.with_company(self.company_id).property_account_receivable_id
+                else:
+                    open_balance_account = self.company_id.partner_id.with_company(self.company_id).property_account_payable_id
+                counterpart_vals['account_id'] = open_balance_account.id
 
             open_balance_vals = self._prepare_counterpart_move_line_vals(counterpart_vals)
         else:
@@ -1248,11 +1262,15 @@ class AccountBankStatementLine(models.Model):
         # Assign partner if needed (for example, when reconciling a statement
         # line with no partner, with an invoice; assign the partner of this invoice)
         if not self.partner_id:
-            rec_overview_partners = set(overview['counterpart_line'].partner_id
+            rec_overview_partners = set(overview['counterpart_line'].partner_id.id
                                         for overview in reconciliation_overview
                                         if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
             if len(rec_overview_partners) == 1:
                 self.line_ids.write({'partner_id': rec_overview_partners.pop()})
+
+        # Refresh analytic lines.
+        self.move_id.line_ids.analytic_line_ids.unlink()
+        self.move_id.line_ids.create_analytic_lines()
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

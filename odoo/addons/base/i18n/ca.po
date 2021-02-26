@@ -11,7 +11,7 @@
 # Martin Trigaux, 2020
 # Arnau Ros, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
-# jabelchi <jabelchi@gmail.com>, 2021
+# Josep Anton Belchi, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: jabelchi <jabelchi@gmail.com>, 2021\n"
+"Last-Translator: Josep Anton Belchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6568,6 +6568,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Adreça de la empresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Adreça de facturació</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Adreça de lliurament</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Altra adreça</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Adreça privada</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adreça</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -6685,7 +6693,7 @@ msgstr "<strong>Dependències :</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Email:</strong>"
-msgstr ""
+msgstr "<strong>Email:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6728,7 +6736,7 @@ msgstr "<strong>Nom</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr ""
+msgstr "<strong>Telèfon:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -10363,7 +10371,7 @@ msgstr "Contacte"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contact / Address"
-msgstr "Contactes / Direccions"
+msgstr "Contacte / Adreça"
 
 #. module: base
 #: model:res.groups,name:base.group_partner_manager
@@ -10417,7 +10425,7 @@ msgstr "Contactes"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Contacts & Addresses"
-msgstr "Contactes i Direccions"
+msgstr "Contactes i adreces"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
@@ -11791,7 +11799,7 @@ msgstr "Mostrar "
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__display_name
 msgid "Display Name"
-msgstr "Mostrar Nom"
+msgstr "Nom mostrat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
@@ -22014,7 +22022,7 @@ msgstr "Transferència de crèdit SEPA"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr ""
+msgstr "Càrrec directe SEPA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_sepa

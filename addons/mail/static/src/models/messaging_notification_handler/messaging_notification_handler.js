@@ -16,8 +16,10 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            this.env.services['bus_service'].off('notification');
-            this.env.services['bus_service'].stopPolling();
+            if (this.env.services['bus_service']) {
+                this.env.services['bus_service'].off('notification');
+                this.env.services['bus_service'].stopPolling();
+            }
             return super._willDelete(...arguments);
         }
 
@@ -87,9 +89,6 @@ function factory(dependencies) {
                             return;
                         }
                         return this._handleNotificationPartner(Object.assign({}, message));
-                    default:
-                        console.warn(`mail.messaging_notification_handler: Unhandled notification "${model}"`);
-                        return;
                 }
             });
             await this.async(() => Promise.all(proms));
@@ -267,7 +266,7 @@ function factory(dependencies) {
                     channel.markAsFetched();
                 }
                 // (re)open chat on receiving new message
-                if (channel.channel_type !== 'channel') {
+                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile) {
                     this.env.messaging.chatWindowManager.openThread(channel);
                 }
             }
@@ -708,7 +707,7 @@ function factory(dependencies) {
             const chat = await this.async(() =>
                 this.env.messaging.getChat({ partnerId: partner_id }
             ));
-            if (!chat) {
+            if (!chat || this.env.messaging.device.isMobile) {
                 return;
             }
             this.env.messaging.chatWindowManager.openThread(chat);

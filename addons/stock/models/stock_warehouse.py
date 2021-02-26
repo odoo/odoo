@@ -90,6 +90,18 @@ class Warehouse(models.Model):
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
     ]
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        group_user = self.env.ref('base.group_user')
+        group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+        if group_stock_multi_warehouses not in group_user.implied_ids:
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _('Creating a new warehouse will automatically activate the Storage Locations setting')
+                }
+            }
+
     @api.depends('name')
     def _compute_warehouse_count(self):
         for warehouse in self:
@@ -213,9 +225,9 @@ class Warehouse(models.Model):
                                     (', '.join(picking_type_using_locations.mapped('name')), warehouse.name))
                 warehouse.view_location_id.write({'active': vals['active']})
 
-                rule_ids = self.env['stock.rule'].with_context(active_test=False).search([('warehouse_id', '=', self.id)])
+                rule_ids = self.env['stock.rule'].with_context(active_test=False).search([('warehouse_id', '=', warehouse.id)])
                 # Only modify route that apply on this warehouse.
-                route_ids = warehouse.route_ids.filtered(lambda r: len(r.warehouse_ids) == 1).write({'active': vals['active']})
+                warehouse.route_ids.filtered(lambda r: len(r.warehouse_ids) == 1).write({'active': vals['active']})
                 rule_ids.write({'active': vals['active']})
 
                 if warehouse.active:

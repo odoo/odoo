@@ -6,6 +6,7 @@ odoo.define('website_form.s_website_form', function (require) {
     const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
     var ajax = require('web.ajax');
     var publicWidget = require('web.public.widget');
+    const dom = require('web.dom');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -28,6 +29,7 @@ odoo.define('website_form.s_website_form', function (require) {
         willStart: function () {
             const res = this._super(...arguments);
             if (!this.$target[0].classList.contains('s_website_form_no_recaptcha')) {
+                this._recaptchaLoaded = true;
                 this._recaptcha.loadLibs();
             }
             return res;
@@ -155,13 +157,16 @@ odoo.define('website_form.s_website_form', function (require) {
                 form_values[$(this).find('input').attr('name')] = date.format(format);
             });
 
-            const tokenObj = await this._recaptcha.getToken('website_form');
-            if (tokenObj.token) {
-                form_values['recaptcha_token_response'] = tokenObj.token;
-            } else if (tokenObj.error) {
-                self.update_status('error', tokenObj.error);
-                return false;
+            if (this._recaptchaLoaded) {
+                const tokenObj = await this._recaptcha.getToken('website_form');
+                if (tokenObj.token) {
+                    form_values['recaptcha_token_response'] = tokenObj.token;
+                } else if (tokenObj.error) {
+                    self.update_status('error', tokenObj.error);
+                    return false;
+                }
             }
+
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
             .then(function (result_data) {
@@ -187,7 +192,14 @@ odoo.define('website_form.s_website_form', function (require) {
                     }
                     switch (successMode) {
                         case 'redirect':
-                            $(window.location).attr('href', successPage);
+                            if (successPage.charAt(0) === "#") {
+                                dom.scrollTo($(successPage)[0], {
+                                    duration: 500,
+                                    extraOffset: 0,
+                                });
+                            } else {
+                                $(window.location).attr('href', successPage);
+                            }
                             break;
                         case 'message':
                             self.$target[0].classList.add('d-none');

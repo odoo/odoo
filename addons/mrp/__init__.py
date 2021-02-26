@@ -30,12 +30,13 @@ def _create_warehouse_data(cr, registry):
 def uninstall_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     warehouses = env["stock.warehouse"].search([])
-    subcontracting_routes = warehouses.mapped("pbm_route_id")
+    pbm_routes = warehouses.mapped("pbm_route_id")
     warehouses.write({"pbm_route_id": False})
     # Fail unlink means that the route is used somewhere (e.g. route_id on stock.rule). In this case
     # we don't try to do anything.
     try:
-        subcontracting_routes.unlink()
+        with env.cr.savepoint():
+            pbm_routes.unlink()
     except:
         pass
 

@@ -553,7 +553,7 @@
                                     <ul class="nav nav-pills flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <li class="nav-item">
-                                                <label style="padding: 0.25rem 0rem; margin: 0" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
+                                                <label style="padding: 0; margin: 0" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
                                                     <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
                                                     <span style="font-weight: normal" t-field="v.name" />
                                                 </label>
@@ -729,7 +729,7 @@
         </xpath>
     </template>
 
-    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="True" customize_show="True" name="Recently Viewed Products" priority="16">
+    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="False" customize_show="True" name="Recently Viewed Products" priority="16">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <t t-snippet-call="website_sale.s_products_recently_viewed"/>
         </xpath>
@@ -925,6 +925,7 @@
                                                 <div style="width: 200px;" class="s_website_form_label"/>
                                                 <a role="button" href="/shop/checkout" class="btn btn-secondary float-left"><span class="fa fa-chevron-left"/> Previous</a>
                                                 <a role="button" class="btn btn-primary float-right s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                <span id="s_website_form_result"></span>
                                             </div>
                                         </div>
                                     </form>

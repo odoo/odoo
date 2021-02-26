@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -58,6 +59,12 @@ class ResConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     def set_values(self):
+        warehouse_grp = self.env.ref('stock.group_stock_multi_warehouses')
+        location_grp = self.env.ref('stock.group_stock_multi_locations')
+        base_user = self.env.ref('base.group_user')
+        if not self.group_stock_multi_locations and location_grp in base_user.implied_ids and warehouse_grp in base_user.implied_ids:
+            raise UserError(_("You can't desactivate the multi-location if you have more than once warehouse by company"))
+
         res = super(ResConfigSettings, self).set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):

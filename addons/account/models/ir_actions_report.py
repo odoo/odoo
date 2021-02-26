@@ -12,8 +12,6 @@ class IrActionsReport(models.Model):
             if record.message_main_attachment_id.mimetype == 'application/pdf' or \
                record.message_main_attachment_id.mimetype.startswith('image'):
                 return record.message_main_attachment_id
-        if self.report_name in ('account.report_invoice_with_payments', 'account.report_invoice') and not record.is_invoice():
-            raise UserError(_("Only invoices could be printed."))
         return super(IrActionsReport, self).retrieve_attachment(record)
 
     def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
@@ -29,4 +27,9 @@ class IrActionsReport(models.Model):
         # don't save the 'account.report_original_vendor_bill' report as it's just a mean to print existing attachments
         if self.report_name == 'account.report_original_vendor_bill':
             return None
-        return super(IrActionsReport, self)._postprocess_pdf_report(record, buffer)
+        res = super(IrActionsReport, self)._postprocess_pdf_report(record, buffer)
+        if self.model == 'account.move' and record.state == 'posted' and record.is_sale_document(include_receipts=True):
+            attachment = self.retrieve_attachment(record)
+            if attachment:
+                attachment.register_as_main_attachment(force=False)
+        return res

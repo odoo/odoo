@@ -17,7 +17,7 @@
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -581,7 +581,7 @@ msgstr ""
 "        Účtovné správy pre Veľkú Britániu\n"
 "\n"
 "        Umožňuje posielať daňové správy cez internet\n"
-"MTD-VAT API pre HMRC.\n"
+"MTD-DPH API pre HMRC.\n"
 "    "
 
 #. module: base
@@ -7689,6 +7689,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Adresa firmy</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Fakturačná adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Adresa dodania</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Iná adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Súkromná adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresa</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -8454,7 +8462,7 @@ msgstr "Účtovné Konzistenčné Testy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
-msgstr "Účtovné Výkazy"
+msgstr "Účtovné výkazy"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -12084,12 +12092,12 @@ msgstr "Podrobnosti o vytvorení"
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
 #: model:ir.model.fields,field_description:base.field_res_users__credit_limit
 msgid "Credit Limit"
-msgstr "Úverový Limit"
+msgstr "Úverový limit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
 msgid "Credit card support for Point Of Sale"
-msgstr "Podpora platobných kariet pre Predajné Miesto"
+msgstr "Podpora platobných kariet pre miesto predaja"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -12739,7 +12747,7 @@ msgstr "Cieľový kontakt"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__res_model
 msgid "Destination Model"
-msgstr "Cieľový Model"
+msgstr "Cieľový model"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -13913,7 +13921,7 @@ msgstr "Názov Exportu"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Settings"
-msgstr "Nastavenia Exportu"
+msgstr "Nastavenia exportu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
@@ -19102,7 +19110,7 @@ msgstr "Holandsko - účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
 msgid "Netherlands - Accounting Reports"
-msgstr "Holendsko - účtovné výkazy"
+msgstr "Holandsko - účtovné výkazy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
@@ -24179,7 +24187,7 @@ msgstr "Social LinkedIn"
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr "Sociálny marketing"
+msgstr "Marketing sociálnych sieti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -27097,7 +27105,7 @@ msgstr "Uzbekistan"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "DIČ"
+msgstr "IČ DPH"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat

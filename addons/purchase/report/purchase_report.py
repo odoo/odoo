@@ -9,7 +9,7 @@ import re
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.osv.expression import expression
+from odoo.osv.expression import AND, expression
 
 
 class PurchaseReport(models.Model):
@@ -179,6 +179,7 @@ class PurchaseReport(models.Model):
             res = [{}]
 
         if avg_days_to_purchase:
+            self.check_access_rights('read')
             query = """ SELECT AVG(days_to_purchase.po_days_to_purchase)::decimal(16,2) AS avg_days_to_purchase
                           FROM (
                               SELECT extract(epoch from age(po.date_approve,po.create_date))/(24*60*60) AS po_days_to_purchase
@@ -188,7 +189,7 @@ class PurchaseReport(models.Model):
                               ) AS days_to_purchase
                     """
 
-            subdomain = domain + [('company_id', '=', self.env.company.id), ('date_approve', '!=', False)]
+            subdomain = AND([domain, [('company_id', '=', self.env.company.id), ('date_approve', '!=', False)]])
             subtables, subwhere, subparams = expression(subdomain, self).query.get_sql()
 
             self.env.cr.execute(query % (subtables, subwhere), subparams)

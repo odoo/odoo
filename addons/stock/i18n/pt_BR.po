@@ -11,7 +11,6 @@
 # Mateus Pinheiro <smateusbp@gmail.com>, 2020
 # André Carvalho <and2carvalho@gmail.com>, 2020
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2020
-# Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
 # Adriel Kotviski <kotviski@gmail.com>, 2020
 # falexandresilva <falexandresilva@gmail.com>, 2020
 # Hendrix Costa <hendrixcosta@gmail.com>, 2020
@@ -37,7 +36,7 @@
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # Maurício Liell <mauricio@liell.com.br>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
 # 
@@ -448,9 +447,9 @@ msgid ""
 "Report\" aria-label=\"Traceability Report\"><i class=\"fa fa-fw fa-level-up "
 "fa-rotate-270\"/></span>"
 msgstr ""
-"<span role=\"img\" class=\"o_stock_reports_stream\" title=\"Traceability "
-"Report\" aria-label=\"Traceability Report\"><i class=\"fa fa-fw fa-level-up "
-"fa-rotate-270\"/></span>"
+"<span role=\"img\" class=\"o_stock_reports_stream\" title=\"Relatório de "
+"Rastreabilidade\" aria-label=\"Relatório de Rastreabilidade\"><i class=\"fa "
+"fa-fw fa-level-up fa-rotate-270\"/></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -997,22 +996,22 @@ msgstr "Back Orders"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Confirmação de Backorder"
+msgstr "Confirmação de Pedido de Backorder"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "Linha de Confirmação de Pedidos em Espera"
+msgstr "Linha de Confirmação de Pedido de Backorder"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Linhas de Confirmação de Pedidos em Espera"
+msgstr "Linhas de Confirmação de Pedido de Backorder"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Criação de Backorder"
+msgstr "Criação de Pedido de Backorder"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
@@ -1515,13 +1514,13 @@ msgstr "Locais de Contrapartida"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Criar Backorder"
+msgstr "Criar Pedido de Backorder"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
-msgstr "Criar Backorder?"
+msgstr "Criar Pedido de Backorder?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
@@ -1537,9 +1536,9 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
-"Criar uma backorder, se você esperar para processar os \n"
+"Criar um Pedido de Backorder, se você esperar para processar os \n"
 "produtos\n"
-"restantes posteriormente. Não crie uma backorder, se você não vai\n"
+"restantes posteriormente. Não crie um Pedido de Backorder, se você não vai\n"
 "fornecer os produtos restantes."
 
 #. module: stock
@@ -1840,8 +1839,8 @@ msgid ""
 "quotations or draft manufacturing orders to resupply your stock."
 msgstr ""
 "Defina uma regra de estoque mínimo para que o Odoo crie automaticamente "
-"solicitações de cotação ou rascunho de ordens de fabricação para reabastecer"
-" seu estoque."
+"solicitações de cotação ou rascunho de ordens de produção para reabastecer "
+"seu estoque."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -1862,7 +1861,7 @@ msgstr ""
 "organização. Odoo é capaz de gerenciar locais físicos\n"
 "(armazéns, prateleiras, compartimento etc.), locais dos parceiros (clientes,\n"
 "fornecedores) e locais virtuais que são a contrapartida da\n"
-"as operações de estoque como as ordens de fabricação\n"
+"as operações de estoque como as ordens de produção\n"
 "consumos, inventários, etc."
 
 #. module: stock
@@ -2375,7 +2374,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
-msgstr "Experimento"
+msgstr "Exp"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -2411,7 +2410,7 @@ msgstr "Nota externa..."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_removal__method
 msgid "FIFO, LIFO..."
-msgstr "FIFO, LIFO..."
+msgstr "PEPS, UEPS..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
@@ -3536,7 +3535,7 @@ msgstr "Transferências Atrasadas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days_date
 msgid "Lead Days Date"
-msgstr ""
+msgstr "Data de Dias de Atraso"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
@@ -6379,6 +6378,7 @@ msgstr "Análise de Movimentos de Estoque"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #, python-format
 msgid "Stock On Hand"
 msgstr "Estoque em Mãos"
@@ -6424,7 +6424,7 @@ msgstr "Relatório de Quantidade em Estoque"
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
 #: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
 msgid "Stock Replenishment Report"
-msgstr "Relatório de reposição de estoque"
+msgstr "Relatório de Reposição de Estoque"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -6657,8 +6657,8 @@ msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
 msgstr ""
-"O pedido de atraso<a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a>"
-" foi criado."
+"O pedido de backorder<a href=# data-oe-model=stock.picking data-oe-"
+"id=%d>%s</a> foi criado."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -6929,10 +6929,10 @@ msgid ""
 msgstr ""
 "Esta é a quantidade de produtos a partir de um ponto de vista de inventário."
 " Para movimentos em situação 'Concluido', esta é a quantidade de produtos "
-"que foram realmente movidoss. Para outros movimentos, esta é a quantidade de"
-" produto previsto para ser movida. A redução desta quantidade não gera uma "
-"backorder. Mudar essa quantidade em movimentos atribuídos afeta a reserva do"
-" produto, e deve ser concluído com cuidado."
+"que foram realmente movidos. Para outros movimentos, esta é a quantidade de "
+"produto previsto para ser movida. A redução desta quantidade não gera um "
+"Pedido de Backorder. Mudar essa quantidade em movimentos atribuídos afeta a "
+"reserva do produto, e deve ser concluído com cuidado."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7015,6 +7015,10 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Este produto foi usado em pelo menos um movimento de estoque. Não é "
+"aconselhável alterar o Tipo de Produto, pois isso pode levar a "
+"inconsistências. Uma solução melhor seria arquivar o produto e criar um "
+"novo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7037,7 +7041,7 @@ msgid ""
 "location for stock moves generated by manufacturing orders."
 msgstr ""
 "Este local de estoque será usado, ao invés da padrão, como o local de origem"
-" dos movimentos de estoque gerados por ordens de fabricação."
+" dos movimentos de estoque gerados por ordens de produção."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_inventory
@@ -7079,7 +7083,7 @@ msgstr "Para"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr "Para Encomenda"
+msgstr "Para Backorder"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -7436,7 +7440,7 @@ msgstr "Contador de mensagens não lidas"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Unreserve"
-msgstr "Falta de reserva"
+msgstr "Cancelar Reserva"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -8404,3 +8408,19 @@ msgstr "report_stock_quantity_graph"
 #, python-format
 msgid "should be replenished to reach the maximum of"
 msgstr "deve ser reabastecido para atingir o máximo de"
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You can't desactivate the multi-location if you have more than once "
+"warehouse by company"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Creating a new warehouse will automatically activate the Storage Locations "
+"setting"
+msgstr ""

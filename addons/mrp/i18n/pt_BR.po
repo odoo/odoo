@@ -33,7 +33,7 @@
 # Pablo Valentini <pablondrina@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Maurício Liell <mauricio@liell.com.br>, 2020
-# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Vanderlei P. Romera <vanderleiromera@gmail.com>, 2020
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
 # 
@@ -63,7 +63,7 @@ msgid ""
 msgstr ""
 " * Draft: A OP não está confirmada ainda.\n"
 " * Confirmada: A OP está confirmada, as regras de estoque e o reordenamento dos componentes foram acionados.\n"
-" * Em Progresso: A produção iniciou (na OP ou na WO).\n"
+" * Em Progresso: A produção iniciou (na OP ou na OS).\n"
 " * Para Fechar: A produção está concluída, a OP tem que ser fechada.\n"
 " * Concluída: A OP está fechada, os movimentos de estoque foram postados. \n"
 " * Cancelada: A OP foi cancelada, não pode ser confirmada mais."
@@ -723,37 +723,37 @@ msgstr "Linhas da referida lista de materiais"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr "Linha de Confirmação de Pedidos em Espera"
+msgstr "Linha de Confirmação de Pedido de Backorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Linhas de Confirmação de Pedidos em Espera"
+msgstr "Linhas de Confirmação de Pedidos de Backorder"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "Pedidos em Espera de OP"
+msgstr "Pedidos de Backorder de OP"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr "Pedidos em Espera de OP's"
+msgstr "Pedido de Backorder de OP's"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
 msgid "Backorder Sequence"
-msgstr "Sequência de Pedidos em Espera"
+msgstr "Sequência de Pedido de Backorder"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
-"Sequência de Pedidos em espera, se igual a 0 significa que não há pedido em "
-"espera relacionado"
+"Sequência de Pedidos de Backorder, se igual a 0 significa que não há pedido "
+"em espera relacionado"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1225,7 +1225,7 @@ msgstr "Informação de Custo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr "Contagem de Pedidos em Espera Vinculados"
+msgstr "Contagem de Pedido de Backorder Vinculados"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
@@ -1237,7 +1237,7 @@ msgstr "Criar Novos Números de Série/Lotes para Componentes"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr "Criar um Pedido em Espera"
+msgstr "Criar um Pedido de Backorder"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1245,9 +1245,9 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
-"Crie um Pedido em Espera se você espera processar os produtos restantes mais"
-" tarde. Não crie um Pedido em Espera se não for processar os produtos "
-"restantes."
+"Crie um Pedido de Backorder se você espera processar os produtos restantes "
+"mais tarde. Não crie um Pedido de Backorder se não for processar os produtos"
+" restantes."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
@@ -1274,7 +1274,7 @@ msgstr "Crie um novo desempenho de ordens de serviço"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr "Criar Pedido em Espera"
+msgstr "Criar Pedido de Backorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -2426,7 +2426,7 @@ msgstr "Baixa"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr "Pedido em Atraso de OP"
+msgstr "Pedido de Backorder de OP"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2763,7 +2763,7 @@ msgstr "Próxima Ordem de Serviço"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
-msgstr "Nenhuma Backorder"
+msgstr "Nenhum Pedido de Backorder"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -3153,7 +3153,7 @@ msgstr "Plano de Ordens"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr "Planejar ordens de fabricação ou compra com base em previsões"
+msgstr "Planejar ordens de produção ou compra com base em previsões"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3875,7 +3875,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr "Exibir linhas de backorder"
+msgstr "Exibir linhas de Pedido de Backorder"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -4050,7 +4050,7 @@ msgstr "Movimentos de Estoque"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr "Relatório de reposição de estoque"
+msgstr "Relatório de Reposição de Estoque"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
@@ -4451,7 +4451,7 @@ msgstr "Dica: Use tablets na loja para controlar a fabricação"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
 msgid "To Backorder"
-msgstr "Para Encomenda"
+msgstr "Para Backorder"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
@@ -4723,7 +4723,7 @@ msgstr "Contador de mensagens não lidas"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Unreserve"
-msgstr "Falta de reserva"
+msgstr "Cancelar Reserva"
 
 #. module: mrp
 #. openerp-web

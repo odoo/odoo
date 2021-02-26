@@ -212,7 +212,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un prodotto stoccabile è un prodotto per il quale vengono gestite le giacenze. È necessario installare l'applicazione magazzino.\n"
+"Un prodotto stoccabile è un prodotto per il quale vengono gestite le giacenze. Deve essere installata l'applicazione magazzino.\n"
 "Un prodotto di consumo è un prodotto per il quale non vengono gestite le giacenze.\n"
 "Un servizio è un prodotto fornito in modo immateriale."
 
@@ -2049,7 +2049,7 @@ msgstr "Quantità di prodotti contenuti nell'imballaggio."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 msgid "Radio"
-msgstr "Radio"
+msgstr "Selezione singola"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
@@ -2127,7 +2127,7 @@ msgstr "Prezzo di vendita"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
 msgid "Select"
-msgstr "Seleziona"
+msgstr "Selezione a discesa"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__categ_id
@@ -2964,6 +2964,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Deve essere definito un prodotto per tutto ciò che viene venduto o acquistato,\n"
+"                che sia un prodotto stoccabile, un consumabile o un servizio.\n"
+"                La scheda prodotto contiene informazioni per semplificare il processo di vendita:\n"
+"                prezzo, note nel preventivo, dati contabili, metodi di approvvigionamento ecc."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -2973,10 +2977,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
-"Devi definire un prodotto per ogni cosa tu acquista, che sia un prodotto fisico,\n"
-"                un prodotto consumabile o un servizio che offri ai tuoi clienti.\n"
-"                La scheda del prodotto contiene informazioni che semplificano il processo di vendita:\n"
-"                il prezzo, le note nel preventivo, le informazioni contabili, i metodi di approvvigionamento, ecc."
+"Deve essere definito un prodotto per tutto ciò che viene venduto, che sia un prodotto fisico,\n"
+"                un consumabile o un servizio offerto ai clienti.\n"
+"                La scheda prodotto contiene informazioni per semplificare il processo di vendita:\n"
+"                prezzo, note nel preventivo, dati contabili, metodi di approvvigionamento ecc."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

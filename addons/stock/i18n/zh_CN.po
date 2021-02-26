@@ -14,7 +14,6 @@
 # John An <johnxan@163.com>, 2020
 # 0023d6d916c2d56e4d76ed7a6e80ad5b, 2020
 # Ted Wang <feiyuwang2012@gmail.com>, 2020
-# keecome <7017511@qq.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
 # Jerry Pan <panjianyu@inspur.com>, 2020
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
@@ -36,7 +35,6 @@
 # JZH-Odoo <jzh@odoo.com>, 2020
 # bower Guo <124358678@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# ryan ryan <itechr@outlook.com>, 2020
 # mao luo <dooms21day@163.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # snow wang <147156565@qq.com>, 2020
@@ -1081,7 +1079,7 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
-"默认情况下，系统从源位置的库存中取货，并被动等待产品入库。另外一个可能是允许您在源位置上直接创建一个采购单（从而忽略其当前库存）来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一次移动，您应该选择第二种方法。"
+"默认情况下，系统从源位置的库存中取货，并被动等待产品入库。另外一个可能是允许您在源位置上直接创建一个补货单（从而忽略其当前库存）来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一次移动，您应该选择第二种方法。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -2846,7 +2844,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
 "operations with the corresponding products, locations and lot/serial "
 "numbers."
-msgstr "如果勾选此复选框，Odoo将自动用相应的产品、位置和批次/序列号预先填写详细的操作。"
+msgstr "如果勾选此复选框，Odoo将自动用相应的产品、位置和批次/序列号预先填写详细的作业。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -3795,7 +3793,7 @@ msgstr "最小库存规则"
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_id
 msgid "Move"
-msgstr "凭证"
+msgstr "移动"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -3815,7 +3813,7 @@ msgstr "移动整个包裹"
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_line_ids
 msgid "Move Line"
-msgstr "凭证行"
+msgstr "移动行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_nosuggest_ids
@@ -4042,7 +4040,7 @@ msgstr "便签"
 #: model:ir.model.fields,field_description:stock.field_stock_move__note
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
-msgstr "便签"
+msgstr "备注"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -4158,7 +4156,7 @@ msgstr "作业类型"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "不支持该操作"
+msgstr "不支持该作业"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
@@ -4467,7 +4465,7 @@ msgid ""
 "Packages are usually created via transfers (during pack operation) and can contain different products.\n"
 "                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again."
 msgstr ""
-"包装通常是通过转移（在包装操作期间）创建的，可以包含不同的产品。 \n"
+"包装通常是通过转移（在包装作业期间）创建的，可以包含不同的产品。 \n"
 " 创建完成后，整个包装可以立即移动，或者产品可以拆开包装并再次作为单个单元移动。"
 
 #. module: stock
@@ -4633,7 +4631,7 @@ msgstr "预先填写的详细作业"
 #: code:addons/stock/static/src/xml/popover_widget.xml:0
 #, python-format
 msgid "Preceding operations"
-msgstr "前置操作"
+msgstr "前置作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
@@ -4808,7 +4806,7 @@ msgstr "产品移动"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "产品凭证(移库明细)"
+msgstr "产品移动(移库明细)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
@@ -5060,13 +5058,13 @@ msgstr "即时库存"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
-msgstr "即时库存创建是被限制的，你不能做此操作。"
+msgstr "即时库存创建是被限制的，你不能做此作业。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's editing is restricted, you can't do this operation."
-msgstr "即时库存的编辑受限，您无法执行此操作。"
+msgstr "即时库存的编辑受限，您无法执行此作业。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
@@ -5541,7 +5539,7 @@ msgstr "退回位置"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退货"
+msgstr "退回拣货"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -6137,7 +6135,7 @@ msgstr "开始盘点"
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__state
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "State"
-msgstr "省/ 州"
+msgstr "状态"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__state
@@ -6195,7 +6193,7 @@ msgstr "库存位置"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__move_id
 msgid "Stock Move"
-msgstr "库存凭证"
+msgstr "库存移动"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -6217,6 +6215,7 @@ msgstr "库存移动分析"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #, python-format
 msgid "Stock On Hand"
 msgstr "在手库存"
@@ -6741,7 +6740,7 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
-"此菜单为您提供特定产品的库存操作的完整可追溯性。\n"
+"此菜单为您提供特定产品的库存作业的完整可追溯性。\n"
 "你可以对产品进行过滤，查看产品过去的所有动作。"
 
 #. module: stock
@@ -6824,7 +6823,7 @@ msgstr "该用户将负责与该产品物流作业相关的下一个活动。"
 #: model:digest.tip,name:stock.digest_tip_stock_0
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid "Tip: Speed up inventory operations with barcodes"
-msgstr "提示：使用条形码加快库存操作"
+msgstr "提示：使用条形码加快库存作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
@@ -7558,7 +7557,7 @@ msgid ""
 "When the virtual stock equals to or goes below the Min Quantity specified "
 "for this field, Odoo generates a procurement to bring the forecasted "
 "quantity to the Max Quantity."
-msgstr "当虚拟库存等于或低于为此字段指定的最小数量时，Odoo生成一个采购，以使预测的数量达到最大数量。"
+msgstr "当虚拟库存等于或低于为此字段指定的最小数量时，Odoo生成一个补货，以使预测的数量达到最大数量。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -7902,7 +7901,7 @@ msgstr "你每次只能退回一次拣货。"
 msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
-msgstr "您需要激活存储位置，以便能够执行内部操作类型。"
+msgstr "您需要激活存储位置，以便能够执行内部作业类型。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7930,7 +7929,7 @@ msgstr "您需要提供产品%s的批号/序列号。"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
-msgstr "您还有进行中的仓库%s中拣配类型%s的操作"
+msgstr "您还有进行中的仓库%s中拣配类型%s的作业"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8065,3 +8064,19 @@ msgstr "报告_库存_数量_图"
 #, python-format
 msgid "should be replenished to reach the maximum of"
 msgstr "应该补充到最大数量"
+
+#. module: stock
+#: code:addons/stock/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"You can't desactivate the multi-location if you have more than once "
+"warehouse by company"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"Creating a new warehouse will automatically activate the Storage Locations "
+"setting"
+msgstr ""

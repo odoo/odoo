@@ -660,10 +660,12 @@ var SnippetEditor = Widget.extend({
 
         this.$editable.find('.oe_drop_zone').droppable({
             over: function () {
-                if (!self.dropped) {
-                    self.dropped = true;
-                    $(this).first().after(self.$target).addClass('invisible');
+                if (self.dropped) {
+                    self.$target.detach();
+                    $('.oe_drop_zone').removeClass('invisible');
                 }
+                self.dropped = true;
+                $(this).first().after(self.$target).addClass('invisible');
             },
             out: function () {
                 var prev = self.$target.prev();
@@ -2027,11 +2029,14 @@ var SnippetsMenu = Widget.extend({
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({
                         over: function () {
-                            if (!dropped) {
-                                dropped = true;
-                                $(this).first().after($toInsert).addClass('invisible');
-                                $toInsert.removeClass('oe_snippet_body');
+                            if (dropped) {
+                                $toInsert.detach();
+                                $toInsert.addClass('oe_snippet_body');
+                                $('.oe_drop_zone').removeClass('invisible');
                             }
+                            dropped = true;
+                            $(this).first().after($toInsert).addClass('invisible');
+                            $toInsert.removeClass('oe_snippet_body');
                         },
                         out: function () {
                             var prev = $toInsert.prev();
@@ -2216,22 +2221,29 @@ var SnippetsMenu = Widget.extend({
     async _execWithLoadingEffect(action, contentLoading = true, delay = 500) {
         const mutexExecResult = this._mutex.exec(action);
         if (!this.loadingTimers[contentLoading]) {
-            this.loadingTimers[contentLoading] = setTimeout(() => {
+            const addLoader = () => {
                 this.loadingElements[contentLoading] = this._createLoadingElement();
                 if (contentLoading) {
                     this.$snippetEditorArea.append(this.loadingElements[contentLoading]);
                 } else {
                     this.el.appendChild(this.loadingElements[contentLoading]);
                 }
-            }, delay);
+            };
+            if (delay) {
+                this.loadingTimers[contentLoading] = setTimeout(addLoader, delay);
+            } else {
+                addLoader();
+            }
             this._mutex.getUnlockedDef().then(() => {
                 // Note: we remove the loading element at the end of the
                 // execution queue *even if subsequent actions are content
                 // related or not*. This is a limitation of the loading feature,
                 // the goal is still to limit the number of elements in that
                 // queue anyway.
-                clearTimeout(this.loadingTimers[contentLoading]);
-                this.loadingTimers[contentLoading] = undefined;
+                if (delay) {
+                    clearTimeout(this.loadingTimers[contentLoading]);
+                    this.loadingTimers[contentLoading] = undefined;
+                }
 
                 if (this.loadingElements[contentLoading]) {
                     this.loadingElements[contentLoading].remove();

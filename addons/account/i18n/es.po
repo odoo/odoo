@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Juan Pablo Mora <jpm@odoo.com>, 2020
-# Mariana Santos Romo <msn@odoo.com>, 2020
 # Massiel Acuna <mac@odoo.com>, 2020
 # Erick Herrera <erick.herrera@jarsa.com.mx>, 2020
 # John Guardado <jgu@odoo.com>, 2020
@@ -13,11 +12,12 @@
 # Edgar Yajure <yajure@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Susanna Pujol, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Jose Alejandro Echeverri Valencia <josealejandroeche@gmail.com>, 2020
 # Dany Lopez <almustafa.net@gmail.com>, 2020
 # Caroline Renson <car@odoo.com>, 2021
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
+# Wilson Pujols <wpujols@capw.com.do>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021\n"
+"Last-Translator: Wilson Pujols <wpujols@capw.com.do>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6118,8 +6118,8 @@ msgid ""
 "If tags are defined for a tax report line, only two are allowed on it: a "
 "positive and a negative one."
 msgstr ""
-"If tags are defined for a tax report line, only two are allowed on it: a "
-"positive and a negative one."
+"Si se definen etiquetas para una línea de informe fiscal, solo se permiten "
+"dos: unopositivo y otro negativo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -6504,7 +6504,9 @@ msgid "Internal Notes"
 msgstr "Notas internas"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Internal Transfer"
 msgstr "Transferencia interna"
 
@@ -6809,7 +6811,7 @@ msgstr "Facturas sin pago"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Facturación"
+msgstr "Facturación / Contabilidad"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
@@ -8484,6 +8486,7 @@ msgstr "Sólo los administradores pueden cargar un plan de cuentas."
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "Only invoices could be printed."
 msgstr "Solo se pueden imprimir facturas."
@@ -9733,7 +9736,7 @@ msgstr "Recepciones"
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__receivable
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Receivable"
-msgstr "Por cobrar"
+msgstr "Cuenta por cobrar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_receivable_id
@@ -12119,6 +12122,16 @@ msgid "That is the date of the opening entry."
 msgstr "Esa es la fecha de la entrada de apertura."
 
 #. module: account
+#: code:addons/account/models/sequence_mixin.py:0
+#, python-format
+msgid ""
+"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
+"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
+msgstr ""
+"El %(date_field)s (%(date)s) no coincide con el %(sequence_field)s (%(sequence)s).\n"
+"Es posible que desee borrar el campo %(sequence_field)s antes de continuar con el cambio de fecha."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
 #: model:ir.model.fields,help:account.field_account_account_type__internal_group
 #: model:ir.model.fields,help:account.field_account_move_line__account_internal_group
@@ -12415,16 +12428,6 @@ msgstr ""
 "las líneas están conciliadas. No queda nada por procesar."
 
 #. module: account
-#: code:addons/account/models/sequence_mixin.py:0
-#, python-format
-msgid ""
-"The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-"You might want to clear the field %(sequence_field)s before proceeding with the change of the date."
-msgstr ""
-"El %(date_field)s (%(date)s) no coincide con el %(sequence_field)s (%(sequence)s).\n"
-"Es posible que desee borrar el campo %(sequence_field)s antes de continuar con el cambio de fecha."
-
-#. module: account
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The day of the month used for this term must be strictly positive."
@@ -12560,6 +12563,20 @@ msgid "The holder of a journal's bank account must be the company (%s)."
 msgstr ""
 "El poseedor de una cuenta bancaria en un diario tiene que ser la compañía "
 "(%s)."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice already contains lines, it was not updated from the attachment."
+msgstr ""
+"La factura ya contiene líneas, no se actualizó desde el archivo adjunto."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The invoice is not a draft, it was not updated from the attachment."
+msgstr "La factura no es borrador, no se actualizó desde el archivo adjunto."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14896,6 +14913,7 @@ msgstr "Rango postal hasta"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"

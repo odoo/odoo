@@ -482,9 +482,9 @@
     </div>
 
     <!-- Mobile display options -->
-    <div data-option-name="showMobile" data-selector="section .row > div"
+    <div data-js="MobileVisibility" data-option-name="showMobile" data-selector="section .row > div"
          data-exclude=".s_col_no_resize.row > div">
-        <we-checkbox string="Shown On Mobile" data-select-class="d-none d-md-block|" data-no-preview="true"/>
+        <we-checkbox string="Shown On Mobile" data-show-on-mobile="true" data-no-preview="true"/>
     </div>
 
     <div data-js="sizing_y"
@@ -935,7 +935,7 @@
     <!-- Anchor Name -->
     <div data-js="anchor"
         data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *"
-        data-exclude=".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *">
+        data-exclude=".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup">
         <we-button class="fa fa-fw fa-link o_we_link"
                    title="Create a link to target this section"
                    data-no-preview="true"/>

@@ -29,8 +29,8 @@
         <div class="input-group">
             <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
             <span class="input-group-append">
-                <a role="button" href="#" class="btn btn-primary js_subscribe_btn">Subscribe</a>
-                <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none" disabled="disabled">Thanks</a>
+                <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+                <a role="button" href="#" class="btn btn-success js_subscribed_btn d-none o_submit" disabled="disabled">Thanks</a>
             </span>
         </div>
     </div>
@@ -92,6 +92,9 @@
             data-selector=".o_newsletter_popup">
             <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
         </div>
+    </xpath>
+    <xpath expr="//div[@data-js='anchor']" position="attributes">
+        <attribute name="data-exclude" add=".o_newsletter_popup" separator=","/>
     </xpath>
 </template>
 

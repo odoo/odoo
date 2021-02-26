@@ -343,7 +343,7 @@ class IrUiView(models.Model):
         full_snippet_key = '%s.%s' % (app_name, snippet_key)
 
         # html to xml to add '/' at the end of self closing tags like br, ...
-        xml_arch = etree.tostring(html.fromstring(arch))
+        xml_arch = etree.tostring(html.fromstring(arch), encoding='utf-8')
         new_snippet_view_values = {
             'name': name,
             'key': full_snippet_key,

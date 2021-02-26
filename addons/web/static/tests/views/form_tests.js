@@ -1,12 +1,14 @@
 odoo.define('web.form_tests', function (require) {
 "use strict";
 
+const AbstractField = require("web.AbstractField");
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 const fieldRegistryOwl = require('web.field_registry_owl');
+const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
@@ -870,6 +872,44 @@ QUnit.module('Views', {
         assert.hasClass(form.$('.o_notebook .nav .nav-item:first()'), 'o_invisible_modifier');
         assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(1)'), 'active');
         assert.hasClass(form.$('.o_notebook .tab-content .tab-pane:nth(1)'), 'active');
+        form.destroy();
+    });
+
+    QUnit.test('invisible attrs on notebook page which has only one page', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="bar"/>' +
+                        '<notebook>' +
+                            '<page string="Foo" attrs=\'{"invisible": [["bar", "!=", false]]}\'>' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.notOk(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should not be active');
+        assert.ok(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be invisible');
+
+        // enable checkbox
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+        assert.ok(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should be active');
+        assert.notOk(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be visible');
+
         form.destroy();
     });
 
@@ -9666,8 +9706,80 @@ QUnit.module('Views', {
 
         form.destroy();
         delete fieldRegistryOwl.map.custom;
-        
+
         assert.verifySteps(['mounted', 'willUnmount']);
+    });
+
+    QUnit.test("attach callbacks with long processing in __renderView", async function (assert) {
+        /**
+         * The main use case of this test is discuss, in which the FormRenderer
+         * __renderView method is overridden to perform asynchronous tasks (the
+         * update of the chatter Component) resulting in a delay between the
+         * appending of the new form content into its element and the
+         * "on_attach_callback" calls. This is the purpose of "__renderView"
+         * which is meant to do all the async work before the content is appended.
+         */
+        assert.expect(11);
+
+        let testPromise = Promise.resolve();
+
+        const Renderer = FormRenderer.extend({
+            on_attach_callback() {
+                assert.step("form.on_attach_callback");
+                this._super(...arguments);
+            },
+            async __renderView() {
+                const _super = this._super.bind(this);
+                await testPromise;
+                return _super();
+            },
+        });
+
+        // Setup custom field widget
+        fieldRegistry.add("customwidget", AbstractField.extend({
+            className: "custom-widget",
+            on_attach_callback() {
+                assert.step("widget.on_attach_callback");
+            },
+        }));
+
+        const form = await createView({
+            arch: `<form><field name="bar" widget="customwidget"/></form>`,
+            data: this.data,
+            model: 'partner',
+            res_id: 1,
+            View: FormView.extend({
+                config: Object.assign({}, FormView.prototype.config, { Renderer }),
+            }),
+        });
+
+        assert.containsOnce(form, ".custom-widget");
+        assert.verifySteps([
+            "form.on_attach_callback", // Form attached
+            "widget.on_attach_callback", // Initial widget attached
+        ]);
+
+        const initialWidget = form.$(".custom-widget")[0];
+        testPromise = testUtils.makeTestPromise();
+
+        await testUtils.form.clickEdit(form);
+
+        assert.containsOnce(form, ".custom-widget");
+        assert.strictEqual(initialWidget, form.$(".custom-widget")[0], "Widgets have yet to be replaced");
+        assert.verifySteps([]);
+
+        testPromise.resolve();
+        await testUtils.nextTick();
+
+        assert.containsOnce(form, ".custom-widget");
+        assert.notStrictEqual(initialWidget, form.$(".custom-widget")[0], "Widgets have been replaced");
+        assert.verifySteps([
+            "widget.on_attach_callback", // New widget attached
+        ]);
+
+        form.destroy();
+
+        delete fieldRegistry.map.customwidget;
     });
 });
 

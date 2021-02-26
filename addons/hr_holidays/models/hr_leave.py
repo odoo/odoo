@@ -84,10 +84,10 @@ class HolidaysRequest(models.Model):
             defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
 
         now = fields.Datetime.now()
-        defaults.update({
-            'date_from': now,
-            'date_to': now,
-        })
+        if 'date_from' not in defaults:
+            defaults.update({'date_from': now})
+        if 'date_to' not in defaults:
+            defaults.update({'date_to': now})
         return defaults
 
     def _default_get_request_parameters(self, values):
@@ -307,7 +307,12 @@ class HolidaysRequest(models.Model):
     @api.depends('holiday_status_id')
     def _compute_state(self):
         for holiday in self:
-            holiday.state = 'confirm' if holiday.validation_type != 'no_validation' else 'draft'
+            if self.env.context.get('unlink') and holiday.state == 'draft':
+                # Otherwise the record in draft with validation_type in (hr, manager, both) will be set to confirm
+                # and a simple internal user will not be able to delete his own draft record
+                holiday.state = 'draft'
+            else:
+                holiday.state = 'confirm' if holiday.validation_type != 'no_validation' else 'draft'
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                 'request_unit_half', 'request_unit_hours', 'request_unit_custom', 'employee_id')
@@ -788,7 +793,7 @@ class HolidaysRequest(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
 
         if not is_officer:
-            if any(hol.date_from.date() < fields.Date.today() for hol in self):
+            if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
         employee_id = values.get('employee_id', False)
@@ -822,7 +827,7 @@ class HolidaysRequest(models.Model):
         else:
             for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
-        return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
+        return super(HolidaysRequest, self.with_context(leave_skip_date_check=True, unlink=True)).unlink()
 
     def copy_data(self, default=None):
         if default and 'date_from' in default and 'date_to' in default:

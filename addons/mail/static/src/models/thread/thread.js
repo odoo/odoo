@@ -1344,6 +1344,9 @@ function factory(dependencies) {
             const index = this.orderedMessages.findIndex(message =>
                 message.id === this.lastSeenByCurrentPartnerMessageId
             );
+            if (index === -1) {
+                return [['unlink']];
+            }
             const message = this.orderedMessages[index + 1];
             if (!message) {
                 return [['unlink']];
@@ -1544,6 +1547,9 @@ function factory(dependencies) {
         _onServerFoldStateChanged() {
             if (!this.env.messaging.chatWindowManager) {
                 // avoid crash during destroy
+                return;
+            }
+            if (this.env.messaging.device.isMobile) {
                 return;
             }
             if (this.serverFoldState === 'closed') {
