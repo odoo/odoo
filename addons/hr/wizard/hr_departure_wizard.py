@@ -8,11 +8,7 @@ class HrDepartureWizard(models.TransientModel):
     _name = 'hr.departure.wizard'
     _description = 'Departure Wizard'
 
-    departure_reason = fields.Selection([
-        ('fired', 'Fired'),
-        ('resigned', 'Resigned'),
-        ('retired', 'Retired')
-    ], string="Departure Reason", default="fired")
+    departure_reason_id = fields.Many2one("hr.departure.reason", default=lambda self: self.env['hr.departure.reason'].search([], limit=1))
     departure_description = fields.Text(string="Additional Information")
     departure_date = fields.Date(string="Departure Date", required=True, default=fields.Date.today)
     employee_id = fields.Many2one(
@@ -23,7 +19,7 @@ class HrDepartureWizard(models.TransientModel):
 
     def action_register_departure(self):
         employee = self.employee_id
-        employee.departure_reason = self.departure_reason
+        employee.departure_reason_id = self.departure_reason_id
         employee.departure_description = self.departure_description
         employee.departure_date = self.departure_date
 
