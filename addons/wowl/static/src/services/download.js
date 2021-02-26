@@ -3,6 +3,7 @@ import { NetworkErrorDialog, ServerErrorDialog } from "../crash_manager/error_di
 import OdooError from "../crash_manager/odoo_error";
 import parse from "../libs/content-disposition";
 import download from "../libs/download";
+
 export const downloadService = {
   name: "download",
   deploy() {

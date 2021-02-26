@@ -1,5 +1,7 @@
 /** @odoo-module **/
+
 import { routeToUrl } from "../services/router";
+
 // Backend Debug Manager Items
 export function runJSTestsItem(env) {
   const runTestsURL = odoo.browser.location.origin + "/wowl/tests?mod=*";
@@ -13,6 +15,7 @@ export function runJSTestsItem(env) {
     sequence: 10,
   };
 }
+
 export function runJSTestsMobileItem(env) {
   const runTestsMobileURL = odoo.browser.location.origin + "/wowl/tests/mobile?mod=*";
   return {
@@ -25,6 +28,7 @@ export function runJSTestsMobileItem(env) {
     sequence: 20,
   };
 }
+
 export function runClickTestItem(env) {
   return {
     type: "item",
@@ -37,6 +41,7 @@ export function runClickTestItem(env) {
     sequence: 30,
   };
 }
+
 export function openViewItem(env) {
   return {
     type: "item",
@@ -50,6 +55,7 @@ export function openViewItem(env) {
     sequence: 40,
   };
 }
+
 // Global Debug Manager Items
 export function globalSeparator(env) {
   return {
@@ -57,6 +63,7 @@ export function globalSeparator(env) {
     sequence: 400,
   };
 }
+
 export function activateAssetsDebugging(env) {
   return {
     type: "item",
@@ -67,6 +74,7 @@ export function activateAssetsDebugging(env) {
     sequence: 410,
   };
 }
+
 export function activateTestsAssetsDebugging(env) {
   return {
     type: "item",
@@ -77,6 +85,7 @@ export function activateTestsAssetsDebugging(env) {
     sequence: 420,
   };
 }
+
 export function regenerateAssets(env) {
   return {
     type: "item",
@@ -96,6 +105,7 @@ export function regenerateAssets(env) {
     sequence: 430,
   };
 }
+
 export function becomeSuperuser(env) {
   const becomeSuperuserULR = odoo.browser.location.origin + "/wowl/become";
   return {
@@ -110,6 +120,7 @@ export function becomeSuperuser(env) {
     sequence: 440,
   };
 }
+
 export function leaveDebugMode(env) {
   return {
     type: "item",
@@ -122,12 +133,14 @@ export function leaveDebugMode(env) {
     sequence: 450,
   };
 }
+
 export const backendDebugManagerItems = [
   runJSTestsItem,
   runJSTestsMobileItem,
   runClickTestItem,
   openViewItem,
 ];
+
 export const globalDebugManagerItems = [
   globalSeparator,
   activateAssetsDebugging,

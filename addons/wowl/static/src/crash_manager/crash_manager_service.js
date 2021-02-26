@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { isBrowserChromium } from "../utils/misc";
 import {
   ClientErrorDialog,

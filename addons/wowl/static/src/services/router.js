@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 function parseString(str) {
   const parts = str.split("&");
   const result = {};
@@ -8,23 +9,28 @@ function parseString(str) {
   }
   return result;
 }
+
 export function parseHash(hash) {
   return hash === "#" || hash === "" ? {} : parseString(hash.slice(1));
 }
+
 export function parseSearchQuery(search) {
   return search === "" ? {} : parseString(search.slice(1));
 }
+
 function toString(query) {
   return Object.entries(query)
     .filter(([k, v]) => v !== undefined)
     .map(([k, v]) => (v ? `${k}=${encodeURIComponent(v)}` : k))
     .join("&");
 }
+
 export function routeToUrl(route) {
   const search = toString(route.search);
   const hash = toString(route.hash);
   return route.pathname + (search ? "?" + search : "") + (hash ? "#" + hash : "");
 }
+
 export function redirect(env, url, wait) {
   const browser = odoo.browser;
   const load = () => browser.location.assign(url);
@@ -40,12 +46,14 @@ export function redirect(env, url, wait) {
     load();
   }
 }
+
 function getRoute() {
   const { pathname, search, hash } = window.location;
   const searchQuery = parseSearchQuery(search);
   const hashQuery = parseHash(hash);
   return { pathname, search: searchQuery, hash: hashQuery };
 }
+
 function makeRouter(env) {
   let bus = env.bus;
   let current = getRoute();
@@ -53,6 +61,7 @@ function makeRouter(env) {
     current = getRoute();
     bus.trigger("ROUTE_CHANGE");
   });
+
   function doPush(mode = "push", route) {
     const url = location.origin + routeToUrl(route);
     if (url !== window.location.href) {
@@ -64,9 +73,11 @@ function makeRouter(env) {
     }
     current = getRoute();
   }
+
   function getCurrent() {
     return current;
   }
+
   return {
     get current() {
       return getCurrent();
@@ -76,6 +87,7 @@ function makeRouter(env) {
     redirect: (url, wait) => redirect(env, url, wait),
   };
 }
+
 export function makePushState(env, getCurrent, doPush) {
   let _replace = false;
   let timeoutId;
@@ -97,12 +109,14 @@ export function makePushState(env, getCurrent, doPush) {
     });
   };
 }
+
 export const routerService = {
   name: "router",
   deploy(env) {
     return makeRouter(env);
   },
 };
+
 export function objectToQuery(obj) {
   const query = {};
   Object.entries(obj).forEach(([k, v]) => {

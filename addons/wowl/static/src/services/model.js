@@ -1,17 +1,23 @@
 /** @odoo-module **/
+
 const { Component } = owl;
+
 function read(rpc, env, model) {
   return (ids, fields, ctx) => callModel(rpc, env, model)("read", [ids, fields], { context: ctx });
 }
+
 function create(rpc, env, model) {
   return (state, ctx) => callModel(rpc, env, model)("create", [state], { context: ctx });
 }
+
 function unlink(rpc, env, model) {
   return (ids, ctx) => callModel(rpc, env, model)("unlink", [ids], { context: ctx });
 }
+
 function write(rpc, env, model) {
   return (ids, data, ctx) => callModel(rpc, env, model)("write", [ids, data], { context: ctx });
 }
+
 function readGroup(rpc, env, model) {
   return (domain, fields, groupby, options = {}, ctx = {}) => {
     const kwargs = {
@@ -35,6 +41,7 @@ function readGroup(rpc, env, model) {
     return callModel(rpc, env, model)("web_read_group", [], kwargs);
   };
 }
+
 function search(rpc, env, model) {
   return (domain, options = {}, ctx = {}) => {
     const kwargs = {
@@ -52,6 +59,7 @@ function search(rpc, env, model) {
     return callModel(rpc, env, model)("search", [domain], kwargs);
   };
 }
+
 function makeSearchRead(method) {
   return function (rpc, env, model) {
     return (domain, fields, options = {}, ctx = {}) => {
@@ -73,6 +81,7 @@ function makeSearchRead(method) {
     };
   };
 }
+
 function callModel(rpc, env, model) {
   const user = env.services.user;
   return (method, args = [], kwargs = {}) => {
@@ -88,6 +97,7 @@ function callModel(rpc, env, model) {
     return rpc(url, params);
   };
 }
+
 /**
  * Note:
  *

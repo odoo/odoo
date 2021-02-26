@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 export const currencyService = {
   name: "currency",
   dependencies: ["localization"],

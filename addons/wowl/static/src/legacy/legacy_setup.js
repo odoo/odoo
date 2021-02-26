@@ -1,6 +1,4 @@
-/** @odoo-module alias=wowl.legacySetup **/
-const { Component, config, utils } = owl;
-const { whenReady } = utils;
+/** @odoo-module alias=wowl.legacySetup**/
 
 import { serviceRegistry } from "../services/service_registry";
 import {
@@ -8,19 +6,21 @@ import {
   makeLegacyRpcService,
   makeLegacySessionService,
 } from "./utils";
-
-// build the legacy env and set it on owl.Component (this was done in main.js,
-// with the starting of the webclient)
 import * as AbstractService from "web.AbstractService";
 import * as legacyEnv from "web.env";
 import * as session from "web.session";
 import * as makeLegacyWebClientService from "wowl.pseudo_web_client";
+
+const { Component, config, utils } = owl;
+const { whenReady } = utils;
 
 let legacySetupResolver;
 export const legacySetupProm = new Promise((resolve) => {
   legacySetupResolver = resolve;
 });
 
+// build the legacy env and set it on owl.Component (this was done in main.js,
+// with the starting of the webclient)
 (async () => {
   config.mode = legacyEnv.isDebug() ? "dev" : "prod";
   AbstractService.prototype.deployServices(legacyEnv);

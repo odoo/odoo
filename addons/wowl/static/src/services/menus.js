@@ -1,5 +1,6 @@
 /** @odoo-module **/
 const loadMenusUrl = `/wowl/load_menus`;
+
 async function fetchLoadMenus(url) {
   const res = await odoo.browser.fetch(url);
   if (!res.ok) {
@@ -7,6 +8,7 @@ async function fetchLoadMenus(url) {
   }
   return res.json();
 }
+
 function makeMenus(env, menusData) {
   let currentAppId;
   return {
@@ -52,6 +54,7 @@ function makeMenus(env, menusData) {
     },
   };
 }
+
 export const menusService = {
   name: "menus",
   dependencies: ["action_manager", "router"],

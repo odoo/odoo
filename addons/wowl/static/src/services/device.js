@@ -1,6 +1,8 @@
 /** @odoo-module **/
 import { debounce } from "../utils/misc";
+
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
+
 export const deviceService = {
   name: "device",
   deploy() {

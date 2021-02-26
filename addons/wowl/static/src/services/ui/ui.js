@@ -1,6 +1,8 @@
 /** @odoo-module **/
+
 const { Component, core, tags, useState } = owl;
 const { EventBus } = core;
+
 class BlockUI extends Component {
   constructor() {
     super(...arguments);
@@ -31,6 +33,7 @@ class BlockUI extends Component {
       count: 0,
     });
   }
+
   replaceMessage(index) {
     const message = this.messagesByDuration[index];
     this.state.line1 = message.l1;
@@ -41,6 +44,7 @@ class BlockUI extends Component {
       }, message.time * 1000);
     }
   }
+
   block() {
     if (this.state.count === 0) {
       this.state.blockUI = true;
@@ -48,6 +52,7 @@ class BlockUI extends Component {
     }
     this.state.count++;
   }
+
   unblock() {
     if (this.state.count > 0) {
       this.state.count--;
@@ -60,6 +65,7 @@ class BlockUI extends Component {
     }
   }
 }
+
 BlockUI.template = tags.xml`
     <div t-att-class="state.blockUI ? 'o_blockUI' : ''">
       <t t-if="state.blockUI">
@@ -72,6 +78,7 @@ BlockUI.template = tags.xml`
         </div>
       </t>
     </div>`;
+
 export const uiService = {
   name: "ui",
   deploy(env) {
@@ -83,7 +90,9 @@ export const uiService = {
         bus.on("UNBLOCK", this, this.unblock);
       }
     }
+
     odoo.mainComponentRegistry.add("BlockUI", ReactiveBlockUI);
+    
     function block() {
       bus.trigger("BLOCK");
     }

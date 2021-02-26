@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import { serviceRegistry } from "./service_registry";
+
 export async function deployServices(env) {
   const toDeploy = new Set();
   let timeoutId;
@@ -19,6 +20,7 @@ export async function deployServices(env) {
   });
   timeoutId = await _deployServices(env, toDeploy, timeoutId);
 }
+
 async function _deployServices(env, toDeploy, timeoutId) {
   const services = env.services;
   odoo.serviceRegistry;
@@ -27,6 +29,7 @@ async function _deployServices(env, toDeploy, timeoutId) {
       toDeploy.add(service);
     }
   }
+
   // deploy as many services in parallel as possible
   function deploy() {
     let service = null;

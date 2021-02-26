@@ -1,8 +1,11 @@
 /** @odoo-module **/
+
 import { ActionContainer } from "../action_manager/action_manager";
-const { Component, hooks } = owl;
 import { NavBar } from "./navbar/navbar";
 import { useService } from "../core/hooks";
+
+const { Component, hooks } = owl;
+
 export class WebClient extends Component {
   constructor(...args) {
     super(...args);
@@ -24,11 +27,13 @@ export class WebClient extends Component {
       this.loadRouterState();
     });
   }
+
   mounted() {
     // the chat window and dialog services listen to 'web_client_ready' event in
     // order to initialize themselves:
     this.env.bus.trigger("WEB_CLIENT_READY");
   }
+
   async loadRouterState() {
     const options = {
       clearBreadcrumbs: true,
@@ -62,6 +67,7 @@ export class WebClient extends Component {
       return this._loadDefaultApp();
     }
   }
+
   async _loadDefaultApp() {
     const action = this.user.home_action_id;
     if (action) {
@@ -75,6 +81,7 @@ export class WebClient extends Component {
       return this.menus.selectMenu(firstApp);
     }
   }
+  
   replaceRouterState() {
     const currentApp = this.menus.getCurrentApp();
     const persistentHash = {

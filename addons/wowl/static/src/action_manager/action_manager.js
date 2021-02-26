@@ -1,15 +1,19 @@
 /** @odoo-module **/
-const { Component, hooks, tags } = owl;
+
 import { evaluateExpr } from "../py/index";
 import { makeContext } from "../core/context";
 import { ActionDialog } from "./action_dialog";
 import { KeepLast } from "../utils/concurrency";
 import { sprintf } from "../utils/strings";
+
+const { Component, hooks, tags } = owl;
+
 export function clearUncommittedChanges(env) {
   const callbacks = [];
   env.bus.trigger("CLEAR-UNCOMMITTED-CHANGES", callbacks);
   return Promise.all(callbacks.map((fn) => fn()));
 }
+
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
@@ -19,10 +23,12 @@ export class ViewNotFoundError extends Error {
     this.name = "ViewNotFoundError";
   }
 }
+
 // -----------------------------------------------------------------------------
 // Action hook
 // -----------------------------------------------------------------------------
 const scrollSymbol = Symbol("scroll");
+
 /**
  * Retrieve the current top and left scroll position. By default, the scrolling
  * area is the '.o_content' main div. In mobile, it is the body.
@@ -39,6 +45,7 @@ function getScrollPosition(component) {
     top: scrollingEl ? scrollingEl.scrollTop : 0,
   };
 }
+
 /**
  * Set top and left scroll positions to the given values. By default, the
  * scrolling area is the '.o_content' main div. In mobile, it is the body.
@@ -55,6 +62,7 @@ function setScrollPosition(component, offset) {
     scrollingEl.scrollTop = offset.top || 0;
   }
 }
+
 /**
  * This hooks should be used by Action Components (client actions or views). It
  * allows to implement the 'export' feature which aims at restoring the state
@@ -86,6 +94,7 @@ export function useSetupAction(params) {
     },
   };
 }
+
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
 // -----------------------------------------------------------------------------
@@ -141,20 +150,25 @@ ActionContainer.template = tags.xml`
       <t t-if="main.Component" t-component="main.Component" t-props="main.componentProps" t-key="main.id"/>
       <ActionDialog t-if="dialog.id" t-props="dialog.props" t-key="dialog.id" t-on-dialog-closed="_onDialogClosed"/>
     </div>`;
+
 // -----------------------------------------------------------------------------
 // ActionManager (Service)
 // -----------------------------------------------------------------------------
+
+// regex that matches context keys not to forward from an action to another
+const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
+
 function makeActionManager(env) {
   const keepLast = new KeepLast();
   let id = 0;
   let controllerStack = [];
   let dialogCloseProm = undefined;
   const actionCache = {};
-  // regex that matches context keys not to forward from an action to another
-  const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
+
   // ---------------------------------------------------------------------------
   // misc
   // ---------------------------------------------------------------------------
+
   /**
    * Given an id, xmlid, tag (key of the client action registry) or directly an
    * object describing an action.
@@ -193,7 +207,9 @@ function makeActionManager(env) {
     }
     return action;
   }
-  /*this function returns an action description
+
+  /**
+   * this function returns an action description
    * with a unique jsId.
    */
   function _preprocessAction(action, context = {}) {
@@ -215,6 +231,7 @@ function makeActionManager(env) {
     }
     return action;
   }
+
   /**
    * Given a controller stack, returns the list of breadcrumb items.
    *
@@ -230,6 +247,7 @@ function makeActionManager(env) {
       };
     });
   }
+
   /**
    * @param {ClientAction | ActWindowAction} action
    * @returns {ActionProps}
@@ -240,6 +258,7 @@ function makeActionManager(env) {
       actionId: action.id,
     };
   }
+
   /**
    * @param {ClientAction} action
    * @param {ActionOptions} options
@@ -248,6 +267,7 @@ function makeActionManager(env) {
   function _getClientActionProps(action, options) {
     return Object.assign({}, _getActionProps(action), { options });
   }
+
   /**
    * @param {BaseView} view
    * @param {ActWindowAction} action
@@ -298,6 +318,7 @@ function makeActionManager(env) {
     }
     return props;
   }
+
   /**
    * Triggers a re-rendering with respect to the given controller.
    *
@@ -316,6 +337,7 @@ function makeActionManager(env) {
       reject = _rej;
     });
     const action = controller.action;
+
     class ControllerComponent extends Component {
       constructor() {
         super(...arguments);
@@ -403,13 +425,16 @@ function makeActionManager(env) {
         controller.title = ev.detail;
       }
     }
+
     ControllerComponent.template = tags.xml`<t t-component="Component" t-props="props"
         __exportState__="exportState"
         __beforeLeave__="beforeLeave"
           t-ref="component"
           t-on-history-back="onHistoryBack"
           t-on-controller-title-updated.stop="onTitleUpdated"/>`;
+
     ControllerComponent.Component = controller.Component;
+
     if (action.target === "new") {
       const actionDialogProps = {
         // TODO add size
@@ -450,9 +475,11 @@ function makeActionManager(env) {
     });
     return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);
   }
+
   // ---------------------------------------------------------------------------
   // ir.actions.act_url
   // ---------------------------------------------------------------------------
+
   /**
    * Executes actions of type 'ir.actions.act_url', i.e. redirects to the
    * given url.
@@ -477,9 +504,11 @@ function makeActionManager(env) {
       }
     }
   }
+
   // ---------------------------------------------------------------------------
   // ir.actions.act_window
   // ---------------------------------------------------------------------------
+
   /**
    * Executes an action of type 'ir.actions.act_window'.
    *
@@ -540,9 +569,11 @@ function makeActionManager(env) {
       onClose: options.onClose,
     });
   }
+
   // ---------------------------------------------------------------------------
   // ir.actions.client
   // ---------------------------------------------------------------------------
+
   /**
    * Executes an action of type 'ir.actions.client'.
    *
@@ -567,9 +598,11 @@ function makeActionManager(env) {
       return clientAction(env, action);
     }
   }
+
   // ---------------------------------------------------------------------------
   // ir.actions.report
   // ---------------------------------------------------------------------------
+
   // messages that might be shown to the user dependening on the state of wkhtmltopdf
   const link = '<br><br><a href="http://wkhtmltopdf.org/" target="_blank">wkhtmltopdf.org</a>';
   const WKHTMLTOPDF_MESSAGES = {
@@ -591,8 +624,10 @@ function makeActionManager(env) {
       "You need to start Odoo with at least two workers to print a pdf version of " + "the reports."
     ),
   };
+
   // only check the wkhtmltopdf state once, so keep the rpc promise
   let wkhtmltopdfStateProm;
+  
   /**
    * Generates the report url given a report action.
    *
@@ -621,6 +656,7 @@ function makeActionManager(env) {
     }
     return url;
   }
+
   /**
    * Launches download action of the report
    *
@@ -650,6 +686,7 @@ function makeActionManager(env) {
       onClose();
     }
   }
+
   function _executeReportClientAction(action, options) {
     const clientActionOptions = Object.assign({}, options, {
       context: action.context,
@@ -662,6 +699,7 @@ function makeActionManager(env) {
     });
     return doAction("report.client_action", clientActionOptions);
   }
+
   /**
    * Executes actions of type 'ir.actions.report'.
    *
@@ -698,9 +736,11 @@ function makeActionManager(env) {
       console.error(`The ActionManager can't handle reports of type ${action.report_type}`, action);
     }
   }
+
   // ---------------------------------------------------------------------------
   // ir.actions.server
   // ---------------------------------------------------------------------------
+
   /**
    * Executes an action of type 'ir.actions.server'.
    *
@@ -718,6 +758,7 @@ function makeActionManager(env) {
     nextAction = nextAction || { type: "ir.actions.act_window_close" };
     return doAction(nextAction, options);
   }
+
   async function _executeCloseAction(params = {}) {
     const closingProms = [];
     env.bus.trigger("ACTION_MANAGER:UPDATE", {
@@ -727,9 +768,11 @@ function makeActionManager(env) {
     });
     await Promise.all([dialogCloseProm].concat(closingProms.map((fn) => fn())));
   }
+
   // ---------------------------------------------------------------------------
   // public API
   // ---------------------------------------------------------------------------
+
   /**
    * Main entry point of a 'doAction' request. Loads the action and executes it.
    *
@@ -763,6 +806,7 @@ function makeActionManager(env) {
         throw new Error(`The ActionManager service can't handle actions of type ${action.type}`);
     }
   }
+
   /**
    * Executes an action on top of the current one (typically, when a button in a
    * view is clicked). The button may be of type 'object' (call a given method
@@ -835,6 +879,7 @@ function makeActionManager(env) {
       env.services.effects.create(effect.message, effect);
     }
   }
+
   /**
    * Switches to the given view type in action of the last controller of the
    * stack. This action must be of type 'ir.actions.act_window'.
@@ -876,6 +921,7 @@ function makeActionManager(env) {
     await clearUncommittedChanges(env);
     return _updateUI(newController, { index });
   }
+
   /**
    * Restores a controller from the controller stack given its id. Typically,
    * this function is called when clicking on the breadcrumbs.
@@ -896,6 +942,7 @@ function makeActionManager(env) {
     await clearUncommittedChanges(env);
     return _updateUI(controller, { index });
   }
+
   async function loadState(state, options) {
     let action;
     if (state.action) {
@@ -982,6 +1029,7 @@ function makeActionManager(env) {
     }
     return false;
   }
+
   function pushState(controller) {
     const newState = {};
     const action = controller.action;
@@ -1016,6 +1064,7 @@ function makeActionManager(env) {
     loadState,
   };
 }
+
 export const actionManagerService = {
   name: "action_manager",
   dependencies: [

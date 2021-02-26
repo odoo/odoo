@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 function computeAllowedCompanyIds(env) {
   const { cookie, router } = env.services;
   const { user_companies } = odoo.session_info;
@@ -18,6 +19,7 @@ function computeAllowedCompanyIds(env) {
   }
   return allowedCompanies;
 }
+
 export const userService = {
   name: "user",
   dependencies: ["router", "cookie"],

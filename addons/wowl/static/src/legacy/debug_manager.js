@@ -1,10 +1,11 @@
 /** @odoo-module **/
-const { Component, hooks, tags } = owl;
 
 import { editModelDebug } from "../debug_manager/debug_manager_service";
 import { Dialog } from "../components/dialog/dialog";
 import { json_node_to_xml } from "../utils/misc";
 import { formatMany2one } from "../utils/fields";
+
+const { Component, hooks, tags } = owl;
 const { useState } = hooks;
 
 export function setupDebugAction(accessRights, env, action) {
@@ -12,6 +13,7 @@ export function setupDebugAction(accessRights, env, action) {
     type: "separator",
     sequence: 100,
   };
+
   let description = env._t("Edit Action");
   const editAction = {
     type: "item",
@@ -21,6 +23,7 @@ export function setupDebugAction(accessRights, env, action) {
     },
     sequence: 110,
   };
+
   description = env._t("View Fields");
   const viewFields = {
     type: "item",
@@ -47,6 +50,7 @@ export function setupDebugAction(accessRights, env, action) {
     },
     sequence: 120,
   };
+
   description = env._t("Manage Filters");
   const manageFilters = {
     type: "item",
@@ -69,6 +73,7 @@ export function setupDebugAction(accessRights, env, action) {
     },
     sequence: 130,
   };
+
   const technicalTranslation = {
     type: "item",
     description: env._t("Technical Translation"),
@@ -80,10 +85,12 @@ export function setupDebugAction(accessRights, env, action) {
     },
     sequence: 140,
   };
+
   const accessSeparator = {
     type: "separator",
     sequence: 200,
   };
+
   description = env._t("View Access Rights");
   const viewAccessRights = {
     type: "item",
@@ -110,6 +117,7 @@ export function setupDebugAction(accessRights, env, action) {
     },
     sequence: 210,
   };
+
   description = env._t("Model Record Rules");
   const viewRecordRules = {
     type: "item",
@@ -136,6 +144,7 @@ export function setupDebugAction(accessRights, env, action) {
     },
     sequence: 220,
   };
+
   const result = [actionSeparator];
   if (action.id) {
     result.push(editAction);
@@ -156,6 +165,7 @@ export function setupDebugAction(accessRights, env, action) {
   }
   return result;
 }
+
 class FieldViewGetDialog extends Component {
   constructor() {
     super(...arguments);
@@ -167,21 +177,25 @@ FieldViewGetDialog.template = tags.xml`
     <pre t-esc="props.arch"/>
   </Dialog>`;
 FieldViewGetDialog.components = { Dialog };
+
 class GetMetadataDialog extends Component {
   constructor(...args) {
     super(...args);
     this.title = this.env._t("View Metadata");
     this.state = useState({});
   }
+
   async willStart() {
     await this.getMetadata();
   }
+
   async toggleNoupdate() {
     await this.env.services
       .model("ir.model.data")
       .call("toggle_noupdate", [this.props.res_model, this.state.id]);
     await this.getMetadata();
   }
+
   async getMetadata() {
     const metadata = (
       await this.env.services
@@ -204,6 +218,7 @@ class GetMetadataDialog extends Component {
 }
 GetMetadataDialog.template = "wowl.DebugManager.GetMetadata";
 GetMetadataDialog.components = { Dialog };
+
 class SetDefaultDialog extends Component {
   constructor() {
     super(...arguments);
@@ -217,6 +232,7 @@ class SetDefaultDialog extends Component {
     this.defaultFields = this.getDefaultFields();
     this.conditions = this.getConditions();
   }
+
   getDataWidgetState() {
     const renderer = this.props.component.widget.renderer;
     const state = renderer.state;
@@ -241,6 +257,7 @@ class SetDefaultDialog extends Component {
       stateId: state.id,
     };
   }
+
   getDefaultFields() {
     const {
       fields,
@@ -287,6 +304,7 @@ class SetDefaultDialog extends Component {
       .filter((val) => val)
       .sort((field) => field.string);
   }
+
   getConditions() {
     const { fields, fieldNamesInView, fieldsValues } = this.dataWidgetState;
     return fieldNamesInView
@@ -307,6 +325,7 @@ class SetDefaultDialog extends Component {
         };
       });
   }
+
   display(fieldInfo, value) {
     let displayed = value;
     if (value && fieldInfo.type === "many2one") {
@@ -319,6 +338,7 @@ class SetDefaultDialog extends Component {
     }
     return [value, displayed];
   }
+
   async saveDefault() {
     if (!this.state.fieldToSet) {
       // TODO $defaults.parent().addClass('o_form_invalid');
@@ -344,6 +364,7 @@ class SetDefaultDialog extends Component {
 }
 SetDefaultDialog.template = "wowl.DebugManager.SetDefault";
 SetDefaultDialog.components = { Dialog };
+
 export function setupDebugView(accessRights, env, component, action) {
   const viewId = component.props.viewInfo.view_id;
   const viewSeparator = {
@@ -394,6 +415,7 @@ export function setupDebugView(accessRights, env, component, action) {
   }
   return result;
 }
+
 export function setupDebugViewForm(env, component, action) {
   const setDefaults = {
     type: "item",

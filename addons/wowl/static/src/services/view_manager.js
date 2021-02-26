@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 export const viewManagerService = {
   name: "view_manager",
   dependencies: ["model"],

@@ -1,6 +1,9 @@
 /** @odoo-module **/
-const { Component } = owl;
+
 import OdooError from "../crash_manager/odoo_error";
+
+const { Component } = owl;
+
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
@@ -10,11 +13,13 @@ export class RPCError extends OdooError {
     this.type = "server";
   }
 }
+
 export class ConnectionLostError extends OdooError {
   constructor() {
     super("CONNECTION_LOST_ERROR");
   }
 }
+
 // -----------------------------------------------------------------------------
 // Main RPC method
 // -----------------------------------------------------------------------------
@@ -33,6 +38,7 @@ function makeErrorFromResponse(reponse) {
   error.code = code;
   return error;
 }
+
 let rpcId = 0;
 function jsonrpc(env, url, params, rpcId, settings = {}) {
   const bus = env.bus;
@@ -69,6 +75,7 @@ function jsonrpc(env, url, params, rpcId, settings = {}) {
     request.send(JSON.stringify(data));
   });
 }
+
 // -----------------------------------------------------------------------------
 // RPC service
 // -----------------------------------------------------------------------------

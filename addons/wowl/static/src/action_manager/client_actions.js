@@ -1,7 +1,10 @@
 /** @odoo-module **/
-const { utils } = owl;
+
 import { sprintf } from "../utils/strings";
+
+const { utils } = owl;
 const { escape } = utils;
+
 export const displayNotificationAction = (env, action) => {
   const params = action.params || {};
   const options = {

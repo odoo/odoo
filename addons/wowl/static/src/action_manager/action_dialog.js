@@ -1,15 +1,19 @@
 /** @odoo-module **/
-const { hooks } = owl;
 import { Dialog } from "../components/dialog/dialog";
 import { DebugManager } from "../debug_manager/debug_manager";
+
+const { hooks } = owl;
+
 const LEGACY_SIZE_CLASSES = {
   "extra-large": "modal-xl",
   large: "modal-lg",
   small: "modal-sm",
 };
+
 // -----------------------------------------------------------------------------
 // Action Dialog (Component)
 // -----------------------------------------------------------------------------
+
 /**
  * TrueActionDialog is the "true" ActionDialog class.
  * You should add new web client code in this TrueActionDialog class.
@@ -32,6 +36,7 @@ TrueActionDialog.props = {
   ActionComponent: { optional: true },
   actionProps: { optional: true },
 };
+
 /**
  * This ActionDialog class will disappear when legacy code will be entirely rewritten.
  * The "TrueActionDialog" class will get renamed to "ActionDialog"

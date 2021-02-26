@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { actionManagerService } from "../action_manager/action_manager";
 import { Registry } from "../core/registry";
 import { crashManagerService } from "../crash_manager/crash_manager_service";
@@ -19,7 +20,9 @@ import { downloadService } from "./download";
 import { effectService } from "../effects/effects_service";
 import { localizationService } from "./localization";
 import { currencyService } from "./currency";
+
 export const serviceRegistry = new Registry();
+
 const services = [
   actionManagerService,
   crashManagerService,

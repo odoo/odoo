@@ -1,8 +1,11 @@
 /** @odoo-module **/
-const { Component, hooks } = owl;
+
 import { Dropdown } from "../components/dropdown/dropdown";
 import { DropdownItem } from "../components/dropdown/dropdown_item";
 import { useService } from "../core/hooks";
+
+const { Component, hooks } = owl;
+
 export class DebugManager extends Component {
   constructor(...args) {
     super(...args);
@@ -32,9 +35,11 @@ export class DebugManager extends Component {
         odoo.debugManagerRegistry.getAll().map((elFactory) => elFactory(this.env));
     }
   }
+
   get isInDialog() {
     return this.env.inDialog;
   }
+
   getElements() {
     if (Object.keys(this.debugFactories).length > 0) {
       const sortedElements = Object.values(this.debugFactories)
@@ -50,23 +55,28 @@ export class DebugManager extends Component {
       return [];
     }
   }
+
   onDropdownItemSelected(ev) {
     ev.detail.payload.callback();
   }
+
   onClickOnTagA(ev) {
     if (!ev.ctrlKey) {
       ev.preventDefault();
     }
   }
 }
+
 DebugManager.debugElementsId = 1;
 DebugManager.template = "wowl.DebugManager";
 DebugManager.components = { Dropdown, DropdownItem };
+
 export const debugManager = {
   name: "wowl.debug_mode_menu",
   Component: DebugManager,
   sequence: 100,
 };
+
 export function useDebugManager(elementsFactory) {
   const elementsId = DebugManager.debugElementsId++;
   const component = Component.current;

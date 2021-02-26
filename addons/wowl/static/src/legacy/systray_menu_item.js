@@ -1,9 +1,10 @@
 /** @odoo-module  **/
-const { Component, tags } = owl;
 
 import { ComponentAdapter } from "web.OwlCompatibility";
 import * as legacySystrayMenu from "web.SystrayMenu";
 import { systrayRegistry } from "../webclient/systray_registry";
+
+const { Component, tags } = owl;
 
 class SystrayItemAdapter extends ComponentAdapter {
   constructor() {
@@ -15,6 +16,7 @@ class SystrayItemAdapter extends ComponentAdapter {
 const legacySystrayMenuItems = legacySystrayMenu.Items;
 // registers the legacy systray menu items from the legacy systray registry
 // to the wowl one, but wrapped into Owl components
+
 legacySystrayMenuItems.forEach((item, index) => {
   const name = `_legacy_systray_item_${index}`;
   class SystrayItem extends Component {

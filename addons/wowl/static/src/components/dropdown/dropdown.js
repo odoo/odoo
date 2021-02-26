@@ -1,6 +1,9 @@
 /** @odoo-module **/
-const { Component, core, hooks, useState } = owl;
+
 import { ParentClosingMode } from "./dropdown_item";
+
+const { Component, core, hooks, useState } = owl;
+
 export class Dropdown extends Component {
   constructor() {
     super(...arguments);
@@ -15,6 +18,7 @@ export class Dropdown extends Component {
       }
     });
   }
+
   // --------------------------------------------------------------------------
   // PRIVATE
   // --------------------------------------------------------------------------
@@ -30,12 +34,15 @@ export class Dropdown extends Component {
       newState: { ...this.state },
     });
   }
+
   _close() {
     return this._changeStateAndNotify({ open: false, groupIsOpen: false });
   }
+
   _open() {
     return this._changeStateAndNotify({ open: true, groupIsOpen: true });
   }
+
   _toggle() {
     const toggled = !this.state.open;
     return this._changeStateAndNotify({
@@ -43,6 +50,7 @@ export class Dropdown extends Component {
       groupIsOpen: toggled,
     });
   }
+
   // --------------------------------------------------------------------------
   // HANDLERS
   // --------------------------------------------------------------------------
@@ -59,6 +67,7 @@ export class Dropdown extends Component {
     // Mark closing request as started
     ev.detail.dropdownClosingRequest.isFresh = false;
   }
+
   /**
    * When a sibling dropdown state has changed, update mine accordingly.
    * To avoid loops, here it's the only place where
@@ -81,14 +90,17 @@ export class Dropdown extends Component {
     // Sync the group status
     this.state.groupIsOpen = args.newState.groupIsOpen;
   }
+
   onTogglerClick() {
     this._toggle();
   }
+
   onTogglerMouseEnter() {
     if (this.state.groupIsOpen) {
       this._open();
     }
   }
+  
   /**
    * Used to close ourself on outside click.
    */

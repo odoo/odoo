@@ -1,11 +1,15 @@
 /** @odoo-module **/
-const { Component } = owl;
+
 import { useService } from "../core/hooks";
+
+const { Component } = owl;
+
 export class Notification extends Component {
   constructor() {
     super(...arguments);
     this.notificationService = useService("notifications");
   }
+
   get icon() {
     switch (this.props.type) {
       case "danger":
@@ -20,6 +24,7 @@ export class Notification extends Component {
         return this.props.icon;
     }
   }
+
   get className() {
     let className;
     switch (this.props.type) {
@@ -39,6 +44,7 @@ export class Notification extends Component {
     return className ? `${className} ${this.props.className}` : this.props.className;
   }
 }
+
 Notification.template = "wowl.Notification";
 Notification.props = {
   id: { type: Number },

@@ -1,5 +1,4 @@
 /** @odoo-module **/
-const { Component, hooks, tags } = owl;
 
 import { actionRegistry } from "../action_manager/action_registry";
 import { action_registry as legacyActionRegistry } from "web.core";
@@ -7,6 +6,8 @@ import { ClientActionAdapter } from "./action_adapters";
 import Widget from "web.Widget";
 import { breadcrumbsToLegacy } from "./utils";
 import { useSetupAction } from "../action_manager/action_manager";
+
+const { Component, hooks, tags } = owl;
 
 // registers an action from the legacy action registry to the wowl one, ensuring
 // that widget actions are actually Components
@@ -48,6 +49,7 @@ function registerClientAction(name, action) {
     actionRegistry.add(name, action);
   }
 }
+
 // register action already in the legacy registry, and listens to future registrations
 for (const [name, action] of Object.entries(legacyActionRegistry.entries())) {
   if (!actionRegistry.contains(name)) {

@@ -18,6 +18,7 @@ function getJsClassWidget(fieldsInfo) {
 // registers a view from the legacy view registry to the wowl one, but wrapped
 // into an Owl Component
 function registerView(name, LegacyView) {
+
   class Controller extends Component {
     constructor() {
       super(...arguments);
@@ -52,6 +53,7 @@ function registerView(name, LegacyView) {
         scrollTo({ left: ev.detail.left, top: ev.detail.top });
       };
     }
+
     async willStart() {
       const params = {
         model: this.props.model,
@@ -87,6 +89,7 @@ function registerView(name, LegacyView) {
       });
     }
   }
+
   Controller.template = tags.xml`
     <ViewAdapter Component="Widget" View="View" viewInfo="viewInfo" viewParams="viewParams"
                  widget="widget" onReverseBreadcrumb="onReverseBreadcrumb" t-ref="controller"
@@ -102,6 +105,7 @@ function registerView(name, LegacyView) {
     viewRegistry.add(name, Controller);
   }
 }
+
 // register views already in the legacy registry, and listens to future registrations
 for (const [name, action] of Object.entries(legacyViewRegistry.entries())) {
   registerView(name, action);

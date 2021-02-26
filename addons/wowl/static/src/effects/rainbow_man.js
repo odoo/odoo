@@ -1,5 +1,7 @@
 /** @odoo-module **/
+
 const { Component, hooks } = owl;
+
 /**
  * The RainbowMan widget is the widget displayed by default as a 'fun/rewarding'
  * effect in some cases.  For example, when the user marked a large deal as won,
@@ -11,6 +13,7 @@ const { Component, hooks } = owl;
  * service (by triggering the 'show_effect' event)
  */
 export class RainbowMan extends Component {
+
   /**
    * @override
    * @constructor
@@ -35,12 +38,14 @@ export class RainbowMan extends Component {
       }
     });
   }
+
   _onAnimationEnd(ev) {
     if (this.delay !== false && ev.animationName === "reward-fading-reverse") {
       ev.stopPropagation();
       this._closeRainbowMan();
     }
   }
+
   _closeRainbowMan() {
     this.trigger("close-rainbowman");
   }

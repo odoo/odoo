@@ -1,5 +1,5 @@
 /** @odoo-module **/
-const { Component, hooks, tags } = owl;
+
 import { useService } from "../core/hooks";
 import { ViewNotFoundError } from "../action_manager/action_manager";
 import { useDebugManager } from "../debug_manager/debug_manager";
@@ -9,7 +9,10 @@ import { ComponentAdapter } from "web.OwlCompatibility";
 import { mapDoActionOptionAPI } from "./utils";
 import { setupDebugAction, setupDebugViewForm, setupDebugView } from "./debug_manager";
 
+const { Component, hooks, tags } = owl;
+
 const reBSTooltip = /^bs-.*$/;
+
 function cleanDomFromBootstrap() {
   const body = document.body;
   // multiple bodies in tests
@@ -62,6 +65,7 @@ class ActionAdapter extends ComponentAdapter {
       this.wowlEnv.bus.off("ACTION_MANAGER:UPDATE", this);
     });
   }
+
   _trigger_up(ev) {
     const payload = ev.data;
     if (ev.name === "do_action") {
@@ -109,6 +113,7 @@ class ActionAdapter extends ComponentAdapter {
       super._trigger_up(ev);
     }
   }
+
   /**
    * This function is called just before the component will be unmounted,
    * because it will be replaced by another one. However, we need to keep it
@@ -126,6 +131,7 @@ class ActionAdapter extends ComponentAdapter {
       __on_reverse_breadcrumb__: this.onReverseBreadcrumb,
     };
   }
+
   canBeRemoved() {
     return this.__widget.canBeRemoved();
   }
@@ -139,6 +145,7 @@ export class ClientActionAdapter extends ActionAdapter {
     );
     this.env = Component.env;
   }
+
   async willStart() {
     if (this.props.widget) {
       this.widget = this.props.widget;
@@ -150,16 +157,19 @@ export class ClientActionAdapter extends ActionAdapter {
     }
     return super.willStart();
   }
+
   /**
    * @override
    */
   updateWidget() {
     return this.widget.do_show();
   }
+
   do_push_state() {}
 }
 
 const magicReloadSymbol = Symbol("magicReload");
+
 function useMagicLegacyReload() {
   const comp = Component.current;
   if (comp.props.widget && comp.props.widget[magicReloadSymbol]) {
@@ -238,6 +248,7 @@ export class ViewAdapter extends ActionAdapter {
     }
     this.env = Component.env;
   }
+
   async willStart() {
     if (this.props.widget) {
       this.widget = this.props.widget;
@@ -258,6 +269,7 @@ export class ViewAdapter extends ActionAdapter {
       return this.widget._widgetRenderAndInsert(() => {});
     }
   }
+
   /**
    * @override
    */
@@ -276,6 +288,7 @@ export class ViewAdapter extends ActionAdapter {
     }
     return this.magicReload();
   }
+
   /**
    * Override to add the state of the legacy controller in the exported state.
    */
@@ -284,9 +297,11 @@ export class ViewAdapter extends ActionAdapter {
     const state = super.exportState();
     return Object.assign({}, state, widgetState);
   }
+
   async loadViews(model, context, views) {
     return (await this.vm.loadViews({ model, views, context }, {})).fields_views;
   }
+
   /**
    * @private
    * @param {OdooEvent} ev

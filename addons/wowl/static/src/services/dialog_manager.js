@@ -1,13 +1,16 @@
 /** @odoo-module **/
+
 const { Component, core, tags, hooks } = owl;
 const { EventBus } = core;
 const { useState } = hooks;
+
 class DialogManager extends Component {
   constructor() {
     super(...arguments);
     this.dialogs = useState({});
     this.dialogId = 1;
   }
+
   addDialog(dialogClass, props) {
     const id = this.dialogId++;
     this.dialogs[id] = {
@@ -16,6 +19,7 @@ class DialogManager extends Component {
       props,
     };
   }
+
   onDialogClosed(id) {
     delete this.dialogs[id];
   }
@@ -27,6 +31,7 @@ DialogManager.template = tags.xml`
       </t>
     </div>
     `;
+
 export const dialogManagerService = {
   name: "dialog_manager",
   deploy(env) {

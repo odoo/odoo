@@ -1,10 +1,13 @@
 /** @odoo-module **/
+
 const { Component } = owl;
+
 export const ParentClosingMode = {
   None: "none",
   ClosestParent: "closest",
   AllParents: "all",
 };
+
 export class DropdownItem extends Component {
   /**
    * Handlers

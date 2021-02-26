@@ -1,14 +1,18 @@
 /** @odoo-module **/
+
 import * as dates from "../utils/dates";
 import * as numbers from "../utils/numbers";
 import { escapeRegExp, sprintf } from "../utils/strings";
+
 const translatedTerms = {};
+
 /**
  * Eager translation function, performs translation immediately at call.
  */
 function _t(str) {
   return translatedTerms[str] || str;
 }
+
 /**
  * Lazy translation function, only performs the translation when actually
  * printed (e.g. inserted into a template).
@@ -19,6 +23,7 @@ function _t(str) {
 export function _lt(str) {
   return { toString: () => _t(str) };
 }
+
 /*
  * Setup jQuery timeago:
  * Strings in timeago are "composed" with prefixes, words and suffixes. This
@@ -37,6 +42,7 @@ _t("about a month ago");
 _t("%d months ago");
 _t("about a year ago");
 _t("%d years ago");
+
 export function makeLocalization(config) {
   const langParams = Object.assign(
     {
@@ -55,6 +61,7 @@ export function makeLocalization(config) {
   const langDateFormat = dates.strftimeToLuxonFormat(langParams.dateFormat);
   const langTimeFormat = dates.strftimeToLuxonFormat(langParams.timeFormat);
   const langDateTimeFormat = `${langDateFormat} ${langTimeFormat}`;
+
   const humanNumber = (number, options = { decimals: 0, minDigits: 1 }) => {
     number = Math.round(number);
     const decimals = options.decimals || 0;
@@ -86,9 +93,11 @@ export function makeLocalization(config) {
       numbers.insertThousandsSep(number, langParams.thousandsSep, langParams.grouping) + symbol
     );
   };
+
   const formatDateTime = (value, options = { timezone: true }) => {
     return dates.formatDateTime(value, { format: langDateTimeFormat, timezone: options.timezone });
   };
+  
   const formatFloat = (value, options = {}) => {
     return numbers.formatFloat(value, {
       precision: options.precision,
@@ -97,6 +106,7 @@ export function makeLocalization(config) {
       grouping: langParams.grouping,
     });
   };
+  
   const parseDate = (value, options = {}) => {
     const result = dates.parseDateTime(value, {
       format: langDateFormat,
@@ -107,6 +117,7 @@ export function makeLocalization(config) {
     }
     return result;
   };
+
   const parseDateTime = (value, options = {}) => {
     const result = dates.parseDateTime(value, {
       format: langDateTimeFormat,
@@ -143,6 +154,7 @@ export function makeLocalization(config) {
     parseFloat,
   };
 }
+
 export const localizationService = {
   name: "localization",
   dependencies: ["user"],

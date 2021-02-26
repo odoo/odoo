@@ -1,6 +1,9 @@
 /** @odoo-module **/
-const { Component } = owl;
+
 import { Dialog } from "../../components/dialog/dialog";
+
+const { Component } = owl;
+
 export function documentationItem(env) {
   const documentationURL = "https://www.odoo.com/documentation/user";
   return {
@@ -13,6 +16,7 @@ export function documentationItem(env) {
     sequence: 10,
   };
 }
+
 export function supportItem(env) {
   const buyEnterpriseURL = "https://www.odoo.com/buy";
   return {
@@ -25,9 +29,11 @@ export function supportItem(env) {
     sequence: 20,
   };
 }
+
 class ShortCutsDialog extends Component {}
 ShortCutsDialog.template = "wowl.UserMenu.ShortCutsDialog";
 ShortCutsDialog.components = { Dialog };
+
 export function shortCutsItem(env) {
   return {
     type: "item",
@@ -39,12 +45,14 @@ export function shortCutsItem(env) {
     sequence: 30,
   };
 }
+
 export function separator(env) {
   return {
     type: "separator",
     sequence: 40,
   };
 }
+
 export function preferencesItem(env) {
   return {
     type: "item",
@@ -57,6 +65,7 @@ export function preferencesItem(env) {
     sequence: 50,
   };
 }
+
 export function odooAccountItem(env) {
   return {
     type: "item",
@@ -74,6 +83,7 @@ export function odooAccountItem(env) {
     sequence: 60,
   };
 }
+
 export function logOutItem(env) {
   const route = "/web/session/logout";
   return {

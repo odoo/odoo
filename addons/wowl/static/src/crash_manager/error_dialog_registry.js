@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { Registry } from "../core/registry";
 import {
   Error504Dialog,
@@ -6,6 +7,7 @@ import {
   SessionExpiredDialog,
   WarningDialog,
 } from "./error_dialogs";
+
 // -----------------------------------------------------------------------------
 // Custom Dialogs for CrashManagerService
 // -----------------------------------------------------------------------------

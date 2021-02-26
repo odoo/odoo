@@ -1,7 +1,9 @@
 /** @odoo-module **/
-const { Component, core, tags } = owl;
 import { RainbowMan } from "./rainbow_man";
+
+const { Component, core, tags } = owl;
 const { EventBus } = core;
+
 class EffectsManager extends Component {
   constructor() {
     super(...arguments);
@@ -14,6 +16,7 @@ EffectsManager.template = tags.xml`
       <RainbowMan t-if="rainbowProps.id" t-props="rainbowProps" t-key="rainbowProps.id" t-on-close-rainbowman="closeRainbowMan"/>
     </div>`;
 EffectsManager.components = { RainbowMan };
+
 export function convertRainBowMessage(message) {
   if (message instanceof jQuery) {
     return message.html();
@@ -23,6 +26,7 @@ export function convertRainBowMessage(message) {
     return message;
   }
 }
+
 export const effectService = {
   name: "effects",
   dependencies: ["notifications", "user"],

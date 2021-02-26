@@ -29,11 +29,12 @@ export function formatFloat(value, options = {}) {
 /**
  * Inserts "thousands" separators in the provided number.
  *
- * @param {integer} [num] integer number
+ * @param {number} [num] integer number
  * @param {string} [thousandsSep=","] the separator to insert
  * @param {number[]} [grouping=[3,0]]
  *   array of relative offsets at which to insert `thousandsSep`.
  *   See `strings.intersperse` method.
+ * @returns {string}
  */
 export function insertThousandsSep(num, thousandsSep = ",", grouping = [3, 0]) {
   let numStr = `${num}`;

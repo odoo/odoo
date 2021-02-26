@@ -1,10 +1,13 @@
 /** @odoo-module **/
-const { Component, hooks } = owl;
+
 import { useService } from "../../core/hooks";
 import { Dropdown } from "../../components/dropdown/dropdown";
 import { DropdownItem } from "../../components/dropdown/dropdown_item";
 import { debounce } from "../../utils/misc";
+
+const { Component, hooks } = owl;
 const { useExternalListener } = hooks;
+
 export class NavBar extends Component {
   constructor(...args) {
     super(...args);
@@ -14,6 +17,7 @@ export class NavBar extends Component {
     const debouncedAdapt = debounce(this.adapt.bind(this), 250);
     useExternalListener(window, "resize", debouncedAdapt);
   }
+
   mounted() {
     this.adapt();
     const renderAndAdapt = async () => {
@@ -23,16 +27,20 @@ export class NavBar extends Component {
     odoo.systrayRegistry.on("UPDATE", this, renderAndAdapt);
     this.env.bus.on("MENUS:APP-CHANGED", this, renderAndAdapt);
   }
+
   willUnmount() {
     odoo.systrayRegistry.off("UPDATE", this);
     this.env.bus.off("MENUS:APP-CHANGED", this);
   }
+
   get currentApp() {
     return this.menuRepo.getCurrentApp();
   }
+  
   get currentAppSections() {
     return (this.currentApp && this.menuRepo.getMenuAsTree(this.currentApp.id).childrenTree) || [];
   }
+  
   get systrayItems() {
     return odoo.systrayRegistry.getAll().sort((x, y) => {
       const xSeq = x.sequence !== undefined ? x.sequence : 50;
@@ -40,6 +48,7 @@ export class NavBar extends Component {
       return ySeq - xSeq;
     });
   }
+  
   async adapt() {
     if (!this.el) {
       // currently, the promise returned by 'render' is resolved at the end of
@@ -92,6 +101,7 @@ export class NavBar extends Component {
     }
     return this.render();
   }
+  
   onNavBarDropdownItemSelection(ev) {
     const { payload: menu } = ev.detail;
     if (menu) {

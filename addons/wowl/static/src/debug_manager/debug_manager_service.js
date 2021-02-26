@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import { debugManager } from "./debug_manager";
+
 export function editModelDebug(env, title, model, id) {
   return env.services.action_manager.doAction({
     res_model: model,
@@ -12,6 +13,7 @@ export function editModelDebug(env, title, model, id) {
     flags: { action_buttons: true, headless: true },
   });
 }
+
 export const debugManagerService = {
   name: "debug_manager",
   dependencies: ["model"],
@@ -20,6 +22,7 @@ export const debugManagerService = {
     if (env.debug !== "") {
       odoo.systrayRegistry.add("wowl.debug_mode_menu", debugManager);
     }
+    
     return {
       getAccessRights() {
         if (!accessRightsProm) {

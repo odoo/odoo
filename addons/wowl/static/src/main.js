@@ -11,8 +11,10 @@ import { mainComponentRegistry } from "./webclient/main_component_registry";
 import { systrayRegistry } from "./webclient/systray_registry";
 import { userMenuRegistry } from "./webclient/user_menu_registry";
 import { WebClient } from "./webclient/webclient";
+
 const { mount, utils } = owl;
 const { whenReady, loadFile } = utils;
+
 (async () => {
   // prepare browser object
   let sessionStorage = window.sessionStorage;
@@ -62,6 +64,7 @@ const { whenReady, loadFile } = utils;
     server_version_info: sessionInfo.server_version_info,
   };
 })();
+
 async function loadTemplates() {
   const templatesUrl = `/wowl/templates/${odoo.session_info.qweb}`;
   const templates = await loadFile(templatesUrl);

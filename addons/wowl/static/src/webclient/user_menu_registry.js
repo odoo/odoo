@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { Registry } from "../core/registry";
 import {
   documentationItem,
@@ -9,10 +10,12 @@ import {
   shortCutsItem,
   supportItem,
 } from "./user_menu/user_menu_items";
+
 // -----------------------------------------------------------------------------
 // Default UserMenu items
 // -----------------------------------------------------------------------------
 export const userMenuRegistry = new Registry();
+
 userMenuRegistry
   .add("documentation", documentationItem)
   .add("support", supportItem)
