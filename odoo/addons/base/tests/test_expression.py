@@ -1128,6 +1128,18 @@ class TestMany2one(TransactionCase):
         ''']):
             self.User.search([('name', 'like', 'foo')])
 
+        # the field supporting the inheritance should be auto_join, too
+        # TODO: use another model, since 'res.users' has explicit auto_join
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
+                ("res_users"."partner_id" = "res_users__partner_id"."id")
+            WHERE ("res_users__partner_id"."name"::text LIKE %s)
+            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+        ''']):
+            self.User.search([('partner_id.name', 'like', 'foo')])
+
     def test_regular(self):
         self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
         self.Partner.search([('country_id.code', 'like', 'BE')])

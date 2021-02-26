@@ -12,6 +12,11 @@ class test_inherits(common.TransactionCase):
 
         self.assertEqual(daughter._inherits, {'test.inherit.mother': 'template_id'})
 
+        # the field supporting the inheritance should be auto_join
+        field = daughter._fields['template_id']
+        self.assertTrue(field.delegate)
+        self.assertTrue(field.auto_join, "delegate fields should be auto_join")
+
     def test_10_access_from_child_to_parent_model(self):
         """ check whether added field in model is accessible from children models (_inherits) """
         # This test checks if the new added column of a parent model
