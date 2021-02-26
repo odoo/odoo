@@ -211,7 +211,6 @@ class SaleOrderLine(models.Model):
             'analytic_account_id': account.id,
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
-            'sale_order_id': self.order_id.id,
             'active': True,
             'company_id': self.company_id.id,
         }

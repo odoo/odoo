@@ -26,9 +26,9 @@ class ProjectProductEmployeeMap(models.Model):
         ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),
     ]
 
-    @api.depends('project_id.sale_order_id')
+    @api.depends('project_id.partner_id')
     def _compute_sale_line_id(self):
-        self.filtered(lambda map_entry: not map_entry.project_id.sale_order_id and map_entry.sale_line_id).update({'sale_line_id': None})
+        self.filtered(lambda map_entry: map_entry.sale_line_id.order_partner_id != map_entry.project_id.partner_id).update({'sale_line_id': False})
 
     @api.depends('sale_line_id', 'sale_line_id.price_unit')
     def _compute_price_unit(self):
