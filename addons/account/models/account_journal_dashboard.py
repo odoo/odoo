@@ -266,6 +266,7 @@ class account_journal(models.Model):
             query = '''
                 SELECT
                     (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
+                    amount_residual_signed AS amount_total_company,
                     currency_id AS currency,
                     move_type,
                     invoice_date,
@@ -326,6 +327,7 @@ class account_journal(models.Model):
         return ('''
             SELECT
                 (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total,
+                amount_residual_signed AS amount_total_company,
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
@@ -346,6 +348,7 @@ class account_journal(models.Model):
         return ('''
             SELECT
                 (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total,
+                amount_residual_signed AS amount_total_company,
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
@@ -362,15 +365,22 @@ class account_journal(models.Model):
         their amount_total field (expressed in the given target currency).
         amount_total must be signed !
         """
-        return (len(results_dict), sum(
-            self.env['res.currency'].browse(result.get('currency'))._convert(
-                from_amount=result.get('amount_total') or 0,
-                to_currency=target_currency,
-                company=self.env['res.company'].browse(result.get('company_id')) or self.env.company,
-                date=result.get('invoice_date') or fields.Date.context_today(self),
-            )
-            for result in results_dict
-        ))
+        total_amount = 0
+        for result in results_dict:
+            document_currency = self.env['res.currency'].browse(result.get('currency'))
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
+            if target_currency == document_currency:
+                total_amount += result.get('amount_total') or 0
+            elif target_currency == company.currency_id:
+                total_amount += result.get('amount_total_company') or 0
+            else:
+                total_amount += document_currency._convert(
+                    from_amount=result.get('amount_total') or 0,
+                    to_currency=target_currency,
+                    company=company,
+                    date=result.get('invoice_date') or fields.Date.context_today(self),
+                )
+        return (len(results_dict), total_amount)
 
     def action_create_new(self):
         ctx = self._context.copy()
