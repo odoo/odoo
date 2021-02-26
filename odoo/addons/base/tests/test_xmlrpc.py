@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
-from xmlrpc.client import Binary
+from xmlrpc.client import ServerProxy
 
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import _request_stack
@@ -9,15 +9,24 @@ from odoo.http import _request_stack
 import odoo.tools
 from odoo.tests import common
 from odoo.service import common as auth, model
-from odoo.tools import DotDict
+from odoo.tools import DotDict, mute_logger
 
 
 @common.tagged('post_install', '-at_install')
 class TestXMLRPC(common.HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        mute_deprecation = mute_logger('odoo.addons.base.controllers.rpc')
+        mute_deprecation.__enter__()
+        cls.addClassCleanup(mute_deprecation.__exit__)
 
     def setUp(self):
         super(TestXMLRPC, self).setUp()
         self.admin_uid = self.env.ref('base.user_admin').id
+        self.xmlrpc_common = ServerProxy(f'{self.base_url()}/xmlrpc/2/common', transport=common.Transport(self.cr))
+        self.xmlrpc_db = ServerProxy(f'{self.base_url()}/xmlrpc/2/db', transport=common.Transport(self.cr))
+        self.xmlrpc_object = ServerProxy(f'{self.base_url()}/xmlrpc/2/object', transport=common.Transport(self.cr))
 
     def xmlrpc(self, model, method, *args, **kwargs):
         return self.xmlrpc_object.execute_kw(

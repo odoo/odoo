@@ -46,3 +46,4 @@ from . import res_users
 from . import res_users_deletion
 
 from . import decimal_precision
+from . import system

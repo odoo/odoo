@@ -17,7 +17,7 @@ RPC_VERSION_1 = {
 }
 
 
-ODOO18_DEPRECATION_WARNING = """
+ODOO17_DEPRECATION_WARNING = """
 The %r service was deprecated in Odoo 7 (more than 10 years ago)
 and does nothing since then. This service is scheduled for removal in
 Odoo 18 but one of your clients is still using it, please report them
@@ -46,7 +46,7 @@ def exp_about(extended=False):
     @param extended: if True then return version info
     @return string if extended is False else tuple
     """
-    _logger.warning(ODOO18_DEPRECATION_WARNING, "about")
+    _logger.warning(ODOO17_DEPRECATION_WARNING, "about")
 
     info = _('See http://openerp.com')
 
@@ -55,7 +55,7 @@ def exp_about(extended=False):
     return info
 
 def exp_set_loglevel(loglevel, logger=None):
-    _logger.warning(ODOO18_DEPRECATION_WARNING, "set_loglevel")
+    _logger.warning(ODOO17_DEPRECATION_WARNING, "set_loglevel")
     return True
 
 def dispatch(method, params):

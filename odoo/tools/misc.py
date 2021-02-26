@@ -745,6 +745,33 @@ class unquote(str):
     def __repr__(self):
         return self
 
+def snake(input_str):
+    """
+    snake cases ``input_str``
+
+    >>> snake("HelloWorld")
+    'hello_world'
+    """
+    # insert a space before each uppercase character preceded by a
+    # non-uppercase letter
+    input_str = re.sub(r'(?<=[^A-Z])\B([A-Z])', r' \1', input_str)
+    # lowercase everything, split on whitespace and join
+    return '_'.join(input_str.lower().split())
+
+def pascal(input_str):
+    """
+    pascal cases ``input_str``
+
+    >>> pascal('hello_world')
+    'HelloWorld'
+    >>> pascal('hello world')
+    'HelloWorld'
+    """
+    return ''.join(
+        word.capitalize()
+        for word in re.sub(r'[_\s]+', ' ', input_str).split()
+    )
+
 
 class mute_logger(logging.Handler):
     """Temporary suppress the logging.

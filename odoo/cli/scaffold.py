@@ -9,6 +9,7 @@ import sys
 import jinja2
 
 from . import Command
+from ..tools import snake, pascal
 
 class Scaffold(Command):
     """ Generates an Odoo module skeleton. """
@@ -48,23 +49,6 @@ builtins = lambda *args: os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
     'templates',
     *args)
-
-def snake(s):
-    """ snake cases ``s``
-
-    :param str s:
-    :return: str
-    """
-    # insert a space before each uppercase character preceded by a
-    # non-uppercase letter
-    s = re.sub(r'(?<=[^A-Z])\B([A-Z])', r' \1', s)
-    # lowercase everything, split on whitespace and join
-    return '_'.join(s.lower().split())
-def pascal(s):
-    return ''.join(
-        ss.capitalize()
-        for ss in re.sub('[_\s]+', ' ', s).split()
-    )
 
 def directory(p, create=False):
     expanded = os.path.abspath(

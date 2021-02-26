@@ -14,9 +14,10 @@ import tempfile
 import textwrap
 import time
 import traceback
-from xmlrpc import client as xmlrpclib
+import xmlrpc.client
 
 from glob import glob
+from urllib.parse import urlparse
 
 #----------------------------------------------------------
 # Utils
@@ -61,17 +62,13 @@ def run_cmd(cmd, chdir=None, timeout=None):
 
 def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
     time.sleep(5)
-    uid = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/common' % (addr, port)).authenticate(
-        dbname, 'admin', 'admin', {}
-    )
-    modules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/object' % (addr, port)).execute(
-        dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
-    )
+    url = urlparse(addr)
+    models = xmlrpc.client.ServerProxy(f'{url.scheme}://admin:admin@{url.netloc}/RPC2/{dbname}')
+
+    modules = models.ir.module.module.search([], [[('state', '=', 'installed')]])
     if len(modules) > 1:
         time.sleep(1)
-        toinstallmodules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/object' % (addr, port)).execute(
-            dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
-        )
+        toinstallmodules = models.ir.module.module.search([], [[('state', '=', 'to install')]])
         if toinstallmodules:
             logging.error("Package test: FAILED. Not able to install dependencies of base.")
             raise OdooTestError("Installation of package failed")

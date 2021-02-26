@@ -1,6 +1,6 @@
 import json
 import time
-from xmlrpc.client import Fault
+import xmlrpc.client
 
 from passlib.totp import TOTP
 
@@ -47,21 +47,23 @@ class TestTOTP(HttpCase):
         # 1. Enable 2FA
         self.start_tour('/web', 'totp_tour_setup', login='demo')
 
+        rpc_common = self.get_xmlrpc_common_proxy()
+        rpc_models = self.get_xmlrpc_models_proxy('demo', 'demo')
+
         # 2. Verify that RPC is blocked because 2FA is on.
         self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {}),
+            rpc_common.authenticate({'args': [get_db_name(), 'demo', 'demo', {}]}),
             "Should not have returned a uid"
         )
         self.assertFalse(
-            self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {'interactive': True}),
+            rpc_common.authenticate({'args': [get_db_name(), 'demo', 'demo', {'interactive': True}]}),
             'Trying to fake the auth type should not work'
         )
-        uid = self.env.ref('base.user_demo').id
-        with self.assertRaisesRegex(Fault, r'Access Denied'):
-            self.xmlrpc_object.execute_kw(
-                get_db_name(), uid, 'demo',
-                'res.users', 'read', [uid, ['login']]
-            )
+        with self.assertRaisesRegex(xmlrpc.client.ProtocolError, r'FORBIDDEN'):
+            rpc_models.res.users.read({
+                'records': self.env.ref('base.user_demo').ids,
+                'kwargs': {'fields': ['login']}
+            })
 
         # 3. Check 2FA is required
         self.start_tour('/', 'totp_login_enabled', login=None)
@@ -73,12 +75,12 @@ class TestTOTP(HttpCase):
         self.start_tour('/', 'totp_login_disabled', login=None)
 
         # 6. Check that rpc is now re-allowed
-        uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {})
+        uid = rpc_common.authenticate({'args': [get_db_name(), 'demo', 'demo', {}]})
         self.assertEqual(uid, self.env.ref('base.user_demo').id)
-        [r] = self.xmlrpc_object.execute_kw(
-            get_db_name(), uid, 'demo',
-            'res.users', 'read', [uid, ['login']]
-        )
+        [r] = rpc_models.res.users.read({
+            'records': [uid],
+            'kwargs': {'fields': ['login']}
+        })
         self.assertEqual(r['login'], 'demo')
 
 

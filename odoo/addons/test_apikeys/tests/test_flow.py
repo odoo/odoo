@@ -25,11 +25,19 @@ class TestAPIKeys(HttpCase):
 
         [(_, [key], [])] = self.messages
 
-        uid = self.xmlrpc_common.authenticate(db, 'demo', key, {})
-        [r] = self.xmlrpc_object.execute_kw(
-            db, uid, key,
-            'res.users', 'read', [uid, ['login']]
+        rpc_common = self.get_xmlrpc_common_proxy()
+        rpc_models = self.get_xmlrpc_models_proxy('demo', key)
+
+        uid = rpc_common.authenticate({'args': [db, 'demo', key, {}]})
+        self.assertEqual(
+            uid, demo_user.id,
+            "the key should be usable as a way to perform RPC calls"
         )
+
+        [r] = rpc_models.res.users.read({
+            'records': [uid],
+            'kwargs': {'fields': ['login']}
+        })
         self.assertEqual(
             r['login'], 'demo',
             "the key should be usable as a way to perform RPC calls"

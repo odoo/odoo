@@ -241,20 +241,19 @@ class WithContext(HttpCase):
         self.assertEqual('I am a specific page' in r.text, True, "Admin should see the specific unpublished page")
 
     def test_search(self):
-        dbname = common.get_db_name()
-        admin_uid = self.env.ref('base.user_admin').id
         website = self.env['website'].get_current_website()
 
-        robot = self.xmlrpc_object.execute(
-            dbname, admin_uid, 'admin',
-            'website', 'search_pages', [website.id], 'info'
-        )
+        rpc_models = self.get_xmlrpc_models_proxy('admin', 'admin')
+        robot = rpc_models.website.search_pages({
+            'records': website.ids,
+            'args': ['info']
+        })
         self.assertIn({'loc': '/website/info'}, robot)
 
-        pages = self.xmlrpc_object.execute(
-            dbname, admin_uid, 'admin',
-            'website', 'search_pages', [website.id], 'page'
-        )
+        pages = rpc_models.website.search_pages({
+            'records': website.ids,
+            'args': ['page']
+        })
         self.assertIn(
             '/page_1',
             [p['loc'] for p in pages],

@@ -45,7 +45,6 @@ from xmlrpc import client as xmlrpclib
 
 import requests
 import werkzeug.urls
-import werkzeug.urls
 from decorator import decorator
 from lxml import etree, html
 
@@ -1792,8 +1791,6 @@ class HttpCase(TransactionCase):
         ICP = cls.env['ir.config_parameter']
         ICP.set_param('web.base.url', cls.base_url())
         ICP.env.flush_all()
-        # v8 api with correct xmlrpc exception handling.
-        cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def setUp(self):
@@ -1802,11 +1799,22 @@ class HttpCase(TransactionCase):
             self.registry.enter_test_mode(self.cr)
             self.addCleanup(self.registry.leave_test_mode)
 
-        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self.cr))
-        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self.cr))
-        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
-        # setup an url opener helper
         self.opener = Opener(self.cr)
+
+    def get_xmlrpc_common_proxy(self):
+        return xmlrpclib.ServerProxy(
+            f'{self.base_url()}/RPC2',
+            transport=Transport(self.cr),
+            allow_none=True,
+        )
+
+    def get_xmlrpc_models_proxy(self, user, password):
+        scheme, netloc, *_ = werkzeug.urls.url_parse(self.base_url())
+        return xmlrpclib.ServerProxy(
+            f'{scheme}://{user}:{password}@{netloc}/RPC2/{get_db_name()}',
+            transport=Transport(self.cr),
+            allow_none=True,
+        )
 
     @classmethod
     def start_browser(cls):
@@ -1996,6 +2004,22 @@ class HttpCase(TransactionCase):
             return sup.profile(description=request.httprequest.full_path)
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
+
+    @contextmanager
+    def nodb(self):
+        with patch('odoo.http.db_list', return_value=[]),\
+             patch('odoo.http.db_filter', return_value=[]):
+            yield
+
+    @contextmanager
+    def multidb(self, dblist):
+        assert len(dblist) >= 2
+        with patch('odoo.http.db_list', return_value=dblist),\
+             patch('odoo.http.db_filter', side_effect=lambda dbs, host=None: [
+                 db for db in dbs if db in dblist
+             ]),\
+             patch('odoo.http.Registry', return_value=self.registry):
+            yield
 
 def no_retry(arg):
     """Disable auto retry on decorated test method or test class"""

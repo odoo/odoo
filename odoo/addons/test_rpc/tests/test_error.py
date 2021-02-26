@@ -1,16 +1,28 @@
 # -*- coding: utf-8 -*-
 
 from functools import partial
+from xmlrpc.client import ServerProxy
 
-from odoo.tests import common, tagged
+from odoo.tests import common, tagged, Transport
 from odoo.tools.misc import mute_logger
 
 
 @tagged('-at_install', 'post_install')
 class TestError(common.HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        mute_deprecation = mute_logger('odoo.addons.base.controllers.rpc')
+        mute_deprecation.__enter__()
+        cls.addClassCleanup(mute_deprecation.__exit__)
+
     def setUp(self):
         super(TestError, self).setUp()
         uid = self.ref("base.user_admin")
+
+        self.xmlrpc_common = ServerProxy(f'{self.base_url()}/xmlrpc/2/common', transport=Transport(self.cr))
+        self.xmlrpc_db = ServerProxy(f'{self.base_url()}/xmlrpc/2/db', transport=Transport(self.cr))
+        self.xmlrpc_object = ServerProxy(f'{self.base_url()}/xmlrpc/2/object', transport=Transport(self.cr))
         self.rpc = partial(self.xmlrpc_object.execute, common.get_db_name(), uid, "admin")
 
         # Reset the admin's lang to avoid breaking tests due to admin not in English

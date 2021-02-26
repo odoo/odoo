@@ -1115,6 +1115,7 @@ class FutureResponse:
     max_cookie_size = 4093
 
     def __init__(self):
+        self.status = None
         self.headers = werkzeug.datastructures.Headers()
 
     @functools.wraps(werkzeug.Response.set_cookie)
@@ -1394,6 +1395,8 @@ class Request:
         return contextlib.nullcontext()
 
     def _inject_future_response(self, response):
+        if self.future_response.status is not None:
+            response.status = self.future_response.status
         response.headers.extend(self.future_response.headers)
         return response
 
