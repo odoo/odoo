@@ -59,11 +59,22 @@
         </field>
     </record>
 
+    <record id="stock_valuation_layer_pivot" model="ir.ui.view">
+        <field name="name">stock.valuation.layer.pivot</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="quantity" type="measure"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="stock_valuation_layer_action" model="ir.actions.act_window">
         <field name="name">Stock Valuation</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.valuation.layer</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="stock_valuation_layer_tree"/>
         <field name="domain">[('product_id.type', '=', 'product')]</field>
         <field name="context">{'search_default_group_by_product_id': 1}</field>
