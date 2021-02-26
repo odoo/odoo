@@ -542,7 +542,7 @@ class Registry(Mapping):
                   FROM pg_class c
                   JOIN pg_namespace n ON (n.oid = c.relnamespace)
                  WHERE c.relname IN %s
-                   AND c.relkind = 'r'
+                   AND c.relkind in ('r', 'p')
                    AND n.nspname = 'public'
             """
             tables = tuple(m._table for m in self.models.values())

@@ -23,7 +23,7 @@ def existing_tables(cr, tablenames):
           FROM pg_class c
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname IN %s
-           AND c.relkind IN ('r', 'v', 'm')
+           AND c.relkind IN ('r', 'v', 'm', 'p')
            AND n.nspname = 'public'
     """
     cr.execute(query, [tuple(tablenames)])
