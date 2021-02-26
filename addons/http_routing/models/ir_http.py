@@ -194,7 +194,7 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
             and '/static/' not in path
             and not path.startswith('/web/')
     )):
-        new_url = request.env['ir.http'].url_rewrite(path)
+        new_url, _ = request.env['ir.http'].url_rewrite(path)
         new_url = new_url if not qs else new_url + '?%s' % qs
 
     return url_lang(new_url or url_from, lang_code=lang_code)
