@@ -6,7 +6,6 @@ from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.tests.common import Form, users
 
-
 class TestCRMLead(TestCrmCommon):
 
     @classmethod
@@ -250,7 +249,8 @@ class TestCRMLead(TestCrmCommon):
         lead_form.partner_id = partner
         self.assertEqual(lead_form.email_from, partner_email)
         self.assertEqual(lead_form.phone, partner_phone_formatted)
-        self.assertFalse(lead_form.ribbon_message)
+        self.assertFalse(lead_form.partner_email_update)
+        self.assertFalse(lead_form.partner_phone_update)
 
         lead_form.save()
         self.assertEqual(partner.phone, partner_phone)
@@ -261,12 +261,13 @@ class TestCRMLead(TestCrmCommon):
         new_email = '"John Zoidberg" <john.zoidberg@test.example.com>'
         new_email_normalized = 'john.zoidberg@test.example.com'
         lead_form.email_from = new_email
-        self.assertIn('the customer email will', lead_form.ribbon_message)
+        self.assertTrue(lead_form.partner_email_update)
         new_phone = '+1 202 555 7799'
         new_phone_formatted = phone_format(new_phone, 'US', '1')
         lead_form.phone = new_phone
         self.assertEqual(lead_form.phone, new_phone_formatted)
-        self.assertIn('the customer email and phone number will', lead_form.ribbon_message)
+        self.assertTrue(lead_form.partner_email_update)
+        self.assertTrue(lead_form.partner_phone_update)
 
         lead_form.save()
         self.assertEqual(partner.email, new_email)
@@ -275,7 +276,8 @@ class TestCRMLead(TestCrmCommon):
 
         # resetting lead values also resets partner
         lead_form.email_from, lead_form.phone = False, False
-        self.assertIn('the customer email and phone number will', lead_form.ribbon_message)
+        self.assertTrue(lead_form.partner_email_update)
+        self.assertTrue(lead_form.partner_phone_update)
         lead_form.save()
         self.assertFalse(partner.email)
         self.assertFalse(partner.email_normalized)
