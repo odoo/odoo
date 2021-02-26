@@ -10,8 +10,15 @@ class ProjectProductEmployeeMap(models.Model):
 
     project_id = fields.Many2one('project.project', "Project", required=True)
     employee_id = fields.Many2one('hr.employee', "Employee", required=True)
-    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", compute="_compute_sale_line_id", store=True, readonly=False, required=True, domain=[('is_service', '=', True)])
+    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", compute="_compute_sale_line_id", store=True, readonly=False, required=True,
+        domain="""[
+            ('is_service', '=', True),
+            ('is_expense', '=', False),
+            ('state', 'in', ['sale', 'done']),
+            ('order_partner_id', '=', partner_id),
+            '|', ('company_id', '=', False), ('company_id', '=', company_id)]""")
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
+    partner_id = fields.Many2one(related='project_id.partner_id')
     price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_price_unit', store=True, readonly=False)
 
