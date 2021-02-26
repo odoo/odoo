@@ -2,7 +2,7 @@
 
 {
     'name' : 'Slovak - Accounting',
-    'version' : '14.1.0.0',
+    'version' : '14.0.1.0.0',
     'author' : '26HOUSE',
     'website': 'http://www.26house.com',
     'category': 'Accounting/Localizations/Account Charts',
