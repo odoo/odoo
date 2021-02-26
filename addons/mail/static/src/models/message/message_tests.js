@@ -2,6 +2,7 @@ odoo.define('mail/static/src/models/message/message_tests.js', function (require
 'use strict';
 
 const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+const { insert, insertAndReplace, link } = require('mail/static/src/model/model_field_command.js');
 
 const { str_to_datetime } = require('web.time');
 
@@ -43,19 +44,19 @@ QUnit.test('create', async function (assert) {
         name: "General",
     });
     const message = this.env.models['mail.message'].create({
-        attachments: [['insert-and-replace', {
+        attachments: insertAndReplace({
             filename: "test.txt",
             id: 750,
             mimetype: 'text/plain',
             name: "test.txt",
-        }]],
-        author: [['insert', { id: 5, display_name: "Demo" }]],
+        }),
+        author: insert({ id: 5, display_name: "Demo" }),
         body: "<p>Test</p>",
         date: moment(str_to_datetime("2019-05-05 10:00:00")),
         id: 4000,
         isNeedaction: true,
         isStarred: true,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
 
     assert.ok(this.env.models['mail.partner'].findFromIdentifyingData({ id: 5 }));

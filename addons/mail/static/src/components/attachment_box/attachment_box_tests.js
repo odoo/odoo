@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/attachment_box/attachment_box_tests.js',
 const components = {
     AttachmentBox: require('mail/static/src/components/attachment_box/attachment_box.js'),
 };
+const { insert } = require('mail/static/src/model/model_field_command.js');
 const {
     afterEach,
     afterNextRender,
@@ -214,16 +215,16 @@ QUnit.test('view attachments', async function (assert) {
     });
     const thread = this.env.models['mail.thread'].create({
         attachments: [
-            ['insert', {
+            insert({
                 id: 143,
                 mimetype: 'text/plain',
                 name: 'Blah.txt'
-            }],
-            ['insert', {
+            }),
+            insert({
                 id: 144,
                 mimetype: 'text/plain',
                 name: 'Blu.txt'
-            }]
+            })
         ],
         id: 100,
         model: 'res.partner',
@@ -287,13 +288,11 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        attachments: [
-            ['insert', {
-                id: 143,
-                mimetype: 'text/plain',
-                name: 'Blah.txt'
-            }],
-        ],
+        attachments: insert({
+            id: 143,
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+        }),
         id: 100,
         model: 'res.partner',
     });

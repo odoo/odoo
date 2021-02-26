@@ -3,7 +3,7 @@ odoo.define('mail/static/src/models/attachment/attachment.js', function (require
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+const { clear, insert, link, replace } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -41,10 +41,10 @@ function factory(dependencies) {
 
             // relation
             if ('res_id' in data && 'res_model' in data) {
-                data2.originThread = [['insert', {
+                data2.originThread = insert({
                     id: data.res_id,
                     model: data.res_model,
-                }]];
+                });
             }
 
             return data2;
@@ -88,8 +88,8 @@ function factory(dependencies) {
                 return;
             }
             this.env.messaging.dialogManager.open('mail.attachment_viewer', {
-                attachment: [['link', attachment]],
-                attachments: [['replace', attachments]],
+                attachment: link(attachment),
+                attachments: replace(attachments),
             });
         }
 
@@ -134,7 +134,7 @@ function factory(dependencies) {
          */
         _computeComposers() {
             if (this.isUploading) {
-                return [];
+                return;
             }
             const relatedUploadingAttachment = this.env.models['mail.attachment']
                 .find(attachment =>
@@ -144,9 +144,9 @@ function factory(dependencies) {
             if (relatedUploadingAttachment) {
                 const composers = relatedUploadingAttachment.composers;
                 relatedUploadingAttachment.delete();
-                return [['replace', composers]];
+                return replace(composers);
             }
-            return [];
+            return;
         }
 
         /**
@@ -284,7 +284,7 @@ function factory(dependencies) {
                 }
                 return this.uploadingAbortController;
             }
-            return undefined;
+            return;
         }
     }
 

@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/thread_viewer/thread_viewer.js', function (r
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const { create, link, unlink } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -101,23 +102,23 @@ function factory(dependencies) {
          _computeThread() {
             if (this.chatter) {
                 if (!this.chatter.thread) {
-                    return [['unlink']];
+                    return unlink();
                 }
-                return [['link', this.chatter.thread]];
+                return link(this.chatter.thread);
             }
             if (this.chatWindow) {
                 if (!this.chatWindow.thread) {
-                    return [['unlink']];
+                    return unlink();
                 }
-                return [['link', this.chatWindow.thread]];
+                return link(this.chatWindow.thread);
             }
             if (this.discuss) {
                 if (!this.discuss.thread) {
-                    return [['unlink']];
+                    return unlink();
                 }
-                return [['link', this.discuss.thread]];
+                return link(this.discuss.thread);
             }
-            return [];
+            return;
         }
 
         /**
@@ -126,9 +127,9 @@ function factory(dependencies) {
          */
         _computeThreadCache() {
             if (!this.thread) {
-                return [['unlink']];
+                return unlink();
             }
-            return [['link', this.thread.cache(this.stringifiedDomain)]];
+            return link(this.thread.cache(this.stringifiedDomain));
         }
 
         /**
@@ -137,12 +138,12 @@ function factory(dependencies) {
          */
         _computeThreadView() {
             if (!this.hasThreadView) {
-                return [['unlink']];
+                return unlink();
             }
             if (this.threadView) {
-                return [];
+                return;
             }
-            return [['create']];
+            return create();
         }
 
     }

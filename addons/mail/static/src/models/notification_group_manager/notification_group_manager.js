@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/notification_group_manager/notification_grou
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { one2many } = require('mail/static/src/model/model_field.js');
+const { link } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -32,7 +33,7 @@ function factory(dependencies) {
                     res_model: thread.model,
                     res_model_name: thread.model_name,
                 });
-                group.update({ notifications: [['link', notification]] });
+                group.update({ notifications: link(notification) });
                 // keep res_id only if all notifications are for the same record
                 // set null if multiple records are present in the group
                 let res_id = group.res_id;
@@ -58,7 +59,7 @@ function factory(dependencies) {
                     groups.push(group);
                 }
             });
-            this.update({ groups: [['link', groups]] });
+            this.update({ groups: link(groups) });
         }
 
     }

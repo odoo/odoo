@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/thread_cache/thread_cache.js', function (req
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -80,7 +81,7 @@ function factory(dependencies) {
         static _createRecordLocalId(data) {
             const {
                 stringifiedDomain = '[]',
-                thread: [[commandInsert, thread]],
+                thread: { value: thread },
             } = data;
             return `${this.modelName}_[${thread.localId}]_<${stringifiedDomain}>`;
         }
@@ -92,7 +93,7 @@ function factory(dependencies) {
             const messagesWithoutCheckbox = this.checkedMessages.filter(
                 message => !message.hasCheckbox
             );
-            return [['unlink', messagesWithoutCheckbox]];
+            return unlink(messagesWithoutCheckbox);
         }
 
         /**
@@ -101,7 +102,7 @@ function factory(dependencies) {
          */
         _computeFetchedMessages() {
             if (!this.thread) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
             const toUnlinkMessages = [];
             for (const message of this.fetchedMessages) {
@@ -109,7 +110,7 @@ function factory(dependencies) {
                     toUnlinkMessages.push(message);
                 }
             }
-            return [['unlink', toUnlinkMessages]];
+            return unlink(toUnlinkMessages);
         }
 
         /**
@@ -122,9 +123,9 @@ function factory(dependencies) {
                 [l - 1]: lastFetchedMessage,
             } = this.orderedFetchedMessages;
             if (!lastFetchedMessage) {
-                return [['unlink']];
+                return unlink();
             }
-            return [['link', lastFetchedMessage]];
+            return link(lastFetchedMessage);
         }
 
         /**
@@ -137,9 +138,9 @@ function factory(dependencies) {
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
             if (!lastMessage) {
-                return [['unlink']];
+                return unlink();
             }
-            return [['link', lastMessage]];
+            return link(lastMessage);
         }
 
         /**
@@ -148,11 +149,11 @@ function factory(dependencies) {
          */
         _computeMessages() {
             if (!this.thread) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
             let messages = this.fetchedMessages;
             if (this.stringifiedDomain !== '[]') {
-                return [['replace', messages]];
+                return replace(messages);
             }
             // main cache: adjust with newer messages
             let newerMessages;
@@ -164,7 +165,7 @@ function factory(dependencies) {
                 );
             }
             messages = messages.concat(newerMessages);
-            return [['replace', messages]];
+            return replace(messages);
         }
 
         /**
@@ -173,7 +174,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeNonEmptyMessages() {
-            return [['replace', this.messages.filter(message => !message.isEmpty)]];
+            return replace(this.messages.filter(message => !message.isEmpty));
         }
 
         /**
@@ -181,7 +182,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedFetchedMessages() {
-            return [['replace', this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return replace(this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
         }
 
         /**
@@ -189,7 +190,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
-            return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
         }
 
         /**
@@ -241,9 +242,9 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeUncheckedMessages() {
-            return [['replace', this.messages.filter(
+            return replace(this.messages.filter(
                 message => message.hasCheckbox && !this.checkedMessages.includes(message)
-            )]];
+            ));
         }
 
         /**
@@ -312,7 +313,7 @@ function factory(dependencies) {
                 throw e;
             }
             this.update({
-                fetchedMessages: [['link', messages]],
+                fetchedMessages: link(messages),
                 hasLoadingFailed: false,
                 isLoaded: true,
                 isLoading: false,

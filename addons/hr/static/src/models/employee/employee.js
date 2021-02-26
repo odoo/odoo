@@ -3,6 +3,7 @@ odoo.define('hr/static/src/models/employee/employee.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, one2one } = require('mail/static/src/model/model_field.js');
+const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -25,7 +26,7 @@ function factory(dependencies) {
             if ('user_id' in data) {
                 data2.hasCheckedUser = true;
                 if (!data.user_id) {
-                    data2.user = [['unlink']];
+                    data2.user = unlink();
                 } else {
                     const partnerNameGet = data['user_partner_id'];
                     const partnerData = {
@@ -35,10 +36,10 @@ function factory(dependencies) {
                     const userNameGet = data['user_id'];
                     const userData = {
                         id: userNameGet[0],
-                        partner: [['insert', partnerData]],
+                        partner: insert(partnerData),
                         display_name: userNameGet[1],
                     };
-                    data2.user = [['insert', userData]];
+                    data2.user = insert(userData);
                 }
             }
             return data2;

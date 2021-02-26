@@ -4,7 +4,7 @@ odoo.define('mail/static/src/models/thread_view/thread_view.js', function (requi
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { RecordDeletedError } = require('mail/static/src/model/model_errors.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+const { clear, link, unlink } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -59,7 +59,7 @@ function factory(dependencies) {
          */
         handleVisibleMessage(message) {
             if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
-                this.update({ lastVisibleMessage: [['link', message]] });
+                this.update({ lastVisibleMessage: link(message) });
             }
         }
 
@@ -72,7 +72,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return [['link', this.env.messaging]];
+            return link(this.env.messaging);
         }
 
         /**
@@ -170,7 +170,7 @@ function factory(dependencies) {
                     isMarkAllAsReadRequested: true,
                 });
             }
-            this.update({ lastVisibleMessage: [['unlink']] });
+            this.update({ lastVisibleMessage: unlink() });
         }
 
         /**

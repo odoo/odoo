@@ -3,7 +3,7 @@ odoo.define('mail/static/src/models/messaging_notification_handler/messaging_not
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { one2one } = require('mail/static/src/model/model_field.js');
-const { decrement, increment } = require('mail/static/src/model/model_field_command.js');
+const { decrement, increment, insert, link } = require('mail/static/src/model/model_field_command.js');
 const { htmlToTextContentInline } = require('mail.utils');
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
@@ -159,7 +159,7 @@ function factory(dependencies) {
             }
             this.env.models['mail.thread_partner_seen_info'].insert({
                 channelId: channel.id,
-                lastFetchedMessage: [['insert', { id: last_message_id }]],
+                lastFetchedMessage: insert({ id: last_message_id }),
                 partnerId: partner_id,
             });
             this.env.models['mail.message_seen_indicator'].insert({
@@ -306,7 +306,7 @@ function factory(dependencies) {
             if (shouldComputeSeenIndicators) {
                 this.env.models['mail.thread_partner_seen_info'].insert({
                     channelId: channel.id,
-                    lastSeenMessage: [['link', lastMessage]],
+                    lastSeenMessage: link(lastMessage),
                     partnerId: partner_id,
                 });
                 this.env.models['mail.message_seen_indicator'].insert({
@@ -465,7 +465,7 @@ function factory(dependencies) {
                 // (e.g. to know when to display "invited" notification)
                 // Current partner can always be assumed to be a member of
                 // channels received through this notification.
-                convertedData.members = [['link', this.env.messaging.currentPartner]];
+                convertedData.members = link(this.env.messaging.currentPartner);
             }
             let channel = this.env.models['mail.thread'].findFromIdentifyingData(convertedData);
             const wasCurrentPartnerMember = (
@@ -529,7 +529,7 @@ function factory(dependencies) {
                 // implicit: failures are sent by the server as notification
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {
-                    message.update({ author: [['link', this.messaging.currentPartner]] });
+                    message.update({ author: link(this.messaging.currentPartner) });
                 }
             }
             this.messaging.notificationGroupManager.computeGroups();
@@ -637,7 +637,7 @@ function factory(dependencies) {
             );
             const partnerRoot = this.env.messaging.partnerRoot;
             const message = this.env.models['mail.message'].create(Object.assign(convertedData, {
-                author: [['link', partnerRoot]],
+                author: link(partnerRoot),
                 id: lastMessageId + 0.01,
                 isTransient: true,
             }));

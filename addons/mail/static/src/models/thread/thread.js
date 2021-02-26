@@ -3,7 +3,7 @@ odoo.define('mail/static/src/models/thread/thread.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+const { clear, create, insert, insertAndReplace, link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
 const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const Timer = require('mail/static/src/utils/timer/timer.js');
 const { cleanSearchTerm } = require('mail/static/src/utils/utils.js');
@@ -149,7 +149,7 @@ function factory(dependencies) {
                 data2.model = 'mail.channel';
             }
             if ('create_uid' in data) {
-                data2.creator = [['insert', { id: data.create_uid }]];
+                data2.creator = insert({ id: data.create_uid });
             }
             if ('custom_channel_name' in data) {
                 data2.custom_channel_name = data.custom_channel_name;
@@ -175,7 +175,7 @@ function factory(dependencies) {
                     model: data2.model,
                     res_id: data2.id,
                 });
-                data2.serverLastMessage = [['insert', messageData]];
+                data2.serverLastMessage = insert(messageData);
             }
             if ('last_message_id' in data && data.last_message_id) {
                 const messageData = this.env.models['mail.message'].convertData({
@@ -183,7 +183,7 @@ function factory(dependencies) {
                     model: data2.model,
                     res_id: data2.id,
                 });
-                data2.serverLastMessage = [['insert', messageData]];
+                data2.serverLastMessage = insert(messageData);
             }
             if ('mass_mailing' in data) {
                 data2.mass_mailing = data.mass_mailing;
@@ -212,19 +212,18 @@ function factory(dependencies) {
 
             // relations
             if ('members' in data) {
+                // The list syntax is kept here because it is used in livechat override
                 if (!data.members) {
-                    data2.members = [['unlink-all']];
+                    data2.members = [unlinkAll()];
                 } else {
-                    data2.members = [
-                        ['insert-and-replace', data.members.map(memberData =>
-                            this.env.models['mail.partner'].convertData(memberData)
-                        )],
-                    ];
+                    data2.members = [insertAndReplace(data.members.map(memberData =>
+                        this.env.models['mail.partner'].convertData(memberData)
+                    ))];
                 }
             }
             if ('seen_partners_info' in data) {
                 if (!data.seen_partners_info) {
-                    data2.partnerSeenInfos = [['unlink-all']];
+                    data2.partnerSeenInfos = unlinkAll();
                 } else {
                     /*
                      * FIXME: not optimal to write on relation given the fact that the relation
@@ -232,19 +231,17 @@ function factory(dependencies) {
                      * (here channelId will compute partnerSeenInfo.thread))
                      * task-2336946
                      */
-                    data2.partnerSeenInfos = [
-                        ['insert-and-replace',
-                            data.seen_partners_info.map(
-                                ({ fetched_message_id, partner_id, seen_message_id }) => {
-                                    return {
-                                        channelId: data2.id,
-                                        lastFetchedMessage: [fetched_message_id ? ['insert', { id: fetched_message_id }] : ['unlink-all']],
-                                        lastSeenMessage: [seen_message_id ? ['insert', { id: seen_message_id }] : ['unlink-all']],
-                                        partnerId: partner_id,
-                                    };
-                                })
-                        ]
-                    ];
+                    data2.partnerSeenInfos = insertAndReplace(
+                        data.seen_partners_info.map(
+                            ({ fetched_message_id, partner_id, seen_message_id }) => {
+                                return {
+                                    channelId: data2.id,
+                                    lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : unlinkAll(),
+                                    lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : unlinkAll(),
+                                    partnerId: partner_id,
+                            };
+                        })
+                    );
                     if (data.id || this.id) {
                         const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
                             if (fetched_message_id) {
@@ -262,16 +259,12 @@ function factory(dependencies) {
                              * (here channelId will compute messageSeenIndicator.thread))
                              * task-2336946
                              */
-                            data2.messageSeenIndicators = [
-                                ['insert',
-                                    [...messageIds].map(messageId => {
-                                       return {
-                                           channelId: data.id || this.id,
-                                           messageId,
-                                       };
-                                    })
-                                ]
-                            ];
+                            data2.messageSeenIndicators = insert([...messageIds].map(messageId => {
+                                return {
+                                    channelId: data.id || this.id,
+                                    messageId,
+                                };
+                            }));
                         }
                     }
                 }
@@ -613,14 +606,14 @@ function factory(dependencies) {
                     return {
                         email,
                         name,
-                        partner: [partner_id ? ['insert', { id: partner_id }] : ['unlink']],
+                        partner: partner_id ? insert({ id: partner_id }) : unlink(),
                         reason,
                     };
                 });
                 this.insert({
                     id: parseInt(id),
                     model,
-                    suggestedRecipientInfoList: [['insert-and-replace', recipientInfoList]],
+                    suggestedRecipientInfoList: insertAndReplace(recipientInfoList),
                 });
             }
         }
@@ -667,7 +660,7 @@ function factory(dependencies) {
         cache(stringifiedDomain = '[]') {
             return this.env.models['mail.thread_cache'].insert({
                 stringifiedDomain,
-                thread: [['link', this]],
+                thread: link(this),
             });
         }
 
@@ -687,11 +680,9 @@ function factory(dependencies) {
                 orderBy: [{ name: 'id', asc: false }],
             }, { shadow: true }));
             this.update({
-                originThreadAttachments: [['insert-and-replace',
-                    attachmentsData.map(data =>
-                        this.env.models['mail.attachment'].convertData(data)
-                    )
-                ]],
+                originThreadAttachments: insertAndReplace(attachmentsData.map(data =>
+                    this.env.models['mail.attachment'].convertData(data)
+                )),
             });
             this.update({ areAttachmentsLoaded: true });
         }
@@ -916,7 +907,7 @@ function factory(dependencies) {
             const activities = this.env.models['mail.activity'].insert(activitiesData.map(
                 activityData => this.env.models['mail.activity'].convertData(activityData)
             ));
-            this.update({ activities: [['replace', activities]] });
+            this.update({ activities: replace(activities) });
         }
 
         /**
@@ -924,7 +915,7 @@ function factory(dependencies) {
          */
         async refreshFollowers() {
             if (this.isTemporary) {
-                this.update({ followers: [['unlink-all']] });
+                this.update({ followers: unlinkAll() });
                 return;
             }
             const { followers } = await this.async(() => this.env.services.rpc({
@@ -937,13 +928,13 @@ function factory(dependencies) {
             this.update({ areFollowersLoaded: true });
             if (followers.length > 0) {
                 this.update({
-                    followers: [['insert-and-replace', followers.map(data =>
+                    followers: insertAndReplace(followers.map(data =>
                         this.env.models['mail.follower'].convertData(data))
-                    ]],
+                    ),
                 });
             } else {
                 this.update({
-                    followers: [['unlink-all']],
+                    followers: unlinkAll(),
                 });
             }
         }
@@ -981,7 +972,7 @@ function factory(dependencies) {
             newOrderedTypingMemberLocalIds.push(currentPartner.localId);
             this.update({
                 orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['link', currentPartner]],
+                typingMembers: link(currentPartner),
             });
             // Notify typing status to other members.
             await this._throttleNotifyCurrentPartnerTypingStatus({ isTyping: true });
@@ -1006,7 +997,7 @@ function factory(dependencies) {
             newOrderedTypingMemberLocalIds.push(partner.localId);
             this.update({
                 orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['link', partner]],
+                typingMembers: link(partner),
             });
         }
 
@@ -1068,7 +1059,7 @@ function factory(dependencies) {
                 .filter(localId => localId !== currentPartner.localId);
             this.update({
                 orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['unlink', currentPartner]],
+                typingMembers: unlink(currentPartner),
             });
             // Notify typing status to other members.
             if (immediateNotify) {
@@ -1092,7 +1083,7 @@ function factory(dependencies) {
                 .filter(localId => localId !== partner.localId);
             this.update({
                 orderedTypingMemberLocalIds: newOrderedTypingMemberLocalIds,
-                typingMembers: [['unlink', partner]],
+                typingMembers: unlink(partner),
             });
         }
 
@@ -1137,7 +1128,7 @@ function factory(dependencies) {
                     // "most-recent" before "oldest" attachments.
                     return Math.abs(a2.id) - Math.abs(a1.id);
                 });
-            return [['replace', allAttachments]];
+            return replace(allAttachments);
         }
 
         /**
@@ -1146,20 +1137,20 @@ function factory(dependencies) {
          */
         _computeCorrespondent() {
             if (this.channel_type === 'channel') {
-                return [['unlink']];
+                return unlink();
             }
             const correspondents = this.members.filter(partner =>
                 partner !== this.env.messaging.currentPartner
             );
             if (correspondents.length === 1) {
                 // 2 members chat
-                return [['link', correspondents[0]]];
+                return link(correspondents[0]);
             }
             if (this.members.length === 1) {
                 // chat with oneself
-                return [['link', this.members[0]]];
+                return link(this.members[0]);
             }
-            return [['unlink']];
+            return unlink();
         }
 
         /**
@@ -1178,7 +1169,7 @@ function factory(dependencies) {
          * @returns {mail.activity[]}
          */
         _computeFutureActivities() {
-            return [['replace', this.activities.filter(activity => activity.state === 'planned')]];
+            return replace(this.activities.filter(activity => activity.state === 'planned'));
         }
 
         /**
@@ -1244,7 +1235,7 @@ function factory(dependencies) {
                 this.partnerSeenInfos.filter(partnerSeenInfo =>
                     partnerSeenInfo.partner !== this.messagingCurrentPartner);
             if (otherPartnerSeenInfos.length === 0) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
 
             const otherPartnersLastSeenMessageIds =
@@ -1252,7 +1243,7 @@ function factory(dependencies) {
                     partnerSeenInfo.lastSeenMessage ? partnerSeenInfo.lastSeenMessage.id : 0
                 );
             if (otherPartnersLastSeenMessageIds.length === 0) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
             const lastMessageSeenByAllId = Math.min(
                 ...otherPartnersLastSeenMessageIds
@@ -1266,9 +1257,9 @@ function factory(dependencies) {
                 !currentPartnerOrderedSeenMessages ||
                 currentPartnerOrderedSeenMessages.length === 0
             ) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
-            return [['link', currentPartnerOrderedSeenMessages.slice().pop()]];
+            return link(currentPartnerOrderedSeenMessages.slice().pop());
         }
 
         /**
@@ -1281,9 +1272,9 @@ function factory(dependencies) {
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
             if (lastMessage) {
-                return [['link', lastMessage]];
+                return link(lastMessage);
             }
-            return [['unlink']];
+            return unlink();
         }
 
         /**
@@ -1296,9 +1287,9 @@ function factory(dependencies) {
                 [l - 1]: lastMessage,
             } = this.orderedNonTransientMessages;
             if (lastMessage) {
-                return [['link', lastMessage]];
+                return link(lastMessage);
             }
-            return [['unlink']];
+            return unlink();
         }
 
         /**
@@ -1349,9 +1340,9 @@ function factory(dependencies) {
                 [l - 1]: lastNeedactionMessageAsOriginThread,
             } = orderedNeedactionMessagesAsOriginThread;
             if (lastNeedactionMessageAsOriginThread) {
-                return [['link', lastNeedactionMessageAsOriginThread]];
+                return link(lastNeedactionMessageAsOriginThread);
             }
-            return [['unlink']];
+            return unlink();
         }
 
         /**
@@ -1359,7 +1350,7 @@ function factory(dependencies) {
          * @returns {mail.thread_cache}
          */
         _computeMainCache() {
-            return [['link', this.cache()]];
+            return link(this.cache());
         }
 
         /**
@@ -1403,7 +1394,7 @@ function factory(dependencies) {
          * @returns {mail.messaging}
          */
         _computeMessaging() {
-            return [['link', this.env.messaging]];
+            return link(this.env.messaging);
         }
 
         /**
@@ -1411,7 +1402,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
-            return [['replace', this.messagesAsOriginThread.filter(message => message.isNeedaction)]];
+            return replace(this.messagesAsOriginThread.filter(message => message.isNeedaction));
         }
 
         /**
@@ -1420,22 +1411,22 @@ function factory(dependencies) {
          */
         _computeMessageAfterNewMessageSeparator() {
             if (this.model !== 'mail.channel') {
-                return [['unlink']];
+                return unlink();
             }
             if (this.localMessageUnreadCounter === 0) {
-                return [['unlink']];
+                return unlink();
             }
             const index = this.orderedMessages.findIndex(message =>
                 message.id === this.lastSeenByCurrentPartnerMessageId
             );
             if (index === -1) {
-                return [['unlink']];
+                return unlink();
             }
             const message = this.orderedMessages[index + 1];
             if (!message) {
-                return [['unlink']];
+                return unlink();
             }
-            return [['link', message]];
+            return link(message);
         }
 
         /**
@@ -1443,7 +1434,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
-            return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
         }
 
         /**
@@ -1451,7 +1442,7 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedNonTransientMessages() {
-            return [['replace', this.orderedMessages.filter(m => !m.isTransient)]];
+            return replace(this.orderedMessages.filter(m => !m.isTransient));
         }
 
         /**
@@ -1459,12 +1450,9 @@ function factory(dependencies) {
          * @returns {mail.partner[]}
          */
         _computeOrderedOtherTypingMembers() {
-            return [[
-                'replace',
-                this.orderedTypingMembers.filter(
-                    member => member !== this.env.messaging.currentPartner
-                ),
-            ]];
+            return replace(this.orderedTypingMembers.filter(
+                member => member !== this.env.messaging.currentPartner
+            ));
         }
 
         /**
@@ -1485,7 +1473,7 @@ function factory(dependencies) {
          * @returns {mail.activity[]}
          */
         _computeOverdueActivities() {
-            return [['replace', this.activities.filter(activity => activity.state === 'overdue')]];
+            return replace(this.activities.filter(activity => activity.state === 'overdue'));
         }
 
         /**
@@ -1493,7 +1481,7 @@ function factory(dependencies) {
          * @returns {mail.activity[]}
          */
         _computeTodayActivities() {
-            return [['replace', this.activities.filter(activity => activity.state === 'today')]];
+            return replace(this.activities.filter(activity => activity.state === 'today'));
         }
 
         /**
@@ -1768,7 +1756,7 @@ function factory(dependencies) {
             related: 'chatWindow.isFolded',
         }),
         composer: one2one('mail.composer', {
-            default: [['create']],
+            default: create(),
             inverse: 'thread',
             isCausal: true,
             readonly: true,

@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/model/model_field.js', function (require) {
 'use strict';
 
-const { FieldCommand } = require('mail/static/src/model/model_field_command.js');
+const { FieldCommand, link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
 
 /**
  * Class whose instances represent field on a model.
@@ -248,7 +248,7 @@ class ModelField {
     clear(record, options) {
         let hasChanged = false;
         if (this.fieldType === 'relation') {
-            if (this.parseAndExecuteCommands(record, [['unlink-all']], options)) {
+            if (this.parseAndExecuteCommands(record, unlinkAll(), options)) {
                 hasChanged = true;
             }
         }
@@ -303,7 +303,7 @@ class ModelField {
                 }
             }
             if (this.fieldType === 'relation') {
-                return [['replace', newVal]];
+                return replace(newVal);
             }
             return newVal;
         }
@@ -314,16 +314,47 @@ class ModelField {
             const newVal = otherField.get(otherRecord);
             if (this.fieldType === 'relation') {
                 if (newVal) {
-                    return [['replace', newVal]];
+                    return replace(newVal);
                 } else {
-                    return [['unlink-all']];
+                    return unlinkAll();
                 }
             }
             return newVal;
         }
         if (this.fieldType === 'relation') {
-            return [];
+            return;
         }
+    }
+
+    /**
+     * Converts the given value to a list of FieldCommands
+     *
+     * @param {*} newVal
+     * @returns {FieldCommand[]}
+     */
+    convertToFieldCommandList(newVal) {
+        if (newVal instanceof FieldCommand) {
+            return [newVal];
+        } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
+            return newVal;
+        } else if (this.fieldType === 'relation') {
+            // Deprecated. Used only to support old syntax: `[...[name, value]]` command
+            return newVal.map(([name, value]) => new FieldCommand(name, value));
+        } else {
+            return [new FieldCommand('set', newVal)];
+        }
+    }
+
+    /**
+     * Decreases the field value by `amount`
+     * for an attribute field holding number value,
+     *
+     * @param {mail.model} record
+     * @param {number} amount
+     */
+    decrement(record, amount) {
+        const currentValue = this.read(record);
+        return this._setAttribute(record, currentValue - amount);
     }
 
     /**
@@ -347,30 +378,108 @@ class ModelField {
     }
 
     /**
+     * Increases the field value by `amount`
+     * for an attribute field holding number value.
+     *
+     * @param {mail.model} record
+     * @param {number} amount
+     */
+    increment(record, amount) {
+        const currentValue = this.read(record);
+        return this._setAttribute(record, currentValue + amount);
+    }
+
+    /**
      * Parses newVal for command(s) and executes them.
      *
      * @param {mail.model} record
      * @param {any} newVal
      * @param {Object} [options]
+     * @param {boolean} [options.hasToUpdateInverse] whether updating the
+     *  current field should also update its inverse field. Only applies to
+     *  relational fields. Typically set to false only during the process of
+     *  updating the inverse field itself, to avoid unnecessary recursion.
      * @returns {boolean} whether the value changed for the current field
      */
     parseAndExecuteCommands(record, newVal, options) {
-        if (newVal instanceof FieldCommand) {
-            // single command given
-            return newVal.execute(this, record, options);
-        }
-        if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
-            // multi command given
-            let hasChanged = false;
-            for (const command of newVal) {
-                if (command.execute(this, record, options)) {
-                    hasChanged = true;
+        const commandList = this.convertToFieldCommandList(newVal);
+        let hasChanged = false;
+        for (const command of commandList) {
+            const commandName = command.name;
+            const newVal = command.value;
+            if (this.fieldType === 'attribute') {
+                switch (commandName) {
+                    case 'clear':
+                        if (this.clear(record, options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'decrement':
+                        if (this.decrement(record, newVal)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'increment':
+                        if (this.increment(record, newVal)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'set':
+                        if (this._setAttribute(record, newVal)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    default:
+                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                }
+            } else if (this.fieldType === 'relation') {
+                switch (commandName) {
+                    case 'clear':
+                        if (this.clear(record, options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'create':
+                        if (this._setRelationCreate(record, newVal, options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'insert':
+                        if (this._setRelationInsert(record, newVal, options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'insert-and-replace':
+                        if (this._setRelationInsertAndReplace(record, newVal, options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'link':
+                        if (this._setRelationLink(record, newVal, options)) {
+                            hasChanged = true;
+                        };
+                        break;
+                    case 'replace':
+                        if (this._setRelationReplace(record, newVal, options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    case 'unlink':
+                        if (this._setRelationUnlink(record, newVal, options)){
+                            hasChanged = true;
+                        };
+                        break;
+                    case 'unlink-all':
+                        if (this._setRelationUnlink(record, this.read(record), options)) {
+                            hasChanged = true;
+                        }
+                        break;
+                    default:
+                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
                 }
             }
-            return hasChanged;
         }
-        // not a command
-        return this.set(record, newVal, options);
+        return hasChanged;
     }
 
     /**
@@ -382,73 +491,6 @@ class ModelField {
      */
     read(record) {
         return record.__values[this.fieldName];
-    }
-
-    /**
-     * Set a value on this field. The format of the value comes from business
-     * code.
-     *
-     * @param {mail.model} record
-     * @param {any} newVal
-     * @param {Object} [options]
-     * @param {boolean} [options.hasToUpdateInverse] whether updating the
-     *  current field should also update its inverse field. Only applies to
-     *  relational fields. Typically set to false only during the process of
-     *  updating the inverse field itself, to avoid unnecessary recursion.
-     * @returns {boolean} whether the value changed for the current field
-     */
-    set(record, newVal, options) {
-        const currentValue = this.read(record);
-        if (this.fieldType === 'attribute') {
-            if (currentValue === newVal) {
-                return false;
-            }
-            record.__values[this.fieldName] = newVal;
-            return true;
-        }
-        if (this.fieldType === 'relation') {
-            let hasChanged = false;
-            for (const val of newVal) {
-                switch (val[0]) {
-                    case 'create':
-                        if (this._setRelationCreate(record, val[1], options)) {
-                            hasChanged = true;
-                        }
-                        break;
-                    case 'insert':
-                        if (this._setRelationInsert(record, val[1], options)) {
-                            hasChanged = true;
-                        }
-                        break;
-                    case 'insert-and-replace':
-                        if (this._setRelationInsertAndReplace(record, val[1], options)) {
-                            hasChanged = true;
-                        }
-                        break;
-                    case 'link':
-                        if (this._setRelationLink(record, val[1], options)) {
-                            hasChanged = true;
-                        }
-                        break;
-                    case 'replace':
-                        if (this._setRelationReplace(record, val[1], options)) {
-                            hasChanged = true;
-                        }
-                        break;
-                    case 'unlink':
-                        if (this._setRelationUnlink(record, val[1], options)) {
-                            hasChanged = true;
-                        }
-                        break;
-                    case 'unlink-all':
-                        if (this._setRelationUnlink(record, currentValue, options)) {
-                            hasChanged = true;
-                        }
-                        break;
-                }
-            }
-            return hasChanged;
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -491,6 +533,23 @@ class ModelField {
             this._verifyRelationalValue(newValue);
         }
         return [newValue];
+    }
+
+    /**
+     *  Set a value for this attribute field
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {any} newVal value to be written on the field value.
+     * @returns {boolean} whether the value changed for the current field
+     */
+    _setAttribute(record, newVal) {
+        const currentValue = this.read(record);
+        if (currentValue === newVal) {
+            return false;
+        }
+        record.__values[this.fieldName] = newVal;
+        return true;
     }
 
     /**
@@ -595,7 +654,7 @@ class ModelField {
             if (hasToUpdateInverse) {
                 this.env.modelManager._update(
                     recordToLink,
-                    { [this.inverse]: [['link', record]] },
+                    { [this.inverse]: link(record) },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
                 );
             }
@@ -631,7 +690,7 @@ class ModelField {
         if (hasToUpdateInverse) {
             this.env.modelManager._update(
                 recordToLink,
-                { [this.inverse]: [['link', record]] },
+                { [this.inverse]: link(record) },
                 { allowWriteReadonly: true, hasToUpdateInverse: false }
             );
         }
@@ -765,7 +824,7 @@ class ModelField {
                 } else {
                     this.env.modelManager._update(
                         recordToUnlink,
-                        { [this.inverse]: [['unlink', record]] },
+                        { [this.inverse]: unlink(record) },
                         { allowWriteReadonly: true, hasToUpdateInverse: false }
                     );
                 }
@@ -809,7 +868,7 @@ class ModelField {
             } else {
                 this.env.modelManager._update(
                     otherRecord,
-                    { [this.inverse]: [['unlink', record]] },
+                    { [this.inverse]: unlink(record) },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
                 );
             }

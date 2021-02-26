@@ -9,6 +9,7 @@ const components = {
 const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const { link } = require('mail/static/src/model/model_field_command.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -54,7 +55,7 @@ class AttachmentBox extends Component {
      */
     get newAttachmentExtraData() {
         return {
-            originThread: [['link', this.thread]],
+            originThread: link(this.thread),
         };
     }
 

@@ -14,6 +14,7 @@ const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+const { replace } = require('mail/static/src/model/model_field_command.js');
 const {
     isEventHandled,
     markEventHandled,
@@ -181,7 +182,7 @@ class Composer extends Component {
      */
     get newAttachmentExtraData() {
         return {
-            composers: [['replace', this.composer]],
+            composers: replace(this.composer),
         };
     }
 
