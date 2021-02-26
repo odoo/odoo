@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from collections import OrderedDict
 from datetime import datetime
 from subprocess import Popen, PIPE
 import base64
@@ -151,7 +150,7 @@ class AssetsBundle(object):
                                                     extension='')
                 else:
                     href = attachment.url
-                attr = OrderedDict([
+                attr = dict([
                     ["type", "text/css"],
                     ["rel", "stylesheet"],
                     ["href", href],
@@ -167,7 +166,7 @@ class AssetsBundle(object):
         if js and self.javascripts:
             js_attachment = self.js(is_minified=not is_debug_assets)
             src = self.get_debug_asset_url(name=js_attachment.name, extension='') if is_debug_assets else js_attachment[0].url
-            attr = OrderedDict([
+            attr = dict([
                 ["async", "async" if async_load else None],
                 ["defer", "defer" if defer_load or lazy_load else None],
                 ["type", "text/javascript"],
@@ -819,14 +818,14 @@ class JavascriptAsset(WebAsset):
 
     def to_node(self):
         if self.url:
-            return ("script", OrderedDict([
+            return ("script", dict([
                 ["type", "text/javascript"],
                 ["src", self.html_url],
                 ['data-asset-bundle', self.bundle.name],
                 ['data-asset-version', self.bundle.version],
             ]), None)
         else:
-            return ("script", OrderedDict([
+            return ("script", dict([
                 ["type", "text/javascript"],
                 ["charset", "utf-8"],
                 ['data-asset-bundle', self.bundle.name],
@@ -922,7 +921,7 @@ class StylesheetAsset(WebAsset):
 
     def to_node(self):
         if self.url:
-            attr = OrderedDict([
+            attr = dict([
                 ["type", "text/css"],
                 ["rel", "stylesheet"],
                 ["href", self.html_url],
@@ -932,7 +931,7 @@ class StylesheetAsset(WebAsset):
             ])
             return ("link", attr, None)
         else:
-            attr = OrderedDict([
+            attr = dict([
                 ["type", "text/css"],
                 ["media", escape(to_text(self.media)) if self.media else None],
                 ['data-asset-bundle', self.bundle.name],

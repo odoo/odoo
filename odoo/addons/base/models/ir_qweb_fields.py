@@ -2,7 +2,6 @@
 import base64
 import logging
 import re
-from collections import OrderedDict
 from io import BytesIO
 
 import babel
@@ -81,9 +80,9 @@ class FieldConverter(models.AbstractModel):
         * ``readonly``, has this attribute if the field is readonly
         * ``expression``, the original expression
 
-        :returns: OrderedDict (attribute name, attribute value).
+        :returns: dict (attribute name, attribute value).
         """
-        data = OrderedDict()
+        data = {}
         field = record._fields[field_name]
 
         if not options['inherit_branding'] and not options['translate']:
@@ -139,7 +138,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}'))
+        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}'))
 
 
 class FloatConverter(models.AbstractModel):
@@ -168,7 +167,7 @@ class FloatConverter(models.AbstractModel):
             value = float_utils.float_round(value, precision_digits=precision)
             fmt = '%.{precision}f'.format(precision=precision)
 
-        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
@@ -245,11 +244,11 @@ class DateTimeConverter(models.AbstractModel):
             pattern = options['format']
         else:
             if options.get('time_only'):
-                strftime_pattern = (u"%s" % (lang.time_format))
+                strftime_pattern = ("%s" % (lang.time_format))
             elif options.get('date_only'):
-                strftime_pattern = (u"%s" % (lang.date_format))
+                strftime_pattern = ("%s" % (lang.date_format))
             else:
-                strftime_pattern = (u"%s %s" % (lang.date_format, lang.time_format))
+                strftime_pattern = ("%s %s" % (lang.date_format, lang.time_format))
 
             pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
@@ -296,7 +295,7 @@ class SelectionConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
-        return escape(pycompat.to_text(options['selection'][value]) or u'')
+        return escape(pycompat.to_text(options['selection'][value]) or '')
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -346,11 +345,11 @@ class HTMLConverter(models.AbstractModel):
         # use pos processing for all nodes with attributes
         for element in body.iter():
             if element.attrib:
-                attrib = OrderedDict(element.attrib)
+                attrib = dict(element.attrib)
                 attrib = irQweb._post_processing_att(element.tag, attrib, options.get('template_options'))
                 element.attrib.clear()
                 element.attrib.update(attrib)
-        return etree.tostring(body, encoding='unicode', method='html')[6:-7]
+        return M(etree.tostring(body, encoding='unicode', method='html')[6:-7])
 
 
 class ImageConverter(models.AbstractModel):
@@ -376,7 +375,7 @@ class ImageConverter(models.AbstractModel):
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return u'<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii'))
+        return M('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii')))
 
 class ImageUrlConverter(models.AbstractModel):
     """ ``image_url`` widget rendering, inserts an image tag in the
@@ -388,7 +387,7 @@ class ImageUrlConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return u'<img src="%s">' % (value)
+        return M('<img src="%s">' % (value))
 
 class MonetaryConverter(models.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
@@ -444,13 +443,13 @@ class MonetaryConverter(models.AbstractModel):
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+                                grouping=True, monetary=True).replace(r' ', '\N{NO-BREAK SPACE}').replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
-        pre = post = u''
+        pre = post = ''
         if display_currency.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=display_currency.symbol or '')
+            pre = '{symbol}\N{NO-BREAK SPACE}'.format(symbol=display_currency.symbol or '')
         else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
+            post = '\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
 
         return M('{pre}<span class="oe_currency_value">{0}</span>{post}').format(formatted_amount, pre=pre, post=post)
 
@@ -571,13 +570,13 @@ class DurationConverter(models.AbstractModel):
                 if not v and (secs_per_unit > factor or secs_per_unit < round_to):
                     continue
                 if len(sections):
-                    sections.append(u':')
-                sections.append(u"%02.0f" % int(round(v)))
-            return u''.join(sections)
+                    sections.append(':')
+                sections.append("%02.0f" % int(round(v)))
+            return ''.join(sections)
 
         if value < 0:
             r = -r
-            sections.append(u'-')
+            sections.append('-')
         for unit, label, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v:
@@ -592,7 +591,7 @@ class DurationConverter(models.AbstractModel):
             if section:
                 sections.append(section)
 
-        return u' '.join(sections)
+        return ' '.join(sections)
 
 
 class RelativeDatetimeConverter(models.AbstractModel):

@@ -229,7 +229,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(default_tree, self.view_ids['C'].id)
 
     def test_no_default_view(self):
-        self.assertFalse(self.View.default_view(model='does.not.exist', view_type='form'))
+        self.assertFalse(self.View.default_view(model='no_model.exist', view_type='form'))
         self.assertFalse(self.View.default_view(model=self.model, view_type='graph'))
 
     def test_no_recursion(self):

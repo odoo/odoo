@@ -17,6 +17,22 @@ class TestQweb(TransactionCaseWithUserDemo):
                            get_module_resource(module, *args),
                            {}, 'init', False, 'test')
 
+    def test_qweb_post_processing_att(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="attr-escaping">
+                <img src="http://test.external.img/img.png"/>
+                <img t-att-src="url"/>
+            </t>'''
+        })
+        result = """
+                <img src="http://test.external.img/img.png" loading="lazy"/>
+                <img src="http://test.external.img/img2.png" loading="lazy"/>
+            """
+        rendered = str(self.env['ir.qweb']._render(t.id, {'url': 'http://test.external.img/img2.png'}), 'utf-8')
+        self.assertEqual(rendered.strip(), result.strip())
+
     def test_qweb_cdn(self):
         self._load('website', 'tests', 'template_qweb_test.xml')
 
