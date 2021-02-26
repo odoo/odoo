@@ -155,9 +155,7 @@
                             <t t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']">
                                 <li t-if="sale_order.validity_date" class="list-group-item">
                                     <small><b class="text-muted">This offer expires on</b></small>
-                                    <div>
-                                        <t t-esc="sale_order.validity_date.strftime('%d %B %Y')"/>
-                                    </div>
+                                    <div t-field="sale_order.validity_date"></div>
                                 </li>
                                 <li t-if="sale_order.amount_undiscounted - sale_order.amount_untaxed &gt; 0.01" class="list-group-item flex-grow-1">
                                     <small><b class="text-muted">Your advantage</b></small>
