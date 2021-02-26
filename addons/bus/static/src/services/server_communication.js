@@ -55,6 +55,8 @@ export class ServerCommunication {
     // Public
     // -------------------------------------------------------------------------
 
+    // TODO same rename register methods? Here or in other files.
+
     /**
      * Registers a new handler.
      *
