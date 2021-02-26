@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="create_company_global_time_off_view_form" model="ir.ui.view">
+        <field name="name">create.company.global.time.off.view.form</field>
+        <field name="model">create.company.global.time.off</field>
+        <field name="arch" type="xml">
+            <form string="Create Company Public Time Off">
+                <group>
+                    <field name="name"/>
+                    <label for="date_from" string="Period"/>
+                    <div>
+                        <field name="date_from" class="oe_inline"/>
+                        <span> to </span>
+                        <field name="date_to" class="oe_inline"/>
+                    </div>
+                    <field name="company_id"/>
+                    <field name="work_entry_type_id"/>
+                </group>
+                <footer>
+                    <button string="Confirm" name="action_confirm" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="action_create_company_global_time_off" model="ir.actions.act_window">
+        <field name="name">Create Company Public Time Off</field>
+        <field name="res_model">create.company.global.time.off</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="create_company_global_time_off_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
