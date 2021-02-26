@@ -185,7 +185,7 @@ tour.register('sale_timesheet_tour', {
     trigger: 'div.o_notebook_headers',
     content: 'Click on Invoicing tab to configure the invoicing of this project.',
     run: function (actions) {
-        const notebookId = $('div[name="sale_order_id"]').closest("div.tab-pane").attr('id');
+        const notebookId = $('div[name="sale_line_id"]').closest("div.tab-pane").attr('id');
         actions.click(this.$anchor.find(`a[data-toggle="tab"][href="#${notebookId}"]`));
     },
 }, {
@@ -197,16 +197,6 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a',
     content: 'Select the customer in the autocomplete dropdown',
-    run: 'click',
-}, {
-    trigger: 'div[name="sale_order_id"]',
-    content: 'Select the first Sales Order for this customer to select a SOL.',
-    run: function (actions) {
-        actions.text('S', this.$anchor.find('input'));
-    },
-}, {
-    trigger: 'ul.ui-autocomplete > li:first-child > a',
-    content: 'Select the Sales Order in autocomplete dropdown.',
     run: 'click',
 }, {
     trigger: 'div[name="sale_line_id"]',

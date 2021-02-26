@@ -24,7 +24,7 @@
                             <field name="display_create_order" invisible="1"/>
                             <field name="pricing_type" invisible="1" widget="radio"/>
                             <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
-                            <field name="sale_order_id" attrs="{'readonly': [('sale_order_id', '!=', False)]}" force_save="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_order_id" invisible="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                             <field name="sale_line_id" string="Default Sales Order Item" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                         </group>
                     </group>
@@ -63,9 +63,6 @@
         <field name="inherit_id" ref="sale_timesheet.project_project_view_form"/>
         <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="arch" type="xml">
-            <field name="sale_order_id" position="attributes">
-                <attribute name="options">{'no_create': True, 'no_edit': True, 'delete': False}</attribute>
-            </field>
             <field name="sale_line_id" position="attributes">
                 <attribute name="options">{'no_create': True, 'no_edit': True, 'delete': False}</attribute>
             </field>

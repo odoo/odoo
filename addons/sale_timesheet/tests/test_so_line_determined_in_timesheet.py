@@ -68,7 +68,6 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
         # 1) Define a SO and SOL in the project
         self.project_project_rate = self.project_task_rate.copy({
             'name': 'Project with pricing_type="project_rate"',
-            'sale_order_id': self.so.id,
             'sale_line_id': self.so.order_line[0].id,
         })
 
@@ -110,7 +109,6 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
         # 1) Define a SO, SOL and mapping for an employee in the project,
         self.project_employee_rate = self.project_task_rate.copy({
             'name': 'Project with pricing_type="employee_rate"',
-            'sale_order_id': self.so.id,
             'sale_line_id': self.so.order_line[0].id,
             'sale_line_employee_ids': [(0, 0, {
                 'employee_id': self.employee_user.id,
