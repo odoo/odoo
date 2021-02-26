@@ -5,7 +5,7 @@ import odoo.tests
 from odoo.tools import mute_logger
 
 
-def break_view(view, fr='<p>placeholder</p>', to='<p t-field="not.exist"/>'):
+def break_view(view, fr='<p>placeholder</p>', to='<p t-field="no_record.exist"/>'):
     view.arch = view.arch.replace(fr, to)
 
 
@@ -44,8 +44,8 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     def test_02_reset_specific_view_controller(self):
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        # `t-att-data="not.exist"` will test the case where exception.html contains branding
-        break_view(self.test_view.with_context(website_id=1), to='<p t-att-data="not.exist" />')
+        # `t-att-data="no_record.exist"` will test the case where exception.html contains branding
+        break_view(self.test_view.with_context(website_id=1), to='<p t-att-data="no_record.exist" />')
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
         self.fix_it('/test_view')
 
@@ -79,12 +79,12 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     #     self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (1)")
     #     self.fix_it('/test_view')
 
-    # also mute ir.ui.view as `get_view_id()` will raise "Could not find view object with xml_id 'not.exist'""
+    # also mute ir.ui.view as `get_view_id()` will raise "Could not find view object with xml_id 'no_record.exist'""
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.addons.website.models.ir_ui_view')
     def test_06_reset_specific_view_controller_inexisting_template(self):
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_view.with_context(website_id=1), to='<t t-call="not.exist"/>')
+        break_view(self.test_view.with_context(website_id=1), to='<t t-call="no_record.exist"/>')
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (2)")
         self.fix_it('/test_view')
 

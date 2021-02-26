@@ -39,6 +39,15 @@
         ok
     </result>
 
+    <t t-name="set-from-body-arch-lookup">
+        <t t-set="stuff"><div><span t-esc="value"/></div></t>
+        <t t-raw="stuff"/>
+    </t>
+    <params id="set-from-body-arch-lookup">
+        {"value": "ok"}
+    </params>
+    <result id="set-from-body-arch-lookup"><![CDATA[<div><span>ok</span></div>]]></result>
+
     <t t-name="set-empty-body">
         <t t-set="stuff"/>
         <t t-esc="stuff"/>

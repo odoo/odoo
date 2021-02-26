@@ -32,6 +32,27 @@
     </t>
     <result id="with-used-setbody">ok</result>
 
+    <t t-name="_call-with-body-arch-lookup">
+        <section t-raw="0"/>
+    </t>
+
+    <t t-name="call-without-body-arch-lookup">
+        <t t-call="_call-with-body-arch-lookup"/>
+    </t>
+    <result id="call-without-body-arch-lookup"><![CDATA[<section></section>]]></result>
+
+    <t t-name="call-with-body-arch-lookup">
+        <t t-call="_call-with-body-arch-lookup">
+            <div><span class="toto" t-esc="value"/></div>
+        </t>
+    </t>
+    <params id="call-with-body-arch-lookup">
+        {"value": "ok"}
+    </params>
+    <result id="call-with-body-arch-lookup"><![CDATA[<section>
+            <div><span class="toto">ok</span></div>
+        </section>]]></result>
+
     <!--
         postfix to call removed because Python impl appends all whitespace
         following called template's root to template result (+= element.tail)
