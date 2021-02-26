@@ -5,7 +5,7 @@
     'version' : '14.1.0.0',
     'author' : '26HOUSE',
     'website': 'http://www.26house.com',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Slovakia accounting chart and localization.
 
