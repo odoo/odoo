@@ -228,7 +228,8 @@ class Lead(models.Model):
     duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})
     duplicate_lead_count = fields.Integer(compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead Count")
     # UX
-    ribbon_message = fields.Char('Ribbon message', compute='_compute_ribbon_message')
+    partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_partner_email_update')
+    partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_partner_phone_update')
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -572,10 +573,14 @@ class Lead(models.Model):
             lead.duplicate_lead_ids = duplicate_lead_ids + lead
             lead.duplicate_lead_count = len(duplicate_lead_ids)
 
-    @api.depends('email_from', 'phone', 'partner_id')
-    def _compute_ribbon_message(self):
+    @api.depends('email_from', 'partner_id')
+    def _compute_partner_email_update(self):
         for lead in self:
-            will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
+            lead.partner_email_update = lead.partner_id and lead.email_from != lead.partner_id.email
+
+    @api.depends('phone', 'partner_id')
+    def _compute_partner_phone_update(self):
+        for lead in self:
             will_write_phone = False
             if lead.partner_id and lead.phone != lead.partner_id.phone:
                 # if reset -> obviously new value will be propagated
@@ -587,15 +592,7 @@ class Lead(models.Model):
                     partner_phone_formatted = lead.partner_id.phone_get_sanitized_number(number_fname='phone')
                     if lead_phone_formatted != partner_phone_formatted:
                         will_write_phone = True
-
-            if will_write_email and will_write_phone:
-                lead.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
-            elif will_write_email:
-                lead.ribbon_message = _('By saving this change, the customer email will also be updated.')
-            elif will_write_phone:
-                lead.ribbon_message = _('By saving this change, the customer phone number will also be updated.')
-            else:
-                lead.ribbon_message = False
+            lead.partner_phone_update = will_write_phone
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):

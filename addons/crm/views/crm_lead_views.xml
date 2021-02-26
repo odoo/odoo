@@ -22,9 +22,6 @@
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
                     </header>
-                    <div class="text-center alert alert-primary oe_edit_only" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
-                        <field name="ribbon_message"/>
-                    </div>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
@@ -162,6 +159,8 @@
                                 <field name="mobile_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
+                                <field name="partner_email_update" invisible="1"/>
+                                <field name="partner_phone_update" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
@@ -169,6 +168,9 @@
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                     <field name="email_from" string="Email" widget="email"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer email will also be updated." 
+                                        attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
                                 </div>
                                 <label for="phone" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -177,6 +179,9 @@
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
                                     <field name="phone" widget="phone"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer phone number will also be updated." 
+                                        attrs="{'invisible': [('partner_phone_update', '=', False)]}"/>
                                 </div>
                             </group>
                             <group name="lead_info" attrs="{'invisible': [('type', '=', 'opportunity')]}">
@@ -189,6 +194,8 @@
                                 <field name="phone_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
+                                <field name="partner_email_update" invisible="1"/>
+                                <field name="partner_phone_update" invisible="1"/>
                                 <label for="email_from_group_lead_info" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
@@ -196,6 +203,9 @@
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                     <field name="email_from" id="email_from_group_lead_info" string="Email" widget="email"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer email will also be updated." 
+                                        attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
@@ -206,6 +216,9 @@
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
                                     <field name="phone" id="phone_group_lead_info" widget="phone"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer phone number will also be updated." 
+                                        attrs="{'invisible': [('partner_phone_update', '=', False)]}"/>
                                 </div>
                                 <label for="mobile" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
