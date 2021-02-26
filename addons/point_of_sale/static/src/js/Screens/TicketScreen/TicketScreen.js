@@ -45,8 +45,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             return this.env.pos.get_order_list();
         }
         get filteredOrderList() {
+            const { AllTickets } = this.getOrderStates();
             const filterCheck = (order) => {
-                if (this.filter && this.filter !== 'All Tickets') {
+                if (this.filter && this.filter !== AllTickets) {
                     const screen = order.get_screen_data();
                     return this.filter === this.constants.screenToStatusMap[screen.name];
                 }
@@ -131,7 +132,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             };
         }
         get filterOptions() {
-            return ['All Tickets', 'Ongoing', 'Payment', 'Receipt'];
+            const { AllTickets, Ongoing, Payment, Receipt } = this.getOrderStates();
+            return [AllTickets, Ongoing, Payment, Receipt];
         }
         /**
          * An object with keys containing the search field names which map to functions.
@@ -158,14 +160,15 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
          * @returns Record<string, (models.Order) => string>
          */
         get _searchFields() {
+            const { ReceiptNumber, Date, Customer, CardholderName } = this.getSearchFieldNames();
             var fields = {
-                'Receipt Number': (order) => order.name,
-                Date: (order) => moment(order.creation_date).format('YYYY-MM-DD hh:mm A'),
-                Customer: (order) => order.get_client_name(),
+                [ReceiptNumber]: (order) => order.name,
+                [Date]: (order) => moment(order.creation_date).format('YYYY-MM-DD hh:mm A'),
+                [Customer]: (order) => order.get_client_name(),
             };
 
             if (this.showCardholderName()) {
-                fields['Cardholder Name'] = (order) => order.get_cardholder_name();
+                fields[CardholderName] = (order) => order.get_cardholder_name();
             }
 
             return fields;
@@ -174,10 +177,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
          * Maps the order screen params to order status.
          */
         get _screenToStatusMap() {
+            const { Ongoing, Payment, Receipt } = this.getOrderStates();
             return {
-                ProductScreen: 'Ongoing',
-                PaymentScreen: 'Payment',
-                ReceiptScreen: 'Receipt',
+                ProductScreen: Ongoing,
+                PaymentScreen: Payment,
+                ReceiptScreen: Receipt,
             };
         }
         _initializeSearchFieldConstants() {
@@ -186,6 +190,22 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 searchFieldNames: Object.keys(this._searchFields),
                 screenToStatusMap: this._screenToStatusMap,
             });
+        }
+        getOrderStates() {
+            return {
+                AllTickets: this.env._t('All Tickets'),
+                Ongoing: this.env._t('Ongoing'),
+                Payment: this.env._t('Payment'),
+                Receipt: this.env._t('Receipt'),
+            };
+        }
+        getSearchFieldNames() {
+            return {
+                ReceiptNumber: this.env._t('Receipt Number'),
+                Date: this.env._t('Date'),
+                Customer: this.env._t('Customer'),
+                CardholderName: this.env._t('Cardholder Name'),
+            };
         }
     }
     TicketScreen.template = 'TicketScreen';
