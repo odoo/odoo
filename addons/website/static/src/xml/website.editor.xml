@@ -143,4 +143,12 @@
         <div class="mb-2" t-esc="contentText"/>
         <div class="o_ace_editor_container"/>
     </div>
+
+    <t t-name="website.new_content_loader">
+        <div class="o_new_content_loader_container position-fixed fixed-top fixed-left
+            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold">
+            <p id="new_content_loader_text"/>
+            <div class="o_new_content_loader"/>
+        </div>
+    </t>
 </templates>
