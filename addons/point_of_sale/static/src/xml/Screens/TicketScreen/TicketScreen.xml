@@ -9,7 +9,8 @@
                         <button t-if="showNewTicketButton" class="highlight" t-on-click="createNewOrder">New Order</button>
                         <button class="discard" t-on-click="trigger('close-screen')">Discard</button>
                     </div>
-                    <SearchBar config="searchBarConfig" placeholder="'Search Tickets...'" />
+                    <t t-set="placeholder">Search Tickets...</t>
+                    <SearchBar config="searchBarConfig" placeholder="placeholder" />
                 </div>
                 <div class="orders">
                     <div class="header-row">
