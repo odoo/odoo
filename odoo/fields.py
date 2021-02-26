@@ -2586,6 +2586,9 @@ class Many2one(_Relational):
         # determine self.delegate
         if not self.delegate:
             self.delegate = name in model._inherits.values()
+        # self.delegate implies self.auto_join
+        if self.delegate:
+            self.auto_join = True
 
     def _setup_regular_base(self, model):
         super()._setup_regular_base(model)
