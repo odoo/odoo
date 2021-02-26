@@ -711,7 +711,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         Return whether the field may be used for grouping in :meth:`~odoo.models.BaseModel.read_group`.
         """
-        return self.store and self.column_type
+        return (self.store or self.related and self.related_field.store) and self.column_type
 
     #
     # Company-dependent fields

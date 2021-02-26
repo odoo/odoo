@@ -2254,7 +2254,7 @@ class BaseModel(metaclass=MetaModel):
                 raise UserError(_("Unknown field %r in 'groupby'", gb))
             if not self._fields[gb].base_field.groupable:
                 raise UserError(_(
-                    "Field %s is not a stored field, only stored fields (regular or "
+                    "Field %s is not a stored field, only stored fields (regular, related or "
                     "many2many) are valid for the 'groupby' parameter", self._fields[gb],
                 ))
 
@@ -2400,28 +2400,106 @@ class BaseModel(metaclass=MetaModel):
         )
         return parent_alias
 
+    # TODO: method should be renamed to _related_join_calc
     @api.model
     def _inherits_join_calc(self, alias, fname, query):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
-        the field coming from an '_inherits' parent table (no duplicates).
+        related fields (including implicit ones coming from an '_inherits')
+        and many2many fields
 
         :param alias: name of the initial SQL alias
         :param fname: name of inherited field to reach
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
-        # INVARIANT: alias is the SQL alias of model._table in query
         model, field = self, self._fields[fname]
-        while field.inherited:
-            # retrieve the parent model where field is inherited from
-            parent_model = self.env[field.related_field.model_name]
-            parent_fname = field.related.split('.')[0]
-            # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
-            parent_alias = query.left_join(
-                alias, parent_fname, parent_model._table, 'id', parent_fname,
-            )
-            model, alias, field = parent_model, parent_alias, field.related_field
+
+        # Here we are jumping between fields to make joins and finally reach
+        # the table where field is stored, so we can read it.
+
+        # There are two types of virtual fields (virtual in a sense, that they
+        # are stored not in a current table, but in another one):
+
+        # 1. inherited fields or implicit related fields
+        # 2. explicit related fields
+
+        # Any inherited field could be represented as an explicit related
+        # field. For example, inherited field "name" in res.users is equivalent
+        # to following explicit definition:
+        #
+        # name = fields.Char(related='partner_id.name')
+
+        # Things become more complicated when we have related fields inside
+        # related fields (have you seen Inception 2010 movie?). Let's see following example:
+
+        # class Partner(models.Model)
+        #     _name = 'res.partner'
+        #
+        #      parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
+        #      parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
+        #      # ...
+
+        # class User(models.Model)
+        #     _name = 'res.users'
+        #     _inherits = {'res.partner': 'partner_id'}
+        #
+        #      partner_id = fields.Many2one('res.partner')
+        #      # ...
+
+        # class Guru(models.Model)
+        #     _name = 'res.guru'
+        #     _inherits = {'res.users': 'user_id'}
+        #
+        #     user_id = fields.Many2one('res.users')
+        #     # ...
+
+        # class Task(models.Model)
+        #     _inherit = 'project.task'
+        #
+        #     guru_id = fields.Many2one('res.guru')
+        #     guru_parent_name = fields.Char(related='guru_id.partner_id.parent_name')
+        #     # ...
+
+        # To read guru_parent_name we do for-loop over ['guru_id',
+        # 'partner_id', 'parent_name'] and expand field if it's related:
+
+        # ['guru_id', 'partner_id', 'parent_name']
+        # ['guru_id', ['user_id', 'partner_id'], 'parent_name']
+        # ['guru_id', ['user_id', 'partner_id'], ['parent_id', 'name']]
+
+        # Because any field in the expanded chain may be related field, we
+        # should do this process recursively. This is how function "process" works.
+
+        # For more examples of possible variants of related fields check tests defined in
+        # ./addons/test_read_group/tests/test_related.py
+        def process(model, alias, field, sudo):
+            if not field.related or field.store:
+                return model, alias, field, sudo
+            sudo = sudo or field.compute_sudo
+            last_field = field.related_field
+            for join_fname in field.related.split('.')[:-1]:
+                field = model._fields[join_fname]
+                model, alias, field, sudo = process(model, alias, field, sudo)
+                assert field.type == 'many2one', "Related field must be a chain of stored or related many2one fields"
+                model = self.env[field.comodel_name]
+                if field.auto_join:
+                    sudo = True
+                if not (sudo or model.check_access_rights('read', raise_exception=False)):
+                    raise AccessError(_("Field %s has %s and can't be used without read access") % (
+                        field, 'auto_join=False'
+                    ))
+                alias = query.left_join(
+                    alias, join_fname,
+                    model._table, 'id',
+                    join_fname
+                )
+            model, field = self.env[last_field.model_name], last_field
+            # Last field may be related too (like guru_parent_name in example above)
+            return process(model, alias, field, sudo)
+
+        model, alias, field, _sudo = process(model, alias, field, self.env.su)
+        fname = field.name
 
         if field.type == 'many2many':
             # special case for many2many fields: prepare a query on the comodel
