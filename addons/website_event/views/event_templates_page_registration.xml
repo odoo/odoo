@@ -334,32 +334,47 @@
             <div class="row mb-3 o_wereg_confirmed_attendees">
                 <div class="col-md-4 col-xs-12 mt-3" t-foreach="attendees" t-as="attendee">
                     <div class="d-flex flex-column">
-                        <span class="font-weight-bold">
+                        <span class="font-weight-bold text-truncate">
                             <t t-if="attendee.name" t-esc="attendee.name"/>
                             <t t-else="">N/A</t>
                         </span>
-                        <span>
+                        <span class="text-truncate">
                             <i class="fa fa-envelope mr-2   "></i>
                             <t t-if="attendee.email" t-esc="attendee.email"/>
                             <t t-else="">N/A</t>
                         </span>
-                        <span>
+                        <span t-if="attendee.phone">
                             <i class="fa fa-phone mr-2"></i>
-                            <t t-if="attendee.phone" t-esc="attendee.phone"/>
-                            <t t-else="">N/A</t>
+                            <t t-esc="attendee.phone"/>
                         </span>
                         <span>
                             <i class="fa fa-ticket mr-2"></i>
-                            <t t-if="attendee.event_ticket_id" t-esc="attendee.event_ticket_id.name"/>
-                            <t t-else="">N/A</t>
-                            (ref: <t t-esc="attendee.id"/>)
+                            <t t-if="attendee.event_ticket_id">
+                                <t t-esc="attendee.event_ticket_id.name"/> (Ref: <t t-esc="attendee.id"/>)
+                            </t>
+                            <t t-else="">Ref: <t t-esc="attendee.id"/></t>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
+                    <div class="row">
+                        <div class="col-2 col-md-1">
+                            <b>Start</b>
+                        </div>
+                        <div class="col pl-0">
+                            <span itemprop="startDate" t-esc="event.date_begin_located"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2 col-md-1">
+                            <b>End</b>
+                        </div>
+                        <div class="col pl-0">
+                            <span itemprop="endDate" t-esc="event.date_end_located"/>
+                        </div>
+                    </div>
                     <div class="mt-4">
                         <h5 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
                             "widget": "contact",
