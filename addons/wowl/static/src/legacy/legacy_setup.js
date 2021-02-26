@@ -1,4 +1,4 @@
-/** @odoo-module alias=wowl.legacySetup**/
+/** @odoo-module alias=wowl.legacySetup **/
 const { Component, config, utils } = owl;
 const { whenReady } = utils;
 
