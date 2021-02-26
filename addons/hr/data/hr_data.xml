@@ -74,5 +74,20 @@
             <field name="value">True</field>
         </record>
 
+        <!-- Departure Reasons -->
+        <record id="departure_fired" model="hr.departure.reason">
+            <field name="sequence">0</field>
+            <field name="name">Fired</field>
+        </record>
+
+        <record id="departure_resigned" model="hr.departure.reason">
+            <field name="sequence">1</field>
+            <field name="name">Resigned</field>
+        </record>
+
+        <record id="departure_retired" model="hr.departure.reason">
+            <field name="sequence">2</field>
+            <field name="name">Retired</field>
+        </record>
     </data>
 </odoo>
