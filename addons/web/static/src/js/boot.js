@@ -123,19 +123,17 @@
                 });
         }
 
-        if (odoo.debug) {
-            if (!(deps instanceof Array)) {
-                throw new Error('Dependencies should be defined by an array', deps);
-            }
-            if (typeof factory !== 'function') {
-                throw new Error('Factory should be defined by a function', factory);
-            }
-            if (typeof name !== 'string') {
-                throw new Error("Invalid name definition (should be a string", name);
-            }
-            if (name in factories) {
-                throw new Error("Service " + name + " already defined");
-            }
+        if (!(deps instanceof Array)) {
+            throw new Error('Dependencies should be defined by an array', deps);
+        }
+        if (typeof factory !== 'function') {
+            throw new Error('Factory should be defined by a function', factory);
+        }
+        if (typeof name !== 'string') {
+            throw new Error("Invalid name definition (should be a string", name);
+        }
+        if (name in factories) {
+            throw new Error("Service " + name + " already defined");
         }
 
         factory.deps = deps;
