@@ -354,7 +354,15 @@ class Lead(models.Model):
     def _inverse_email_from(self):
         for lead in self:
             if lead.partner_id and lead.email_from != lead.partner_id.email:
-                lead.partner_id.email = lead.email_from
+                # force reset
+                if not lead.email_from or not lead.partner_id.email:
+                    lead.partner_id.email = lead.email_from
+                # compare formatted values as we may have formatting differences between equivalent email
+                else:
+                    lead_email_normalized = tools.email_normalize(lead.email_from)
+                    partner_email_normalized = tools.email_normalize(lead.partner_id.email)
+                    if lead_email_normalized != partner_email_normalized:
+                        lead.partner_id.email = lead.email_from
 
     @api.depends('partner_id.phone')
     def _compute_phone(self):
@@ -446,7 +454,10 @@ class Lead(models.Model):
     @api.depends('email_from', 'phone', 'partner_id')
     def _compute_ribbon_message(self):
         for lead in self:
-            will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
+            # beware: void user input gives '' which is different from False
+            lead_email_normalized = tools.email_normalize(lead.email_from) or (lead.email_from if lead.email_from else False)
+            partner_email_normalized = tools.email_normalize(lead.partner_id.email) or lead.partner_id.email
+            will_write_email = lead_email_normalized != partner_email_normalized if lead.partner_id else False
             will_write_phone = False
             if lead.partner_id and lead.phone != lead.partner_id.phone:
                 # if reset -> obviously new value will be propagated
