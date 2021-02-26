@@ -3,6 +3,7 @@ odoo.define('website_livechat/static/src/models/partner/partner.js', function (r
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { insert, link, unlink } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -18,12 +19,12 @@ function factory(dependencies) {
             const data2 = {};
             if ('country_id' in data) {
                 if (data.country_id) {
-                    data2.country = [['insert', {
+                    data2.country = insert({
                         id: data.country_id,
                         code: data.country_code,
-                    }]];
+                    });
                 } else {
-                    data2.country = [['unlink']];
+                    data2.country = unlink();
                 }
             }
             if ('history' in data) {
@@ -40,9 +41,9 @@ function factory(dependencies) {
             }
             if ('partner_id' in data) {
                 if (data.partner_id) {
-                    data2.partner = [['insert', { id: data.partner_id }]];
+                    data2.partner = insert({ id: data.partner_id });
                 } else {
-                    data2.partner = [['unlink']];
+                    data2.partner = unlink();
                 }
             }
             if ('website_name' in data) {
@@ -72,12 +73,12 @@ function factory(dependencies) {
          */
         _computeCountry() {
             if (this.partner && this.partner.country) {
-                return [['link', this.partner.country]];
+                return link(this.partner.country);
             }
             if (this.country) {
-                return [['link', this.country]];
+                return link(this.country);
             }
-            return [['unlink']];
+            return unlink();
         }
 
         /**

@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/composer/composer_tests.js', function (r
 const components = {
     Composer: require('mail/static/src/components/composer/composer.js'),
 };
+const { create } = require('mail/static/src/model/model_field_command.js');
 const {
     afterEach,
     afterNextRender,
@@ -58,7 +59,7 @@ QUnit.test('composer text input: basic rendering when posting a message', async 
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        composer: [['create', { isLog: false }]],
+        composer: create({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });
@@ -94,7 +95,7 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        composer: [['create', { isLog: true }]],
+        composer: create({ isLog: true }),
         id: 20,
         model: 'res.partner',
     });
@@ -1901,7 +1902,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
         },
     });
     const thread = this.env.models['mail.thread'].create({
-        composer: [['create', { isLog: false }]],
+        composer: create({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });
@@ -2102,7 +2103,7 @@ QUnit.test("Show a default status in the recipient status text when the thread d
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
-        composer: [['create', { isLog: false }]],
+        composer: create({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });
@@ -2120,7 +2121,7 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
     await this.start();
     const thread = this.env.models['mail.thread'].create({
         name: "test name",
-        composer: [['create', { isLog: false }]],
+        composer: create({ isLog: false }),
         id: 20,
         model: 'res.partner',
     });

@@ -5,6 +5,7 @@ const {
     registerClassPatchModel,
     registerInstancePatchModel,
 } = require('mail/static/src/model/model_core.js');
+const { insert, link, unlink } = require('mail/static/src/model/model_field_command.js');
 
 registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
 
@@ -39,19 +40,19 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
                  * of polluting the database, it is therefore acceptable and
                  * easier to handle one temporary partner per channel.
                  */
-                data2.members.push(['unlink', this.env.messaging.publicPartners]);
+                data2.members.push(unlink(this.env.messaging.publicPartners));
                 const partner = this.env.models['mail.partner'].create(
                     Object.assign(
                         this.env.models['mail.partner'].convertData(data.livechat_visitor),
                         { id: this.env.models['mail.partner'].getNextPublicId() }
                     )
                 );
-                data2.members.push(['link', partner]);
-                data2.correspondent = [['link', partner]];
+                data2.members.push(link(partner));
+                data2.correspondent = link(partner);
             } else {
                 const partnerData = this.env.models['mail.partner'].convertData(data.livechat_visitor);
-                data2.members.push(['insert', partnerData]);
-                data2.correspondent = [['insert', partnerData]];
+                data2.members.push(insert(partnerData));
+                data2.correspondent = insert(partnerData);
             }
         }
         return data2;
@@ -70,7 +71,7 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
     _computeCorrespondent() {
         if (this.channel_type === 'livechat') {
             // livechat correspondent never change: always the public member.
-            return [];
+            return;
         }
         return this._super();
     },

@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/chat_window_manager/chat_window_manager.js',
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { link, replace, unlink } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -92,7 +93,7 @@ function factory(dependencies) {
             let newMessageChatWindow = this.newMessageChatWindow;
             if (!newMessageChatWindow) {
                 newMessageChatWindow = this.env.models['mail.chat_window'].create({
-                    manager: [['link', this]],
+                    manager: link(this),
                 });
             }
             newMessageChatWindow.makeActive();
@@ -121,8 +122,8 @@ function factory(dependencies) {
             if (!chatWindow) {
                 chatWindow = this.env.models['mail.chat_window'].create({
                     isFolded,
-                    manager: [['link', this]],
-                    thread: [['link', thread]],
+                    manager: link(this),
+                    thread: link(thread),
                 });
             } else {
                 chatWindow.update({ isFolded });
@@ -231,9 +232,9 @@ function factory(dependencies) {
          * @returns {mail.chat_window}
          */
         _computeAllOrdered() {
-            return [['replace', this._ordered.map(chatWindowLocalId =>
+            return replace(this._ordered.map(chatWindowLocalId =>
                 this.env.models['mail.chat_window'].get(chatWindowLocalId)
-            )]];
+            ));
         }
 
         /**
@@ -241,9 +242,9 @@ function factory(dependencies) {
          * @returns {mail.chat_window[]}
          */
         _computeAllOrderedHidden() {
-            return [['replace', this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
+            return replace(this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
                 this.env.models['mail.chat_window'].get(chatWindowLocalId)
-            )]];
+            ));
         }
 
         /**
@@ -251,9 +252,9 @@ function factory(dependencies) {
          * @returns {mail.chat_window[]}
          */
         _computeAllOrderedVisible() {
-            return [['replace', this.visual.visible.map(({ chatWindowLocalId }) =>
+            return replace(this.visual.visible.map(({ chatWindowLocalId }) =>
                 this.env.models['mail.chat_window'].get(chatWindowLocalId)
-            )]];
+            ));
         }
 
         /**
@@ -279,9 +280,9 @@ function factory(dependencies) {
         _computeLastVisible() {
             const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
             if (!lastVisible) {
-                return [['unlink']];
+                return unlink();
             }
-            return [['link', lastVisible]];
+            return link(lastVisible);
         }
 
         /**
@@ -291,9 +292,9 @@ function factory(dependencies) {
         _computeNewMessageChatWindow() {
             const chatWindow = this.allOrdered.find(chatWindow => !chatWindow.thread);
             if (!chatWindow) {
-                return [['unlink']];
+                return unlink();
             }
-            return [['link', chatWindow]];
+            return link(chatWindow);
         }
 
         /**

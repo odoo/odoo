@@ -4,6 +4,12 @@ odoo.define('mail/static/src/components/message/message_tests.js', function (req
 const components = {
     Message: require('mail/static/src/components/message/message.js'),
 };
+const {
+    create,
+    insert,
+    insertAndReplace,
+    link,
+} = require('mail/static/src/model/model_field_command.js');
 const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
@@ -49,7 +55,7 @@ QUnit.test('basic rendering', async function (assert) {
 
     await this.start();
     const message = this.env.models['mail.message'].create({
-        author: [['insert', { id: 7, display_name: "Demo User" }]],
+        author: insert({ id: 7, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -127,11 +133,11 @@ QUnit.test('moderation: as author, moderated channel with pending moderation mes
         model: 'mail.channel',
     });
     const message = this.env.models['mail.message'].create({
-        author: [['insert', { id: 1, display_name: "Admin" }]],
+        author: insert({ id: 1, display_name: "Admin" }),
         body: "<p>Test</p>",
         id: 100,
         moderation_status: 'pending_moderation',
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     await this.createMessageComponent(message);
 
@@ -155,11 +161,11 @@ QUnit.test('moderation: as moderator, moderated channel with pending moderation 
         model: 'mail.channel',
     });
     const message = this.env.models['mail.message'].create({
-        author: [['insert', { id: 7, display_name: "Demo User" }]],
+        author: insert({ id: 7, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
         moderation_status: 'pending_moderation',
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     await this.createMessageComponent(message);
     const messageEl = document.querySelector('.o_Message');
@@ -202,18 +208,18 @@ QUnit.test('Notification Sent', async function (assert) {
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'email',
-        notifications: [['insert', {
+        notifications: insert({
             id: 11,
             notification_status: 'sent',
             notification_type: 'email',
-            partner: [['insert', { id: 12, name: "Someone" }]],
-        }]],
-        originThread: [['link', threadViewer.thread]],
+            partner: insert({ id: 12, name: "Someone" }),
+        }),
+        originThread: link(threadViewer.thread),
     });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId
@@ -298,17 +304,17 @@ QUnit.test('Notification Error', async function (assert) {
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'email',
-        notifications: [['insert', {
+        notifications: insert({
             id: 11,
             notification_status: 'exception',
             notification_type: 'email',
-        }]],
-        originThread: [['link', threadViewer.thread]],
+        }),
+        originThread: link(threadViewer.thread),
     });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId
@@ -365,13 +371,13 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const message = this.env.models['mail.message'].create({
-        author: [['link', currentPartner]],
+        author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
 
     await this.createMessageComponent(message, {
@@ -431,13 +437,13 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const message = this.env.models['mail.message'].create({
-        author: [['link', currentPartner]],
+        author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
@@ -496,13 +502,13 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const message = this.env.models['mail.message'].create({
-        author: [['link', currentPartner]],
+        author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
@@ -566,29 +572,29 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
-        partnerSeenInfos: [['create', [
+        partnerSeenInfos: create([
             {
                 channelId: 11,
-                lastFetchedMessage: [['insert', { id: 100 }]],
+                lastFetchedMessage: insert({ id: 100 }),
                 partnerId: this.env.messaging.currentPartner.id,
             },
             {
                 channelId: 11,
-                lastFetchedMessage: [['insert', { id: 100 }]],
+                lastFetchedMessage: insert({ id: 100 }),
                 partnerId: author.id,
             },
-        ]]],
+        ]),
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['link', author]],
+        author: link(author),
         body: "<p>Test</p>",
         id: 100,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     await this.createMessageComponent(message, { threadViewLocalId: threadViewer.threadView.localId });
 
@@ -615,37 +621,37 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
-        messageSeenIndicators: [['insert', {
+        messageSeenIndicators: insert({
             channelId: 11,
             messageId: 99,
-        }]],
+        }),
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const lastSeenMessage = this.env.models['mail.message'].create({
-        author: [['link', currentPartner]],
+        author: link(currentPartner),
         body: "<p>You already saw me</p>",
         id: 100,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['link', currentPartner]],
+        author: link(currentPartner),
         body: "<p>Test</p>",
         id: 99,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     this.env.models['mail.thread_partner_seen_info'].insert([
         {
             channelId: 11,
-            lastSeenMessage: [['link', lastSeenMessage]],
+            lastSeenMessage: link(lastSeenMessage),
             partnerId: this.env.messaging.currentPartner.id,
         },
         {
             channelId: 11,
-            lastSeenMessage: [['link', lastSeenMessage]],
+            lastSeenMessage: link(lastSeenMessage),
             partnerId: 100,
         },
     ]);
@@ -681,34 +687,34 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'chat',
         id: 11,
-        partnerSeenInfos: [['create', [
+        partnerSeenInfos: create([
             {
                 channelId: 11,
-                lastSeenMessage: [['insert', { id: 100 }]],
+                lastSeenMessage: insert({ id: 100 }),
                 partnerId: this.env.messaging.currentPartner.id,
             },
             {
                 channelId: 11,
-                lastFetchedMessage: [['insert', { id: 100 }]],
-                lastSeenMessage: [['insert', { id: 99 }]],
+                lastFetchedMessage: insert({ id: 100 }),
+                lastSeenMessage: insert({ id: 99 }),
                 partnerId: 100,
             },
-        ]]],
-        messageSeenIndicators: [['insert', {
+        ]),
+        messageSeenIndicators: insert({
             channelId: 11,
             messageId: 100,
-        }]],
+        }),
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     const message = this.env.models['mail.message'].insert({
-        author: [['link', currentPartner]],
+        author: link(currentPartner),
         body: "<p>Test</p>",
         id: 100,
-        originThread: [['link', thread]],
+        originThread: link(thread),
     });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
@@ -737,12 +743,12 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 
     await this.start();
     const message = this.env.models['mail.message'].create({
-        attachments: [['insert-and-replace', {
+        attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
             name: "BLAH",
-        }]],
-        author: [['link', this.env.messaging.currentPartner]],
+        }),
+        author: link(this.env.messaging.currentPartner),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -786,12 +792,12 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
 
     await this.start();
     const message = this.env.models['mail.message'].create({
-        attachments: [['insert-and-replace', {
+        attachments: insertAndReplace({
             filename: "BLAH.jpg",
             id: 10,
             name: "BLAH",
-        }]],
-        author: [['insert', { id: 11, display_name: "Guy" }]],
+        }),
+        author: insert({ id: 11, display_name: "Guy" }),
         body: "<p>Test</p>",
         id: 100,
     });
@@ -908,7 +914,7 @@ QUnit.test('chat with author should be opened after clicking on his avatar', asy
         hasChatWindow: true,
     });
     const message = this.env.models['mail.message'].create({
-        author: [['insert', { id: 10 }]],
+        author: insert({ id: 10 }),
         id: 10,
     });
     await this.createMessageComponent(message);
@@ -947,7 +953,7 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
         hasChatWindow: true,
     });
     const message = this.env.models['mail.message'].create({
-        author: [['insert', { id: 10, im_status: 'online' }]],
+        author: insert({ id: 10, im_status: 'online' }),
         id: 10,
     });
     await this.createMessageComponent(message);
@@ -992,13 +998,13 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     });
     const correspondent = this.env.models['mail.partner'].insert({ id: 10 });
     const message = this.env.models['mail.message'].create({
-        author: [['link', correspondent]],
+        author: link(correspondent),
         id: 10,
     });
     const thread = await correspondent.getChat();
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['link', thread]],
+        thread: link(thread),
     });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,

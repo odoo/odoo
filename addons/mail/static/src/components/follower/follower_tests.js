@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/follower/follower_tests.js', function (r
 const components = {
     Follower: require('mail/static/src/components/follower/follower.js'),
 };
+const { insert, link } = require('mail/static/src/model/model_field_command.js');
 const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
@@ -52,11 +53,11 @@ QUnit.test('base rendering not editable', async function (assert) {
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        partner: [['insert', {
+        partner: insert({
             id: 1,
             name: "François Perusse",
-        }]],
-        followedThread: [['link', thread]],
+        }),
+        followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: false,
@@ -98,11 +99,11 @@ QUnit.test('base rendering editable', async function (assert) {
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        partner: [['insert', {
+        partner: insert({
             id: 1,
             name: "François Perusse",
-        }]],
-        followedThread: [['link', thread]],
+        }),
+        followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
@@ -173,15 +174,15 @@ QUnit.test('click on partner follower details', async function (assert) {
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        followedThread: [['link', thread]],
+        followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
-        partner: [['insert', {
+        partner: insert({
             email: "bla@bla.bla",
             id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
-        }]],
+        }),
     });
     await this.createFollowerComponent(follower);
     assert.containsOnce(
@@ -279,15 +280,15 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        followedThread: [['link', thread]],
+        followedThread: link(thread),
         id: 2,
         isActive: true,
         isEditable: true,
-        partner: [['insert', {
+        partner: insert({
             email: "bla@bla.bla",
             id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
-        }]],
+        }),
     });
     await this.createFollowerComponent(follower);
     assert.containsOnce(

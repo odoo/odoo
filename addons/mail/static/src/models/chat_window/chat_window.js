@@ -3,7 +3,7 @@ odoo.define('mail/static/src/models/chat_window/chat_window.js', function (requi
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+const { clear, create } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -447,7 +447,7 @@ function factory(dependencies) {
          * Determines the `mail.thread_viewer` managing the display of `this.thread`.
          */
         threadViewer: one2one('mail.thread_viewer', {
-            default: [['create']],
+            default: create(),
             inverse: 'chatWindow',
             isCausal: true,
             readonly: true,

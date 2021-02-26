@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/message_seen_indicator/message_seen_indicato
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { insert, replace, unlinkAll } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -174,7 +175,7 @@ function factory(dependencies) {
          */
         _computePartnersThatHaveFetched() {
             if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
             const otherPartnersThatHaveFetched = this.thread.partnerSeenInfos
                 .filter(partnerSeenInfo =>
@@ -190,9 +191,9 @@ function factory(dependencies) {
                 )
                 .map(partnerSeenInfo => partnerSeenInfo.partner);
             if (otherPartnersThatHaveFetched.length === 0) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
-            return [['replace', otherPartnersThatHaveFetched]];
+            return replace(otherPartnersThatHaveFetched);
         }
 
         /**
@@ -204,7 +205,7 @@ function factory(dependencies) {
          */
         _computePartnersThatHaveSeen() {
             if (!this.message || !this.thread || !this.thread.partnerSeenInfos) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
             const otherPartnersThatHaveSeen = this.thread.partnerSeenInfos
                 .filter(partnerSeenInfo =>
@@ -219,9 +220,9 @@ function factory(dependencies) {
                     partnerSeenInfo.lastSeenMessage.id >= this.message.id)
                 .map(partnerSeenInfo => partnerSeenInfo.partner);
             if (otherPartnersThatHaveSeen.length === 0) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
-            return [['replace', otherPartnersThatHaveSeen]];
+            return replace(otherPartnersThatHaveSeen);
         }
 
         /**
@@ -229,7 +230,7 @@ function factory(dependencies) {
          * @returns {mail.message}
          */
         _computeMessage() {
-            return [['insert', { id: this.messageId }]];
+            return insert({ id: this.messageId });
         }
 
         /**
@@ -237,10 +238,10 @@ function factory(dependencies) {
          * @returns {mail.thread}
          */
         _computeThread() {
-            return [['insert', {
+            return insert({
                 id: this.channelId,
                 model: 'mail.channel',
-            }]];
+            });
         }
     }
 

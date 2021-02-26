@@ -4,7 +4,7 @@ odoo.define('website_slides/static/src/tests/activity_tests.js', function (requi
 const components = {
     Activity: require('mail/static/src/components/activity/activity.js'),
 };
-
+const { insert } = require('mail/static/src/model/model_field_command.js');
 const {
     afterEach,
     beforeEach,
@@ -57,18 +57,18 @@ QUnit.test('grant course access', async function (assert) {
     const activity = this.env.models['mail.activity'].create({
         id: 100,
         canWrite: true,
-        thread: [['insert', {
+        thread: insert({
             id: 100,
             model: 'slide.channel',
-        }]],
-        requestingPartner: [['insert', {
+        }),
+        requestingPartner: insert({
             id: 5,
             displayName: "Pauvre pomme",
-        }]],
-        type: [['insert', {
+        }),
+        type: insert({
             id: 1,
             displayName: "Access Request",
-        }]],
+        }),
     });
     await this.createActivityComponent(activity);
 
@@ -97,18 +97,18 @@ QUnit.test('refuse course access', async function (assert) {
     const activity = this.env.models['mail.activity'].create({
         id: 100,
         canWrite: true,
-        thread: [['insert', {
+        thread: insert({
             id: 100,
             model: 'slide.channel',
-        }]],
-        requestingPartner: [['insert', {
+        }),
+        requestingPartner: insert({
             id: 5,
             displayName: "Pauvre pomme",
-        }]],
-        type: [['insert', {
+        }),
+        type: insert({
             id: 1,
             displayName: "Access Request",
-        }]],
+        }),
     });
     await this.createActivityComponent(activity);
 

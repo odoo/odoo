@@ -4,7 +4,7 @@ odoo.define('mail/static/src/models/composer/composer.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+const { clear, insert, link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
 const mailUtils = require('mail.utils');
 
 const {
@@ -140,10 +140,10 @@ function factory(dependencies) {
             // the target partner.
             switch (this.activeSuggestedRecord.constructor.modelName) {
                 case 'mail.thread':
-                    Object.assign(updateData, { mentionedChannels: [['link', this.activeSuggestedRecord]] });
+                    Object.assign(updateData, { mentionedChannels: link(this.activeSuggestedRecord) });
                     break;
                 case 'mail.partner':
-                    Object.assign(updateData, { mentionedPartners: [['link', this.activeSuggestedRecord]] });
+                    Object.assign(updateData, { mentionedPartners: link(this.activeSuggestedRecord) });
                     break;
             }
             this.update(updateData);
@@ -162,7 +162,7 @@ function factory(dependencies) {
                     }
                 }
             }
-            return [['replace', recipients]];
+            return replace(recipients);
         }
 
         /**
@@ -275,10 +275,10 @@ function factory(dependencies) {
                         {},
                         this.env.models['mail.message'].convertData(messageData),
                         {
-                            originThread: [['insert', {
+                            originThread: insert({
                                 id: thread.id,
                                 model: thread.model,
-                            }]],
+                            }),
                         })
                     );
                     thread.loadNewMessages();
@@ -318,7 +318,7 @@ function factory(dependencies) {
         setFirstSuggestionActive() {
             const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
             const firstRecord = suggestedRecords[0];
-            this.update({ activeSuggestedRecord: [['link', firstRecord]] });
+            this.update({ activeSuggestedRecord: link(firstRecord) });
         }
 
         /**
@@ -328,7 +328,7 @@ function factory(dependencies) {
         setLastSuggestionActive() {
             const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
             const { length, [length - 1]: lastRecord } = suggestedRecords;
-            this.update({ activeSuggestedRecord: [['link', lastRecord]] });
+            this.update({ activeSuggestedRecord: link(lastRecord) });
         }
 
         /**
@@ -346,7 +346,7 @@ function factory(dependencies) {
                 return;
             }
             const nextRecord = suggestedRecords[activeElementIndex + 1];
-            this.update({ activeSuggestedRecord: [['link', nextRecord]] });
+            this.update({ activeSuggestedRecord: link(nextRecord) });
         }
 
         /**
@@ -364,7 +364,7 @@ function factory(dependencies) {
                 return;
             }
             const previousRecord = suggestedRecords[activeElementIndex - 1];
-            this.update({ activeSuggestedRecord: [['link', previousRecord]] });
+            this.update({ activeSuggestedRecord: link(previousRecord) });
         }
 
         //----------------------------------------------------------------------
@@ -383,7 +383,7 @@ function factory(dependencies) {
                 this.mainSuggestedRecords.length === 0 &&
                 this.extraSuggestedRecords.length === 0
             ) {
-                return [['unlink']];
+                return unlink();
             }
             if (
                 this.mainSuggestedRecords.includes(this.activeSuggestedRecord) ||
@@ -393,7 +393,7 @@ function factory(dependencies) {
             }
             const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
             const firstRecord = suggestedRecords[0];
-            return [['link', firstRecord]];
+            return link(firstRecord);
         }
 
         /**
@@ -417,9 +417,9 @@ function factory(dependencies) {
          */
         _computeExtraSuggestedRecords() {
             if (this.suggestionDelimiterPosition === undefined) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
-            return [['unlink', this.mainSuggestedRecords]];
+            return unlink(this.mainSuggestedRecords);
         }
 
         /**
@@ -446,7 +446,7 @@ function factory(dependencies) {
          */
         _computeMainSuggestedRecords() {
             if (this.suggestionDelimiterPosition === undefined) {
-                return [['unlink-all']];
+                return unlinkAll();
             }
         }
 
@@ -473,7 +473,7 @@ function factory(dependencies) {
                     unmentionedPartners.push(partner);
                 }
             }
-            return [['unlink', unmentionedPartners]];
+            return unlink(unmentionedPartners);
         }
 
         /**
@@ -499,7 +499,7 @@ function factory(dependencies) {
                     unmentionedChannels.push(channel);
                 }
             }
-            return [['unlink', unmentionedChannels]];
+            return unlink(unmentionedChannels);
         }
 
         /**
@@ -750,10 +750,10 @@ function factory(dependencies) {
          */
         _reset() {
             this.update({
-                attachments: [['unlink-all']],
+                attachments: unlinkAll(),
                 isLastStateChangeProgrammatic: true,
-                mentionedChannels: [['unlink-all']],
-                mentionedPartners: [['unlink-all']],
+                mentionedChannels: unlinkAll(),
+                mentionedPartners: unlinkAll(),
                 subjectContent: "",
                 textInputContent: '',
                 textInputCursorEnd: 0,
@@ -793,9 +793,9 @@ function factory(dependencies) {
             mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
             extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
             this.update({
-                extraSuggestedRecords: [['replace', extraSuggestedRecords]],
+                extraSuggestedRecords: replace(extraSuggestedRecords),
                 hasToScrollToActiveSuggestion: true,
-                mainSuggestedRecords: [['replace', mainSuggestedRecords]],
+                mainSuggestedRecords: replace(mainSuggestedRecords),
             });
         }
     }

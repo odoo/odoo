@@ -4,6 +4,7 @@ odoo.define('mail/static/src/model/model_manager.js', function (require) {
 const { registry } = require('mail/static/src/model/model_core.js');
 const ModelField = require('mail/static/src/model/model_field.js');
 const { patchClassMethods, patchInstanceMethods } = require('mail/static/src/utils/utils.js');
+const { unlinkAll } = require('mail/static/src/model/model_field_command.js');
 
 /**
  * Inner separator used between bits of information in string that is used to
@@ -638,7 +639,7 @@ class ModelManager {
         for (const field of Model.__fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
-                field.parseAndExecuteCommands(record, [['unlink-all']], { allowWriteReadonly: true });
+                field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
             }
         }
         this._hasAnyChangeDuringCycle = true;
