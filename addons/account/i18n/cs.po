@@ -10,20 +10,20 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # Ladislav Tomm <tomm@helemik.cz>, 2020
 # Chris <krystof.reklamy13@gmail.com>, 2020
-# Michal Veselý <michal@veselyberanek.net>, 2020
 # milda dvorak <milda.dvorak@optimal4.cz>, 2020
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # trendspotter, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -51,7 +51,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Odsouhlasené účty"
+msgstr "# Odsouhlasené přijaté faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -151,6 +151,12 @@ msgstr "-> Zkontrolovat částečně rekonciliované záznamy"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr ". Možná sem budete chtít přidat vyšší číslo."
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -356,8 +362,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Účtovat</span>\n"
-"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Účty</span>"
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Přijatá faktura</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Přijaté faktury</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -467,8 +473,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">Všechny vybrané deníkové záznamy budou ověřeny "
-"a zveřejněny. Poté je nebudete moci upravit.</span>"
+"<span class=\"o_form_label\">Všechny vybrané vnitřní účetní doklady budou "
+"ověřeny a zveřejněny. Poté je nebudete moci upravit.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -586,7 +592,9 @@ msgstr "<span role=\"separator\">Zobrazení</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Balance in General Ledger\">Zůstatek v GL</span>"
+msgstr ""
+"<span title=\"Balance in General Ledger\">Zůstatek v obratovej "
+"předvahe</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1842,7 +1850,7 @@ msgstr "Umožňuje nastavit daně na základě hotovosti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr "Povolené deníky"
+msgstr "Povolené účetní deníky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
@@ -2413,6 +2421,13 @@ msgid "Balance"
 msgstr "Zůstatek"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Rozvaha"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr ""
@@ -2485,7 +2500,7 @@ msgstr "Bankovní rozhraní - synchronizujte bankovní kanály automaticky"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
 msgid "Bank Journals"
-msgstr "Bankovní deník"
+msgstr "Bankovní účetní deníky"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -2661,7 +2676,7 @@ msgstr "Na základě platby"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
-msgstr "Dávkové platby"
+msgstr "Hromadné platby"
 
 #. module: account
 #. openerp-web
@@ -2713,28 +2728,28 @@ msgstr "Správce fakturace"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Bills"
-msgstr "Účty"
+msgstr "Přijaté faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
-msgstr "Analýza účtů"
+msgstr "Analýza přijatých faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Pay"
-msgstr "Účtenky k platbě"
+msgstr "Přijaté faktury k platbě"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Účty k ověření"
+msgstr "Přijaté faktury k ověření"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Bills to pay"
-msgstr "Účty k zaplacení"
+msgstr "Přijaté faktury k zaplacení"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
@@ -3194,7 +3209,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Zaškrtněte toto pole, pokud tento účet umožňuje faktury a platby "
-"odpovídající položkám deníku."
+"odpovídající položkám účetního deníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -3680,7 +3695,7 @@ msgstr "Vytvářejte automatické záznamy"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
-msgstr "Vytvořte automatické položky pro vybrané položky deníku"
+msgstr "Vytvořte automatické položky pro vybraný účetní deník"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -3695,7 +3710,7 @@ msgstr "Vytvářejte faktury na e-mailech"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr "Vytvořte záznamy deníku"
+msgstr "Vytvořte vnitřní účetní doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -4017,7 +4032,7 @@ msgstr "Úvěrový účet"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Položky úvěrového deníku, které jsou k této položce deníku přiřazeny."
+msgstr "Položky účetního deníku, které jsou k této položce deníku přiřazeny."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -4307,7 +4322,7 @@ msgid ""
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
 "Datum (včetně), ke kterému jsou čísla přeřazena. Pokud není nastaveno, "
-"všechny položky deníku až do konce období se přeřadí"
+"všechny vnitřní účetní doklady až do konce období se přeřadí"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
@@ -4380,7 +4395,7 @@ msgstr "Debetní účet"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Debetujte položky deníku, které se shodují s touto položkou deníku."
+msgstr "Debetný účetní deník, které se shoduje s týmto Účetním deníkom. "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -4502,8 +4517,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
-"Definujte, ve kterých denících lze tento účet použít. Pokud je prázdný, lze "
-"jej použít ve všech časopisech."
+"Definujte, ve kterých účetních denících lze tento účet použít. Pokud je "
+"prázdný, lze jej použít ve všech časopisech."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5158,7 +5173,7 @@ msgstr "Vyloučit z karty faktury"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
-msgstr "Vyloučené deníky"
+msgstr "Vyloučené účetní deníky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -5614,7 +5629,7 @@ msgstr "Získejte směnný účet"
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_general
 #: model:ir.ui.menu,name:account.menu_action_account_moves_ledger_general
 msgid "General Ledger"
-msgstr "Obecná účetní kniha"
+msgstr "Obratová předvaha"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -6147,7 +6162,7 @@ msgid ""
 "related journal items."
 msgstr ""
 "Chcete-li odstranit výpis z účtu, musíte jej nejprve zrušit, abyste "
-"odstranili související položky deníku."
+"odstranili související položky účetního deníku."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -6231,7 +6246,7 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
-"Položky příchozích plateb vyvolané fakturami / vrácením plateb budou "
+"Položky příchozích plateb vyvolané fakturami / přijaté dobropisy budou "
 "zaúčtovány na účet nevyřízených příjmů a zobrazeny jako modré čáry v widgetu"
 " odsouhlasení banky. Během procesu odsouhlasení budou příslušné transakce "
 "odsouhlaseny s položkami na účtu nevyřízených příjmů namísto na účtu "
@@ -6606,7 +6621,7 @@ msgstr "Faktury"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr "Faktury &amp; účty"
+msgstr "Faktury &amp; přijaté faktury"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -6644,7 +6659,9 @@ msgstr "Faktury k ověření"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr "Faktury, jejichž položky deníku byly odsouhlaseny s těmito platbami."
+msgstr ""
+"Faktury, jejichž položky účetního deníku byly odsouhlaseny s těmito "
+"platbami."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -6743,7 +6760,7 @@ msgstr "Je nula"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr "Vytváří koncepty faktur a účtů zasláním e-mailu."
+msgstr "Vytváří koncepty faktur a přijaté faktury zasláním e-mailu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -6824,12 +6841,12 @@ msgstr "Měna deníku"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "Položky deníku"
+msgstr "Vnitřní účetní doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr "Záznamy deníku podle data"
+msgstr "Vnitřní účetní doklady podle data"
 
 #. module: account
 #. openerp-web
@@ -6903,7 +6920,7 @@ msgstr "Označení položky deníku"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Journal Items"
-msgstr "Položky deníku"
+msgstr "Účetní deník"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -6926,12 +6943,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr "Položky deníku"
+msgstr "Účetní deník"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Položky peněžního deníku, u kterých není nastaveno odpovídající číslo"
+msgstr "Položky účetního deníku, u kterých není nastaveno odpovídající číslo"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -6961,12 +6978,12 @@ msgstr "Deník, kde se má záznam vytvořit."
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_journals
 msgid "Journals"
-msgstr "Deníky"
+msgstr "Účetní deníky"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_journal
 msgid "Journals Audit"
-msgstr "Audit deníků"
+msgstr "Audit účetních deníků"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -7613,7 +7630,7 @@ msgstr "Porovnat odkaz na umístění textu"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Match existing invoices/bills"
-msgstr "Přiřaďte stávající faktury / faktury"
+msgstr "Přiřaďte stávající faktury / přijaté faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -7629,7 +7646,7 @@ msgstr "Odpovídající debety"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Odpovídající položky deníku"
+msgstr "Odpovídající položky účetního deníku"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -7747,7 +7764,7 @@ msgstr "Mínus řádky hlášení"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Miscellaneous"
-msgstr "Různé"
+msgstr "Účetní zápisy"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7976,8 +7993,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
-"Žádní uživatelé nemohou upravovat záznamy deníku týkající se daně před a "
-"včetně tohoto data."
+"Žádní uživatelé nemohou upravovat vnitřní účetní doklady týkající se daně "
+"před a včetně tohoto data."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -8121,7 +8138,7 @@ msgstr "Nyní vytvoříme vaši první fakturu."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
 msgid "Num Journals Without Account"
-msgstr "Počet časopisů bez účtu"
+msgstr "Počet účetních deníku bez účtu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -8472,6 +8489,12 @@ msgid "Options"
 msgstr "Možnosti"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr "Objednávání"
@@ -8493,7 +8516,7 @@ msgstr "Hotovostní základ daně z původu"
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
-msgstr "Originální doklady"
+msgstr "Originální přijaté faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -8640,7 +8663,7 @@ msgstr "Zaplaceno"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Paid Bills"
-msgstr "Zaplacené účty"
+msgstr "Zaplacené přijaté faktury"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -8750,7 +8773,7 @@ msgstr "Partner je nastaven a odpovídá"
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 #: model:ir.ui.menu,name:account.menu_action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Účetní kniha partnera"
+msgstr "Saldokonto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -8786,7 +8809,7 @@ msgstr "Limit minulých měsíců"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
-msgstr "Plaťte své účty jedním kliknutím pomocí služby Euro SEPA"
+msgstr "Plaťte své přijaté faktury jedním kliknutím pomocí služby Euro SEPA"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_payable
@@ -9191,7 +9214,7 @@ msgstr "Rozdíl příspěvku v"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Zaúčtovat položky deníku"
+msgstr "Zaúčtovat vnitřní účetní doklady"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -9222,12 +9245,12 @@ msgstr "Zveřejněno dříve"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Zaúčtované položky deníku"
+msgstr "Zaúčtované vnitřní účetní doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Zaúčtované položky deníku"
+msgstr "Zaúčtované položky účetního deníku"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9275,7 +9298,8 @@ msgstr "Předplacené platby"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Přednastaveno vytváření záznamů v denících při přiřazování faktur a plateb"
+"Přednastaveno vytváření vnitřních účetních dokladu při přiřazování faktur a "
+"plateb"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9466,7 +9490,7 @@ msgstr "Daň z nákupu"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Purchases"
-msgstr "Nákupy"
+msgstr "Nákup"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__formula
@@ -9622,7 +9646,7 @@ msgstr "Vyrovnán"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr "Odsouhlasené doklady"
+msgstr "Odsouhlasené přijaté faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9770,7 +9794,7 @@ msgstr "Související model dokumentu"
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Předělejte posloupnost položek deníku."
+msgstr "Předělejte posloupnost vnitřní účetní doklady."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
@@ -10266,7 +10290,7 @@ msgstr "Hledat fakturu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "Hledat položky deníku"
+msgstr "Hledat položky účetního deníku"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -10348,6 +10372,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Pro účetní deníky zákaznických faktur vyberte možnost Prodej.\n"
+"Pro účetní deníky faktur dodavatelů vyberte možnost Koupit.\n"
+"Pro účetní deníky, které se používají při platbách zákazníků nebo prodejců, vyberte možnost „Hotovost“ nebo „Banka“.\n"
+"Vyberte „Obecné“ pro různé provozní účetní deníky."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__company_id
@@ -10715,8 +10743,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also"
 " be named using this prefix by default."
 msgstr ""
-"Kratší název použitý pro zobrazení. Položky deníku tohoto deníku budou také "
-"standardně pojmenovány pomocí této předpony."
+"Kratší název použitý pro zobrazení. Vnitřní účetní doklady tohoto deníku "
+"budou také standardně pojmenovány pomocí této předpony."
 
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
@@ -10826,8 +10854,8 @@ msgid ""
 "Some journal items already exist in this journal but with accounts from "
 "different types than the allowed ones."
 msgstr ""
-"Některé položky deníku již v tomto deníku existují, ale s účty z jiných "
-"typů, než jsou povolené."
+"Některé položky účetního deníku již v tomto deníku existují, ale s účty z "
+"jiných typů, než jsou povolené."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -10836,8 +10864,8 @@ msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
 msgstr ""
-"Některé položky deníku již v tomto deníku existují, ale s jinými než "
-"povolenými účty."
+"Některé položky účetního deníku již v tomto deníku existují, ale s jinými "
+"než povolenými účty."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -10846,8 +10874,8 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
-"Některé položky deníku již s tímto účtem existují, ale v jiných než "
-"povolených denících."
+"Některé položky účetního deníku již s tímto účtem existují, ale v jiných než"
+" povolených denících."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -11431,7 +11459,7 @@ msgid ""
 "set together."
 msgstr ""
 "Šablony daňových distribučních linek by se měly vztahovat buď na faktury, "
-"nebo na vrácení peněz, nikoli na obě současně. fakturační_datum_id a "
+"nebo na přijaté dobropisy, nikoli na obě současně. fakturační_datum_id a "
 "refundační_datum_id by neměly být nastaveny společně."
 
 #. module: account
@@ -11778,9 +11806,9 @@ msgid ""
 "will become exigible only when the payment is recorded."
 msgstr ""
 "Technické pole, které se používá k označení daňového řádu jako požadovaného "
-"ve výkazu DPH nebo ne (jsou zobrazeny pouze požadované deníkové položky). Ve"
-" výchozím nastavení jsou všechny nové položky deníku přímo požadovány, ale s"
-" funkcí cash_basis o daních, některé budou platné až po zaplacení platby."
+"ve výkazu DPH nebo ne (jsou zobrazeny pouze požadované účetní deníky). Ve "
+"výchozím nastavení jsou všechny nové účetní deníky přímo požadovány, ale s "
+"funkcí cash_basis o daních, některé budou platné až po zaplacení platby."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tax_fiscal_country_id
@@ -11963,6 +11991,7 @@ msgid ""
 "The account %(account_name)s can't be shared between multiple journals: "
 "%(journals)s"
 msgstr ""
+"Účet %(account_name)s nelze sdílet mezi více účetními deníky: %(journals)s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12181,10 +12210,10 @@ msgid ""
 "entries, ready for the reconciliation.- Validated: All lines are reconciled."
 " There is nothing left to process."
 msgstr ""
-"Aktuální stav vašeho bankovního výpisu: - Nový: Plně upravitelné s konceptem"
-" položky deníku. - Zpracování: Již nelze upravovat se zaúčtovanými položkami"
-" deníku, připraveno k odsouhlasení. - Ověření: Všechny řádky jsou "
-"odsouhlaseny. Nezbývá nic na zpracování."
+"Aktuální stav vašeho bankovního výpisu: - Nový: plně upravitelné s konceptem"
+" vnitřní účetní doklady. - Zpracování: již nelze upravovat se zaúčtovanými "
+"vnitřními účetními dokladmi, připraveno k odsouhlasení. - Ověření: Všechny "
+"řádky jsou odsouhlaseny. Nezbývá nic na zpracování."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -12249,7 +12278,7 @@ msgstr "Fiskální pozice určuje daně / účty použité pro tento kontakt."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr "Budou vygenerovány následující položky deníku"
+msgstr "Budou vygenerovány následující vnitřní účetní doklady"
 
 #. module: account
 #: code:addons/account/models/res_bank.py:0
@@ -12341,7 +12370,7 @@ msgid ""
 "To be consistent, all the write-off journal items must share the same account."
 msgstr ""
 "Položka deníku%s dosáhl neplatného stavu vzhledem k jeho platbě.\n"
-"V zájmu konzistence musí všechny položky odpisu sdílet stejný účet."
+"V zájmu konzistence musí všechny odpisy účetního deníku sdílet stejný účet."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12370,6 +12399,8 @@ msgid ""
 "The journal entry %s reached an invalid state relative to its payment.\n"
 "To be consistent, the journal items must share the same partner."
 msgstr ""
+"Vnitřní účetní doklad %s dosáhl neplatného stavu vzhledem k její platbě.\n"
+"V zájmu konzistence musí položky deníku sdílet stejného partnera. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -12537,7 +12568,7 @@ msgstr "Výše platby nemůže být záporná."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr "Odkaz na platbu, který se má nastavit na položky deníku."
+msgstr "Odkaz na platbu, který se má nastavit na položky účetního deníku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
@@ -12708,8 +12739,8 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you"
 " selected some of both types."
 msgstr ""
-"Pořadí tohoto deníku se u faktur a refundací liší, ale vybrali jste některé "
-"z obou typů."
+"Pořadí tohoto deníku se u faktur a přijatých dobropisů liší, ale vybrali "
+"jste některé z obou typů."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -12820,7 +12851,7 @@ msgstr "Pro váš účet momentálně neexistují žádné faktury ani platby."
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr "Ve stavu konceptu nejsou žádné položky deníku k zaúčtování."
+msgstr "Ve stavu konceptu nejsou žádné položky účetního deníku k zaúčtování."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -12954,7 +12985,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "This can only be used on journal items"
-msgstr "To lze použít pouze na položky deníku"
+msgstr "To lze použít pouze na položky účetního deníku"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -12977,8 +13008,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Toto pole se používá pro zapsání dlužných a pohledávek. Můžete umístit "
-"termín pro platbu tohoto řádku."
+"Toto pole se používá pro závazky a pohledávky vnitřních účetních dokladů. "
+"Můžete umístit termín pro platbu tohoto řádku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__partner_name
@@ -13110,8 +13141,8 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
-"Tento průvodce ověří všechny vybrané položky deníku. Po ověření položek "
-"deníku je již nelze aktualizovat."
+"Tento průvodce ověří všechny vybrané vnitřní účetní doklady. Po ověření "
+"vnitřních účetních dokladu je již nelze aktualizovat."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -13119,8 +13150,8 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Ty mohou být použity k rychlému vytvoření položek deníku při sladění "
-"bankovního výpisu nebo účtu."
+"Ty mohou být použity k rychlému vytvoření položek účetního deníku při "
+"sladění bankovního výpisu nebo účtu."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13325,6 +13356,12 @@ msgid "Transfers"
 msgstr "Přesuny"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13449,12 +13486,12 @@ msgstr "Nezaúčtované"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Nezaúčtované položky deníku"
+msgstr "Nezaúčtované vnitřní účetní doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Nezaúčtované položky deníku"
+msgstr "Nezaúčtované položky účetního deníku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_unread
@@ -13530,6 +13567,12 @@ msgid "Upload"
 msgstr "Nahrát"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
 msgstr "Použijte anglosaské účetnictví"
@@ -13563,7 +13606,7 @@ msgstr "Použijte anglosaské účetnictví"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
 msgid "Use batch payments"
-msgstr "Použít hromadné platby"
+msgstr "Použít dávkové platby"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13857,8 +13900,8 @@ msgid ""
 "We process bills automatically so that you only have to validate them. "
 "Choose how you want to test our artificial intelligence engine:"
 msgstr ""
-"Účty zpracováváme automaticky, takže je musíte pouze ověřit. Vyberte, jak "
-"chcete otestovat náš modul umělé inteligence:"
+"Přijaté faktury zpracováváme automaticky, takže je musíte pouze ověřit. "
+"Vyberte, jak chcete otestovat náš modul umělé inteligence:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
@@ -13922,7 +13965,7 @@ msgstr "S měnou"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "With Odoo, you won't have to records bills manually"
-msgstr "S Odoo nebudete muset účty zaznamenávat ručně"
+msgstr "S Odoo nebudete muset přijaté faktury zaznamenávat ručně"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -14005,7 +14048,8 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr "Můžete změnit pouze období / účet u zaúčtovaných položek deníku."
+msgstr ""
+"Můžete změnit pouze období / účet u zaúčtovaných položek účetního deníku."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14023,7 +14067,8 @@ msgstr "Můžete odsouhlasit pouze zaúčtované položky."
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr "Platbu můžete zaregistrovat pouze za zaúčtované položky deníku."
+msgstr ""
+"Platbu můžete zaregistrovat pouze za zaúčtované vnitřní účetní doklady."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -14082,7 +14127,7 @@ msgid ""
 "items linked to it."
 msgstr ""
 "Společnost svého účtu nemůžete změnit, protože jsou s ním propojeny některé "
-"položky deníku."
+"účetní deníky."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14092,7 +14137,7 @@ msgid ""
 "entries linked to it."
 msgstr ""
 "Společnost svého deníku nemůžete změnit, protože jsou s ním spojeny některé "
-"položky deníku."
+"vnitřní účetní doklady."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14102,7 +14147,7 @@ msgid ""
 "linked to it."
 msgstr ""
 "Společnost své daně nemůžete změnit, protože jsou s ní spojeny některé "
-"položky deníku."
+"položky účetního deníku."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -14177,8 +14222,8 @@ msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
 msgstr ""
-"Nelze zaregistrovat platby za položky deníku, které jsou buď všechny "
-"příchozí, nebo všechny odchozí."
+"Nelze zaregistrovat platby za položky účetního deníku, které jsou buď "
+"všechny příchozí, nebo všechny odchozí."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -14198,7 +14243,7 @@ msgid ""
 " journal items linked to it."
 msgstr ""
 "Na analytických značkách nemůžete nastavit jinou společnost, protože jsou s "
-"ní propojeny některé položky deníku."
+"ní propojeny některé položky účetního deníku."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14224,8 +14269,8 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
-"Nemůžete změnit měnu společnosti, jelikož některé položky deníku již "
-"existují"
+"Nemůžete změnit měnu společnosti, jelikož některé položky účetního deníku "
+"již existují"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -14367,7 +14412,8 @@ msgstr "Nemůžete přepsat hodnoty zajišťující nezměnitelnost účetnictv�
 #, python-format
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr "Tuto akci nelze provést na účtu, který obsahuje deníkové položky."
+msgstr ""
+"Tuto akci nelze provést na účtu, který obsahuje položky účetního deníku."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -14420,8 +14466,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"V tomto účtu nelze nastavit měnu, protože již obsahuje deníky s jinou cizí "
-"měnou."
+"V tomto účtu nelze nastavit měnu, protože již obsahuje vnitřní účetní "
+"doklady s jinou cizí měnou."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -14453,7 +14499,7 @@ msgid ""
 "Journals' on the related account."
 msgstr ""
 "Tento účet nemůžete použít (%s)v tomto deníku zaškrtněte u příslušného účtu "
-"pole „Povolené časopisy“."
+"pole „Povolené účetní deníky“."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

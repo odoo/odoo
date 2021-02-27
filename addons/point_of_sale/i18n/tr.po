@@ -9,7 +9,6 @@
 # Gökhan Yüksel <yg_yuksel@hotmail.com>, 2020
 # Saban Yildiz <sabany@projetgrup.com>, 2020
 # gezgin biri <gezginbiri@hotmail.com>, 2020
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2020
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2020
@@ -17,7 +16,6 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
@@ -25,16 +23,18 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
+# Levent Karakaş <levent@mektup.at>, 2021
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2021-01-26 09:03+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
+"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -491,6 +491,13 @@ msgid "All"
 msgstr "Belirlenmedi"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "All Tickets"
+msgstr "Tüm Talepler"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -830,6 +837,7 @@ msgstr "Nakit ödeme yöntemi olmadan para üstü verilemez"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 #, python-format
@@ -1350,6 +1358,7 @@ msgstr "Özel"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderList.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -1400,6 +1409,7 @@ msgstr "Panel"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderList.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__date_order
@@ -2867,6 +2877,13 @@ msgid "Ok"
 msgstr "Tamam"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Ongoing"
+msgstr "Süren"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "Yalnızca nakit üzerinde yuvarlamayı uygula"
@@ -3181,6 +3198,7 @@ msgstr "Siparişi Öde"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
@@ -3949,6 +3967,13 @@ msgid "Ready to launch your <b>point of sale</b>?"
 msgstr "Ready to launch your <b>point of sale</b>?"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Receipt"
+msgstr "Alım"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
@@ -3966,6 +3991,7 @@ msgstr "Makbuz Üstbilgi"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 #, python-format
@@ -4222,6 +4248,20 @@ msgstr "Search Products..."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
 msgstr "Satış Siparişi Ara"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
+#, python-format
+msgid "Search Tickets..."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/SearchBar.js:0
+#, python-format
+msgid "Select"
+msgstr "Seçmeli"
 
 #. module: point_of_sale
 #. openerp-web

@@ -19,18 +19,18 @@
 # Tina Milas, 2020
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Ivan Marijanović <ivanm101@yahoo.com>, 2020
-# Martin Trigaux, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # Jasmina Otročak <jasmina@uvid.hr>, 2020
 # Bole <bole@dajmi5.com>, 2020
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,6 +156,12 @@ msgstr "-> Pregled djelomično zatvorenih temeljnica"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr ". Možda želite ovdje upisati broj."
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -2379,6 +2385,13 @@ msgstr "Loš dužnik"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__balance
 msgid "Balance"
 msgstr "Saldo"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Bilanca stanja"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -8307,6 +8320,12 @@ msgid "Options"
 msgstr "Opcije"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr ""
@@ -12922,6 +12941,12 @@ msgid "Transfers"
 msgstr "Prijenosi"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13119,6 +13144,12 @@ msgstr "Automatski ažuriraj tečaj"
 #, python-format
 msgid "Upload"
 msgstr "Učitaj"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
