@@ -29,7 +29,6 @@
 # Lisa Zhang <lzh@odoo.com>, 2020
 # jian liu <lj1989419@gmail.com>, 2020
 # Manga Tsang <mts@odoo.com>, 2020
-# 卓忆科技 <zhanghao@jointd.com>, 2020
 # lttlsnk <lttlsnk@gmail.com>, 2020
 # Maie <m@maie.name>, 2020
 # niulin lnc. <admin@niulin.net>, 2020
@@ -61,6 +60,8 @@
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# Titan Li <lghbeta@gmail.com>, 2021
+# 卓忆科技 <zhanghao@jointd.com>, 2021
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
 # 
 msgid ""
@@ -3552,7 +3553,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"包含Stock帐户的企业视图\n"
+"包含仓库会计的企业版视图\n"
 "    "
 
 #. module: base
@@ -3563,7 +3564,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"包含库存管理的企业视图\n"
+"包含仓库管理的企业版视图\n"
 "    "
 
 #. module: base
@@ -12775,7 +12776,7 @@ msgstr "收付实现制会计报表"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Categories"
-msgstr "分类"
+msgstr "类别"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__category_id
@@ -13306,7 +13307,7 @@ msgstr "公司注册号"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
 msgid "Company Tagline"
-msgstr "公司口号"
+msgstr "公司标语"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__company_type
@@ -13596,13 +13597,13 @@ msgstr "联系人姓名"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr "联系人分类"
+msgstr "联系人标签"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr "联系人分类"
+msgstr "联系人标签"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -13881,7 +13882,7 @@ msgstr "创建一个新公司"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Create a new contact tag"
-msgstr "新建一个联系人分类"
+msgstr "新建一个联系人标签"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
@@ -15902,7 +15903,7 @@ msgstr "可执行Python代码"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Execute several actions"
-msgstr "执行几个动作"
+msgstr "执行多个动作"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
@@ -20534,7 +20535,7 @@ msgstr "自动合并所有处理"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Contacts"
-msgstr "合并合同"
+msgstr "合并联系人"
 
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_line
@@ -20554,7 +20555,7 @@ msgstr "合并以下联系人"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge with Manual Check"
-msgstr "手动检查与合并"
+msgstr "手动检查并合并"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
@@ -27515,12 +27516,12 @@ msgstr "库存国际联盟"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account_enterprise
 msgid "Stock account enterprise"
-msgstr "库存会计企业"
+msgstr "库存会计企业版"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
 msgid "Stock enterprise"
-msgstr "股份制企业"
+msgstr "仓库企业版"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_be_hr_payroll
@@ -30907,7 +30908,7 @@ msgstr "你可以管理不同的省/州，每一个省/州都关联到一个国�
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You can not create recursive tags."
-msgstr "你不能创建自循环的标记。"
+msgstr "你不能创建自循环的标签。"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
