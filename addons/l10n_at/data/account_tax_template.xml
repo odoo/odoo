@@ -5,10 +5,11 @@
         <!-- Vorlagen: Verkauf (Umsatzsteuer) -->
         <!-- Lieferungen, sonstige Leistungen und Eigenverbrauch +000,+001,-021 -->
         <!-- Umsätze, für die die Steuerschuld gemäß § 19 Abs. 1 zweiter
-            Satz sowie gemäß § 19 Abs. 1a, 1b, 1c, 1d und 1e (Umsätze ab 01.07.2010)
+            Satz sowie gemäß § 19 Abs. 1a, 1b,
+            1c, 1d und 1e (Umsätze ab 01.07.2010)
             auf den Leistungsempfänger übergegangen ist. -->
         <record id="account_tax_template_sales_rev_charge_0_code021" model="account.tax.template">
-            <field name="name">UST_021 Steuerschuld betrifft Leistungsempfänger</field>
+            <field name="name">UST_021 § 19 Abs. 1 zweiter Satz (Steuerschuld betrifft Leistungsempfänger)</field>
             <field name="description">USt. 0%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template" />
             <field name="sequence">400</field>
@@ -21,7 +22,8 @@
                 (0,0,{
                   'factor_percent': 100,
                   'repartition_type': 'base',
-                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
                 }),
                 (0,0,{
                   'factor_percent': 100,
@@ -34,7 +36,208 @@
                 (0,0,{
                   'factor_percent': 100,
                   'repartition_type': 'base',
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
                   'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1a" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1a (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">USt. 0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template" />
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount" />
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0" />
+            <field name="active" eval="False" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1b" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1b (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">USt. 0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template" />
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount" />
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0" />
+            <field name="active" eval="False" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1c" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1c (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">USt. 0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template" />
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount" />
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0" />
+            <field name="active" eval="False" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1d" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1d (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">USt. 0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template" />
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount" />
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0" />
+            <field name="active" eval="False" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_sales_rev_charge_0_code021_1e" model="account.tax.template">
+            <field name="name">UST_021 § 19 Abs. 1e (Steuerschuld betrifft Leistungsempfänger)</field>
+            <field name="description">USt. 0%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template" />
+            <field name="sequence">400</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0.0" name="amount" />
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0" />
+            <field name="active" eval="False" />
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3505'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_3')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                  'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_1'),
+                  ref('tax_report_line_l10n_at_tva_line_4_3')],
                 }),
 
                 (0,0,{
@@ -542,6 +745,7 @@
                   'plus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_4_17_tax')],
                 }),
             ]"/>
+            <field name="tax_group_id" ref="tax_group_19" />
         </record>
         <!-- 10% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche
             Betriebe -->
@@ -741,6 +945,7 @@
                   'plus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_4_17_tax')],
                 }),
             ]"/>
+            <field name="tax_group_id" ref="tax_group_19" />
         </record>
         <record id="account_tax_template_sales_self_add10_code052" model="account.tax.template">
             <field name="name">UST_052 Zusatzsteuersatz 10% (LWB/FWB - Eigenverbrauch)</field>
@@ -1177,8 +1382,15 @@
                   'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_5_4')],
                 }),
             ]"/>
+            <field name="tax_group_id" ref="tax_group_0" />
         </record>
-                <!-- Reverse Charge (§ 19 Abs. 1a - Bauleistungen) -->
+
+        <!--    § 19 Abs. 1a
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge (§ 19 Abs. 1a - Bauleistungen)
+        -->
         <record id="account_tax_template_purchase_rev_charge_1a" model="account.tax.template">
             <field name="name">Reverse Charge 20% (§ 19 Abs. 1a - Bauleistungen)</field>
             <field name="description">RC 20% § 19 Abs. 1a</field>
@@ -1224,12 +1436,23 @@
                   'minus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_5_6')],
                 }),
             ]"/>
-            <field name="price_include" eval="0" />
+            <field name="tax_group_id" ref="tax_group_0" />
         </record>
 
-        <!-- Reverse Charge gemäß § 19 Abs. 1b (Sicherungseigentum, Vorbehaltseigentum  und Grundstücke im Zwangsversteigerungsverfahren) -->
+        <!--    § 19 Abs. 1b
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1b (Sicherungseigentum, Vorbehaltseigentum  und
+                Grundstücke im Zwangsversteigerungsverfahren)
+
+                a) sicherungsübereigneter Gegenstände durch den Sicherungsgeber an den Sicherungsnehmer,
+                b) des Vorbehaltskäufers an den Vorbehaltseigentümer im Falle der vorangegangenen Übertragung des vorbehaltenen Eigentums und
+                c) von Grundstücken im Zwangsversteigerungsverfahren durch den Verpflichteten an den Ersteher
+        -->
         <record id="account_tax_template_purchase_rev_charge_1b" model="account.tax.template">
-            <field name="name">Reverse Charge 20% (§ 19 Abs. 1b - Sicherungseigentum)</field>
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1b - Sicherungseigentum, Vorbehaltseigentum  und
+                Grundstücke im Zwangsversteigerungsverfahren))</field>
             <field name="description">RC 20% § 19 Abs. 1b</field>
             <field name="chart_template_id" ref="l10n_at_chart_template" />
             <field name="sequence">550</field>
@@ -1276,9 +1499,77 @@
             <field name="tax_group_id" ref="tax_group_0" />
         </record>
 
-        <!-- Reverse Charge gemäß § 19 Abs. 1 zweiter Satz, § 19 Abs. 1c sowie  gemäß Art. 25 Abs. 5 -->
+        <!--    § 19 Abs. 1 zweiter Satz
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Art. 25 Abs. 5 (Dreiecksgeschäft)
+                https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10004929
+                https://www.jusline.at/gesetz/ustg-anhang/paragraf/artikel25
+
+                Reverse Charge gemäß § 19 Abs. 1 zweiter Satz, sowie  gemäß Art. 25 Abs. 5 (Dreiecksgeschäft)
+        -->
+        <record id="account_tax_template_purchase_rev_charge_19_2_25_5" model="account.tax.template">
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1 zweiter Satz - Sonstige Leistungen, Art. 25 Abs. 5 - Dreiecksgeschäft</field>
+            <field name="description">RC 20% §19 Sonstige Leistungen, Dreiecksgeschäft</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template" />
+            <field name="sequence">550</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="0" />
+            <field name="amount">20</field>
+            <field name="amount_type">percent</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_21')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_5_5')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_4_21')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_5_5')],
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="tax_group_0" />
+        </record>
+
+        <!--    § 19 Abs. 1c
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1c
+                Bei der Lieferung von Gas über ein Erdgasnetz im Gebiet der Gemeinschaft oder
+                jedes an ein solches Netz angeschlossene Netz, von Elektrizität oder
+                von Wärme oder Kälte über Wärme- oder Kältenetze, wenn sich der Ort dieser Lieferung nach § 3 Abs. 13 oder 14 bestimmt und
+                der liefernde Unternehmer im Inland weder sein Unternehmen betreibt noch eine an der Lieferung beteiligte Betriebsstätte hat,
+                wird die Steuer vom Empfänger der Lieferung geschuldet, wenn er im Inland für Zwecke der Umsatzsteuer erfasst ist.
+        -->
         <record id="account_tax_template_purchase_rev_charge_1c" model="account.tax.template">
-            <field name="name">Reverse Charge 20% (§ 19 Abs. 1c - Sonstige Leistungen)</field>
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1c - Gas, Strom, Wärme, Kälte)</field>
             <field name="description">RC 20% § 19 Abs. 1c</field>
             <field name="chart_template_id" ref="l10n_at_chart_template" />
             <field name="sequence">550</field>
@@ -1325,13 +1616,79 @@
             <field name="tax_group_id" ref="tax_group_0" />
         </record>
 
-        <!-- Reverse Charge gemäß § 19 Abs. 1d (Schrott und Abfallstoffe, Verordnung
-            BGBl. II Nr. 129/2007; Videospielkonsolen, Laptops, Tablet-Computer, Gas
-            und Elektrizität, Gas- und Elektrizitätszertifikate, Metalle, Anlagegold,
-            Verordnung BGBl. II Nr. 369/2013) -->
+        <!--    § 19 Abs. 1d
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1d (Schrott und Abfallstoffe, Verordnung
+                BGBl. II Nr. 129/2007; Videospielkonsolen, Laptops, Tablet-Computer, Gas
+                und Elektrizität, Gas- und Elektrizitätszertifikate, Metalle, Anlagegold,
+                Verordnung BGBl. II Nr. 369/2013)
+        -->
         <record id="account_tax_template_purchase_rev_charge_1d" model="account.tax.template">
-            <field name="name">Reverse Charge 20% (§ 19 Abs. 1d - Schrott und Abfallstoffe)</field>
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1d - Schrott und Abfallstoffe, Spielekonsolen, Laptops, Tablet-Computer >= EUR 5.000,-, Gas und Elektrizität, Gas- und Elektrizitätszertifikate, Metalle, Anlagegold)</field>
             <field name="description">RC 20% § 19 Abs. 1d</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template" />
+            <field name="sequence">550</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="0" />
+            <field name="amount">20</field>
+            <field name="amount_type">percent</field>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_4_24')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_5_8')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3510'),
+                  'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_4_24')],
+                }),
+                (0,0,{
+                  'factor_percent': 100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2510'),
+                  'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_5_8')],
+                }),
+            ]"/>
+            <field name="tax_group_id" ref="tax_group_0" />
+        </record>
+
+        <!--    § 19 Abs. 1e
+                https://www.ris.bka.gv.at/eli/bgbl/1994/663/P19/NOR40189968
+                https://www.jusline.at/gesetz/ustg/paragraf/19
+
+                Reverse Charge gemäß § 19 Abs. 1e
+                a)  der Übertragung von Treibhausgasemissionszertifikaten im Sinne des Art. 3 der Richtlinie 2003/87/EG
+                    über ein System für den Handel mit Treibhausgasemissionszertifikaten in der Gemeinschaft und
+                    zur Änderung der Richtlinie 96/61/EG des Rates, ABl. Nr. L 275 vom 25.10.2003 S. 32, und bei
+                    der Übertragung von anderen Einheiten, die genutzt werden können, um den Auflagen dieser Richtlinie nachzukommen,
+                b)  der Lieferung von Mobilfunkgeräten (Unterpositionen 8517 12 00 und 8517 18 00 der Kombinierten Nomenklatur)
+                    und integrierten Schaltkreisen (Unterpositionen 8542 31 90, 8473 30 20, 8473 30 80 und 8471 50 00 der Kombinierten Nomenklatur),
+                    wenn das in der Rechnung ausgewiesene Entgelt mindestens 5 000 Euro beträgt.
+        -->
+        <record id="account_tax_template_purchase_rev_charge_1e" model="account.tax.template">
+            <field name="name">Reverse Charge 20% (§ 19 Abs. 1e - Treibhausgasemissionszertifikaten, Mobilfunkgeräte >= EUR 5.000,-)</field>
+            <field name="description">RC 20% § 19 Abs. 1e</field>
             <field name="chart_template_id" ref="l10n_at_chart_template" />
             <field name="sequence">550</field>
             <field name="type_tax_use">purchase</field>
@@ -1632,6 +1989,7 @@
                   'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_5_1')],
                 }),
             ]"/>
+            <field name="tax_group_id" ref="tax_group_19" />
         </record>
         <record id="account_tax_template_purchase_12_code060" model="account.tax.template">
             <field name="name">VST_060 Weineinkauf 12% (LWB)</field>
@@ -1667,77 +2025,24 @@
                   'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_5_1')],
                 }),
             ]"/>
+            <field name="tax_group_id" ref="tax_group_12" />
         </record>
-        <!-- Vorsteuern betreffend die entrichtete Einfuhrumsatzsteuer (§
-            12 Abs. 1 Z 2 lit. a) -->
+        <!-- Vorsteuern betreffend die entrichtete Einfuhrumsatzsteuer (§ 12 Abs. 1 Z 2 lit. a) -->
         <record id="account_tax_template_purchase_xx_code061" model="account.tax.template">
             <field name="name">VST_061 entrichtete EUst (§ 12 Abs. 1 Z 2 lit. a)</field>
-            <field name="description">VSt. 20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template" />
             <field name="sequence">400</field>
             <field name="type_tax_use">purchase</field>
-            <field eval="20" name="amount" />
             <field name="amount_type">percent</field>
-            <field name="price_include" eval="0" />
-            <field name="active" eval="False" />
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'tax',
-                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_5_2')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'tax',
-                  'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_5_2')],
-                }),
-            ]"/>
         </record>
         <!-- Vorsteuern betreffend die geschuldete, auf dem Abgabenkonto
             verbuchte Einfuhrumsatzsteuer (§ 12 Abs. 1 Z 2 lit. b) -->
         <record id="account_tax_template_purchase_xx_code083" model="account.tax.template">
             <field name="name">VST_083 verbuchte EUst. (§ 12 Abs. 1 Z 2 lit. b)</field>
-            <field name="description">VSt. 20%</field>
             <field name="chart_template_id" ref="l10n_at_chart_template" />
             <field name="sequence">400</field>
             <field name="type_tax_use">none</field>
-            <field eval="20" name="amount" />
             <field name="amount_type">percent</field>
-            <field name="price_include" eval="0" />
-            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'tax',
-                  'account_id': ref('chart_at_template_2515'),
-                  'plus_report_line_ids': [ref('tax_report_line_l10n_at_tva_line_5_3')],
-                }),
-            ]"/>
-            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'base',
-                }),
-                (0,0,{
-                  'factor_percent': 100,
-                  'repartition_type': 'tax',
-                  'account_id': ref('chart_at_template_3515'),
-                  'minus_report_line_ids':  [ref('tax_report_line_l10n_at_tva_line_5_3')],
-                }),
-            ]"/>
         </record>
 
         <!-- Berichtigungen -063, -067, -090 ! -->
@@ -1883,6 +2188,7 @@
                   'account_id': ref('chart_at_template_2505'),
                 }),
             ]"/>
+            <field name="tax_group_id" ref="tax_group_20" />
         </record>
         <!-- Vorsteuern betreffend Gebäude nach EKR 030-037 und 070, 071 -->
         <record id="account_tax_template_purchase_cars_buildings_code028" model="account.tax.template">
@@ -1917,6 +2223,7 @@
                   'account_id': ref('chart_at_template_2505'),
                 }),
             ]"/>
+            <field name="tax_group_id" ref="tax_group_20" />
         </record>
         <!-- Innergemeinschaftlicher Erwerb 070 abzgl. 071 ! -->
         <record id="account_tax_template_purchase_eu_0_vst_071" model="account.tax.template">
