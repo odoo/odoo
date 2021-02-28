@@ -9,7 +9,7 @@
 # Melroy van den Berg <webmaster1989@gmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Martin Trigaux, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # 
 msgid ""
@@ -1318,6 +1318,12 @@ msgstr "Volgers (Kanalen)"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:86
+#, python-format
+msgid "For %s to be a kit, its product type must be 'Consumable'."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3585,6 +3591,14 @@ msgstr ""
 "De werkzaamheden voor de productie van deze stuklijst. Wanneer een route is "
 "opgegeven, zullen de productie orders worden uitgevoerd door middel van "
 "werkorders, anders alles wordt verwerkt in de productieorder zelf."
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:30
+#, python-format
+msgid ""
+"The product type of %s must be 'Consumable' because it has at least one kit-"
+"type bill of materials."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:56
