@@ -456,7 +456,7 @@
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="name" string="Work Center" filter_domain="[('bom_id.operation_ids.workcenter_id', 'ilike', self)]"/>
                     <field name="origin"/>
-                    <filter string="To Do" name="todo" domain="['|', ('state', 'in', ('draft', 'confirmed', 'progress', 'to_close')), ('is_planned', '=', True)]"
+                    <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
