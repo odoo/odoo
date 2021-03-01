@@ -20,8 +20,15 @@
             <t t-set="body_classname" t-value="(body_classname if body_classname else '') + (' o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else '')"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="before">
-            <div t-if="'with_loader' in request.params" class="o_theme_install_loader_container position-fixed fixed-top fixed-left h-100 w-100 d-flex justify-content-center align-items-center">
+            <div t-if="'with_loader' in request.params" class="o_theme_install_loader_container position-fixed fixed-top fixed-left
+            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold text-center">
+                Building your website...
                 <div class="o_theme_install_loader"/>
+                <p class="o_theme_install_loader_tip w-25">
+                    TIP: Once loaded, follow the
+                    <span class="o_tooltip o_tooltip_visible bottom o_animated position-relative"></span>
+                    <br/>pointer to build the perfect page in 7 steps.
+                </p>
             </div>
             <nav groups="base.group_user" t-if="website" id="oe_main_menu_navbar" class="o_main_navbar">
                 <ul id="oe_applications">
