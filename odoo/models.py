@@ -2470,11 +2470,13 @@ class BaseModel(metaclass=MetaModel):
 
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
-            assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
-            assert self._fields[gb].base_field.groupable, (
-                f"Field {gb} of model {self._name} is not a stored field, only stored fields "
-                "(regular or many2many) are valid for the 'groupby' parameter."
-            )
+            if gb not in self._fields:
+                raise UserError(_("Unknown field %r in 'groupby'") % gb)
+            if not self._fields[gb].base_field.groupable:
+                raise UserError(_(
+                    "Field %s is not a stored field, only stored fields (regular or "
+                    "many2many) are valid for the 'groupby' parameter", self._fields[gb],
+                ))
 
         aggregated_fields = []
         select_terms = []
