@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { actionRegistry } from "./action_manager/action_registry";
+import { actionRegistry } from "./actions/action_registry";
 import { errorDialogRegistry } from "./crash_manager/error_dialog_registry";
 import { debugManagerRegistry } from "./debug_manager/debug_manager_registry";
 import { makeEnv, makeRAMLocalStorage } from "./env";

@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { actionRegistry } from "../action_manager/action_registry";
+import { actionRegistry } from "../actions/action_registry";
 import { action_registry as legacyActionRegistry } from "web.core";
 import { ClientActionAdapter } from "./action_adapters";
 import Widget from "web.Widget";
 import { breadcrumbsToLegacy } from "./utils";
-import { useSetupAction } from "../action_manager/action_manager";
+import { useSetupAction } from "../actions/action_manager";
 
 const { Component, hooks, tags } = owl;
 

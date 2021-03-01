@@ -2,7 +2,7 @@
 const { Component, hooks, tags } = owl;
 
 import { useService } from "../core/hooks";
-import { useSetupAction } from "../action_manager/action_manager";
+import { useSetupAction } from "../actions/action_manager";
 import { viewRegistry } from "../views/view_registry";
 import legacyViewRegistry from "web.view_registry";
 import { ViewAdapter } from "./action_adapters";

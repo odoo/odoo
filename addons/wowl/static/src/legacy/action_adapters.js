@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from "../core/hooks";
-import { ViewNotFoundError } from "../action_manager/action_manager";
+import { ViewNotFoundError } from "../actions/action_manager";
 import { useDebugManager } from "../debug_manager/debug_manager";
 import { Dialog } from "../components/dialog/dialog";
 import { objectToQuery } from "../services/router";

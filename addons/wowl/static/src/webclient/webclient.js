@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ActionContainer } from "../action_manager/action_manager";
+import { ActionContainer } from "../actions/action_manager";
 import { NavBar } from "./navbar/navbar";
 import { useService } from "../core/hooks";
 
@@ -81,7 +81,7 @@ export class WebClient extends Component {
       return this.menus.selectMenu(firstApp);
     }
   }
-  
+
   replaceRouterState() {
     const currentApp = this.menus.getCurrentApp();
     const persistentHash = {

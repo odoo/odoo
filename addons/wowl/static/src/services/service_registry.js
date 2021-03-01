@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { actionManagerService } from "../action_manager/action_manager";
+import { actionManagerService } from "../actions/action_manager";
 import { Registry } from "../core/registry";
 import { crashManagerService } from "../crash_manager/crash_manager_service";
 import { notificationService } from "../notifications/notification_service";

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useService } from "../core/hooks";
 import { Notification as NotificationComponent } from "./notification";
 
 const { Component, core, tags } = owl;
@@ -8,9 +9,9 @@ const { EventBus } = core;
 const AUTOCLOSE_DELAY = 4000;
 
 class NotificationManager extends Component {
-  constructor() {
-    super(...arguments);
+  setup() {
     this.notifications = [];
+    useService("notifications")
   }
 }
 NotificationManager.template = tags.xml`
@@ -36,7 +37,7 @@ export const notificationService = {
         });
       }
     }
-    
+
     odoo.mainComponentRegistry.add("NotificationManager", ReactiveNotificationManager);
     function close(id) {
       const index = notifications.findIndex((n) => n.id === id);
