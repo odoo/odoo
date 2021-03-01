@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from datetime import datetime
+
+from freezegun import freeze_time
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests.common import users, Form
@@ -172,6 +175,44 @@ class TestMassMailFeatures(MassMailCommon):
                 set([formataddr((test_partner.name, test_partner.email))]),
                 'email_to incorrect. Should be equal to "%s"' % (
                     formataddr((test_partner.name, test_partner.email))))
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_cron_trigger(self):
+        """ Technical test to ensure the cron is triggered at the correct
+        time """
+
+        ir_cron_triggers = self.env['ir.cron.trigger'].sudo()
+        partner = self.env['res.partner'].create({
+            'name': 'Jean-Alphonce',
+            'email': 'jeanalph@example.com',
+        })
+        common_mailing_values = {
+            'name': 'Knock knock',
+            'subject': "Who's there?",
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            'mailing_domain': [('id', '=', partner.id)],
+            'body_html': 'The marketing mailing test.',
+            'schedule_type': 'scheduled',
+        }
+
+        now = datetime(2021, 2, 5, 16, 43, 20)
+        then = datetime(2021, 2, 7, 12, 0, 0)
+
+        with freeze_time(now):
+            for (test, truth) in [(False, now), (then, then)]:
+                with self.subTest(schedule_date=test):
+                    triggers_before = ir_cron_triggers.search([])
+                    mailing = self.env['mailing.mailing'].create({
+                        **common_mailing_values,
+                        'schedule_date': test,
+                    })
+                    mailing.action_put_in_queue()
+
+                    triggers_after = ir_cron_triggers.search([])
+                    new_triggers = triggers_after - triggers_before
+                    new_triggers.ensure_one()
+                    self.assertLessEqual(new_triggers.call_at, truth)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
