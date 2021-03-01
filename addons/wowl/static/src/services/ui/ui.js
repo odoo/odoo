@@ -92,7 +92,7 @@ export const uiService = {
     }
 
     odoo.mainComponentRegistry.add("BlockUI", ReactiveBlockUI);
-    
+
     function block() {
       bus.trigger("BLOCK");
     }

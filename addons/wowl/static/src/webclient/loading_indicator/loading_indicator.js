@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { useService } from "../../core/hooks";
+
 const { Component, useState } = owl;
 
 /**
@@ -13,8 +15,7 @@ const { Component, useState } = owl;
  * After a delay of 3s, if a rpc is still not completed, we also block the UI.
  */
 export class LoadingIndicator extends Component {
-  constructor() {
-    super(...arguments);
+  setup() {
     this.state = useState({
       count: 0,
       show: false,
@@ -23,12 +24,13 @@ export class LoadingIndicator extends Component {
     this.debugMode = true;
     this.env.bus.on("RPC:REQUEST", this, this.requestCall);
     this.env.bus.on("RPC:RESPONSE", this, this.responseCall);
+    this.uiService = useService("ui");
   }
 
   requestCall(rpcId) {
     if (this.state.count === 0) {
       this.state.show = true;
-      this.blockUITimer = odoo.browser.setTimeout(this.env.services.ui.block, 3000);
+      this.blockUITimer = odoo.browser.setTimeout(this.uiService.block, 3000);
     }
     this.rpcIds.add(rpcId);
     this.state.count++;
@@ -39,7 +41,7 @@ export class LoadingIndicator extends Component {
     this.state.count = this.rpcIds.size;
     if (this.state.count === 0) {
       clearTimeout(this.blockUITimer);
-      this.env.services.ui.unblock();
+      this.uiService.unblock();
       this.state.show = false;
     }
   }
