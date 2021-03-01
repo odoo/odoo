@@ -42,6 +42,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def test_sale_stock_margin_1(self):
         sale_order = self._create_sale_order()
         product = self._create_product()
+        # force same currency in sale order and product
+        sale_order.pricelist_id.currency_id = product.cost_currency_id.id
+        sale_order.currency_id = product.cost_currency_id.id
 
         self._make_in_move(product, 2, 35)
         self._make_out_move(product, 1)
@@ -62,6 +65,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def test_sale_stock_margin_2(self):
         sale_order = self._create_sale_order()
         product = self._create_product()
+        # force same currency in sale order and product
+        sale_order.pricelist_id.currency_id = product.cost_currency_id.id
+        sale_order.currency_id = product.cost_currency_id.id
 
         self._make_in_move(product, 2, 32)
         self._make_in_move(product, 5, 17)
@@ -83,6 +89,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def test_sale_stock_margin_3(self):
         sale_order = self._create_sale_order()
         product = self._create_product()
+        # force same currency in sale order and product
+        sale_order.pricelist_id.currency_id = product.cost_currency_id.id
+        sale_order.currency_id = product.cost_currency_id.id
 
         self._make_in_move(product, 2, 10)
         self._make_out_move(product, 1)
@@ -103,6 +112,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def test_sale_stock_margin_4(self):
         sale_order = self._create_sale_order()
         product = self._create_product()
+        # force same currency in sale order and product
+        sale_order.pricelist_id.currency_id = product.cost_currency_id.id
+        sale_order.currency_id = product.cost_currency_id.id
 
         self._make_in_move(product, 2, 10)
         self._make_in_move(product, 1, 20)
@@ -126,6 +138,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
         sale_order = self._create_sale_order()
         product_1 = self._create_product()
         product_2 = self._create_product()
+        # force same currency in sale order and product
+        sale_order.pricelist_id.currency_id = product_1.cost_currency_id.id
+        sale_order.currency_id = product_1.cost_currency_id.id
 
         self._make_in_move(product_1, 2, 35)
         self._make_in_move(product_1, 1, 51)
