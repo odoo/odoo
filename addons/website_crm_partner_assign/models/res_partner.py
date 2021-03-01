@@ -38,6 +38,18 @@ class ResPartnerActivation(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+    @api.model
+    def default_get(self, fields_list):
+        default_vals = super().default_get(fields_list)
+        if self.env.context.get('partner_set_default_grade_activation'):
+            # sets the lowest grade and activation if no default values given, mainly useful while
+            # creating assigned partner on the fly (to make it visible in same m2o again)
+            if 'grade_id' in fields_list and not default_vals.get('grade_id'):
+                default_vals['grade_id'] = self.env['res.partner.grade'].search([], order='sequence', limit=1).id
+            if 'activation' in fields_list and not default_vals.get('activation'):
+                default_vals['activation'] = self.env['res.partner.activation'].search([], order='sequence', limit=1).id
+        return default_vals
+
     partner_weight = fields.Integer(
         'Level Weight', compute='_compute_partner_weight',
         readonly=False, store=True, tracking=True,
