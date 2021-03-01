@@ -358,6 +358,11 @@ class MassMailing(models.Model):
 
     def action_put_in_queue(self):
         self.write({'state': 'in_queue'})
+        cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue')
+        cron._trigger(
+            schedule_date or fields.Datetime.now()
+            for schedule_date in self.mapped('schedule_date')
+        )
 
     def action_cancel(self):
         self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
