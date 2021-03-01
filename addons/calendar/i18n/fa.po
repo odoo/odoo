@@ -1,29 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* calendar
-# 
-# Translators:
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
-# Martin Trigaux, 2020
-# Hamid Darabi, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
-# 
+#
+# Amir <شسی>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2021-01-06 14:17+0000\n"
+"PO-Revision-Date: 2021-02-22 16:37+0330\n"
+"Last-Translator: Amir <kenevist>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
@@ -42,14 +35,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
-"%(date_start)s در%(time_start)s تا\n"
-" %(date_end)s در %(time_end)s (%(timezone)s)"
+"از %(date_start)s ساعت %(time_start)s تا \n"
+"%(date_end)s ساعت %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr "%(day)s در (%(start)s تا %(end)s) (%(timezone)s)"
+msgstr "%(day)s از (%(start)s تا %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -71,31 +64,55 @@ msgid ""
 "    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
-"        ${object.event_id.user_id.partner_id.name} invited you to the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.\n"
+"        ${object.event_id.user_id.partner_id.name} invited you to the"
+" ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}"
+".\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        % set target = 'recurrence' if recurrent else 'meeting'\n"
-"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;"
+"id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            Accept</a>\n"
-"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp"
+";id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            Decline</a>\n"
-"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=$"
+"{object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
 "        % if not recurrent:\n"
 "        <td width=\"130px;\">\n"
-"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
-"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            <div style=\"border-top-left-radius: 3px;"
+" border-top-right-radius: 3px; font-size: 12px; border-collapse: separate;"
+" text-align: center; font-weight: bold; color: #ffffff; min-height: 18px;"
+" background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight:"
+" bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border:"
+" 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz"
+" if not object.event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight:"
+" bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
-"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F;"
+" text-align: center; font-size: 12px; border-bottom-right-radius: 3px;"
+" font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius:"
+" 3px;\">\n"
+"                ${not object.event_id.allday and"
+" object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
 "            </div>\n"
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
@@ -105,7 +122,9 @@ msgid ""
 "            <ul>\n"
 "                % if object.event_id.location:\n"
 "                    <li>Location: ${object.event_id.location}\n"
-"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                        (<a target=\"_blank\""
+" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\""
+">View Map</a>)\n"
 "                    </li>\n"
 "                % endif\n"
 "                % if object.event_id.description :\n"
@@ -115,15 +134,19 @@ msgid ""
 "                    <li>When: ${object.recurrence_id.name}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duration: ${('%dH%02d' %"
+" (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
 "                % for attendee in object.event_id.attendee_ids:\n"
 "                    <li>\n"
-"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        <div style=\"display: inline-block; border-radius: 50"
+"%; width: 10px; height: 10px; background:${colors[attendee.state] or"
+" 'white'};\"> </div>\n"
 "                        % if attendee.common_name != object.common_name:\n"
-"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                            <span style=\"margin-left:5px\""
+">${attendee.common_name}</span>\n"
 "                        % else:\n"
 "                            <span style=\"margin-left:5px\">You</span>\n"
 "                        % endif\n"
@@ -142,6 +165,112 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
+"    <p>\n"
+"        سلام ${object.common_name},<br/><br/>\n"
+"        ${object.event_id.user_id.partner_id.name} شما را به جلسه "
+" ${object.event_id.name} ${object.event_id.user_id.company_id.name} دعوت"
+" می‌کند"
+".\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;"
+"id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            پذیرفتن</a>\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp"
+";id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            ردکردن</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=$"
+"{object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            نمایش</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px;"
+" border-top-right-radius: 3px; font-size: 12px; border-collapse: separate;"
+" text-align: center; font-weight: bold; color: #ffffff; min-height: 18px;"
+" background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight:"
+" bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border:"
+" 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz"
+" if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight:"
+" bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F;"
+" text-align: center; font-size: 12px; border-bottom-right-radius: 3px;"
+" font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius:"
+" 3px;\">\n"
+"                ${not object.event_id.allday and"
+" object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        % endif\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>جزییات رویداد</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>مکان: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\""
+" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\""
+">نمایش نقشه</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>Description: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if recurrent:\n"
+"                    <li>زمان: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>مدت: ${('%dH%02d' %"
+" (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>شرکت کنندگان\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50"
+"%; width: 10px; height: 10px; background:${colors[attendee.state] or"
+" 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\""
+">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">شما</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    با سپاس٬\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -151,31 +280,56 @@ msgid ""
 "    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
 "    <p>\n"
 "        Hello ${object.common_name},<br/><br/>\n"
-"        The date of the meeting has been updated. The meeting ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.\n"
+"        The date of the meeting has been updated. The meeting"
+" ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name}"
+" is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_"
+"id.tz)}.\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
 "        % set target = 'recurrence' if recurrent else 'meeting'\n"
-"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;"
+"id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            Accept</a>\n"
-"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp"
+";id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            Decline</a>\n"
-"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=$"
+"{object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
 "        % if not recurrent:\n"
 "        <td width=\"130px;\">\n"
-"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
-"                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            <div style=\"border-top-left-radius: 3px;"
+" border-top-right-radius: 3px; font-size: 12px; border-collapse: separate;"
+" text-align: center; font-weight: bold; color: #ffffff; min-height: 18px;"
+" background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight:"
+" bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border:"
+" 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz"
+" if not object.event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight:"
+" bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
-"                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F;"
+" text-align: center; font-size: 12px; border-bottom-right-radius: 3px;"
+" font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius:"
+" 3px;\">\n"
+"                ${not object.event_id.allday and"
+" object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
 "            </div>\n"
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
@@ -185,7 +339,9 @@ msgid ""
 "            <ul>\n"
 "                % if object.event_id.location:\n"
 "                    <li>Location: ${object.event_id.location}\n"
-"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                        (<a target=\"_blank\""
+" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\""
+">View Map</a>)\n"
 "                    </li>\n"
 "                % endif\n"
 "                % if object.event_id.description :\n"
@@ -195,15 +351,19 @@ msgid ""
 "                    <li>When: ${object.recurrence_id.name}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duration: ${('%dH%02d' %"
+" (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
 "                % for attendee in object.event_id.attendee_ids:\n"
 "                    <li>\n"
-"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: ${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        <div style=\"display: inline-block; border-radius: 50"
+"%; width: 10px; height: 10px; background: ${colors[attendee.state] or"
+" 'white'};\"> </div>\n"
 "                        % if attendee.common_name != object.common_name:\n"
-"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                            <span style=\"margin-left:5px\""
+">${attendee.common_name}</span>\n"
 "                        % else:\n"
 "                            <span style=\"margin-left:5px\">You</span>\n"
 "                        % endif\n"
@@ -222,14 +382,123 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set colors = ctx.get('colors', {})\n"
+"    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']\n"
+"    <p>\n"
+"        سلام ${object.common_name},<br/><br/>\n"
+"        تاریخ جلسه تغییر یافته است. چلسه‌ی"
+" ${object.event_id.name} ایجاد شده توسط ${object.event_id.user_id.partner_id.n"
+"ame}"
+"اکنون در تاریخ و زمان ${object.event_id.get_display_time_tz(tz=object.partner_"
+"id.tz)} برگذار می‌شود.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        % set target = 'recurrence' if recurrent else 'meeting'\n"
+"        <a href=\"/calendar/${target}/accept?token=${object.access_token}&amp;"
+"id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            پذیرفتن</a>\n"
+"        <a href=\"/calendar/${target}/decline?token=${object.access_token}&amp"
+";id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            ردکردن</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=$"
+"{object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            نمایش</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        % if not recurrent:\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px;"
+" border-top-right-radius: 3px; font-size: 12px; border-collapse: separate;"
+" text-align: center; font-weight: bold; color: #ffffff; min-height: 18px;"
+" background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('dayname',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight:"
+" bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border:"
+" 1px solid #875A7B;\">\n"
+"                ${object.event_id.get_interval('day', tz=object.partner_id.tz"
+" if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight:"
+" bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${object.event_id.get_interval('month',"
+" tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F;"
+" text-align: center; font-size: 12px; border-bottom-right-radius: 3px;"
+" font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius:"
+" 3px;\">\n"
+"                ${not object.event_id.allday and"
+" object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        % endif\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>جزییات رویداد</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>مکان: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\""
+" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\""
+">نمایش نقشه</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>توضیحات: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if recurrent:\n"
+"                    <li>زمان: ${object.recurrence_id.name}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>مدت: ${('%dH%02d' %"
+" (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>شرکت کنندگان\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50"
+"%; width: 10px; height: 10px; background: ${colors[attendee.state] or"
+" 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\""
+">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">شما</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    باسپاس٬\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
 msgid ""
 "<div>\n"
-"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
+"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative':"
+" '#FFFF00',  'declined': 'red'}\n"
 "    <!--\n"
-"        In a recurring event case, the object.event_id is always the first event\n"
+"        In a recurring event case, the object.event_id is always the first"
+" event\n"
 "        This makes the event date (and a lot of other information) incorrect\n"
 "    -->\n"
 "    % set event_id = ctx.get('force_event_id') or object.event_id\n"
@@ -238,26 +507,48 @@ msgid ""
 "        This is a reminder for the below event :\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
-"        <a href=\"/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/accept?token=${object.access_token}&amp;id"
+"=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            Accept</a>\n"
-"        <a href=\"/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/decline?token=${object.access_token}&amp;i"
+"d=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            Decline</a>\n"
-"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=$"
+"{object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
 "        <td width=\"130px;\">\n"
-"            <div style=\"border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
-"                ${event_id.get_interval('dayname', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            <div style=\"border-top-left-radius: 3px;"
+" border-top-right-radius: 3px; font-size: 12px; border-collapse: separate;"
+" text-align: center; font-weight: bold; color: #ffffff; min-height: 18px;"
+" background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('dayname', tz=object.partner_id.tz if"
+" not event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                ${event_id.get_interval('day', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight:"
+" bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border:"
+" 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('day', tz=object.partner_id.tz if not"
+" event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
-"                ${event_id.get_interval('month', tz=object.partner_id.tz if not event_id.allday else None)}\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight:"
+" bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${event_id.get_interval('month', tz=object.partner_id.tz if"
+" not event_id.allday else None)}\n"
 "            </div>\n"
-"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;\">\n"
-"                ${not event_id.allday and event_id.get_interval('time', tz=object.partner_id.tz) or ''}\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F;"
+" text-align: center; font-size: 12px; border-bottom-right-radius: 3px;"
+" font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius:"
+" 3px;\">\n"
+"                ${not event_id.allday and event_id.get_interval('time',"
+" tz=object.partner_id.tz) or ''}\n"
 "            </div>\n"
 "        </td>\n"
 "        <td width=\"20px;\"/>\n"
@@ -266,22 +557,28 @@ msgid ""
 "            <ul>\n"
 "                % if object.event_id.location:\n"
 "                    <li>Location: ${object.event_id.location}\n"
-"                        (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\">View Map</a>)\n"
+"                        (<a target=\"_blank\""
+" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\""
+">View Map</a>)\n"
 "                    </li>\n"
 "                % endif\n"
 "                % if object.event_id.description :\n"
 "                    <li>Description: ${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duration: ${('%dH%02d' %"
+" (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Attendees\n"
 "                <ul>\n"
 "                % for attendee in object.event_id.attendee_ids:\n"
 "                    <li>\n"
-"                        <div style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:${colors[attendee.state] or 'white'};\"> </div>\n"
+"                        <div style=\"display: inline-block; border-radius: 50"
+"%; width: 10px; height: 10px; background:${colors[attendee.state] or"
+" 'white'};\"> </div>\n"
 "                        % if attendee.common_name != object.common_name:\n"
-"                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
+"                            <span style=\"margin-left:5px\""
+">${attendee.common_name}</span>\n"
 "                        % else:\n"
 "                            <span style=\"margin-left:5px\">You</span>\n"
 "                        % endif\n"
@@ -300,6 +597,109 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative':"
+" '#FFFF00',  'declined': 'red'}\n"
+"    <!--\n"
+"        In a recurring event case, the object.event_id is always the first"
+" event\n"
+"        This makes the event date (and a lot of other information) incorrect\n"
+"    -->\n"
+"    % set event_id = ctx.get('force_event_id') or object.event_id\n"
+"    <p>\n"
+"        سلام ${object.common_name},<br/><br/>\n"
+"        این یک یادآوری برای رویداد زیر می‌باشد:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/calendar/meeting/accept?token=${object.access_token}&amp;id"
+"=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            پذیرفتن</a>\n"
+"        <a href=\"/calendar/meeting/decline?token=${object.access_token}&amp;i"
+"d=${object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            ردکردن</a>\n"
+"        <a href=\"/calendar/meeting/view?token=${object.access_token}&amp;id=$"
+"{object.event_id.id}\" style=\"padding: 5px 10px; color: #FFFFFF;"
+" text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B;"
+" border-radius: 3px\">\n"
+"            نمایش</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\">\n"
+"            <div style=\"border-top-left-radius: 3px;"
+" border-top-right-radius: 3px; font-size: 12px; border-collapse: separate;"
+" text-align: center; font-weight: bold; color: #ffffff; min-height: 18px;"
+" background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('dayname', tz=object.partner_id.tz if"
+" not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight:"
+" bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border:"
+" 1px solid #875A7B;\">\n"
+"                ${event_id.get_interval('day', tz=object.partner_id.tz if not"
+" event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight:"
+" bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                ${event_id.get_interval('month', tz=object.partner_id.tz if"
+" not event_id.allday else None)}\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F;"
+" text-align: center; font-size: 12px; border-bottom-right-radius: 3px;"
+" font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius:"
+" 3px;\">\n"
+"                ${not event_id.allday and event_id.get_interval('time',"
+" tz=object.partner_id.tz) or ''}\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>جزییات رویداد</strong></p>\n"
+"            <ul>\n"
+"                % if object.event_id.location:\n"
+"                    <li>مکان: ${object.event_id.location}\n"
+"                        (<a target=\"_blank\""
+" href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\""
+">نمایش نقشه</a>)\n"
+"                    </li>\n"
+"                % endif\n"
+"                % if object.event_id.description :\n"
+"                    <li>توضیحات: ${object.event_id.description}</li>\n"
+"                % endif\n"
+"                % if not object.event_id.allday and object.event_id.duration\n"
+"                    <li>مدت: ${('%dH%02d' %"
+" (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                % endif\n"
+"                <li>شرکت کنندگان\n"
+"                <ul>\n"
+"                % for attendee in object.event_id.attendee_ids:\n"
+"                    <li>\n"
+"                        <div style=\"display: inline-block; border-radius: 50"
+"%; width: 10px; height: 10px; background:${colors[attendee.state] or"
+" 'white'};\"> </div>\n"
+"                        % if attendee.common_name != object.common_name:\n"
+"                            <span style=\"margin-left:5px\""
+">${attendee.common_name}</span>\n"
+"                        % else:\n"
+"                            <span style=\"margin-left:5px\">شما</span>\n"
+"                        % endif\n"
+"                    </li>\n"
+"                % endfor\n"
+"                </ul></li>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    باسپاس٬\n"
+"    % if object.event_id.user_id.signature:\n"
+"        <br/>\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -309,7 +709,7 @@ msgstr "<span> ساعت</span>"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_contacts_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr "یک کاربر نمی‌تواند دوبار همان تماس را داشته باشد."
+msgstr "یک کاربر نمی‌تواند دو مخاطب یکسان داشته باشد."
 
 #. module: calendar
 #. openerp-web
@@ -328,7 +728,7 @@ msgstr "پذیرفته شد"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "کنش مورد نیاز است"
+msgstr "نیازمند اقدام"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -341,6 +741,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"کنش‌ها ممکن است باعث ایجاد رفتار خاصی مانند باز کردن نمای تقویم شود "
+"و یا به طور خودکار هنگام بارگذاری سندی علامت گذاری شود."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
@@ -356,12 +758,12 @@ msgstr "فعالیت‌ها"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity
 msgid "Activity"
-msgstr "فعالیت"
+msgstr "اقدام"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr "نوع فعالیت"
+msgstr "نوع اقدام"
 
 #. module: calendar
 #. openerp-web
@@ -375,12 +777,12 @@ msgstr "کل روز"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr "همه روزها, %(day)s"
+msgstr "تمام روز, %(day)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 msgid "All events"
-msgstr "همه رخدادها"
+msgstr "تمام مناسبت‌ها"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -431,7 +833,7 @@ msgstr "بر اساس روز"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 msgid "Byday"
-msgstr ""
+msgstr "بر اساس روز"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
@@ -450,18 +852,18 @@ msgstr "هشدار تقویم"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr ""
+msgstr "اطلاعات شرکتکنندگان گاهشمار"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "Calendar Contacts"
-msgstr "مخاطبان گاهشمار"
+msgstr "گاهشمار مخاطبین"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 msgid "Calendar Event"
-msgstr "رخداد گاهشمار"
+msgstr "مناسبت گاهشمار"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -486,6 +888,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
+"انتخاب کنید که با سایر رویدادهای مکرر چه کار کنید. هنگام تغییر تاریخ یا زمان،"
+" به‌روزرسانی همه رویدادها مجاز نیست"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
@@ -518,7 +922,7 @@ msgstr "تعداد"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
@@ -564,7 +968,7 @@ msgstr "روز ماه"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__daily
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__daily
 msgid "Days"
-msgstr "روزها"
+msgstr "روز"
 
 #. module: calendar
 #. openerp-web
@@ -584,7 +988,7 @@ msgstr "رد شد"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Description"
-msgstr "توضیحات"
+msgstr "شرح"
 
 #. module: calendar
 #. openerp-web
@@ -651,12 +1055,12 @@ msgstr "مدت به دقیقه"
 #: code:addons/calendar/static/src/js/calendar_controller.js:0
 #, python-format
 msgid "Edit Recurrent event"
-msgstr ""
+msgstr "ویرایش رویدادهای تکرار شونده"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Edit recurring event"
-msgstr ""
+msgstr "ویرایش رویدادهای تکرار شونده"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
@@ -667,12 +1071,12 @@ msgstr "ایمیل"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr "ایمیل - 3 ساعت"
+msgstr "ایمیل- ۳ ساعت"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr "ایمیل - 6 ساعت"
+msgstr "ایمیل -۶ ساعت"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
@@ -719,12 +1123,12 @@ msgstr "مدیریت اطلاع رسانی رویداد"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr ""
+msgstr "نوع رویداد"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr ""
+msgstr "قاعده رویداد مکرر"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
@@ -773,12 +1177,12 @@ msgstr "دنبال‌کنندگان"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "دنبال کنندگان (کانال ها)"
+msgstr "دنبال‌ کنندگان (کانال‌ها)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (همکاران)"
+msgstr "دنبال‌ کنندگان (مخاطبین)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -795,13 +1199,13 @@ msgstr "چهارمین"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fr
 msgid "Fr"
-msgstr "جم"
+msgstr "جمعه"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Free"
-msgstr "رایگان"
+msgstr "آزاد"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
@@ -822,13 +1226,13 @@ msgstr "جمعه"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr "دسته بندی بر مبنای"
+msgstr "گروه‌بندی برمبنای"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Grouping by %s is not allowed."
-msgstr "گروه‌بندی بر اساس %s مجاز نیست."
+msgstr "گروه‌بندی با %s مجاز نمی‌باشد."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -838,7 +1242,7 @@ msgstr "مسیریابی HTTP"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
 msgid "Hours"
-msgstr "ساعت‌ها"
+msgstr "ساعت"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
@@ -860,13 +1264,13 @@ msgstr "شناسه"
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
-"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
+msgstr "اگر این گزینه علامت خورده باشد، پیام‌های جدیدی نیاز به توجه شما دارند."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
+msgstr ""
+"اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -874,8 +1278,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"اگر فیلد فعال روی نادرست تعیین شود، به شما اجازه می‌دهد هشدار رویداد را "
-"پنهان کنید بودن اینکه آن را حذف کنید."
+"بایگانی کردن این امکان را می‌دهد که این آیتم را بدون پاک کردن آن پنهان کنید."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -905,7 +1308,7 @@ msgstr "دعوت برای"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to ${object.event_id.name}"
-msgstr ""
+msgstr "دعوت به ${object.event_id.name}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -915,7 +1318,7 @@ msgstr "دعوت‌نامه‌ها"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
 msgid "Is Follower"
-msgstr "دنبال می کند"
+msgstr "دنبال‌کننده است"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -952,7 +1355,7 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به روز رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
@@ -962,7 +1365,7 @@ msgstr "آخرین به روز رسانی توسط"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
@@ -989,7 +1392,7 @@ msgstr "مکان رویداد"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Logo"
-msgstr "لوگو"
+msgstr "نشان"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
@@ -1014,6 +1417,8 @@ msgstr "ملاقات"
 msgid ""
 "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
+"جلسه '%(name)s' از '%(start_datetime)s' شروع و در '%(end_datetime)s' پایان"
+" می‌یابد"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1044,7 +1449,7 @@ msgstr "جلسه لینک شده"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
-msgstr "ملاقات ها"
+msgstr "ملاقات‌ها"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
@@ -1069,7 +1474,7 @@ msgstr "متفرقه"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__mo
 msgid "Mo"
-msgstr "دو"
+msgstr "دوشنبه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mo
@@ -1085,18 +1490,18 @@ msgstr "دوشنبه"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
 msgid "Month By"
-msgstr ""
+msgstr "ما بوسیله‌ی"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__monthly
 msgid "Months"
-msgstr "ماه‌ها"
+msgstr "ماه"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr "ملاقات های من"
+msgstr "ملاقات‌های من"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
@@ -1109,7 +1514,7 @@ msgstr "نام"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__needsaction
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__needsaction
 msgid "Needs Action"
-msgstr "نیاز به اقدام دارد"
+msgstr "نیازمند اقدام"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1119,7 +1524,7 @@ msgstr "نه من نمی‌روم."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr "هنوز بازخورد نداشته"
+msgstr "هنوز هیچ بازخوردی دریافت نشده است"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1129,32 +1534,32 @@ msgstr "اعلان"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "Notification - 1 Days"
-msgstr "نوتیفیکیشن - 1 روز"
+msgstr "آگاه‌سازی - 1 روز"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr "نوتیفیکیشن - 1 ساعت"
+msgstr "آگاه‌سازی - 1 ساعت"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr "نوتیفیکیشن - 15 دقیقه"
+msgstr "آگاه‌سازی - 15 دقیقه"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr "نوتیفیکیشن - 2 ساعت"
+msgstr "آگاه‌سازی - 2 ساعت"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr "نوتیفیکیشن - 30 دقیقه"
+msgstr "آگاه‌سازی - 30 دقیقه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of Actions"
-msgstr "تعداد کنش ها"
+msgstr "تعداد اقدامات"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
@@ -1164,12 +1569,12 @@ msgstr "تعداد خطاها"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به کنش دارد"
+msgstr "تعداد پیام‌هایی که نیاز به اقدام دارند"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "تعداد پیامهای با خطای تحویل"
+msgstr "تعداد پیام‌هایی که خطای تحویل دارند"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
@@ -1180,7 +1585,7 @@ msgstr "تعداد تکرار"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
 msgid "Number of unread messages"
-msgstr "تعداد پیام‌های خوانده نشده"
+msgstr "تعداد پیام‌های خوانده‌نشده"
 
 #. module: calendar
 #. openerp-web
@@ -1202,7 +1607,7 @@ msgstr "فقط من"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
-msgstr "بارکردن گاهشمار"
+msgstr "باز کردن گاهشمار"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -1212,7 +1617,7 @@ msgstr "گزینه"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Options"
-msgstr "گزینه ها"
+msgstr "گزینه‌ها"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -1222,12 +1627,12 @@ msgstr "شرکت کننده"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "داده مربوط به همکار کاربر"
+msgstr "داده مربوط به مخاطب کاربر"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
 msgid "Privacy"
-msgstr "حریم‌خصوصی"
+msgstr "نمایش محتویات به:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
@@ -1238,7 +1643,7 @@ msgstr "تکرار"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
 msgid "Recurrence Rule"
-msgstr ""
+msgstr "قاعده تکرار"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
@@ -1248,7 +1653,7 @@ msgstr "پایان تکرار"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "به‌روزرسانی تکرار"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
@@ -1258,12 +1663,12 @@ msgstr "مکرر"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrency
 msgid "Recurrent Event"
-msgstr ""
+msgstr "رویدادهای تکرار شونده"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
 msgid "Recurrent Rule"
-msgstr "قانون تکرار"
+msgstr "قاعده تکرار"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
@@ -1288,7 +1693,7 @@ msgstr "تکرار هر"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
 msgid "Repeat Until"
-msgstr "یادآوری تا"
+msgstr "تکرار تا"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
@@ -1298,7 +1703,7 @@ msgstr "تکرار هر (روز/هفته/ماه/سال)"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
-msgstr "xبار یادآوری"
+msgstr "xبار تکرار کن"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
@@ -1310,7 +1715,7 @@ msgstr "پاسخگو"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Responsible Contact"
-msgstr ""
+msgstr "مخاطب پاسخگو"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
@@ -1325,7 +1730,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sa
 msgid "Sa"
-msgstr "شن"
+msgstr "شنبه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
@@ -1341,12 +1746,12 @@ msgstr "شنبه"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Schedule a new meeting"
-msgstr ""
+msgstr "جلسه جدیدی را برنامه‌ریزی کنید"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr "جستجوی ملاقات ها"
+msgstr "جستجوی ملاقات‌ها"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
@@ -1425,7 +1830,7 @@ msgstr "تاریخ پایان برای یک رویداد، بدون زمان ب�
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__su
 msgid "Su"
-msgstr "یک"
+msgstr "یک‌شنبه"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1441,27 +1846,27 @@ msgstr "یک‌شنبه"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__su
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__su
 msgid "Sunday"
-msgstr "یکشنبه"
+msgstr "یک‌شنبه"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
-msgstr "برچسب نام از قبل وجود دارد!"
+msgstr "نام برچسب از قبل وجود دارد!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "تگ ها"
+msgstr "برچسب‌ها"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr ""
+msgstr "آزمایشی"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__th
 msgid "Th"
-msgstr "پن"
+msgstr "پنج‌شنبه"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1493,32 +1898,32 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "روز باید بین 1 تا 31 باشد"
+msgstr "روز باید بین ۱ تا ۳۱ باشد"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
-msgstr ""
+msgstr "تاریخ و زمان پایان نمی‌تواند زودتر از تاریخ و زمان شروع باشد"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
-msgstr ""
+msgstr "تاریخ پایان نمی‌تواند زودتر از تاریخ شروع باشد"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The interval cannot be negative."
-msgstr "بازه نمی‌تواند منفی باشد."
+msgstr "بازه نمی‌تواند منفی باشد"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The number of repetitions cannot be negative."
-msgstr "تعداد تکرار نمی‌تواند منفی باشد."
+msgstr "شماره تکرارها نمی‌تواند منفی باشد"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -1532,7 +1937,7 @@ msgstr "سومین"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
 msgid "This and following events"
-msgstr "این و رخدادهای بعدی"
+msgstr "این و رویدادهای زیر"
 
 #. module: calendar
 #. openerp-web
@@ -1540,18 +1945,18 @@ msgstr "این و رخدادهای بعدی"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #, python-format
 msgid "This event"
-msgstr "این رخداد"
+msgstr "این مناسبت"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__th
 msgid "Thu"
-msgstr "پنجشنبه"
+msgstr "پنج‌شنبه"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__th
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__th
 msgid "Thursday"
-msgstr "پنجشنبه"
+msgstr "پنج‌شنبه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
@@ -1563,12 +1968,12 @@ msgstr "منطقه‌ زمانی"
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
-msgstr "ملاقات‌های امروز"
+msgstr "جلسات امروز"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__tu
 msgid "Tu"
-msgstr "سه"
+msgstr "سه‌شنبه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tu
@@ -1594,7 +1999,7 @@ msgstr "نوع"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Uncertain"
-msgstr "نا مشخص"
+msgstr "نامشخص"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
@@ -1604,12 +2009,12 @@ msgstr "عدد"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 msgid "Unread Messages"
-msgstr "پیام های ناخوانده"
+msgstr "پیام‌های خوانده‌نشده"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "شمارنده پیام‌های خوانده‌ نشده"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -1624,6 +2029,8 @@ msgid ""
 "Updating All Events is not allowed when dates or time is modified. You can "
 "only update one particular event and following events."
 msgstr ""
+"هنگام تغییر تاریخ یا زمان، به‌روزرسانی همه رویدادها مجاز نیست. فقط می‌توانید"
+" یک رویداد خاص و رویدادهای زیر را به‌روز کنید."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -1633,7 +2040,7 @@ msgstr "کاربران"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__we
 msgid "We"
-msgstr "چه"
+msgstr "چهارشنبه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__we
@@ -1656,13 +2063,13 @@ msgstr "روزهفته"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__weekly
 msgid "Weeks"
-msgstr "هفته‌ها"
+msgstr "هفته‌"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__rrule_type__yearly
 msgid "Years"
-msgstr "سالها"
+msgstr "سال"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1679,7 +2086,7 @@ msgstr "نمی‌توانید دوبار یک نفر از حضار وارد کن
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
-msgstr "باید حداقل یک روز از هفته را انتخاب کنید"
+msgstr "شما باید حداقل یک روز در هفته را انتخاب کنید"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -1696,7 +2103,7 @@ msgstr "برای مثال نهار کاری"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "for %s events"
-msgstr "برای %s رخداد"
+msgstr "برای مناسبت‌های %s "
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0

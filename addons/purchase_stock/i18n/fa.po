@@ -1,40 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_stock
-# 
-# Translators:
-# Martin Trigaux, 2020
-# Hamid Darabi, 2020
-# Abel Miri <miri1888@gmail.com>, 2020
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
-# 
+#
+# Amir <kenevist>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2021-02-23 13:55+0000\n"
+"PO-Revision-Date: 2021-02-23 18:32+0330\n"
+"Last-Translator: Amir <kenevist>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr ""
+msgstr "درصد تحویل‌های به موقع"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "<p>Corresponding receipt not found.</p>"
-msgstr ""
+msgstr "<p>رسید مربوطه یافت نشد.</p>"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -43,12 +36,14 @@ msgid ""
 "<p>Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated.</p>"
 msgstr ""
+"<p>بر اساس رسید %s که قبلا تایید شده است، نمی‌توان آن تاریخ‌ها را به اصلاح"
+" کرد.</p>"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "<p>Those dates have been updated accordingly on the receipt %s.</p>"
-msgstr ""
+msgstr "س<p>براساس رسید %s٬ آن تاریخ‌ها به‌روز شد.</p>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -56,6 +51,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
 "Delivery Data</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">هیج داده‌ای"
+" برای تحویل‌های به موقع وجود ندارد</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -64,6 +61,10 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"مقادیری که اینجا تعیین می‌شوند"
+" برای هر شرکت منحصر به فرد هستند.\" aria-label=\"Values set here are"
+" company-specific.\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -71,13 +72,14 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"مقادیری که اینجا تعیین "
+"می‌شوند برای هر شرکت منحصر به فرد هستند.\" "
+"groups=\"base.group_multi_company\"/>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">نرخ تحویل‌های به موقع</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
@@ -99,15 +101,21 @@ msgstr "<strong>نشانی ارسال:</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
+"According to product configuration, the received quantity can be"
+" automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"با توجه به پیکربندی کالا٬ مقدار دریافت شده می‌تواند به طور خودکار توسط"
+" مکانیسم زیر محاسبه می‌شود: \n"
+"   - دستی: مقدار به صورت دستی روی خط تنظیم می‌شود \n"
+"   - جابجایی در انبار: موجودی تایید شده انبار \n"
+" "
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
 msgid "Action"
-msgstr "کنش"
+msgstr "عمل"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_report__avg_receipt_delay
@@ -117,11 +125,14 @@ msgid ""
 "average value, therefore only use this as an aggregated value with "
 "group_operator=avg"
 msgstr ""
+"مقدار زمان بین تاریخ دریافت انتظار و موثر.  با توجه به دشواری محاسبه،"
+"هر رکورد همان مقدار متوسط را نشان می‌دهد، بنابراین فقط از این به عنوان یک"
+" مقدار جمع شده با group_operator = avg استفاده کنید"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
 msgid "Average Receipt Delay"
-msgstr ""
+msgstr "میانگین تاخیر دریافت"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
@@ -140,7 +151,7 @@ msgstr "قاعده خرید"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr "بخر برای تامین"
+msgstr "خرید برای تامین"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
@@ -150,7 +161,7 @@ msgstr "شرکت‌ها"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr ""
+msgstr "تاریخ اتمام اولین سفارش دریافت."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -165,12 +176,12 @@ msgstr "مخاطب"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr "سطر سفارش خرید ایجاد شده"
+msgstr "ردیف سفارش خرید ایجاد شده"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "توضیحات دلخواه"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
@@ -178,6 +189,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr ""
+"روزهای مورد نیاز برای تایید سفارش خری.٬ هنگامی که نیاز به اعتبارسنجی سفارش"
+" خرید می‌باشد٬ تعریف می‌شود"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -185,7 +198,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
 #, python-format
 msgid "Days to Purchase"
-msgstr ""
+msgstr "روز مانده به خرید"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -200,6 +213,8 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
+"بسته به ماژول‌های نصب شده، به شما امکان تعریف مسیر کالا را می‌دهد: فارغ از "
+"اینکه خریداری‌شده، ساخته‌شده، تامین مستقل از موجودی و ... باشد."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -238,17 +253,17 @@ msgstr "مستندات"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
 msgid "Downstream Moves"
-msgstr ""
+msgstr "Downstream Moves***"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_product_product_replenishment
 msgid "Draft PO"
-msgstr ""
+msgstr "تبدیل سفارش خرید به پیش‌نویس"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "ارسال مستقیم"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -260,31 +275,31 @@ msgstr "تاریخ موثر"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "Effective Date Last Year"
-msgstr ""
+msgstr "تاریخ موثر سال گذشته"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "خطا(ها)یی در سفارش(ها)ی خرید رخ داده است."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr "استثنا(ها):"
+msgstr "خطا(ها)"
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Generate the draft vendor bill."
-msgstr ""
+msgstr "پیش‌نویس صورت‌حساب تامین کننده را ایجاد کنید."
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr ""
+msgstr "برای تولید صورت‌حساب تامین کننده، به سفارش خرید برگردید."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
@@ -312,7 +327,7 @@ msgstr "شناسه"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "محموله ی در حال آمدن"
+msgstr "محموله‌های در حال آمدن"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
@@ -336,12 +351,12 @@ msgstr "ارسال شده"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr "آیا ماجول فروش نصب شده است"
+msgstr "آیا ماژول فروش نصب شده است"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
 msgid "Journal Entry"
-msgstr "ثبت سند روزنامه"
+msgstr "سند حسابداری"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move____last_update
@@ -374,18 +389,18 @@ msgstr "لجستیک"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "لات/سریال"
+msgstr "سری ساخت/شماره سریال"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Manual Replenishment"
-msgstr "جایگزینی دستی"
+msgstr "دستورالعمل درخواست کالا"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
-msgstr "اقدام دستی ممکن است نیاز باشد"
+msgstr "ممکن است اقدامات دستی مورد نیاز باشد."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -394,6 +409,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"حاشیه خطای زمان‌های تحویل تامین‌کننده. زمانی که سیستم، سفارش‌های خرید را "
+"برای سفارشگذاری مجدد کالاها ایجاد می‌کند، چندین روز جلوتر برای مواجهه با "
+"تاخیر‌های غیرمنتظره تامین‌کننده برنامه‌ریزی می‌شود. "
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -403,17 +421,17 @@ msgstr "قاعده حداقل انبارداری"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "جلو بردن تاریخ مورد انتظار به مدت"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "انتقال(های) بعدی که متاثر شده‌اند:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "No data yet"
-msgstr ""
+msgstr "هنوز داده‌ای وجود ندارد"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/account_invoice.py:0
@@ -422,11 +440,13 @@ msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
 " %s is zero."
 msgstr ""
+"کنویست قادر به ایجاد اسناد حسابداری انگول ساکسون نیست. ارزیابی کل %s صفر"
+" می‌باشد."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
 msgid "On-Time Delivery"
-msgstr ""
+msgstr "تحویل‌های به موقع"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
@@ -434,28 +454,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr ""
+msgstr "نرخ تحویل‌های به موقع"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
 msgid "On-Time Quantity"
-msgstr ""
+msgstr "تعداد تحویل‌های به موقع"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "On-time Delivery"
-msgstr ""
+msgstr "تحویل‌های به موقع"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "On-time Rate"
-msgstr ""
+msgstr "نرخ تحویل‌های به موقع"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "نقطه سفارش"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__on_time_rate
@@ -465,50 +485,52 @@ msgid ""
 "Over the past 12 months; the number of products received on time divided by "
 "the number of ordered products."
 msgstr ""
+"در 12 ماه گذشته؛ تعداد کالاهای دریافتی به موقع تقسیم بر تعداد کالاهای سفارش"
+" داده شده. "
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
 msgid "Picking count"
-msgstr ""
+msgstr "شمارش حواله"
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Process all the receipt quantities."
-msgstr ""
+msgstr "پردازش تعداد دریافت‌ها"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "گروه تامین"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__product_id
 msgid "Product"
-msgstr "محصول"
+msgstr "کالا"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__category_id
 msgid "Product Category"
-msgstr "دسته بندی محصول"
+msgstr "گروه کالا"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
 msgid "Product Template"
-msgstr "قالب محصول"
+msgstr "قالب کالا"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
 msgid "Propagate cancellation"
-msgstr ""
+msgstr "لغو تکثیر کردن"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__purchase_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__purchase_line_ids
 msgid "Purchase Lines"
-msgstr ""
+msgstr "ردیف‌های خرید"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -520,7 +542,7 @@ msgstr "سفارش خرید"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "سطر سفارش خرید"
+msgstr "ردیف سفارش خرید"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
@@ -538,12 +560,12 @@ msgstr "گزارش خرید"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
-msgstr ""
+msgstr "زمان ایمنی تحویل کالای خریداری شده"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr "تعداد سفارش خرید"
+msgstr "شمارش سفارشات خرید"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -553,19 +575,19 @@ msgstr "رسید"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive Products"
-msgstr "دریافت محصولات"
+msgstr "دریافت کالاها"
 
 #. module: purchase_stock
 #. openerp-web
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Receive the ordered products."
-msgstr ""
+msgstr "دریافت کالاهای سفارشگذاری شده"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr "روش تعداد دریافتی"
+msgstr "روش مقدار دریافت شده"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -576,7 +598,7 @@ msgstr "رسیدها"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr "گزارش جایگزینی"
+msgstr "گزارش درخواست کالا"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -591,7 +613,7 @@ msgstr "رزرو کردن"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "حواله برگشت"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__route_ids
@@ -607,33 +629,33 @@ msgstr "دریافتها را از قبل برنامه ریزی کنید تا ا
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
 msgid "Show supplier column"
-msgstr ""
+msgstr "نمایش ستون تامین کننده"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "انتقال موجودی"
+msgstr "حواله انبار"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "انتقالهای موجودی"
+msgstr "انتقال‌های موجودی"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr "گزارش جایگزینی انبار"
+msgstr "گزارش دوباره پر شدن انبار"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "قانون موجودی انبار"
+msgstr "قاعده انبار"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "گزارش قانون موجودی انبار"
+msgstr "گزارش قاعده انبار"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -643,13 +665,13 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "فنی: مورد استفاده در محاسبه مقادیر"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr ""
+msgstr "درخواست کالاهای زیر ایجاد شده است"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -658,6 +680,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
+"مقادیر سفارش خرید شما کمتر از مقدار صورت‌حساب شده می‌باشد. باید درخواست"
+" بازپرداخت کنید."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -667,6 +691,10 @@ msgid ""
 " %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
 " Go on the product form and complete the list of vendors."
 msgstr ""
+"برای ایجاد سفارش خرید کالای %s هیچ قیمت منطبقی با تامین کننده وجود ندارد (هیچ"
+" تامین کننده‌ای تعریف نشده است، به حداقل مقدار نرسیده است، تاریخ‌ها معتبر"
+" نیستند، ...)."
+"  به فرم کالا بروید و لیست تامین کنندگان را کامل کنید."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -677,16 +705,21 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"باین کار یک مسیر ارسال مستقیم برروی کالا اعمال می‌شود تا از تامین کنندگان خود"
+" بخواهید آنها را به مشتریان خود تحویل دهند. پس از تایید سفارش فروش، ارسال"
+" کالا به صورت مستقیم٬ منجر به ایجاد سفارش خرید برای پیشنهاد قیمت پس از تایید"
+" سفارش فروش می‌شود. این یک جریان براساس درخواست است. آدرس تحویل٬  آدرس تحویل"
+" مشتری خواهد بود و نه انبار شما."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "این نوع عملیات بر محموله ورودی را تعیین می‌کند"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
 msgid "Total Quantity"
-msgstr "تعداد کل"
+msgstr "مقدار کل"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
@@ -706,7 +739,7 @@ msgstr "امکان لغو سفارش وجود ندارد %s چون بعضی در
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr ""
+msgstr "دریافت کلیه محصولات سفارش داده شده را تایید کنید."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
@@ -717,18 +750,18 @@ msgstr "تامین کننده"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_vendor_delay_report
 msgid "Vendor Delay Report"
-msgstr ""
+msgstr "گزارش تاخیر تامین کننده "
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
-msgstr ""
+msgstr "زمان تحویل تامین کننده"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr ""
+msgstr "تجزیه و تحلیل تحویل به موقع تامین کننده"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
@@ -739,7 +772,7 @@ msgstr "انبار"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "وقتی محصولات خرید شدند، آنها می‌توانند به این انبار تحویل شوند"
+msgstr "وقتی کالاها خرید شدند، آنها می‌توانند به این انبار تحویل شوند"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -748,8 +781,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
 msgstr ""
-"وقتی محصولات مورد نیاز باشند در <b>%s</b>, <br/> یک درخواست پیشفاکتور برای "
-"تامین نیاز ایجاد می‌شود."
+"در صورت نیاز به کالاها در <b>%s </b>، <br/> برای تامین نیاز، درخواست پیشنهاد"
+" قیمت ایجاد می‌شود."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -758,12 +791,14 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"نمی‌توانید مقدار سفارش داده شده را به زیر مقدار دریافتی کاهش دهید. \n"
+"ابتدا یک بازگشت ایجاد کنید."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr "برای این همکار باید یک مکان فروشنده تعریف کنید %s"
+msgstr "برای این مخاطب باید یک مکان فروشنده تعریف کنید %s"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0
@@ -771,7 +806,7 @@ msgstr "برای این همکار باید یک مکان فروشنده تعر�
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "day(s)"
-msgstr "روز(ها)"
+msgstr "روز"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock

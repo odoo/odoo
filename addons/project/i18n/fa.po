@@ -1,41 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project
-# 
-# Translators:
-# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2020
-# Morovat Guivi <tarjomac@gmail.com>, 2020
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
-# arya sadeghi <aryasadeghy@gmail.com>, 2020
-# Zahed Alfak <tamass4116@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Reza Royaei <mr.royaei@gmail.com>, 2020
-# Hamid Darabi, 2020
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
-# Maziar Niaki <maziarmn@gmail.com>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2021
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
-# 
+#
+# Amir <شسی>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:23+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2021-01-18 10:58+0000\n"
+"PO-Revision-Date: 2021-02-23 15:24+0330\n"
+"Last-Translator: Amir <kenevist>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "\"Refused\""
-msgstr "\"رد کرد\""
+msgstr "\"موافقت نشد\""
 
 #. module: project
 #. openerp-web
@@ -61,7 +49,7 @@ msgstr "\"امروز\""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "# Days to Deadline"
-msgstr "# روز تا موعد نهایی"
+msgstr "تعداد روزها باقیمانده به پایان مهلت"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -72,22 +60,22 @@ msgstr "تعداد وظایف"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "تعداد روزهای کاری مانده به محول شدن"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "تعداد روزهای مانده به ختم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
-msgstr "تعداد کارها"
+msgstr "تعداد وظایف"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: نظرسنجی"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -101,7 +89,7 @@ msgstr "%s (کپی)"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "%s Use the %s icon to organize your daily activities."
-msgstr ""
+msgstr "%s برای مرتب کردن اقدام‌های روزانه خود٬ از ایکون %s استفاده کنید."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__10
@@ -241,16 +229,25 @@ msgstr "31"
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
 msgstr ""
+"برای تغییر دادن مراحل وظایف٬ کارت‌ها را <b>از این ستون به آن ستون</b> جابجا"
+" کنید."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \n"
-"    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
+"<b>Log notes</b> for internal communications <i>(the people following this"
+" task won't be notified \n"
+"    of the note you are logging unless you specifically tag them)</i>. Use @"
+" <b>mentions</b> to ping a colleague \n"
 "    or # <b>mentions</b> to reach an entire team."
 msgstr ""
+"<b> ثبت یادداشت‌ها </ b> برای ارتباطات داخلی <i> (افرادی که این وظیفه را"
+" دنبال می‌کنند از یادداشتی که وارد می‌کنید مطلع نخواهند شد\n"
+" مگر اینکه آنها را به طور خاص برچسب گذاری کنید) </ i>. برای پینگ کردن یک"
+" همکار از  <b> @ منشن </ b> استفاده کنید \n"
+"و یا برای خبر کردن یک تیم  از  <b> # منشن </ b> استفاده کنید."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -258,7 +255,8 @@ msgid ""
 "<div>\n"
 "    % set access_token = object.rating_get_access_token()\n"
 "    % set partner = object.rating_get_partner_id()\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            % if partner.name:\n"
@@ -266,35 +264,44 @@ msgid ""
 "            % else:\n"
 "                Hello,<br/><br/>\n"
 "            % endif\n"
-"            Please take a moment to rate our services related to the task \"<strong>${object.name}</strong>\"\n"
+"            Please take a moment to rate our services related to the task \"<"
+"strong>${object.name}</strong>\"\n"
 "            % if object.rating_get_rated_partner_id().name:\n"
-"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"                assigned to <strong>${object.rating_get_rated_partner_id().nam"
+"e}</strong>.<br/>\n"
 "            % else:\n"
 "                .<br/>\n"
 "            % endif\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin:"
+" 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Tell us how you feel about our service</strong><br/>\n"
-"                    <span style=\"text-color: #888888\">(click on one of these smileys)</span>\n"
+"                    <strong>Tell us how you feel about our service</strong><"
+"br/>\n"
+"                    <span style=\"text-color: #888888\">(click on one of"
+" these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
 "                    <table style=\"width:100%;text-align:center;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a href=\"/rate/${access_token}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                    <img alt=\"Satisfied\""
+" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a href=\"/rate/${access_token}/3\">\n"
-"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_3.png\" title=\"Not satisfied\"/>\n"
+"                                    <img alt=\"Not satisfied\""
+" src=\"/rating/static/src/img/rating_3.png\" title=\"Not satisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a href=\"/rate/${access_token}/1\">\n"
-"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                    <img alt=\"Highly Dissatisfied\""
+" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -303,12 +310,18 @@ msgid ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            We appreciate your feedback. It helps us to improve continuously.\n"
+"            We appreciate your feedback. It helps us to improve"
+" continuously.\n"
 "            % if object.project_id.rating_status == 'stage':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px;"
+" opacity: 0.5; color: #454748;\">This customer survey has been sent because"
+" your task has been moved to the stage <b>${object.stage_id.name}</b></span>\n"
 "            % endif\n"
 "            % if object.project_id.rating_status == 'periodic':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px;"
+" opacity: 0.5; color: #454748;\">This customer survey is sent <b"
+">${object.project_id.rating_status_period}</b> as long as the task is in the"
+" <b>${object.stage_id.name}</b> stage.</span>\n"
 "            % endif\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -316,6 +329,82 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            % if partner.name:\n"
+"                سلام ${partner.name},<br/><br/>\n"
+"            % else:\n"
+"                سلام٬<br/><br/>\n"
+"            % endif\n"
+"            لطفاً لحظه ای وقت بگذارید و به خدمات ما در رابطه با این کار"
+" امتیاز دهید \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                محول شده به <strong>${object.rating_get_rated_partner_id().nam"
+"e}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin:"
+" 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>احساس خود را در مورد خدمات ما٬ به ما بگویید<"
+"/strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(برروی یکی از این"
+" شکلک‌ها کلیک کنید)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/5\">\n"
+"                                    <img alt=\"Satisfied\""
+" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/3\">\n"
+"                                    <img alt=\"Not satisfied\""
+" src=\"/rating/static/src/img/rating_3.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rate/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\""
+" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"             از نظردهی شما سپاس‌گزاریم. این به ما کمک می‌کند تا به طور مداوم"
+" پیشرفت کنیم.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px;"
+" opacity: 0.5; color: #454748;\">این نظرسنجی ارسال شده است زیرا٬ کارهای شما"
+" به مرحله <b>${object.stage_id.name}</b> منتقل شده است</span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px;"
+" opacity: 0.5; color: #454748;\">نظرسنجی برای مشتری ارسال شد <b"
+">${object.project_id.rating_status_period}</b>تا زمانی که کار درمرحله <b"
+">${object.stage_id.name}</b> می‌باشد.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -333,11 +422,26 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    عزیز ${object.partner_id.name or 'مشتری'},<br/>\n"
+"    از پرس و جو شما متشکریم.<br/>\n"
+"    اگر سوالی دارید٬ لطفا از ما بپرسید\n"
+"    <br/><br/>\n"
+"    با سپاس\n"
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgid ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\""
+" title=\"Manage\"/>"
+msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"مدیریت\""
+" title=\"مدیریت\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -345,8 +449,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
-"title=\"Domain Alias\"/>"
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"شناسه دامنه\" "
+"title=\"شناسه دامنه\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -354,8 +458,8 @@ msgid ""
 "<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
 "satisfaction\" title=\"Percentage of satisfaction\"/>"
 msgstr ""
-"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
-"satisfaction\" title=\"Percentage of satisfaction\"/>"
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"درصد رضایت\" "
+" title=\"درصد رضایت\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -363,12 +467,14 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
+"<i class=\"fa fa-warning\" title=\"مشتری در پروژه غیرفعال شده است\"/><b> "
+"امتیازدهی مشتری</b>برای این پروژه(ها) غیرفعال می‌باشد <br/>"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
-msgstr "<p><em>تعداد تکالیف: %(tasks_count)s</em></p>"
+msgstr "<p><em>تعداد وظایف: %(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -387,24 +493,34 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"fa fa-check-circle\"/> Next Occurrences:"
-msgstr ""
+msgstr "<span class=\"fa fa-check-circle\"/> پیامدهای بعدی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
-msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
-msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
+msgid ""
+"<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\""
+" title=\"Tasks\"/>"
+msgstr ""
+"<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"وظایف\""
+" title=\"وظایف\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">to </span>\n"
-"                                            <span class=\"font-weight-bold oe_edit_only\">to </span>"
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': "
+" [('alias_name', '=', False)]}\">to </span>\n"
+"                                            <span class=\"font-weight-bold"
+" oe_edit_only\">to </span>"
 msgstr ""
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': "
+" [('alias_name', '=', False)]}\">به </span>\n"
+"                                            <span class=\"font-weight-bold"
+" oe_edit_only\">به</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Profitability</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">سوددهی</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -414,18 +530,18 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                    رضایتمندی مشتری\n"
+"                                    رضایت مشتری\n"
 "                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">در رخداد</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
-msgstr ""
+msgstr "<span>آیا شما مطمئنید می‌خواهید این پروژه را پاک کنید؟</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -433,11 +549,14 @@ msgid ""
 "<span>You cannot delete a project containing tasks. You can either archive "
 "it or first delete all of its tasks.</span>"
 msgstr ""
+"<span>نمی‌توانید یک پروژه حاوی وظایف را حذف کنید. شما می‌توانید یا آن را"
+" بایگانی کنید ویا قبل "
+"از پاک کردن ابتدا همه وظایف آن را حذف کنید.</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr "<strong class=\"d-block mb-2\">پیوستها</strong>"
+msgstr "<strong class=\"d-block mb-2\">پیوست‌ها</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -452,12 +571,12 @@ msgstr "<strong>تاریخ:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr "<strong>موعد نهایی:</strong>"
+msgstr "<strong>آخرین مهلت:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Description</strong>"
-msgstr "<strong>توضیحات</strong>"
+msgstr "<strong>شرح</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -480,8 +599,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"یک دیکشنری پایتون که برای فراهم کردن مقادیر پیشفرض هنگام ایجاد رکوردهای جدید"
-" برای این نام مستعار مورد  ارزیابی قرار می‌گیرد."
+"یک دیکشنری پایتون که برای فراهم کردن مقادیر پیش‌فرض هنگام ایجاد رکوردهای جدید"
+" برای این نام مستعار مورد ارزیابی قرار می‌گیرد."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -498,7 +617,7 @@ msgstr "اخطار دسترسی"
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 msgid "Action Needed"
-msgstr "کنش مورد نیاز است"
+msgstr "نیازمند اقدام"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
@@ -510,12 +629,12 @@ msgstr "فعال"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_ids
 msgid "Activities"
-msgstr "فعالیت‌ها"
+msgstr "اقدام‌ها"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "دکوراسیون استثنا فعالیت"
+msgstr "نوع نمایش اقدام ناموفق"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
@@ -536,7 +655,7 @@ msgstr "انواع فعالیت"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr "افزودن توضیح "
+msgstr "افزودن شرح "
 
 #. module: project
 #. openerp-web
@@ -547,13 +666,16 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"با افزودن ستون٬ می‌توانید وظایف خود را متشکل از چندین <b>مراحل</b>کنید <i>به"
+" عنوان مثال: "
+"جدید-در حال انجام- انجام شد</i>."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr ""
+msgstr "وقتی وظایفتان آماده است آن را اضافه کنید"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -565,7 +687,7 @@ msgstr "مدیریت"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile Scrum"
-msgstr ""
+msgstr "اسکرام"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -585,7 +707,7 @@ msgstr "نام مستعار"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias domain"
-msgstr "دامین مستعار"
+msgstr "دامنه دریافت ایمیل"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
@@ -601,38 +723,38 @@ msgstr "همه"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr ""
+msgstr "تمام کاربران داخلی"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
 msgid "All tasks"
-msgstr "همه تکالیف"
+msgstr "تمام وظایف"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
 msgid "Allow Sub-tasks"
-msgstr ""
+msgstr "زیروظایف مجاز می‌باشد"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
 msgid "Allowed Internal Users"
-msgstr ""
+msgstr "کاربران داخلی مجاز"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_portal_user_ids
 msgid "Allowed Portal Users"
-msgstr ""
+msgstr "کاربران پرتال مجاز "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_user_ids
 msgid "Allowed User"
-msgstr "کاربر مجاز"
+msgstr "کاربران مجاز"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 msgid "Analytic Account"
-msgstr "حساب تحلیلی"
+msgstr "حساب مرکز هزینه/درآمد"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -640,6 +762,8 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"حساب تحلیلی که این پروژه برای مدیریت مالی به آن پیوند داده شده است."
+"برای ثبت هزینه و درآمد پروژه خود از یک حساب تحلیلی استفاده کنید."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -655,7 +779,7 @@ msgstr "بایگانی"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr ""
+msgstr "بایگانی مراحل"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -675,19 +799,19 @@ msgstr "بایگانی شده"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr ""
+msgstr "آیا مطمئن هستید می‌خواهید ادامه دهید؟"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr ""
+msgstr "آیا مطمئن هستید می‌خواهید این مراحل را پاک کنید؟"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "مونتاژ کردن"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -699,7 +823,7 @@ msgstr "محول کن به من"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assigned"
-msgstr "محول شد"
+msgstr "محول شده"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -728,21 +852,27 @@ msgstr "تاریخ محول کردن"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 msgid "Assignment Date"
-msgstr ""
+msgstr "تاریخ محول کردن"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid ""
 "At each stage employees can block or make task/issue ready for next stage.\n"
-"                                You can define here labels that will be displayed for the state instead\n"
+"                                You can define here labels that will be"
+" displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+" مرحله، کارمندان می‌توانند کار / مشکل را برای مرحله بعدی مسدود یا آماده کنند."
+" \n"
+"                                 شما می‌توانید برای وضعیت برچسب‌هایی را تعریف"
+" کنید که به جای \n"
+"                                 برچسب‌های پیش‌فرض نمایش داده شوند."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_attachment_count
 #: model:ir.model.fields,field_description:project.field_project_task__message_attachment_count
 msgid "Attachment Count"
-msgstr "تعداد پیوست"
+msgstr "شمارش پیوست"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
@@ -759,20 +889,29 @@ msgstr "آگوست"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr ""
+msgstr "ایجاد خودکار وظایف برای اقدام‌های منظم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "وضعیت خودکار کانبان"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
-" * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
-" * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
+"Automatically modify the kanban state when the customer replies to the"
+" feedback for this stage.\n"
+" * A good feedback from the customer will update the kanban state to 'ready"
+" for the new stage' (green bullet).\n"
+" * A medium or a bad feedback will set the kanban state to 'blocked' (red"
+" bullet).\n"
 msgstr ""
+"وقتی مشتری به بازخورد این مرحله پاسخ می‌دهد، به طور خودکار وضعیت کانبان را"
+" تغییر دهید. \n"
+"  * بازخورد خوب از طرف مشتری وضعیت کانبان را به \"آماده برای مرحله جدید\""
+" (گلوله سبز) به روز می‌کند. \n"
+"  * بازخورد متوسط یا بد وضعیت کانبان را روی \"مسدود شده\" (گلوله قرمز) تنظیم"
+" می‌کند. \n"
 
 #. module: project
 #. openerp-web
@@ -780,25 +919,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "بک‌لاگ"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
-#: model:project.task,legend_blocked:project.project_task_1
-#: model:project.task,legend_blocked:project.project_task_12
-#: model:project.task,legend_blocked:project.project_task_19
-#: model:project.task,legend_blocked:project.project_task_20
-#: model:project.task,legend_blocked:project.project_task_24
-#: model:project.task,legend_blocked:project.project_task_25
-#: model:project.task,legend_blocked:project.project_task_26
-#: model:project.task,legend_blocked:project.project_task_3
-#: model:project.task,legend_blocked:project.project_task_8
-#: model:project.task,legend_blocked:project.project_task_9
-#: model:project.task.type,legend_blocked:project.project_stage_0
-#: model:project.task.type,legend_blocked:project.project_stage_2
-#: model:project.task.type,legend_blocked:project.project_stage_3
 #, python-format
 msgid "Blocked"
 msgstr "مسدود شد"
@@ -808,21 +934,7 @@ msgstr "مسدود شد"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
-
-#. module: project
-#: model:project.task,legend_done:project.project_task_10
-#: model:project.task,legend_done:project.project_task_11
-#: model:project.task,legend_done:project.project_task_2
-#: model:project.task,legend_done:project.project_task_21
-#: model:project.task,legend_done:project.project_task_22
-#: model:project.task,legend_done:project.project_task_4
-#: model:project.task,legend_done:project.project_task_5
-#: model:project.task,legend_done:project.project_task_6
-#: model:project.task,legend_done:project.project_task_7
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr "زنگ یا تنظیم بعنوان انجام شده"
+msgstr "ایده‌پردازی"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -830,19 +942,19 @@ msgstr "زنگ یا تنظیم بعنوان انجام شده"
 msgid ""
 "By saving this change, the customer email and phone number will also be "
 "updated."
-msgstr ""
+msgstr "با ذخیره این تغییر، ایمیل و شماره تلفن مشتری نیز به‌روز می‌شود."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer email will also be updated."
-msgstr ""
+msgstr "با ذخیره این تغییر، ایمیل مشتری نیز به‌روز می‌شود."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer phone number will also be updated."
-msgstr ""
+msgstr "با ذخیره این تغییر، شماره تلفن مشتری نیز به‌روز می‌شود."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -850,23 +962,22 @@ msgid "Cancel"
 msgstr "لغو"
 
 #. module: project
-#: model:project.task.type,name:project.project_stage_3
-msgid "Cancelled"
-msgstr "لغو شد"
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "تیک بزنید اگر تماس یک شرکت است، در غیر این صورت شخص میباشد"
+msgstr "اگر مخاطب یک شرکت است، تیک بزنید در غیر این صورت شخص می‌باشد"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
+"Choose a <b>name</b> for your project. <i>It can be anything you want: the"
+" name of a customer,\n"
 "     of a product, of a team, of a construction site...</i>"
 msgstr ""
+"برای پروژه خود یک<b>نام</b> انتخاب کنید. <i>این نام هر چیز که می‌خواهید"
+" می‌تواند باشد: نام یک مشتری٬ \n"
+"نام یک کالا٬ نام یک تیم٬ نام یک سایت ساختمانی و ...</i>"
 
 #. module: project
 #. openerp-web
@@ -875,6 +986,8 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
+"برای وظایف یک  <b>نام</b> انتخاب کنید <i>(به عنوان مثال: طراحی وب‌سایت٬ خرید"
+" کالا...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -886,13 +999,13 @@ msgstr "شهر"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
-msgstr ""
+msgstr "انتقاد مشتری"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 #: model:ir.model.fields,field_description:project.field_project_task_type__is_closed
 msgid "Closing Stage"
-msgstr ""
+msgstr "مرحله ختم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -903,12 +1016,12 @@ msgstr "رنگ"
 #: model:ir.model.fields,field_description:project.field_project_project__color
 #: model:ir.model.fields,field_description:project.field_project_task__color
 msgid "Color Index"
-msgstr "شاخص رنگ"
+msgstr "رنگ پس زمینه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "موسسه تجاری"
+msgstr "نهاد تجاری"
 
 #. module: project
 #. openerp-web
@@ -920,6 +1033,13 @@ msgid ""
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 " %s"
 msgstr ""
+"با استفاده از درگاه ایمیل با مشتری درمورد وظایف ارتباط برقرار کنید. لوگوی"
+" طراحی "
+" شده را به این وظایف ضمیمه کنید، بنابراین اطلاعات از طراحان به کارگرانی"
+" می‌رسد که "
+" تی شرت را چاپ می‌کنند. اولویت‌ها را با استفاده از نماد در میان سفارشات %s"
+" سازماندهی کنید."
+"%s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -948,7 +1068,7 @@ msgstr "تایید"
 #: code:addons/project/wizard/project_task_type_delete.py:0
 #, python-format
 msgid "Confirmation"
-msgstr "تایید کردن"
+msgstr "تاییده"
 
 #. module: project
 #. openerp-web
@@ -969,7 +1089,7 @@ msgstr "مخاطب"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "نوشتن متن"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -990,22 +1110,22 @@ msgstr "ایجاد یک پروژه"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "در پایپ‌لاین وظایف یک مرحله جدید ایجاد کنید"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Create tasks by sending an email"
-msgstr ""
+msgstr "با ارسال یک ایمیل وظیفه ایجاد کنید "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr ""
+msgstr "ایجاد وظیفه با ارسال یک ایمیل به"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "ایجاد شده در"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_uid
@@ -1016,7 +1136,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_date
@@ -1041,22 +1161,22 @@ msgstr "ارز"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current project of the task"
-msgstr ""
+msgstr "پروژه کنونی وظیفه"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr "وضعیت کنونی کار"
+msgstr "وضعیت کنونی وظیفه"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr "وضعیت کنونی این کار"
+msgstr "وضعیت کنونی این وظیفه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "تعداد پیام‌های خوانده‌نشده"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1083,7 +1203,7 @@ msgstr "ایمیل مشتری"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "بازخورد مشتری"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -1097,17 +1217,17 @@ msgstr "آدرس پرتال مشتری"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
-msgstr "رتبه‌دهی مشتری"
+msgstr "امتیازدهی مشتری"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr ""
+msgstr "وضعیت امتیازدهی مشتری"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
 msgid "Customer Ratings on Task"
-msgstr ""
+msgstr "امتیازدهی مشتری برروی وظایف"
 
 #. module: project
 #. openerp-web
@@ -1118,6 +1238,10 @@ msgid ""
 "you can communicate on the task directly. Your managers decide which "
 "feedback is accepted %s and which feedback is moved to the %s column. %s"
 msgstr ""
+"مشتریان بازخورد را از طریق ایمیل پیشنهاد می‌کنند. کنویست به طور خودکار وظایف "
+" را ایجاد می‌کند و شما می‌توانید مستقیماً در مورد وظایف ارتباط برقرار کنید. "
+" مدیران شما تصمیم می‌گیرند که کدام بازخورد %s پذیرفته شود و کدام بازخورد "
+" به ستون %s منتقل شود. %s"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1126,6 +1250,9 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
+"نحوه نامگذاری وظایف را با توجه به پروژه سفارشی کنید و پیام‌های درخور با هر "
+"مرحله از گردش کار ایجاد کنید. این به مستند کردن گردش کار "
+"شما کمک می‌کند: در این مرحله چه کاری باید انجام شود."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1136,38 +1263,38 @@ msgstr "روزانه"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__date
 msgid "Date of the Month"
-msgstr ""
+msgstr "روز ماه"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__date
 msgid "Date of the Year"
-msgstr ""
+msgstr "روز سال"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_weekday
 msgid "Day Of The Week"
-msgstr ""
+msgstr "روز هفته"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__day
 msgid "Day of the Month"
-msgstr ""
+msgstr "روز ماه"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__day
 msgid "Day of the Year"
-msgstr ""
+msgstr "روز سال"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__day
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr "روزها"
+msgstr "روز"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
@@ -1184,28 +1311,42 @@ msgstr "دسامبر"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
 msgid "Default Values"
-msgstr "مقادیر پیش فرض"
+msgstr "مقادیر پیش‌فرض"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid ""
 "Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or issue.\n"
+"                creation of the task, up to the closing of the task or"
+" issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"مراحلی را که از زمان ایجاد وظیفه تا پایان وظیفه یا مشکل در \n"
+"                 پروژه استفاده می‌شود، تعیین کنید. \n"
+"                 برای پیگیری پیشرفت در حل یک وظیفه یا مشکل از این \n"
+"                 مراحل استفاده خواهید کرد."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
+"- Invited internal users: employees may only see the followed project and"
+" tasks.\n"
 "- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
+"- Invited portal and all internal users: employees may see everything.  "
+" Portal users may see project and tasks followed by\n"
 "   them or by someone of their company."
 msgstr ""
+"نمایان بودن وظایف پروژه را تعریف می‌کند: \n"
+"- کاربران داخلی دعوت شده: کارمندان فقط می‌توانند پروژه و کارهای دنبال شده را"
+" مشاهده کنند. \n"
+"- همه کاربران داخلی: کارمندان می‌توانند همه پروژه‌ها و وظایف را ببینند. \n"
+"- کاربران دعوت شده پورتال و همه کاربران داخلی: کارمندان می‌توانند همه چیز را"
+" ببینند. کاربران پورتال ممکن است پروژه و وظایفی \n"
+"را که توسط آنها یا شخص دیگری از شرکت آنها دنبال می‌شود مشاهده کنند."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1218,7 +1359,7 @@ msgstr "حذف"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Delete Project"
-msgstr ""
+msgstr "حذف پروژه"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1226,7 +1367,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr ""
+msgstr "حذف مرحله"
 
 #. module: project
 #. openerp-web
@@ -1239,7 +1380,7 @@ msgstr "تحویل داده شد"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Describe your project..."
-msgstr ""
+msgstr "پروژه خود را شرح دهید..."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1248,7 +1389,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Description"
-msgstr "توضیحات"
+msgstr "شرح"
 
 #. module: project
 #. openerp-web
@@ -1269,19 +1410,19 @@ msgstr "توسعه"
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr "خلاصه کردن"
+msgstr "چکیده"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "بازاریابی دیجیتال"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__disabled_rating_warning
 msgid "Disabled Rating Warning"
-msgstr ""
+msgstr "غیرفعال بودن هشدار امتیازدهی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1311,12 +1452,7 @@ msgstr "نام نمایشی"
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "دسنرسی ندارد، از این داده برای ایمیل خلاصه کاربر پرش کن"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
-msgid "Documentation"
-msgstr "مستندات"
+msgstr "دسترسی ندارید، از این داده‌ها برای ایمیل چکیده کاربر صرف نظر کنید"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1330,7 +1466,6 @@ msgstr "اسناد"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "انجام شد"
@@ -1340,7 +1475,7 @@ msgstr "انجام شد"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Draft"
-msgstr "پیشنویس"
+msgstr "پیش‌نویس"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1356,7 +1491,7 @@ msgstr "ویرایش"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Edit recurring task"
-msgstr ""
+msgstr "ویرایش وظایف دوره‌ای"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1364,6 +1499,8 @@ msgid ""
 "Edit tasks' description collaboratively in real time. See each author's text"
 " in a distinct color."
 msgstr ""
+"شرح وظایف را به صورت مشترک در زمان واقعی ویرایش کنید. متن هر نویسنده را با "
+"یک رنگ مشخص مشاهده کنید."
 
 #. module: project
 #. openerp-web
@@ -1371,7 +1508,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "ویرایش کردن"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_email
@@ -1382,7 +1519,7 @@ msgstr "ایمیل"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
 msgid "Email From"
-msgstr ""
+msgstr "ایمیل از طرف"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
@@ -1392,7 +1529,7 @@ msgstr "قالب ایمیل"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "رونوشت ایمیل"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_until
@@ -1412,13 +1549,13 @@ msgstr "تاریخ پایان"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
+msgstr "خطا! شما نمی‌توانید ساختار درختی بازگشتی برای وظایف ایجاد کنید."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of tasks."
-msgstr ""
+msgstr "خطا! شما نمی‌توانید ساختار درختی بازگشتی برای وظایف ایجاد کنید."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -1434,6 +1571,10 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized. %s"
 msgstr ""
+"همه می‌توانند ایده‌هایی را پیشنهاد دهند، و ویرایشگر بهترین ایده‌ها را به"
+" عنوان %s مشخص "
+"می‌کند. تمام اسناد یا پیوندها را مستقیماً به وظایف وصل کنید تا تمام اطلاعات "
+"مربوط به یک تحقیق به صورت متمرکز باشد. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1466,13 +1607,17 @@ msgid ""
 "review the %s column to move important tasks %s. Every Monday, you review "
 "the %s column. %s"
 msgstr ""
+"صندوق ایمیل خود را به راحتی با درگاه ایمیل پر کنید. صندوق ورودی و وظایف"
+" برنامه‌ریزی شده خود را با انتقال آنها به ستون‌های دیگر به صورت دوره‌ای مرور"
+" کنید. هر روز، ستون %s را مرور می‌کنید تا کارهای مهم %s را منتقل کنید. هر"
+" دوشنبه، ستون %s را مرور می‌کنید. %s"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "سند نهایی"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__first
@@ -1483,7 +1628,7 @@ msgstr "نخستین"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "جمع شده در کانبان"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1491,16 +1636,18 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
+"برای ردیابی خودکار وقایع مرتبط با وظایف و مسائل این پروژه، این پروژه را دنبال"
+" کنید."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed"
-msgstr ""
+msgstr "پروژه‌های دنبال شده"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "وظایف دنبال شده"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1512,18 +1659,18 @@ msgstr "دنبال‌کنندگان"
 #: model:ir.model.fields,field_description:project.field_project_project__message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "دنبال کنندگان (کانال ها)"
+msgstr "دنبال‌ کنندگان (کانال‌ها)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (همکاران)"
+msgstr "دنبال ‌کنندگان (مخاطبین)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "آیکون فونت عالی به عبارتی fa-tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
@@ -1546,7 +1693,7 @@ msgstr "جمعه"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr "فعالیتهای آینده"
+msgstr "اقدام‌های آتی"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -1556,24 +1703,24 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "دریافت بازخورد مشتری"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr ""
+msgstr "انجام دادن کارها (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "ترتیب نمایش لیست پروژه‌ها را مشخص می‌کند."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__sequence
 msgid "Gives the sequence order when displaying a list of tasks."
-msgstr ""
+msgstr "ترتیب نمایش لیست وظایف را مشخص می‌کند."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
@@ -1590,7 +1737,7 @@ msgstr "برچسب خاکستری کانبان"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr "دسته بندی بر مبنای"
+msgstr "گروه‌بندی برمبنای"
 
 #. module: project
 #. openerp-web
@@ -1602,18 +1749,21 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea. %s"
 msgstr ""
+" ایده‌های جمع‌آوری شده خود را در وظابف پروژه جدید مدیریت کنید و در مورد وظایف"
+" مختلف در خبرچین بحث کنید. از %s و %s برای نشان دادن وضعیت فعلی ایده خود"
+" استفاده کنید. %s"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr ""
+msgstr "منتقل کردن"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "صورتک خندان"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
@@ -1623,23 +1773,32 @@ msgstr "بالا"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hours"
-msgstr "ساعت‌ها"
+msgstr "ساعت"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
 msgid ""
 "How to get customer feedback?\n"
-"- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+"- Rating when changing stage: an email will be sent when a task is pulled in"
+" another stage.\n"
 "- Periodical Rating: email will be sent periodically.\n"
 "\n"
-"Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
+"Don't forget to set up the mail templates on the stages for which you want to"
+" get the customer's feedbacks."
 msgstr ""
+"چگونه می‌توان بازخورد مشتری را دریافت کرد؟ \n"
+"- امتیازدهی هنگام تغییر مرحله: هنگامی‌که کاری در مرحله دیگری کشیده می‌شود یک"
+" ایمیل ارسال می‌شود. \n"
+"- امتیازدهی دوره‌ای: ایمیل به صورت دوره‌ای ارسال می‌شود. \n"
+"\n"
+"فراموش نکنید که قالب‌های ایمیل را برای مراحلی که می‌خواهید بازخورد مشتری را"
+" برای آن دریافت شود، تنظیم کنید."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "I take it"
-msgstr "می گیرمش"
+msgstr "برعهده می‌گیرم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__id
@@ -1663,6 +1822,9 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"رکوردی که در صورتی که ایمیل در این آدرس دریافت شود، رکورد ساخته‌شده "
+"زیرمجموعه آن می‌شود.(مثال: پروژه‌ای که وظیفه‌هایی که از طریق دریافت ایمیل در"
+" آدرس بخصوص ساخته می‌شوند، زیرمجموعه آن قرار می‌گیرند)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
@@ -1672,7 +1834,7 @@ msgstr "آیکون"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "آیکون برای نشان دادن یک فعالیت استثنا."
+msgstr "آیکون برای نشان دادن اقدام ناموفق."
 
 #. module: project
 #. openerp-web
@@ -1688,8 +1850,7 @@ msgstr "‌ایده‌ها"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 #: model:ir.model.fields,help:project.field_project_task__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
-"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
+msgstr "اگر این گزینه علامت خورده باشد، پیام‌های جدیدی نیاز به توجه شما دارند."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_has_error
@@ -1697,7 +1858,8 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_has_error
 #: model:ir.model.fields,help:project.field_project_task__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
+msgstr ""
+"اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -1705,6 +1867,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"در صورت تنظیم، با رسیدن کار یا مشکل به این مرحله، ایمیلی برای مشتری ارسال"
+" می‌شود."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -1713,6 +1877,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"اگر تنظیم شود و اگر در پیکربندی رتبه‌بندی پروژه \"امتیازدهی هنگام تغییر"
+" مرحله\" "
+" باشد، پس از رسیدن کار به این مرحله، یک ایمیل برای مشتری ارسال می‌شود."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -1720,6 +1887,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"در صورت تنظیم، این محتوا به طور خودکار به جای پیام پیش‌فرض برای کاربران "
+"غیرمجاز ارسال می‌شود."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1727,11 +1896,12 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"بایگانی کردن این امکان را می‌دهد که این آیتم را بدون پاک کردن آن پنهان کنید."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
 msgid "Important"
-msgstr ""
+msgstr "مهم"
 
 #. module: project
 #. openerp-web
@@ -1740,30 +1910,6 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
-#: model:project.task,legend_normal:project.project_task_1
-#: model:project.task,legend_normal:project.project_task_10
-#: model:project.task,legend_normal:project.project_task_11
-#: model:project.task,legend_normal:project.project_task_12
-#: model:project.task,legend_normal:project.project_task_19
-#: model:project.task,legend_normal:project.project_task_2
-#: model:project.task,legend_normal:project.project_task_20
-#: model:project.task,legend_normal:project.project_task_21
-#: model:project.task,legend_normal:project.project_task_22
-#: model:project.task,legend_normal:project.project_task_24
-#: model:project.task,legend_normal:project.project_task_25
-#: model:project.task,legend_normal:project.project_task_26
-#: model:project.task,legend_normal:project.project_task_3
-#: model:project.task,legend_normal:project.project_task_4
-#: model:project.task,legend_normal:project.project_task_5
-#: model:project.task,legend_normal:project.project_task_6
-#: model:project.task,legend_normal:project.project_task_7
-#: model:project.task,legend_normal:project.project_task_8
-#: model:project.task,legend_normal:project.project_task_9
-#: model:project.task.type,legend_normal:project.project_stage_0
-#: model:project.task.type,legend_normal:project.project_stage_1
-#: model:project.task.type,legend_normal:project.project_stage_2
-#: model:project.task.type,legend_normal:project.project_stage_3
-#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "در جریان"
@@ -1773,19 +1919,19 @@ msgstr "در جریان"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "در حال توسعه"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Inbox"
-msgstr "صندوق پستی"
+msgstr "صندوق ایمیل"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
-msgstr "ساعت‌های برنامه‌ریزی شده اولیه"
+msgstr "ساعت‌های درنظر گرفته شده اولیه"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
@@ -1794,22 +1940,25 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"ایمیل داخلی مرتبط با این پروژه. ایمیل‌های دریافتی به طور خودکار با وظایف"
+" هماهنگ می‌شوند (یا در صورت نصب ماژول ردیاب مشکلات به صورت اختیاری با مشکلات"
+" هماهنگ می‌شوند)."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "کاربران دعوت شده داخلی"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users"
-msgstr ""
+msgstr "کاربران دعوت شده پرتال و همه کاربران داخلی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
 #: model:ir.model.fields,field_description:project.field_project_task__message_is_follower
 msgid "Is Follower"
-msgstr "دنبال می کند"
+msgstr "دنبال‌کننده است"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_is_company
@@ -1842,12 +1991,12 @@ msgstr "ژوئن"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "کانبان توضیح مسدود شده"
+msgstr "توضیح وضعیت قرمز (مسدود شده) کانبان"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr "کانبان توضیح در دست اقدام"
+msgstr "توضیح وضعیت خاکستری (دردست اقدام) کانبان "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state
@@ -1858,22 +2007,22 @@ msgstr "وضعیت کانبان"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "لیبل وضعیت کانبان "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "کانبان توضیح معتبر"
+msgstr "توضیح وضعیت سبز (انجام شده) کانبان"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "شاخص ارزش اولیه وظایف پروژه"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "لیبل استفاده شده برای وظایف پروژه "
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__last
@@ -1884,7 +2033,7 @@ msgstr "آخرین"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Last 30 Days"
-msgstr "30 روز اخیر"
+msgstr "۳۰ روز اخیر"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account____last_update
@@ -1908,12 +2057,12 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr "به روز رسانی آخرین مرحله"
+msgstr "به‌روزرسانی آخرین مرحله"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__write_uid
@@ -1924,7 +2073,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type__write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به روز رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__write_date
@@ -1934,32 +2083,32 @@ msgstr "آخرین به روز رسانی توسط"
 #: model:ir.model.fields,field_description:project.field_project_task_type__write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr "فعالیتهای دیر شده"
+msgstr "اقدام‌های مهلت‌گذشته"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Tasks"
-msgstr ""
+msgstr "وظایف مهلت‌گذشته"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "آخرین امتیازدهی: بسیار ناراضی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "آخرین امتیازدهی: ناراضی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "آخرین امتیازدهی: راضی"
 
 #. module: project
 #. openerp-web
@@ -1967,14 +2116,14 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr ""
+msgstr "اولین <b>پروژه</b> خود را ایجاد کنید."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr ""
+msgstr "اولین <b>وظیفه</b> خود را ایجاد کنید."
 
 #. module: project
 #. openerp-web
@@ -1984,45 +2133,47 @@ msgid ""
 "Let's go back to your <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"بیایید به <b> نمای کانبان </ b> خود برگردیم تا نمای کلی از وظایف بعدی خود"
+" داشته باشید."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's start working on your task."
-msgstr ""
+msgstr "بیایید کار روی وظیفه خود را شروع کنید."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr ""
+msgstr "منتظر بمانیم تا مشتری‌های خود را نشان دهند."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "لیست رونوشت از ایمیل‌های دریافتی."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "بالا آمده"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "طراحی لوگو"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Long Term"
-msgstr ""
+msgstr "دراز مدت"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
@@ -2038,7 +2189,7 @@ msgstr "پیوست اصلی"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
 msgid "Main Attachments"
-msgstr "پیوستهای اصلی"
+msgstr "پیوست‌های اصلی"
 
 #. module: project
 #. openerp-web
@@ -2049,6 +2200,9 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
+"با استفاده از نمای کانبان چرخه عمر پروژه خود را مدیریت کنید. پروژه‌های به"
+" تازگی گرفته شده‌اند را اضافه کنید، آنها را مهول کنید و از %s و %s برای تعیین"
+" اینکه آیا پروژه برای مرحله بعدی آماده است استفاده کنید. %s"
 
 #. module: project
 #. openerp-web
@@ -2056,7 +2210,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Manufacturing"
-msgstr "تولید"
+msgstr "تولید کردن"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__march
@@ -2069,7 +2223,7 @@ msgstr "مارس"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Material Sourcing"
-msgstr ""
+msgstr "تأمین مواد"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__may
@@ -2086,7 +2240,7 @@ msgstr "اعضا"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 msgid "Message Delivery error"
-msgstr "خطای تحویل پیام"
+msgstr "خطا در تحویل پیام"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_ids
@@ -2099,7 +2253,7 @@ msgstr "پیام‌ها"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr ""
+msgstr "میکس"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__mon
@@ -2117,17 +2271,17 @@ msgstr "دوشنبه"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__month
 msgid "Months"
-msgstr "ماه‌ها"
+msgstr "ماه"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr "محبوبهای من"
+msgstr "محبوب‌های من"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Projects"
-msgstr "پروژه های من"
+msgstr "پروژه‌های من"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2147,32 +2301,17 @@ msgstr "نام"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks:"
-msgstr ""
-
-#. module: project
-#: model:project.task,legend_blocked:project.project_task_10
-#: model:project.task,legend_blocked:project.project_task_11
-#: model:project.task,legend_blocked:project.project_task_2
-#: model:project.task,legend_blocked:project.project_task_21
-#: model:project.task,legend_blocked:project.project_task_22
-#: model:project.task,legend_blocked:project.project_task_4
-#: model:project.task,legend_blocked:project.project_task_5
-#: model:project.task,legend_blocked:project.project_task_6
-#: model:project.task,legend_blocked:project.project_task_7
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr "نیاز به کمک فنی یا عملی"
+msgstr "نام وظایف:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "صورتک خنثی"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "New"
 msgstr "جدید"
@@ -2183,14 +2322,14 @@ msgstr "جدید"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "سفارشات جدید"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Projects"
-msgstr ""
+msgstr "پروژه‌های جدید"
 
 #. module: project
 #. openerp-web
@@ -2209,55 +2348,55 @@ msgstr "جدیدترین"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_activity
 msgid "Next Activities"
-msgstr "فعایتهای بعدی"
+msgstr "اقدام‌های بعدی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "موعد فعالیت بعدی"
+msgstr "مهلت انجام فعالیت بعدی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 msgid "Next Activity Summary"
-msgstr "خلاصه فعالیت بعدی"
+msgstr "خلاصه اقدام بعدی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 msgid "Next Activity Type"
-msgstr "نوع فعالیت بعدی"
+msgstr "نوع اقدام بعدی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
 msgid "Next Recurrence Date"
-msgstr ""
+msgstr "تاریخ تکرار بعدی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
-msgstr ""
+msgstr "تکرارهای بعدی"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "No Subject"
-msgstr "بدون موضوع"
+msgstr "بدون عنوان"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "بدون امتیازدهی مشتری"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "No projects found. Let's create one!"
-msgstr ""
+msgstr "هیچ پروژه‌ای یافت نشد. یکی بسازیم!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr ""
+msgstr "هیچ برچسبی یافت نشد. یکی بسازیم!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2265,13 +2404,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.action_view_task
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
-msgstr ""
+msgstr "هیچ وظیفه‌ای یافت نشد. یکی بسازیم! "
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "None"
-msgstr "هیچکدام"
+msgstr "هیچ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -2289,23 +2428,23 @@ msgstr "نوامبر"
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 msgid "Number of Actions"
-msgstr "تعداد کنش ها"
+msgstr "تعداد اقدامات"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__after
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__after
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "تعداد تکرار"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "تعداد روزهای کاری تا بازگشایی وظیفه"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
 msgid "Number of Working Days to close the task"
-msgstr "تعداد روزهای کاری تا بستن کار"
+msgstr "تعداد روزهای کاری تا بستن وظیفه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
@@ -2322,29 +2461,29 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به کنش دارد"
+msgstr "تعداد پیام‌هایی که نیاز به اقدام دارند"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "تعداد پیامهای با خطای تحویل"
+msgstr "تعداد پیام‌هایی که خطا در تحویل دارند"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
 msgid "Number of tasks"
-msgstr ""
+msgstr "تعداد وظایف"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
 msgid "Number of tasks left to create"
-msgstr ""
+msgstr "تعداد وظایف باقیمانده برای ایجاد"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_unread_counter
 #: model:ir.model.fields,help:project.field_project_task__message_unread_counter
 msgid "Number of unread messages"
-msgstr "تعداد پیام‌های خوانده نشده"
+msgstr "تعداد پیام‌های خوانده‌نشده"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__october
@@ -2355,24 +2494,24 @@ msgstr "اکتبر"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Ok"
-msgstr "باشه"
+msgstr "تایید"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr ""
+msgstr "اسپرینت‌های کامل شده قبلی"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
-msgstr ""
+msgstr "یک بار در ماه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr ""
+msgstr "وظایف در حال اقدام"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -2381,12 +2520,15 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"شناسه اختیاری رشته (رکورد) که همه پیام‌های دریافتی به آن پیوست شوند، حتی اگر"
+" پاسخ آن نیستند. در صورت تنظیم شدن، امکان ایجاد رکوردهای جدید کاملا از بین "
+"می‌رود."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Others"
-msgstr ""
+msgstr "سایرین"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2400,7 +2542,7 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"برای انتخاب کانبان، مقدار پیش فرض نمایش داده شده برای حالت مسدود شده نادیده "
+"برای انتخاب کانبان، مقدار پیش‌فرض نمایش داده شده برای حالت مسدود شده نادیده "
 "گرفته شود، هنگامی که وظیفه یا مورد در آن مرحله است."
 
 #. module: project
@@ -2410,7 +2552,7 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"برای انتخاب کانبان، مقدار پیش فرض نمایش داده شده برای حالت انجام شده نادیده "
+"برای انتخاب کانبان، مقدار پیش‌فرض نمایش داده شده برای حالت انجام شده نادیده "
 "گرفته شود، هنگامی که وظیفه یا مورد در آن مرحله است."
 
 #. module: project
@@ -2420,7 +2562,7 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"برای انتخاب کانبان، مقدار پیش فرض نمایش داده شده برای حالت عادی نادیده گرفته"
+"برای انتخاب کانبان، مقدار پیش‌فرض نمایش داده شده برای حالت عادی نادیده گرفته"
 " شود، هنگامی که وظیفه یا مورد در آن مرحله است."
 
 #. module: project
@@ -2433,7 +2575,7 @@ msgstr "مالک‌"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "ایده صفحه‌ها"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -2443,7 +2585,7 @@ msgstr "مدل والد"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "شناسه رشته رکورد بالادست"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2459,21 +2601,24 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"مدل بالادست٬ شناسه را نگه می‌دارد. مدلی که شناسه ایمیل را نگه می‌دارد "
+"لزوما مدلی نیست که با alias_model_id داده می‌شود (مثال: پروژه  (مدل بالادست)"
+" و وظیفه (مدل))"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "درصد رضایتمندی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Percentage of happy ratings over the past 30 days."
-msgstr ""
+msgstr "درصد رضایتمندی در ۳۰ روز گذشته"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodical Rating"
-msgstr ""
+msgstr "امتیازدهی دوره‌ای"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -2487,11 +2632,13 @@ msgid ""
 "Plan resource allocation across projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
+"برای تخصیص منابع در بین پروژه‌ها و وظایف برنامه‌ریزی کنید و مهلت‌های مقرر "
+" را با دقت بیشتری تخمین بزنید"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
 msgid "Planning"
-msgstr "برنامه ریزی"
+msgstr "برنامه‌ریزی"
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -2500,13 +2647,15 @@ msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
 msgstr ""
+"لطفاً وظایف موجود در پروژه مرتبط با حساب‌هایی را که می‌خواهید پاک کنید، حذف"
+" کنید."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Podcast and Video Production"
-msgstr ""
+msgstr "ساخت پادکست و ویدیو"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -2514,8 +2663,13 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following"
+" channels\n"
 msgstr ""
+"خط‌مشی ارسال پیام در سند با استفاده از درگاه ایمیل.\n"
+"- همه: همه می‌توانند ارسال کنند.\n"
+"- مخاطبین: فقط مخاطبین مجاز می‌توانند ارسال کنند.\n"
+"- دنبال‌کنندگان: فقط دنبال‌کنندگان سند مربوطه یا اعضای کانال‌های زیر\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
@@ -2532,6 +2686,10 @@ msgid ""
 "colleagues that a task is ready for the next stage.%s Use the %s to indicate"
 " a problem or a need for discussion on a task.%s"
 msgstr ""
+"وظایف را با استفاده از نماد %s اولویت‌بندی کنید. %s با استفاده از دکمه %s به "
+"همکاران خود اطلاع دهید که یک وظیفه برای مرحله بعدی آماده است. %s از %s برای"
+" نشان "
+" دادن مشکل یا نیاز به بحث درباره یک کار استفاده کنید. %s"
 
 #. module: project
 #. openerp-web
@@ -2542,6 +2700,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task.%s"
 msgstr ""
+"وظایف را با استفاده از نماد %s اولویت‌بندی کنید. %s با استفاده از دکمه %s به "
+"همکاران خود علامت دهید که یک وظیفه برای مرحله بعدی آماده است. %s از %s برای"
+" علامت "
+" دادن مشکل یا نیاز به بحث درباره یک وظیفه استفاده کنید. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2577,12 +2739,12 @@ msgstr "پروژه"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
-msgstr "تعداد پروژه"
+msgstr "شمارش پروژه"
 
 #. module: project
 #: model:ir.model,name:project.model_project_delete_wizard
 msgid "Project Delete Wizard"
-msgstr ""
+msgstr "پنجره پاک کردن پروژه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
@@ -2603,24 +2765,24 @@ msgstr "نام پروژه"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "پنجره پاک کردن مرحله پروژه"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "برچسب‌ها پروژه"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
-msgstr "کارهای پروژه"
+msgstr "وظایف پروژه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
+msgstr "وضعیت نمایان بودن پروژه"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__subtask_project_id
@@ -2629,25 +2791,27 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"پروژه‌ای که در آن زیروظایف پروژه فعلی ایجاد می‌شود. این می‌تواند خود "
+"پروژه فعلی باشد."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "کارهای مربوط به پروژه"
+msgstr "وظایف مربوط به پروژه"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_recurring_tasks_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_recurring_tasks
 #: model:ir.cron,name:project.ir_cron_recurring_tasks
 msgid "Project: Create Recurring Tasks"
-msgstr ""
+msgstr "پروژه: ایجاد وظایف تکرار شونده"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "پروژه: ارسال امتیازدهی"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2667,14 +2831,9 @@ msgid "Projects"
 msgstr "پروژه‌ها"
 
 #. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-msgid "Projects & Tasks"
-msgstr "پروژه‌ها و کارها"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__projects_archived
 msgid "Projects Archived"
-msgstr ""
+msgstr "پروژه‌های بایگانی شده"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2682,13 +2841,15 @@ msgstr ""
 msgid ""
 "Projects regroup tasks on the same topic and each have their own dashboard."
 msgstr ""
+"پروژه‌ها وظایف مربوط به یک موضوع را دوباره گروه‌بندی می‌کنند و هر کدام"
+" داشبورد خاص خود را دارند."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
-msgstr "منتشر شده"
+msgstr "چاپ شد"
 
 #. module: project
 #. openerp-web
@@ -2696,17 +2857,17 @@ msgstr "منتشر شده"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr ""
+msgstr "انتشار"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr ""
+msgstr "سه ماه یکبار"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rated tasks"
-msgstr ""
+msgstr "وظایف امتیازدهی شده"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
@@ -2714,47 +2875,47 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
-msgstr "رتبه دهی"
+msgstr "امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 msgid "Rating Average"
-msgstr ""
+msgstr "میانگین امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "قالب ایمیل امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "دوره‌های امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "بازخورد آخرین امتیازدهی "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "تصویر آخرین امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "مقدار آخرین امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "آخرین مهلت درخواست امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "درصد رضایت"
 
 #. module: project
 #. openerp-web
@@ -2762,44 +2923,33 @@ msgstr ""
 #: code:addons/project/static/src/js/project_rating_reporting.js:0
 #, python-format
 msgid "Rating Value (/5)"
-msgstr ""
+msgstr "مقدار امتیاز ( /۵)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "تعداد امتیازدهی"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "امتیازدهی هنگام تغییر مرحله"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
 #: model:mail.message.subtype,description:project.mt_task_rating
 msgid "Ratings"
-msgstr ""
+msgstr "امتیازدهی‌ها "
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "امتیازدهی %s"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
-#: model:project.task,legend_done:project.project_task_1
-#: model:project.task,legend_done:project.project_task_12
-#: model:project.task,legend_done:project.project_task_20
-#: model:project.task,legend_done:project.project_task_24
-#: model:project.task,legend_done:project.project_task_25
-#: model:project.task,legend_done:project.project_task_26
-#: model:project.task,legend_done:project.project_task_3
-#: model:project.task,legend_done:project.project_task_8
-#: model:project.task,legend_done:project.project_task_9
-#: model:project.task.type,legend_done:project.project_stage_0
-#: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
 msgstr "آماده"
@@ -2810,43 +2960,37 @@ msgid "Ready for next stage"
 msgstr "آماده برای مرحله بعد"
 
 #. module: project
-#: model:project.task,legend_done:project.project_task_19
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr "آماده بازشدن مجدد"
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "علت امتیازدهی"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "پذیرش ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "شناسه رشته رکورد"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Recording"
-msgstr ""
+msgstr "ضبط"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_id
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurrence"
-msgstr "تکرار"
+msgstr "دوره تکرار"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "به‌روزرسانی مکرر"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
@@ -2858,7 +3002,7 @@ msgstr "مکرر"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_recurring_tasks
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 msgid "Recurring Tasks"
-msgstr ""
+msgstr "وظایف تکرار شونده"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
@@ -2875,13 +3019,13 @@ msgstr "مرجع"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Refused"
-msgstr ""
+msgstr "پذیرش‌نشده"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_day
 msgid "Repeat Day"
-msgstr ""
+msgstr "روز تکرار"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
@@ -2893,24 +3037,24 @@ msgstr "تکرار هر"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_month
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_month
 msgid "Repeat Month"
-msgstr ""
+msgstr "ماه تکرار"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Repeat On"
-msgstr ""
+msgstr "تکرار شود"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_month
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_month
 msgid "Repeat On Month"
-msgstr ""
+msgstr "تکرار در ماه"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_year
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_year
 msgid "Repeat On Year"
-msgstr ""
+msgstr "تکرار در سال"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_day
@@ -2936,24 +3080,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "واحد تکرار"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_week
 msgid "Repeat Week"
-msgstr ""
+msgstr "هفته تکرار"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_number
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_number
 msgid "Repetitions"
-msgstr ""
+msgstr "تکرارها"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr "گزارش گیری"
+msgstr "گزارش"
 
 #. module: project
 #. openerp-web
@@ -2961,33 +3105,33 @@ msgstr "گزارش گیری"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "تحقیق"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "پروژه تحقیقات"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "تحقیق"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "تخصیص منابع"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
 msgid "Responsible User"
-msgstr "کاربر پاسخگو"
+msgstr "کاربر مسئول"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2997,7 +3141,7 @@ msgstr "بازگردانی"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ribbon_message
 msgid "Ribbon message"
-msgstr ""
+msgstr "روبان پیام "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
@@ -3008,7 +3152,7 @@ msgstr "خطای تحویل پیامک"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "صورتک غمگین"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sat
@@ -3038,7 +3182,7 @@ msgstr "جستجو <span class=\"nolabel\"> (در محتوا)"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr "جستوجو پروژه"
+msgstr "جستجو پروژه"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3050,25 +3194,25 @@ msgstr "جستجو در همه"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Customer"
-msgstr "جستجو در مشتری"
+msgstr "جستجو در مشتری‌ها"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Messages"
-msgstr "جستجو در پیامها"
+msgstr "جستجو در پیام‌ها"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr ""
+msgstr "جستجو در پیام‌ها"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr "جستجو در مضعیتها"
+msgstr "جستجو در مراحل"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
@@ -3085,7 +3229,7 @@ msgstr "توکن امنیتی"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Send an email"
-msgstr ""
+msgstr "ارسال ایمیل"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
@@ -3109,7 +3253,7 @@ msgstr "تعیین تصویر رویی"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr ""
+msgstr "تنظیم قالب ایمیل امتیازدهی برای مراحل"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -3134,54 +3278,54 @@ msgstr "نمایش پروژه در داشبورد"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
-msgstr "تمام رکوردهایی که تاریخ اعمال بعدی قبل از امروز است را نشان بده"
+msgstr "نمایش تمام رکوردهایی که تاریخ اقدام بعدی آنها قبل از امروز است"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "توسعه نرم افزار"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr ""
+msgstr "متاسفیم. شما نمی‌توانید خود وظیفه را به عنوان کار والد تعریف کنید"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "مشخصات فنی"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "وظایف خود را تقسیم کنید تا کار خود را به نقاط عطف زیرین سازماندهی کنید"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "اسپرینت بک‌لاگ"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr ""
+msgstr "پایان اسپرینت"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr ""
+msgstr "اسپرینت در حال انجام"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3203,7 +3347,7 @@ msgstr "مرحله تغییر کرد"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "شرح و نکات راهنمایی مرحله"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
@@ -3225,12 +3369,12 @@ msgstr "مراحل"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "فعال بودن مراحل"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr ""
+msgstr "پاک کردن مراحل"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -3250,21 +3394,21 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"وضعیت بر اساس فعالیت\n"
-"Overdue: Due date is already passed\n"
-"امروز:تاریخ فعالیت امروز است\n"
-"برنامه‌ریزی شده: برنامه‌های آینده."
+"وضعیت بر مبنای اقدام‌ها\n"
+"سررسید گذشته: مهلت اقدام گذشته است.\n"
+"امروز: زمان انجام فعالیت امروز است.\n"
+"برنامه‌ریزی شده: فعالیت‌های آینده."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "پروژه زیروظیفه "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "تعداد زیروظایف"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3273,12 +3417,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_subtask_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "زیروظایف"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Sub-tasks Planned Hours"
-msgstr ""
+msgstr "ساعت‌های برنامه‌ریزی شده یرای زیروظایف"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -3286,6 +3430,8 @@ msgid ""
 "Sum of the time planned of all the sub-tasks linked to this task. Usually "
 "less or equal to the initially time planned of this task."
 msgstr ""
+"مجموع زمان برنامه‌ریزی شده برای تمام زیروظایف مرتبط با این وظیفه. معمولاً"
+" کمتر یا برابر با زمان اولیه برنامه‌ریزی شده برای این وظیفه است."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sun
@@ -3297,19 +3443,19 @@ msgstr "یک‌شنبه"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sun
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sun
 msgid "Sunday"
-msgstr "یکشنبه"
+msgstr "یک‌شنبه"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "چاپ تیشرت"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "نام برچسب از قبل وجود دارد!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3318,12 +3464,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
 msgid "Tags"
-msgstr "تگ ها"
+msgstr "برچسب‌ها"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Tags are perfect to categorize your tasks."
-msgstr ""
+msgstr "برچسب‌ها برای دسته‌بندی وظایف شما عالی هستند."
 
 #. module: project
 #. openerp-web
@@ -3342,37 +3488,37 @@ msgstr "وظیفه"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
 msgid "Task Activities"
-msgstr "فعالیتهای کار"
+msgstr "اقدام‌های وظیفه"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr "کار به مانع خورده"
+msgstr "وظیفه مسدود شده است"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__task_count
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "شمارش وظیفه"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "وظیفه ایجاد شد"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "لاگ وظیفه"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "امتیازدهی وظایف"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -3383,7 +3529,7 @@ msgstr "کار آمده شده"
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "دوره تکرار وظیفه"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3411,17 +3557,21 @@ msgstr "عنوان کار ..."
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "کار به مانع خورده"
+msgstr "وظیفه مسدود شده است"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
+"وظیفه در حال انجام است. برای مسدود کردن یا تبدیل آن به وظیفه انجام شده٬ کلیک"
+" کنید."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"وظیفه مسدود شده است. برای رفع مسدودیت یا تبدیل آن به وظیفه انجام شده٬ کلیک"
+" کنید."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -3437,8 +3587,6 @@ msgstr "کار برای مرحله بعدی آماده است"
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
 #: model:ir.model.fields,field_description:project.field_res_users__task_ids
 #: model:ir.ui.menu,name:project.menu_project_management
-#: model:project.project,label_tasks:project.project_project_1
-#: model:project.project,label_tasks:project.project_project_2
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3463,12 +3611,12 @@ msgstr "تحلیل کارها"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Tasks In Progress"
-msgstr ""
+msgstr "وظایف در حال انجام"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "مدیریت وظایف"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -3479,20 +3627,20 @@ msgstr "مراحل کارها"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
-msgstr ""
+msgstr "وظایف تکرار شونده"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__is_closed
 #: model:ir.model.fields,help:project.field_project_task_type__is_closed
 msgid "Tasks in this stage are considered as closed."
-msgstr "تکلیفها در این حالت به عنوان بسته شده در نظر گرفته می‌شوند."
+msgstr "وظایف در این مرحله بسته به حساب می‌آیند."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Tests"
-msgstr "آزمونها"
+msgstr "آزمون‌ها"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -3501,6 +3649,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"مدلی (نوع سند کنویست) که این شناسه ایمیل با آن مطابقت دارد. هر ایمیل ورودی "
+"که به یک رکورد موجود پاسخ نمی‌دهد باعث ایجاد یک رکورد جدید از این مدل می‌شود"
+" (به عنوان مثال: یک وظیفه پروژه)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -3508,6 +3659,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"نام شناسه ایمیل، به عنوان مثال 'jobs' در صورتی که می‌خواهید برای "
+"<jobs@example.kenevist.com>ایمیل‌ها را بگیرید."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -3517,6 +3670,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"صاحب رکوردهای ساخته‌شده از طریق دریافت ایمیل‌ها در این شناسه ایمیل. اگر این "
+"فیلد مشخص نشود کنویست تلاش می‌کند صاحب درست را بر اساس آدرس فرستنده (از) "
+"پیدا کند یا اگر هیچ کاربری برای آن آدرس پیدا نشد از کاربر ادمین استفاده "
+"می‌کند."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3526,6 +3683,10 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"پروژه نمی‌تواند با گیرنده(ها) به اشتراک گذاشته شود زیرا حریم خصوصی پروژه بیش"
+" از "
+" حد محدود شده است. برای دسترسی داشتن گیرنده(ها) حریم خصوصی را روی "
+" «قابل مشاهده با دنبال کردن مشتری» تنظیم کنید."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3534,6 +3695,8 @@ msgid ""
 "The project visibility setting doesn't allow portal users to see the "
 "project's tasks. (%s)"
 msgstr ""
+"تنظیمات قابلیت مشاهده پروژه٬ به کاربران پورتال اجازه نمی‌دهد وظایف پروژه را"
+" ببینند. (%s)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3543,21 +3706,25 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"وظیفه نمی‌تواند با گیرنده(ها) به اشتراک گذاشته شود زیرا حریم خصوصی وظایف بیش"
+" از "
+" حد محدود شده است. برای دسترسی داشتن گیرنده(ها) حریم خصوصی را روی "
+" «قابل مشاهده با دنبال کردن مشتری» تنظیم کنید."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr "هیچ پروژه‌ای نیست."
+msgstr "هیچ پروژه‌ای موجود نمی‌باشد."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr ""
+msgstr "هیچ امتیازدهی برای این پروژه هم‌اکنون موجود نمی‌باشد"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr "هیچ کاری نیست."
+msgstr "هیچ وظیفه‌ای موجود نمی‌باشد."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -3587,7 +3754,7 @@ msgstr "این هفته"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__subsequent
 msgid "This and following tasks"
-msgstr ""
+msgstr "این وظیفه و وظایف مذکور"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3596,6 +3763,10 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"این گزارش به شما امکان می‌دهد عملکرد پروژه‌ها و کاربران خود را تجزیه و تحلیل"
+" کنید. "
+"می‌توانید تعداد وظایف، ساعات سپری شده نسبت به ساعت برنامه‌ریزی شده، میانگین "
+"روزهای باز یا بسته شدن یک وظیفه و غیره را تجزیه و تحلیل کنید."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__fold
@@ -3603,16 +3774,19 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"این مرحله در نمای کانبان جمع شده است مگر اینکه آیتمی برای نمایش در آن موجود "
+"باشد."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
+"این مرحله انجام شد. برای مسدود کردم یا تبدیل آن به در حال انجام کلیک کنید "
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__this
 msgid "This task"
-msgstr ""
+msgstr "این وظیفه"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -3620,18 +3794,20 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
+"با این کار مراحل و همه وظایف موجود در آن از طریق پروژه‌های زیر بایگانی"
+" می‌شوند:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__thu
 msgid "Thu"
-msgstr "پنجشنبه"
+msgstr "پنج‌شنبه"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__thu
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__thu
 msgid "Thursday"
-msgstr "پنجشنبه"
+msgstr "پنج‌شنبه"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3642,12 +3818,13 @@ msgstr "مدیریت زمان"
 #: model:ir.model.fields,help:project.field_project_task__planned_hours
 msgid "Time planned to achieve this task (including its sub-tasks)."
 msgstr ""
+"زمان برنامه‌ریزی شده برای تکمیل این وظیفه (شامل زیروظایف آن نیز می‌شود)"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr ""
+msgstr "نکته: وظایف و مراحل را با توجه به پروژه سفارشی کنید"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3661,7 +3838,7 @@ msgstr "عنوان"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "چاپ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3672,6 +3849,9 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"برای انجام کارها، از اقدام‌ها و وضعیت وظایف استفاده کنید. <br> \n"
+"                     برای همکاری موثر از طریق چت یا از طریق ایمیل ارتباط"
+" برقرار کنید."
 
 #. module: project
 #. openerp-web
@@ -3683,17 +3863,17 @@ msgstr "امروز"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr "فعالیتها امروز"
+msgstr "اقدام‌های امروز"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "رضایت مشتری برروی وظایف را رسد کنید."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "زمان سپری شده برروی پروژه‌ها و وظایف رسد کنید"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -3710,12 +3890,12 @@ msgstr "سه‌شنبه"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
 msgid "Twice a Month"
-msgstr ""
+msgstr "دوبار در ماه"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "نوع فعالیت استثنایی برای رکورد."
+msgstr "نوع کنش ناموفق برروی رکورد."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3727,20 +3907,20 @@ msgstr "محول نشده"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr ""
+msgstr "حساب تحلیلی ناشناس"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr "پیام های ناخوانده"
+msgstr "پیام‌های خوانده‌نشده"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "شمارنده پیام‌های خوانده‌ نشده"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_type
@@ -3753,48 +3933,55 @@ msgstr "تا"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Use <b>activities</b> to organize your daily work."
-msgstr ""
+msgstr "با استفاده از <b>اقدام‌ها</b> کارهای روزمره خود را نظم دهید."
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "استفاده از امتیازدهی در پروژه"
 
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr ""
+msgstr "استفاده از وظایف تکرار شونده"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr ""
+msgstr "استفاده از زیروظایف"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr "استفاده از کار به عنوان "
+msgstr "استفاده از وظایف به عنوان "
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr ""
+msgstr "از این برای پروژه من استفاده کن"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
 msgid "Use email alias"
-msgstr ""
+msgstr "استفاده از شناسه ایمیل"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Use this chatter to <b>send emails</b> and communicate efficently with your customers. \n"
-"    Add new people in the followers list to make them aware about the main changes about this task."
+"Use this chatter to <b>send emails</b> and communicate efficently with your"
+" customers. \n"
+"    Add new people in the followers list to make them aware about the main"
+" changes about this task."
 msgstr ""
+"از خبرچین برای <b> ارسال ایمیل‌ها </ b> و برقراری ارتباط موثر با مشتریان "
+"خود استفاده کنید. \n"
+"     افراد جدیدی را در لیست دنبال کنندگان اضافه کنید تا آنها را از تغییرات"
+" اصلی "
+"در مورد این وظیفه آگاه کنید."
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3809,19 +3996,19 @@ msgstr "ایمیل کاربر"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
 msgid "Visibility"
-msgstr "وضعیت قابلیت بازدید"
+msgstr "قابلیت مشاهده"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allowed_user_ids
 msgid "Visible to"
-msgstr ""
+msgstr "قابل مشاهده توسط"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets. %s"
-msgstr ""
+msgstr "منتظر مرحله بعدی: از گلوله‌های %s و %s استفاده کنید. %s"
 
 #. module: project
 #. openerp-web
@@ -3831,6 +4018,8 @@ msgstr ""
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
+"به دنبال راه بهتری برای <b>مدیریت پروژه‌های خود</b>هستید? <i>از اینجا شروع"
+" کنید.<"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
@@ -3843,13 +4032,13 @@ msgstr "پیام‌های وب‌سایت"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "بازظراحی وب‌سایت"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 msgid "Website communication history"
-msgstr "تاریخچه ارتباطات با وبسایت"
+msgstr "تاریخچه ارتباط با وب‌سایت"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__wed
@@ -3872,12 +4061,12 @@ msgstr "هفتگی"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
-msgstr "هفته‌ها"
+msgstr "هفته"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "اینکه آیا این پروژه باید روی داشبورد شما نمایش داده شود یا خیر."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3887,32 +4076,32 @@ msgstr "ساعت کاری"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "زمان کاری مانده به محول شدن"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr "زمان کار تا بستن"
+msgstr "زمان کاری مانده به ختم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "روزهای مانده به محول شدن"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working days to close"
-msgstr "روزهای کار تا بستن"
+msgstr "روزهای کاری مانده به ختم"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "ساعات کاری مانده به محول شدن"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working hours to close"
-msgstr "ساعت‌های کار تا بستن"
+msgstr "ساعات کاری مانده به ختم"
 
 #. module: project
 #. openerp-web
@@ -3920,7 +4109,7 @@ msgstr "ساعت‌های کار تا بستن"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "در حال نوشتن"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
@@ -3931,7 +4120,7 @@ msgstr "سالیانه"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__year
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__year
 msgid "Years"
-msgstr "سالها"
+msgstr "سال‌ها"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3939,6 +4128,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
+"همچنین می‌توانید برای کمک به همکاران خود در درک معنی و هدف "
+"مرحله توضیحاتی را اضافه کنید."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3946,6 +4137,8 @@ msgstr ""
 msgid ""
 "You cannot archive recurring tasks. Please, disable the recurrence first."
 msgstr ""
+"شما نمی‌توانید وظایفی که تکرار می‌شوند را بایگانی کنید. لطفا ابتدا تکرار"
+" شوندگی آنها را غیرفعال کنید"
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -3954,6 +4147,8 @@ msgid ""
 "You cannot change the company of an analytical account if it is related to a"
 " project."
 msgstr ""
+"شما نمی‌توانید شرکت یک حساب تحلیلی را که به یک پروژه متصل است "
+"تغییر دهید."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3962,6 +4157,9 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"شما نمی‌توانید پروژه که دارای وظایف می‌باشند را حذف کنید. شما یا می‌توانید"
+" آنها را "
+"بیگانی کنید و یا ابتدا همه وظایف آنها را حذف کنید."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3969,6 +4167,8 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please, disable the recurrence first."
 msgstr ""
+"شما نمی‌توانید وظایفی که تکرار می‌شوند را حذف کنید. لطفا ابتدا تکرار شوندگی"
+" آنها را غیرفعال کنید"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -3976,6 +4176,9 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"شما نمی‌توانید مراحلی که دارای وظایف می‌باشند را حذف کنید. شما یا می‌توانید"
+" آنها را "
+"بیگانی کنید و یا ابتدا همه وظایف آنها را حذف کنید."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -3983,6 +4186,9 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"شما نمی‌توانید مراحلی که دارای وظایف می‌باشند را حذف کنید. ابتدا باید همه"
+" وظایف "
+"آنها را حذف کنید."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -3992,20 +4198,20 @@ msgstr "برای مثال مهمانی کاری"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr ""
+msgstr "برای مثال مهمانی کاری"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "for project:"
-msgstr ""
+msgstr "برای پروژه:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "in stage:"
-msgstr ""
+msgstr "در مرحله:"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "وظیفه"

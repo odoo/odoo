@@ -1,52 +1,49 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* rating
-# 
-# Translators:
-# Martin Trigaux, 2020
-# Hamid Darabi, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
-# Arash Sardari <arashss77@gmail.com>, 2020
-# 
+#
+# Amir <شسی>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2020\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2021-01-26 10:11+0000\n"
+"PO-Revision-Date: 2021-01-26 14:21+0330\n"
+"Last-Translator: Amir <شسی>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
 msgid "Access token to set the rating of the value"
-msgstr ""
+msgstr "توکن دسترسی تنظیم شده برای امتیازدهی به یک کار"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
+"پیام مرتبط هنگام ارسال نظر. عمدتا در افزونه‌های وب‌سایت استفاده می‌شود. "
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
 msgid "Author of the rating"
-msgstr ""
+msgstr "طراح امتیازدهی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
 msgid "Comment"
-msgstr "توضیح"
+msgstr "شرح"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
@@ -87,7 +84,12 @@ msgstr "موضوع ایمیل"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
-msgstr ""
+msgstr "اگر امتیازدهی انجام شده باشد، فعال می‌شود. "
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Feel free to write a feedback on your experience:"
+msgstr "تجربه خود را با ما درمیان بگذارید: "
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -97,12 +99,12 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "امتیازدهی انجام شده"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go back to the Homepage"
-msgstr ""
+msgstr "بازگشت به صفحه نخست"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -116,10 +118,16 @@ msgid ""
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr "مستقل از پیکربندی زیرنوع، برای کاربران عمومی/پورتال پنهان کنید."
+
+#. module: rating
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Highly dissatisfied"
-msgstr ""
+msgstr "بسیار ناراضی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_message__id
@@ -133,7 +141,7 @@ msgstr "شناسه"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_id
 msgid "Identifier of the rated object"
-msgstr ""
+msgstr "شناسه شی امتیاز داده شده"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
@@ -157,7 +165,7 @@ msgstr "آخرین به روز رسانی توسط"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_message
@@ -168,48 +176,58 @@ msgstr "پیام"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "مدل رکورد دنبال‌شده"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr ""
+msgstr "امتیازهای من"
 
 #. module: rating
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__no_rating
 msgid "No Rating yet"
-msgstr ""
+msgstr "هنوز امتیازی داده نشده است"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.rating_rating_view
 msgid "No rating yet"
-msgstr ""
+msgstr "هنوز امتیازی داده نشده است"
 
 #. module: rating
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__not_satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Not satisfied"
-msgstr ""
+msgstr "ناراضی"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
 msgid "Owner of the rated resource"
-msgstr ""
+msgstr "صاحب منبع امتیازداده شده "
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "سند والد"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "مدل سند والد"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "نام  سند والد"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Parent Holder"
+msgstr "نگه‌دارنده والد"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
+msgid "Parent Ref"
+msgstr "مرجع والد"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
@@ -224,7 +242,12 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "مدل سند مرتبط با والد"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
+msgstr "درصد رضایتمندی"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
@@ -234,13 +257,12 @@ msgstr ""
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
-msgstr ""
+msgstr "کاربر ارزیابی شده"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Rated Operator"
-msgstr ""
+msgid "Rated person"
+msgstr "فرد ارزیابی شده"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_rating
@@ -250,66 +272,66 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
-msgstr "رتبه دهی"
+msgstr "امتیازدهی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
-msgstr ""
+msgstr "میانگین امتیازدهی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "بازخورد آخرین امتیازدهی "
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "تصویر آخرین امتیازدهی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "مقدار آخرین امتیازدهی"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
-msgstr ""
+msgstr "میکسین امتیازدهی"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_parent_mixin
 msgid "Rating Parent Mixin"
-msgstr ""
+msgstr "میکسین والد امتیازدهی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "درصد رضایت"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Value"
-msgstr ""
+msgstr "مقدار امتیاز"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "تعداد امتیازدهی"
 
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 and 5"
-msgstr ""
+msgstr "امتیاز داده شده باید بین ۰ تا ۵ باشد"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
 msgid "Rating value: 0=Unhappy, 5=Happy"
-msgstr ""
+msgstr "مقدار امتیاز: 0=ناراضی٬ 5=راضی"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.rating_rating_view
@@ -318,24 +340,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
-msgstr ""
+msgstr "امتیازدهی‌ها "
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
 #: model:ir.model.fields,help:rating.field_rating_rating__feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "علت امتیازدهی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
-msgstr "مدل سند مربوطه"
+msgstr "مدل سند مرتبط"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "امتیازدهی‌های مرتبط"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -345,18 +367,18 @@ msgstr "منبع"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
 msgid "Resource Ref"
-msgstr ""
+msgstr "مرجع منابع"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
-msgstr ""
+msgstr "نام منبع"
 
 #. module: rating
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Satisfied"
-msgstr ""
+msgstr "راضی"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
@@ -366,59 +388,59 @@ msgstr "توکن امنیتی"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr ""
+msgstr "ارسال بازخورد"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Submitted on"
-msgstr ""
+msgstr "ارسال شده در"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thank you for rating our services!"
-msgstr ""
+msgstr "سپاس از ارزیابی شما!"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Thank you, we appreciate your feedback!"
-msgstr ""
+msgstr "با تشکر از شما، از نظرات شما قدردانی می‌کنیم! "
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name
 msgid "The name of the rated resource."
-msgstr ""
+msgstr "نام منبع سند امتیازدهی شده "
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.rating_rating_view
 msgid "There is no rating for this object at the moment."
-msgstr ""
+msgstr "در حال حاضر هیچ امتیازدهی برای این شی وجود ندارد. "
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
 msgid "Visible Internally Only"
-msgstr ""
+msgstr "فقط برای مصرف داخلی"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
-msgstr ""
+msgstr "بوسیله"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
+msgstr "برای"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "highly dissatisfied"
-msgstr ""
+msgstr "بسیار ناراضی"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "not satisfied"
-msgstr ""
+msgstr "ناراضی"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
@@ -429,4 +451,4 @@ msgstr "در"
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "satisfied"
-msgstr ""
+msgstr "راضی"

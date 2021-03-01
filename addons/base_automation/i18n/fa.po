@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_automation
-# 
+# * base_automation
+
 # Translators:
-# Martin Trigaux, 2020
-# Hamid Darabi, 2020
-# elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2020
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
-# 
+# Zahed Alfak <tamass4116@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Hamid Darabi, 2018
+# elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2018
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
+# Maziar Niaki <maziarmn@gmail.com>, 2018
+# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2019
+
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2019\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_automation
@@ -35,7 +38,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
 msgid "Action Description"
-msgstr "توضیحات کنش"
+msgstr "شرح عمل"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
@@ -45,12 +48,12 @@ msgstr "نام کنش"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "کنش برای انجام"
+msgstr "عمل برای انجام"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
 msgid "Action Type"
-msgstr "نوع کنش"
+msgstr "نوع واکنش"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -70,7 +73,7 @@ msgstr "نوع فعالیت کاربر"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
 msgid "Add Channels"
-msgstr "افزودن کانالها"
+msgstr "افزودن کانال‌ها"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
@@ -124,7 +127,7 @@ msgstr "بر اساس شرایط زمانی"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr "قبل از بروز کردن دامنه"
+msgstr "قبل از به‌روز کردن دامنه"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
@@ -156,7 +159,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
@@ -166,20 +169,22 @@ msgstr "ایجاد شده در"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
 msgid "Days"
-msgstr "روزها"
+msgstr "روز"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 minutes before a meeting."
+"                                    You can put a negative number if you "
+"need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 "
+"minutes before a meeting."
 msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
 msgid "Delay after trigger date"
-msgstr "تاخیر پس از روز راه‌اندازی"
+msgstr "تاخیر پس از تاریخ فعال شدن"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
@@ -199,8 +204,10 @@ msgstr ""
 #, python-format
 msgid ""
 "Disabling this automated action will enable you to continue your workflow\n"
-"                    but any data created after this could potentially be corrupted,\n"
-"                    as you are effectively disabling a customization that may set\n"
+"                    but any data created after this could potentially be "
+"corrupted,\n"
+"                    as you are effectively disabling a customization that "
+"may set\n"
 "                    important and/or required fields."
 msgstr ""
 
@@ -234,7 +241,7 @@ msgstr "قالب ایمیل"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
-msgstr "شناسه خارجی"
+msgstr "آیدی خارجی"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
@@ -249,7 +256,7 @@ msgstr "گروه‌ها"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
 msgid "Hours"
-msgstr "ساعت‌ها"
+msgstr "ساعت"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
@@ -271,8 +278,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
 msgid ""
-"If present, this condition must be satisfied before the update of the "
-"record."
+"If present, this condition must be satisfied before the update of the record."
 msgstr ""
 
 #. module: base_automation
@@ -288,12 +294,12 @@ msgstr "آخرین اجرا"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به روز رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
@@ -308,7 +314,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
 msgid "Minutes"
-msgstr "دقیقه"
+msgstr "دقیقه‌ها"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
@@ -326,8 +332,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"مدل برای ایجاد ثبت / به روز رسانی. این فیلد را فقط برای تعیین یک مدل متفاوت "
-"از مدل پایه تنظیم کنید."
+"مدل برای ایجاد ثبت / به‌روزرسانی. این فیلد را فقط برای تعیین یک مدل متفاوت از "
+"مدل پایه تنظیم کنید."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -337,7 +343,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
 msgid "Months"
-msgstr "ماه‌ها"
+msgstr "ماه"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
@@ -354,7 +360,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr "راه‌انداز در هنگام تغییر فبلدها"
+msgstr "فعال کننده فیلدهای در حال تغییر"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -379,8 +385,8 @@ msgstr "هنگام بروزرسانی"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
 msgid ""
-"Optional help text for the users with a description of the target view, such"
-" as its usage and purpose."
+"Optional help text for the users with a description of the target view, such "
+"as its usage and purpose."
 msgstr ""
 
 #. module: base_automation
@@ -408,7 +414,7 @@ msgstr "دنباله"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "کنش سرور"
+msgstr "کنش کارپذیر"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -458,8 +464,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
 msgid ""
-"The action will be triggered if and only if one of these fields is "
-"updated.If empty, all fields are watched."
+"The action will be triggered if and only if one of these fields is updated."
+"If empty, all fields are watched."
 msgstr ""
 
 #. module: base_automation
@@ -494,7 +500,8 @@ msgid ""
 "- 'Execute Python Code': a block of python code that will be executed\n"
 "- 'Create': create a new record with new values\n"
 "- 'Update a Record': update the values of a record\n"
-"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Execute several actions': define an action that triggers several other "
+"server actions\n"
 "- 'Send Email': automatically send an email (Discuss)\n"
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
@@ -509,8 +516,8 @@ msgstr "کاربرد"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
 msgid ""
-"Use 'Specific User' to always assign the same user on the next activity. Use"
-" 'Generic User From Record' to specify the field name of the user to choose "
+"Use 'Specific User' to always assign the same user on the next activity. Use "
+"'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
 
@@ -523,9 +530,11 @@ msgstr "استفاده از گاهشمار"
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user may\n"
+"                various screens. Example: a lead created by a specific user "
+"may\n"
 "                be automatically set to a specific Sales Team, or an\n"
-"                opportunity which still has status pending after 14 days might\n"
+"                opportunity which still has status pending after 14 days "
+"might\n"
 "                trigger an automatic reminder email."
 msgstr ""
 
@@ -563,7 +572,8 @@ msgstr ""
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the "
+"scheduler. If empty, will be checked at creation and update."
 msgstr ""
 
 #. module: base_automation
@@ -574,8 +584,8 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid ""
-"Write Python code that the action will execute. Some variables are available"
-" for use; help about python expression is given in the help tab."
+"Write Python code that the action will execute. Some variables are available "
+"for use; help about python expression is given in the help tab."
 msgstr ""
 
 #. module: base_automation
@@ -592,3 +602,4 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+

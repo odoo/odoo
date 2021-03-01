@@ -1,48 +1,50 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* portal
-# 
-# Translators:
-# Martin Trigaux, 2020
-# Hamid Darabi, 2020
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
-# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2020
-# Arash Sardari <arashss77@gmail.com>, 2020
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
-# 
+#
+# Amir <kenevist>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
+"POT-Creation-Date: 2021-02-15 14:17+0000\n"
+"PO-Revision-Date: 2021-02-15 18:31+0330\n"
+"Last-Translator: Amir <kenevist>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid ""
+"\n"
+"- Switch the internal users to portal manually"
+msgstr ""
+"\n"
+"- کاربران داخلی را به صورت دستی به کاربران پورتال تغییر دهید "
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr "%d روز از موعد گذشته"
+msgstr "%d روز عقب افتاده است"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr "%s یک شماره پیگیری برای گزارش نیست"
+msgstr "%s مرجع یک گزارش نمی‌باشد"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
-msgstr "<i class=\"fa fa-arrow-right mr-1\"/>برگشت به حالت ویرایش"
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>بازگشت به حالت ویرایش"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -51,17 +53,21 @@ msgid ""
 "title=\"Previous\"/>"
 msgstr ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+"title=\"قبلی\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
-msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgid ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\""
+" title=\"Next\"/>"
+msgstr ""
+"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\""
+" title=\"بعدی\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr "<i class=\"fa fa-pencil mx-1\"/>ویرایش رشته امنیتی"
+msgstr "<i class=\"fa fa-pencil mx-1\"/>ویرایش تنظیمات امنیتی"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -71,17 +77,17 @@ msgstr "<i class=\"fa fa-pencil\"/> ویرایش"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Filter By:</span>"
-msgstr "<span class=\"small mr-1 navbar-text\">فیلتر توسط:</span>"
+msgstr "<span class=\"small mr-1 navbar-text\">فیلتر به وسیله‌ی:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Group By:</span>"
-msgstr "<span class=\"small mr-1 navbar-text\">گروه بندی برای:</span>"
+msgstr "<span class=\"small mr-1 navbar-text\">گروه‌بندی با:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small mr-1 navbar-text\">Sort By:</span>"
-msgstr "<span class=\"small mr-1 navbar-text\">مرتب کردت برای:</span>"
+msgstr "<span class=\"small mr-1 navbar-text\">مرتب‌سازی با:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -91,23 +97,35 @@ msgstr "<strong>باز کردن </strong>"
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif;"
+" color: #454748; width: 100%; border-collapse:separate;\"><tr><td"
+" align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"padding: 16px; background-color: white; color: #454748;"
+" border-collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Account</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br/"
+">\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.user_id.name}\n"
 "                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.i"
+"d}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\""
+" alt=\"${object.user_id.company_id.name}\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line"
+"-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -115,26 +133,36 @@ msgid ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Dear ${object.user_id.name or ''},<br/> <br/>\n"
-"                        You have been given access to ${object.user_id.company_id.name}'s portal.<br/>\n"
+"                        You have been given access to"
+" ${object.user_id.company_id.name}'s portal.<br/>\n"
 "                        Your login account data is:\n"
 "                        <ul>\n"
 "                            <li>Username: ${object.user_id.login or ''}</li>\n"
-"                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
-"                            <li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                            <li>Portal: <a href=\"${'portal_url' in ctx and"
+" ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or"
+" ''}</a></li>\n"
+"                            <li>Database: ${'dbname' in ctx and ctx['dbname']"
+" or ''}</li>\n"
 "                        </ul>\n"
-"                        You can set or change your password via the following url:\n"
+"                        You can set or change your password via the following"
+" url:\n"
 "                        <ul>\n"
-"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\""
+">${object.user_id.signup_url}</a></li>\n"
 "                        </ul>\n"
 "                        ${object.wizard_id.welcome_message or ''}\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line"
+"-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -142,17 +170,24 @@ msgid ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; font-size:"
+" 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    ${object.user_id.company_id.name}\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity:"
+" 0.7;\">\n"
 "                    ${object.user_id.company_id.phone}\n"
 "                    % if object.user_id.company_id.email\n"
-"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                        | <a href=\"'mailto:%s' %"
+" ${object.user_id.company_id.email}\" style=\"text-decoration:none; color:"
+" #454748;\">${object.user_id.company_id.email}</a>\n"
 "                    % endif\n"
 "                    % if object.user_id.company_id.website\n"
-"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        | <a href=\"'%s' %"
+" ${object.user_id.company_id.website}\" style=\"text-decoration:none; color:"
+" #454748;\">\n"
 "                        ${object.user_id.company_id.website}\n"
 "                    </a>\n"
 "                    % endif\n"
@@ -165,32 +200,46 @@ msgid ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748;"
+" padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source"
+"=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif;"
+" color: #454748; width: 100%; border-collapse:separate;\"><tr><td"
+" align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"padding: 16px; background-color: white; color: #454748;"
+" border-collapse:separate;\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">حساب شما</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.user_id.name}\n"
 "                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.i"
+"d}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\""
+" alt=\"${object.user_id.company_id.name}\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line"
+"-height:0; margin:16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -198,26 +247,37 @@ msgstr ""
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        گرامی ${object.user_id.name or ''},<br/> <br/>\n"
-"                        به شما دسترسی به پرتال ${object.user_id.company_id.name} داده شده است.<br/>\n"
-"                        اطلاعات حساب شما عبارت است از:\n"
+"                         ${object.user_id.name or ''} عزیز٬<br/> <br/>\n"
+"                        به شما دسترسی به پرتال"
+" ${object.user_id.company_id.name}'s داده شده است.<br/>\n"
+"                        اطلاعات ورود شما به صورت زیر می‌باشد:\n"
 "                        <ul>\n"
-"                            <li>نام کاربری: ${object.user_id.login or ''}</li>\n"
-"                            <li>پرتال: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
-"                            <li>پایگاه داده: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"                            <li>نام‌کاربری: ${object.user_id.login or ''}</li"
+">\n"
+"                            <li>پرتال: <a href=\"${'portal_url' in ctx and"
+" ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or"
+" ''}</a></li>\n"
+"                            <li>پایگاه داده: ${'dbname' in ctx and"
+" ctx['dbname'] or ''}</li>\n"
 "                        </ul>\n"
-"                        شما می توانید گذرواژه خود را با استفاده از لینک زیر تعیین یا تغییر دهید:\n"
+"                        شما با استفاده از آدرس اینترنتی زیر می‌توانید گذرواژه"
+" خود را تغییر دهید:\n"
 "                        <ul>\n"
-"                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"                            <li><a href=\"${object.user_id.signup_url}\""
+">${object.user_id.signup_url}</a></li>\n"
 "                        </ul>\n"
 "                        ${object.wizard_id.welcome_message or ''}\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line"
+"-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -225,17 +285,24 @@ msgstr ""
 "    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; font-size:"
+" 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
 "                    ${object.user_id.company_id.name}\n"
 "                </td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity:"
+" 0.7;\">\n"
 "                    ${object.user_id.company_id.phone}\n"
 "                    % if object.user_id.company_id.email\n"
-"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                        | <a href=\"'mailto:%s' %"
+" ${object.user_id.company_id.email}\" style=\"text-decoration:none; color:"
+" #454748;\">${object.user_id.company_id.email}</a>\n"
 "                    % endif\n"
 "                    % if object.user_id.company_id.website\n"
-"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        | <a href=\"'%s' %"
+" ${object.user_id.company_id.website}\" style=\"text-decoration:none; color:"
+" #454748;\">\n"
 "                        ${object.user_id.company_id.website}\n"
 "                    </a>\n"
 "                    % endif\n"
@@ -248,9 +315,13 @@ msgstr ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748;"
+" padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        قدرت گرفته از <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">اودو</a>\n"
+"        راه اندازی شده به وسیله‌ی <a target=\"_blank\""
+" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\""
+" style=\"color: #875A7B;\">کنویست</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -262,7 +333,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
-msgstr "قبول و امضاء"
+msgstr "پذیرش و امضا"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
@@ -278,7 +349,7 @@ msgstr "امنیت حساب"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
-msgstr "افزودن یادداشت"
+msgstr "اضافه کردن یادداشت"
 
 #. module: portal
 #. openerp-web
@@ -290,18 +361,18 @@ msgstr "افزودن پیوست"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr "افزودن مخاطبان برای استراک گذاری این سند..."
+msgstr "برای اشتراک گذاری این سند مخاطبین را اضافه کنید..."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr "افزودن محتوای اضافی برای نمایش در ایمیل"
+msgstr "محتوای اضافی را برای نمایش در ایمیل اضافه کنید "
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr "یک توکن دسترسی باید برای هر پیوست فراهم شود."
+msgstr "برای هر پیوست باید یک توکن دسترسی ارائه شود."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -331,11 +402,14 @@ msgstr "تغییر گذرواژه"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"تغییر شماره مالیات بر ارزش افزوده هنگامی که سند(های) برای حساب شما صادر شود٬"
+" مجاز نمی‌باشد.  لطفا برای این کار مستقیما با ما تماس بگیرید. "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -343,13 +417,15 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"تغییر نام شرکت پس از صدور سند برای حساب شما مجاز نمی‌باشد. لطفا برای این کار"
+" مستقیما با ما تماس بگیرید. "
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr "بررسی شکست خورد"
+msgstr "بررسی ناموفق"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -387,7 +463,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Confirm Password"
-msgstr "تائید گذرواژه"
+msgstr "تایید گذرواژه"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -398,7 +474,7 @@ msgstr "مخاطب"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Contact Details"
-msgstr "جزییات تماس"
+msgstr "اطلاعات مخاطب"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -410,7 +486,7 @@ msgstr "مخاطبان"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr "نمی‌تواند ذخیره کند فایل <strong>%s</strong>"
+msgstr "فایل <strong>%s</strong> نمی‌توان ذخیره کرد"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -427,7 +503,7 @@ msgstr "کشور..."
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_date
@@ -444,6 +520,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"در حال حاضر برای هر کس که این سند را مشاهده می‌کند در دسترس است، برای محدود"
+" کردن به کارمندان داخلی٬ کلیک کنید."
 
 #. module: portal
 #. openerp-web
@@ -453,6 +531,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"در حال حاضر دسترسی به کارمندان داخلی محدود شده است، کلیک کنید تا در دسترس"
+" برای همه افرادی باشد که این سند را مشاهده می‌کنند."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -500,14 +580,14 @@ msgstr "اسناد"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %d days"
-msgstr "سررسید در %d روز"
+msgstr "باید در %d روز انجام شود."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
-msgstr "سررسید امروز"
+msgstr "باید امروز انجام بشود "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -532,18 +612,18 @@ msgstr "فقط کارمندان"
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Forgot password?"
-msgstr "گذرواژه فراموش شده؟"
+msgstr "گذرواژه خود را فراموش کرده‌اید؟"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
-msgstr "دادن دسترسی به پرتال"
+msgstr "اعطای دسترسی پورتال"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 msgid "Grant portal access"
-msgstr "دادن دسترسی به پرتال"
+msgstr "اعطای دسترسی پورتال"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -577,7 +657,7 @@ msgstr "در پرتال"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "ایمیل نامعتبر! لطفا یک ایمیل معتبر وارد کنید."
+msgstr "ایمیل نامعتبر! لطفا یک آدرس ایمیل معتبر وارد کنید."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -608,14 +688,14 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به روز رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین به‌روزرسانی در"
 
 #. module: portal
 #. openerp-web
@@ -651,6 +731,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"مدل %(model_name)s ٬ به علت نداشتن فیلد %(field_name)s٬  از امضا توکن"
+" پشتیبانی نمی‌کند."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -684,7 +766,7 @@ msgstr "یادداشت"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Odoo Logo"
-msgstr "لوگوی اودو"
+msgstr "لوگوی کنویست"
 
 #. module: portal
 #. openerp-web
@@ -703,7 +785,7 @@ msgstr "گذرواژه"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr "گذرواژه بروز شده!"
+msgstr "گذرواژه به‌روز شد"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -720,7 +802,7 @@ msgstr "تلفن"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please confirm your password to continue"
-msgstr "لطفا برای ادامه گذرواژه خود را تایید کنید"
+msgstr "برای ادامه٬ لطفا گذرواژه خود را تایید منید"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -775,12 +857,12 @@ msgstr "گیرندگان"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
 msgid "Related Document ID"
-msgstr "شناسه سند مربوطه"
+msgstr "شناسه سند مرتبط"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
 msgid "Related Document Model"
-msgstr "مدل سند مربوطه"
+msgstr "مدل سند مرتبط"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -808,9 +890,16 @@ msgstr "توکن امنیتی"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be valid and unique.\n"
-"                        If necessary, you can fix any contact's email address directly in the list."
+"                        The email address of each selected contact must be"
+" valid and unique.\n"
+"                        If necessary, you can fix any contact's email address"
+" directly in the list."
 msgstr ""
+"مخاطبینی را که باید در فهرست زیر به پورتال تعلق داشته باشند، انتخاب کنید. \n"
+"                         آدرس ایمیل هر مخاطب انتخاب شده باید معتبر و منحصر به"
+" فرد باشد. \n"
+"                         در صورت لزوم، می‌توانید آدرس ایمیل هر مخاطبی را"
+" مستقیما در این لیست اصلاح کنید. "
 
 #. module: portal
 #. openerp-web
@@ -830,17 +919,23 @@ msgstr "چند تماس ایمیل یکسان دارند:"
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
-msgstr "اشتراک سند"
+msgstr "اشتراک گذاری سند"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
 msgid "Show As Optional Inherit"
-msgstr ""
+msgstr "نمایش به عنوان وراثت اختیاری "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_sign_in
 msgid "Sign in"
-msgstr "ورود"
+msgstr "ورود "
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:0
+#, python-format
+msgid "Some contacts are already internal users:"
+msgstr "برخی از مخاطبین از قبل کاربران داخلی هستند: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -852,13 +947,13 @@ msgstr "بعضی مخاطبان ایمیل معتبر ندارند:"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr "بعضی مخاطبان دارای ایمیل یکسان با یک کاربر پرتال موجود هستند:"
+msgstr "برخی از کاربران پرتال ایمیل مشابه دارند: "
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr "بعضی فیلدهای اجباری خالی هستند."
+msgstr "بعضی از فیلدها مورد نیاز خالی رها شده‌اند"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -875,72 +970,71 @@ msgstr "خیابان"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr "سپاسگزاریم!"
+msgstr "با سپاس!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
+msgstr "پیوست %s را نمی‌توانید حذف کنید زیرا به یک پیام لینک شده است."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
+msgstr "پیوست %s را نمی‌توانید حذف کنید زیرا در وضعیت معلق نمی‌باشد."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "پیوست %s وجود ندارد یا شما حق دسترسی به آن را ندارید."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "پیوست وجود ندارد یا شما حق دسترسی به آن را ندارید. "
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
-msgid ""
-"The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgid "The document does not exist or you do not have the rights to access it."
+msgstr "سند وجود ندارد یا شما حق دسترسی به آن را ندارید. "
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The new password and its confirmation must be identical."
-msgstr "گذرواژه جدید و تایید آن باید یکسان باشند."
+msgstr "گذرواژه جدید و تایید آن باید یکسان باشد. "
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr "این رمز عبور سابق شما, رمز عبور شما تغییر پیدا کرده است."
+msgstr "گذرواژه قدیمی که ارائه کردید نادرست است، گذرواژه شما تغییر نکرده است. "
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "There are no comments for now."
-msgstr "فعلا کامنتی موجود نیست."
+msgstr "هیچ کامنتی در حال حاضر موجود نمی‌باشد."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "This document does not exist."
-msgstr "این سند وجود ندارد."
+msgstr "سند موجود نمی‌باشد"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr "این پیش‌نمایش پرتال مشتری است."
+msgstr "این پیش‌نمایش پرتال مشتری می‌باشد."
 
 #. module: portal
 #. openerp-web
@@ -950,16 +1044,19 @@ msgid ""
 "This is necessary for security-related changes. The authorization will last "
 "for a few minutes."
 msgstr ""
+"این برای تغییرات مربوط به امنیت لازم است. مجوز برای چند دقیقه طول می‌کشد."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr "این متن در ایمیل فرستاده شده به کاربران پرتال جدید گنجانده می شود."
+msgstr ""
+"این متن در ایمیلی که برای کاربران جدید پورتال ارسال می‌شود موجود می‌باشد."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"این متن در ایمیلی که برای کاربران جدید پورتال ارسال می‌شود موجود می‌باشد."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -969,11 +1066,14 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"برای رفع این خطا، می‌توانید: \n"
+"- ایمیل‌های مخاطبین مربوطه را اصلاح کنید \n"
+"- فقط به مخاطبین دارای ایمیل منحصر به فرد اجازه دسترسی دعید"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "تغییر فیلترها"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -983,7 +1083,7 @@ msgstr "کاربران"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
-msgstr "شماره ارزش افزوده"
+msgstr "شماره مالیات بر ارزش افزوده"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1006,9 +1106,6 @@ msgstr "نمايان"
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
@@ -1017,17 +1114,12 @@ msgstr "نمايان"
 #: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
@@ -1040,9 +1132,6 @@ msgstr "پیام‌های وب‌سایت"
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
@@ -1051,29 +1140,24 @@ msgstr "پیام‌های وب‌سایت"
 #: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
 #: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
-#: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_product__website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "تاریخچه ارتباطات با وبسایت"
+msgstr "تاریخچه ارتباط با وب‌سایت"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
 msgid "Wizard"
-msgstr "تَردست"
+msgstr "پنجره"
 
 #. module: portal
 #. openerp-web
@@ -1087,18 +1171,18 @@ msgstr "نوشتن یک پیام ..."
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
-msgstr "شما دعوت شدید برای دسترسی به %s"
+msgstr "شما برای دسترسی به %s دعوت شده‌اید"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "You cannot leave any password empty."
-msgstr "هیچ یک از فیلد های کلمه عبور نباید خالی باشد."
+msgstr "نمی‌توانید هیچ گذرواژه‌ای را خالی بگذارید. "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr "شما دعوت شدید برای دسترسی به سند زیر:"
+msgstr "از شما برای دسترسی به سند زیر دعوت شده است: "
 
 #. module: portal
 #. openerp-web
@@ -1110,19 +1194,19 @@ msgstr "شما باید"
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
-msgid ""
-"You must have an email address in your User Preferences to send emails."
+msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"برای ارسال ایمیل باید آدرس ایمیل خود را در تنظیمات کاربر وارد کرده باشید. "
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${object.user_id.company_id.name}"
-msgstr "حساب اودو شما نزد ${object.user_id.company_id.name}"
+msgstr "حساب کنویست شما در ${object.user_id.company_id.name}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
 msgid "Your contact"
-msgstr "مخاطب شما"
+msgstr "اطلاعات تماس شما"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -1148,7 +1232,7 @@ msgstr "کامنت"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "comments"
-msgstr "کامنتها"
+msgstr "کامنت‌ها"
 
 #. module: portal
 #. openerp-web
@@ -1160,7 +1244,7 @@ msgstr "وارد شده"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
-msgstr "اودو"
+msgstr "کنویست"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
