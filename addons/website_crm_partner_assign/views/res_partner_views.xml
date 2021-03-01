@@ -144,12 +144,12 @@
         <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//page[@name='geo_location']" position="inside">
-                    <group>
+                <xpath expr="//page[@name='geo_location']/group" position="before">
+                    <group name="group_partner_activation_review">
                         <group>
                             <separator string="Partner Activation" colspan="2"/>
-                            <field name="grade_id" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="activation" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="grade_id" options="{'no_open': True}"/>
+                            <field name="activation" options="{'no_open': True}"/>
                             <field name="partner_weight"/>
                         </group>
                         <group>
