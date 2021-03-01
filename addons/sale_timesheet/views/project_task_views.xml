@@ -40,17 +40,15 @@
                     </field>
                 </page>
             </xpath>
-            <xpath expr="//div[@id='timesheet_settings']/.." position="after">
-                <div class="row mt16 o_settings_container">
-                    <div class="col-lg-6 o_setting_box" id="allow_billable_container">
-                        <div class="o_setting_left_pane">
-                            <field name="allow_billable"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="allow_billable"/>
-                            <div class="text-muted" id="allow_billable_setting">
-                                Invoice your time and material to customers
-                            </div>
+            <xpath expr="//div[@id='timesheet_settings']" position="after">
+                <div class="col-lg-6 o_setting_box" id="allow_billable_container">
+                    <div class="o_setting_left_pane">
+                        <field name="allow_billable"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="allow_billable"/>
+                        <div class="text-muted" id="allow_billable_setting">
+                            Invoice your time and material to customers
                         </div>
                     </div>
                 </div>

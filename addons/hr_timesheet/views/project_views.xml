@@ -51,17 +51,15 @@
                         </div>
                     </button>
                 </div>
-                <xpath expr="//div[@id='rating_settings']/.." position="before">
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
-                            <div class="o_setting_left_pane">
-                                <field name="allow_timesheets"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="allow_timesheets" string="Timesheets"/>
-                                <div class="text-muted">
-                                    Log time on tasks
-                                </div>
+                <xpath expr="//div[@id='rating_settings']" position="before">
+                    <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="allow_timesheets"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="allow_timesheets" string="Timesheets"/>
+                            <div class="text-muted">
+                                Log time on tasks
                             </div>
                         </div>
                     </div>
