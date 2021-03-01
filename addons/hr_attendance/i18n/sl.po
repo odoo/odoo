@@ -33,13 +33,13 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:29
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr ""
+msgstr "%(empl_name)s od %(check_in)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:34
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr ""
+msgstr "%(empl_name)s od %(check_in)s do %(check_out)s"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -100,6 +100,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"Ni mogoče ustvariti novega zapisa za %(empl_name)s, odjavil se ni že od "
+"%(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -109,6 +111,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"Ni mogoče ustvariti novega zapisa za %(empl_name)s, zaposleni je že bil "
+"prijavljen od %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:108
@@ -128,7 +132,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
-msgstr ""
+msgstr "Prijava"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
@@ -138,7 +142,7 @@ msgstr "Prijava / Odjava"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
 msgid "Check Out"
-msgstr ""
+msgstr "Odjava"
 
 #. module: hr_attendance
 #. openerp-web
@@ -162,14 +166,14 @@ msgstr "Prijava / odjava"
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
 msgid "Checked in"
-msgstr ""
+msgstr "Prijavljen"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:109
 #, python-format
 msgid "Checked in at"
-msgstr ""
+msgstr "Prijavljen ob"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -329,7 +333,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:85
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr ""
+msgstr "Dobrodošli nazaj!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -384,7 +388,7 @@ msgstr "Lepo popoldne"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:111
 #, python-format
 msgid "Have a good day!"
-msgstr ""
+msgstr "Imej lep dan!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -398,7 +402,7 @@ msgstr "Lep večer"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Have a nice lunch!"
-msgstr ""
+msgstr "Dober tek!"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -427,7 +431,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:120
 #, python-format
 msgid "Invalid request, please return to the main menu."
-msgstr ""
+msgstr "Neveljavna zahteva, vrnite se v glavni meni."
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
@@ -541,7 +545,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:82
 #, python-format
 msgid "Please return to the main menu."
-msgstr ""
+msgstr "Vrnite se v glavni meni."
 
 #. module: hr_attendance
 #: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
@@ -558,7 +562,7 @@ msgstr "Poročanje"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
 msgid "Scan your badge"
-msgstr ""
+msgstr "Skenirajte svojo značko"
 
 #. module: hr_attendance
 #. openerp-web
@@ -571,6 +575,8 @@ msgstr "Izberi zaposlenega"
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr ""
+"Kode PIN nastavite na formi s podrobnostmi o zaposlenem (na zavihku "
+"Nastavitve kadrov). "
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -581,7 +587,7 @@ msgstr "Nastavitve"
 #: code:addons/hr_attendance/models/hr_employee.py:155
 #, python-format
 msgid "Such grouping is not allowed."
-msgstr ""
+msgstr "Takšno razvrščanje v skupine ni dovoljeno."
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -594,7 +600,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_employee.py:63
 #, python-format
 msgid "The PIN must be a sequence of digits."
-msgstr ""
+msgstr "Koda PIN mora biti zaporedje števk."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -667,7 +673,7 @@ msgstr "Dobrodošli"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:11
 #, python-format
 msgid "Welcome to"
-msgstr ""
+msgstr "Dobrodošli"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
@@ -689,7 +695,7 @@ msgstr "Ne morete podvajati udeležbe."
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
-msgstr ""
+msgstr "seznam prisotnosti zaposlenega"
 
 #. module: hr_attendance
 #. openerp-web
