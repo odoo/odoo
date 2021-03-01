@@ -1401,6 +1401,10 @@ class MrpProduction(models.Model):
                     wo.qty_producing = 1
                 else:
                     wo.qty_producing = wo.qty_remaining
+                    if wo.qty_remaining == 0:
+                        wo.button_finish()
+                        move = wo.production_id.move_raw_ids.filtered(lambda m: m.operation_id.id == wo.operation_id.id)
+                        move.quantity_done = wo.qty_produced
 
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
