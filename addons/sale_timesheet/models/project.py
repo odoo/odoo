@@ -325,7 +325,7 @@ class ProjectTask(models.Model):
         if not self.commercial_partner_id or not self.allow_billable:
             return False
         domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
-        if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id:
+        if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         return self.env['sale.order.line'].search(domain, limit=1)
 
