@@ -158,6 +158,8 @@ class WebsitePayment(http.Controller):
             if not token_ok:
                 raise werkzeug.exceptions.NotFound
 
+        invoice_id = kw.get('invoice_id')
+
         # Default values
         values = {
             'amount': 0.0,
@@ -182,6 +184,12 @@ class WebsitePayment(http.Controller):
                 })
             except:
                 order_id = None
+
+        if invoice_id:
+            try:
+                values['invoice_id'] = int(invoice_id)
+            except ValueError:
+                invoice_id = None
 
         # Check currency
         if currency_id:
@@ -266,6 +274,7 @@ class WebsitePayment(http.Controller):
     def transaction(self, acquirer_id, reference, amount, currency_id, partner_id=False, **kwargs):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         order_id = kwargs.get('order_id')
+        invoice_id = kwargs.get('invoice_id')
 
         reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
         reference = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
@@ -281,6 +290,8 @@ class WebsitePayment(http.Controller):
 
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
+        elif invoice_id:
+            values['invoice_ids'] = [(6, 0, [invoice_id])]
 
         reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
         reference_values.update(acquirer_id=int(acquirer_id))
