@@ -145,7 +145,3 @@ class StockPicking(models.Model):
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
             mo.action_assign()
-
-            if move._has_tracked_subcontract_components():
-                mo.qty_producing = move.product_uom_qty
-                mo.with_context(subcontract_move_id=True)._set_qty_producing()
