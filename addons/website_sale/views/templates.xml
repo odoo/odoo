@@ -873,7 +873,7 @@
     <template id="extra_info" name="Checkout Extra Info">
         <t t-call="website.layout">
             <t t-set="no_footer" t-value="1"/>
-            <div id="wrap">
+            <div id="wrap" class="o_ws_nofooter">
                 <div class="container oe_website_sale py-2">
                     <div class="row">
                         <div class="col-12">
@@ -1194,7 +1194,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Checkout</t>
             <t t-set="no_footer" t-value="1"/>
-            <div id="wrap">
+            <div id="wrap" class="o_ws_nofooter">
                 <div class="container oe_website_sale py-2">
                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                     <div class="row">
@@ -1303,7 +1303,7 @@
     <template id="address" name="Address Management">
         <t t-set="no_footer" t-value="1"/>
         <t t-call="website.layout">
-            <div id="wrap">
+            <div id="wrap" class="o_ws_nofooter">
                 <div class="container oe_website_sale py-2">
                     <div class="row">
                         <div class="col-12">
@@ -1474,7 +1474,7 @@
             <t t-set="additional_title">Shop - Select Payment Acquirer</t>
             <t t-set="no_footer" t-value="1"/>
 
-            <div id="wrap">
+            <div id="wrap" class="o_ws_nofooter">
                 <div class="container oe_website_sale py-2">
                     <div class="row">
                         <div class='col-12'>
