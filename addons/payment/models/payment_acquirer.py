@@ -997,7 +997,7 @@ class PaymentTransaction(models.Model):
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), values['partner_country_id'])
+                values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id', self._get_default_partner_country_id()))
             values['fees'] = fees
 
         # custom create
