@@ -190,13 +190,16 @@ class AccountEdiDocument(models.Model):
             self._process_job(documents, doc_type)
 
     def _process_documents_web_services(self, job_count=None, with_commit=True):
-        """ Post and cancel all the documents that need a web service. This is called by CRON.
+        ''' Post and cancel all the documents that need a web service.
 
-        :param job_count: Limit to the number of jobs to process among the ones that are available for treatment.
-        """
-        jobs = self.filtered(lambda d: d.edi_format_id._needs_web_services())._prepare_jobs()
-        jobs = jobs[0:job_count or len(jobs)]
-        for documents, doc_type in jobs:
+        :param job_count:   The maximum number of jobs to process if specified.
+        :param with_commit: Flag indicating a commit should be made between each job.
+        :return:            The number of remaining jobs to process.
+        '''
+        all_jobs = self.filtered(lambda d: d.edi_format_id._needs_web_services())._prepare_jobs()
+        jobs_to_process = all_jobs[0:job_count] if job_count else all_jobs
+
+        for documents, doc_type in jobs_to_process:
             move_to_cancel = documents.filtered(lambda doc: doc.attachment_id \
                                                     and doc.state == 'to_cancel' \
                                                     and doc.move_id.is_invoice(include_receipts=True) \
@@ -220,5 +223,20 @@ class AccountEdiDocument(models.Model):
                 else:
                     raise e
             else:
-                if with_commit and len(jobs) > 1:
+                if with_commit and len(jobs_to_process) > 1:
                     self.env.cr.commit()
+
+        return len(all_jobs) - len(jobs_to_process)
+
+    @api.model
+    def _cron_process_documents_web_services(self, job_count=None):
+        ''' Method called by the EDI cron processing all web-services.
+
+        :param job_count: Limit explicitely the number of web service calls. If not provided, process all.
+        '''
+        edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel'))])
+        nb_remaining_jobs = edi_documents._process_documents_web_services(job_count=job_count)
+
+        # Mark the CRON to be triggered again asap since there is some remaining jobs to process.
+        if nb_remaining_jobs > 0:
+            self.env.ref('account_edi.ir_cron_edi_network')._trigger()

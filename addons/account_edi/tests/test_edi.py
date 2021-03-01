@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon, _mocked_post_two_steps, _generate_mocked_needs_web_services, _mocked_cancel_failed, _generate_mocked_support_batching
 from unittest.mock import patch
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 
 
-class TestAccountEdi(AccountEdiTestCommon):
+class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None, edi_format_ref=None):
@@ -93,7 +95,7 @@ class TestAccountEdi(AccountEdiTestCommon):
             self.invoice.button_cancel_posted_moves()
             self.assertEqual(doc.state, 'to_cancel')
             self.assertEqual(self.invoice.state, 'posted')
-            doc._process_documents_web_services()
+            doc._process_documents_web_services(with_commit=False)
             self.assertEqual(doc.state, 'cancelled')
             self.assertEqual(self.invoice.state, 'cancel')
 
@@ -120,7 +122,7 @@ class TestAccountEdi(AccountEdiTestCommon):
             self.invoice.button_cancel_posted_moves()
             self.assertEqual(doc.state, 'to_cancel')
             self.assertEqual(self.invoice.state, 'posted')
-            doc._process_documents_web_services()
+            doc._process_documents_web_services(with_commit=False)
             self.assertEqual(doc.state, 'to_cancel')
             self.assertEqual(self.invoice.state, 'posted')
 
@@ -196,3 +198,32 @@ class TestAccountEdi(AccountEdiTestCommon):
             doc2.move_id.ref = 'batch1'
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 2)
+
+    def test_cron_triggers(self):
+        with self.capture_triggers('account_edi.ir_cron_edi_network') as capt, \
+         self.mock_edi(_needs_web_services_method=_generate_mocked_needs_web_services(True)):
+            self.invoice._get_edi_document(self.edi_format)
+            self.invoice.action_post()
+            capt.records.ensure_one()
+
+    def test_cron_self_trigger(self):
+        # Process single job by CRON call (and thus, disable the auto-commit).
+        edi_cron = self.env.ref('account_edi.ir_cron_edi_network')
+        edi_cron.code = 'model._cron_process_documents_web_services(job_count=1)'
+
+        # Create invoices.
+        invoices = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        } for i in range(4)])
+
+        with self.capture_triggers('account_edi.ir_cron_edi_network') as capt, \
+             self.mock_edi(_needs_web_services_method=_generate_mocked_needs_web_services(True)):
+            invoices.action_post()
+
+            self.env.ref('account_edi.ir_cron_edi_network').method_direct_trigger()
+            self.assertEqual(len(capt.records), 2, "Not all records have been processed in this run, the cron should "
+                                                   "re-trigger itself to process some more later")

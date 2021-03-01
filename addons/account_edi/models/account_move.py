@@ -261,6 +261,7 @@ class AccountMove(models.Model):
 
         self.env['account.edi.document'].create(edi_document_vals_list)
         posted.edi_document_ids._process_documents_no_web_services()
+        self.env.ref('account_edi.ir_cron_edi_network')._trigger()
         return posted
 
     def button_cancel(self):
@@ -271,6 +272,7 @@ class AccountMove(models.Model):
         self.edi_document_ids.filtered(lambda doc: doc.attachment_id).write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
         self.edi_document_ids.filtered(lambda doc: not doc.attachment_id).write({'state': 'cancelled', 'error': False, 'blocking_level': False})
         self.edi_document_ids._process_documents_no_web_services()
+        self.env.ref('account_edi.ir_cron_edi_network')._trigger()
 
         return res
 
@@ -353,7 +355,7 @@ class AccountMove(models.Model):
 
     def action_process_edi_web_services(self):
         docs = self.edi_document_ids.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
-        docs._process_documents_web_services(with_commit=False)
+        docs._process_documents_web_services()
 
     def action_retry_edi_documents_error(self):
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
