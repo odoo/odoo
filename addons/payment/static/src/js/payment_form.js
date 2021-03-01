@@ -284,6 +284,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                             'error_url': self.options.errorUrl,
                             'callback_method': self.options.callbackMethod,
                             'order_id': self.options.orderId,
+                            'invoice_id': self.options.invoiceId,
                         },
                     }).then(function (result) {
                         if (result) {
