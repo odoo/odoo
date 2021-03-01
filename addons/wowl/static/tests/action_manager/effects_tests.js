@@ -5,6 +5,8 @@ import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { Registry } from "../../src/core/registry";
+import { NotificationContainer } from "../../src/notifications/notification_container";
 let testConfig;
 // legacy stuff
 let testUtils;
@@ -71,6 +73,10 @@ QUnit.module("ActionManager", (hooks) => {
   });
   QUnit.test("show effect notification instead of rainbow man", async function (assert) {
     assert.expect(6);
+    const componentRegistry = new Registry();
+    componentRegistry.add("NotificationContainer", NotificationContainer)
+    testConfig.mainComponentRegistry = componentRegistry;
+
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 1);
     assert.containsOnce(webClient.el, ".o_kanban_view");

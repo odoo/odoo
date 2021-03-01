@@ -1,17 +1,23 @@
 /** @odoo-module **/
+
 import { click, legacyExtraNextTick } from "../helpers/utility";
 import { notificationService } from "../../src/notifications/notification_service";
-const { Component, tags } = owl;
 import { makeFakeRouterService } from "../helpers/mocks";
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { NotificationContainer } from "../../src/notifications/notification_container";
+import { Registry } from "../../src/core/registry";
+
+const { Component, tags } = owl;
+
 let testConfig;
 // legacy stuff
 let AbstractAction;
 let core;
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
@@ -46,7 +52,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Client Actions");
+  
   QUnit.test("can display client actions in Dialog", async function (assert) {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -60,6 +68,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".modal-title").textContent, "Dialog Test");
     webClient.destroy();
   });
+
   QUnit.test("can display client actions as main, then in Dialog", async function (assert) {
     assert.expect(3);
     const webClient = await createWebClient({ testConfig });
@@ -74,6 +83,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient, ".modal .test_client_action");
     webClient.destroy();
   });
+
   QUnit.test(
     "can display client actions in Dialog, then as main destroys Dialog",
     async function (assert) {
@@ -92,6 +102,7 @@ QUnit.module("ActionManager", (hooks) => {
       webClient.destroy();
     }
   );
+
   QUnit.test("can execute client actions from tag name (legacy)", async function (assert) {
     // remove this test as soon as legacy Widgets are no longer supported
     assert.expect(4);
@@ -121,6 +132,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.HelloWorldTestLeg;
   });
+
   QUnit.test("can execute client actions from tag name", async function (assert) {
     assert.expect(4);
     class ClientAction extends Component {}
@@ -145,6 +157,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testConfig.actionRegistry.remove("HelloWorldTest");
   });
+
   QUnit.test("client action with control panel (legacy)", async function (assert) {
     assert.expect(4);
     // LPE Fixme: at this time we don't really know the API that wowl ClientActions implement
@@ -184,6 +197,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.HelloWorldTest;
   });
+
   QUnit.test("state is pushed for client action (legacy)", async function (assert) {
     assert.expect(6);
     const ClientAction = AbstractAction.extend({
@@ -222,6 +236,7 @@ QUnit.module("ActionManager", (hooks) => {
     delete core.action_registry.map.HelloWorldTest;
     actionRegistry.remove("HelloWorldTest");
   });
+
   QUnit.test("action can use a custom control panel (legacy)", async function (assert) {
     assert.expect(1);
     class CustomControlPanel extends Component {}
@@ -245,6 +260,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.HelloWorldTest;
   });
+
   QUnit.test("breadcrumb is updated on title change (legacy)", async function (assert) {
     assert.expect(2);
     const ClientAction = AbstractAction.extend({
@@ -279,6 +295,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.HelloWorldTest;
   });
+
   QUnit.test("client actions can have breadcrumbs (legacy)", async function (assert) {
     assert.expect(4);
     const ClientAction = AbstractAction.extend({
@@ -322,6 +339,7 @@ QUnit.module("ActionManager", (hooks) => {
     delete core.action_registry.map.ClientAction;
     delete core.action_registry.map.ClientAction2;
   });
+  
   QUnit.test("ClientAction receives breadcrumbs and exports title (wowl)", async (assert) => {
     assert.expect(4);
     class ClientAction extends Component {
@@ -354,9 +372,13 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("test display_notification client action", async function (assert) {
     assert.expect(6);
     testConfig.serviceRegistry.add("notification", notificationService);
+    const componentRegistry = new Registry();
+    componentRegistry.add("NotificationContainer", NotificationContainer)
+    testConfig.mainComponentRegistry = componentRegistry;
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 1);
     assert.containsOnce(webClient, ".o_kanban_view");

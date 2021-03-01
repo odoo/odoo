@@ -4,6 +4,8 @@ import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { Registry } from "../../src/core/registry";
+import { NotificationContainer } from "../../src/notifications/notification_container";
 let testConfig;
 // legacy stuff
 let ListController;
@@ -41,7 +43,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Legacy tests (to eventually drop)");
+
   QUnit.test("display warning as notification", async function (assert) {
     // this test can be removed as soon as the legacy layer is dropped
     assert.expect(5);
@@ -52,6 +56,10 @@ QUnit.module("ActionManager", (hooks) => {
         list = this;
       },
     });
+    
+    const componentRegistry = new Registry();
+    componentRegistry.add("NotificationContainer", NotificationContainer)
+    testConfig.mainComponentRegistry = componentRegistry;
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 3);
     assert.containsOnce(webClient, ".o_list_view");
