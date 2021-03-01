@@ -12,13 +12,6 @@ var qweb = core.qweb;
 */
 const ThemePreviewControllerCommon = {
     /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        this.$loader = $(qweb.render('website.ThemePreview.Loader'));
-    },
-    /**
      * Called to add loading effect and install/pdate the selected theme depending on action.
      *
      * @private
@@ -26,6 +19,9 @@ const ThemePreviewControllerCommon = {
      * @param {String} action
      */
     _handleThemeAction(res_id, action) {
+        this.$loader = $(qweb.render('website.ThemePreview.Loader', {
+            'showTips': action !== 'button_refresh_theme',
+        }));
         let actionCallback = undefined;
         this._addLoader();
         switch (action) {
