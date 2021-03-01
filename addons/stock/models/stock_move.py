@@ -1426,7 +1426,7 @@ class StockMove(models.Model):
         if self.env.context.get('bypass_entire_pack'):
             return
         self.mapped('picking_id')._check_entire_pack()
-    
+
     def _propagate_cancel(self):
         for move in self:
             siblings_states = (move.move_dest_ids.mapped('move_orig_ids') - move).mapped('state')
@@ -1446,14 +1446,13 @@ class StockMove(models.Model):
                             break
                         if float_compare(move_dest.product_uom_qty, qty_dest_to_cancel, precision_digits=rounding) > 0:
                             qty_split = move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
-                            new_move_id = move_dest._split(qty_split)
-                            move._unreserve_initial_demand(new_move_id)
-                            move_to_cancel = self.env["stock.move"].browse(new_move_id)
+                            new_move_vals = move_dest._split(qty_split)
+                            move_to_cancel = self.env["stock.move"].create(new_move_vals)
                         else:
                             move_to_cancel = move_dest
                         qty_dest_to_cancel -= move_to_cancel.product_uom_qty
                         move_to_cancel._action_cancel()
-                        
+
                 if all(state == 'cancel' for state in siblings_states):
                     move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
             else:
