@@ -228,8 +228,8 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
   Parent.components = { RedirectWarningDialog };
   Parent.template = tags.xml`<RedirectWarningDialog data="data" t-on-dialog-closed="onDialogClosed"/>`;
   const serviceRegistry = new Registry();
-  const fakeActionManagerService = {
-    name: "action_manager",
+  const faceActionService = {
+    name: "action",
     deploy() {
       return {
         doAction(actionId) {
@@ -238,7 +238,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
       };
     },
   };
-  serviceRegistry.add("action_manager", fakeActionManagerService);
+  serviceRegistry.add("action", faceActionService);
   env = await makeTestEnv({ serviceRegistry });
   assert.containsNone(target, ".o_dialog");
   parent = await mount(Parent, { env, target });

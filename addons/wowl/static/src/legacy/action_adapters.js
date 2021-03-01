@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from "../core/hooks";
-import { ViewNotFoundError } from "../actions/action_manager";
+import { ViewNotFoundError } from "../actions/action_service";
 import { useDebugManager } from "../debug_manager/debug_manager";
 import { Dialog } from "../components/dialog/dialog";
 import { objectToQuery } from "../services/router";
@@ -28,7 +28,7 @@ function cleanDomFromBootstrap() {
 class ActionAdapter extends ComponentAdapter {
   constructor(...args) {
     super(...args);
-    this.am = useService("action_manager");
+    this.actionService = useService("action");
     this.router = useService("router");
     this.title = useService("title");
     this.notifications = useService("notifications");
@@ -80,9 +80,9 @@ class ActionAdapter extends ComponentAdapter {
       }
       this.onReverseBreadcrumb = ev.data.options && ev.data.options.on_reverse_breadcrumb;
       const legacyOptions = mapDoActionOptionAPI(ev.data.options);
-      this.am.doAction(payload.action, legacyOptions);
+      this.actionService.doAction(payload.action, legacyOptions);
     } else if (ev.name === "breadcrumb_clicked") {
-      this.am.restore(payload.controllerID);
+      this.actionService.restore(payload.controllerID);
     } else if (ev.name === "push_state") {
       const query = objectToQuery(payload.state);
       if (this.tempQuery) {
@@ -213,7 +213,7 @@ export class ViewAdapter extends ActionAdapter {
   constructor(...args) {
     super(...args);
     this.model = useService("model");
-    this.am = useService("action_manager");
+    this.actionService = useService("action");
     this.vm = useService("view_manager");
     this.shouldUpdateWidget = true;
     this.magicReload = useMagicLegacyReload();
@@ -311,7 +311,7 @@ export class ViewAdapter extends ActionAdapter {
     if (ev.name === "switch_view") {
       const state = ev.target.exportState();
       try {
-        await this.am.switchView(payload.view_type, {
+        await this.actionService.switchView(payload.view_type, {
           recordId: payload.res_id,
           recordIds: state.resIds,
           searchModel: state.searchModel,
@@ -326,7 +326,7 @@ export class ViewAdapter extends ActionAdapter {
     } else if (ev.name === "execute_action") {
       const onSuccess = payload.on_success || (() => {});
       const onFail = payload.on_fail || (() => {});
-      this.am
+      this.actionService
         .doActionButton({
           args: payload.action_data.args,
           buttonContext: payload.action_data.context,

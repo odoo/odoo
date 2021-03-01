@@ -6,18 +6,20 @@ import { legacyExtraNextTick, makeTestEnv, mount } from "../helpers/utility";
 import { notificationService } from "../../src/notifications/notification_service";
 import { dialogManagerService } from "../../src/services/dialog_manager";
 import { menusService } from "../../src/services/menus";
-import { actionManagerService } from "../../src/action_manager/action_manager";
-const { Component, tags } = owl;
+import { actionService } from "../../src/actions/action_service";
 import { makeFakeRouterService, fakeTitleService, makeFakeDeviceService } from "../helpers/mocks";
 import { viewManagerService } from "../../src/services/view_manager";
 import { modelService } from "../../src/services/model";
 import { makeRAMLocalStorage } from "../../src/env";
 import { makeLegacyActionManagerService, mapLegacyEnvToWowlEnv } from "../../src/legacy/utils";
 import { getLegacy } from "wowl.test_legacy";
-import { actionRegistry } from "../../src/action_manager/action_registry";
+import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { uiService } from "../../src/services/ui/ui";
 import { effectService } from "../../src/effects/effects_service";
+
+const { Component, tags } = owl;
+
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
@@ -134,7 +136,7 @@ export async function doAction(env, ...args) {
     env = env.env;
   }
   try {
-    await env.services.action_manager.doAction(...args);
+    await env.services.action.doAction(...args);
   } finally {
     await legacyExtraNextTick();
   }
@@ -161,7 +163,7 @@ export function getActionManagerTestConfig() {
     .add(notificationService.name, notificationService)
     .add(dialogManagerService.name, dialogManagerService)
     .add("menus", menusService)
-    .add("action_manager", actionManagerService)
+    .add("action", actionService)
     .add("router", makeFakeRouterService())
     .add("view_manager", viewManagerService)
     .add("model", modelService)

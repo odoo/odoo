@@ -60,7 +60,7 @@ export function preferencesItem(env) {
     callback: async function () {
       const actionDescription = await env.services.model("res.users").call("action_get");
       actionDescription.res_id = env.services.user.userId;
-      env.services.action_manager.doAction(actionDescription);
+      env.services.action.doAction(actionDescription);
     },
     sequence: 50,
   };

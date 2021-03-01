@@ -2,8 +2,8 @@
 import { makeFakeUserService, nextTick } from "../helpers/index";
 import { click, legacyExtraNextTick } from "../helpers/utility";
 import { getLegacy } from "wowl.test_legacy";
-import { clearUncommittedChanges } from "../../src/action_manager/action_manager";
-import { actionRegistry } from "../../src/action_manager/action_registry";
+import { clearUncommittedChanges } from "../../src/actions/action_service";
+import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig, loadState } from "./helpers";
 let testConfig;

@@ -23,11 +23,11 @@ export function makeLegacyActionManagerService(legacyEnv) {
   // legacy env to the action-manager service in the wowl env
   return {
     name: "legacy_action_manager",
-    dependencies: ["action_manager"],
+    dependencies: ["action"],
     deploy(env) {
       legacyEnv.bus.on("do-action", null, (payload) => {
         const legacyOptions = mapDoActionOptionAPI(payload.options);
-        env.services.action_manager.doAction(payload.action, legacyOptions);
+        env.services.action.doAction(payload.action, legacyOptions);
       });
     },
   };

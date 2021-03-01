@@ -1065,8 +1065,8 @@ function makeActionManager(env) {
   };
 }
 
-export const actionManagerService = {
-  name: "action_manager",
+export const actionService = {
+  name: "action",
   dependencies: [
     "download",
     "effects",

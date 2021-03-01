@@ -4,7 +4,7 @@ import { NavBar } from "../../src/webclient/navbar/navbar";
 import { click } from "../helpers/index";
 import { makeTestEnv, mount, nextTick } from "../helpers/utility";
 import { Registry } from "./../../src/core/registry";
-import { actionManagerService } from "../../src/action_manager/action_manager";
+import { actionService } from "../../src/actions/action_service";
 import { menusService } from "./../../src/services/menus";
 import { notificationService } from "../../src/notifications/notification_service";
 const { xml } = tags;
@@ -15,7 +15,7 @@ QUnit.module("Navbar", {
   async beforeEach() {
     const serviceRegistry = new Registry();
     serviceRegistry.add("menus", menusService);
-    serviceRegistry.add(actionManagerService.name, actionManagerService);
+    serviceRegistry.add(actionService.name, actionService);
     serviceRegistry.add(notificationService.name, notificationService);
     const menus = {
       root: { id: "root", children: [1], name: "root", appID: "root" },

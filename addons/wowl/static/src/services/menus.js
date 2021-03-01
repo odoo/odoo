@@ -39,7 +39,7 @@ function makeMenus(env, menusData) {
       if (!menu.actionID) {
         return;
       }
-      await env.services.action_manager.doAction(menu.actionID, { clearBreadcrumbs: true });
+      await env.services.action.doAction(menu.actionID, { clearBreadcrumbs: true });
       this.setCurrentMenu(menu);
       env.services.router.pushState({
         menu_id: `${menu.id}`,
@@ -57,7 +57,7 @@ function makeMenus(env, menusData) {
 
 export const menusService = {
   name: "menus",
-  dependencies: ["action_manager", "router"],
+  dependencies: ["action", "router"],
   async deploy(env) {
     const cacheHashes = odoo.session_info.cache_hashes;
     const loadMenusHash = cacheHashes.load_menus || new Date().getTime().toString();

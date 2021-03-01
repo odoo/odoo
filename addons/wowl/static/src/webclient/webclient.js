@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ActionContainer } from "../actions/action_manager";
+import { ActionContainer } from "../actions/action_service";
 import { NavBar } from "./navbar/navbar";
 import { useService } from "../core/hooks";
 
@@ -10,7 +10,7 @@ export class WebClient extends Component {
   constructor(...args) {
     super(...args);
     this.menus = useService("menus");
-    this.actionManager = useService("action_manager");
+    this.actionService = useService("action");
     this.title = useService("title");
     this.router = useService("router");
     this.user = useService("user");
@@ -44,7 +44,7 @@ export class WebClient extends Component {
       action = parseInt(action, 10);
     }
     let menuId = state.menu_id ? parseInt(state.menu_id, 10) : undefined;
-    const actionManagerHandles = await this.actionManager.loadState(state, options);
+    const actionManagerHandles = await this.actionService.loadState(state, options);
     if (!actionManagerHandles) {
       if (!action && menuId) {
         // determine action from menu_id key
@@ -52,7 +52,7 @@ export class WebClient extends Component {
         action = menu && menu.actionID;
       }
       if (action) {
-        await this.actionManager.doAction(action, options);
+        await this.actionService.doAction(action, options);
       }
     }
     // Determine the app we are in
@@ -73,7 +73,7 @@ export class WebClient extends Component {
     if (action) {
       // Don't know what to do here: should we set the menu
       // even if it's a guess ?
-      return this.actionManager.doAction(action, { clearBreadcrumbs: true });
+      return this.actionService.doAction(action, { clearBreadcrumbs: true });
     }
     const root = this.menus.getMenu("root");
     const firstApp = root.children[0];

@@ -4,7 +4,7 @@ import { nextTick } from "../helpers/index";
 import { legacyExtraNextTick } from "../helpers/utility";
 const { Component, tags } = owl;
 import { getLegacy } from "wowl.test_legacy";
-import { actionRegistry } from "../../src/action_manager/action_registry";
+import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 let testConfig;

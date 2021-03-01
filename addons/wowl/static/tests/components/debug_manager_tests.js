@@ -1,6 +1,6 @@
 /** @odoo-module **/
 const { Component, hooks, tags } = owl;
-import { ActionDialog } from "../../src/action_manager/action_dialog";
+import { ActionDialog } from "../../src/actions/action_dialog";
 import { Registry } from "../../src/core/registry";
 import { DebugManager } from "../../src/debug_manager/debug_manager";
 import { debugManagerService } from "../../src/debug_manager/debug_manager_service";

@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { actionRegistry } from "../../src/action_manager/action_registry";
+import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 let testConfig;

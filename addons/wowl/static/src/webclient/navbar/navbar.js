@@ -12,7 +12,7 @@ export class NavBar extends Component {
   constructor(...args) {
     super(...args);
     this.currentAppSectionsExtra = [];
-    this.actionManager = useService("action_manager");
+    this.actionService = useService("action");
     this.menuRepo = useService("menus");
     const debouncedAdapt = debounce(this.adapt.bind(this), 250);
     useExternalListener(window, "resize", debouncedAdapt);

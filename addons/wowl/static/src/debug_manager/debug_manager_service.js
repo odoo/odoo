@@ -2,7 +2,7 @@
 import { debugManager } from "./debug_manager";
 
 export function editModelDebug(env, title, model, id) {
-  return env.services.action_manager.doAction({
+  return env.services.action.doAction({
     res_model: model,
     res_id: id,
     name: title,

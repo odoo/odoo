@@ -143,7 +143,7 @@ WarningDialog.components = { Dialog };
 export class RedirectWarningDialog extends Component {
   constructor() {
     super(...arguments);
-    this.actionManager = useService("action_manager");
+    this.actionService = useService("action");
     const { data, subType } = this.props;
     const [message, actionId, buttonText, additional_context] = data.arguments;
     this.title = capitalize(subType) || this.env._t("Odoo Warning");
@@ -153,7 +153,7 @@ export class RedirectWarningDialog extends Component {
     this.additionalContext = additional_context;
   }
   onClick() {
-    this.actionManager.doAction(this.actionId, { additionalContext: this.additionalContext });
+    this.actionService.doAction(this.actionId, { additionalContext: this.additionalContext });
   }
   onCancel() {
     this.trigger("dialog-closed");

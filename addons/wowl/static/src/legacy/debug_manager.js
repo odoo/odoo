@@ -34,7 +34,7 @@ export function setupDebugAction(accessRights, env, action) {
           .model("ir.model")
           .search([["model", "=", action.res_model]], { limit: 1 })
       )[0];
-      env.services.action_manager.doAction({
+      env.services.action.doAction({
         res_model: "ir.model.fields",
         name: description,
         views: [
@@ -57,7 +57,7 @@ export function setupDebugAction(accessRights, env, action) {
     description: description,
     callback: () => {
       // manage_filters
-      env.services.action_manager.doAction({
+      env.services.action.doAction({
         res_model: "ir.filters",
         name: description,
         views: [
@@ -81,7 +81,7 @@ export function setupDebugAction(accessRights, env, action) {
       const result = await env.services
         .model("ir.translation")
         .call("get_technical_translations", [action.res_model]);
-      env.services.action_manager.doAction(result);
+      env.services.action.doAction(result);
     },
     sequence: 140,
   };
@@ -101,7 +101,7 @@ export function setupDebugAction(accessRights, env, action) {
           .model("ir.model")
           .search([["model", "=", action.res_model]], { limit: 1 })
       )[0];
-      env.services.action_manager.doAction({
+      env.services.action.doAction({
         res_model: "ir.model.access",
         name: description,
         views: [
@@ -128,7 +128,7 @@ export function setupDebugAction(accessRights, env, action) {
           .model("ir.model")
           .search([["model", "=", action.res_model]], { limit: 1 })
       )[0];
-      env.services.action_manager.doAction({
+      env.services.action.doAction({
         res_model: "ir.rule",
         name: description,
         views: [
@@ -446,7 +446,7 @@ export function setupDebugViewForm(env, component, action) {
     description: description,
     callback: () => {
       const selectedId = component.widget.getSelectedIds()[0];
-      env.services.action_manager.doAction({
+      env.services.action.doAction({
         res_model: "ir.attachment",
         name: description,
         views: [

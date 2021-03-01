@@ -5,7 +5,7 @@ import { action_registry as legacyActionRegistry } from "web.core";
 import { ClientActionAdapter } from "./action_adapters";
 import Widget from "web.Widget";
 import { breadcrumbsToLegacy } from "./utils";
-import { useSetupAction } from "../actions/action_manager";
+import { useSetupAction } from "../actions/action_service";
 
 const { Component, hooks, tags } = owl;
 
