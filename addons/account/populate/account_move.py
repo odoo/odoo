@@ -96,8 +96,10 @@ class AccountMove(models.Model):
             :return list: list of ORM create commands for the field line_ids
             """
             def get_line(account, label, balance=None, balance_sign=False, exclude_from_invoice_tab=False):
-                is_foreign_currency = currency_id != account.company_id.currency_id.id
+                company_currency = account.company_id.currency_id
+                currency = self.env['res.currency'].browse(currency_id)
                 balance = balance or balance_sign * round(random.uniform(0, 1000))
+                amount_currency = company_currency._convert(balance, currency, account.company_id, date)
                 return (0, 0, {
                     'name': 'label_%s' % label,
                     'debit': balance > 0 and balance or 0,
@@ -105,10 +107,11 @@ class AccountMove(models.Model):
                     'account_id': account.id,
                     'partner_id': partner_id,
                     'currency_id': currency_id,
-                    'amount_currency': 2 * balance if is_foreign_currency else balance,
+                    'amount_currency': amount_currency,
                     'exclude_from_invoice_tab': exclude_from_invoice_tab,
                 })
             move_type = values['move_type']
+            date = values['date']
             company_id = values['company_id']
             currency_id = values['currency_id']
             partner_id = values['partner_id']
