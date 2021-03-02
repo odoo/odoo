@@ -2313,6 +2313,62 @@ class TestRoutes(TestStockCommon):
         pushed_move = move1.move_dest_ids
         self.assertEqual(pushed_move.location_dest_id.id, push_location.id)
 
+    def test_location_dest_update(self):
+        """ Check the location dest of a stock move changed by a push rule
+        with auto field set to transparent is done correctly. The stock_move
+        is create with the move line directly to pass into action_confirm() via
+        action_done(). """
+        self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        new_loc = self.env['stock.location'].create({
+            'name': 'New_location',
+            'usage': 'internal',
+            'location_id': self.env.ref('stock.stock_location_locations').id,
+        })
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type',
+            'code': 'internal',
+            'sequence_code': 'NPT',
+            'default_location_src_id': self.env.ref('stock.stock_location_stock').id,
+            'default_location_dest_id': new_loc.id,
+            'warehouse_id': self.wh.id,
+        })
+        route = self.env['stock.location.route'].create({
+            'name': 'new route',
+            'rule_ids': [(0, False, {
+                'name': 'create a move to push location',
+                'location_src_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': new_loc.id,
+                'company_id': self.env.company.id,
+                'action': 'push',
+                'auto': 'transparent',
+                'picking_type_id': picking_type.id,
+            })],
+        })
+        product = self.env['product.product'].create({
+            'name': 'new_product',
+            'type': 'product',
+            'route_ids': [(4, route.id)]
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'move with a route',
+            'location_id': self.supplier_location,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'product_id': product.id,
+            'product_uom_qty': 1.0,
+            'product_uom': self.uom_unit.id,
+            'move_line_ids': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_id': self.uom_unit.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+                'qty_done': 1.00,
+            })],
+        })
+        move1._action_done()
+        self.assertEqual(move1.location_dest_id, new_loc)
+        positive_quant = product.stock_quant_ids.filtered(lambda q: q.quantity > 0)
+        self.assertEqual(positive_quant.location_id, new_loc)
+
     def test_mtso_mto(self):
         """ Run a procurement for 5 products when there are only 4 in stock then
         check that MTO is applied on the moves when the rule is set to 'mts_else_mto'
