@@ -2,7 +2,6 @@
 
 import { evaluateExpr } from "../py_js/py";
 import { makeContext } from "../core/context";
-import { ActionDialog } from "./action_dialog";
 import { KeepLast } from "../utils/concurrency";
 import { sprintf } from "../utils/strings";
 import { serviceRegistry } from "../webclient/service_registry";
@@ -96,61 +95,6 @@ export function useSetupAction(params) {
   };
 }
 
-// -----------------------------------------------------------------------------
-// ActionContainer (Component)
-// -----------------------------------------------------------------------------
-export class ActionContainer extends Component {
-  constructor(...args) {
-    super(...args);
-    this.main = {};
-    this.dialog = {};
-    this.env.bus.on("ACTION_MANAGER:UPDATE", this, (info) => {
-      switch (info.type) {
-        case "MAIN":
-          this.main = info;
-          break;
-        case "OPEN_DIALOG": {
-          const { onClose } = this.dialog;
-          this.dialog = {
-            id: info.id,
-            props: info.props,
-            onClose: onClose || info.onClose,
-          };
-          break;
-        }
-        case "CLOSE_DIALOG": {
-          let onClose;
-          if (this.dialog.id) {
-            onClose = this.dialog.onClose;
-          } else {
-            onClose = info.onClose;
-          }
-          if (onClose) {
-            onClose(info.onCloseInfo);
-          }
-          this.dialog = {};
-          break;
-        }
-      }
-      this.render();
-    });
-  }
-  _onDialogClosed() {
-    this.dialog = {};
-    this.render();
-  }
-  shouldUpdate(nextProps) {
-    // We should not be updated by a render triggered from our parent
-    // LPE FIXME: except in the case of the HomeMenu
-    return false;
-  }
-}
-ActionContainer.components = { ActionDialog };
-ActionContainer.template = tags.xml`
-    <div t-name="wowl.ActionContainer" class="o_action_manager">
-      <t t-if="main.Component" t-component="main.Component" t-props="main.componentProps" t-key="main.id"/>
-      <ActionDialog t-if="dialog.id" t-props="dialog.props" t-key="dialog.id" t-on-dialog-closed="_onDialogClosed"/>
-    </div>`;
 
 // -----------------------------------------------------------------------------
 // ActionManager (Service)

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ActionContainer } from "../actions/action_service";
+import { ActionContainer } from "../actions/action_container";
 import { NavBar } from "./navbar/navbar";
 import { useService } from "../core/hooks";
 
