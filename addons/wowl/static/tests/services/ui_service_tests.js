@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { uiService } from "../../src/services/ui_service";
 import { Registry } from "../../src/core/registry";
 import { getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
@@ -8,6 +9,7 @@ let target;
 let serviceRegistry;
 let browser;
 let baseConfig;
+
 QUnit.module("UI", {
   async beforeEach() {
     target = getFixture();
@@ -17,6 +19,7 @@ QUnit.module("UI", {
     baseConfig = { serviceRegistry, browser };
   },
 });
+
 QUnit.test("block and unblock once ui with ui service", async (assert) => {
   const env = await makeTestEnv({ ...baseConfig });
   const ui = env.services.ui;
@@ -32,6 +35,7 @@ QUnit.test("block and unblock once ui with ui service", async (assert) => {
   blockUI = target.querySelector(".o_blockUI");
   assert.strictEqual(blockUI, null, "ui should not be blocked");
 });
+
 QUnit.test("use block and unblock several times to block ui with ui service", async (assert) => {
   const env = await makeTestEnv({ ...baseConfig });
   const ui = env.services.ui;

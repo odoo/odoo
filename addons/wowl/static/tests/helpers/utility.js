@@ -1,8 +1,10 @@
 /** @odoo-module **/
+
 import { Registry } from "../../src/core/registry";
 import { makeEnv } from "../../src/env";
 import { makeFakeDeviceService, makeFakeLocalizationService, makeTestOdoo, mocks } from "./mocks";
 import { makeMockServer } from "./mock_server";
+
 export async function mount(C, params) {
   C.env = params.env;
   const component = new C(null);
@@ -10,6 +12,7 @@ export async function mount(C, params) {
   await component.mount(target, { position: "first-child" });
   return component;
 }
+
 function makeTestConfig(config = {}) {
   const serviceRegistry = config.serviceRegistry || new Registry();
   if (!serviceRegistry.contains("device")) {
@@ -30,6 +33,7 @@ function makeTestConfig(config = {}) {
     viewRegistry: config.viewRegistry || new Registry(),
   });
 }
+
 export async function makeTestEnv(config = {}) {
   const testConfig = makeTestConfig(config);
   if (config.serverData || config.mockRPC || config.activateMockServer) {
@@ -51,6 +55,7 @@ export async function makeTestEnv(config = {}) {
   env.qweb.addTemplates(templates);
   return env;
 }
+
 export function getFixture() {
   if (QUnit.config.debug) {
     return document.body;
@@ -58,10 +63,12 @@ export function getFixture() {
     return document.querySelector("#qunit-fixture");
   }
 }
+
 export async function nextTick() {
   await new Promise((resolve) => window.requestAnimationFrame(resolve));
   await new Promise((resolve) => setTimeout(resolve));
 }
+
 export function makeDeferred() {
   let resolve;
   let prom = new Promise((_r) => {
@@ -70,6 +77,7 @@ export function makeDeferred() {
   prom.resolve = resolve;
   return prom;
 }
+
 export function click(el, selector) {
   let target = el;
   if (selector) {
@@ -88,13 +96,16 @@ export function click(el, selector) {
   target.dispatchEvent(ev);
   return nextTick();
 }
+
 // -----------------------------------------------------------------------------
 // Private (should not be called from any test)
 // -----------------------------------------------------------------------------
+
 let templates;
 export function setTemplates(xml) {
   templates = xml;
 }
+
 export async function legacyExtraNextTick() {
   return nextTick();
 }

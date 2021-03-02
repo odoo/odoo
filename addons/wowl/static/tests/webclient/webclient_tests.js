@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { WebClient } from "../../src/webclient/webclient";
 import { Registry } from "../../src/core/registry";
 import { actionService } from "../../src/actions/action_service";

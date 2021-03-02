@@ -1,8 +1,10 @@
 /** @odoo-module **/
+
 import { notificationService } from "../../src/notifications/notification_service";
 import { Registry } from "../../src/core/registry";
 import { click, getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
 import { NotificationContainer } from "../../src/notifications/notification_container";
+
 let target;
 let browser;
 let serviceRegistry;

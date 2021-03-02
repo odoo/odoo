@@ -1,10 +1,13 @@
 /** @odoo-module **/
+
 import { Dropdown } from "../../src/components/dropdown/dropdown";
 import { DropdownItem } from "../../src/components/dropdown/dropdown_item";
 import { click, makeTestEnv, mount, nextTick } from "../helpers/utility";
 import { makeDeferred } from "../helpers/index";
+
 let env;
 let parent;
+
 QUnit.module("Dropdown", {
   async beforeEach() {
     env = await makeTestEnv();
@@ -13,6 +16,7 @@ QUnit.module("Dropdown", {
     parent.unmount();
   },
 });
+
 QUnit.test("can be rendered", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown };
@@ -21,6 +25,7 @@ QUnit.test("can be rendered", async (assert) => {
   assert.containsOnce(parent.el, "button.o_dropdown_toggler");
   assert.containsNone(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("can be styled", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown, DropdownItem };
@@ -41,6 +46,7 @@ QUnit.test("can be styled", async (assert) => {
   const item = parent.el.querySelector("li");
   assert.hasClass(item, "o_dropdown_item four");
 });
+
 QUnit.test("menu can be toggled", async (assert) => {
   assert.expect(5);
   const beforeOpenProm = makeDeferred();
@@ -65,6 +71,7 @@ QUnit.test("menu can be toggled", async (assert) => {
   await click(parent.el, "button.o_dropdown_toggler");
   assert.containsNone(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("initial open state can be true", async (assert) => {
   assert.expect(3);
   class Parent extends owl.Component {
@@ -81,6 +88,7 @@ QUnit.test("initial open state can be true", async (assert) => {
   assert.verifySteps(["beforeOpen"]);
   assert.containsOnce(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("close on outside click", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown };
@@ -96,6 +104,7 @@ QUnit.test("close on outside click", async (assert) => {
   await click(parent.el, "div.outside");
   assert.containsNone(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("close on item selection", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown, DropdownItem };
@@ -111,6 +120,7 @@ QUnit.test("close on item selection", async (assert) => {
   await click(parent.el, "ul.o_dropdown_menu li");
   assert.containsNone(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("payload received on item selection", async (assert) => {
   class Parent extends owl.Component {
     onItemSelected(ev) {
@@ -129,6 +139,7 @@ QUnit.test("payload received on item selection", async (assert) => {
   await click(parent.el, "button.o_dropdown_toggler");
   await click(parent.el, "ul.o_dropdown_menu li");
 });
+
 QUnit.test("multi-level dropdown: can be rendered and toggled", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown };
@@ -149,6 +160,7 @@ QUnit.test("multi-level dropdown: can be rendered and toggled", async (assert) =
   await click(parent.el, "button.o_dropdown_toggler:last-child");
   assert.containsN(parent.el, "ul.o_dropdown_menu", 3);
 });
+
 QUnit.test("multi-level dropdown: initial open state can be true", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown };
@@ -166,6 +178,7 @@ QUnit.test("multi-level dropdown: initial open state can be true", async (assert
   parent = await mount(Parent, { env });
   assert.containsN(parent.el, "ul.o_dropdown_menu", 3);
 });
+
 QUnit.test("multi-level dropdown: close on outside click", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown };
@@ -191,6 +204,7 @@ QUnit.test("multi-level dropdown: close on outside click", async (assert) => {
   await click(parent.el, "div.outside");
   assert.containsNone(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("multi-level dropdown: close on item selection", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown, DropdownItem };
@@ -212,6 +226,7 @@ QUnit.test("multi-level dropdown: close on item selection", async (assert) => {
   await click(parent.el, "li");
   assert.containsNone(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("multi-level dropdown: parent closing modes on item selection", async (assert) => {
   class Parent extends owl.Component {}
   Parent.components = { Dropdown, DropdownItem };
@@ -254,6 +269,7 @@ QUnit.test("multi-level dropdown: parent closing modes on item selection", async
   await click(parent.el, "li.item4");
   assert.containsNone(parent.el, "ul.o_dropdown_menu");
 });
+
 QUnit.test("multi-level dropdown: payload bubbles on item selection", async (assert) => {
   assert.expect(2);
   class Parent extends owl.Component {
@@ -280,6 +296,7 @@ QUnit.test("multi-level dropdown: payload bubbles on item selection", async (ass
   // clicking once the item would execute the handler twice.
   await click(parent.el, "li");
 });
+
 QUnit.test("multi-level dropdown: recursive template can be rendered", async (assert) => {
   const recursiveTemplate = `
       <Dropdown startOpen="true">
@@ -355,6 +372,7 @@ QUnit.test("multi-level dropdown: recursive template can be rendered", async (as
     ]
   );
 });
+
 QUnit.test(
   "siblings dropdowns: when one is open, others can be toggled on mouse-enter",
   async (assert) => {
@@ -413,6 +431,7 @@ QUnit.test(
     assert.containsNone(parent.el, "ul.o_dropdown_menu");
   }
 );
+
 QUnit.test(
   "siblings dropdowns: when non-sibling is open, other must not be toggled on mouse-enter",
   async (assert) => {
@@ -437,6 +456,7 @@ QUnit.test(
     assert.containsNone(bar1, "ul.o_dropdown_menu");
   }
 );
+
 QUnit.test(
   "siblings dropdowns: when one is open, then non-sibling toggled, siblings must not be toggled on mouse-enter",
   async (assert) => {

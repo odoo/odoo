@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { Registry } from "../../src/core/registry";
 import { errorService } from "../../src/errors/error_service";
 import { notificationService } from "../../src/notifications/notification_service";
@@ -35,6 +36,7 @@ QUnit.module("Error Service", {
     window.addEventListener = windowAddEventListener;
   },
 });
+
 QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", async (assert) => {
   assert.expect(2);
   let errorCb;
@@ -68,6 +70,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
   const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
   errorCb(errorEvent);
 });
+
 QUnit.test(
   "handle RPC_ERROR of type='server' and associated custom dialog class",
   async (assert) => {
@@ -105,6 +108,7 @@ QUnit.test(
     errorCb(errorEvent);
   }
 );
+
 QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
   let errorCb;
   window.addEventListener = (type, cb) => {

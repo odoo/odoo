@@ -1,11 +1,13 @@
 /** @odoo-module **/
-const { hooks } = owl;
-const { useState } = hooks;
 import { Dialog } from "../../src/components/dialog/dialog";
 import { click, getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
+
+const { useState } = owl.hooks;
+
 let parent;
 let target;
 let env;
+
 QUnit.module("Dialog", {
   async beforeEach() {
     target = getFixture();
@@ -20,6 +22,7 @@ QUnit.module("Dialog", {
     }
   },
 });
+
 QUnit.test("simple rendering", async function (assert) {
   var _a, _b, _c;
   assert.expect(8);
@@ -57,6 +60,7 @@ QUnit.test("simple rendering", async function (assert) {
     "Ok"
   );
 });
+
 QUnit.test("simple rendering with two dialogs", async function (assert) {
   assert.expect(2);
   class Parent extends owl.Component {}
@@ -78,6 +82,7 @@ QUnit.test("simple rendering with two dialogs", async function (assert) {
     [" Hello again! ", " Hello! "] // mounted is called in reverse order
   );
 });
+
 QUnit.test("click on the button x triggers the custom event 'dialog-closed'", async function (
   assert
 ) {
@@ -103,6 +108,7 @@ QUnit.test("click on the button x triggers the custom event 'dialog-closed'", as
   await click(target, ".o_dialog header button.close");
   assert.containsNone(target, ".o_dialog");
 });
+
 QUnit.test(
   "click on the default footer button triggers the custom event 'dialog-closed'",
   async function (assert) {
@@ -129,6 +135,7 @@ QUnit.test(
     assert.containsNone(target, ".o_dialog");
   }
 );
+
 QUnit.test("render custom footer buttons is possible", async function (assert) {
   assert.expect(3);
   class Parent extends owl.Component {
@@ -156,6 +163,7 @@ QUnit.test("render custom footer buttons is possible", async function (assert) {
   await click(target.querySelector(".o_dialog footer button"));
   assert.containsNone(target, ".o_dialog");
 });
+
 QUnit.test("embed an arbitrary component in a dialog is possible", async function (assert) {
   var _a;
   assert.expect(6);
@@ -191,6 +199,7 @@ QUnit.test("embed an arbitrary component in a dialog is possible", async functio
   await click(target.querySelector(".o_subcomponent"));
   assert.verifySteps(["subcomponent-clicked", "message received by parent"]);
 });
+
 QUnit.test("dialog without header/footer", async function (assert) {
   assert.expect(4);
   class Parent extends owl.Component {}
@@ -204,6 +213,7 @@ QUnit.test("dialog without header/footer", async function (assert) {
   assert.containsOnce(target, "main", "a dialog has always a main node");
   assert.containsNone(target, ".o_dialog footer");
 });
+
 QUnit.test("dialog size can be chosen", async function (assert) {
   assert.expect(5);
   class Parent extends owl.Component {}
@@ -222,6 +232,7 @@ QUnit.test("dialog size can be chosen", async function (assert) {
   assert.containsOnce(target, target.querySelectorAll(".o_dialog .modal-dialog.modal-md .md"));
   assert.containsOnce(target, target.querySelectorAll(".o_dialog .modal-dialog.modal-sm .sm"));
 });
+
 QUnit.test("dialog can be rendered on fullscreen", async function (assert) {
   assert.expect(2);
   class Parent extends owl.Component {}
@@ -233,6 +244,7 @@ QUnit.test("dialog can be rendered on fullscreen", async function (assert) {
   assert.containsOnce(target, ".o_dialog");
   assert.hasClass(target.querySelector(".o_dialog .modal"), "o_modal_full");
 });
+
 QUnit.test("Interactions between multiple dialogs", async function (assert) {
   assert.expect(14);
   class Parent extends owl.Component {

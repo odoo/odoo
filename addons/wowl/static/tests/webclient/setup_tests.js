@@ -1,12 +1,16 @@
 /** @odoo-module **/
+
 import { Registry } from "../../src/core/registry";
 import { makeDeferred, makeTestEnv, nextTick } from "../helpers/index";
+
 let serviceRegistry;
+
 QUnit.module("deployServices", {
   beforeEach() {
     serviceRegistry = new Registry();
   },
 });
+
 QUnit.test("can deploy a service", async (assert) => {
   serviceRegistry.add("test", {
     name: "test",
@@ -17,6 +21,7 @@ QUnit.test("can deploy a service", async (assert) => {
   const env = await makeTestEnv({ serviceRegistry });
   assert.strictEqual(env.services.test, 17);
 });
+
 QUnit.test("can deploy an asynchronous service", async (assert) => {
   const def = makeDeferred();
   serviceRegistry.add("test", {
@@ -35,6 +40,7 @@ QUnit.test("can deploy an asynchronous service", async (assert) => {
   assert.verifySteps(["after"]);
   assert.strictEqual(env.services.test, 15);
 });
+
 QUnit.test("can deploy two sequentially dependant asynchronous services", async (assert) => {
   const def1 = makeDeferred();
   const def2 = makeDeferred();
@@ -71,6 +77,7 @@ QUnit.test("can deploy two sequentially dependant asynchronous services", async 
   assert.verifySteps(["test2", "test3"]);
   await promise;
 });
+
 QUnit.test("can deploy two independant asynchronous services in parallel", async (assert) => {
   const def1 = makeDeferred();
   const def2 = makeDeferred();
@@ -106,6 +113,7 @@ QUnit.test("can deploy two independant asynchronous services in parallel", async
   assert.verifySteps(["test3"]);
   await promise;
 });
+
 QUnit.test("can deploy a service with a dependency", async (assert) => {
   serviceRegistry.add("aang", {
     dependencies: ["appa"],
@@ -123,6 +131,7 @@ QUnit.test("can deploy a service with a dependency", async (assert) => {
   await makeTestEnv({ serviceRegistry });
   assert.verifySteps(["appa", "aang"]);
 });
+
 QUnit.test("a service has only access to dependent services", async (assert) => {
   assert.expect(2);
   serviceRegistry.add("king", {

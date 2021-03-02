@@ -1,12 +1,15 @@
 /** @odoo-module **/
+
 import { UserMenu } from "../../src/webclient/user_menu/user_menu";
 import { click, getFixture, makeFakeUserService, makeTestEnv, mount } from "../helpers/index";
 import { Registry } from "./../../src/core/registry";
+
 let target;
 let env;
 let serviceRegistry;
 let userMenu;
 let baseConfig;
+
 QUnit.module("UserMenu", {
   async beforeEach() {
     serviceRegistry = new Registry();
@@ -23,6 +26,7 @@ QUnit.module("UserMenu", {
     userMenu.unmount();
   },
 });
+
 QUnit.test("can be rendered", async (assert) => {
   var _a, _b, _c;
   env = await makeTestEnv(baseConfig);
@@ -113,6 +117,7 @@ QUnit.test("can be rendered", async (assert) => {
   }
   assert.verifySteps(["callback ring_item", "callback bad_item", "callback eye_item"]);
 });
+
 QUnit.test("display the correct name in debug mode", async (assert) => {
   var _a;
   env = await makeTestEnv(Object.assign(baseConfig, { debug: "1" }));

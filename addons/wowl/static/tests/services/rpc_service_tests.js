@@ -1,5 +1,5 @@
 /** @odoo-module **/
-const { Component, tags } = owl;
+
 import { useService } from "../../src/core/hooks";
 import { Registry } from "../../src/core/registry";
 import { notificationService } from "../../src/notifications/notification_service";
@@ -12,8 +12,12 @@ import {
   mount,
   nextTick,
 } from "../helpers/index";
+
+const { Component, tags } = owl;
 const { xml } = tags;
+
 let serviceRegistry;
+
 async function testRPC(route, params) {
   let url = "";
   let request;
@@ -28,9 +32,11 @@ async function testRPC(route, params) {
   await env.services.rpc(route, params);
   return { url, request };
 }
+
 // -----------------------------------------------------------------------------
 // Tests
 // -----------------------------------------------------------------------------
+
 QUnit.module("RPC", {
   beforeEach() {
     serviceRegistry = new Registry();
@@ -38,6 +44,7 @@ QUnit.module("RPC", {
     serviceRegistry.add(rpcService.name, rpcService);
   },
 });
+
 QUnit.test("can perform a simple rpc", async (assert) => {
   assert.expect(4);
   let MockXHR = makeMockXHR({ result: { action_id: 123 } }, (request) => {
@@ -52,6 +59,7 @@ QUnit.test("can perform a simple rpc", async (assert) => {
   const result = await env.services.rpc("/test/");
   assert.deepEqual(result, { action_id: 123 });
 });
+
 QUnit.test("trigger an error when response has 'error' key", async (assert) => {
   assert.expect(1);
   const error = {
@@ -73,6 +81,7 @@ QUnit.test("trigger an error when response has 'error' key", async (assert) => {
     assert.ok(true);
   }
 });
+
 QUnit.test("rpc with simple routes", async (assert) => {
   const info1 = await testRPC("/my/route");
   assert.strictEqual(info1.url, "/my/route");
@@ -82,10 +91,10 @@ QUnit.test("rpc with simple routes", async (assert) => {
     model: "test",
   });
 });
+
 QUnit.test("rpc coming from destroyed components are left pending", async (assert) => {
   class MyComponent extends Component {
-    constructor() {
-      super(...arguments);
+    setup() {
       this.rpc = useService("rpc");
     }
   }
@@ -115,6 +124,7 @@ QUnit.test("rpc coming from destroyed components are left pending", async (asser
   assert.strictEqual(isResolved, false);
   assert.strictEqual(isFailed, false);
 });
+
 QUnit.test("rpc initiated from destroyed components throw exception", async (assert) => {
   assert.expect(1);
   class MyComponent extends Component {
@@ -135,6 +145,7 @@ QUnit.test("rpc initiated from destroyed components throw exception", async (ass
     assert.strictEqual(e.message, "A destroyed component should never initiate a RPC");
   }
 });
+
 QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async (assert) => {
   let MockXHR = makeMockXHR({ test: true }, () => 1);
   const env = await makeTestEnv({
@@ -155,6 +166,7 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async 
   assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
   assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 });
+
 QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error", async (assert) => {
   const error = {
     message: "message",

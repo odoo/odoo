@@ -2,9 +2,12 @@
 import { currencyService } from "../../src/services/currency_service";
 import { makeTestEnv } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
+
 let env;
 let serviceRegistry;
+
 QUnit.module("Currency");
+
 QUnit.test("get & getAll", async (assert) => {
   serviceRegistry = new Registry();
   serviceRegistry.add("currency", currencyService);
@@ -18,6 +21,7 @@ QUnit.test("get & getAll", async (assert) => {
     ["USD", "EUR"]
   );
 });
+
 QUnit.test("format", async (assert) => {
   serviceRegistry = new Registry();
   serviceRegistry.add("currency", currencyService);
@@ -40,6 +44,7 @@ QUnit.test("format", async (assert) => {
   );
   assert.strictEqual(curSvc.format(false, "EUR"), "");
 });
+
 // BOI: we do not have a parse method, but here are some tests if we want to add this at some point.
 // QUnit.test("parse", async (assert) => {
 //   serviceRegistry = new Registry();

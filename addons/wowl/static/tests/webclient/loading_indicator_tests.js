@@ -1,12 +1,15 @@
 /** @odoo-module **/
+
 import { LoadingIndicator } from "../../src/webclient/loading_indicator/loading_indicator";
 import { uiService } from "../../src/services/ui_service";
 import { Registry } from "../../src/core/registry";
 import { getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
+
 let target;
 let serviceRegistry;
 let browser;
 let baseConfig;
+
 QUnit.module("LoadingIndicator", {
   async beforeEach() {
     target = getFixture();
@@ -16,6 +19,7 @@ QUnit.module("LoadingIndicator", {
     baseConfig = { serviceRegistry, browser };
   },
 });
+
 QUnit.test("displays the loading indicator for one rpc", async (assert) => {
   const env = await makeTestEnv({ ...baseConfig });
   await mount(LoadingIndicator, { env, target });
@@ -35,6 +39,7 @@ QUnit.test("displays the loading indicator for one rpc", async (assert) => {
   loadingIndicator = target.querySelector(".o_loading");
   assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
 });
+
 QUnit.test("displays the loading indicator for multi rpc", async (assert) => {
   const env = await makeTestEnv({ ...baseConfig });
   await mount(LoadingIndicator, { env, target });

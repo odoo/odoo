@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { NavBar } from "../../src/webclient/navbar/navbar";
 import { click } from "../helpers/index";
 import { makeTestEnv, mount, nextTick } from "../helpers/utility";
@@ -38,6 +39,7 @@ QUnit.module("Navbar", {
     baseConfig = { browser, serviceRegistry, serverData, systrayRegistry };
   },
 });
+
 QUnit.test("can be rendered", async (assert) => {
   const env = await makeTestEnv(baseConfig);
   const navbar = await mount(NavBar, { env });
@@ -48,6 +50,7 @@ QUnit.test("can be rendered", async (assert) => {
   );
   navbar.destroy();
 });
+
 QUnit.test("dropdown menu can be toggled", async (assert) => {
   const env = await makeTestEnv(baseConfig);
   const navbar = await mount(NavBar, { env });
@@ -88,6 +91,7 @@ QUnit.test("navbar can display systray items", async (assert) => {
   assert.containsOnce(navbar.el, "li.my-item");
   navbar.destroy();
 });
+
 QUnit.test("navbar can display systray items ordered based on their sequence", async (assert) => {
   class MyItem1 extends Component {}
   MyItem1.template = xml`<li class="my-item-1">my item 1</li>`;
@@ -127,6 +131,7 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
   assert.strictEqual(menuSystray.innerText, "my item 3\nmy item 2\nmy item 4\nmy item 1");
   navbar.destroy();
 });
+
 QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
   class MyNavbar extends NavBar {
     async adapt() {

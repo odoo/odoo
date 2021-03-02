@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { RainbowMan } from "../../src/effects/rainbow_man";
 import { makeTestEnv } from "../helpers/utility";
 import { click, getFixture, makeFakeUserService, mount, nextTick } from "../helpers/index";
@@ -9,8 +10,7 @@ import { notificationService } from "../../src/notifications/notification_servic
 const { Component, tags } = owl;
 
 class Parent extends Component {
-  constructor() {
-    super(...arguments);
+  setup() {
     this.RainbowMgr = EffectsContainer;
   }
 }
@@ -19,7 +19,8 @@ Parent.template = tags.xml`
       <t t-component="RainbowMgr" />
     </div>
   `;
-QUnit.module("RainbowMan", (hooks) => {
+
+  QUnit.module("RainbowMan", (hooks) => {
   let rainbowManDefault, serviceRegistry, target;
   hooks.beforeEach(async () => {
     rainbowManDefault = {

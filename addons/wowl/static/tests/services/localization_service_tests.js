@@ -1,17 +1,23 @@
 /** @odoo-module **/
+
 import { useService } from "../../src/core/hooks";
 import { getFixture, makeTestEnv, mount } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
 import { makeFakeLocalizationService } from "../helpers/mocks";
+
 const { DateTime, Settings } = luxon;
 const terms = { Hello: "Bonjour" };
+
 class TestComponent extends owl.Component {}
-const makeTestLocalizationEnv = async (config) => {
+
+async function makeTestLocalizationEnv(config) {
   const serviceRegistry = new Registry();
   serviceRegistry.add("localization", makeFakeLocalizationService(config));
   return await makeTestEnv({ serviceRegistry });
 };
+
 QUnit.module("Localization");
+
 QUnit.test("can translate a text node", async (assert) => {
   assert.expect(1);
   TestComponent.template = owl.tags.xml`<div>Hello</div>`;
@@ -20,6 +26,7 @@ QUnit.test("can translate a text node", async (assert) => {
   await mount(TestComponent, { env, target });
   assert.strictEqual(target.innerText, "Bonjour");
 });
+
 QUnit.test("_t can be found in component env", async (assert) => {
   assert.expect(1);
   TestComponent.template = owl.tags.xml`<span t-esc="env._t('Hello')"/>`;
@@ -28,6 +35,7 @@ QUnit.test("_t can be found in component env", async (assert) => {
   await mount(TestComponent, { env, target });
   assert.strictEqual(target.innerText, "Bonjour");
 });
+
 QUnit.test("components can access lang parameters", async (assert) => {
   assert.expect(1);
   class TestComponent extends owl.Component {
@@ -44,6 +52,7 @@ QUnit.test("components can access lang parameters", async (assert) => {
   await mount(TestComponent, { env, target });
   assert.strictEqual(target.innerText, decimalPoint);
 });
+
 QUnit.test("formatDateTime", async (assert) => {
   const { localization: l10n } = (await makeTestEnv()).services;
   // const isoDateStr = "2009-05-04 12:34:23"; // with moment, this one was accepted as an iso date string
@@ -52,6 +61,7 @@ QUnit.test("formatDateTime", async (assert) => {
   const str = l10n.formatDateTime(date, { timezone: false });
   assert.strictEqual(str, date.toFormat("MM/dd/yyyy HH:mm:ss"));
 });
+
 QUnit.test("formatDateTime (with different timezone offset)", async (assert) => {
   // BOI: with legacy web, date format was mocked but IMHO this is not needed here.
   const env = await makeTestLocalizationEnv({ langParams: { dateFormat: "%m/%d/%Y" } });
@@ -61,6 +71,7 @@ QUnit.test("formatDateTime (with different timezone offset)", async (assert) => 
   str = l10n.formatDateTime(DateTime.utc(2017, 6, 1, 10, 0, 0, 0));
   assert.strictEqual(str, "06/01/2017 12:00:00");
 });
+
 QUnit.test("formatFloat", async (assert) => {
   const env1 = await makeTestLocalizationEnv({ langParams: { grouping: [3, 3, 3, 3] } });
   const env2 = await makeTestLocalizationEnv({ langParams: { grouping: [3, 2, -1] } });
@@ -78,6 +89,7 @@ QUnit.test("formatFloat", async (assert) => {
   assert.strictEqual(l10n.formatFloat(6000), "6.000,00");
   assert.strictEqual(l10n.formatFloat(false), "");
 });
+
 QUnit.test("humanNumber", async (assert) => {
   const { localization: l10n } = (await makeTestEnv()).services;
   assert.strictEqual(l10n.humanNumber(1020, { decimals: 2, minDigits: 1 }), "1.02k");
@@ -107,6 +119,7 @@ QUnit.test("humanNumber", async (assert) => {
   assert.strictEqual(l10n.humanNumber(-1.012e43, { decimals: 2, minDigits: 1 }), "-1.01e+43");
   assert.strictEqual(l10n.humanNumber(-1.012e43, { decimals: 2, minDigits: 2 }), "-1.01e+43");
 });
+
 QUnit.test("parseDateTime", async (assert) => {
   const env = await makeTestLocalizationEnv({
     langParams: { dateFormat: "%m/%d/%Y", timeFormat: "%H:%M:%S" },
@@ -143,6 +156,7 @@ QUnit.test("parseDateTime", async (assert) => {
   date2 = DateTime.fromFormat(dateStr, "M/d/y H:m:s");
   assert.equal(date1.toISO(), date2.toISO(), "can parse dates of year 1");
 });
+
 QUnit.test("parseDateTime (norwegian locale)", async (assert) => {
   const env = await makeTestLocalizationEnv({
     langParams: { dateFormat: "%d. %b %Y", timeFormat: "%H:%M:%S" },
@@ -161,6 +175,7 @@ QUnit.test("parseDateTime (norwegian locale)", async (assert) => {
   assert.equal(date1.toISO(), date2.toISO(), "Day/month inverted + month i18n");
   Settings.defaultLocale = originalLocale;
 });
+
 QUnit.test("parseDate without separator", async (assert) => {
   const env = await makeTestLocalizationEnv({ langParams: { dateFormat: "%d.%m/%Y" } });
   const { localization: l10n } = env.services;
@@ -199,6 +214,7 @@ QUnit.test("parseDate without separator", async (assert) => {
   assert.equal(l10n.parseDate("310117").toFormat(dateFormat), "31.01/2017");
   assert.equal(l10n.parseDate("31011985").toFormat(dateFormat), "31.01/1985");
 });
+
 QUnit.test("parseDateTime without separator", async (assert) => {
   const env = await makeTestLocalizationEnv({
     langParams: { dateFormat: "%d.%m/%Y", timeFormat: "%H:%M/%S" },
@@ -209,6 +225,7 @@ QUnit.test("parseDateTime without separator", async (assert) => {
   assert.equal(l10n.parseDateTime("310119850833").toFormat(dateTimeFormat), "31.01/1985 08:33/00");
   assert.equal(l10n.parseDateTime("31/01/1985 08").toFormat(dateTimeFormat), "31.01/1985 08:00/00");
 });
+
 QUnit.test("parse smart date input", async (assert) => {
   const { localization: l10n } = (await makeTestEnv()).services;
   const format = "dd MM yyyy";
@@ -253,6 +270,7 @@ QUnit.test("parse smart date input", async (assert) => {
     DateTime.local().minus({ days: 1 }).toFormat(format)
   );
 });
+
 QUnit.test("parseFloat", async (assert) => {
   const env1 = await makeTestLocalizationEnv({
     langParams: { grouping: [3, 0], decimalPoint: ".", thousandsSep: "," },

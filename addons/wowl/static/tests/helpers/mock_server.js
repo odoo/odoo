@@ -5,6 +5,7 @@ import { makeFakeRPCService, makeMockFetch } from "./mocks";
 import { Registry } from "../../src/core/registry";
 import { evaluateExpr } from "../../src/py_js/py";
 import { combineDomains, Domain } from "../../src/core/domain";
+
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
@@ -51,6 +52,7 @@ class MockServer {
       model.methods = model.methods || {};
     });
   }
+
   /**
    * Simulate a complete RPC call. This is the main method for this class.
    *
@@ -98,6 +100,7 @@ class MockServer {
     // }
     // def.abort = abort;
   }
+
   fieldsViewGet(modelName, args, kwargs) {
     if (!(modelName in this.models)) {
       throw new Error(`Model ${modelName} was not defined in mock server data`);
@@ -137,6 +140,7 @@ class MockServer {
     }
     return fvg;
   }
+
   _fieldsViewGet(params) {
     let processedNodes = params.processedNodes || [];
     const { arch, context, fields, modelName } = params;
@@ -165,6 +169,7 @@ class MockServer {
         }
       }
     }
+
     traverseElementTree(doc, (node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         return false;
@@ -319,6 +324,7 @@ class MockServer {
       type: doc.tagName === "tree" ? "list" : doc.tagName,
     };
   }
+
   /**
    * Converts an Object representing a record to actual return Object of the
    * python `onchange` method.
@@ -355,6 +361,7 @@ class MockServer {
     });
     return values;
   }
+
   _performRPC(route, args) {
     switch (route) {
       case "/wowl/load_menus":
@@ -393,6 +400,7 @@ class MockServer {
     }
     throw new Error(`Unimplemented route: ${route}`);
   }
+
   mockCreate(modelName, values) {
     if ("id" in values) {
       throw new Error("Cannot create a record with a predefinite id");
@@ -405,6 +413,7 @@ class MockServer {
     this.writeRecord(modelName, values, id);
     return id;
   }
+
   /**
    * @param {string} modelName
    * @param {array[]} args a list with a list of fields in the first position
@@ -442,9 +451,11 @@ class MockServer {
     }
     return result;
   }
+
   mockFieldsGet(modelName) {
     return this.models[modelName].fields;
   }
+
   mockLoadAction(kwargs) {
     const action = this.actions[kwargs.action_id];
     if (!action) {
@@ -454,6 +465,7 @@ class MockServer {
     }
     return action || false;
   }
+
   mockLoadMenus() {
     let menus = this.menus;
     if (!menus) {
@@ -464,6 +476,7 @@ class MockServer {
     }
     return menus;
   }
+
   mockLoadViews(modelName, kwargs) {
     const fieldsViews = {};
     kwargs.views.forEach(([viewId, viewType]) => {
@@ -478,6 +491,7 @@ class MockServer {
     }
     return result;
   }
+
   mockOnchange(modelName, args, kwargs) {
     const currentData = args[1];
     const onChangeSpec = args[3];
@@ -523,6 +537,7 @@ class MockServer {
       value: this.convertToOnChange(modelName, Object.assign({}, defaultVals, onchangeVals)),
     };
   }
+
   mockRead(modelName, args) {
     const model = this.models[modelName];
     let fields;
@@ -568,6 +583,7 @@ class MockServer {
       return result;
     });
   }
+
   mockReadGroup(modelName, kwargs) {
     if (!("lazy" in kwargs)) {
       kwargs.lazy = true;
@@ -732,6 +748,7 @@ class MockServer {
     }
     return result;
   }
+
   mockWebReadGroup(modelName, kwargs) {
     const groups = this.mockReadGroup(modelName, kwargs);
     if (kwargs.expand && kwargs.groupby.length === 1) {
@@ -756,6 +773,7 @@ class MockServer {
       length: allGroups.length,
     };
   }
+
   mockSearchRead(modelName, args, kwargs) {
     const result = this.mockSearchReadController({
       model: modelName,
@@ -768,6 +786,7 @@ class MockServer {
     });
     return result.records;
   }
+
   mockSearchReadController(params) {
     const model = this.models[params.model];
     let fieldNames = params.fields;
@@ -791,16 +810,19 @@ class MockServer {
       records: this.mockRead(params.model, [records.map((r) => r.id), fieldNames]),
     };
   }
+
   mockWrite(modelName, args) {
     args[0].forEach((id) => this.writeRecord(modelName, args[1], id));
     return true;
   }
+
   //////////////////////////////////////////////////////////////////////////////
   // Private
   //////////////////////////////////////////////////////////////////////////////
   evaluateDomain(domain, record) {
     return new Domain(domain).contains(record);
   }
+
   /**
    * Get all records from a model matching a domain.  The only difficulty is
    * that if we have an 'active' field, we implicitely add active = true in
@@ -842,6 +864,7 @@ class MockServer {
     }
     return records;
   }
+
   sortByField(records, modelName, fieldName, order) {
     const field = this.models[modelName].fields[fieldName];
     records.sort((r1, r2) => {
@@ -869,6 +892,7 @@ class MockServer {
     });
     return records;
   }
+
   writeRecord(modelName, values, id, { ensureIntegrity = true } = {}) {
     const model = this.models[modelName];
     const record = model.records.find((r) => r.id === id);
@@ -942,6 +966,7 @@ class MockServer {
       }
     }
   }
+
   getUnusedID(modelName) {
     const model = this.models[modelName];
     return (
@@ -953,6 +978,7 @@ class MockServer {
       }, 0) + 1
     );
   }
+
   applyDefaults(model, record) {
     record.display_name = record.display_name || record.name;
     for (const fieldName in model.fields) {
@@ -972,6 +998,7 @@ class MockServer {
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // MockServer deployment helper
 // -----------------------------------------------------------------------------

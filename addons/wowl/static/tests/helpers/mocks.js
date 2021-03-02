@@ -1,11 +1,14 @@
 /** @odoo-module **/
+
 import { effectService } from "../../src/effects/effect_service";
 import { makePushState, routeToUrl } from "../../src/services/router_service";
 import { SIZES } from "../../src/services/device_service";
 import { makeLocalization } from "../../src/services/localization_service";
-// // -----------------------------------------------------------------------------
-// // Mock Services
-// // -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// Mock Services
+// -----------------------------------------------------------------------------
+
 export function makeFakeLocalizationService(config) {
   return {
     name: "localization",
@@ -17,6 +20,7 @@ export function makeFakeLocalizationService(config) {
     },
   };
 }
+
 /**
  * Simulate a fake user service.
  */
@@ -45,6 +49,7 @@ export function makeFakeUserService(values) {
     },
   };
 }
+
 /*export function makeFakeMenusService(menuData?: MenuData): Service<MenuService> {
   const _menuData = menuData || {
     root: { id: "root", children: [1], name: "root" },
@@ -75,6 +80,7 @@ export function makeFakeUserService(values) {
     },
   };
 }*/
+
 function buildMockRPC(mockRPC) {
   return async (...args) => {
     if (mockRPC) {
@@ -82,6 +88,7 @@ function buildMockRPC(mockRPC) {
     }
   };
 }
+
 export function makeFakeRPCService(mockRPC) {
   return {
     name: "rpc",
@@ -90,6 +97,7 @@ export function makeFakeRPCService(mockRPC) {
     },
   };
 }
+
 export function makeTestOdoo(config = {}) {
   return Object.assign({}, odoo, {
     browser: config.browser || {},
@@ -132,6 +140,7 @@ export function makeTestOdoo(config = {}) {
     viewRegistry: config.viewRegistry,
   });
 }
+
 export function makeMockXHR(response, sendCb, def) {
   let MockXHR = function () {
     return {
@@ -160,9 +169,11 @@ export function makeMockXHR(response, sendCb, def) {
   };
   return MockXHR;
 }
-//   // -----------------------------------------------------------------------------
-//   // Low level API mocking
-//   // -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// Low level API mocking
+// -----------------------------------------------------------------------------
+
 export function makeMockFetch(mockRPC) {
   const _rpc = buildMockRPC(mockRPC);
   return async (input) => {
@@ -187,6 +198,7 @@ export function makeMockFetch(mockRPC) {
     return new Response(blob, { status });
   };
 }
+
 function stripUndefinedQueryKey(query) {
   const keyValArray = Array.from(Object.entries(query)).filter(([k, v]) => v !== undefined);
   // transform to Object.fromEntries in es > 2019
@@ -196,11 +208,13 @@ function stripUndefinedQueryKey(query) {
   });
   return newObj;
 }
+
 function getRoute(route) {
   route.hash = stripUndefinedQueryKey(route.hash);
   route.search = stripUndefinedQueryKey(route.search);
   return route;
 }
+
 export function makeFakeRouterService(params) {
   let _current = {
     pathname: "test.wowl",
@@ -242,6 +256,7 @@ export function makeFakeRouterService(params) {
     },
   };
 }
+
 export function makeFakeDeviceService() {
   return {
     name: "device",
@@ -256,6 +271,7 @@ export function makeFakeDeviceService() {
     },
   };
 }
+
 export const fakeCookieService = {
   name: "cookie",
   deploy() {
@@ -275,6 +291,7 @@ export const fakeCookieService = {
     };
   },
 };
+
 export const fakeTitleService = {
   name: "title",
   deploy() {
@@ -292,6 +309,7 @@ export const fakeTitleService = {
     };
   },
 };
+
 export function makeFakeDownloadService(callback) {
   return {
     name: "download",
@@ -304,6 +322,7 @@ export function makeFakeDownloadService(callback) {
     },
   };
 }
+
 export function makeFakeUIService(blockCallback, unblockCallback) {
   return {
     name: "ui",
@@ -322,6 +341,7 @@ export function makeFakeUIService(blockCallback, unblockCallback) {
     },
   };
 }
+
 export function makeFakeNotificationService(createMock, closeMock) {
   return {
     name: "notification",
@@ -343,6 +363,7 @@ export function makeFakeNotificationService(createMock, closeMock) {
     },
   };
 }
+
 export const mocks = {
   cookie: () => fakeCookieService,
   download: makeFakeDownloadService,

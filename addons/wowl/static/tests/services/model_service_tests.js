@@ -1,11 +1,15 @@
 /** @odoo-module **/
-const { Component, tags } = owl;
+
 import { Registry } from "../../src/core/registry";
 import { useService } from "../../src/core/hooks";
 import { modelService } from "../../src/services/model_service";
 import { getFixture, makeFakeUserService, makeTestEnv, mount } from "../helpers/index";
+
+const { Component, tags } = owl;
 const { xml } = tags;
+
 let serviceRegistry;
+
 QUnit.module("Model Service", {
   async beforeEach() {
     serviceRegistry = new Registry();
@@ -13,6 +17,7 @@ QUnit.module("Model Service", {
     serviceRegistry.add(modelService.name, modelService);
   },
 });
+
 function makeFakeRPC() {
   const query = { route: null, params: null };
   const rpc = {
@@ -26,6 +31,7 @@ function makeFakeRPC() {
   };
   return [query, rpc];
 }
+
 QUnit.test("add user context to a simple read request", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -45,6 +51,7 @@ QUnit.test("add user context to a simple read request", async (assert) => {
     model: "my.model",
   });
 });
+
 QUnit.test("context is combined with user context in read request", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -65,6 +72,7 @@ QUnit.test("context is combined with user context in read request", async (asser
     model: "my.model",
   });
 });
+
 QUnit.test("basic method call of model", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -85,6 +93,7 @@ QUnit.test("basic method call of model", async (assert) => {
     model: "partner",
   });
 });
+
 QUnit.test("create method", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -108,6 +117,7 @@ QUnit.test("create method", async (assert) => {
     model: "partner",
   });
 });
+
 QUnit.test("unlink method", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -127,6 +137,7 @@ QUnit.test("unlink method", async (assert) => {
     model: "partner",
   });
 });
+
 QUnit.test("write method", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -146,6 +157,7 @@ QUnit.test("write method", async (assert) => {
     model: "partner",
   });
 });
+
 QUnit.test("readGroup method", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -171,6 +183,7 @@ QUnit.test("readGroup method", async (assert) => {
     model: "sale.order",
   });
 });
+
 QUnit.test("searchRead method", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -192,6 +205,7 @@ QUnit.test("searchRead method", async (assert) => {
     model: "sale.order",
   });
 });
+
 QUnit.test("webSearchRead method", async (assert) => {
   const [query, rpc] = makeFakeRPC();
   serviceRegistry.add("rpc", rpc);
@@ -213,6 +227,7 @@ QUnit.test("webSearchRead method", async (assert) => {
     model: "sale.order",
   });
 });
+
 QUnit.test("useModel take proper reference to rpc service", async (assert) => {
   class MyComponent extends Component {
     constructor() {

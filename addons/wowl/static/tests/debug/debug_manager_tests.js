@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { ActionDialog } from "../../src/actions/action_dialog";
 import { Registry } from "../../src/core/registry";
 import { DebugManager } from "../../src/debug/debug_manager";
@@ -113,6 +114,7 @@ QUnit.module("DebugManager", (hooks) => {
     assert.verifySteps(["callback item_2", "callback item_1", "callback item_3"]);
     debugManager.destroy();
   });
+
   QUnit.test("Don't display the DebugManager if debug mode is disabled", async (assert) => {
     var _a;
     const dialogContainer = document.createElement("div");
@@ -127,6 +129,7 @@ QUnit.module("DebugManager", (hooks) => {
       ? void 0
       : _a.remove();
   });
+  
   QUnit.test(
     "Display the DebugManager correctly in a ActionDialog if debug mode is enabled",
     async (assert) => {

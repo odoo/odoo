@@ -1,5 +1,7 @@
 odoo.define("wowl.test_legacy", async (require) => {
+
   const legacyExports = {};
+
   const legacyProm = new Promise(async (resolve) => {
     const session = require("web.session");
     await session.is_bound; // await for templates from server

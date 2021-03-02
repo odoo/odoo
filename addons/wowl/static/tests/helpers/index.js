@@ -1,11 +1,16 @@
 /** @odoo-module **/
+
 import { setTemplates } from "./utility";
 import { legacyProm } from "wowl.test_legacy";
 import { makeTestOdoo } from "./mocks";
+
 const { whenReady, loadFile } = owl.utils;
+
 let templates;
+
 owl.config.enableTransitions = false;
 owl.QWeb.dev = true;
+
 export async function setupTests() {
   const originalOdoo = odoo;
   QUnit.testStart(() => {
@@ -30,5 +35,7 @@ export async function setupTests() {
   setTemplates(templates);
   await Promise.all([whenReady(), legacyProm]);
 }
+
 export { makeFakeUserService, makeFakeRPCService, makeMockXHR, makeMockFetch } from "./mocks";
+
 export { getFixture, makeTestEnv, mount, nextTick, makeDeferred, click } from "./utility";

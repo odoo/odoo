@@ -1,6 +1,6 @@
 /** @odoo-module **/
+
 import { click, getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
-const { Component, tags } = owl;
 import {
   ErrorDialog,
   Error504Dialog,
@@ -11,6 +11,8 @@ import {
 } from "../../src/errors/error_dialogs";
 import { Registry } from "../../src/core/registry";
 import OdooError from "../../src/errors/odoo_error";
+
+const { Component, tags } = owl;
 let target;
 let env;
 let parent;
@@ -27,6 +29,7 @@ QUnit.module("Error dialogs", {
     parent.unmount();
   },
 });
+
 QUnit.test("ErrorDialog with traceback", async (assert) => {
   var _a, _b, _c;
   assert.expect(11);
@@ -88,12 +91,12 @@ QUnit.test("ErrorDialog with traceback", async (assert) => {
     "This is a tracback string"
   );
 });
+
 QUnit.test("Client ErrorDialog with traceback", async (assert) => {
   var _a, _b, _c;
   assert.expect(11);
   class Parent extends Component {
-    constructor() {
-      super(...arguments);
+    setup() {
       this.message = "Something bad happened";
       this.data = { debug: "Some strange unreadable stack" };
       this.name = "ERROR_NAME";
@@ -149,6 +152,7 @@ QUnit.test("Client ErrorDialog with traceback", async (assert) => {
     "This is a tracback string"
   );
 });
+
 QUnit.test("button clipboard copy error traceback", async (assert) => {
   assert.expect(1);
   const error = new OdooError("ERROR_NAME");
@@ -179,6 +183,7 @@ QUnit.test("button clipboard copy error traceback", async (assert) => {
   click(clipboardButton);
   await nextTick();
 });
+
 QUnit.test("WarningDialog", async (assert) => {
   var _a, _b, _c;
   assert.expect(5);
@@ -212,6 +217,7 @@ QUnit.test("WarningDialog", async (assert) => {
     "Ok"
   );
 });
+
 QUnit.test("RedirectWarningDialog", async (assert) => {
   var _a, _b;
   assert.expect(8);
@@ -263,6 +269,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
   click(footerButtons[1]);
   assert.verifySteps(["buy_action_id", "dialog-closed"]);
 });
+
 QUnit.test("Error504Dialog", async (assert) => {
   var _a, _b, _c;
   assert.expect(5);
@@ -289,6 +296,7 @@ QUnit.test("Error504Dialog", async (assert) => {
     "Ok"
   );
 });
+
 QUnit.test("SessionExpiredDialog", async (assert) => {
   var _a, _b;
   assert.expect(7);
