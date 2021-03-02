@@ -468,9 +468,24 @@ class MrpProduction(models.Model):
                 production.state = 'draft'
             elif all(move.state == 'cancel' for move in production.move_raw_ids):
                 production.state = 'cancel'
+<<<<<<< HEAD
             elif all(move.state in ('cancel', 'done') for move in production.move_raw_ids):
                 production.state = 'done'
             elif production.qty_producing >= production.product_qty:
+=======
+            elif all(move.state in ['cancel', 'done'] for move in production.move_raw_ids):
+                if (
+                    production.bom_id.consumption == 'flexible'
+                    and float_compare(production.qty_produced, production.product_qty, precision_rounding=production.product_uom_id.rounding) == -1
+                    and production.state != 'done'
+                ):
+                    production.state = 'progress'
+                else:
+                    production.state = 'done'
+            elif production.move_finished_ids.filtered(lambda m: m.state not in ('cancel', 'done') and m.product_id.id == production.product_id.id)\
+                 and (production.qty_produced >= production.product_qty)\
+                 and (not production.routing_id or all(wo_state in ('cancel', 'done') for wo_state in production.workorder_ids.mapped('state'))):
+>>>>>>> 55949d8e8dc... temp
                 production.state = 'to_close'
             elif any(wo_state in ('progress', 'done') for wo_state in production.workorder_ids.mapped('state')):
                 production.state = 'progress'
