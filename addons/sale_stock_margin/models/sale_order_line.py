@@ -13,6 +13,6 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.move_ids:
                 lines_without_moves |= line
-            else:
+            elif line.product_id.categ_id.property_cost_method != 'standard':
                 line.purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         return super(SaleOrderLine, lines_without_moves)._compute_purchase_price()
