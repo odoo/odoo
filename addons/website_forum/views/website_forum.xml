@@ -803,7 +803,7 @@
                 <input type="hidden" name="post_tags" placeholder="Tags" class="form-control js_select2"/>
             </div>
             <div class="mb-5">
-                <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call'} #{(user.karma &lt; forum.karma_ask) and 'karma_required'}"
+                <button type="submit" t-attf-class="btn btn-primary o_submit_btn #{forum.allow_share and 'oe_social_share_call'} #{(user.karma &lt; forum.karma_ask) and 'karma_required'}"
                     t-att-data-karma="forum.karma_ask"
                     data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
                 <a class="btn btn-secondary" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }"> Discard</a>
@@ -862,7 +862,7 @@
                        t-att-title="edit_tags_karma_fail and edit_tags_karma_error_message"/>
             </div>
             <div class="mb-4">
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-primary o_submit_btn">Save changes</button>
                 <a class="btn btn-secondary" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post)}">
                     Discard
                 </a>
@@ -920,7 +920,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" class="form-control o_wysiwyg_loader" required="required" t-att-data-karma="forum.karma_editor"/>
-            <button type="submit" class="btn btn-primary mb16">Post Answer</button>
+            <button type="submit" class="btn btn-primary o_submit_btn mb16">Post Answer</button>
         </form>
     </div>
 </template>
@@ -944,7 +944,7 @@
             - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
             - it really helps to select the best questions and answers!
         </p>
-        <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call'} my-3 #{not question.can_answer and 'karma_required'}"
+        <button type="submit" t-attf-class="btn btn-primary o_submit_btn #{forum.allow_share and 'oe_social_share_call'} my-3 #{not question.can_answer and 'karma_required'}"
                 t-att-data-karma="question.forum_id.karma_answer"
                 data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
     </form>

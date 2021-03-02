@@ -155,8 +155,15 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 // o_we_selected_image has not always been removed when
                 // saving a post so we need the line below to remove it if it is present.
                 $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
-                $form.on('click', 'button, .a-submit', () => {
+                $form.on('click', 'button, .a-submit', async (ev) => {
                     $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
+                    const $croppedImg = wysiwyg.$editor.find('.o_cropped_img_to_save');
+                    // this will call when only form is submiting
+                    if (ev.target.classList.contains('o_submit_btn') && $croppedImg.length) {
+                        ev.preventDefault();
+                        await wysiwyg.saveCroppedImages(wysiwyg.$editor);
+                        $form.submit();
+                    }
                     wysiwyg.save();
                 });
             });
