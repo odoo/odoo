@@ -128,7 +128,7 @@ export function makeTestOdoo(config = {}) {
     systrayRegistry: config.systrayRegistry,
     errorDialogRegistry: config.errorDialogRegistry,
     userMenuRegistry: config.userMenuRegistry,
-    debugManagerRegistry: config.debugManagerRegistry,
+    debugRegistry: config.debugRegistry,
     viewRegistry: config.viewRegistry,
   });
 }

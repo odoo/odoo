@@ -31,7 +31,7 @@ export class DebugManager extends Component {
     });
     if (!this.isInDialog) {
       this.debugFactories["global"] = () =>
-        odoo.debugManagerRegistry.getAll().map((elFactory) => elFactory(this.env));
+        odoo.debugRegistry.getAll().map((elFactory) => elFactory(this.env));
     }
   }
 

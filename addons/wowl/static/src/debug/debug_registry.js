@@ -3,12 +3,12 @@
 import { Registry } from "../core/registry";
 import { backendDebugManagerItems, globalDebugManagerItems } from "./debug_menu_items";
 
-export const debugManagerRegistry = (odoo.debugManagerRegistry = new Registry());
+export const debugRegistry = (odoo.debugRegistry = new Registry());
 
 backendDebugManagerItems.forEach((item) => {
-  debugManagerRegistry.add(item.name, item);
+  debugRegistry.add(item.name, item);
 });
 
 globalDebugManagerItems.forEach((item) => {
-  debugManagerRegistry.add(item.name, item);
+  debugRegistry.add(item.name, item);
 });
