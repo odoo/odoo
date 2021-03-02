@@ -3376,6 +3376,7 @@
   					then.call(promise, function () {
   						resume();
   					}, function (error) {
+  						lastError = error;
   						message = "Promise rejected " + (!phase ? "during" : phase.replace(/Each$/, "")) + " \"" + test.testName + "\": " + (error && error.message || error);
   						test.pushFailure(message, extractStacktrace(error, 0));
 
