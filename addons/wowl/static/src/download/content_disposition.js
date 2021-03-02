@@ -1,5 +1,4 @@
 /** @odoo-module **/
-/* eslint-disable no-control-regex */
 
 /*
 (The MIT License)
@@ -238,3 +237,4 @@ function ContentDisposition(type, parameters) {
   this.type = type;
   this.parameters = parameters;
 }
+

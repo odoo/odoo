@@ -1,10 +1,10 @@
 /** @odoo-module **/
 import { click, getFixture, makeFakeRPCService, makeTestEnv, mount, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
-import { dialogService } from "../../src/services/dialog_service";
+import { DialogContainer, dialogService } from "../../src/services/dialog_service";
 import { Dialog } from "../../src/components/dialog/dialog";
 import { notificationService } from '../../src/notifications/notification_service';
-import { crashManagerService } from '../../src/crash_manager/crash_manager_service';
+import { errorService } from '../../src/errors/error_service';
 import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
 
 const { Component, tags } = owl;
@@ -112,8 +112,7 @@ QUnit.test("dialog component crashes", async (assert) => {
   assert.expect(4);
 
   class FailingDialog extends Component {
-    constructor() {
-      super(...arguments);
+    setup() {
       throw new Error('Some Error');
     }
   }
@@ -123,8 +122,10 @@ QUnit.test("dialog component crashes", async (assert) => {
   const rpc = makeFakeRPCService();
   serviceRegistry.add(rpc.name, rpc);
   serviceRegistry.add(notificationService.name, notificationService);
-  serviceRegistry.add(crashManagerService.name, crashManagerService);
-  env = await makeTestEnv({ serviceRegistry });
+  serviceRegistry.add(errorService.name, errorService);
+  const componentRegistry = new Registry();
+  componentRegistry.add("DialogContainer", DialogContainer)
+  env = await makeTestEnv({ serviceRegistry, mainComponentRegistry: componentRegistry });
 
   pseudoWebClient = await mount(PseudoWebClient, { target, env });
 
@@ -133,6 +134,7 @@ QUnit.test("dialog component crashes", async (assert) => {
     assert.step('error');
   };
 
+  debugger;
   env.services[dialogService.name].open(FailingDialog);
   await nextTick();
   assert.verifySteps(['error']);
