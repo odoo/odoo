@@ -567,9 +567,13 @@ class Lead(models.Model):
         return {'contact_name': contact_name or self.contact_name}
 
     def _prepare_partner_name_from_partner(self, partner):
+        """ Company name: name of partner parent (if set) or name of partner
+        (if company) or company_name of partner (if not a company). """
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
+        elif not partner_name and partner.company_name:
+            partner_name = partner.company_name
         return {'partner_name': partner_name or self.partner_name}
 
     # ------------------------------------------------------------
