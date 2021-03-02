@@ -5337,7 +5337,7 @@
   		assertList.appendChild(assertLi);
 
       // Odoo Customisation!!!
-			// Crappy hack to display traceback with sourcemaps if debug=assets
+      // Crappy hack to display traceback with sourcemaps if debug=assets
       if (lastError && QUnit.annotateTraceback && odoo && odoo.debug && odoo.debug.includes("assets")) {
           const pre = assertLi.querySelector("pre");
 
