@@ -13,7 +13,7 @@ export class NavBar extends Component {
     super(...args);
     this.currentAppSectionsExtra = [];
     this.actionService = useService("action");
-    this.menuRepo = useService("menus");
+    this.menuService = useService("menu");
     const debouncedAdapt = debounce(this.adapt.bind(this), 250);
     useExternalListener(window, "resize", debouncedAdapt);
   }
@@ -34,11 +34,11 @@ export class NavBar extends Component {
   }
 
   get currentApp() {
-    return this.menuRepo.getCurrentApp();
+    return this.menuService.getCurrentApp();
   }
 
   get currentAppSections() {
-    return (this.currentApp && this.menuRepo.getMenuAsTree(this.currentApp.id).childrenTree) || [];
+    return (this.currentApp && this.menuService.getMenuAsTree(this.currentApp.id).childrenTree) || [];
   }
 
   get systrayItems() {
@@ -124,7 +124,7 @@ export class NavBar extends Component {
   onNavBarDropdownItemSelection(ev) {
     const { payload: menu } = ev.detail;
     if (menu) {
-      this.menuRepo.selectMenu(menu);
+      this.menuService.selectMenu(menu);
     }
   }
 }

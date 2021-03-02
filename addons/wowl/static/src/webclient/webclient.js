@@ -9,7 +9,7 @@ const { Component, hooks } = owl;
 export class WebClient extends Component {
   constructor(...args) {
     super(...args);
-    this.menus = useService("menus");
+    this.menuService = useService("menu");
     this.actionService = useService("action");
     this.title = useService("title");
     this.router = useService("router");
@@ -48,7 +48,7 @@ export class WebClient extends Component {
     if (!actionManagerHandles) {
       if (!action && menuId) {
         // determine action from menu_id key
-        const menu = this.menus.getAll().find((m) => menuId === m.id);
+        const menu = this.menuService.getAll().find((m) => menuId === m.id);
         action = menu && menu.actionID;
       }
       if (action) {
@@ -57,11 +57,11 @@ export class WebClient extends Component {
     }
     // Determine the app we are in
     if (!menuId && typeof action === "number") {
-      const menu = this.menus.getAll().find((m) => m.actionID === action);
+      const menu = this.menuService.getAll().find((m) => m.actionID === action);
       menuId = menu && menu.appID;
     }
     if (menuId) {
-      this.menus.setCurrentMenu(menuId);
+      this.menuService.setCurrentMenu(menuId);
     }
     if (!actionManagerHandles && !action) {
       return this._loadDefaultApp();
@@ -75,15 +75,15 @@ export class WebClient extends Component {
       // even if it's a guess ?
       return this.actionService.doAction(action, { clearBreadcrumbs: true });
     }
-    const root = this.menus.getMenu("root");
+    const root = this.menuService.getMenu("root");
     const firstApp = root.children[0];
     if (firstApp) {
-      return this.menus.selectMenu(firstApp);
+      return this.menuService.selectMenu(firstApp);
     }
   }
 
   replaceRouterState() {
-    const currentApp = this.menus.getCurrentApp();
+    const currentApp = this.menuService.getCurrentApp();
     const persistentHash = {
       menu_id: currentApp && `${currentApp.id}`,
     };

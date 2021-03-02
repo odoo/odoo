@@ -5,7 +5,7 @@
     <nav class="o_main_navbar" t-on-dropdown-item-selected="onNavBarDropdownItemSelection">
       <!-- Apps Menu -->
       <t t-call="wowl.NavBar.AppsMenu">
-        <t t-set="apps" t-value="menuRepo.getApps()" />
+        <t t-set="apps" t-value="menuService.getApps()" />
       </t>
 
       <!-- App Brand -->

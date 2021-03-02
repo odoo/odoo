@@ -5,7 +5,7 @@ import { makeFakeUserService, nextTick } from "../helpers/index";
 import { legacyExtraNextTick, makeTestEnv, mount } from "../helpers/utility";
 import { notificationService } from "../../src/notifications/notification_service";
 import { dialogService } from "../../src/services/dialog_service";
-import { menusService } from "../../src/services/menus";
+import { menuService } from "../../src/services/menu_service";
 import { actionService } from "../../src/actions/action_service";
 import { makeFakeRouterService, fakeTitleService, makeFakeDeviceService } from "../helpers/mocks";
 import { viewService } from "../../src/views/view_service";
@@ -162,7 +162,7 @@ export function getActionManagerTestConfig() {
     .add("user", makeFakeUserService())
     .add(notificationService.name, notificationService)
     .add(dialogService.name, dialogService)
-    .add("menus", menusService)
+    .add("menu", menuService)
     .add("action", actionService)
     .add("router", makeFakeRouterService())
     .add("view_manager", viewService)

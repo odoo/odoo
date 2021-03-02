@@ -1,20 +1,23 @@
 /** @odoo-module **/
-const { Component, tags } = owl;
 import { NavBar } from "../../src/webclient/navbar/navbar";
 import { click } from "../helpers/index";
 import { makeTestEnv, mount, nextTick } from "../helpers/utility";
 import { Registry } from "./../../src/core/registry";
 import { actionService } from "../../src/actions/action_service";
-import { menusService } from "./../../src/services/menus";
+import { menuService } from "./../../src/services/menu_service";
 import { notificationService } from "../../src/notifications/notification_service";
+
+const { Component, tags } = owl;
 const { xml } = tags;
+
 class MySystrayItem extends Component {}
 MySystrayItem.template = xml`<li class="my-item">my item</li>`;
 let baseConfig;
+
 QUnit.module("Navbar", {
   async beforeEach() {
     const serviceRegistry = new Registry();
-    serviceRegistry.add("menus", menusService);
+    serviceRegistry.add("menu", menuService);
     serviceRegistry.add(actionService.name, actionService);
     serviceRegistry.add(notificationService.name, notificationService);
     const menus = {
@@ -146,7 +149,7 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
   baseConfig.serverData.menus = newMenus;
   const env = await makeTestEnv(baseConfig);
   // Set menu and mount
-  env.services.menus.setCurrentMenu(1);
+  env.services.menu.setCurrentMenu(1);
   const navbar = await mount(MyNavbar, { env });
   assert.containsN(
     navbar.el,
