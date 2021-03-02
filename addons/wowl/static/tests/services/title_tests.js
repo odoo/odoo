@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { Registry } from "../../src/core/registry";
-import { titleService } from "../../src/services/title";
+import { titleService } from "../../src/services/title_service";
 import { makeTestEnv } from "../helpers/index";
 // -----------------------------------------------------------------------------
 // Tests

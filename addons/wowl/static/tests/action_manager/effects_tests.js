@@ -7,8 +7,8 @@ import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 import { Registry } from "../../src/core/registry";
 import { NotificationContainer } from "../../src/notifications/notification_container";
-import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
 import { EffectsContainer } from "../../src/effects/effect_service";
+
 let testConfig;
 // legacy stuff
 let testUtils;

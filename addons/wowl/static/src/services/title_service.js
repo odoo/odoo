@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { serviceRegistry } from "./service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 export const titleService = {
   name: "title",
@@ -24,6 +24,9 @@ export const titleService = {
     }
 
     return {
+      /**
+       * @returns {string}
+       */
       get current() {
         return document.title;
       },

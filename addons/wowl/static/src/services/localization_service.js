@@ -3,7 +3,7 @@
 import * as dates from "../utils/dates";
 import * as numbers from "../utils/numbers";
 import { escapeRegExp, sprintf } from "../utils/strings";
-import { serviceRegistry } from "./service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 const translatedTerms = {};
 

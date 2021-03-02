@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { click, legacyExtraNextTick } from "../helpers/utility";
-import { notificationService } from "../../src/notifications/notification_service";
 import { makeFakeRouterService } from "../helpers/mocks";
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";

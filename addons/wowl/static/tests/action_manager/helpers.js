@@ -9,7 +9,7 @@ import { menuService } from "../../src/services/menu_service";
 import { actionService } from "../../src/actions/action_service";
 import { makeFakeRouterService, fakeTitleService, makeFakeDeviceService } from "../helpers/mocks";
 import { viewService } from "../../src/views/view_service";
-import { modelService } from "../../src/services/model";
+import { modelService } from "../../src/services/model_service";
 import { makeRAMLocalStorage } from "../../src/env";
 import { makeLegacyActionManagerService, mapLegacyEnvToWowlEnv } from "../../src/legacy/utils";
 import { getLegacy } from "wowl.test_legacy";

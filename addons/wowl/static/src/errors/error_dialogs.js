@@ -3,7 +3,7 @@
 import { Dialog } from "../components/dialog/dialog";
 import { useService } from "../core/hooks";
 import { capitalize } from "../utils/strings";
-import { _lt } from "../services/localization";
+import { _lt } from "../services/localization_service";
 
 const { Component, hooks } = owl;
 const { useState } = hooks;

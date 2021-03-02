@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { useService } from "../core/hooks";
-import { serviceRegistry } from "../services/service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 import { mainComponentRegistry } from "../webclient/main_component_registry";
 import { RainbowMan } from "./rainbow_man";
 

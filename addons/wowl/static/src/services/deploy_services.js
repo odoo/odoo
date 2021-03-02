@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { serviceRegistry } from "./service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 export async function deployServices(env) {
   const toDeploy = new Set();

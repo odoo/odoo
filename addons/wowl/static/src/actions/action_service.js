@@ -5,7 +5,7 @@ import { makeContext } from "../core/context";
 import { ActionDialog } from "./action_dialog";
 import { KeepLast } from "../utils/concurrency";
 import { sprintf } from "../utils/strings";
-import { serviceRegistry } from "../services/service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 const { Component, hooks, tags } = owl;
 

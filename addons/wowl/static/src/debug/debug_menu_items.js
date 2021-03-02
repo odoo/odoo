@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { routeToUrl } from "../services/router";
+import { routeToUrl } from "../services/router_service";
 
 // Backend Debug Manager Items
 export function runJSTestsItem(env) {

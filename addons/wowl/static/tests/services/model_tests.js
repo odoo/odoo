@@ -2,7 +2,7 @@
 const { Component, tags } = owl;
 import { Registry } from "../../src/core/registry";
 import { useService } from "../../src/core/hooks";
-import { modelService } from "../../src/services/model";
+import { modelService } from "../../src/services/model_service";
 import { getFixture, makeFakeUserService, makeTestEnv, mount } from "../helpers/index";
 const { xml } = tags;
 let serviceRegistry;

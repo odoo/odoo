@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import OdooError from "../errors/odoo_error";
-import { serviceRegistry } from "./service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 const { Component } = owl;
 

@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { currencyService } from "../../src/services/currency";
+import { currencyService } from "../../src/services/currency_service";
 import { makeTestEnv } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
 let env;

@@ -5,7 +5,7 @@ import { notificationService } from "../../src/notifications/notification_servic
 import { RPCErrorDialog } from "../../src/errors/error_dialogs";
 import { dialogService } from "../../src/services/dialog_service";
 import { makeFakeRPCService, makeFakeNotificationService } from "../helpers/mocks";
-import { ConnectionLostError, RPCError } from "../../src/services/rpc";
+import { ConnectionLostError, RPCError } from "../../src/services/rpc_service";
 import { nextTick } from "../helpers/utility";
 import { makeTestEnv } from "../helpers/index";
 

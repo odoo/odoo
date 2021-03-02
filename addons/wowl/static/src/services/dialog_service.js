@@ -2,7 +2,7 @@
 
 import { useService } from "../core/hooks";
 import { mainComponentRegistry } from "../webclient/main_component_registry";
-import { serviceRegistry } from "./service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 const { Component, core, tags, useState } = owl;
 const { EventBus } = core;

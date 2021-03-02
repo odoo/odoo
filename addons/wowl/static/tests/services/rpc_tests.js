@@ -3,7 +3,7 @@ const { Component, tags } = owl;
 import { useService } from "../../src/core/hooks";
 import { Registry } from "../../src/core/registry";
 import { notificationService } from "../../src/notifications/notification_service";
-import { rpcService } from "../../src/services/rpc";
+import { rpcService } from "../../src/services/rpc_service";
 import {
   getFixture,
   makeDeferred,

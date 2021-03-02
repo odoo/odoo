@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { serviceRegistry } from "./service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 function computeAllowedCompanyIds(env) {
   const { cookie, router } = env.services;

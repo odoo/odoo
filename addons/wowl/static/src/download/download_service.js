@@ -4,7 +4,7 @@ import { NetworkErrorDialog, ServerErrorDialog } from "../errors/error_dialogs";
 import OdooError from "../errors/odoo_error";
 import parse from "./content_disposition";
 import { download } from "./download";
-import { serviceRegistry } from "../services/service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 export const downloadService = {
   name: "download",

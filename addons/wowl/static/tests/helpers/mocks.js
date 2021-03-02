@@ -1,8 +1,8 @@
 /** @odoo-module **/
 import { effectService } from "../../src/effects/effect_service";
-import { makePushState, routeToUrl } from "../../src/services/router";
-import { SIZES } from "../../src/services/device";
-import { makeLocalization } from "../../src/services/localization";
+import { makePushState, routeToUrl } from "../../src/services/router_service";
+import { SIZES } from "../../src/services/device_service";
+import { makeLocalization } from "../../src/services/localization_service";
 // // -----------------------------------------------------------------------------
 // // Mock Services
 // // -----------------------------------------------------------------------------

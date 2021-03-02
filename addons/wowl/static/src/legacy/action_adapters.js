@@ -4,7 +4,7 @@ import { useService } from "../core/hooks";
 import { ViewNotFoundError } from "../actions/action_service";
 import { useDebugManager } from "../debug/debug_manager";
 import { Dialog } from "../components/dialog/dialog";
-import { objectToQuery } from "../services/router";
+import { objectToQuery } from "../services/router_service";
 import { ComponentAdapter } from "web.OwlCompatibility";
 import { mapDoActionOptionAPI } from "./utils";
 import { setupDebugAction, setupDebugViewForm, setupDebugView } from "./debug_manager";

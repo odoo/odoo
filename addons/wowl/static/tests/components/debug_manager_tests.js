@@ -3,7 +3,7 @@ import { ActionDialog } from "../../src/actions/action_dialog";
 import { Registry } from "../../src/core/registry";
 import { DebugManager } from "../../src/debug/debug_manager";
 import { debugService } from "../../src/debug/debug_service";
-import { modelService } from "../../src/services/model";
+import { modelService } from "../../src/services/model_service";
 import { useDebugManager } from "../../src/debug/debug_manager";
 import { click, getFixture, makeTestEnv, mount } from "../helpers/index";
 

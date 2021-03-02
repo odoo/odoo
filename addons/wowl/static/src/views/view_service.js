@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { serviceRegistry } from "../services/service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 export const viewService = {
   name: "view",

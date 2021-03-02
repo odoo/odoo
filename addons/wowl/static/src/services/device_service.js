@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { debounce } from "../utils/misc";
-import { serviceRegistry } from "./service_registry";
+import { serviceRegistry } from "../webclient/service_registry";
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 

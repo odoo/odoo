@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { parseHash, parseSearchQuery, redirect, routeToUrl } from "../../src/services/router";
+import { parseHash, parseSearchQuery, redirect, routeToUrl } from "../../src/services/router_service";
 import { makeTestEnv, nextTick } from "../helpers/index";
 QUnit.module("Router");
 QUnit.test("can parse an empty hash", (assert) => {

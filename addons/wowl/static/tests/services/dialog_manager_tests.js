@@ -134,7 +134,6 @@ QUnit.test("dialog component crashes", async (assert) => {
     assert.step('error');
   };
 
-  debugger;
   env.services[dialogService.name].open(FailingDialog);
   await nextTick();
   assert.verifySteps(['error']);
