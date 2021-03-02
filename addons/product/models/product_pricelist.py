@@ -597,6 +597,10 @@ class PricelistItem(models.Model):
             if self.price_surcharge:
                 price_surcharge = convert_to_price_uom(self.price_surcharge)
                 price += price_surcharge
+                # avoid unexpected negative price due to negative surcharge. For example, to create an x.99 price,
+                # we may configure the pricelist with 1 as price_round and -0.01 as price_surcharge,
+                # when applying this to a free product (zero price), it will be resulting -0.01 which is unexpected
+                price = max(price, 0.0)
 
             if self.price_min_margin:
                 price_min_margin = convert_to_price_uom(self.price_min_margin)
