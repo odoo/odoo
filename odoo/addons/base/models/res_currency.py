@@ -5,7 +5,6 @@ import logging
 import math
 import re
 import time
-import traceback
 
 from odoo import api, fields, models, tools, _
 
@@ -171,11 +170,12 @@ class Currency(models.Model):
         self.ensure_one()
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
-    @api.model
+    @tools.ormcache('from_currency', 'to_currency', 'company', 'date')
     def _get_conversion_rate(self, from_currency, to_currency, company, date):
+        if not from_currency or not to_currency or from_currency == to_currency:
+            return 1
         currency_rates = (from_currency + to_currency)._get_rates(company, date)
-        res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
-        return res
+        return currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
 
     def _convert(self, from_amount, to_currency, company, date, round=True):
         """Returns the converted amount of ``from_amount``` from the currency
@@ -192,10 +192,7 @@ class Currency(models.Model):
         assert company, "convert amount from unknown company"
         assert date, "convert amount from unknown date"
         # apply conversion rate
-        if self == to_currency:
-            to_amount = from_amount
-        else:
-            to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
+        to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
@@ -247,6 +244,15 @@ class CurrencyRate(models.Model):
         ('unique_name_per_day', 'unique (name,currency_id,company_id)', 'Only one currency rate per day allowed!'),
         ('currency_rate_check', 'CHECK (rate>0)', 'The currency rate must be strictly positive.'),
     ]
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.env['res.currency']._get_conversion_rate.clear_cache(self)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self.env['res.currency']._get_conversion_rate.clear_cache(self)
+        return super().write(vals)
 
     def _get_latest_rate(self):
         return self.search([

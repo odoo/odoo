@@ -266,6 +266,7 @@ class account_journal(models.Model):
             query = '''
                 SELECT
                     (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
+                    amount_residual_signed AS amount_total_company,
                     currency_id AS currency,
                     move_type,
                     invoice_date,
@@ -279,10 +280,9 @@ class account_journal(models.Model):
             '''
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
-            curr_cache = {}
-            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency, curr_cache=curr_cache)
-            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency, curr_cache=curr_cache)
-            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency, curr_cache=curr_cache)
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency)
             read = self.env['account.move'].read_group([('journal_id', '=', self.id), ('to_check', '=', True)], ['amount_total'], 'journal_id', lazy=False)
             if read:
                 number_to_check = read[0]['__count']
@@ -327,6 +327,7 @@ class account_journal(models.Model):
         return ('''
             SELECT
                 (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_residual AS amount_total,
+                amount_residual_signed AS amount_total_company,
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
@@ -347,6 +348,7 @@ class account_journal(models.Model):
         return ('''
             SELECT
                 (CASE WHEN move.move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * move.amount_total AS amount_total,
+                amount_residual_signed AS amount_total_company,
                 move.currency_id AS currency,
                 move.move_type,
                 move.invoice_date,
@@ -358,33 +360,27 @@ class account_journal(models.Model):
             AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
         ''', {'journal_id': self.id})
 
-    def _count_results_and_sum_amounts(self, results_dict, target_currency, curr_cache=None):
+    def _count_results_and_sum_amounts(self, results_dict, target_currency):
         """ Loops on a query result to count the total number of invoices and sum
         their amount_total field (expressed in the given target currency).
         amount_total must be signed !
         """
-        rslt_count = 0
-        rslt_sum = 0.0
-        # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
-        # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
-        # calls of the method.
-        curr_cache = {} if curr_cache is None else curr_cache
+        total_amount = 0
         for result in results_dict:
-            cur = self.env['res.currency'].browse(result.get('currency'))
+            document_currency = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
-            rslt_count += 1
-            date = result.get('invoice_date') or fields.Date.context_today(self)
-
-            amount = result.get('amount_total', 0) or 0
-            if cur != target_currency:
-                key = (cur, target_currency, company, date)
-                # Using setdefault will call _get_conversion_rate, so we explicitly check the
-                # existence of the key in the cache instead.
-                if key not in curr_cache:
-                    curr_cache[key] = self.env['res.currency']._get_conversion_rate(*key)
-                amount *= curr_cache[key]
-            rslt_sum += target_currency.round(amount)
-        return (rslt_count, rslt_sum)
+            if target_currency == document_currency:
+                total_amount += result.get('amount_total') or 0
+            elif target_currency == company.currency_id:
+                total_amount += result.get('amount_total_company') or 0
+            else:
+                total_amount += document_currency._convert(
+                    from_amount=result.get('amount_total') or 0,
+                    to_currency=target_currency,
+                    company=company,
+                    date=result.get('invoice_date') or fields.Date.context_today(self),
+                )
+        return (len(results_dict), total_amount)
 
     def action_create_new(self):
         ctx = self._context.copy()
