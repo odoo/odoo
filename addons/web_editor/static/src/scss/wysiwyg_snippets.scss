@@ -1427,6 +1427,21 @@ body.editor_enable.editor_has_snippets {
         @extend %we-generic-button;
     }
     .o_colorpicker_sections {
+        .o_colorpicker_widget {
+            .o_hex_div, .o_rgba_div  {
+                &:focus-within {
+                    border-color: $o-we-sidebar-content-field-input-border-color;
+                }
+            }
+            .o_color_picker_inputs {
+                input {
+                    border: none;
+                    &:focus {
+                        outline: none;
+                    }
+                }
+            }
+        }   
 
         .o_we_color_btn, .o_we_color_combination_btn {
             float: left;
