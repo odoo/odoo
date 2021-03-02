@@ -252,7 +252,8 @@ class AccountPayment(models.Model):
             invoice_payment_reconcile = invoice.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.line_ids)
 
         if self.currency_id != self.journal_id.company_id.currency_id:
-            amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount_currency')))
+            amount_paid = abs(sum(invoice_payment_reconcile.mapped('debit_amount_currency'))) + \
+                          abs(sum(invoice_payment_reconcile.mapped('credit_amount_currency')))
         else:
             amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount')))
 
