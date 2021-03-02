@@ -1,8 +1,9 @@
 /** @odoo-module **/
+
 import * as utils from "../../src/utils/arrays";
 import { makeFakeRPCService, makeMockFetch } from "./mocks";
 import { Registry } from "../../src/core/registry";
-import { evaluateExpr } from "../../src/py/index";
+import { evaluateExpr } from "../../src/py_js/index";
 import { combineDomains, Domain } from "../../src/core/domain";
 // -----------------------------------------------------------------------------
 // Utils

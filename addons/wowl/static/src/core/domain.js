@@ -1,9 +1,9 @@
 /** @odoo-module **/
-import { evaluate, formatAST, parseExpr } from "../py/index";
-import { toPyValue } from "../py/utils";
+import { evaluate, formatAST, parseExpr } from "../py_js/index";
+import { toPyValue } from "../py_js/utils";
 
 /**
- * @typedef {import("../py/parser").AST} AST
+ * @typedef {import("../py_js/parser").AST} AST
  * @typedef {[string, string, any]} Condition
  * @typedef {("&" | "|" | "!" | Condition)[]} DomainListRepr
  * @typedef {DomainListRepr | string | Domain} DomainRepr
