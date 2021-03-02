@@ -25,5 +25,8 @@
             </we-row>
         </div>
     </xpath>
+    <xpath expr="//*[@data-js='anchor']" position="attributes">
+        <attribute name="data-exclude" add=".o_wblog_post_content_field > :not(div, section)" separator=","/>
+    </xpath>
 </template>
 </odoo>
