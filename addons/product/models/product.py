@@ -497,13 +497,12 @@ class ProductProduct(models.Model):
                     temp = _name_get(mydict)
                     if temp not in result:
                         result.append(temp)
-            else:
-                mydict = {
-                          'id': product.id,
-                          'name': name,
-                          'default_code': product.default_code,
-                          }
-                result.append(_name_get(mydict))
+            mydict = {
+                      'id': product.id,
+                      'name': name,
+                      'default_code': product.default_code,
+                      }
+            result.append(_name_get(mydict))
         return result
 
     @api.model

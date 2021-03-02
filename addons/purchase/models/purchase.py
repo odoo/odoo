@@ -1071,6 +1071,13 @@ class PurchaseOrderLine(models.Model):
 
         self.price_unit = price_unit
 
+        if seller and seller.product_name:
+            name = seller.product_name
+            code = self._context.get('display_default_code', True) and seller.product_code or False
+            if code:
+                name = '[%s] %s' % (code, name)
+            self.name = name
+
     @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
         for line in self:
