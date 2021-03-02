@@ -1,13 +1,15 @@
 /** @odoo-module **/
-const { Component, hooks, tags } = owl;
 import { ActionDialog } from "../../src/actions/action_dialog";
 import { Registry } from "../../src/core/registry";
-import { DebugManager } from "../../src/debug_manager/debug_manager";
-import { debugManagerService } from "../../src/debug_manager/debug_manager_service";
+import { DebugManager } from "../../src/debug/debug_manager";
+import { debugManagerService } from "../../src/debug/debug_manager_service";
 import { modelService } from "../../src/services/model";
-import { useDebugManager } from "../../src/debug_manager/debug_manager";
+import { useDebugManager } from "../../src/debug/debug_manager";
 import { click, getFixture, makeTestEnv, mount } from "../helpers/index";
+
+const { Component, hooks, tags } = owl;
 const { useSubEnv } = hooks;
+
 let target;
 let testConfig;
 QUnit.module("DebugManager", (hooks) => {

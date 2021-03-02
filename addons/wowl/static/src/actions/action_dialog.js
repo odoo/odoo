@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { Dialog } from "../components/dialog/dialog";
-import { DebugManager } from "../debug_manager/debug_manager";
+import { DebugManager } from "../debug/debug_manager";
 
 const { hooks } = owl;
 

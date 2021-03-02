@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { editModelDebug } from "../debug_manager/debug_manager_service";
+import { editModelDebug } from "../debug/debug_manager_service";
 import { Dialog } from "../components/dialog/dialog";
 import { json_node_to_xml } from "../utils/misc";
 import { formatMany2one } from "../utils/fields";
