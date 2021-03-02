@@ -1,22 +1,36 @@
 /** @odoo-module **/
+import { useService } from "../core/hooks";
 import { serviceRegistry } from "../services/service_registry";
+import { mainComponentRegistry } from "../webclient/main_component_registry";
 import { RainbowMan } from "./rainbow_man";
 
 const { Component, core, tags } = owl;
 const { EventBus } = core;
 
-class EffectsManager extends Component {
-  constructor() {
-    super(...arguments);
+export class EffectsContainer extends Component {
+  setup() {
     this.rainbowProps = {};
+    const { bus } = useService("effect");
+    bus.on("UPDATE", this, effect => {
+      this.rainbowProps = effect;
+      this.render();
+    });
+
   }
-  closeRainbowMan() {}
+  closeRainbowMan() {
+    this.rainbowProps = {};
+    this.render();
+  }
 }
-EffectsManager.template = tags.xml`
+
+mainComponentRegistry.add("EffectsContainer", EffectsContainer);
+
+
+EffectsContainer.template = tags.xml`
     <div class="o_effects_manager">
       <RainbowMan t-if="rainbowProps.id" t-props="rainbowProps" t-key="rainbowProps.id" t-on-close-rainbowman="closeRainbowMan"/>
     </div>`;
-EffectsManager.components = { RainbowMan };
+EffectsContainer.components = { RainbowMan };
 
 export function convertRainBowMessage(message) {
   if (message instanceof jQuery) {
@@ -32,33 +46,18 @@ export const effectService = {
   name: "effect",
   dependencies: ["notification", "user"],
   deploy(env) {
+    const bus = new EventBus();
     if (!env.services.user.showEffect) {
       return {
         create: (message, options) => {
           env.services.notification.create(message, { sticky: false });
         },
+        bus
       };
     }
     let effectId = 0;
     let effect = {};
-    const bus = new EventBus();
-    class ReactiveEffectsManager extends EffectsManager {
-      constructor() {
-        super(...arguments);
-        bus.on("UPDATE", this, () => {
-          this.rainbowProps = effect;
-          this.render();
-        });
-      }
-      closeRainbowMan() {
-        close();
-      }
-    }
-    odoo.mainComponentRegistry.add("EffectsManager", ReactiveEffectsManager);
-    function close() {
-      effect = {};
-      bus.trigger("UPDATE");
-    }
+
     function create(message, options) {
       message = message || env._t("Well Done!");
       let type = "rainbow_man";
@@ -70,10 +69,10 @@ export const effectService = {
           id: ++effectId,
           message,
         });
-        bus.trigger("UPDATE");
+        bus.trigger("UPDATE", effect);
       }
     }
-    return { create };
+    return { create, bus };
   },
 };
 

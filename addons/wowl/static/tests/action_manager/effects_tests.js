@@ -7,6 +7,8 @@ import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 import { Registry } from "../../src/core/registry";
 import { NotificationContainer } from "../../src/notifications/notification_container";
+import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
+import { EffectsContainer } from "../../src/effects/effect_service";
 let testConfig;
 // legacy stuff
 let testUtils;
@@ -47,6 +49,9 @@ QUnit.module("ActionManager", (hooks) => {
   QUnit.test("rainbowman integrated to webClient", async function (assert) {
     assert.expect(10);
     testConfig.serviceRegistry.add("user", makeFakeUserService({ showEffect: true }), true);
+    const mainComponentRegistry = new Registry();
+    mainComponentRegistry.add("EffectsContainer", EffectsContainer);
+    testConfig.mainComponentRegistry = mainComponentRegistry;
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 1);
     assert.containsOnce(webClient.el, ".o_kanban_view");
@@ -91,6 +96,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient.el, ".o_notification");
     webClient.destroy();
   });
+
   QUnit.test("on close with effect from server", async function (assert) {
     assert.expect(1);
     testConfig.serviceRegistry.add("user", makeFakeUserService({ showEffect: true }), true);
@@ -105,12 +111,16 @@ QUnit.module("ActionManager", (hooks) => {
         });
       }
     };
+    const mainComponentRegistry = new Registry();
+    mainComponentRegistry.add("EffectsContainer", EffectsContainer);
+    testConfig.mainComponentRegistry = mainComponentRegistry;
     const webClient = await createWebClient({ testConfig, mockRPC });
     await doAction(webClient, 6);
     await click(webClient.el.querySelector('button[name="object"]'));
     assert.containsOnce(webClient, ".o_reward");
     webClient.destroy();
   });
+
   QUnit.test("on close with effect in xml", async function (assert) {
     assert.expect(2);
     testConfig.serverData.views["partner,false,form"] = `
@@ -128,6 +138,10 @@ QUnit.module("ActionManager", (hooks) => {
         return Promise.resolve(false);
       }
     };
+    const mainComponentRegistry = new Registry();
+    mainComponentRegistry.add("EffectsContainer", EffectsContainer);
+    testConfig.mainComponentRegistry = mainComponentRegistry;
+
     const webClient = await createWebClient({ testConfig, mockRPC });
     await doAction(webClient, 6);
     await click(webClient.el.querySelector('button[name="object"]'));
