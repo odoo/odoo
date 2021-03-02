@@ -27,14 +27,14 @@ class MailThread(models.AbstractModel):
                 self.env['mailing.trace'].set_replied(mail_message_ids=msg_references)
         return super(MailThread, self)._message_route_process(message, message_dict, routes)
 
-    def message_post_with_template(self, template_id, **kwargs):
+    def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
         no_massmail = self.with_context(
             default_mass_mailing_name=False,
             default_mass_mailing_id=False,
         )
-        return super(MailThread, no_massmail).message_post_with_template(template_id, **kwargs)
+        return super(MailThread, no_massmail).message_post_with_template(template_id, email_layout_xmlid, auto_commit, **kwargs)
 
     @api.model
     def _routing_handle_bounce(self, email_message, message_dict):
