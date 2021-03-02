@@ -6,4 +6,3 @@ from . import account
 from . import res_bank
 from . import res_config_settings
 from . import chart_template
-from . import account_move
