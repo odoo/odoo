@@ -8,12 +8,13 @@ import {
   SessionExpiredDialog,
   WarningDialog,
   ClientErrorDialog,
-} from "../../src/crash_manager/error_dialogs";
+} from "../../src/errors/error_dialogs";
 import { Registry } from "../../src/core/registry";
-import OdooError from "../../src/crash_manager/odoo_error";
+import OdooError from "../../src/errors/odoo_error";
 let target;
 let env;
 let parent;
+
 QUnit.module("Error dialogs", {
   async beforeEach() {
     target = getFixture();

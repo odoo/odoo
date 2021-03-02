@@ -1,6 +1,6 @@
 /** @odoo-module **/
-import { NetworkErrorDialog, ServerErrorDialog } from "../crash_manager/error_dialogs";
-import OdooError from "../crash_manager/odoo_error";
+import { NetworkErrorDialog, ServerErrorDialog } from "../errors/error_dialogs";
+import OdooError from "../errors/odoo_error";
 import parse from "../libs/content-disposition";
 import download from "../libs/download";
 import { serviceRegistry } from "./service_registry";

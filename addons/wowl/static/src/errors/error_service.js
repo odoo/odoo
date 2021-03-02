@@ -10,8 +10,8 @@ import {
 } from "./error_dialogs";
 import OdooError from "./odoo_error";
 
-export const crashManagerService = {
-  name: "crash_manager",
+export const errorService = {
+  name: "error",
   dependencies: ["dialog", "notification", "rpc"],
   deploy(env) {
     let connectionLostNotifId;
@@ -177,4 +177,4 @@ export const crashManagerService = {
   },
 };
 
-serviceRegistry.add("crash_manager", crashManagerService)
+serviceRegistry.add("error", errorService);

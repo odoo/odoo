@@ -1,14 +1,15 @@
 /** @odoo-module **/
-const { Component, tags } = owl;
 import { Registry } from "../../src/core/registry";
-import { crashManagerService } from "../../src/crash_manager/crash_manager_service";
+import { errorService } from "../../src/errors/error_service";
 import { notificationService } from "../../src/notifications/notification_service";
-import { RPCErrorDialog } from "../../src/crash_manager/error_dialogs";
+import { RPCErrorDialog } from "../../src/errors/error_dialogs";
 import { dialogService } from "../../src/services/dialog_service";
 import { makeFakeRPCService, makeFakeNotificationService } from "../helpers/mocks";
 import { ConnectionLostError, RPCError } from "../../src/services/rpc";
 import { nextTick } from "../helpers/utility";
 import { makeTestEnv } from "../helpers/index";
+
+const { Component, tags } = owl;
 
 function makeFakeDialogService(open) {
   return {
@@ -22,10 +23,10 @@ function makeFakeDialogService(open) {
 let serviceRegistry;
 let windowAddEventListener = window.addEventListener;
 
-QUnit.module("CrashManager", {
+QUnit.module("Error Service", {
   async beforeEach() {
     serviceRegistry = new Registry();
-    serviceRegistry.add(crashManagerService.name, crashManagerService);
+    serviceRegistry.add(errorService.name, errorService);
     serviceRegistry.add(dialogService.name, dialogService);
     serviceRegistry.add(notificationService.name, notificationService);
     serviceRegistry.add("rpc", makeFakeRPCService());

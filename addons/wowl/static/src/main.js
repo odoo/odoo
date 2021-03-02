@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { actionRegistry } from "./actions/action_registry";
-import { errorDialogRegistry } from "./crash_manager/error_dialog_registry";
+import { errorDialogRegistry } from "./errors/error_dialog_registry";
 import { debugManagerRegistry } from "./debug_manager/debug_manager_registry";
 import { makeEnv, makeRAMLocalStorage } from "./env";
 import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
