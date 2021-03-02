@@ -255,6 +255,12 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
         })
 
+        self.assertFalse(timesheet1.so_line, "The timesheet should be not linked to the project of the map entry since no SOL in the linked task.")
+
+        task.write({
+            'sale_line_id': self.project_employee_rate_user.sale_line_id.id
+        })
+
         self.assertEqual(self.project_employee_rate_manager.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the Employee manager in the map")
         self.assertEqual(self.project_employee_rate_manager.project_id, timesheet1.project_id, "The timesheet should be linked to the project of the map entry")
 
