@@ -97,21 +97,19 @@ class ColoredPerfFilter(PerfFilter):
             colorize_time(remaining_time, "%.3f", 1, 5)
             )
 
-class DBFormatter(logging.Formatter):
-    def format(self, record):
+class DBFormatter(logging.Filter):
+    def filter(self, record):
         record.pid = os.getpid()
         record.dbname = getattr(threading.current_thread(), 'dbname', '?')
-        self.color(record)
-        return logging.Formatter.format(self, record)
-
-    def color(self, record):
-        pass
+        return True
 
 class ColoredFormatter(DBFormatter):
-    def color(self, record):
+    def filter(self, record):
+        super().filter(record)
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         record.pid = COLOR_PATTERN % (30 + DEFAULT, 40 + record.pid % 7, record.pid)
+        return True
 
 _logger_init = False
 def init_logger():
@@ -185,12 +183,13 @@ def init_logger():
         return hasattr(stream, 'fileno') and os.isatty(stream.fileno())
 
     if os.name == 'posix' and isinstance(handler, logging.StreamHandler) and is_a_tty(handler.stream):
-        formatter = ColoredFormatter(format)
+        formatter = ColoredFormatter()
         perf_filter = ColoredPerfFilter()
     else:
-        formatter = DBFormatter(format)
+        formatter = DBFormatter()
         perf_filter = PerfFilter()
-    handler.setFormatter(formatter)
+    handler.setFormatter(logging.Formatter(format))
+    logging.getLogger().addFilter(formatter)
     logging.getLogger().addHandler(handler)
     logging.getLogger('werkzeug').addFilter(perf_filter)
 
