@@ -1,6 +1,7 @@
 /** @odoo-module **/
-import { formatAST, evaluateExpr, parseExpr, tokenize } from "../../src/py/index";
-import { toPyDict } from "../../src/py/utils";
+import { formatAST, evaluateExpr, parseExpr, tokenize } from "../../src/py_js/index";
+import { toPyDict } from "../../src/py_js/utils";
+
 QUnit.module("py", {}, () => {
   QUnit.module("tokenizer");
   QUnit.test("can tokenize simple expressions with spaces", (assert) => {
