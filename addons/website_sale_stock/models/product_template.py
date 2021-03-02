@@ -8,13 +8,17 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     inventory_availability = fields.Selection([
-        ('never', 'Sell regardless of inventory'),
-        ('always', 'Show inventory on website and prevent sales if not enough stock'),
-        ('threshold', 'Show inventory below a threshold and prevent sales if not enough stock'),
-        ('custom', 'Show product-specific notifications'),
+        ('never', 'Never'),
+        ('always', 'Always'),
+        ('threshold', 'Only below a threshold'),
+        ('custom', 'Custom Inventory Notification'),
     ], string='Inventory Availability', help='Adds an inventory availability status on the web product page.', default='never')
     available_threshold = fields.Float(string='Availability Threshold', default=5.0)
     custom_message = fields.Text(string='Custom Message', default='', translate=True)
+    allow_order = fields.Selection(selection=[
+        ('always', 'Always'),
+        ('enough', 'Only if enough inventory'),
+    ], string='Allow to Order', default='enough')
 
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         combination_info = super(ProductTemplate, self)._get_combination_info(
@@ -27,13 +31,17 @@ class ProductTemplate(models.Model):
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
-            virtual_available = product.with_context(warehouse=website.warehouse_id.id).virtual_available
+            product_with_context = product.with_context(warehouse=website.warehouse_id.id)
+            qty_available = product_with_context.qty_available
+            qty_forecasted = product_with_context.incoming_qty
             combination_info.update({
-                'virtual_available': virtual_available,
-                'virtual_available_formatted': self.env['ir.qweb.field.float'].value_to_html(virtual_available, {'precision': 0}),
+                'qty_available': qty_available,
+                'qty_available_formatted': self.env['ir.qweb.field.float'].value_to_html(qty_available, {'decimal_precision': 'Product Unit of Measure'}),
+                'qty_forecasted': qty_forecasted,
                 'product_type': product.type,
                 'inventory_availability': product.inventory_availability,
                 'available_threshold': product.available_threshold,
+                'allow_order': product.allow_order,
                 'custom_message': product.custom_message,
                 'product_template': product.product_tmpl_id.id,
                 'cart_qty': product.cart_qty,
@@ -50,5 +58,5 @@ class ProductTemplate(models.Model):
                 'product_template': product_template.id,
                 'cart_qty': 0
             })
-
+        print(combination_info)
         return combination_info

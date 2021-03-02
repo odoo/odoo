@@ -8,13 +8,18 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     inventory_availability = fields.Selection([
-        ('never', 'Sell regardless of inventory'),
-        ('always', 'Show inventory on website and prevent sales if not enough stock'),
-        ('threshold', 'Show inventory when below the threshold and prevent sales if not enough stock'),
-        ('custom', 'Show product-specific notifications'),
+        ('never', 'Never'),
+        ('always', 'Always'),
+        ('threshold', 'Only below a threshold'),
+        ('custom', 'Custom Inventory Notification'),
     ], string='Inventory Availability', default='never')
     available_threshold = fields.Float(string='Availability Threshold')
     website_warehouse_id = fields.Many2one('stock.warehouse', related='website_id.warehouse_id', domain="[('company_id', '=', website_company_id)]", readonly=False)
+    allow_order = fields.Selection([
+        ('always', 'Always'),
+        ('enough', 'Only if enough inventory'),
+    ], string='Allow to Order', default='enough')
+    custom_message = fields.Char(string='Custom Message', default='Default Custom Message')
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()

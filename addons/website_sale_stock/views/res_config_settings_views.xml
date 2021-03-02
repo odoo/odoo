@@ -21,12 +21,17 @@
                     <div class="row mt16"
                         id="inventory_availability_setting"
                         title="Default availability mode set on newly created storable products. This can be changed at the product level.">
-                        <label for="inventory_availability" string="Mode" class="col-lg-3 o_light_label" />
+                        <label for="inventory_availability" string="Show Availability" class="col-lg-4 o_light_label" />
                         <field name="inventory_availability" string="Inventory"/>
-                    </div><br/>
+                    </div>
                     <div class="row" id="available_treshold_setting" attrs="{'invisible': [('inventory_availability', '!=', 'threshold')]}">
-                        <label for="available_threshold" string="Threshold" class="col-lg-3 o_light_label" />
+                        <label for="available_threshold" string="Threshold" class="col-lg-4 o_light_label" />
                         <field name="available_threshold" class="oe_inline" attrs="{'required': [('inventory_availability', '=', 'threshold')]}"/>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <label for="allow_order" string="Allow to Order" class="col-lg-4 o_light_label"/>
+                        <field name="allow_order" string="Allow Order"/>
                     </div>
                 </div>
             </xpath>
