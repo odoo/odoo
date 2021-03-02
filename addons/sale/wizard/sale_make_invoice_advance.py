@@ -106,7 +106,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _get_advance_details(self, order):
         context = {'lang': order.partner_id.lang}
         if self.advance_payment_method == 'percentage':
-            if self.product_id.taxes_id.price_include:
+            if all(self.product_id.taxes_id.mapped('price_include')):
                 amount = order.amount_total * self.amount / 100
             else:
                 amount = order.amount_untaxed * self.amount / 100
