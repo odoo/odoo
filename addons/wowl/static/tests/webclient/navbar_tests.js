@@ -72,7 +72,7 @@ QUnit.test("navbar can display current active app", async (assert) => {
   );
 
   // Activate an app
-  env.services.menus.setCurrentMenu(1);
+  env.services.menu.setCurrentMenu(1);
   await nextTick();
   assert.containsOnce(
     dropdown,
@@ -231,7 +231,7 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
   const env = await makeTestEnv(baseConfig);
 
   // Set App1 menu and mount
-  env.services.menus.setCurrentMenu(1);
+  env.services.menu.setCurrentMenu(1);
   const navbar = await mount(NavBar, { env });
 
   // Force minimal width and dispatch window resize event
@@ -260,7 +260,7 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
   await click(navbar.el, ".o_menu_sections_more .o_dropdown_toggler");
 
   // Set App2 menu
-  env.services.menus.setCurrentMenu(2);
+  env.services.menu.setCurrentMenu(2);
   await nextTick();
 
   // Open the more menu
