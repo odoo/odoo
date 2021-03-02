@@ -149,12 +149,12 @@ class SaleOrder(models.Model):
 
         try:
             if add_qty:
-                add_qty = float(add_qty)
+                add_qty = int(add_qty)
         except ValueError:
             add_qty = 1
         try:
             if set_qty:
-                set_qty = float(set_qty)
+                set_qty = int(set_qty)
         except ValueError:
             set_qty = 0
         quantity = 0
