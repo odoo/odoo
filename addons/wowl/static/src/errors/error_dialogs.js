@@ -36,7 +36,6 @@ export class ErrorDialog extends Component {
 ErrorDialog.template = "wowl.ErrorDialog";
 ErrorDialog.components = { Dialog };
 
-
 // -----------------------------------------------------------------------------
 // Client Error Dialog
 // -----------------------------------------------------------------------------
@@ -46,7 +45,6 @@ export class ClientErrorDialog extends ErrorDialog {
     this.title = this.env._t("Odoo Client Error");
   }
 }
-
 
 // -----------------------------------------------------------------------------
 // Server Error Dialog

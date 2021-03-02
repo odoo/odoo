@@ -48,4 +48,4 @@ export const viewService = {
   },
 };
 
-serviceRegistry.add("view", viewService)
+serviceRegistry.add("view", viewService);

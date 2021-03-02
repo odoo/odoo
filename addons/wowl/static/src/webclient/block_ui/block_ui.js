@@ -5,7 +5,6 @@ import { mainComponentRegistry } from "../main_component_registry";
 
 const { Component, tags, useState } = owl;
 
-
 export class BlockUI extends Component {
   setup() {
     this.messagesByDuration = [
@@ -35,7 +34,7 @@ export class BlockUI extends Component {
       count: 0,
     });
 
-    const { bus } = useService("ui"); 
+    const { bus } = useService("ui");
     bus.on("BLOCK", this, this.block);
     bus.on("UNBLOCK", this, this.unblock);
   }

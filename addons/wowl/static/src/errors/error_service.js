@@ -142,7 +142,7 @@ export const errorService = {
       }
       handleError(err, env);
     });
-    
+
     window.addEventListener("unhandledrejection", (ev) => {
       let unhandledError = ev.reason;
       if (!unhandledError) {

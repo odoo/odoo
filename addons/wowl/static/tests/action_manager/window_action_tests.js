@@ -691,61 +691,60 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
-  QUnit.test(
-    "requests for execute_action of type object: disable buttons (2)",
-    async function (assert) {
-      assert.expect(6);
-      testConfig.serverData.views["pony,44,form"] = `
+  QUnit.test("requests for execute_action of type object: disable buttons (2)", async function (
+    assert
+  ) {
+    assert.expect(6);
+    testConfig.serverData.views["pony,44,form"] = `
     <form>
     <field name="name"/>
     <button string="Cancel" class="cancel-btn" special="cancel"/>
     </form>`;
-      testConfig.serverData.actions[4] = {
-        id: 4,
-        name: "Create a Partner",
-        res_model: "pony",
-        target: "new",
-        type: "ir.actions.act_window",
-        views: [[44, "form"]],
-      };
-      const def = testUtils.makeTestPromise();
-      const mockRPC = async (route, args) => {
-        if (args.method === "onchange") {
-          // delay the opening of the dialog
-          await def;
-        }
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      await doAction(webClient, 3);
-      assert.containsOnce(webClient.el, ".o_list_view");
-      // open first record in form view
-      await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_form_view");
-      // click on 'Execute action', to execute action 4 in a dialog
-      await testUtils.dom.click(webClient.el.querySelector('.o_form_view button[name="4"]'));
-      await legacyExtraNextTick();
-      assert.ok(
-        webClient.el.querySelector(".o_cp_buttons .o_form_button_edit").disabled,
-        "control panel buttons should be disabled"
-      );
-      def.resolve();
-      await nextTick();
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".modal .o_form_view");
-      assert.notOk(
-        webClient.el.querySelector(".o_cp_buttons .o_form_button_edit").disabled,
-        "control panel buttons should have been re-enabled"
-      );
-      await testUtils.dom.click(webClient.el.querySelector(".modal .cancel-btn"));
-      await legacyExtraNextTick();
-      assert.notOk(
-        webClient.el.querySelector(".o_cp_buttons .o_form_button_edit").disabled,
-        "control panel buttons should still be enabled"
-      );
-      webClient.destroy();
-    }
-  );
+    testConfig.serverData.actions[4] = {
+      id: 4,
+      name: "Create a Partner",
+      res_model: "pony",
+      target: "new",
+      type: "ir.actions.act_window",
+      views: [[44, "form"]],
+    };
+    const def = testUtils.makeTestPromise();
+    const mockRPC = async (route, args) => {
+      if (args.method === "onchange") {
+        // delay the opening of the dialog
+        await def;
+      }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    await doAction(webClient, 3);
+    assert.containsOnce(webClient.el, ".o_list_view");
+    // open first record in form view
+    await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_form_view");
+    // click on 'Execute action', to execute action 4 in a dialog
+    await testUtils.dom.click(webClient.el.querySelector('.o_form_view button[name="4"]'));
+    await legacyExtraNextTick();
+    assert.ok(
+      webClient.el.querySelector(".o_cp_buttons .o_form_button_edit").disabled,
+      "control panel buttons should be disabled"
+    );
+    def.resolve();
+    await nextTick();
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".modal .o_form_view");
+    assert.notOk(
+      webClient.el.querySelector(".o_cp_buttons .o_form_button_edit").disabled,
+      "control panel buttons should have been re-enabled"
+    );
+    await testUtils.dom.click(webClient.el.querySelector(".modal .cancel-btn"));
+    await legacyExtraNextTick();
+    assert.notOk(
+      webClient.el.querySelector(".o_cp_buttons .o_form_button_edit").disabled,
+      "control panel buttons should still be enabled"
+    );
+    webClient.destroy();
+  });
   QUnit.test(
     "requests for execute_action of type object raises error: re-enables buttons",
     async function (assert) {
@@ -889,46 +888,45 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
-  QUnit.test(
-    "requests for execute_action of type object: disable buttons",
-    async function (assert) {
-      assert.expect(2);
-      let def;
-      const mockRPC = async (route, args) => {
-        if (route === "/web/dataset/call_button") {
-          return Promise.resolve(false);
-        } else if (args && args.method === "read") {
-          await def; // block the 'read' call
-        }
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      await doAction(webClient, 3);
-      // open a record in form view
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      // click on 'Call method' button (should call an Object method)
-      def = testUtils.makeTestPromise();
-      await testUtils.dom.click($(webClient.el).find(".o_form_view button:contains(Call method)"));
-      await legacyExtraNextTick();
-      // Buttons should be disabled
-      assert.strictEqual(
-        $(webClient.el).find(".o_form_view button:contains(Call method)").attr("disabled"),
-        "disabled",
-        "buttons should be disabled"
-      );
-      // Release the 'read' call
-      def.resolve();
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      // Buttons should be enabled after the reload
-      assert.strictEqual(
-        $(webClient.el).find(".o_form_view button:contains(Call method)").attr("disabled"),
-        undefined,
-        "buttons should not be disabled anymore"
-      );
-      webClient.destroy();
-    }
-  );
+  QUnit.test("requests for execute_action of type object: disable buttons", async function (
+    assert
+  ) {
+    assert.expect(2);
+    let def;
+    const mockRPC = async (route, args) => {
+      if (route === "/web/dataset/call_button") {
+        return Promise.resolve(false);
+      } else if (args && args.method === "read") {
+        await def; // block the 'read' call
+      }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    await doAction(webClient, 3);
+    // open a record in form view
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    // click on 'Call method' button (should call an Object method)
+    def = testUtils.makeTestPromise();
+    await testUtils.dom.click($(webClient.el).find(".o_form_view button:contains(Call method)"));
+    await legacyExtraNextTick();
+    // Buttons should be disabled
+    assert.strictEqual(
+      $(webClient.el).find(".o_form_view button:contains(Call method)").attr("disabled"),
+      "disabled",
+      "buttons should be disabled"
+    );
+    // Release the 'read' call
+    def.resolve();
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    // Buttons should be enabled after the reload
+    assert.strictEqual(
+      $(webClient.el).find(".o_form_view button:contains(Call method)").attr("disabled"),
+      undefined,
+      "buttons should not be disabled anymore"
+    );
+    webClient.destroy();
+  });
   QUnit.test("can open different records from a multi record view", async function (assert) {
     assert.expect(12);
     const mockRPC = async (route, args) => {
@@ -1123,12 +1121,9 @@ QUnit.module("ActionManager", (hooks) => {
   QUnit.test('save when leaving a "dirty" view', async function (assert) {
     assert.expect(4);
     const mockRPC = async (route, { args, method, model }) => {
-        if (model === 'partner' && method === 'write') {
-            assert.deepEqual(args, [
-                [1],
-                { foo: 'pinkypie', },
-            ]);
-        }
+      if (model === "partner" && method === "write") {
+        assert.deepEqual(args, [[1], { foo: "pinkypie" }]);
+      }
     };
     const webClient = await createWebClient({ testConfig, mockRPC });
     await doAction(webClient, 4);
@@ -1141,7 +1136,7 @@ QUnit.module("ActionManager", (hooks) => {
     // go back to kanban view
     await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:first a"));
     await legacyExtraNextTick();
-    assert.containsNone(document.body, '.modal', "should not display a modal dialog");
+    assert.containsNone(document.body, ".modal", "should not display a modal dialog");
     assert.containsNone(webClient, ".o_form_view", "should no longer be in form view");
     assert.containsOnce(webClient, ".o_kanban_view", "should be in kanban view");
     webClient.destroy();
@@ -1232,28 +1227,27 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
-  QUnit.test(
-    "form views are restored in readonly when coming back in breadcrumbs",
-    async function (assert) {
-      assert.expect(2);
-      const webClient = await createWebClient({ testConfig });
-      await doAction(webClient, 3);
-      // open a record in form view
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      // switch to edit mode
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .o_form_button_edit"));
-      await legacyExtraNextTick();
-      assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_editable");
-      // do some other action
-      await doAction(webClient, 4);
-      // go back to form view
-      await testUtils.dom.clickLast($(webClient.el).find(".o_control_panel .breadcrumb a"));
-      await legacyExtraNextTick();
-      assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_readonly");
-      webClient.destroy();
-    }
-  );
+  QUnit.test("form views are restored in readonly when coming back in breadcrumbs", async function (
+    assert
+  ) {
+    assert.expect(2);
+    const webClient = await createWebClient({ testConfig });
+    await doAction(webClient, 3);
+    // open a record in form view
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    // switch to edit mode
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .o_form_button_edit"));
+    await legacyExtraNextTick();
+    assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_editable");
+    // do some other action
+    await doAction(webClient, 4);
+    // go back to form view
+    await testUtils.dom.clickLast($(webClient.el).find(".o_control_panel .breadcrumb a"));
+    await legacyExtraNextTick();
+    assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_readonly");
+    webClient.destroy();
+  });
   QUnit.test("honor group_by specified in actions context", async function (assert) {
     assert.expect(5);
     testConfig.serverData.actions[3].context = "{'group_by': 'bar'}";
@@ -1379,98 +1373,96 @@ QUnit.module("ActionManager", (hooks) => {
     testUtils.mock.unpatch(ListController);
     webClient.destroy();
   });
-  QUnit.test(
-    "list with default_order and favorite filter with no orderedBy",
-    async function (assert) {
-      assert.expect(5);
-      testConfig.serverData.views["partner,1,list"] =
-        '<tree default_order="foo desc"><field name="foo"/></tree>';
-      testConfig.serverData.actions[100] = {
-        id: 100,
-        name: "Partners",
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [
-          [1, "list"],
-          [false, "form"],
-        ],
-      };
-      testConfig.serverData.models.partner.filters = [
-        {
-          name: "favorite filter",
-          id: 5,
-          context: "{}",
-          sort: "[]",
-          domain: '[("bar", "=", 1)]',
-          is_default: false,
-        },
-      ];
-      const webClient = await createWebClient({ testConfig });
-      await doAction(webClient, 100);
-      assert.strictEqual(
-        $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
-        "zoupyopplopgnapblip",
-        "record should be in descending order as default_order applies"
-      );
-      await cpHelpers.toggleFavoriteMenu(webClient.el);
-      await cpHelpers.toggleMenuItem(webClient.el, "favorite filter");
-      await legacyExtraNextTick();
-      assert.strictEqual(
-        $(webClient.el).find(".o_control_panel .o_facet_values").text().trim(),
-        "favorite filter",
-        "favorite filter should be applied"
-      );
-      assert.strictEqual(
-        $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
-        "gnapblip",
-        "record should still be in descending order after default_order applied"
-      );
-      // go to formview and come back to listview
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a:eq(0)"));
-      await legacyExtraNextTick();
-      assert.strictEqual(
-        $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
-        "gnapblip",
-        "order of records should not be changed, while coming back through breadcrumb"
-      );
-      // remove filter
-      await cpHelpers.removeFacet(webClient.el, 0);
-      await legacyExtraNextTick();
-      assert.strictEqual(
-        $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
-        "zoupyopplopgnapblip",
-        "order of records should not be changed, after removing current filter"
-      );
-      webClient.destroy();
-    }
-  );
-  QUnit.test(
-    "search menus are still available when switching between actions",
-    async function (assert) {
-      assert.expect(3);
-      const webClient = await createWebClient({ testConfig });
-      await doAction(webClient, 1);
-      assert.isVisible(
-        webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
-        "the search options should be available"
-      );
-      await doAction(webClient, 3);
-      assert.isVisible(
-        webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
-        "the search options should be available"
-      );
-      // go back using the breadcrumbs
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a:first"));
-      await legacyExtraNextTick();
-      assert.isVisible(
-        webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
-        "the search options should be available"
-      );
-      webClient.destroy();
-    }
-  );
+  QUnit.test("list with default_order and favorite filter with no orderedBy", async function (
+    assert
+  ) {
+    assert.expect(5);
+    testConfig.serverData.views["partner,1,list"] =
+      '<tree default_order="foo desc"><field name="foo"/></tree>';
+    testConfig.serverData.actions[100] = {
+      id: 100,
+      name: "Partners",
+      res_model: "partner",
+      type: "ir.actions.act_window",
+      views: [
+        [1, "list"],
+        [false, "form"],
+      ],
+    };
+    testConfig.serverData.models.partner.filters = [
+      {
+        name: "favorite filter",
+        id: 5,
+        context: "{}",
+        sort: "[]",
+        domain: '[("bar", "=", 1)]',
+        is_default: false,
+      },
+    ];
+    const webClient = await createWebClient({ testConfig });
+    await doAction(webClient, 100);
+    assert.strictEqual(
+      $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+      "zoupyopplopgnapblip",
+      "record should be in descending order as default_order applies"
+    );
+    await cpHelpers.toggleFavoriteMenu(webClient.el);
+    await cpHelpers.toggleMenuItem(webClient.el, "favorite filter");
+    await legacyExtraNextTick();
+    assert.strictEqual(
+      $(webClient.el).find(".o_control_panel .o_facet_values").text().trim(),
+      "favorite filter",
+      "favorite filter should be applied"
+    );
+    assert.strictEqual(
+      $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+      "gnapblip",
+      "record should still be in descending order after default_order applied"
+    );
+    // go to formview and come back to listview
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a:eq(0)"));
+    await legacyExtraNextTick();
+    assert.strictEqual(
+      $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+      "gnapblip",
+      "order of records should not be changed, while coming back through breadcrumb"
+    );
+    // remove filter
+    await cpHelpers.removeFacet(webClient.el, 0);
+    await legacyExtraNextTick();
+    assert.strictEqual(
+      $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
+      "zoupyopplopgnapblip",
+      "order of records should not be changed, after removing current filter"
+    );
+    webClient.destroy();
+  });
+  QUnit.test("search menus are still available when switching between actions", async function (
+    assert
+  ) {
+    assert.expect(3);
+    const webClient = await createWebClient({ testConfig });
+    await doAction(webClient, 1);
+    assert.isVisible(
+      webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
+      "the search options should be available"
+    );
+    await doAction(webClient, 3);
+    assert.isVisible(
+      webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
+      "the search options should be available"
+    );
+    // go back using the breadcrumbs
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a:first"));
+    await legacyExtraNextTick();
+    assert.isVisible(
+      webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
+      "the search options should be available"
+    );
+    webClient.destroy();
+  });
   QUnit.test("current act_window action is stored in session_storage", async function (assert) {
     assert.expect(1);
     const expectedAction = {
@@ -1495,51 +1487,48 @@ QUnit.module("ActionManager", (hooks) => {
     await doAction(webClient, 3);
     webClient.destroy();
   });
-  QUnit.test(
-    "store evaluated context of current action in session_storage",
-    async function (assert) {
-      // this test ensures that we don't store stringified instances of
-      // CompoundContext in the session_storage, as they would be meaningless
-      // once restored
-      assert.expect(1);
-      const expectedAction = {
-        ...testConfig.serverData.actions[4],
-        context: {
-          lang: "en",
-          uid: 7,
-          tz: "taht",
-          active_model: "partner",
-          active_id: 1,
-          active_ids: [1],
-        },
-      };
-      let checkSessionStorage = false;
-      const sessionStorage = testConfig.browser.sessionStorage;
-      testConfig.browser.sessionStorage = Object.assign(Object.create(sessionStorage), {
-        setItem(k, value) {
-          if (checkSessionStorage) {
-            assert.strictEqual(
-              value,
-              JSON.stringify(expectedAction),
-              "should store the executed action in the sessionStorage"
-            );
-          }
-        },
-      });
-      const webClient = await createWebClient({ testConfig });
-      // execute an action and open a record in form view
-      await doAction(webClient, 3);
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      // click on 'Execute action' button (it executes an action with a CompoundContext as context)
-      checkSessionStorage = true;
-      await testUtils.dom.click(
-        $(webClient.el).find(".o_form_view button:contains(Execute action)")
-      );
-      await legacyExtraNextTick();
-      webClient.destroy();
-    }
-  );
+  QUnit.test("store evaluated context of current action in session_storage", async function (
+    assert
+  ) {
+    // this test ensures that we don't store stringified instances of
+    // CompoundContext in the session_storage, as they would be meaningless
+    // once restored
+    assert.expect(1);
+    const expectedAction = {
+      ...testConfig.serverData.actions[4],
+      context: {
+        lang: "en",
+        uid: 7,
+        tz: "taht",
+        active_model: "partner",
+        active_id: 1,
+        active_ids: [1],
+      },
+    };
+    let checkSessionStorage = false;
+    const sessionStorage = testConfig.browser.sessionStorage;
+    testConfig.browser.sessionStorage = Object.assign(Object.create(sessionStorage), {
+      setItem(k, value) {
+        if (checkSessionStorage) {
+          assert.strictEqual(
+            value,
+            JSON.stringify(expectedAction),
+            "should store the executed action in the sessionStorage"
+          );
+        }
+      },
+    });
+    const webClient = await createWebClient({ testConfig });
+    // execute an action and open a record in form view
+    await doAction(webClient, 3);
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    // click on 'Execute action' button (it executes an action with a CompoundContext as context)
+    checkSessionStorage = true;
+    await testUtils.dom.click($(webClient.el).find(".o_form_view button:contains(Execute action)"));
+    await legacyExtraNextTick();
+    webClient.destroy();
+  });
   QUnit.test("destroy action with lazy loaded controller", async function (assert) {
     assert.expect(6);
     const webClient = await createWebClient({ testConfig });
@@ -1598,7 +1587,7 @@ QUnit.module("ActionManager", (hooks) => {
       "PartnersNew"
     );
     // set form view dirty and open m2o record
-    await testUtils.fields.editInput($(webClient.el).find('input[name="display_name"]'), 'test');
+    await testUtils.fields.editInput($(webClient.el).find('input[name="display_name"]'), "test");
     await testUtils.fields.editInput($(webClient.el).find("input[name=foo]"), "val");
     await testUtils.dom.click($(webClient.el).find(".o_form_uri:contains(First record)"));
     await legacyExtraNextTick();
@@ -1611,7 +1600,7 @@ QUnit.module("ActionManager", (hooks) => {
     await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:nth(1) a"));
     await legacyExtraNextTick();
     // should be readonly and so saved
-    assert.containsOnce(webClient, '.o_form_view.o_form_readonly');
+    assert.containsOnce(webClient, ".o_form_view.o_form_readonly");
     assert.strictEqual(
       $(webClient.el).find(".o_control_panel .breadcrumb-item").text(),
       "Partnerstest"
@@ -1726,77 +1715,75 @@ QUnit.module("ActionManager", (hooks) => {
     assert.hasClass(webClient.el.querySelector(".o_form_view"), "o_form_editable");
     webClient.destroy();
   });
-  QUnit.test(
-    "open form view, use the pager, execute action, and come back",
-    async function (assert) {
-      assert.expect(8);
-      const webClient = await createWebClient({ testConfig });
-      // execute an action and open a record
-      await doAction(webClient, 3);
-      assert.containsOnce(webClient.el, ".o_list_view");
-      assert.containsN(webClient.el, ".o_list_view .o_data_row", 5);
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_form_view");
-      assert.strictEqual(
-        $(webClient.el).find(".o_field_widget[name=display_name]").text(),
-        "First record"
-      );
-      // switch to second record
-      await testUtils.dom.click($(webClient.el).find(".o_pager_next"));
-      assert.strictEqual(
-        $(webClient.el).find(".o_field_widget[name=display_name]").text(),
-        "Second record"
-      );
-      // execute an action from the second record
-      await testUtils.dom.click($(webClient.el).find(".o_statusbar_buttons button[name=4]"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_kanban_view");
-      // go back using the breadcrumbs
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:nth(1) a"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_form_view");
-      assert.strictEqual(
-        $(webClient.el).find(".o_field_widget[name=display_name]").text(),
-        "Second record"
-      );
-      webClient.destroy();
-    }
-  );
-  QUnit.test(
-    "create a new record in a form view, execute action, and come back",
-    async function (assert) {
-      assert.expect(8);
-      const webClient = await createWebClient({ testConfig });
-      // execute an action and create a new record
-      await doAction(webClient, 3);
-      assert.containsOnce(webClient.el, ".o_list_view");
-      await testUtils.dom.click($(webClient.el).find(".o_list_button_add"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_form_view");
-      assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_editable");
-      await testUtils.fields.editInput(
-        $(webClient.el).find(".o_field_widget[name=display_name]"),
-        "another record"
-      );
-      await testUtils.dom.click($(webClient.el).find(".o_form_button_save"));
-      assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_readonly");
-      // execute an action from the second record
-      await testUtils.dom.click($(webClient.el).find(".o_statusbar_buttons button[name=4]"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_kanban_view");
-      // go back using the breadcrumbs
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:nth(1) a"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_form_view");
-      assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_readonly");
-      assert.strictEqual(
-        $(webClient.el).find(".o_field_widget[name=display_name]").text(),
-        "another record"
-      );
-      webClient.destroy();
-    }
-  );
+  QUnit.test("open form view, use the pager, execute action, and come back", async function (
+    assert
+  ) {
+    assert.expect(8);
+    const webClient = await createWebClient({ testConfig });
+    // execute an action and open a record
+    await doAction(webClient, 3);
+    assert.containsOnce(webClient.el, ".o_list_view");
+    assert.containsN(webClient.el, ".o_list_view .o_data_row", 5);
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_form_view");
+    assert.strictEqual(
+      $(webClient.el).find(".o_field_widget[name=display_name]").text(),
+      "First record"
+    );
+    // switch to second record
+    await testUtils.dom.click($(webClient.el).find(".o_pager_next"));
+    assert.strictEqual(
+      $(webClient.el).find(".o_field_widget[name=display_name]").text(),
+      "Second record"
+    );
+    // execute an action from the second record
+    await testUtils.dom.click($(webClient.el).find(".o_statusbar_buttons button[name=4]"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_kanban_view");
+    // go back using the breadcrumbs
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:nth(1) a"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_form_view");
+    assert.strictEqual(
+      $(webClient.el).find(".o_field_widget[name=display_name]").text(),
+      "Second record"
+    );
+    webClient.destroy();
+  });
+  QUnit.test("create a new record in a form view, execute action, and come back", async function (
+    assert
+  ) {
+    assert.expect(8);
+    const webClient = await createWebClient({ testConfig });
+    // execute an action and create a new record
+    await doAction(webClient, 3);
+    assert.containsOnce(webClient.el, ".o_list_view");
+    await testUtils.dom.click($(webClient.el).find(".o_list_button_add"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_form_view");
+    assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_editable");
+    await testUtils.fields.editInput(
+      $(webClient.el).find(".o_field_widget[name=display_name]"),
+      "another record"
+    );
+    await testUtils.dom.click($(webClient.el).find(".o_form_button_save"));
+    assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_readonly");
+    // execute an action from the second record
+    await testUtils.dom.click($(webClient.el).find(".o_statusbar_buttons button[name=4]"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_kanban_view");
+    // go back using the breadcrumbs
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb-item:nth(1) a"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_form_view");
+    assert.hasClass($(webClient.el).find(".o_form_view")[0], "o_form_readonly");
+    assert.strictEqual(
+      $(webClient.el).find(".o_field_widget[name=display_name]").text(),
+      "another record"
+    );
+    webClient.destroy();
+  });
   QUnit.test("view with js_class attribute (legacy)", async function (assert) {
     assert.expect(2);
     const { AbstractView, legacyViewRegistry } = getLegacy();
@@ -1874,52 +1861,51 @@ QUnit.module("ActionManager", (hooks) => {
       delete legacyViewRegistry.map.test_view;
     }
   );
-  QUnit.test(
-    "execute action without modal closes bootstrap tooltips anyway",
-    async function (assert) {
-      assert.expect(12);
-      Object.assign(testConfig.serverData.views, {
-        "partner,666,form": `<form>
+  QUnit.test("execute action without modal closes bootstrap tooltips anyway", async function (
+    assert
+  ) {
+    assert.expect(12);
+    Object.assign(testConfig.serverData.views, {
+      "partner,666,form": `<form>
             <header>
               <button name="object" string="Call method" type="object" help="need somebody"/>
             </header>
             <field name="display_name"/>
           </form>`,
+    });
+    const mockRPC = async (route, args) => {
+      assert.step(route);
+      if (route === "/web/dataset/call_button") {
+        // Some business stuff server side, then return an implicit close action
+        return Promise.resolve(false);
+      }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    await doAction(webClient, 24);
+    assert.verifySteps([
+      "/wowl/load_menus",
+      "/web/action/load",
+      "/web/dataset/call_kw/partner/load_views",
+      "/web/dataset/call_kw/partner/read",
+    ]);
+    assert.containsN(webClient.el, ".o_form_buttons_view button:not([disabled])", 2);
+    const actionButton = webClient.el.querySelector("button[name=object]");
+    const tooltipProm = new Promise((resolve) => {
+      $(document.body).one("shown.bs.tooltip", () => {
+        $(actionButton).mouseleave();
+        resolve();
       });
-      const mockRPC = async (route, args) => {
-        assert.step(route);
-        if (route === "/web/dataset/call_button") {
-          // Some business stuff server side, then return an implicit close action
-          return Promise.resolve(false);
-        }
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      await doAction(webClient, 24);
-      assert.verifySteps([
-        "/wowl/load_menus",
-        "/web/action/load",
-        "/web/dataset/call_kw/partner/load_views",
-        "/web/dataset/call_kw/partner/read",
-      ]);
-      assert.containsN(webClient.el, ".o_form_buttons_view button:not([disabled])", 2);
-      const actionButton = webClient.el.querySelector("button[name=object]");
-      const tooltipProm = new Promise((resolve) => {
-        $(document.body).one("shown.bs.tooltip", () => {
-          $(actionButton).mouseleave();
-          resolve();
-        });
-      });
-      $(actionButton).mouseenter();
-      await tooltipProm;
-      assert.containsN(document.body, ".tooltip", 2);
-      await click(actionButton);
-      await legacyExtraNextTick();
-      assert.verifySteps(["/web/dataset/call_button", "/web/dataset/call_kw/partner/read"]);
-      assert.containsNone(document.body, ".tooltip"); // body different from webClient in tests !
-      assert.containsN(webClient.el, ".o_form_buttons_view button:not([disabled])", 2);
-      webClient.destroy();
-    }
-  );
+    });
+    $(actionButton).mouseenter();
+    await tooltipProm;
+    assert.containsN(document.body, ".tooltip", 2);
+    await click(actionButton);
+    await legacyExtraNextTick();
+    assert.verifySteps(["/web/dataset/call_button", "/web/dataset/call_kw/partner/read"]);
+    assert.containsNone(document.body, ".tooltip"); // body different from webClient in tests !
+    assert.containsN(webClient.el, ".o_form_buttons_view button:not([disabled])", 2);
+    webClient.destroy();
+  });
   QUnit.test("search view should keep focus during do_search", async function (assert) {
     assert.expect(5);
     // One should be able to type something in the search view, press on enter to
@@ -1951,35 +1937,34 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["search_read |,foo,ilike,m,foo,ilike,o"]);
     webClient.destroy();
   });
-  QUnit.test(
-    "Call twice clearUncommittedChanges in a row does not save twice",
-    async function (assert) {
-      assert.expect(5);
-      let writeCalls = 0;
-      const mockRPC = async (route, { method }) => {
-          if (method === 'write') {
-              writeCalls += 1;
-          }
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      // execute an action and edit existing record
-      await doAction(webClient, 3);
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient, ".o_form_view.o_form_readonly");
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .o_form_button_edit"));
-      assert.containsOnce(webClient, ".o_form_view.o_form_editable");
-      await testUtils.fields.editInput($(webClient.el).find("input[name=foo]"), "val");
-      clearUncommittedChanges(webClient.env);
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      assert.containsNone(document.body, ".modal");
-      clearUncommittedChanges(webClient.env);
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      assert.containsNone(document.body, ".modal");
-      assert.strictEqual(writeCalls, 1);
-      webClient.destroy();
-    }
-  );
+  QUnit.test("Call twice clearUncommittedChanges in a row does not save twice", async function (
+    assert
+  ) {
+    assert.expect(5);
+    let writeCalls = 0;
+    const mockRPC = async (route, { method }) => {
+      if (method === "write") {
+        writeCalls += 1;
+      }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    // execute an action and edit existing record
+    await doAction(webClient, 3);
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient, ".o_form_view.o_form_readonly");
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .o_form_button_edit"));
+    assert.containsOnce(webClient, ".o_form_view.o_form_editable");
+    await testUtils.fields.editInput($(webClient.el).find("input[name=foo]"), "val");
+    clearUncommittedChanges(webClient.env);
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    assert.containsNone(document.body, ".modal");
+    clearUncommittedChanges(webClient.env);
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    assert.containsNone(document.body, ".modal");
+    assert.strictEqual(writeCalls, 1);
+    webClient.destroy();
+  });
 });

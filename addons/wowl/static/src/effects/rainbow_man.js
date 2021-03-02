@@ -13,7 +13,6 @@ const { Component, hooks } = owl;
  * service (by triggering the 'show_effect' event)
  */
 export class RainbowMan extends Component {
-
   /**
    * @override
    * @constructor

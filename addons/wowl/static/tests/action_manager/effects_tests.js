@@ -80,7 +80,7 @@ QUnit.module("ActionManager", (hooks) => {
   QUnit.test("show effect notification instead of rainbow man", async function (assert) {
     assert.expect(6);
     const componentRegistry = new Registry();
-    componentRegistry.add("NotificationContainer", NotificationContainer)
+    componentRegistry.add("NotificationContainer", NotificationContainer);
     testConfig.mainComponentRegistry = componentRegistry;
 
     const webClient = await createWebClient({ testConfig });

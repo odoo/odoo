@@ -8,9 +8,9 @@ const { Component, core, tags, useState } = owl;
 const { EventBus } = core;
 
 class ErrorHandler extends Component {
-    catchError(error) {
-      this.props.callback();
-      throw error;
+  catchError(error) {
+    this.props.callback();
+    throw error;
   }
 }
 ErrorHandler.template = tags.xml`<t t-component="props.dialog.class" t-props="props.dialog.props" />`;

@@ -98,7 +98,7 @@ export function makeLocalization(config) {
   const formatDateTime = (value, options = { timezone: true }) => {
     return dates.formatDateTime(value, { format: langDateTimeFormat, timezone: options.timezone });
   };
-  
+
   const formatFloat = (value, options = {}) => {
     return numbers.formatFloat(value, {
       precision: options.precision,
@@ -107,7 +107,7 @@ export function makeLocalization(config) {
       grouping: langParams.grouping,
     });
   };
-  
+
   const parseDate = (value, options = {}) => {
     const result = dates.parseDateTime(value, {
       format: langDateFormat,

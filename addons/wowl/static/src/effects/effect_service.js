@@ -11,11 +11,10 @@ export class EffectsContainer extends Component {
   setup() {
     this.rainbowProps = {};
     const { bus } = useService("effect");
-    bus.on("UPDATE", this, effect => {
+    bus.on("UPDATE", this, (effect) => {
       this.rainbowProps = effect;
       this.render();
     });
-
   }
   closeRainbowMan() {
     this.rainbowProps = {};
@@ -24,7 +23,6 @@ export class EffectsContainer extends Component {
 }
 
 mainComponentRegistry.add("EffectsContainer", EffectsContainer);
-
 
 EffectsContainer.template = tags.xml`
     <div class="o_effects_manager">
@@ -52,7 +50,7 @@ export const effectService = {
         create: (message, options) => {
           env.services.notification.create(message, { sticky: false });
         },
-        bus
+        bus,
       };
     }
     let effectId = 0;

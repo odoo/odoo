@@ -46,7 +46,7 @@ QUnit.test("can display a danger notification with a title", async (assert) => {
   const env = await makeTestEnv({ browser, serviceRegistry });
   const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
-  
+
   notifService.create("I'm a danger notification", { title: "Some title", type: "danger" });
   await nextTick();
   assert.containsOnce(target, ".o_notification");
@@ -105,11 +105,11 @@ QUnit.test("can close sticky notification", async (assert) => {
   notifService.close(id);
   await nextTick();
   assert.containsNone(target, ".o_notification");
-  
+
   id = notifService.create("I'm a sticky notification", { sticky: true });
   await nextTick();
   assert.containsOnce(target, ".o_notification");
-  
+
   // close by clicking on the close icon
   await click(target, ".o_notification .o_notification_close");
   assert.containsNone(target, ".o_notification");
@@ -154,17 +154,17 @@ QUnit.test("close a non-sticky notification while another one remains", async (a
   const id2 = notifService.create("I'm a sticky notification", { sticky: true });
   await nextTick();
   assert.containsN(target, ".o_notification", 2);
-  
+
   // close the non sticky notification
   notifService.close(id1);
   await nextTick();
   assert.containsOnce(target, ".o_notification");
-  
+
   // simulate end of timeout, which should try to close notification 1 as well
   timeoutCB();
   await nextTick();
   assert.containsOnce(target, ".o_notification");
-  
+
   // close the non sticky notification
   notifService.close(id2);
   await nextTick();
@@ -175,7 +175,7 @@ QUnit.test("notification coming when NotificationManager not mounted yet", async
   const env = await makeTestEnv({ browser, serviceRegistry });
   const notifService = env.services.notification;
   mount(NotificationContainer, { env, target });
-  
+
   notifService.create("I'm a non-sticky notification");
   await nextTick();
   assert.containsOnce(target, ".o_notification");

@@ -38,4 +38,4 @@ export const currencyService = {
   },
 };
 
-serviceRegistry.add("currency", currencyService)
+serviceRegistry.add("currency", currencyService);

@@ -50,4 +50,3 @@ const { whenReady } = utils;
     server_version_info: sessionInfo.server_version_info,
   };
 })();
-

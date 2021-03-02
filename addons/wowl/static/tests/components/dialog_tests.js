@@ -78,32 +78,31 @@ QUnit.test("simple rendering with two dialogs", async function (assert) {
     [" Hello again! ", " Hello! "] // mounted is called in reverse order
   );
 });
-QUnit.test(
-  "click on the button x triggers the custom event 'dialog-closed'",
-  async function (assert) {
-    assert.expect(2);
-    class Parent extends owl.Component {
-      constructor() {
-        super(...arguments);
-        this.state = useState({
-          displayDialog: true,
-        });
-      }
+QUnit.test("click on the button x triggers the custom event 'dialog-closed'", async function (
+  assert
+) {
+  assert.expect(2);
+  class Parent extends owl.Component {
+    constructor() {
+      super(...arguments);
+      this.state = useState({
+        displayDialog: true,
+      });
     }
-    Parent.components = { Dialog };
-    Parent.template = owl.tags.xml`
+  }
+  Parent.components = { Dialog };
+  Parent.template = owl.tags.xml`
             <div t-on-dialog-closed="state.displayDialog = false">
                 <Dialog t-if="state.displayDialog">
                     Hello!
                 </Dialog>
             </div>
         `;
-    parent = await mount(Parent, { env, target });
-    assert.containsOnce(target, ".o_dialog");
-    await click(target, ".o_dialog header button.close");
-    assert.containsNone(target, ".o_dialog");
-  }
-);
+  parent = await mount(Parent, { env, target });
+  assert.containsOnce(target, ".o_dialog");
+  await click(target, ".o_dialog header button.close");
+  assert.containsNone(target, ".o_dialog");
+});
 QUnit.test(
   "click on the default footer button triggers the custom event 'dialog-closed'",
   async function (assert) {

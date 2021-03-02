@@ -1,10 +1,17 @@
 /** @odoo-module **/
-import { click, getFixture, makeFakeRPCService, makeTestEnv, mount, nextTick } from "../helpers/index";
+import {
+  click,
+  getFixture,
+  makeFakeRPCService,
+  makeTestEnv,
+  mount,
+  nextTick,
+} from "../helpers/index";
 import { Registry } from "../../src/core/registry";
 import { DialogContainer, dialogService } from "../../src/services/dialog_service";
 import { Dialog } from "../../src/components/dialog/dialog";
-import { notificationService } from '../../src/notifications/notification_service';
-import { errorService } from '../../src/errors/error_service';
+import { notificationService } from "../../src/notifications/notification_service";
+import { errorService } from "../../src/errors/error_service";
 import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
 
 const { Component, tags } = owl;
@@ -113,32 +120,32 @@ QUnit.test("dialog component crashes", async (assert) => {
 
   class FailingDialog extends Component {
     setup() {
-      throw new Error('Some Error');
+      throw new Error("Some Error");
     }
   }
   FailingDialog.template = tags.xml`<Dialog title="'Error'"/>`;
-  FailingDialog.components =  { Dialog };
+  FailingDialog.components = { Dialog };
 
   const rpc = makeFakeRPCService();
   serviceRegistry.add(rpc.name, rpc);
   serviceRegistry.add(notificationService.name, notificationService);
   serviceRegistry.add(errorService.name, errorService);
   const componentRegistry = new Registry();
-  componentRegistry.add("DialogContainer", DialogContainer)
+  componentRegistry.add("DialogContainer", DialogContainer);
   env = await makeTestEnv({ serviceRegistry, mainComponentRegistry: componentRegistry });
 
   pseudoWebClient = await mount(PseudoWebClient, { target, env });
 
   const qunitUnhandledReject = QUnit.onUnhandledRejection;
   QUnit.onUnhandledRejection = (reason) => {
-    assert.step('error');
+    assert.step("error");
   };
 
   env.services[dialogService.name].open(FailingDialog);
   await nextTick();
-  assert.verifySteps(['error']);
-  assert.containsOnce(pseudoWebClient, '.modal');
-  assert.containsOnce(pseudoWebClient, '.modal .o_dialog_error');
+  assert.verifySteps(["error"]);
+  assert.containsOnce(pseudoWebClient, ".modal");
+  assert.containsOnce(pseudoWebClient, ".modal .o_dialog_error");
 
   QUnit.onUnhandledRejection = qunitUnhandledReject;
   pseudoWebClient.destroy();

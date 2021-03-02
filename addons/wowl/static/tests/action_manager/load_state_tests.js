@@ -225,44 +225,43 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
-  QUnit.test(
-    "lazy load multi record view if mono record one is requested",
-    async function (assert) {
-      assert.expect(12);
-      const mockRPC = async function (route, args) {
-        assert.step((args && args.method) || route);
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      webClient.env.bus.trigger("test:hashchange", {
-        action: 3,
-        id: 2,
-        view_type: "form",
-      });
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      assert.containsNone(webClient, ".o_list_view");
-      assert.containsOnce(webClient, ".o_form_view");
-      assert.containsN(webClient, ".o_control_panel .breadcrumb-item", 2);
-      assert.strictEqual(
-        $(webClient.el).find(".o_control_panel .breadcrumb-item:last").text(),
-        "Second record",
-        "breadcrumbs should contain the display_name of the opened record"
-      );
-      // go back to Lst
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient, ".o_list_view");
-      assert.containsNone(webClient, ".o_form_view");
-      assert.verifySteps([
-        "/wowl/load_menus",
-        "/web/action/load",
-        "load_views",
-        "read",
-        "/web/dataset/search_read",
-      ]);
-      webClient.destroy();
-    }
-  );
+  QUnit.test("lazy load multi record view if mono record one is requested", async function (
+    assert
+  ) {
+    assert.expect(12);
+    const mockRPC = async function (route, args) {
+      assert.step((args && args.method) || route);
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    webClient.env.bus.trigger("test:hashchange", {
+      action: 3,
+      id: 2,
+      view_type: "form",
+    });
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    assert.containsNone(webClient, ".o_list_view");
+    assert.containsOnce(webClient, ".o_form_view");
+    assert.containsN(webClient, ".o_control_panel .breadcrumb-item", 2);
+    assert.strictEqual(
+      $(webClient.el).find(".o_control_panel .breadcrumb-item:last").text(),
+      "Second record",
+      "breadcrumbs should contain the display_name of the opened record"
+    );
+    // go back to Lst
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient, ".o_list_view");
+    assert.containsNone(webClient, ".o_form_view");
+    assert.verifySteps([
+      "/wowl/load_menus",
+      "/web/action/load",
+      "load_views",
+      "read",
+      "/web/dataset/search_read",
+    ]);
+    webClient.destroy();
+  });
   QUnit.test("lazy load multi record view with previous action", async function (assert) {
     assert.expect(6);
     const webClient = await createWebClient({ testConfig });

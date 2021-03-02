@@ -129,84 +129,82 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(Widget);
   });
-  QUnit.test(
-    "no memory leaks when executing an action while switching view",
-    async function (assert) {
-      assert.expect(1);
-      let def;
-      let delta = 0;
-      testUtils.mock.patch(Widget, {
-        init: function () {
-          delta += 1;
-          this._super.apply(this, arguments);
-        },
-        destroy: function () {
-          delta -= 1;
-          this._super.apply(this, arguments);
-        },
-      });
-      const mockRPC = async function (route, args) {
-        if (args && args.method === "read") {
-          await Promise.resolve(def);
-        }
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      await doAction(webClient, 4);
-      const n = delta;
-      await doAction(webClient, 3, { clearBreadcrumbs: true });
-      // switch to the form view (this request is blocked)
-      def = testUtils.makeTestPromise();
-      await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
-      // execute another action meanwhile (don't block this request)
-      await doAction(webClient, 4, { clearBreadcrumbs: true });
-      // unblock the switch to the form view in action 3
-      def.resolve();
-      await testUtils.nextTick();
-      assert.strictEqual(n, delta, "all widgets of action 3 should have been destroyed");
-      webClient.destroy();
-      testUtils.mock.unpatch(Widget);
-    }
-  );
-  QUnit.test(
-    "no memory leaks when executing an action while loading views",
-    async function (assert) {
-      assert.expect(1);
-      let def;
-      let delta = 0;
-      testUtils.mock.patch(Widget, {
-        init: function () {
-          delta += 1;
-          this._super.apply(this, arguments);
-        },
-        destroy: function () {
-          delta -= 1;
-          this._super.apply(this, arguments);
-        },
-      });
-      const mockRPC = async function (route, args) {
-        if (args && args.method === "load_views") {
-          await Promise.resolve(def);
-        }
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      // execute action 4 to know the number of widgets it instantiates
-      await doAction(webClient, 4);
-      const n = delta;
-      // execute a first action (its 'load_views' RPC is blocked)
-      def = testUtils.makeTestPromise();
-      doAction(webClient, 3, { clearBreadcrumbs: true });
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      // execute another action meanwhile (and unlock the RPC)
-      doAction(webClient, 4, { clearBreadcrumbs: true });
-      def.resolve();
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      assert.strictEqual(n, delta, "all widgets of action 3 should have been destroyed");
-      webClient.destroy();
-      testUtils.mock.unpatch(Widget);
-    }
-  );
+  QUnit.test("no memory leaks when executing an action while switching view", async function (
+    assert
+  ) {
+    assert.expect(1);
+    let def;
+    let delta = 0;
+    testUtils.mock.patch(Widget, {
+      init: function () {
+        delta += 1;
+        this._super.apply(this, arguments);
+      },
+      destroy: function () {
+        delta -= 1;
+        this._super.apply(this, arguments);
+      },
+    });
+    const mockRPC = async function (route, args) {
+      if (args && args.method === "read") {
+        await Promise.resolve(def);
+      }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    await doAction(webClient, 4);
+    const n = delta;
+    await doAction(webClient, 3, { clearBreadcrumbs: true });
+    // switch to the form view (this request is blocked)
+    def = testUtils.makeTestPromise();
+    await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
+    // execute another action meanwhile (don't block this request)
+    await doAction(webClient, 4, { clearBreadcrumbs: true });
+    // unblock the switch to the form view in action 3
+    def.resolve();
+    await testUtils.nextTick();
+    assert.strictEqual(n, delta, "all widgets of action 3 should have been destroyed");
+    webClient.destroy();
+    testUtils.mock.unpatch(Widget);
+  });
+  QUnit.test("no memory leaks when executing an action while loading views", async function (
+    assert
+  ) {
+    assert.expect(1);
+    let def;
+    let delta = 0;
+    testUtils.mock.patch(Widget, {
+      init: function () {
+        delta += 1;
+        this._super.apply(this, arguments);
+      },
+      destroy: function () {
+        delta -= 1;
+        this._super.apply(this, arguments);
+      },
+    });
+    const mockRPC = async function (route, args) {
+      if (args && args.method === "load_views") {
+        await Promise.resolve(def);
+      }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    // execute action 4 to know the number of widgets it instantiates
+    await doAction(webClient, 4);
+    const n = delta;
+    // execute a first action (its 'load_views' RPC is blocked)
+    def = testUtils.makeTestPromise();
+    doAction(webClient, 3, { clearBreadcrumbs: true });
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    // execute another action meanwhile (and unlock the RPC)
+    doAction(webClient, 4, { clearBreadcrumbs: true });
+    def.resolve();
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    assert.strictEqual(n, delta, "all widgets of action 3 should have been destroyed");
+    webClient.destroy();
+    testUtils.mock.unpatch(Widget);
+  });
   QUnit.test(
     "no memory leaks when executing an action while loading data of default view",
     async function (assert) {
@@ -368,54 +366,52 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_content").scrollTop, 100);
     webClient.destroy();
   });
-  QUnit.test(
-    'executing an action with target != "new" closes all dialogs',
-    async function (assert) {
-      assert.expect(4);
-      testConfig.serverData.views["partner,false,form"] = `
+  QUnit.test('executing an action with target != "new" closes all dialogs', async function (
+    assert
+  ) {
+    assert.expect(4);
+    testConfig.serverData.views["partner,false,form"] = `
       <form>
         <field name="o2m">
           <tree><field name="foo"/></tree>
           <form><field name="foo"/></form>
         </field>
       </form>`;
-      const webClient = await createWebClient({ testConfig });
-      await doAction(webClient, 3);
-      assert.containsOnce(webClient, ".o_list_view");
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient, ".o_form_view");
-      await testUtils.dom.click($(webClient.el).find(".o_form_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      assert.containsOnce(document.body, ".modal .o_form_view");
-      await doAction(webClient, 1); // target != 'new'
-      assert.containsNone(document.body, ".modal");
-      webClient.destroy();
-    }
-  );
-  QUnit.test(
-    'executing an action with target "new" does not close dialogs',
-    async function (assert) {
-      assert.expect(4);
-      testConfig.serverData.views["partner,false,form"] = `
+    const webClient = await createWebClient({ testConfig });
+    await doAction(webClient, 3);
+    assert.containsOnce(webClient, ".o_list_view");
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient, ".o_form_view");
+    await testUtils.dom.click($(webClient.el).find(".o_form_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    assert.containsOnce(document.body, ".modal .o_form_view");
+    await doAction(webClient, 1); // target != 'new'
+    assert.containsNone(document.body, ".modal");
+    webClient.destroy();
+  });
+  QUnit.test('executing an action with target "new" does not close dialogs', async function (
+    assert
+  ) {
+    assert.expect(4);
+    testConfig.serverData.views["partner,false,form"] = `
       <form>
         <field name="o2m">
           <tree><field name="foo"/></tree>
           <form><field name="foo"/></form>
         </field>
       </form>`;
-      const webClient = await createWebClient({ testConfig });
-      await doAction(webClient, 3);
-      assert.containsOnce(webClient, ".o_list_view");
-      await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient, ".o_form_view");
-      await testUtils.dom.click($(webClient.el).find(".o_form_view .o_data_row:first"));
-      await legacyExtraNextTick();
-      assert.containsOnce(document.body, ".modal .o_form_view");
-      await doAction(webClient, 5); // target 'new'
-      assert.containsN(document.body, ".modal .o_form_view", 2);
-      webClient.destroy();
-    }
-  );
+    const webClient = await createWebClient({ testConfig });
+    await doAction(webClient, 3);
+    assert.containsOnce(webClient, ".o_list_view");
+    await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient, ".o_form_view");
+    await testUtils.dom.click($(webClient.el).find(".o_form_view .o_data_row:first"));
+    await legacyExtraNextTick();
+    assert.containsOnce(document.body, ".modal .o_form_view");
+    await doAction(webClient, 5); // target 'new'
+    assert.containsN(document.body, ".modal .o_form_view", 2);
+    webClient.destroy();
+  });
 });

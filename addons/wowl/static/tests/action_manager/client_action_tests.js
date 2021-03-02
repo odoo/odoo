@@ -53,7 +53,7 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module("Client Actions");
-  
+
   QUnit.test("can display client actions in Dialog", async function (assert) {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -83,24 +83,23 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
   });
 
-  QUnit.test(
-    "can display client actions in Dialog, then as main destroys Dialog",
-    async function (assert) {
-      assert.expect(4);
-      const webClient = await createWebClient({ testConfig });
-      await doAction(webClient, {
-        target: "new",
-        tag: "__test__client__action__",
-        type: "ir.actions.client",
-      });
-      assert.containsOnce(webClient, ".test_client_action");
-      assert.containsOnce(webClient, ".modal .test_client_action");
-      await doAction(webClient, "__test__client__action__");
-      assert.containsOnce(webClient, ".test_client_action");
-      assert.containsNone(webClient, ".modal .test_client_action");
-      webClient.destroy();
-    }
-  );
+  QUnit.test("can display client actions in Dialog, then as main destroys Dialog", async function (
+    assert
+  ) {
+    assert.expect(4);
+    const webClient = await createWebClient({ testConfig });
+    await doAction(webClient, {
+      target: "new",
+      tag: "__test__client__action__",
+      type: "ir.actions.client",
+    });
+    assert.containsOnce(webClient, ".test_client_action");
+    assert.containsOnce(webClient, ".modal .test_client_action");
+    await doAction(webClient, "__test__client__action__");
+    assert.containsOnce(webClient, ".test_client_action");
+    assert.containsNone(webClient, ".modal .test_client_action");
+    webClient.destroy();
+  });
 
   QUnit.test("can execute client actions from tag name (legacy)", async function (assert) {
     // remove this test as soon as legacy Widgets are no longer supported
@@ -338,7 +337,7 @@ QUnit.module("ActionManager", (hooks) => {
     delete core.action_registry.map.ClientAction;
     delete core.action_registry.map.ClientAction2;
   });
-  
+
   QUnit.test("ClientAction receives breadcrumbs and exports title (wowl)", async (assert) => {
     assert.expect(4);
     class ClientAction extends Component {
@@ -375,7 +374,7 @@ QUnit.module("ActionManager", (hooks) => {
   QUnit.test("test display_notification client action", async function (assert) {
     assert.expect(6);
     const componentRegistry = new Registry();
-    componentRegistry.add("NotificationContainer", NotificationContainer)
+    componentRegistry.add("NotificationContainer", NotificationContainer);
     testConfig.mainComponentRegistry = componentRegistry;
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 1);

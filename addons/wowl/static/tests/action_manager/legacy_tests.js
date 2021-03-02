@@ -57,9 +57,9 @@ QUnit.module("ActionManager", (hooks) => {
         list = this;
       },
     });
-    
+
     const componentRegistry = new Registry();
-    componentRegistry.add("NotificationContainer", NotificationContainer)
+    componentRegistry.add("NotificationContainer", NotificationContainer);
     testConfig.mainComponentRegistry = componentRegistry;
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 3);
@@ -76,7 +76,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual($(".o_notification_content").text(), "This is a warning...");
     webClient.destroy();
   });
-  
+
   QUnit.test("display warning as modal", async function (assert) {
     // this test can be removed as soon as the legacy layer is dropped
     assert.expect(5);
@@ -88,7 +88,7 @@ QUnit.module("ActionManager", (hooks) => {
       },
     });
     const componentRegistry = new Registry();
-    componentRegistry.add("DialogContainer", DialogContainer)
+    componentRegistry.add("DialogContainer", DialogContainer);
     testConfig.mainComponentRegistry = componentRegistry;
 
     const webClient = await createWebClient({ testConfig });

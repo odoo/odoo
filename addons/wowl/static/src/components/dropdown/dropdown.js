@@ -100,7 +100,7 @@ export class Dropdown extends Component {
       this._open();
     }
   }
-  
+
   /**
    * Used to close ourself on outside click.
    */

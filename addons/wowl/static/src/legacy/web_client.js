@@ -1,4 +1,3 @@
-
 odoo.define("web.web_client", function () {
   return {};
 });

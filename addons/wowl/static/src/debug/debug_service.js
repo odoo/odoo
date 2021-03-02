@@ -23,7 +23,7 @@ export const debugService = {
     if (env.debug !== "") {
       odoo.systrayRegistry.add("wowl.debug_mode_menu", debugManager);
     }
-    
+
     return {
       getAccessRights() {
         if (!accessRightsProm) {

@@ -18,7 +18,6 @@ function getJsClassWidget(fieldsInfo) {
 // registers a view from the legacy view registry to the wowl one, but wrapped
 // into an Owl Component
 function registerView(name, LegacyView) {
-
   class Controller extends Component {
     constructor() {
       super(...arguments);

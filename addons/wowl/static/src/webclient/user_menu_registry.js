@@ -14,7 +14,7 @@ import {
 // -----------------------------------------------------------------------------
 // Default UserMenu items
 // -----------------------------------------------------------------------------
-export const userMenuRegistry = odoo.userMenuRegistry = new Registry();
+export const userMenuRegistry = (odoo.userMenuRegistry = new Registry());
 
 userMenuRegistry
   .add("documentation", documentationItem)

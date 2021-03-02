@@ -38,7 +38,9 @@ export class NavBar extends Component {
   }
 
   get currentAppSections() {
-    return (this.currentApp && this.menuService.getMenuAsTree(this.currentApp.id).childrenTree) || [];
+    return (
+      (this.currentApp && this.menuService.getMenuAsTree(this.currentApp.id).childrenTree) || []
+    );
   }
 
   get systrayItems() {

@@ -83,7 +83,7 @@ export function sprintf(s, ...values) {
  * Capitalizes a string: "abc def" => "Abc def"
  *
  * @param {string} s the input string
- * @returns {string} 
+ * @returns {string}
  */
 export function capitalize(s) {
   return s ? s[0].toUpperCase() + s.slice(1) : "";

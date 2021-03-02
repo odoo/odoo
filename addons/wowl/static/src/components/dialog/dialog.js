@@ -45,8 +45,8 @@ export class Dialog extends Component {
   }
 
   /**
-   * 
-   * @param {KeyboardEvent} ev 
+   *
+   * @param {KeyboardEvent} ev
    */
   _onKeydown(ev) {
     var _a;

@@ -628,7 +628,7 @@ function makeActionManager(env) {
 
   // only check the wkhtmltopdf state once, so keep the rpc promise
   let wkhtmltopdfStateProm;
-  
+
   /**
    * Generates the report url given a report action.
    *

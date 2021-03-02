@@ -8,7 +8,6 @@ import { notificationService } from "../../src/notifications/notification_servic
 
 const { Component, tags } = owl;
 
-
 class Parent extends Component {
   constructor() {
     super(...arguments);
@@ -49,7 +48,7 @@ QUnit.module("RainbowMan", (hooks) => {
       parent.el.querySelector(".o_reward_msg_content").innerHTML,
       "<div>Congrats!</div>"
     );
-    
+
     const ev = new AnimationEvent("animationend", { animationName: "reward-fading-reverse" });
     target.querySelector(".o_reward").dispatchEvent(ev);
     await nextTick();

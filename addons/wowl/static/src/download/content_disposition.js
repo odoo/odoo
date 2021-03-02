@@ -237,4 +237,3 @@ function ContentDisposition(type, parameters) {
   this.type = type;
   this.parameters = parameters;
 }
-

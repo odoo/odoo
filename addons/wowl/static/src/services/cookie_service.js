@@ -9,9 +9,9 @@ import { serviceRegistry } from "../webclient/service_registry";
  * but with localStorage/sessionStorage
  */
 
- const COOKIE_TTL = 24 * 60 * 60 * 365;
+const COOKIE_TTL = 24 * 60 * 60 * 365;
 
- function parseCookieString(str) {
+function parseCookieString(str) {
   const cookie = {};
   const parts = str.split("; ");
   for (let part of parts) {

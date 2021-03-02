@@ -165,65 +165,64 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
-  QUnit.test(
-    "execute a new action while loading a lazy-loaded controller",
-    async function (assert) {
-      assert.expect(16);
-      let def;
-      const mockRPC = async function (route, args) {
-        assert.step((args && args.method) || route);
-        if (route === "/web/dataset/search_read" && args && args.model === "partner") {
-          await def;
-        }
-      };
-      const webClient = await createWebClient({ testConfig, mockRPC });
-      webClient.env.bus.trigger("test:hashchange", {
-        action: 4,
-        id: 2,
-        view_type: "form",
-      });
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient.el, ".o_form_view", "should display the form view of action 4");
-      // click to go back to Kanban (this request is blocked)
-      def = testUtils.makeTestPromise();
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a"));
-      await legacyExtraNextTick();
-      assert.containsOnce(
-        webClient.el,
-        ".o_form_view",
-        "should still display the form view of action 4"
-      );
-      // execute another action meanwhile (don't block this request)
-      await doAction(webClient, 8, { clearBreadcrumbs: true });
-      assert.containsOnce(webClient, ".o_list_view", "should display action 8");
-      assert.containsNone(webClient, ".o_form_view", "should no longer display the form view");
-      assert.verifySteps([
-        "/wowl/load_menus",
-        "/web/action/load",
-        "load_views",
-        "read",
-        "/web/dataset/search_read",
-        "/web/action/load",
-        "load_views",
-        "/web/dataset/search_read",
-      ]);
-      // unblock the switch to Kanban in action 4
-      def.resolve();
-      await testUtils.nextTick();
-      await legacyExtraNextTick();
-      assert.containsOnce(webClient, ".o_list_view", "should still display action 8");
-      assert.containsNone(
-        webClient.el,
-        ".o_kanban_view",
-        "should not display the kanban view of action 4"
-      );
-      assert.verifySteps([]);
-      webClient.destroy();
-    }
-  );
+  QUnit.test("execute a new action while loading a lazy-loaded controller", async function (
+    assert
+  ) {
+    assert.expect(16);
+    let def;
+    const mockRPC = async function (route, args) {
+      assert.step((args && args.method) || route);
+      if (route === "/web/dataset/search_read" && args && args.model === "partner") {
+        await def;
+      }
+    };
+    const webClient = await createWebClient({ testConfig, mockRPC });
+    webClient.env.bus.trigger("test:hashchange", {
+      action: 4,
+      id: 2,
+      view_type: "form",
+    });
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient.el, ".o_form_view", "should display the form view of action 4");
+    // click to go back to Kanban (this request is blocked)
+    def = testUtils.makeTestPromise();
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a"));
+    await legacyExtraNextTick();
+    assert.containsOnce(
+      webClient.el,
+      ".o_form_view",
+      "should still display the form view of action 4"
+    );
+    // execute another action meanwhile (don't block this request)
+    await doAction(webClient, 8, { clearBreadcrumbs: true });
+    assert.containsOnce(webClient, ".o_list_view", "should display action 8");
+    assert.containsNone(webClient, ".o_form_view", "should no longer display the form view");
+    assert.verifySteps([
+      "/wowl/load_menus",
+      "/web/action/load",
+      "load_views",
+      "read",
+      "/web/dataset/search_read",
+      "/web/action/load",
+      "load_views",
+      "/web/dataset/search_read",
+    ]);
+    // unblock the switch to Kanban in action 4
+    def.resolve();
+    await testUtils.nextTick();
+    await legacyExtraNextTick();
+    assert.containsOnce(webClient, ".o_list_view", "should still display action 8");
+    assert.containsNone(
+      webClient.el,
+      ".o_kanban_view",
+      "should not display the kanban view of action 4"
+    );
+    assert.verifySteps([]);
+    webClient.destroy();
+  });
   QUnit.test("execute a new action while handling a call_button", async function (assert) {
     assert.expect(17);
     const def = testUtils.makeTestPromise();
