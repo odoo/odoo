@@ -37,6 +37,7 @@ class MassMailingListMerge(models.TransientModel):
     archive_src_lists = fields.Boolean('Archive source mailing lists', default=True)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     @api.model
     def default_get(self, fields):
@@ -49,6 +50,8 @@ class MassMailingListMerge(models.TransientModel):
         return res
 
 >>>>>>> [FIX] mass_mailing: Traceback on mass mailing list merging
+=======
+>>>>>>> [FW][FIX] mass_mailing: improve default values management when merging mailing lists
     def action_mailing_lists_merge(self):
         if self.merge_options == 'new':
             self.dest_list_id = self.env['mailing.list'].create({
