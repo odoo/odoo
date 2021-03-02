@@ -77,7 +77,7 @@
         <field name="arch" type="xml">
             <tree string="Meetings" sample="1" multi_edit="1">
                 <header>
-                    <button name="action_mass_mailing" type="object"
+                    <button name="action_open_composer" type="object"
                             string="Send Mail"/>
                 </header>
                 <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly':[('recurrency','=',True)]}"/>
@@ -132,7 +132,7 @@
                                 class="oe_inline o_calendar_attendees"
                             />
                             <div name="send_buttons">
-                                <button name="action_mass_mailing" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
+                                <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
                             </div>
                         </div>
                     </div>

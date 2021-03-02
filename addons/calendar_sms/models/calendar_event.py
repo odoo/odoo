@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, _
-
+from odoo.exceptions import UserError
 
 class CalendarEvent(models.Model):
     _inherit = 'calendar.event'
@@ -24,8 +24,11 @@ class CalendarEvent(models.Model):
             )
 
     def action_send_sms(self):
+        if not self.partner_ids:
+            raise UserError(_("There are no attendees on these events"))
         return {
             'type': 'ir.actions.act_window',
+            'name': _("Send SMS Text Message"),
             'res_model': 'sms.composer',
             'view_mode': 'form',
             'target': 'new',
@@ -33,6 +36,7 @@ class CalendarEvent(models.Model):
                 'default_composition_mode': 'mass',
                 'default_res_model': 'res.partner',
                 'default_res_ids': self.partner_ids.ids,
+                'default_sms_mass_keep_log': True,
             },
         }
 
