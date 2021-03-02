@@ -6,6 +6,7 @@ import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 import { Registry } from "../../src/core/registry";
 import { NotificationContainer } from "../../src/notifications/notification_container";
+import { DialogContainer } from "../../src/services/dialog_service";
 let testConfig;
 // legacy stuff
 let ListController;
@@ -75,6 +76,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual($(".o_notification_content").text(), "This is a warning...");
     webClient.destroy();
   });
+  
   QUnit.test("display warning as modal", async function (assert) {
     // this test can be removed as soon as the legacy layer is dropped
     assert.expect(5);
@@ -85,6 +87,10 @@ QUnit.module("ActionManager", (hooks) => {
         list = this;
       },
     });
+    const componentRegistry = new Registry();
+    componentRegistry.add("DialogContainer", DialogContainer)
+    testConfig.mainComponentRegistry = componentRegistry;
+
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 3);
     assert.containsOnce(webClient, ".o_list_view");

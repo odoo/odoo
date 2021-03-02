@@ -4,26 +4,29 @@ import { Registry } from "../../src/core/registry";
 import { crashManagerService } from "../../src/crash_manager/crash_manager_service";
 import { notificationService } from "../../src/notifications/notification_service";
 import { RPCErrorDialog } from "../../src/crash_manager/error_dialogs";
-import { dialogManagerService } from "../../src/services/dialog_manager";
+import { dialogService } from "../../src/services/dialog_service";
 import { makeFakeRPCService, makeFakeNotificationService } from "../helpers/mocks";
 import { ConnectionLostError, RPCError } from "../../src/services/rpc";
 import { nextTick } from "../helpers/utility";
 import { makeTestEnv } from "../helpers/index";
-function makeFakeDialogManagerService(open) {
+
+function makeFakeDialogService(open) {
   return {
-    name: "dialog_manager",
+    name: "dialog",
     deploy() {
       return { open };
     },
   };
 }
+
 let serviceRegistry;
 let windowAddEventListener = window.addEventListener;
+
 QUnit.module("CrashManager", {
   async beforeEach() {
     serviceRegistry = new Registry();
     serviceRegistry.add(crashManagerService.name, crashManagerService);
-    serviceRegistry.add(dialogManagerService.name, dialogManagerService);
+    serviceRegistry.add(dialogService.name, dialogService);
     serviceRegistry.add(notificationService.name, notificationService);
     serviceRegistry.add("rpc", makeFakeRPCService());
   },
@@ -59,7 +62,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
       traceback: error.stack,
     });
   }
-  serviceRegistry.add("dialog_manager", makeFakeDialogManagerService(open), true);
+  serviceRegistry.add("dialog", makeFakeDialogService(open), true);
   await makeTestEnv({ serviceRegistry });
   const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
   errorCb(errorEvent);
@@ -94,7 +97,7 @@ QUnit.test(
         traceback: error.stack,
       });
     }
-    serviceRegistry.add("dialog_manager", makeFakeDialogManagerService(open), true);
+    serviceRegistry.add("dialog", makeFakeDialogService(open), true);
     await makeTestEnv({ serviceRegistry });
     odoo.errorDialogRegistry.add("strange_error", CustomDialog);
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });

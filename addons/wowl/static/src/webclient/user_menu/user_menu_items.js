@@ -40,7 +40,7 @@ export function shortCutsItem(env) {
     description: env._t("Shortcuts"),
     callback: () => {
       const title = env._t("Shortcuts");
-      env.services.dialog_manager.open(ShortCutsDialog, { title });
+      env.services.dialog.open(ShortCutsDialog, { title });
     },
     sequence: 30,
   };

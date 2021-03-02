@@ -378,7 +378,7 @@ export function setupDebugView(accessRights, env, component, action) {
       const props = {
         arch: json_node_to_xml(component.widget.renderer.arch, true, 0),
       };
-      env.services.dialog_manager.open(FieldViewGetDialog, props);
+      env.services.dialog.open(FieldViewGetDialog, props);
     },
     sequence: 340,
   };
@@ -421,7 +421,7 @@ export function setupDebugViewForm(env, component, action) {
     type: "item",
     description: env._t("Set Defaults"),
     callback: () => {
-      env.services.dialog_manager.open(SetDefaultDialog, {
+      env.services.dialog.open(SetDefaultDialog, {
         res_model: action.res_model,
         component: component,
       });
@@ -433,7 +433,7 @@ export function setupDebugViewForm(env, component, action) {
     description: env._t("View Metadata"),
     callback: () => {
       const selectedIds = component.widget.getSelectedIds();
-      env.services.dialog_manager.open(GetMetadataDialog, {
+      env.services.dialog.open(GetMetadataDialog, {
         res_model: action.res_model,
         selectedIds,
       });

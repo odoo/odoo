@@ -12,28 +12,28 @@ import OdooError from "./odoo_error";
 
 export const crashManagerService = {
   name: "crash_manager",
-  dependencies: ["dialog_manager", "notification", "rpc"],
+  dependencies: ["dialog", "notification", "rpc"],
   deploy(env) {
     let connectionLostNotifId;
 
     function handleError(error, env) {
       switch (error.name) {
         case "UNKNOWN_CORS_ERROR":
-          env.services.dialog_manager.open(NetworkErrorDialog, {
+          env.services.dialog.open(NetworkErrorDialog, {
             traceback: error.traceback || error.stack,
             message: error.message,
             name: error.name,
           });
           break;
         case "UNCAUGHT_CLIENT_ERROR":
-          env.services.dialog_manager.open(ClientErrorDialog, {
+          env.services.dialog.open(ClientErrorDialog, {
             traceback: error.traceback || error.stack,
             message: error.message,
             name: error.name,
           });
           break;
         case "UNCAUGHT_EMPTY_REJECTION_ERROR":
-          env.services.dialog_manager.open(ClientErrorDialog, {
+          env.services.dialog.open(ClientErrorDialog, {
             message: error.message,
             name: error.name,
           });
@@ -55,7 +55,7 @@ export const crashManagerService = {
           ) {
             ErrorComponent = odoo.errorDialogRegistry.get(exceptionName);
           }
-          env.services.dialog_manager.open(ErrorComponent || RPCErrorDialog, {
+          env.services.dialog.open(ErrorComponent || RPCErrorDialog, {
             traceback: error.traceback || error.stack,
             message: error.message,
             name: error.name,
@@ -102,7 +102,7 @@ export const crashManagerService = {
           if (error.Component) {
             DialogComponent = error.Component;
           }
-          env.services.dialog_manager.open(DialogComponent, {
+          env.services.dialog.open(DialogComponent, {
             traceback: error.traceback || error.stack,
             message: error.message,
             name: error.name,

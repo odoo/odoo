@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
+import { useService } from "../core/hooks";
+import { mainComponentRegistry } from "../webclient/main_component_registry";
 import { serviceRegistry } from "./service_registry";
 
-const { Component, core, tags, hooks } = owl;
+const { Component, core, tags, useState } = owl;
 const { EventBus } = core;
-const { useState } = hooks;
 
 class ErrorHandler extends Component {
     catchError(error) {
@@ -14,11 +15,14 @@ class ErrorHandler extends Component {
 }
 ErrorHandler.template = tags.xml`<t t-component="props.dialog.class" t-props="props.dialog.props" />`;
 
-class DialogManager extends Component {
-  constructor() {
-    super(...arguments);
+export class DialogContainer extends Component {
+  setup() {
     this.dialogs = useState({});
     this.dialogId = 1;
+    const { bus } = useService("dialog");
+    bus.on("UPDATE", this, (dialogClass, props) => {
+      this.addDialog(dialogClass, props);
+    });
   }
 
   addDialog(dialogClass, props) {
@@ -42,8 +46,8 @@ class DialogManager extends Component {
     return () => this._doCloseDialog(id);
   }
 }
-DialogManager.components = { ErrorHandler };
-DialogManager.template = tags.xml`
+DialogContainer.components = { ErrorHandler };
+DialogContainer.template = tags.xml`
     <div class="o_dialog_manager">
       <t t-foreach="Object.values(dialogs)" t-as="dialog" t-key="dialog.id">
         <ErrorHandler dialog="dialog" t-on-dialog-closed="onDialogClosed(dialog.id)" callback="_errorCallBack(dialog.id)" />
@@ -51,24 +55,17 @@ DialogManager.template = tags.xml`
     </div>
     `;
 
-export const dialogManagerService = {
-  name: "dialog_manager",
+mainComponentRegistry.add("DialogContainer", DialogContainer);
+
+export const dialogService = {
+  name: "dialog",
   deploy(env) {
     const bus = new EventBus();
-    class ReactiveDialogManager extends DialogManager {
-      constructor() {
-        super(...arguments);
-        bus.on("UPDATE", this, (dialogClass, props) => {
-          this.addDialog(dialogClass, props);
-        });
-      }
-    }
-    odoo.mainComponentRegistry.add("DialogManager", ReactiveDialogManager);
     function open(dialogClass, props) {
       bus.trigger("UPDATE", dialogClass, props);
     }
-    return { open };
+    return { open, bus };
   },
 };
 
-serviceRegistry.add("dialog_manager", dialogManagerService);
+serviceRegistry.add("dialog", dialogService);

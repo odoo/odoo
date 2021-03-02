@@ -1,16 +1,19 @@
 /** @odoo-module **/
 import { click, getFixture, makeFakeRPCService, makeTestEnv, mount, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
-import { dialogManagerService } from "../../src/services/dialog_manager";
-const { Component, tags } = owl;
+import { dialogService } from "../../src/services/dialog_service";
 import { Dialog } from "../../src/components/dialog/dialog";
 import { notificationService } from '../../src/notifications/notification_service';
 import { crashManagerService } from '../../src/crash_manager/crash_manager_service';
+import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
+
+const { Component, tags } = owl;
 
 let env;
 let serviceRegistry;
 let target;
 let pseudoWebClient;
+
 class PseudoWebClient extends Component {
   constructor() {
     super(...arguments);
@@ -27,12 +30,15 @@ PseudoWebClient.template = tags.xml`
             </div>
         </div>
     `;
+
 QUnit.module("DialogManager", {
   async beforeEach() {
     target = getFixture();
     serviceRegistry = new Registry();
-    serviceRegistry.add(dialogManagerService.name, dialogManagerService);
-    env = await makeTestEnv({ serviceRegistry });
+    serviceRegistry.add(dialogService.name, dialogService);
+    const componentRegistry = new Registry();
+    componentRegistry.add("DialogContainer", mainComponentRegistry.get("DialogContainer"));
+    env = await makeTestEnv({ serviceRegistry, mainComponentRegistry: componentRegistry });
   },
   afterEach() {
     pseudoWebClient.unmount();
@@ -48,7 +54,7 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
   assert.containsOnce(target, ".o_dialog_manager");
   assert.containsNone(target, ".o_dialog_manager portal");
   assert.containsNone(target, ".o_dialog_container .o_dialog");
-  env.services[dialogManagerService.name].open(CustomDialog);
+  env.services[dialogService.name].open(CustomDialog);
   await nextTick();
   assert.containsOnce(target, ".o_dialog_manager portal");
   assert.containsOnce(target, ".o_dialog_container .o_dialog");
@@ -73,7 +79,7 @@ QUnit.test("rendering with two dialogs", async (assert) => {
   assert.containsOnce(target, ".o_dialog_manager");
   assert.containsNone(target, ".o_dialog_manager portal");
   assert.containsNone(target, ".o_dialog_container .o_dialog");
-  env.services[dialogManagerService.name].open(CustomDialog, { title: "Hello" });
+  env.services[dialogService.name].open(CustomDialog, { title: "Hello" });
   await nextTick();
   assert.containsOnce(target, ".o_dialog_manager portal");
   assert.containsOnce(target, ".o_dialog_container .o_dialog");
@@ -83,7 +89,7 @@ QUnit.test("rendering with two dialogs", async (assert) => {
       : _a.textContent,
     "Hello"
   );
-  env.services[dialogManagerService.name].open(CustomDialog, { title: "Sauron" });
+  env.services[dialogService.name].open(CustomDialog, { title: "Sauron" });
   await nextTick();
   assert.containsN(target, ".o_dialog_manager portal", 2);
   assert.containsN(target, ".o_dialog_container .o_dialog", 2);
@@ -127,7 +133,7 @@ QUnit.test("dialog component crashes", async (assert) => {
     assert.step('error');
   };
 
-  env.services[dialogManagerService.name].open(FailingDialog);
+  env.services[dialogService.name].open(FailingDialog);
   await nextTick();
   assert.verifySteps(['error']);
   assert.containsOnce(pseudoWebClient, '.modal');

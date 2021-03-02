@@ -1,5 +1,4 @@
 /** @odoo-module **/
-const { Component, core, hooks, useState } = owl;
 import { useBus } from "../../core/hooks";
 import { ParentClosingMode } from "./dropdown_item";
 

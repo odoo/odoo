@@ -4,7 +4,7 @@ import { Registry } from "../../src/core/registry";
 import { makeFakeUserService, nextTick } from "../helpers/index";
 import { legacyExtraNextTick, makeTestEnv, mount } from "../helpers/utility";
 import { notificationService } from "../../src/notifications/notification_service";
-import { dialogManagerService } from "../../src/services/dialog_manager";
+import { dialogService } from "../../src/services/dialog_service";
 import { menusService } from "../../src/services/menus";
 import { actionService } from "../../src/actions/action_service";
 import { makeFakeRouterService, fakeTitleService, makeFakeDeviceService } from "../helpers/mocks";
@@ -161,7 +161,7 @@ export function getActionManagerTestConfig() {
   serviceRegistry
     .add("user", makeFakeUserService())
     .add(notificationService.name, notificationService)
-    .add(dialogManagerService.name, dialogManagerService)
+    .add(dialogService.name, dialogService)
     .add("menus", menusService)
     .add("action", actionService)
     .add("router", makeFakeRouterService())
