@@ -49,7 +49,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         :param data: the `_actions` key mapped to the action method we want to call
         :type data: string
         """
-        self._actions[data['action']](data)
+        self._actions[data.get('action', '')](data)
 
     def disconnect(self):
         self._stopped.set()
