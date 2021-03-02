@@ -123,6 +123,8 @@ odoo.define('web.ControlPanel', function (require) {
             };
 
             this.fields = this._formatFields(this.props.fields);
+
+            this.sprintf = _.str.sprintf;
         }
 
         mounted() {
