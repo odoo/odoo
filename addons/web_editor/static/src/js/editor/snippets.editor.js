@@ -1477,18 +1477,20 @@ var SnippetsMenu = Widget.extend({
         if ($snippet && !$snippet.is(':visible')) {
             return;
         }
+        // Take the first parent of the provided DOM (or itself) which
+        // should have an associated snippet editor.
+        // It is important to do that before the mutex exec call to compute it
+        // before potential ancestor removal.
+        if ($snippet && $snippet.length) {
+            $snippet = globalSelector.closest($snippet);
+        }
         const exec = previewMode
             ? action => this._mutex.exec(action)
             : action => this._execWithLoadingEffect(action, false);
         return exec(() => {
             return new Promise(resolve => {
-                // Take the first parent of the provided DOM (or itself) which
-                // should have an associated snippet editor and create + enable it.
                 if ($snippet && $snippet.length) {
-                    $snippet = globalSelector.closest($snippet);
-                    if ($snippet.length) {
-                        return this._createSnippetEditor($snippet).then(resolve);
-                    }
+                    return this._createSnippetEditor($snippet).then(resolve);
                 }
                 resolve(null);
             }).then(editorToEnable => {
