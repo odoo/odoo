@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-export const viewManagerService = {
-  name: "view_manager",
+export const viewService = {
+  name: "view",
   dependencies: ["model"],
   deploy(env) {
     const modelService = env.services.model;

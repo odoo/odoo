@@ -8,7 +8,7 @@ import { dialogManagerService } from "../../src/services/dialog_manager";
 import { menusService } from "../../src/services/menus";
 import { actionService } from "../../src/actions/action_service";
 import { makeFakeRouterService, fakeTitleService, makeFakeDeviceService } from "../helpers/mocks";
-import { viewManagerService } from "../../src/services/view_manager";
+import { viewService } from "../../src/views/view_service";
 import { modelService } from "../../src/services/model";
 import { makeRAMLocalStorage } from "../../src/env";
 import { makeLegacyActionManagerService, mapLegacyEnvToWowlEnv } from "../../src/legacy/utils";
@@ -165,7 +165,7 @@ export function getActionManagerTestConfig() {
     .add("menus", menusService)
     .add("action", actionService)
     .add("router", makeFakeRouterService())
-    .add("view_manager", viewManagerService)
+    .add("view_manager", viewService)
     .add("model", modelService)
     .add(fakeTitleService.name, fakeTitleService)
     .add(uiService.name, uiService)

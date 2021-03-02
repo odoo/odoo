@@ -22,7 +22,7 @@ function registerView(name, LegacyView) {
   class Controller extends Component {
     constructor() {
       super(...arguments);
-      this.vm = useService("view_manager");
+      this.vm = useService("view");
       this.controllerRef = hooks.useRef("controller");
       this.Widget = Widget; // fool the ComponentAdapter with a simple Widget
       this.View = LegacyView;

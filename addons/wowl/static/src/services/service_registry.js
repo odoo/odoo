@@ -14,7 +14,7 @@ import { rpcService } from "./rpc";
 import { titleService } from "./title";
 import { uiService } from "./ui/ui";
 import { userService } from "./user";
-import { viewManagerService } from "./view_manager";
+import { viewService } from "../views/view_service";
 import { debugManagerService } from "../debug_manager/debug_manager_service";
 import { downloadService } from "./download";
 import { effectService } from "../effects/effects_service";
@@ -37,7 +37,7 @@ const services = [
   rpcService,
   uiService,
   userService,
-  viewManagerService,
+  viewService,
   debugManagerService,
   downloadService,
   effectService,

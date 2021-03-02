@@ -214,7 +214,7 @@ export class ViewAdapter extends ActionAdapter {
     super(...args);
     this.model = useService("model");
     this.actionService = useService("action");
-    this.vm = useService("view_manager");
+    this.vm = useService("view");
     this.shouldUpdateWidget = true;
     this.magicReload = useMagicLegacyReload();
     const envWowl = this.env;
