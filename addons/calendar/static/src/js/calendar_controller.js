@@ -16,7 +16,9 @@ odoo.define('calendar.CalendarController', function (require) {
         const self = this;
         // When clicking on "Add", create a new record in form view
         this.$buttons.on('click', 'button.o-calendar-button-new', () => {
-            return self.do_action('calendar.action_calendar_event_notify');
+            return self.do_action('calendar.action_calendar_event_notify', {
+                additional_context: self.context,
+            });
         });
     },
 
