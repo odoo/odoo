@@ -178,3 +178,14 @@ class MrpProductProduceLine(models.TransientModel):
     def _get_production(self):
         product_produce_id = self.raw_product_produce_id or self.finished_product_produce_id
         return product_produce_id.production_id
+
+    @api.onchange('lot_id')
+    def _onchange_lot_id(self):
+        """ When the user is encoding a produce line for a tracked product, we apply some logic to
+        help him. This onchange will automatically switch `qty_done` to 1.0.
+        """
+        if self.product_id.tracking == 'serial':
+            if self.lot_id:
+                self.qty_done = 1
+            else:
+                self.qty_done = 0
