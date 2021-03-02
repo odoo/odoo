@@ -2,6 +2,7 @@
 
 import { loadJS } from "web.ajax";
 import BrowserDetection from "web.BrowserDetection";
+import { _t } from "web.core";
 /**
  * Format the traceback of an error.  Basically, we just add the error message
  * in the traceback if necessary (Chrome already does it by default, but not
