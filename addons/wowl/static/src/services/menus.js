@@ -1,4 +1,7 @@
 /** @odoo-module **/
+
+import { serviceRegistry } from "./service_registry";
+
 const loadMenusUrl = `/wowl/load_menus`;
 
 async function fetchLoadMenus(url) {
@@ -65,3 +68,5 @@ export const menusService = {
     return makeMenus(env, menusData);
   },
 };
+
+serviceRegistry.add("menus", menusService);

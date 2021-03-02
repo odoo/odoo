@@ -324,7 +324,7 @@ export function makeFakeUIService(blockCallback, unblockCallback) {
 }
 export function makeFakeNotificationService(createMock, closeMock) {
   return {
-    name: "notifications",
+    name: "notification",
     deploy() {
       function create() {
         if (createMock) {

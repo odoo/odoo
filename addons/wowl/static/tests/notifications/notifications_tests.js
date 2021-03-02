@@ -18,7 +18,7 @@ QUnit.module("Notifications", {
 
 QUnit.test("can display a basic notification", async (assert) => {
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
 
   notifService.create("I'm a basic notification");
@@ -31,7 +31,7 @@ QUnit.test("can display a basic notification", async (assert) => {
 
 QUnit.test("can display a notification of type danger", async (assert) => {
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
 
   notifService.create("I'm a danger notification", { type: "danger" });
@@ -44,7 +44,7 @@ QUnit.test("can display a notification of type danger", async (assert) => {
 
 QUnit.test("can display a danger notification with a title", async (assert) => {
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
   
   notifService.create("I'm a danger notification", { title: "Some title", type: "danger" });
@@ -67,7 +67,7 @@ QUnit.test("notifications aren't sticky by default", async (assert) => {
     return 1;
   };
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
 
   notifService.create("I'm a notification");
@@ -84,7 +84,7 @@ QUnit.test("can display a sticky notification", async (assert) => {
     return 1;
   };
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
 
   notifService.create("I'm a sticky notification", { sticky: true });
@@ -94,7 +94,7 @@ QUnit.test("can display a sticky notification", async (assert) => {
 
 QUnit.test("can close sticky notification", async (assert) => {
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
 
   let id = notifService.create("I'm a sticky notification", { sticky: true });
@@ -122,7 +122,7 @@ QUnit.test("can close a non-sticky notification", async (assert) => {
     return 1;
   };
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
 
   const id = notifService.create("I'm a sticky notification");
@@ -147,7 +147,7 @@ QUnit.test("close a non-sticky notification while another one remains", async (a
     return 1;
   };
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   await mount(NotificationContainer, { env, target });
 
   const id1 = notifService.create("I'm a non-sticky notification");
@@ -173,7 +173,7 @@ QUnit.test("close a non-sticky notification while another one remains", async (a
 
 QUnit.test("notification coming when NotificationManager not mounted yet", async (assert) => {
   const env = await makeTestEnv({ browser, serviceRegistry });
-  const notifService = env.services.notifications;
+  const notifService = env.services.notification;
   mount(NotificationContainer, { env, target });
   
   notifService.create("I'm a non-sticky notification");

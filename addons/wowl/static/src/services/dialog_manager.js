@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "./service_registry";
+
 const { Component, core, tags, hooks } = owl;
 const { EventBus } = core;
 const { useState } = hooks;
@@ -68,3 +70,5 @@ export const dialogManagerService = {
     return { open };
   },
 };
+
+serviceRegistry.add("dialog_manager", dialogManagerService);

@@ -5,9 +5,8 @@ import { useService } from "../core/hooks";
 const { Component } = owl;
 
 export class Notification extends Component {
-  constructor() {
-    super(...arguments);
-    this.notificationService = useService("notifications");
+  setup() {
+    this.notificationService = useService("notification");
   }
 
   get icon() {

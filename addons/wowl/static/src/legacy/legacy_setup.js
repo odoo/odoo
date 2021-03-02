@@ -1,4 +1,4 @@
-/** @odoo-module alias=wowl.legacySetup**/
+/** @odoo-module alias=wowl.legacySetup **/
 
 import { serviceRegistry } from "../services/service_registry";
 import {

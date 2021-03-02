@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "./service_registry";
+
 function computeAllowedCompanyIds(env) {
   const { cookie, router } = env.services;
   const { user_companies } = odoo.session_info;
@@ -69,3 +71,5 @@ export const userService = {
     };
   },
 };
+
+serviceRegistry.add("user", userService);

@@ -3,6 +3,7 @@
 import * as dates from "../utils/dates";
 import * as numbers from "../utils/numbers";
 import { escapeRegExp, sprintf } from "../utils/strings";
+import { serviceRegistry } from "./service_registry";
 
 const translatedTerms = {};
 
@@ -186,3 +187,5 @@ export const localizationService = {
     return makeLocalization({ langParams, terms });
   },
 };
+
+serviceRegistry.add("localization", localizationService);

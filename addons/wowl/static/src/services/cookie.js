@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "./service_registry";
+
 /**
  * Service to make use of document.cookie
  * https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
@@ -54,3 +56,5 @@ export const cookieService = {
     return makeCookieService();
   },
 };
+
+serviceRegistry.add("cookie", cookieService);

@@ -31,7 +31,7 @@ class ActionAdapter extends ComponentAdapter {
     this.actionService = useService("action");
     this.router = useService("router");
     this.title = useService("title");
-    this.notifications = useService("notifications");
+    this.notifications = useService("notification");
     this.dialogs = useService("dialog_manager");
     this.wowlEnv = this.env;
     // a legacy widget widget can push_state anytime including during its async rendering

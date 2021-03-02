@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "./service_registry";
+
 const { Component } = owl;
 
 function read(rpc, env, model) {
@@ -150,3 +152,5 @@ export const modelService = {
     };
   },
 };
+
+serviceRegistry.add("model", modelService);

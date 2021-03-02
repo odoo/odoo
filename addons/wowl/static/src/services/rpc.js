@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import OdooError from "../crash_manager/odoo_error";
+import { serviceRegistry } from "./service_registry";
 
 const { Component } = owl;
 
@@ -97,3 +98,5 @@ export const rpcService = {
     };
   },
 };
+
+serviceRegistry.add("rpc", rpcService);

@@ -119,7 +119,7 @@ QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
     return 1234;
   };
   const mockClose = (id) => assert.step(`close (${id})`);
-  serviceRegistry.add("notifications", makeFakeNotificationService(mockCreate, mockClose), true);
+  serviceRegistry.add("notification", makeFakeNotificationService(mockCreate, mockClose), true);
   const values = [false, true]; // simulate the 'back online status' after 2 'version_info' calls
   const mockRPC = async (route) => {
     if (route === "/web/webclient/version_info") {

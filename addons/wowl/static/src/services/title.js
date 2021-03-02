@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "./service_registry";
+
 export const titleService = {
   name: "title",
   deploy() {
@@ -30,3 +32,5 @@ export const titleService = {
     };
   },
 };
+
+serviceRegistry.add("title", titleService);

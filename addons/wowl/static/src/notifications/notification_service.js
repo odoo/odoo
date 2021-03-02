@@ -1,11 +1,13 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "../services/service_registry";
+
 const { EventBus } = owl.core;
 
 const AUTOCLOSE_DELAY = 4000;
 
 export const notificationService = {
-  name: "notifications",
+  name: "notification",
   deploy(env) {
     let notifId = 0;
     let notifications = [];
@@ -35,3 +37,5 @@ export const notificationService = {
     return { close, create, bus };
   },
 };
+
+serviceRegistry.add("notification", notificationService);

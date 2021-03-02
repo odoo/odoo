@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "../services/service_registry";
+
 export const viewService = {
   name: "view",
   dependencies: ["model"],
@@ -45,3 +47,5 @@ export const viewService = {
     return { loadViews };
   },
 };
+
+serviceRegistry.add("view", viewService)

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "../services/service_registry";
 import { isBrowserChromium } from "../utils/misc";
 import {
   ClientErrorDialog,
@@ -11,7 +12,7 @@ import OdooError from "./odoo_error";
 
 export const crashManagerService = {
   name: "crash_manager",
-  dependencies: ["dialog_manager", "notifications", "rpc"],
+  dependencies: ["dialog_manager", "notification", "rpc"],
   deploy(env) {
     let connectionLostNotifId;
 
@@ -71,7 +72,7 @@ export const crashManagerService = {
             // concurrent rpcs when the connection was lost)
             break;
           }
-          connectionLostNotifId = env.services.notifications.create(
+          connectionLostNotifId = env.services.notification.create(
             env._t("Connection lost. Trying to reconnect..."),
             { sticky: true }
           );
@@ -80,9 +81,9 @@ export const crashManagerService = {
             env.services
               .rpc("/web/webclient/version_info", {})
               .then(function () {
-                env.services.notifications.close(connectionLostNotifId);
+                env.services.notification.close(connectionLostNotifId);
                 connectionLostNotifId = null;
-                env.services.notifications.create(
+                env.services.notification.create(
                   env._t("Connection restored. You are back online."),
                   { type: "info" }
                 );
@@ -175,3 +176,5 @@ export const crashManagerService = {
     });
   },
 };
+
+serviceRegistry.add("crash_manager", crashManagerService)

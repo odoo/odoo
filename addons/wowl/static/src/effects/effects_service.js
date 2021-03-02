@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { serviceRegistry } from "../services/service_registry";
 import { RainbowMan } from "./rainbow_man";
 
 const { Component, core, tags } = owl;
@@ -29,12 +30,12 @@ export function convertRainBowMessage(message) {
 
 export const effectService = {
   name: "effects",
-  dependencies: ["notifications", "user"],
+  dependencies: ["notification", "user"],
   deploy(env) {
     if (!env.services.user.showEffect) {
       return {
         create: (message, options) => {
-          env.services.notifications.create(message, { sticky: false });
+          env.services.notification.create(message, { sticky: false });
         },
       };
     }
@@ -75,3 +76,5 @@ export const effectService = {
     return { create };
   },
 };
+
+serviceRegistry.add("effects", effectService);

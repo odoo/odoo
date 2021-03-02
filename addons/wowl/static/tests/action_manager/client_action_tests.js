@@ -375,7 +375,6 @@ QUnit.module("ActionManager", (hooks) => {
 
   QUnit.test("test display_notification client action", async function (assert) {
     assert.expect(6);
-    testConfig.serviceRegistry.add("notification", notificationService);
     const componentRegistry = new Registry();
     componentRegistry.add("NotificationContainer", NotificationContainer)
     testConfig.mainComponentRegistry = componentRegistry;

@@ -3,6 +3,7 @@ import { NetworkErrorDialog, ServerErrorDialog } from "../crash_manager/error_di
 import OdooError from "../crash_manager/odoo_error";
 import parse from "../libs/content-disposition";
 import download from "../libs/download";
+import { serviceRegistry } from "./service_registry";
 
 export const downloadService = {
   name: "download",
@@ -75,3 +76,5 @@ export const downloadService = {
     };
   },
 };
+
+serviceRegistry.add("download", downloadService);

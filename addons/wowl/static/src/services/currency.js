@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "./service_registry";
+
 export const currencyService = {
   name: "currency",
   dependencies: ["localization"],
@@ -35,3 +37,5 @@ export const currencyService = {
     return { get, getAll, format };
   },
 };
+
+serviceRegistry.add("currency", currencyService)

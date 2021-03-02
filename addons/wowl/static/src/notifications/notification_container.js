@@ -9,7 +9,7 @@ const { Component, tags } = owl;
 export class NotificationContainer extends Component {
   setup() {
     this.notifications = [];
-    const { bus } = useService("notifications");
+    const { bus } = useService("notification");
     bus.on("UPDATE", this, notifications => {
       this.notifications = notifications;
       this.render();

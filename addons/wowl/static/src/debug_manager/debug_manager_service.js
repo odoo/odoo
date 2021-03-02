@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { serviceRegistry } from "../services/service_registry";
 import { debugManager } from "./debug_manager";
 
 export function editModelDebug(env, title, model, id) {
@@ -57,3 +58,5 @@ export const debugManagerService = {
     };
   },
 };
+
+serviceRegistry.add("debug_manager", debugManagerService);

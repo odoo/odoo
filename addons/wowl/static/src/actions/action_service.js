@@ -5,6 +5,7 @@ import { makeContext } from "../core/context";
 import { ActionDialog } from "./action_dialog";
 import { KeepLast } from "../utils/concurrency";
 import { sprintf } from "../utils/strings";
+import { serviceRegistry } from "../services/service_registry";
 
 const { Component, hooks, tags } = owl;
 
@@ -497,7 +498,7 @@ function makeActionManager(env) {
           "A popup window has been blocked. You may need to change your " +
             "browser settings to allow popup windows for this page."
         );
-        env.services.notifications.create(msg, {
+        env.services.notification.create(msg, {
           sticky: true,
           type: "warning",
         });
@@ -718,7 +719,7 @@ function makeActionManager(env) {
       const state = await wkhtmltopdfStateProm;
       // display a notification according to wkhtmltopdf's state
       if (state in WKHTMLTOPDF_MESSAGES) {
-        env.services.notifications.create(WKHTMLTOPDF_MESSAGES[state], {
+        env.services.notification.create(WKHTMLTOPDF_MESSAGES[state], {
           sticky: true,
           title: env._t("Report"),
         });
@@ -1071,7 +1072,7 @@ export const actionService = {
     "download",
     "effects",
     "localization",
-    "notifications",
+    "notification",
     "router",
     "rpc",
     "ui",
@@ -1081,3 +1082,5 @@ export const actionService = {
     return makeActionManager(env);
   },
 };
+
+serviceRegistry.add("action", actionService);

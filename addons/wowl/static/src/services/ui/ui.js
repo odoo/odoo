@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "../service_registry";
+
 const { Component, core, tags, useState } = owl;
 const { EventBus } = core;
 
@@ -102,3 +104,5 @@ export const uiService = {
     return { block, unblock };
   },
 };
+
+serviceRegistry.add("ui", uiService);

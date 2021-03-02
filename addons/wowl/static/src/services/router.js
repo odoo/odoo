@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { serviceRegistry } from "./service_registry";
+
 function parseString(str) {
   const parts = str.split("&");
   const result = {};
@@ -124,3 +126,5 @@ export function objectToQuery(obj) {
   });
   return query;
 }
+
+serviceRegistry.add("router", routerService);
