@@ -582,25 +582,20 @@ class Meeting(models.Model):
                 )
         return True
 
-    def action_mass_mailing(self):
-        partners_ids = self.mapped('partner_ids')
-        if not partners_ids:
+    def action_open_composer(self):
+        if not self.partner_ids:
             raise UserError(_("There are no attendees on these events"))
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        default_partners = partners_ids and partners_ids.ids
         compose_ctx = dict(
-            default_use_template=False,
             default_composition_mode='mass_mail',
-            default_partner_ids=default_partners,
-            default_subject=_("Event update")
+            default_subject=_("Event update"),
+            default_model='calendar.event',
+            default_res_ids=self.ids,
         )
         return {
             'name': _('Contact Attendees'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
             'target': 'new',
             'context': compose_ctx,
         }
