@@ -107,6 +107,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'is_won': True,
         })
 
+        base_us = cls.env.ref('base.us')
+
         cls.lead_1 = cls.env['crm.lead'].create({
             'name': 'Nibbler Spacecraft Request',
             'type': 'lead',
@@ -169,9 +171,19 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'is_company': False,
             'street': 'Cookieville Minimum-Security Orphanarium',
             'city': 'New New York',
-            'country_id': cls.env.ref('base.us').id,
+            'country_id': base_us.id,
             'mobile': '+1 202 555 0999',
             'zip': '97648',
+        })
+        cls.contact_company = cls.env['res.partner'].create({
+            'name': 'Mom',
+            'company_name': 'MomCorp',
+            'is_company': True,
+            'street': 'Mom Friendly Robot Street',
+            'city': 'New new York',
+            'country_id': base_us.id,
+            'mobile': '+1 202 555 0888',
+            'zip': '87654',
         })
 
     def _create_leads_batch(self, lead_type='lead', count=10, email_dup_count=0,
