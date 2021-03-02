@@ -28,9 +28,6 @@
     }
     .o_slider_pointer, .o_opacity_pointer, .o_picker_pointer, .o_color_preview, .o_hex_div, .o_rgba_div  {
         border: 1px solid black;
-        &:focus-within {
-            border-color: $o-we-sidebar-content-field-input-border-color;
-        }
     }
     .o_color_picker_inputs {
         font-size: 10px;
@@ -39,10 +36,6 @@
             font-family: monospace !important; // FIXME: the monospace font used in the editor has not consistent ch units on Firefox
             height: 18px;
             font-size: 11px;
-            border: none;
-            &:focus {
-                outline: none;
-            }
         }
         .o_hex_div input {
             width: 7ch;
