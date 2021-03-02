@@ -3,7 +3,7 @@
 import * as utils from "../../src/utils/arrays";
 import { makeFakeRPCService, makeMockFetch } from "./mocks";
 import { Registry } from "../../src/core/registry";
-import { evaluateExpr } from "../../src/py_js/index";
+import { evaluateExpr } from "../../src/py_js/py";
 import { combineDomains, Domain } from "../../src/core/domain";
 // -----------------------------------------------------------------------------
 // Utils

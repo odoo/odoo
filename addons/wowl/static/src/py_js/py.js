@@ -1,16 +1,16 @@
 /** @odoo-module **/
 
-import { tokenize } from "./tokenizer";
-import { parse } from "./parser";
-import { evaluate } from "./interpreter";
-export { tokenize } from "./tokenizer";
-export { parse } from "./parser";
-export { evaluate } from "./interpreter";
-export { formatAST } from "./utils";
+import { tokenize } from "./py_tokenizer";
+import { parse } from "./py_parser";
+import { evaluate } from "./py_interpreter";
+export { tokenize } from "./py_tokenizer";
+export { parse } from "./py_parser";
+export { evaluate } from "./py_interpreter";
+export { formatAST } from "./py_utils";
 
 /**
- * @typedef { import("./tokenizer").Token } Token
- * @typedef { import("./parser").AST } AST
+ * @typedef { import("./py_tokenizer").Token } Token
+ * @typedef { import("./py_parser").AST } AST
  */
 
 /**

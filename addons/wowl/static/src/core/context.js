@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "../py_js/index";
+import { evaluateExpr } from "../py_js/py";
 
 /**
  * @typedef {{[key: string]: any}} Context

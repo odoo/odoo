@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "../py_js/index";
+import { evaluateExpr } from "../py_js/py";
 import { makeContext } from "../core/context";
 import { ActionDialog } from "./action_dialog";
 import { KeepLast } from "../utils/concurrency";

@@ -1,6 +1,6 @@
 /** @odoo-module **/
-import { formatAST, evaluateExpr, parseExpr, tokenize } from "../../src/py_js/index";
-import { toPyDict } from "../../src/py_js/utils";
+import { formatAST, evaluateExpr, parseExpr, tokenize } from "../../src/py_js/py";
+import { toPyDict } from "../../src/py_js/py_utils";
 
 QUnit.module("py", {}, () => {
   QUnit.module("tokenizer");

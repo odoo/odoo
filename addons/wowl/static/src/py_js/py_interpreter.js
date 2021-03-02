@@ -1,13 +1,13 @@
 /** @odoo-module **/
-import { BUILTINS, PyDate, parseArgs, PyDateTime, PyTime, PyRelativeDelta } from "./builtins";
-import { PY_DICT } from "./utils";
+import { BUILTINS, PyDate, parseArgs, PyDateTime, PyTime, PyRelativeDelta } from "./py_builtin";
+import { PY_DICT } from "./py_utils";
 
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
 
 /**
- * @typedef { import("./parser").AST } AST
+ * @typedef { import("./py_parser").AST } AST
  */
 
 // -----------------------------------------------------------------------------

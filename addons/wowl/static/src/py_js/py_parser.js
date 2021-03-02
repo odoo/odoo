@@ -1,12 +1,12 @@
 /** @odoo-module **/
-import { binaryOperators, comparators } from "./tokenizer";
+import { binaryOperators, comparators } from "./py_tokenizer";
 
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
 
 /**
- * @typedef { import("./tokenizer").Token } Token
+ * @typedef { import("./py_tokenizer").Token } Token
  */
 
 /**
