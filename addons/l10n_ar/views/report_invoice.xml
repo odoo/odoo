@@ -16,7 +16,7 @@
                         <span style="font-size: x-small;" t-esc="not pre_printed_report and document_legend or '&#160;'"/>
                     </span>
                 </div>
-                <div name="right-upper-side" class="col-5 text-right" t-if="not pre_printed_report">
+                <div name="right-upper-side" class="col-5 text-right" style="padding-left: 0px;" t-if="not pre_printed_report">
 
                     <!-- (6) Titulo de Documento -->
                     <h4 t-att-style="'color: %s;' % o.company_id.primary_color"><strong>
