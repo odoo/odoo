@@ -15,7 +15,7 @@ import { makeLegacyActionManagerService, mapLegacyEnvToWowlEnv } from "../../src
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
-import { uiService } from "../../src/services/ui/ui";
+import { uiService } from "../../src/services/ui_service";
 import { effectService } from "../../src/effects/effect_service";
 
 const { Component, tags } = owl;

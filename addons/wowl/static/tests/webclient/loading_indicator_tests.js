@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { LoadingIndicator } from "../../src/webclient/loading_indicator/loading_indicator";
-import { uiService } from "../../src/services/ui/ui";
+import { uiService } from "../../src/services/ui_service";
 import { Registry } from "../../src/core/registry";
 import { getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
 let target;

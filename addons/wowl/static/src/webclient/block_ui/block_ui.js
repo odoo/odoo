@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { serviceRegistry } from "../../webclient/service_registry";
+import { useService } from "../../core/hooks";
+import { mainComponentRegistry } from "../main_component_registry";
 
-const { Component, core, tags, useState } = owl;
-const { EventBus } = core;
+const { Component, tags, useState } = owl;
 
-class BlockUI extends Component {
-  constructor() {
-    super(...arguments);
+
+export class BlockUI extends Component {
+  setup() {
     this.messagesByDuration = [
       { time: 20, l1: this.env._t("Loading...") },
       { time: 40, l1: this.env._t("Still loading...") },
@@ -34,6 +34,10 @@ class BlockUI extends Component {
       line2: "",
       count: 0,
     });
+
+    const { bus } = useService("ui"); 
+    bus.on("BLOCK", this, this.block);
+    bus.on("UNBLOCK", this, this.unblock);
   }
 
   replaceMessage(index) {
@@ -81,28 +85,4 @@ BlockUI.template = tags.xml`
       </t>
     </div>`;
 
-export const uiService = {
-  name: "ui",
-  deploy(env) {
-    const bus = new EventBus();
-    class ReactiveBlockUI extends BlockUI {
-      constructor() {
-        super(...arguments);
-        bus.on("BLOCK", this, this.block);
-        bus.on("UNBLOCK", this, this.unblock);
-      }
-    }
-
-    odoo.mainComponentRegistry.add("BlockUI", ReactiveBlockUI);
-
-    function block() {
-      bus.trigger("BLOCK");
-    }
-    function unblock() {
-      bus.trigger("UNBLOCK");
-    }
-    return { block, unblock };
-  },
-};
-
-serviceRegistry.add("ui", uiService);
+mainComponentRegistry.add("BlockUI", BlockUI);
