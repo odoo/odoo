@@ -3,7 +3,6 @@ import { formatAST, evaluateExpr, parseExpr, tokenize } from "../../src/py_js/py
 import { toPyDict } from "../../src/py_js/py_utils";
 
 QUnit.module("py", {}, () => {
-
   QUnit.module("tokenizer");
 
   QUnit.test("can tokenize simple expressions with spaces", (assert) => {
@@ -424,14 +423,13 @@ QUnit.module("py", {}, () => {
   });
 
   QUnit.module("interpreter", () => {
-  
     QUnit.module("basic values");
-  
+
     QUnit.test("evaluate simple values", (assert) => {
       assert.strictEqual(evaluateExpr("12"), 12);
       assert.strictEqual(evaluateExpr('"foo"'), "foo");
     });
-  
+
     QUnit.test("numbers", (assert) => {
       assert.strictEqual(evaluateExpr("1.2"), 1.2);
       assert.strictEqual(evaluateExpr(".12"), 0.12);
@@ -441,18 +439,18 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr("-12"), -12);
       assert.strictEqual(evaluateExpr("+12"), 12);
     });
-  
+
     QUnit.test("strings", (assert) => {
       assert.strictEqual(evaluateExpr('""'), "");
       assert.strictEqual(evaluateExpr('"foo"'), "foo");
       assert.strictEqual(evaluateExpr("'foo'"), "foo");
     });
-  
+
     QUnit.test("boolean", (assert) => {
       assert.strictEqual(evaluateExpr("True"), true);
       assert.strictEqual(evaluateExpr("False"), false);
     });
-  
+
     QUnit.test("lists", (assert) => {
       assert.deepEqual(evaluateExpr("[]"), []);
       assert.deepEqual(evaluateExpr("[1]"), [1]);
@@ -461,23 +459,23 @@ QUnit.module("py", {}, () => {
       assert.deepEqual(evaluateExpr("[1,2 + 3]"), [1, 5]);
       assert.deepEqual(evaluateExpr("[1,2, 3][1]"), 2);
     });
-  
+
     QUnit.test("None", (assert) => {
       assert.strictEqual(evaluateExpr("None"), null);
     });
-  
+
     QUnit.test("Tuples", (assert) => {
       assert.deepEqual(evaluateExpr("()"), []);
       assert.deepEqual(evaluateExpr("(1,)"), [1]);
       assert.deepEqual(evaluateExpr("(1,2)"), [1, 2]);
     });
-  
+
     QUnit.test("strings can be concatenated", (assert) => {
       assert.strictEqual(evaluateExpr('"foo" + "bar"'), "foobar");
     });
-  
+
     QUnit.module("number properties");
-  
+
     QUnit.test("number arithmetic", (assert) => {
       assert.strictEqual(evaluateExpr("1 + 2"), 3);
       assert.strictEqual(evaluateExpr("4 - 2"), 2);
@@ -495,16 +493,16 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr("2 ** 3"), 8);
       assert.strictEqual(evaluateExpr("a + b", { a: 1, b: 41 }), 42);
     });
-  
+
     QUnit.test("// operator", (assert) => {
       assert.strictEqual(evaluateExpr("1 // 2"), 0);
       assert.strictEqual(evaluateExpr("1 // -2"), -1);
       assert.strictEqual(evaluateExpr("-1 // 2"), -1);
       assert.strictEqual(evaluateExpr("6 // 2"), 3);
     });
-  
+
     QUnit.module("boolean properties");
-  
+
     QUnit.test("boolean arithmetic", (assert) => {
       assert.strictEqual(evaluateExpr("True and False"), false);
       assert.strictEqual(evaluateExpr("True or False"), true);
@@ -516,7 +514,7 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr("True == False or True == True"), true);
       assert.strictEqual(evaluateExpr("False == True and False"), false);
     });
-  
+
     QUnit.test("get value from context", (assert) => {
       assert.strictEqual(evaluateExpr("foo == 'foo' or foo == 'bar'", { foo: "bar" }), true);
       assert.strictEqual(
@@ -524,23 +522,23 @@ QUnit.module("py", {}, () => {
         true
       );
     });
-  
+
     QUnit.test("should be lazy", (assert) => {
       // second clause should nameerror if evaluated
       assert.throws(() => evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "foo" }));
       assert.strictEqual(evaluateExpr("foo == 'foo' and bar == 'bar'", { foo: "bar" }), false);
       assert.strictEqual(evaluateExpr("foo == 'foo' or bar == 'bar'", { foo: "foo" }), true);
     });
-  
+
     QUnit.test("should return the actual object", (assert) => {
       assert.strictEqual(evaluateExpr('"foo" or "bar"'), "foo");
       assert.strictEqual(evaluateExpr('None or "bar"'), "bar");
       assert.strictEqual(evaluateExpr("False or None"), null);
       assert.strictEqual(evaluateExpr("0 or 1"), 1);
     });
-  
+
     QUnit.module("values from context");
-  
+
     QUnit.test("free variable", (assert) => {
       assert.strictEqual(evaluateExpr("a", { a: 3 }), 3);
       assert.strictEqual(evaluateExpr("a + b", { a: 3, b: 5 }), 8);
@@ -550,19 +548,19 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr("a", { a: "bar" }), "bar");
       assert.deepEqual(evaluateExpr("foo", { foo: [1, 2, 3] }), [1, 2, 3]);
     });
-  
+
     QUnit.test("python values in context", (assert) => {
       const context = toPyDict({ b: 3 });
       assert.strictEqual(evaluateExpr("context.get('b', 54)", { context }), 3);
       assert.strictEqual(evaluateExpr("context.get('c', 54)", { context }), 54);
     });
-  
+
     QUnit.test("throw error if name is not defined", (assert) => {
       assert.throws(() => evaluateExpr("a"));
     });
-  
+
     QUnit.module("comparisons");
-  
+
     QUnit.test("equality", (assert) => {
       assert.strictEqual(evaluateExpr("1 == 1"), true);
       assert.strictEqual(evaluateExpr('"foo" == "foo"'), true);
@@ -582,20 +580,20 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr('foo == "bar"', { foo: "bar" }), true);
       assert.strictEqual(evaluateExpr('foo == "bar"', { foo: "qux" }), false);
     });
-    
+
     QUnit.test("inequality", (assert) => {
       assert.strictEqual(evaluateExpr("1 != 2"), true);
       assert.strictEqual(evaluateExpr('"foo" != "foo"'), false);
       assert.strictEqual(evaluateExpr('"foo" != "bar"'), true);
     });
-    
+
     QUnit.test("inequality should work with free variables", (assert) => {
       assert.strictEqual(evaluateExpr("1 != a", { a: 42 }), true);
       assert.strictEqual(evaluateExpr('foo != "bar"', { foo: "bar" }), false);
       assert.strictEqual(evaluateExpr('foo != "bar"', { foo: "qux" }), true);
       assert.strictEqual(evaluateExpr("foo != bar", { foo: "qux", bar: "quux" }), true);
     });
-    
+
     QUnit.test("should accept deprecated form", (assert) => {
       assert.strictEqual(evaluateExpr("1 <> 2"), true);
       assert.strictEqual(evaluateExpr('"foo" <> "foo"'), false);
@@ -656,9 +654,9 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr("'foo' < 4444"), false);
       assert.strictEqual(evaluateExpr("{} < []"), true);
     });
-    
+
     QUnit.module("containment");
-    
+
     QUnit.test("in tuples", (assert) => {
       assert.strictEqual(evaluateExpr("'bar' in ('foo', 'bar')"), true);
       assert.strictEqual(evaluateExpr("'bar' in ('foo', 'qux')"), false);
@@ -668,13 +666,13 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr("'ur' in ('url',)"), false);
       assert.strictEqual(evaluateExpr("'url' in ('url', 'foo', 'bar')"), true);
     });
-    
+
     QUnit.test("in strings", (assert) => {
       assert.strictEqual(evaluateExpr("'bar' in 'bar'"), true);
       assert.strictEqual(evaluateExpr("'bar' in 'foobar'"), true);
       assert.strictEqual(evaluateExpr("'bar' in 'fooqux'"), false);
     });
-    
+
     QUnit.test("in lists", (assert) => {
       assert.strictEqual(evaluateExpr("'bar' in ['foo', 'bar']"), true);
       assert.strictEqual(evaluateExpr("'bar' in ['foo', 'qux']"), false);
@@ -682,82 +680,81 @@ QUnit.module("py", {}, () => {
       assert.strictEqual(evaluateExpr("None  in [1,'foo',None]"), true);
       assert.strictEqual(evaluateExpr("not a in b", { a: 3, b: [1, 2, 4, 8] }), true);
     });
-    
+
     QUnit.test("not in", (assert) => {
       assert.strictEqual(evaluateExpr("1  not in (2,3,4)"), true);
       assert.strictEqual(evaluateExpr('"ur" not in ("url",)'), true);
       assert.strictEqual(evaluateExpr("-2 not in (1,2,3)"), true);
       assert.strictEqual(evaluateExpr("-2 not in (1,-2,3)"), false);
     });
-    
+
     QUnit.module("conversions");
-    
+
     QUnit.test("to bool", (assert) => {
       assert.strictEqual(evaluateExpr("bool('')"), false);
       assert.strictEqual(evaluateExpr("bool('foo')"), true);
       assert.strictEqual(evaluateExpr("bool(date_deadline)", { date_deadline: "2008" }), true);
       assert.strictEqual(evaluateExpr("bool(s)", { s: "" }), false);
     });
-    
+
     QUnit.module("callables");
-    
+
     QUnit.test("should call function from context", (assert) => {
       assert.strictEqual(evaluateExpr("foo()", { foo: () => 3 }), 3);
       assert.strictEqual(evaluateExpr("1 + foo()", { foo: () => 3 }), 4);
     });
-    
+
     QUnit.module("dicts");
-    
+
     QUnit.test("dict", (assert) => {
       assert.deepEqual(evaluateExpr("{}"), {});
       assert.deepEqual(evaluateExpr("{'foo': 1 + 2}"), { foo: 3 });
       assert.deepEqual(evaluateExpr("{'foo': 1, 'bar': 4}"), { foo: 1, bar: 4 });
     });
-    
+
     QUnit.test("lookup and definition", (assert) => {
       assert.strictEqual(evaluateExpr("{'a': 1}['a']"), 1);
       assert.strictEqual(evaluateExpr("{1: 2}[1]"), 2);
     });
-    
+
     QUnit.test("can get values with get method", (assert) => {
       assert.strictEqual(evaluateExpr("{'a': 1}.get('a')"), 1);
       assert.strictEqual(evaluateExpr("{'a': 1}.get('b')"), null);
       assert.strictEqual(evaluateExpr("{'a': 1}.get('b', 54)"), 54);
     });
-    
+
     QUnit.module("objects");
-    
+
     QUnit.test("can read values from object", (assert) => {
       assert.strictEqual(evaluateExpr("obj.a", { obj: { a: 123 } }), 123);
       assert.strictEqual(evaluateExpr("obj.a.b.c", { obj: { a: { b: { c: 321 } } } }), 321);
     });
-    
+
     QUnit.test("can call function in object", (assert) => {
       assert.strictEqual(evaluateExpr("obj.f(3)", { obj: { f: (n) => n + 1 } }), 4);
     });
-    
+
     QUnit.module("if expressions");
-    
+
     QUnit.test("simple if expressions", (assert) => {
       assert.strictEqual(evaluateExpr("1 if True else 2"), 1);
       assert.strictEqual(evaluateExpr("1 if 3 < 2 else 'greater'"), "greater");
     });
-    
+
     QUnit.test("only evaluate proper branch", (assert) => {
       // will throw if evaluate wrong branch => name error
       assert.strictEqual(evaluateExpr("1 if True else boom"), 1);
       assert.strictEqual(evaluateExpr("boom if False else 222"), 222);
     });
-    
+
     QUnit.module("miscellaneous expressions");
-    
+
     QUnit.test("tuple in list", (assert) => {
       assert.deepEqual(evaluateExpr("[(1 + 2,'foo', True)]"), [[3, "foo", true]]);
     });
   });
 
   QUnit.module("builtins", () => {
-  
     QUnit.module("time");
 
     function check(expr, fn) {
@@ -779,7 +776,7 @@ QUnit.module("py", {}, () => {
       const s = format(d.getUTCSeconds());
       return `${formatDate(d)} ${h}:${m}:${s}`;
     };
-  
+
     QUnit.test("strftime", (assert) => {
       assert.ok(check("time.strftime('%Y')", (d) => String(d.getFullYear())));
       assert.ok(check("time.strftime('%Y') + '-01-30'", (d) => String(d.getFullYear()) + "-01-30"));
@@ -787,7 +784,7 @@ QUnit.module("py", {}, () => {
     });
 
     QUnit.module("datetime.datetime");
-    
+
     QUnit.test("datetime.datetime.now", (assert) => {
       console.log(evaluateExpr("datetime.datetime.now().month"));
       assert.ok(check("datetime.datetime.now().year", (d) => d.getUTCFullYear()));
@@ -797,7 +794,7 @@ QUnit.module("py", {}, () => {
       assert.ok(check("datetime.datetime.now().minute", (d) => d.getUTCMinutes()));
       assert.ok(check("datetime.datetime.now().second", (d) => d.getUTCSeconds()));
     });
-    
+
     QUnit.test("various operations", (assert) => {
       const expr1 = "datetime.datetime(day=3,month=4,year=2001).strftime('%Y-%m-%d')";
       assert.strictEqual(evaluateExpr(expr1), "2001-04-03");
@@ -807,7 +804,7 @@ QUnit.module("py", {}, () => {
         "datetime.datetime(day=3,month=4,second=12, year=2001,minute=32).strftime('%Y-%m-%d %H:%M:%S')";
       assert.strictEqual(evaluateExpr(expr3), "2001-04-03 00:32:12");
     });
-    
+
     QUnit.test("datetime.datetime.combine", (assert) => {
       const expr =
         "datetime.datetime.combine(context_today(), datetime.time(23,59,59)).strftime('%Y-%m-%d %H:%M:%S')";
@@ -817,28 +814,28 @@ QUnit.module("py", {}, () => {
         })
       );
     });
-    
+
     // datetime.datetime.combine(context_today(), datetime.time(23,59,59))
     QUnit.module("datetime.date");
-    
+
     QUnit.test("datetime.date.today", (assert) => {
       assert.ok(check("(datetime.date.today()).strftime('%Y-%m-%d')", formatDate));
     });
-    
+
     QUnit.test("various operations", (assert) => {
       const expr1 = "datetime.date(day=3,month=4,year=2001).strftime('%Y-%m-%d')";
       assert.strictEqual(evaluateExpr(expr1), "2001-04-03");
       const expr2 = "datetime.date(2001, 4, 3).strftime('%Y-%m-%d')";
       assert.strictEqual(evaluateExpr(expr2), "2001-04-03");
     });
-    
+
     QUnit.module("datetime.time");
-    
+
     QUnit.test("various operations", (assert) => {
       const expr1 = "datetime.time(hour=3,minute=2. second=1).strftime('%H:%M:%S')";
       assert.strictEqual(evaluateExpr(expr1), "03:02:01");
     });
-    
+
     QUnit.test("attributes", (assert) => {
       const expr1 = "datetime.time(hour=3,minute=2. second=1).hour";
       assert.strictEqual(evaluateExpr(expr1), 3);
@@ -847,9 +844,9 @@ QUnit.module("py", {}, () => {
       const expr3 = "datetime.time(hour=3,minute=2. second=1).second";
       assert.strictEqual(evaluateExpr(expr3), 1);
     });
-    
+
     QUnit.module("relativedelta");
-    
+
     QUnit.test("adding date and relative delta", (assert) => {
       const expr1 =
         "(datetime.date(day=3,month=4,year=2001) + relativedelta(days=-1)).strftime('%Y-%m-%d')";
@@ -858,37 +855,37 @@ QUnit.module("py", {}, () => {
         "(datetime.date(day=3,month=4,year=2001) + relativedelta(weeks=-1)).strftime('%Y-%m-%d')";
       assert.strictEqual(evaluateExpr(expr2), "2001-03-27");
     });
-    
+
     QUnit.test("adding relative delta and date", (assert) => {
       const expr =
         "(relativedelta(days=-1) + datetime.date(day=3,month=4,year=2001)).strftime('%Y-%m-%d')";
       assert.strictEqual(evaluateExpr(expr), "2001-04-02");
     });
-    
+
     QUnit.module("datetime.timedelta");
-    
+
     QUnit.test("adding date and time delta", (assert) => {
       const expr =
         "(datetime.date(day=3,month=4,year=2001) + datetime.timedelta(days=-1)).strftime('%Y-%m-%d')";
       assert.strictEqual(evaluateExpr(expr), "2001-04-02");
     });
-    
+
     QUnit.test("adding time delta and date", (assert) => {
       const expr =
         "(datetime.timedelta(days=-1) + datetime.date(day=3,month=4,year=2001)).strftime('%Y-%m-%d')";
       assert.strictEqual(evaluateExpr(expr), "2001-04-02");
     });
-    
+
     QUnit.module("misc");
-    
+
     QUnit.test("context_today", (assert) => {
       assert.ok(check("context_today().strftime('%Y-%m-%d')", formatDate));
     });
-    
+
     QUnit.test("today", (assert) => {
       assert.ok(check("today", formatDate));
     });
-    
+
     QUnit.test("now", (assert) => {
       assert.ok(check("now", formatDateTime));
     });
@@ -903,7 +900,7 @@ QUnit.module("py", {}, () => {
     }
     return true;
   }
-  
+
   QUnit.test("basic values", function (assert) {
     assert.ok(checkAST("1", "integer value"));
     assert.ok(checkAST("1.4", "float value"));
@@ -912,24 +909,24 @@ QUnit.module("py", {}, () => {
     assert.ok(checkAST(`"some string"`, "a string"));
     assert.ok(checkAST("None", "None"));
   });
-  
+
   QUnit.test("dictionary", function (assert) {
     assert.ok(checkAST("{}", "empty dictionary"));
     assert.ok(checkAST(`{"a": 1}`, "dictionary with a single key"));
     assert.ok(checkAST(`d["a"]`, "get a value in a dictionary"));
   });
-  
+
   QUnit.test("list", function (assert) {
     assert.ok(checkAST("[]", "empty list"));
     assert.ok(checkAST("[1]", "list with one value"));
     assert.ok(checkAST("[1, 2]", "list with two values"));
   });
-  
+
   QUnit.test("tuple", function (assert) {
     assert.ok(checkAST("()", "empty tuple"));
     assert.ok(checkAST("(1, 2)", "basic tuple"));
   });
-  
+
   QUnit.test("simple arithmetic", function (assert) {
     assert.ok(checkAST("1 + 2", "addition"));
     assert.ok(checkAST("+(1 + 2)", "other addition, prefix"));
@@ -956,12 +953,12 @@ QUnit.module("py", {}, () => {
     assert.ok(checkAST("not foo", "not prefix with variable"));
     assert.ok(checkAST("not a in b", "not prefix with expression"));
   });
-  
+
   QUnit.test("conditional expression", function (assert) {
     assert.ok(checkAST("1 if a else 2"));
     assert.ok(checkAST("[] if a else 2"));
   });
-  
+
   QUnit.test("other operators", function (assert) {
     assert.ok(checkAST("x == y", "== operator"));
     assert.ok(checkAST("x != y", "!= operator"));
@@ -971,21 +968,21 @@ QUnit.module("py", {}, () => {
     assert.ok(checkAST("x in y", "in operator"));
     assert.ok(checkAST("x not in y", "not in operator"));
   });
-  
+
   QUnit.test("equality", function (assert) {
     assert.ok(checkAST("a == b", "simple equality"));
   });
-  
+
   QUnit.test("strftime", function (assert) {
     assert.ok(checkAST(`time.strftime("%Y")`, "strftime with year"));
     assert.ok(checkAST(`time.strftime("%Y") + "-01-30"`, "strftime with year"));
     assert.ok(checkAST(`time.strftime("%Y-%m-%d %H:%M:%S")`, "strftime with year"));
   });
-  
+
   QUnit.test("context_today", function (assert) {
     assert.ok(checkAST(`context_today().strftime("%Y-%m-%d")`, "context today call"));
   });
-  
+
   QUnit.test("function call", function (assert) {
     assert.ok(checkAST("td()", "simple call"));
     assert.ok(checkAST("td(a, b, c)", "simple call with args"));
@@ -993,14 +990,14 @@ QUnit.module("py", {}, () => {
     assert.ok(checkAST("f(1, 2, days = 1)", "mixing args and kwargs"));
     assert.ok(checkAST("str(td(2))", "function call in function call"));
   });
-  
+
   QUnit.test("various expressions", function (assert) {
     assert.ok(checkAST("(a - b).days", "substraction and .days"));
     assert.ok(checkAST("a + day == date(2002, 3, 3)"));
     const expr = `[("type", "=", "in"), ("day", "<=", time.strftime("%Y-%m-%d")), ("day", ">", (context_today() - datetime.timedelta(days = 15)).strftime("%Y-%m-%d"))]`;
     assert.ok(checkAST(expr));
   });
-  
+
   QUnit.test("escaping support", function (assert) {
     assert.strictEqual(evaluateExpr(String.raw`"\x61"`), "a", "hex escapes");
     assert.strictEqual(evaluateExpr(String.raw`"\\abc"`), String.raw`\abc`, "escaped backslash");

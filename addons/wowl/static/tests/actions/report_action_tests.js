@@ -266,7 +266,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(ReportClientAction);
   });
-  
+
   QUnit.test("UI unblocks after downloading the report even if it threw an error", async function (
     assert
   ) {

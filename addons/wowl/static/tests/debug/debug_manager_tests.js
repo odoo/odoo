@@ -129,7 +129,7 @@ QUnit.module("DebugManager", (hooks) => {
       ? void 0
       : _a.remove();
   });
-  
+
   QUnit.test(
     "Display the DebugManager correctly in a ActionDialog if debug mode is enabled",
     async (assert) => {

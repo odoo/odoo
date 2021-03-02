@@ -53,7 +53,7 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module("Misc");
-  
+
   QUnit.test("can execute actions from id, xmlid and tag", async (assert) => {
     assert.expect(6);
     testConfig.serverData.actions[1] = {
@@ -407,7 +407,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(document.body, ".modal");
     webClient.destroy();
   });
-  
+
   QUnit.test('executing an action with target "new" does not close dialogs', async function (
     assert
   ) {

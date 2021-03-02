@@ -1,34 +1,7 @@
 /** @odoo-module **/
-import { useService } from "../core/hooks";
 import { serviceRegistry } from "../webclient/service_registry";
-import { mainComponentRegistry } from "../webclient/main_component_registry";
-import { RainbowMan } from "./rainbow_man";
 
-const { Component, core, tags } = owl;
-const { EventBus } = core;
-
-export class EffectsContainer extends Component {
-  setup() {
-    this.rainbowProps = {};
-    const { bus } = useService("effect");
-    bus.on("UPDATE", this, (effect) => {
-      this.rainbowProps = effect;
-      this.render();
-    });
-  }
-  closeRainbowMan() {
-    this.rainbowProps = {};
-    this.render();
-  }
-}
-
-mainComponentRegistry.add("EffectsContainer", EffectsContainer);
-
-EffectsContainer.template = tags.xml`
-    <div class="o_effects_manager">
-      <RainbowMan t-if="rainbowProps.id" t-props="rainbowProps" t-key="rainbowProps.id" t-on-close-rainbowman="closeRainbowMan"/>
-    </div>`;
-EffectsContainer.components = { RainbowMan };
+const { EventBus } = owl.core;
 
 export function convertRainBowMessage(message) {
   if (message instanceof jQuery) {

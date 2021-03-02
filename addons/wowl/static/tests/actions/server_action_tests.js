@@ -7,7 +7,6 @@ import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers
 let testConfig;
 
 QUnit.module("ActionManager", (hooks) => {
-
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -61,7 +60,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
-  
+
   QUnit.test("handle server actions returning false", async function (assert) {
     assert.expect(10);
     const mockRPC = async (route, args) => {

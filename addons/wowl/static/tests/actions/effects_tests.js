@@ -7,7 +7,7 @@ import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 import { Registry } from "../../src/core/registry";
 import { NotificationContainer } from "../../src/notifications/notification_container";
-import { EffectsContainer } from "../../src/effects/effect_service";
+import { EffectContainer } from "../../src/effects/effect_container";
 
 let testConfig;
 // legacy stuff
@@ -52,7 +52,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.expect(10);
     testConfig.serviceRegistry.add("user", makeFakeUserService({ showEffect: true }), true);
     const mainComponentRegistry = new Registry();
-    mainComponentRegistry.add("EffectsContainer", EffectsContainer);
+    mainComponentRegistry.add("EffectContainer", EffectContainer);
     testConfig.mainComponentRegistry = mainComponentRegistry;
     const webClient = await createWebClient({ testConfig });
     await doAction(webClient, 1);
@@ -79,7 +79,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient.el, ".o_list_view");
     webClient.destroy();
   });
-  
+
   QUnit.test("show effect notification instead of rainbow man", async function (assert) {
     assert.expect(6);
     const componentRegistry = new Registry();
@@ -115,7 +115,7 @@ QUnit.module("ActionManager", (hooks) => {
       }
     };
     const mainComponentRegistry = new Registry();
-    mainComponentRegistry.add("EffectsContainer", EffectsContainer);
+    mainComponentRegistry.add("EffectContainer", EffectContainer);
     testConfig.mainComponentRegistry = mainComponentRegistry;
     const webClient = await createWebClient({ testConfig, mockRPC });
     await doAction(webClient, 6);
@@ -142,7 +142,7 @@ QUnit.module("ActionManager", (hooks) => {
       }
     };
     const mainComponentRegistry = new Registry();
-    mainComponentRegistry.add("EffectsContainer", EffectsContainer);
+    mainComponentRegistry.add("EffectContainer", EffectContainer);
     testConfig.mainComponentRegistry = mainComponentRegistry;
 
     const webClient = await createWebClient({ testConfig, mockRPC });

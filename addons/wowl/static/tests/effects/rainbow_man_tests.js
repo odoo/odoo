@@ -4,14 +4,15 @@ import { RainbowMan } from "../../src/effects/rainbow_man";
 import { makeTestEnv } from "../helpers/utility";
 import { click, getFixture, makeFakeUserService, mount, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
-import { effectService, EffectsContainer } from "../../src/effects/effect_service";
+import { effectService } from "../../src/effects/effect_service";
+import { EffectContainer } from "../../src/effects/effect_container";
 import { notificationService } from "../../src/notifications/notification_service";
 
 const { Component, tags } = owl;
 
 class Parent extends Component {
   setup() {
-    this.RainbowMgr = EffectsContainer;
+    this.RainbowMgr = EffectContainer;
   }
 }
 Parent.template = tags.xml`
@@ -20,7 +21,7 @@ Parent.template = tags.xml`
     </div>
   `;
 
-  QUnit.module("RainbowMan", (hooks) => {
+QUnit.module("RainbowMan", (hooks) => {
   let rainbowManDefault, serviceRegistry, target;
   hooks.beforeEach(async () => {
     rainbowManDefault = {

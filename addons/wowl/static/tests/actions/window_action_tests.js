@@ -1989,7 +1989,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["search_read |,foo,ilike,m,foo,ilike,o"]);
     webClient.destroy();
   });
-  
+
   QUnit.test("Call twice clearUncommittedChanges in a row does not save twice", async function (
     assert
   ) {

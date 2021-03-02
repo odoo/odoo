@@ -3,7 +3,6 @@
 import { combineDomains, Domain } from "../../src/core/domain";
 
 QUnit.module("domain", {}, () => {
-
   // ---------------------------------------------------------------------------
   // Basic properties
   // ---------------------------------------------------------------------------
@@ -263,7 +262,7 @@ QUnit.module("domain", {}, () => {
       `["|", "&", ("a", "=", "1"), ("c", "in", [4, 5]), ("b", "<=", 3)]`
     );
   });
-  
+
   QUnit.test("combining three domains", function (assert) {
     assert.strictEqual(
       combineDomains(

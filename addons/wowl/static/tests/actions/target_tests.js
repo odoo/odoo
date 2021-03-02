@@ -364,7 +364,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
     webClient.destroy();
   });
-  
+
   QUnit.test('fullscreen on action change: back to another "current" action', async function (
     assert
   ) {

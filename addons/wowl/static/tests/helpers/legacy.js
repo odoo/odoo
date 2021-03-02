@@ -1,5 +1,4 @@
 odoo.define("wowl.test_legacy", async (require) => {
-
   const legacyExports = {};
 
   const legacyProm = new Promise(async (resolve) => {

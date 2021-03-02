@@ -46,7 +46,7 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module('"ir.actions.act_window_close" actions');
-  
+
   QUnit.test("close the currently opened dialog", async function (assert) {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -146,7 +146,7 @@ QUnit.module("ActionManager", (hooks) => {
       webClient.destroy();
     }
   );
-  
+
   QUnit.test("web client is not deadlocked when a view crashes", async function (assert) {
     assert.expect(3);
     const readOnFirstRecordDef = testUtils.makeTestPromise();

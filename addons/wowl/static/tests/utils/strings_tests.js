@@ -3,7 +3,6 @@
 import { escapeRegExp, intersperse, sprintf } from "../../src/utils/strings";
 
 QUnit.module("utils", {}, () => {
-
   QUnit.module("strings");
 
   QUnit.test("escapeRegExp", (assert) => {
@@ -47,7 +46,7 @@ QUnit.module("utils", {}, () => {
     assert.deepEqual(intersperse("12345678", [3, 3, 3, 3], "."), "12.345.678");
     assert.deepEqual(intersperse("12345678", [3, 0], "."), "12.345.678");
   });
-  
+
   QUnit.test("sprintf properly formats strings", (assert) => {
     assert.deepEqual(sprintf("Hello %s!", "ged"), "Hello ged!");
     assert.deepEqual(sprintf("Hello %s and %s!", "ged", "lpe"), "Hello ged and lpe!");

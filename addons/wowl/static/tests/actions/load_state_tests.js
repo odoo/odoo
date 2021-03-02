@@ -52,7 +52,7 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module("Load State");
-  
+
   QUnit.test("action loading", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -63,7 +63,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App1");
     webClient.destroy();
   });
-  
+
   QUnit.test("menu loading", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -77,7 +77,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
     webClient.destroy();
   });
-  
+
   QUnit.test("action and menu loading", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -92,7 +92,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
     webClient.destroy();
   });
-  
+
   QUnit.test("supports action as xmlId", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -106,7 +106,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(webClient, ".o_menu_brand");
     webClient.destroy();
   });
-  
+
   QUnit.test("supports opening action in dialog", async (assert) => {
     assert.expect(3);
     testConfig.serverData.actions["wowl.client_action"].target = "new";
@@ -119,7 +119,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(webClient, ".o_menu_brand");
     webClient.destroy();
   });
-  
+
   QUnit.test("should not crash on invalid state", async function (assert) {
     assert.expect(3);
     const mockRPC = async function (route, args) {
@@ -799,7 +799,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
-  
+
   QUnit.test("hashchange does not trigger canberemoved right away", async function (assert) {
     assert.expect(9);
     const ClientAction = AbstractAction.extend({

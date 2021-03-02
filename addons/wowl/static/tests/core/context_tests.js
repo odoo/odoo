@@ -3,7 +3,6 @@
 import { makeContext } from "../../src/core/context";
 
 QUnit.module("utils", {}, () => {
-
   QUnit.module("makeContext");
 
   QUnit.test("return empty context", (assert) => {

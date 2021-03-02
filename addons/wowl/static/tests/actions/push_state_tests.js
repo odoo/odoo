@@ -258,7 +258,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
     webClient.destroy();
   });
-  
+
   QUnit.test("do not push state when action fails", async function (assert) {
     assert.expect(3);
     const mockRPC = async function (route, args) {

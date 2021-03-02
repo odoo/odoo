@@ -10,8 +10,9 @@ export class KeepLast {
   /**
    * Register a new task
    *
-   * @param {Promise<any>} promise
-   * @returns {Promise<any>}
+   * @template T
+   * @param {Promise<T>} promise
+   * @returns {Promise<T>}
    */
   add(promise) {
     this.id++;

@@ -50,7 +50,7 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module("Concurrency management");
-  
+
   QUnit.test("drop previous actions if possible", async function (assert) {
     assert.expect(7);
     const def = testUtils.makeTestPromise();
@@ -553,7 +553,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
-  
+
   QUnit.test("switching when doing an action -- search_read slow", async function (assert) {
     assert.expect(13);
     const def = testUtils.makeTestPromise();

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+/** @type {any} */
 const { DateTime } = luxon;
 
 /**
@@ -46,9 +47,9 @@ function stripAlphaDupes(str) {
  * @param {DateTime | false} date
  * @returns {boolean}
  */
-function check(d) {
+function check(date) {
   // FYI, luxon authorizes years until 275760 included...
-  return d.isValid && d.year < 10000 && d;
+  return date.isValid && date.year < 10000 && date;
 }
 
 const nonAlphaRegex = /\W/g;

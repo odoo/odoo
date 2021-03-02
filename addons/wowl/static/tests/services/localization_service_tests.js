@@ -14,7 +14,7 @@ async function makeTestLocalizationEnv(config) {
   const serviceRegistry = new Registry();
   serviceRegistry.add("localization", makeFakeLocalizationService(config));
   return await makeTestEnv({ serviceRegistry });
-};
+}
 
 QUnit.module("Localization");
 

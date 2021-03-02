@@ -9,7 +9,7 @@
   QUnit.config.autostart = false;
   QUnit.config.testTimeout = 1 * 60 * 1000;
   QUnit.config.hidepassed = window.location.href.match(/[?&]testId=/) === null;
-  
+
   // -----------------------------------------------------------------------------
   // QUnit assert
   // -----------------------------------------------------------------------------
@@ -33,7 +33,7 @@
     msg = msg || `Selector '${selector}' should have exactly ${n} matches inside the target`;
     QUnit.assert.strictEqual($el.find(selector).length, n, msg);
   }
-  
+
   /**
    * Checks that the target contains exactly 0 match for the selector.
    *
@@ -44,7 +44,7 @@
   function containsNone(target, selector, msg) {
     containsN(target, selector, 0, msg);
   }
-  
+
   /**
    * Checks that the target contains exactly 1 match for the selector.
    *
@@ -55,7 +55,7 @@
   function containsOnce(target, selector, msg) {
     containsN(target, selector, 1, msg);
   }
- 
+
   /**
    * Helper function, to check if a given element has (or has not) classnames.
    *
@@ -73,7 +73,7 @@
     });
     QUnit.assert.ok(!isFalse, msg);
   }
- 
+
   /**
    * Checks that the target element has the given classnames.
    *
@@ -84,7 +84,7 @@
   function hasClass(el, classNames, msg) {
     _checkClass(el, classNames, true, msg);
   }
- 
+
   /**
    * Checks that the target element does not have the given classnames.
    *
@@ -95,7 +95,7 @@
   function doesNotHaveClass(el, classNames, msg) {
     _checkClass(el, classNames, false, msg);
   }
- 
+
   /**
    * Helper function, to check if a given element
    * - is unique (if it is a jquery node set)
@@ -238,7 +238,7 @@
     QUnit.config.debug = true;
     QUnit.only(name, cb);
   };
-  
+
   // Override global UnhandledRejection that is assigned wayyy before this file
   // Do not really crash on non-errors rejections
   const qunitUnhandledReject = QUnit.onUnhandledRejection;
@@ -247,7 +247,7 @@
       qunitUnhandledReject(reason);
     }
   };
-  
+
   // Essentially prevents default error logging when the rejection was
   // not due to an actual error
   const windowUnhandledReject = window.onunhandledrejection;

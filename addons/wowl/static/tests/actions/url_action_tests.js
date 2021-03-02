@@ -38,7 +38,7 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module("URL actions");
-  
+
   QUnit.test("execute an 'ir.actions.act_url' action with target 'self'", async (assert) => {
     var _a;
     (_a = testConfig.serviceRegistry) === null || _a === void 0
