@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { deployServices } from "./services/deploy_services";
+import { deployServices } from "./webclient/setup";
 
 // -----------------------------------------------------------------------------
 // Types

@@ -3,9 +3,10 @@ import { makeEnv, makeRAMLocalStorage } from "./env";
 import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
 import { legacySetupProm } from "./legacy/legacy_setup";
 import { WebClient } from "./webclient/webclient";
+import { loadTemplates } from "./webclient/setup";
 
 const { mount, utils } = owl;
-const { whenReady, loadFile } = utils;
+const { whenReady } = utils;
 
 (async () => {
   // prepare browser object
@@ -29,6 +30,7 @@ const { whenReady, loadFile } = utils;
     localStorage,
     sessionStorage,
   });
+
   // setup environment
   const [env, templates] = await Promise.all([makeEnv(odoo.debug), loadTemplates()]);
   env.qweb.addTemplates(templates);
@@ -49,18 +51,3 @@ const { whenReady, loadFile } = utils;
   };
 })();
 
-async function loadTemplates() {
-  const templatesUrl = `/wowl/templates/${odoo.session_info.qweb}`;
-  const templates = await loadFile(templatesUrl);
-  // as we currently have two qweb engines (owl and legacy), owl templates are
-  // flagged with attribute `owl="1"`. The following lines removes the 'owl'
-  // attribute from the templates, so that it doesn't appear in the DOM. For now,
-  // we make the assumption that 'templates' only contains owl templates. We
-  // might need at some point to handle the case where we have both owl and
-  // legacy templates. At the end, we'll get rid of all this.
-  const doc = new DOMParser().parseFromString(templates, "text/xml");
-  for (let child of doc.querySelectorAll("templates > [owl]")) {
-    child.removeAttribute("owl");
-  }
-  return new XMLSerializer().serializeToString(doc);
-}

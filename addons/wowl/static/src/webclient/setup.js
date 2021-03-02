@@ -1,5 +1,7 @@
 /** @odoo-module **/
-import { serviceRegistry } from "../webclient/service_registry";
+
+import { serviceRegistry } from "./service_registry";
+const { loadFile } = owl.utils;
 
 export async function deployServices(env) {
   const toDeploy = new Set();
@@ -82,4 +84,20 @@ async function _deployServices(env, toDeploy, timeoutId) {
     }
     return null;
   }
+}
+
+export async function loadTemplates() {
+  const templatesUrl = `/wowl/templates/${odoo.session_info.qweb}`;
+  const templates = await loadFile(templatesUrl);
+  // as we currently have two qweb engines (owl and legacy), owl templates are
+  // flagged with attribute `owl="1"`. The following lines removes the 'owl'
+  // attribute from the templates, so that it doesn't appear in the DOM. For now,
+  // we make the assumption that 'templates' only contains owl templates. We
+  // might need at some point to handle the case where we have both owl and
+  // legacy templates. At the end, we'll get rid of all this.
+  const doc = new DOMParser().parseFromString(templates, "text/xml");
+  for (let child of doc.querySelectorAll("templates > [owl]")) {
+    child.removeAttribute("owl");
+  }
+  return new XMLSerializer().serializeToString(doc);
 }
