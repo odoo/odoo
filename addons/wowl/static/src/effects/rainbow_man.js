@@ -21,8 +21,7 @@ export class RainbowMan extends Component {
    * @param {string} [options.fadeout='medium'] Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear quickly, 'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer), 'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
    * @param {string} [options.img_url] URL of the image to be displayed
    */
-  constructor(...args) {
-    super(...args);
+  setup() {
     hooks.useExternalListener(document.body, "click", this._closeRainbowMan);
     const fadeout = "fadeout" in this.props ? this.props.fadeout : "medium";
     const delay = fadeout ? RainbowMan.rainbowFadeouts[fadeout] : false;

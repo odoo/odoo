@@ -341,10 +341,9 @@ QUnit.module("ActionManager", (hooks) => {
   QUnit.test("ClientAction receives breadcrumbs and exports title (wowl)", async (assert) => {
     assert.expect(4);
     class ClientAction extends Component {
-      constructor(parent, props) {
-        super(parent, props);
+      setup() {
         this.breadcrumbTitle = "myOwlAction";
-        const breadCrumbs = props.breadcrumbs;
+        const breadCrumbs = this.props.breadcrumbs;
         assert.strictEqual(breadCrumbs.length, 1);
         assert.strictEqual(breadCrumbs[0].name, "Favorite Ponies");
       }

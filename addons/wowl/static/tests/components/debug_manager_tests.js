@@ -162,8 +162,7 @@ QUnit.module("DebugManager", (hooks) => {
         sequence: 20,
       };
       class Parent extends Component {
-        constructor(...args) {
-          super(...args);
+        setup() {
           useSubEnv({ inDialog: true });
           useDebugManager(() => [item1, item2]);
         }

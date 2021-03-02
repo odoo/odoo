@@ -9,8 +9,7 @@ const { Component, hooks } = owl;
 const { useExternalListener } = hooks;
 
 export class NavBar extends Component {
-  constructor(...args) {
-    super(...args);
+  setup() {
     this.currentAppSectionsExtra = [];
     this.actionService = useService("action");
     this.menuService = useService("menu");

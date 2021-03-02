@@ -26,8 +26,8 @@ function cleanDomFromBootstrap() {
 }
 
 class ActionAdapter extends ComponentAdapter {
-  constructor(...args) {
-    super(...args);
+  setup() {
+    super.setup();
     this.actionService = useService("action");
     this.router = useService("router");
     this.title = useService("title");
@@ -138,8 +138,8 @@ class ActionAdapter extends ComponentAdapter {
 }
 
 export class ClientActionAdapter extends ActionAdapter {
-  constructor(parent, props) {
-    super(parent, props);
+  setup() {
+    super.setup();
     useDebugManager((accessRights) =>
       setupDebugAction(accessRights, this.wowlEnv, this.props.widgetArgs[0])
     );
@@ -210,8 +210,8 @@ function useMagicLegacyReload() {
 }
 
 export class ViewAdapter extends ActionAdapter {
-  constructor(...args) {
-    super(...args);
+  setup() {
+    super.setup();
     this.model = useService("model");
     this.actionService = useService("action");
     this.vm = useService("view");

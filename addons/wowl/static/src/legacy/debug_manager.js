@@ -179,8 +179,7 @@ FieldViewGetDialog.template = tags.xml`
 FieldViewGetDialog.components = { Dialog };
 
 class GetMetadataDialog extends Component {
-  constructor(...args) {
-    super(...args);
+  setup() {
     this.title = this.env._t("View Metadata");
     this.state = useState({});
   }

@@ -5,8 +5,7 @@ const { useRef, useExternalListener, useSubEnv } = hooks;
 const { Portal } = misc;
 
 export class Dialog extends Component {
-  constructor(parent, props) {
-    super(...arguments);
+  setup() {
     this.modalRef = useRef("modal");
     useExternalListener(window, "keydown", this._onKeydown);
     useSubEnv({ inDialog: true });

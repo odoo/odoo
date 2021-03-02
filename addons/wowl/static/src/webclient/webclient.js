@@ -7,8 +7,7 @@ import { useService } from "../core/hooks";
 const { Component, hooks } = owl;
 
 export class WebClient extends Component {
-  constructor(...args) {
-    super(...args);
+  setup() {
     this.menuService = useService("menu");
     this.actionService = useService("action");
     this.title = useService("title");

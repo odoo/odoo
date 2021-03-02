@@ -21,10 +21,10 @@ const LEGACY_SIZE_CLASSES = {
  * the ActionDialog exported class (see below).
  */
 class TrueActionDialog extends Dialog {
-  constructor(parent, props) {
-    super(...arguments);
+  setup() {
+    super.setup();
     this.actionRef = hooks.useRef("actionRef");
-    const actionProps = props && props.actionProps;
+    const actionProps = this.props && this.props.actionProps;
     const action = actionProps && actionProps.action;
     this.actionType = action && action.type;
   }
@@ -43,13 +43,13 @@ TrueActionDialog.props = {
  * and exported from this file when the cleaning will occur.
  */
 export class ActionDialog extends TrueActionDialog {
-  constructor(parent, props) {
-    super(...arguments);
-    const actionProps = props && props.actionProps;
+  setup() {
+    super.setup();
+    const actionProps = this.props && this.props.actionProps;
     const action = actionProps && actionProps.action;
     const actionContext = action && action.context;
     const actionDialogSize = actionContext && actionContext.dialog_size;
-    this.props.size = LEGACY_SIZE_CLASSES[actionDialogSize] || (props && props.size);
+    this.props.size = LEGACY_SIZE_CLASSES[actionDialogSize] || (this.props && this.props.size);
     const ControllerComponent = this.props && this.props.ActionComponent;
     const Controller = ControllerComponent && ControllerComponent.Component;
     this.isLegacy = Controller && Controller.isLegacy;

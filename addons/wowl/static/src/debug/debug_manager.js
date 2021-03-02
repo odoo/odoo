@@ -7,8 +7,7 @@ import { useService } from "../core/hooks";
 const { Component, hooks } = owl;
 
 export class DebugManager extends Component {
-  constructor(...args) {
-    super(...args);
+  setup() {
     this.debugFactories = {};
     this.debugService = useService("debug");
     // Defined as arrow to be passed as prop
