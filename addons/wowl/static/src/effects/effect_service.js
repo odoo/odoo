@@ -29,7 +29,7 @@ export function convertRainBowMessage(message) {
 }
 
 export const effectService = {
-  name: "effects",
+  name: "effect",
   dependencies: ["notification", "user"],
   deploy(env) {
     if (!env.services.user.showEffect) {
@@ -77,4 +77,4 @@ export const effectService = {
   },
 };
 
-serviceRegistry.add("effects", effectService);
+serviceRegistry.add("effect", effectService);

@@ -877,7 +877,7 @@ function makeActionManager(env) {
       await _executeCloseAction();
     }
     if (effect) {
-      env.services.effects.create(effect.message, effect);
+      env.services.effect.create(effect.message, effect);
     }
   }
 
@@ -1070,7 +1070,7 @@ export const actionService = {
   name: "action",
   dependencies: [
     "download",
-    "effects",
+    "effect",
     "localization",
     "notification",
     "router",

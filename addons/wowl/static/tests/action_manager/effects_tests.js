@@ -42,6 +42,7 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Effects");
   QUnit.test("rainbowman integrated to webClient", async function (assert) {
     assert.expect(10);
@@ -50,7 +51,7 @@ QUnit.module("ActionManager", (hooks) => {
     await doAction(webClient, 1);
     assert.containsOnce(webClient.el, ".o_kanban_view");
     assert.containsNone(webClient.el, ".o_reward");
-    webClient.env.services.effects.create("", { fadeout: "no" });
+    webClient.env.services.effect.create("", { fadeout: "no" });
     await nextTick();
     await legacyExtraNextTick();
     assert.containsOnce(webClient.el, ".o_reward");
@@ -59,7 +60,7 @@ QUnit.module("ActionManager", (hooks) => {
     await legacyExtraNextTick();
     assert.containsNone(webClient.el, ".o_reward");
     assert.containsOnce(webClient.el, ".o_kanban_view");
-    webClient.env.services.effects.create("", { fadeout: "no" });
+    webClient.env.services.effect.create("", { fadeout: "no" });
     await nextTick();
     await legacyExtraNextTick();
     assert.containsOnce(webClient.el, ".o_reward");
@@ -82,7 +83,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient.el, ".o_kanban_view");
     assert.containsNone(webClient.el, ".o_reward");
     assert.containsNone(webClient.el, ".o_notification");
-    webClient.env.services.effects.create("", { fadeout: "no" });
+    webClient.env.services.effect.create("", { fadeout: "no" });
     await nextTick();
     await legacyExtraNextTick();
     assert.containsOnce(webClient.el, ".o_kanban_view");

@@ -1,11 +1,13 @@
 /** @odoo-module **/
-const { Component, tags } = owl;
 import { RainbowMan } from "../../src/effects/rainbow_man";
 import { makeTestEnv } from "../helpers/utility";
 import { click, getFixture, makeFakeUserService, mount, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
-import { effectService } from "../../src/effects/effects_service";
+import { effectService } from "../../src/effects/effect_service";
 import { notificationService } from "../../src/notifications/notification_service";
+
+const { Component, tags } = owl;
+
 class Parent extends Component {
   constructor() {
     super(...arguments);
@@ -37,7 +39,7 @@ QUnit.module("RainbowMan", (hooks) => {
     RainbowMan.rainbowFadeouts = { nextTick: 0 };
     const env = await makeTestEnv({ serviceRegistry });
     const parent = await mount(Parent, { target, env });
-    env.services.effects.create(rainbowManDefault.message, rainbowManDefault);
+    env.services.effect.create(rainbowManDefault.message, rainbowManDefault);
     await nextTick();
     assert.containsOnce(target, ".o_reward");
     assert.containsOnce(parent.el, ".o_reward_rainbow");
@@ -57,7 +59,7 @@ QUnit.module("RainbowMan", (hooks) => {
     rainbowManDefault.fadeout = "no";
     const env = await makeTestEnv({ serviceRegistry });
     const parent = await mount(Parent, { target, env });
-    env.services.effects.create(rainbowManDefault.message, rainbowManDefault);
+    env.services.effect.create(rainbowManDefault.message, rainbowManDefault);
     await nextTick();
     assert.containsOnce(parent.el, ".o_reward");
     assert.containsOnce(parent.el, ".o_reward_rainbow");

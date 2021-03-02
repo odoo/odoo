@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { effectService } from "../../src/effects/effects_service";
+import { effectService } from "../../src/effects/effect_service";
 import { makePushState, routeToUrl } from "../../src/services/router";
 import { SIZES } from "../../src/services/device";
 import { makeLocalization } from "../../src/services/localization";
@@ -346,7 +346,7 @@ export function makeFakeNotificationService(createMock, closeMock) {
 export const mocks = {
   cookie: () => fakeCookieService,
   download: makeFakeDownloadService,
-  effects: () => effectService,
+  effect: () => effectService,
   localization: makeFakeLocalizationService,
   notifications: makeFakeNotificationService,
   router: makeFakeRouterService,
