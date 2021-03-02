@@ -67,6 +67,7 @@ export async function createWebClient(params) {
   await legacyExtraNextTick();
   return wc;
 }
+
 /**
  * Remove this as soon as we drop the legacy support
  */
@@ -131,6 +132,7 @@ function addLegacyMockEnvironment(comp, testConfig, legacyParams = {}) {
     compDestroy();
   };
 }
+
 export async function doAction(env, ...args) {
   if (env instanceof Component) {
     env = env.env;
@@ -141,6 +143,7 @@ export async function doAction(env, ...args) {
     await legacyExtraNextTick();
   }
 }
+
 export async function loadState(env, state) {
   if (env instanceof Component) {
     env = env.env;
@@ -149,6 +152,7 @@ export async function loadState(env, state) {
   await nextTick();
   await legacyExtraNextTick();
 }
+
 export function getActionManagerTestConfig() {
   const browser = {
     setTimeout: window.setTimeout.bind(window),

@@ -13,12 +13,14 @@ let testConfig;
 // legacy stuff
 let cpHelpers;
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
     testUtils = legacy.testUtils;
     cpHelpers = testUtils.controlPanel;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -46,7 +48,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Concurrency management");
+  
   QUnit.test("drop previous actions if possible", async function (assert) {
     assert.expect(7);
     const def = testUtils.makeTestPromise();
@@ -73,6 +77,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("handle switching view and switching back on slow network", async function (assert) {
     assert.expect(9);
     let def = testUtils.makeTestPromise();
@@ -108,6 +113,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(webClient, ".o_list_view", "there should not be a list view in dom");
     webClient.destroy();
   });
+
   QUnit.test("when an server action takes too much time...", async function (assert) {
     assert.expect(1);
     const def = testUtils.makeTestPromise();
@@ -130,6 +136,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("clicking quickly on breadcrumbs...", async function (assert) {
     assert.expect(1);
     let def;
@@ -165,6 +172,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("execute a new action while loading a lazy-loaded controller", async function (
     assert
   ) {
@@ -223,6 +231,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps([]);
     webClient.destroy();
   });
+
   QUnit.test("execute a new action while handling a call_button", async function (assert) {
     assert.expect(17);
     const def = testUtils.makeTestPromise();
@@ -274,6 +283,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps([]);
     webClient.destroy();
   });
+
   QUnit.test("execute a new action while switching to another controller", async function (assert) {
     assert.expect(16);
     // This test's bottom line is that a doAction always has priority
@@ -339,6 +349,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps([]);
     webClient.destroy();
   });
+
   QUnit.test("execute a new action while loading views", async function (assert) {
     assert.expect(11);
     const def = testUtils.makeTestPromise();
@@ -388,6 +399,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("execute a new action while loading data of default view", async function (assert) {
     assert.expect(12);
     const def = testUtils.makeTestPromise();
@@ -438,6 +450,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("open a record while reloading the list view", async function (assert) {
     assert.expect(12);
     let def;
@@ -473,6 +486,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient, ".o_control_panel .o_form_buttons_view");
     webClient.destroy();
   });
+
   QUnit.test("properly drop client actions after new action is initiated", async function (assert) {
     assert.expect(3);
     const slowWillStartDef = testUtils.makeTestPromise();
@@ -500,6 +514,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient, ".o_kanban_view", "should still display the kanban view");
     webClient.destroy();
   });
+
   QUnit.test("switching when doing an action -- load_views slow", async function (assert) {
     assert.expect(13);
     let def;
@@ -538,6 +553,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+  
   QUnit.test("switching when doing an action -- search_read slow", async function (assert) {
     assert.expect(13);
     const def = testUtils.makeTestPromise();

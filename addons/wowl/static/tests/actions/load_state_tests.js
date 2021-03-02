@@ -1,16 +1,20 @@
 /** @odoo-module **/
+
 import { legacyExtraNextTick } from "../helpers/utility";
-const { Component, tags } = owl;
 import { makeFakeRouterService } from "../helpers/mocks";
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig, loadState } from "./helpers";
+
+const { Component, tags } = owl;
+
 let testConfig;
 // legacy stuff
 let AbstractAction;
 let core;
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
@@ -18,6 +22,7 @@ QUnit.module("ActionManager", (hooks) => {
     core = legacy.core;
     testUtils = legacy.testUtils;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -45,7 +50,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Load State");
+  
   QUnit.test("action loading", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -56,6 +63,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App1");
     webClient.destroy();
   });
+  
   QUnit.test("menu loading", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -69,6 +77,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
     webClient.destroy();
   });
+  
   QUnit.test("action and menu loading", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -83,6 +92,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
     webClient.destroy();
   });
+  
   QUnit.test("supports action as xmlId", async (assert) => {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -96,6 +106,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(webClient, ".o_menu_brand");
     webClient.destroy();
   });
+  
   QUnit.test("supports opening action in dialog", async (assert) => {
     assert.expect(3);
     testConfig.serverData.actions["wowl.client_action"].target = "new";
@@ -108,6 +119,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(webClient, ".o_menu_brand");
     webClient.destroy();
   });
+  
   QUnit.test("should not crash on invalid state", async function (assert) {
     assert.expect(3);
     const mockRPC = async function (route, args) {
@@ -121,6 +133,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["/wowl/load_menus"]);
     webClient.destroy();
   });
+
   QUnit.test("properly load client actions", async function (assert) {
     assert.expect(3);
     class ClientAction extends Component {}
@@ -143,6 +156,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testConfig.actionRegistry.remove("HelloWorldTest");
   });
+
   QUnit.test("properly load act window actions", async function (assert) {
     assert.expect(7);
     const mockRPC = async function (route, args) {
@@ -164,6 +178,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("properly load records", async function (assert) {
     assert.expect(6);
     const mockRPC = async function (route, args) {
@@ -185,6 +200,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["/wowl/load_menus", "load_views", "read"]);
     webClient.destroy();
   });
+
   QUnit.test("properly load default record", async function (assert) {
     assert.expect(6);
     const mockRPC = async function (route, args) {
@@ -203,6 +219,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["/wowl/load_menus", "/web/action/load", "load_views", "onchange"]);
     webClient.destroy();
   });
+
   QUnit.test("load requested view for act window actions", async function (assert) {
     assert.expect(7);
     const mockRPC = async function (route, args) {
@@ -225,6 +242,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("lazy load multi record view if mono record one is requested", async function (
     assert
   ) {
@@ -262,6 +280,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("lazy load multi record view with previous action", async function (assert) {
     assert.expect(6);
     const webClient = await createWebClient({ testConfig });
@@ -307,6 +326,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("lazy loaded multi record view with failing mono record one", async function (assert) {
     assert.expect(3);
     const mockRPC = async function (route, args) {
@@ -326,6 +346,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient, ".o_kanban_view");
     webClient.destroy();
   });
+
   QUnit.test("change the viewType of the current action", async function (assert) {
     assert.expect(14);
     const mockRPC = async function (route, args) {
@@ -377,6 +398,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("change the id of the current action", async function (assert) {
     assert.expect(12);
     const mockRPC = async function (route, args) {
@@ -426,6 +448,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("should push the correct state at the right time", async function (assert) {
     // formerly "should not push a loaded state"
     assert.expect(7);
@@ -461,6 +484,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["push_state"], "should push the state of it changes afterwards");
     webClient.destroy();
   });
+
   QUnit.test("should not push a loaded state of a legacy client action", async function (assert) {
     assert.expect(6);
     const ClientAction = AbstractAction.extend({
@@ -510,6 +534,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.ClientAction;
   });
+
   QUnit.test("change a param of an ir.actions.client in the url", async function (assert) {
     assert.expect(13);
     const ClientAction = AbstractAction.extend({
@@ -587,6 +612,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.ClientAction;
   });
+
   QUnit.test("load a window action without id (in a multi-record view)", async function (assert) {
     assert.expect(14);
     const sessionStorage = testConfig.browser.sessionStorage;
@@ -634,6 +660,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("load state supports being given menu_id alone", async function (assert) {
     assert.expect(7);
     testConfig.serverData.menus[666] = {
@@ -664,6 +691,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("load state supports #home", async function (assert) {
     assert.expect(6);
     testConfig.serverData.menus = {
@@ -696,6 +724,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("load state supports #home as initial state", async function (assert) {
     assert.expect(7);
     testConfig.serverData.menus = {
@@ -730,6 +759,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("load state: in a form view, remove the id from the state", async function (assert) {
     assert.expect(13);
     testConfig.serverData.actions[999] = {
@@ -769,6 +799,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+  
   QUnit.test("hashchange does not trigger canberemoved right away", async function (assert) {
     assert.expect(9);
     const ClientAction = AbstractAction.extend({

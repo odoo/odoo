@@ -1,21 +1,25 @@
 /** @odoo-module **/
 import { nextTick } from "../helpers/index";
 import { click, legacyExtraNextTick } from "../helpers/utility";
-const { Component, tags } = owl;
 import { makeFakeRouterService } from "../helpers/mocks";
 import { useService } from "../../src/core/hooks";
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+
+const { Component, tags } = owl;
+
 let testConfig;
 // legacy stuff
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
     testUtils = legacy.testUtils;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -43,7 +47,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Push State");
+
   QUnit.test("basic action as App", async (assert) => {
     assert.expect(5);
     const webClient = await createWebClient({ testConfig });
@@ -63,6 +69,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
     webClient.destroy();
   });
+
   QUnit.test("do action keeps menu in url", async (assert) => {
     assert.expect(9);
     const webClient = await createWebClient({ testConfig });
@@ -91,6 +98,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
     webClient.destroy();
   });
+
   QUnit.test("actions can push state", async (assert) => {
     assert.expect(5);
     class ClientActionPushes extends Component {
@@ -120,6 +128,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(urlState.hash.arbitrary, "actionPushed");
     webClient.destroy();
   });
+
   QUnit.test("actions override previous state", async (assert) => {
     assert.expect(5);
     class ClientActionPushes extends Component {
@@ -150,6 +159,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(urlState.hash.arbitrary, undefined);
     webClient.destroy();
   });
+
   QUnit.test("actions override previous state from menu click", async (assert) => {
     assert.expect(3);
     class ClientActionPushes extends Component {
@@ -180,6 +190,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(urlState.hash.menu_id, "2");
     webClient.destroy();
   });
+
   QUnit.test("action in target new do not push state", async (assert) => {
     assert.expect(1);
     testConfig.serverData.actions[1001].target = "new";
@@ -197,6 +208,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient, ".modal .test_client_action");
     webClient.destroy();
   });
+
   QUnit.test("properly push state", async function (assert) {
     assert.expect(3);
     const webClient = await createWebClient({ testConfig });
@@ -222,6 +234,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
     webClient.destroy();
   });
+
   QUnit.test("push state after action is loaded, not before", async function (assert) {
     assert.expect(2);
     const def = testUtils.makeTestPromise();
@@ -245,6 +258,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
     webClient.destroy();
   });
+  
   QUnit.test("do not push state when action fails", async function (assert) {
     assert.expect(3);
     const mockRPC = async function (route, args) {

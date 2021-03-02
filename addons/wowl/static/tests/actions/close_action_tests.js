@@ -1,18 +1,22 @@
 /** @odoo-module **/
+
 import { nextTick } from "../helpers/index";
 import { legacyExtraNextTick } from "../helpers/utility";
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+
 let testConfig;
 // legacy stuff
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
     testUtils = legacy.testUtils;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -40,7 +44,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module('"ir.actions.act_window_close" actions');
+  
   QUnit.test("close the currently opened dialog", async function (assert) {
     assert.expect(2);
     const webClient = await createWebClient({ testConfig });
@@ -58,6 +64,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(document.body, ".o_technical_modal", "should have closed the modal");
     webClient.destroy();
   });
+
   QUnit.test('execute "on_close" only if there is no dialog to close', async function (assert) {
     assert.expect(3);
     const webClient = await createWebClient({ testConfig });
@@ -77,6 +84,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["on_close"]);
     webClient.destroy();
   });
+
   QUnit.test("close action with provided infos", async function (assert) {
     assert.expect(1);
     const webClient = await createWebClient({ testConfig });
@@ -95,6 +103,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("history back calls on_close handler of dialog action", async function (assert) {
     assert.expect(4);
     const webClient = await createWebClient({ testConfig });
@@ -111,6 +120,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(webClient.el, ".modal");
     webClient.destroy();
   });
+
   QUnit.test(
     "history back calls on_close handler of dialog action with 2 breadcrumbs",
     async function (assert) {
@@ -136,6 +146,7 @@ QUnit.module("ActionManager", (hooks) => {
       webClient.destroy();
     }
   );
+  
   QUnit.test("web client is not deadlocked when a view crashes", async function (assert) {
     assert.expect(3);
     const readOnFirstRecordDef = testUtils.makeTestPromise();

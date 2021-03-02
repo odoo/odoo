@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { makeFakeUserService } from "../helpers/index";
 import { notificationService } from "../../src/notifications/notification_service";
 import {
@@ -10,16 +11,20 @@ import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+
 let testConfig;
+
 // legacy stuff
 let testUtils;
 let ReportClientAction;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
     testUtils = legacy.testUtils;
     ReportClientAction = legacy.ReportClientAction;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -47,7 +52,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Report actions");
+
   QUnit.test("can execute report actions from db ID", async function (assert) {
     assert.expect(6);
     testConfig.serviceRegistry.add(
@@ -74,6 +81,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("report actions can close modals and reload views", async function (assert) {
     assert.expect(8);
     testConfig.serviceRegistry.add(
@@ -110,6 +118,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["/report/download", "on_printed", "/report/download", "on_close"]);
     webClient.destroy();
   });
+
   QUnit.test("should trigger a notification if wkhtmltopdf is to upgrade", async function (assert) {
     testConfig.serviceRegistry.add(
       notificationService.name,
@@ -145,6 +154,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+
   QUnit.test("should open the report client action if wkhtmltopdf is broken", async function (
     assert
   ) {
@@ -205,6 +215,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(ReportClientAction);
   });
+
   QUnit.test("send context in case of html report", async function (assert) {
     assert.expect(5);
     testConfig.serviceRegistry.add(
@@ -255,6 +266,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(ReportClientAction);
   });
+  
   QUnit.test("UI unblocks after downloading the report even if it threw an error", async function (
     assert
   ) {

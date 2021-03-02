@@ -1,9 +1,13 @@
 /** @odoo-module **/
+
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+
 let testConfig;
+
 QUnit.module("ActionManager", (hooks) => {
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -31,7 +35,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Server actions");
+
   QUnit.test("can execute server actions from db ID", async function (assert) {
     assert.expect(10);
     const mockRPC = async (route, args) => {
@@ -55,6 +61,7 @@ QUnit.module("ActionManager", (hooks) => {
     ]);
     webClient.destroy();
   });
+  
   QUnit.test("handle server actions returning false", async function (assert) {
     assert.expect(10);
     const mockRPC = async (route, args) => {

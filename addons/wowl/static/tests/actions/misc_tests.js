@@ -1,9 +1,11 @@
 /** @odoo-module **/
+
 import { legacyExtraNextTick, makeTestEnv } from "../helpers/utility";
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+
 let testConfig;
 // legacy stuff
 let AbstractAction;
@@ -11,6 +13,7 @@ let cpHelpers;
 let core;
 let testUtils;
 let Widget;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
@@ -20,6 +23,7 @@ QUnit.module("ActionManager", (hooks) => {
     cpHelpers = testUtils.controlPanel;
     Widget = legacy.Widget;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -47,7 +51,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("Misc");
+  
   QUnit.test("can execute actions from id, xmlid and tag", async (assert) => {
     assert.expect(6);
     testConfig.serverData.actions[1] = {
@@ -76,6 +82,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
     assert.verifySteps(["client_action_object"]);
   });
+
   QUnit.test("no widget memory leaks when doing some action stuff", async function (assert) {
     assert.expect(1);
     let delta = 0;
@@ -106,6 +113,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(Widget);
   });
+
   QUnit.test("no widget memory leaks when executing actions in dialog", async function (assert) {
     assert.expect(1);
     let delta = 0;
@@ -129,6 +137,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(Widget);
   });
+
   QUnit.test("no memory leaks when executing an action while switching view", async function (
     assert
   ) {
@@ -166,6 +175,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(Widget);
   });
+
   QUnit.test("no memory leaks when executing an action while loading views", async function (
     assert
   ) {
@@ -205,6 +215,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     testUtils.mock.unpatch(Widget);
   });
+
   QUnit.test(
     "no memory leaks when executing an action while loading data of default view",
     async function (assert) {
@@ -245,6 +256,7 @@ QUnit.module("ActionManager", (hooks) => {
       testUtils.mock.unpatch(Widget);
     }
   );
+
   QUnit.test('action with "no_breadcrumbs" set to true', async function (assert) {
     assert.expect(2);
     testConfig.serverData.actions[4].context = { no_breadcrumbs: true };
@@ -258,6 +270,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(webClient, ".o_control_panel .breadcrumb-item");
     webClient.destroy();
   });
+
   QUnit.test("document's title is updated when an action is executed", async function (assert) {
     assert.expect(8);
     const defaultTitle = { zopenerp: "Odoo" };
@@ -293,6 +306,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.deepEqual(currentHash, { action: "8", id: "4", model: "pony", view_type: "form" });
     webClient.destroy();
   });
+
   QUnit.test("on_reverse_breadcrumb handler is correctly called (legacy)", async function (assert) {
     // This test can be removed as soon as we no longer support legacy actions as the new
     // ActionManager doesn't support this option. Indeed, it is used to reload the previous
@@ -326,6 +340,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.ClientAction;
   });
+
   QUnit.test('handles "history_back" event', async function (assert) {
     assert.expect(3);
     const webClient = await createWebClient({ testConfig });
@@ -345,6 +360,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("stores and restores scroll position", async function (assert) {
     assert.expect(3);
     for (let i = 0; i < 60; i++) {
@@ -366,6 +382,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual(webClient.el.querySelector(".o_content").scrollTop, 100);
     webClient.destroy();
   });
+
   QUnit.test('executing an action with target != "new" closes all dialogs', async function (
     assert
   ) {
@@ -390,6 +407,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsNone(document.body, ".modal");
     webClient.destroy();
   });
+  
   QUnit.test('executing an action with target "new" does not close dialogs', async function (
     assert
   ) {

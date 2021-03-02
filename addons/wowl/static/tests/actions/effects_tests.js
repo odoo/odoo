@@ -12,6 +12,7 @@ import { EffectsContainer } from "../../src/effects/effect_service";
 let testConfig;
 // legacy stuff
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
@@ -46,6 +47,7 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module("Effects");
+
   QUnit.test("rainbowman integrated to webClient", async function (assert) {
     assert.expect(10);
     testConfig.serviceRegistry.add("user", makeFakeUserService({ showEffect: true }), true);
@@ -77,6 +79,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.containsOnce(webClient.el, ".o_list_view");
     webClient.destroy();
   });
+  
   QUnit.test("show effect notification instead of rainbow man", async function (assert) {
     assert.expect(6);
     const componentRegistry = new Registry();

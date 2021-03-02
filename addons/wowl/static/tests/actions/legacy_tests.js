@@ -7,16 +7,19 @@ import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers
 import { Registry } from "../../src/core/registry";
 import { NotificationContainer } from "../../src/notifications/notification_container";
 import { DialogContainer } from "../../src/services/dialog_service";
+
 let testConfig;
 // legacy stuff
 let ListController;
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
     ListController = legacy.ListController;
     testUtils = legacy.testUtils;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We

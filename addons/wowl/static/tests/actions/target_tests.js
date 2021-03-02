@@ -1,14 +1,18 @@
 /** @odoo-module **/
+
 import { legacyExtraNextTick } from "../helpers/utility";
 import { getLegacy } from "wowl.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+
 let testConfig;
+
 // legacy stuff
 let AbstractAction;
 let core;
 let testUtils;
+
 QUnit.module("ActionManager", (hooks) => {
   hooks.before(() => {
     const legacy = getLegacy();
@@ -16,6 +20,7 @@ QUnit.module("ActionManager", (hooks) => {
     core = legacy.core;
     testUtils = legacy.testUtils;
   });
+
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
   // which are in turned wrapped and added into the real wowl registries. We
@@ -43,7 +48,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module('Actions in target="new"');
+
   QUnit.test('can execute act_window actions in target="new"', async function (assert) {
     assert.expect(8);
     const mockRPC = async (route, args) => {
@@ -69,6 +76,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["/wowl/load_menus", "/web/action/load", "load_views", "onchange"]);
     webClient.destroy();
   });
+
   QUnit.test("chained action on_close", async function (assert) {
     assert.expect(4);
     function onClose(closeInfo) {
@@ -85,6 +93,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["Close Action"]);
     webClient.destroy();
   });
+
   QUnit.test("footer buttons are moved to the dialog footer", async function (assert) {
     assert.expect(3);
     testConfig.serverData.views["partner,false,form"] = `
@@ -113,6 +122,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
     assert.expect(19);
     testConfig.serverData.views = {
@@ -185,6 +195,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.strictEqual($(".modal").length, 0, "It should have closed the modal");
     webClient.destroy();
   });
+
   QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {
     assert.expect(3);
     const ClientAction = AbstractAction.extend({
@@ -211,6 +222,7 @@ QUnit.module("ActionManager", (hooks) => {
     webClient.destroy();
     delete core.action_registry.map.test;
   });
+
   QUnit.test(
     'footer buttons are updated when having another action in target "new"',
     async function (assert) {
@@ -237,6 +249,7 @@ QUnit.module("ActionManager", (hooks) => {
       webClient.destroy();
     }
   );
+
   QUnit.test(
     'buttons of client action in target="new" and transition to MVC action',
     async function (assert) {
@@ -264,6 +277,7 @@ QUnit.module("ActionManager", (hooks) => {
       delete core.action_registry.map.test;
     }
   );
+
   QUnit.module('Actions in target="inline"');
   QUnit.test('form views for actions in target="inline" open in edit mode', async function (
     assert
@@ -282,6 +296,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.verifySteps(["/wowl/load_menus", "/web/action/load", "load_views", "read"]);
     webClient.destroy();
   });
+
   QUnit.test("breadcrumbs and actions with target inline", async function (assert) {
     assert.expect(4);
     testConfig.serverData.actions[4].views = [[false, "form"]];
@@ -299,6 +314,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
     webClient.destroy();
   });
+
   QUnit.module('Actions in target="fullscreen"');
   QUnit.test('correctly execute act_window actions in target="fullscreen"', async function (
     assert
@@ -312,6 +328,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
     webClient.destroy();
   });
+
   QUnit.test('fullscreen on action change: back to a "current" action', async function (assert) {
     assert.expect(3);
     testConfig.serverData.actions[1].target = "fullscreen";
@@ -329,6 +346,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.isVisible(webClient.el.querySelector(".o_main_navbar"));
     webClient.destroy();
   });
+
   QUnit.test('fullscreen on action change: all "fullscreen" actions', async function (assert) {
     assert.expect(3);
     testConfig.serverData.actions[6].target = "fullscreen";
@@ -346,6 +364,7 @@ QUnit.module("ActionManager", (hooks) => {
     assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
     webClient.destroy();
   });
+  
   QUnit.test('fullscreen on action change: back to another "current" action', async function (
     assert
   ) {

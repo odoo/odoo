@@ -1,10 +1,13 @@
 /** @odoo-module **/
+
 import { makeTestEnv } from "../helpers/utility";
 import { makeFakeRouterService } from "../helpers/mocks";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { doAction, getActionManagerTestConfig } from "./helpers";
+
 let testConfig;
+
 QUnit.module("ActionManager", (hooks) => {
   // Remove this as soon as we drop the legacy support.
   // This is necessary as some tests add actions/views in the legacy registries,
@@ -33,7 +36,9 @@ QUnit.module("ActionManager", (hooks) => {
   hooks.beforeEach(() => {
     testConfig = getActionManagerTestConfig();
   });
+
   QUnit.module("URL actions");
+  
   QUnit.test("execute an 'ir.actions.act_url' action with target 'self'", async (assert) => {
     var _a;
     (_a = testConfig.serviceRegistry) === null || _a === void 0
