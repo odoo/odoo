@@ -7,7 +7,8 @@
             <form string="SMS">
                 <header>
                     <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
-                    <button name="cancel" string="Cancel" type="object" states='outgoing'/>
+                    <button name="retry" string="RETRY" type="object" states='error,canceled'/>
+                    <button name="cancel" string="Cancel" type="object" states='error,outgoing'/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -64,5 +65,13 @@
         action="sms_sms_action"
         sequence="1"/>
 
+    <record id="model_sms_sms_action_resend" model="ir.actions.server">
+        <field name="name">Resend</field>
+        <field name="model_id" ref="sms.model_sms_sms"/>
+        <field name="binding_model_id" ref="sms.model_sms_sms"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.resend()</field>
+    </record>
 </data>
 </odoo>
