@@ -93,8 +93,8 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    value_svl = fields.Float(compute='_compute_value_svl')
-    quantity_svl = fields.Float(compute='_compute_value_svl')
+    value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
+    quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
     valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
     cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
