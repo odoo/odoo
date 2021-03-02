@@ -1025,6 +1025,17 @@ class HrExpenseSheet(models.Model):
         }
         return res
 
+    def action_open_account_move(self):
+        self.ensure_one()
+        return {
+            'name': self.account_move_id.name,
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.move',
+            'res_id': self.account_move_id.id
+        }
+
     # --------------------------------------------
     # Business
     # --------------------------------------------

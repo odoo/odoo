@@ -696,6 +696,15 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_open_account_move"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            type="object"
+                            attrs="{'invisible': ['|', ('state', 'not in', ['post', 'done']), ('account_move_id', '=', False)]}"
+                            groups="account.group_account_invoice,account.group_account_readonly">
+                            Journal Entry
+                        </button>
+                        <field name="account_move_id" invisible="1"/>
                         <button name="action_get_attachment_view"
                             class="oe_stat_button"
                             icon="fa-file-text-o"
@@ -767,9 +776,6 @@
                                     <field name="journal_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}" context="{'default_company_id': company_id}"/>
                                     <field name="bank_journal_id" groups="account.group_account_invoice,account.group_account_readonly" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" context="{'default_company_id': company_id}"/>
                                     <field name="accounting_date" groups="account.group_account_invoice,account.group_account_readonly" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
-                                </group>
-                                <group>
-                                    <field name="account_move_id" groups="account.group_account_invoice,account.group_account_readonly" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
                                 </group>
                             </group>
                         </page>
