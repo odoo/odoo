@@ -407,10 +407,17 @@ return AbstractRenderer.extend({
                 var event = self._convertEventToFC3Event(eventResizeInfo.event);
                 self.trigger_up('updateRecord', event);
             },
-            eventClick: function (eventClickInfo) {
+            eventClick: async function (eventClickInfo) {
                 eventClickInfo.jsEvent.preventDefault();
                 eventClickInfo.jsEvent.stopPropagation();
                 var eventData = eventClickInfo.event;
+                await Promise.all([
+                    self._rpc({model: 'calendar.event', method: 'check_access_rule', args: [parseInt(eventClickInfo.event.id), "write", false]}),
+                    self._rpc({model: 'calendar.event', method: 'check_access_rule', args: [parseInt(eventClickInfo.event.id), "unlink", false]}),
+                ]).then(function (result) {
+                    eventData.canEdit = result[0];
+                    eventData.canDelete = result[1];
+                });
                 self._unselectEvent();
                 $(self.calendarElement).find(`[data-event-id=${eventData.id}]`).addClass('o_cw_custom_highlight');
                 self._renderEventPopover(eventData, $(eventClickInfo.el));
@@ -785,7 +792,8 @@ return AbstractRenderer.extend({
             displayFields: this.displayFields,
             event: eventData,
             modelName: this.model,
-            canDelete: this.canDelete,
+            canDelete: this.canDelete && eventData.canDelete,
+            canEdit: eventData.canEdit,
         };
 
         var start = moment((eventData.extendedProps && eventData.extendedProps.r_start) || eventData.start);
@@ -846,6 +854,7 @@ return AbstractRenderer.extend({
             container: eventData.allDay ? '.fc-view' : '.fc-scroller',
         }
     },
+
     /**
      * Render event popover
      *

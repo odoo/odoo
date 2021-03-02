@@ -100,14 +100,14 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'description': test_description,
             'start': fields.Datetime.to_string(now + timedelta(days=-1)),
             'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
-            'user_id': self.env.user.id,
+            'user_id': test_user.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
         self.assertEqual(test_record.activity_ids.summary, test_name)
         self.assertEqual(test_record.activity_ids.note, test_note)
-        self.assertEqual(test_record.activity_ids.user_id, self.env.user)
+        self.assertEqual(test_record.activity_ids.user_id, test_user)
         self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-1)).date())
 
         # updating event should update activity
@@ -144,7 +144,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'description': test_description,
             'start': now + timedelta(days=-1),
             'stop': now + timedelta(hours=2),
-            'user_id': self.env.user.id,
+            'user_id': self.user_demo.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)
         self.assertEqual(test_event.res_id, test_record.id)

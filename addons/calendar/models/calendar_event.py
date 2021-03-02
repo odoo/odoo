@@ -814,8 +814,8 @@ class Meeting(models.Model):
             :param events: list of event values (dict)
             :return: tuple(my events, other events)
             """
-            my = [event for event in events if (event.get('user_id') and event.get('user_id')[0] == self.env.uid) or self.env.user.partner_id.id in event.get('partner_ids')]
-            others = [event for event in events if not event.get('user_id') or (event.get('user_id')[0] != self.env.uid and self.env.user.partner_id.id not in event.get('partner_ids'))]
+            my = [event for event in events if (event.get('user_id') and event.get('user_id')[0] == self.env.uid) or (event.get('partner_ids') and self.env.user.partner_id.id in event.get('partner_ids'))]
+            others = [event for event in events if not event.get('user_id') or (event.get('user_id')[0] != self.env.uid and (not event.get('partner_ids') or self.env.user.partner_id.id not in event.get('partner_ids')))]
             return my, others
 
         def obfuscated(events):
@@ -894,3 +894,12 @@ class Meeting(models.Model):
         if status == 'declined':
             return attendee.do_decline()
         return attendee.do_tentative()
+
+    def check_access_rule(self, operation, raise_exception=True):
+        try:
+            super().check_access_rule(operation)
+            return None if raise_exception else True
+        except Exception as e:
+            if raise_exception:
+                raise e
+            return False

@@ -31,6 +31,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
         this.event = eventInfo.event;
         this.modelName = eventInfo.modelName;
         this._canDelete = eventInfo.canDelete;
+        this._canEdit = eventInfo.canEdit;
     },
     /**
      * @override
@@ -76,7 +77,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
      * @return {boolean}
      */
     isEventDeletable() {
-        return this._canDelete;;
+        return this._canDelete;
     },
     /**
      * @return {boolean}
@@ -88,7 +89,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
      * @return {boolean}
      */
     isEventEditable() {
-        return true;
+        return this._canEdit;
     },
 
     //--------------------------------------------------------------------------

@@ -3344,27 +3344,22 @@ Fields:
         """
         return self.env['ir.model.access'].check(self._name, operation, raise_exception)
 
-    def check_access_rule(self, operation, raise_exception=True):
+    def check_access_rule(self, operation):
         """ Verifies that the operation given by ``operation`` is allowed for
             the current user according to ir.rules.
 
            :param operation: one of ``write``, ``unlink``
-           :param raise_exception: use UserError [use True/False to represent permission]
-           :raise UserError: * if current ir.rules do not permit this operation [No UserError]
-           :return: None if the operation is allowed [True/False if the operation is allowed/forbidden]
+           :raise UserError: * if current ir.rules do not permit this operation.
+           :return: None if the operation is allowed
         """
-        allowed = None if raise_exception else True
         if self.env.su:
-            return allowed
+            return
 
         # SQL Alternative if computing in-memory is too slow for large dataset
         # invalid = self - self._filter_access_rules(operation)
         invalid = self - self._filter_access_rules_python(operation)
         if not invalid:
-            return allowed
-
-        if not raise_exception:
-            return False
+            return
 
         forbidden = invalid.exists()
         if forbidden:

@@ -26,14 +26,6 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
             });
             this.selectedStatusInfo = this.statusInfo[this.event.extendedProps.record.attendee_status];
         }
-
-        Promise.all([
-            self._rpc({model: self.modelName, method: 'check_access_rule', args: [parseInt(this.event.id), "write", false]}),
-            self._rpc({model: self.modelName, method: 'check_access_rule', args: [parseInt(this.event.id), "unlink", false]}),
-        ]).then(function (result) {
-            self.editable = result[0]
-            self.deletable = result[1]
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -51,14 +43,14 @@ const AttendeeCalendarPopover = CalendarPopover.extend({
      * @return {boolean}
      */
     isEventDeletable() {
-        return this.deletable;
+        return this._canDelete;
     },
     /**
      * @override
      * @return {boolean}
      */
     isEventEditable() {
-        return this.editable;
+        return this._canEdit;
     },
 
     //--------------------------------------------------------------------------
