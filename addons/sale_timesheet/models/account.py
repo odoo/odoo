@@ -108,7 +108,7 @@ class AccountAnalyticLine(models.Model):
                     return map_entry.sale_line_id
             if project.sale_line_id:
                 return project.sale_line_id
-        if task.allow_billable:
+        if task.allow_billable and task.sale_line_id:
             if task.bill_type == 'customer_task':
                 return task.sale_line_id
             if task.pricing_type == 'fixed_rate':
