@@ -1,15 +1,7 @@
 /** @odoo-module **/
-import { actionRegistry } from "./actions/action_registry";
-import { errorDialogRegistry } from "./errors/error_dialog_registry";
-import { debugManagerRegistry } from "./debug/debug_registry";
 import { makeEnv, makeRAMLocalStorage } from "./env";
 import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
 import { legacySetupProm } from "./legacy/legacy_setup";
-import { serviceRegistry } from "./services/service_registry";
-import { viewRegistry } from "./views/view_registry";
-import { mainComponentRegistry } from "./webclient/main_component_registry";
-import { systrayRegistry } from "./webclient/systray_registry";
-import { userMenuRegistry } from "./webclient/user_menu_registry";
 import { WebClient } from "./webclient/webclient";
 
 const { mount, utils } = owl;
@@ -37,14 +29,6 @@ const { whenReady, loadFile } = utils;
     localStorage,
     sessionStorage,
   });
-  odoo.userMenuRegistry = userMenuRegistry;
-  odoo.mainComponentRegistry = mainComponentRegistry;
-  odoo.actionRegistry = actionRegistry;
-  odoo.viewRegistry = viewRegistry;
-  odoo.systrayRegistry = systrayRegistry;
-  odoo.errorDialogRegistry = errorDialogRegistry;
-  odoo.serviceRegistry = serviceRegistry;
-  odoo.debugManagerRegistry = debugManagerRegistry;
   // setup environment
   const [env, templates] = await Promise.all([makeEnv(odoo.debug), loadTemplates()]);
   env.qweb.addTemplates(templates);

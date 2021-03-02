@@ -11,7 +11,7 @@ import {
 // -----------------------------------------------------------------------------
 // Custom Dialogs for CrashManagerService
 // -----------------------------------------------------------------------------
-export const errorDialogRegistry = new Registry();
+export const errorDialogRegistry = odoo.errorDialogRegistry = new Registry();
 
 errorDialogRegistry
   .add("odoo.exceptions.AccessDenied", WarningDialog)
