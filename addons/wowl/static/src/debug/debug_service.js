@@ -15,8 +15,8 @@ export function editModelDebug(env, title, model, id) {
   });
 }
 
-export const debugManagerService = {
-  name: "debug_manager",
+export const debugService = {
+  name: "debug",
   dependencies: ["model"],
   async deploy(env) {
     let accessRightsProm;
@@ -59,4 +59,4 @@ export const debugManagerService = {
   },
 };
 
-serviceRegistry.add("debug_manager", debugManagerService);
+serviceRegistry.add("debug", debugService);

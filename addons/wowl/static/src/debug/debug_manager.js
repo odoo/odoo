@@ -10,7 +10,7 @@ export class DebugManager extends Component {
   constructor(...args) {
     super(...args);
     this.debugFactories = {};
-    this.debugService = useService("debug_manager");
+    this.debugService = useService("debug");
     // Defined as arrow to be passed as prop
     // @ts-ignore
     this.beforeOpenDropdown = async () => {

@@ -2,7 +2,7 @@
 import { ActionDialog } from "../../src/actions/action_dialog";
 import { Registry } from "../../src/core/registry";
 import { DebugManager } from "../../src/debug/debug_manager";
-import { debugManagerService } from "../../src/debug/debug_manager_service";
+import { debugService } from "../../src/debug/debug_service";
 import { modelService } from "../../src/services/model";
 import { useDebugManager } from "../../src/debug/debug_manager";
 import { click, getFixture, makeTestEnv, mount } from "../helpers/index";
@@ -17,7 +17,7 @@ QUnit.module("DebugManager", (hooks) => {
     target = getFixture();
     const serviceRegistry = new Registry();
     serviceRegistry.add(modelService.name, modelService);
-    serviceRegistry.add(debugManagerService.name, debugManagerService);
+    serviceRegistry.add(debugService.name, debugService);
     const mockRPC = async (route, args) => {
       if (args.method === "check_access_rights") {
         return Promise.resolve(true);

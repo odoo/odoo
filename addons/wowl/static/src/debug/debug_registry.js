@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Registry } from "../core/registry";
-import { backendDebugManagerItems, globalDebugManagerItems } from "./debug_manager_elements";
+import { backendDebugManagerItems, globalDebugManagerItems } from "./debug_menu_items";
 
 export const debugManagerRegistry = new Registry();
 
