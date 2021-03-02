@@ -13,26 +13,13 @@
         </field>
     </record>
 
-    <!-- Add action entry in the Action Menu for Events -->
-    <record id="calendar_event_act_window_sms_composer_single" model="ir.actions.act_window">
-        <field name="name">Send SMS</field>
-        <field name="res_model">sms.composer</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{
-            'default_composition_mode': 'guess',
-            'default_res_id': active_id,
-            'default_res_ids': active_ids,
-        }</field>
-    </record>
-
     <record id="view_calendar_event_tree_inherited" model="ir.ui.view">
         <field name="name">calendar.event.tree.calendar_sms</field>
         <field name="model">calendar.event</field>
         <field name="inherit_id" ref="calendar.view_calendar_event_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="%(calendar_event_act_window_sms_composer_single)d" type="action"
+                <button name="action_send_sms" type="object"
                         string="Send SMS"/>
             </xpath>
         </field>
@@ -45,6 +32,9 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='send_buttons']" position="inside">
                 <button name="action_send_sms" help="Send SMS to attendees" type="object" string="SMS" icon="fa-mobile"/>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="replace">
+                <field name="phone" widget="phone" options="{'enable_sms': false}"/>
             </xpath>
         </field>
     </record>
