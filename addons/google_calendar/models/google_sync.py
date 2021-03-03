@@ -155,12 +155,15 @@ class GoogleSync(models.AbstractModel):
             dict(self._odoo_values(e, default_reminders), need_sync=False)
             for e in new
         ]
-        new_odoo = self._create_from_google(new, odoo_values)
+        new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
+        # Synced recurrences attendees will be notified once _apply_recurrence is called.
+        if not self._context.get("dont_notify") and all(not e.is_recurrence() for e in google_events):
+            new_odoo._notify_attendees()
+
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
         cancelled_odoo._cancel()
-
-        synced_records = new_odoo + cancelled_odoo
+        synced_records = (new_odoo + cancelled_odoo).with_context(dont_notify=self._context.get("dont_notify", False))
         for gevent in existing - cancelled:
             # Last updated wins.
             # This could be dangerous if google server time and odoo server time are different
@@ -249,5 +252,15 @@ class GoogleSync(models.AbstractModel):
     def _get_google_synced_fields(self):
         """Return a set of field names. Changing one of these fields
         marks the record to be re-synchronized.
+        """
+        raise NotImplementedError()
+
+    def _notify_attendees(self):
+        """ Notify calendar event partners.
+        This is called when creating new calendar events in _sync_google2odoo.
+        At the initialization of a synced calendar, Odoo requests all events for a specific
+        GoogleCalendar. Among those there will probably be lots of events that will never triggers a notification
+        (e.g. single events that occured in the past). Processing all these events through the notification procedure
+        of calendar.event.create is a possible performance bottleneck. This method aimed at alleviating that.
         """
         raise NotImplementedError()
