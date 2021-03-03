@@ -27,10 +27,7 @@
                     <div t-if="qty_forecasted" t-attf-class="availability_message_#{product_template} text-success mt16">Item will ship by February 12, 2021.</div>
                     <div t-if="!qty_forecasted" t-attf-class="availability_message_#{product_template} text-success mt16">Orders awaiting replenishment are accepted.</div>
                 </t>
-                <div t-if="allow_order == 'enough'" t-attf-class="availability_message_#{product_template} text-warning mt8">
-                    <!--{if wishlist activated} Add the item to your wishlist to be notified when product is back in stock.-->
-                    Orders awaiting replenishment aren't accepted.
-                </div>
+                <div id="allow_to_order_enough_qty" t-if="allow_order == 'enough'" t-attf-class="availability_message_#{product_template} text-warning mt8">Orders awaiting replenishment aren't accepted.</div>
             </t>
         </t>
         <div t-if="product_type == 'product' and inventory_availability == 'custom'" t-attf-class="availability_message_#{product_template} text-success mt16">
