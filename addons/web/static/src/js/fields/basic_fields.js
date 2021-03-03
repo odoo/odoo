@@ -3770,6 +3770,9 @@ var FieldColorPicker = FieldInteger.extend({
 
         }
     },
+    _onNavigationMove() {
+        // disable navigation from FieldInput, to prevent a crash
+    }
 });
 
 return {
