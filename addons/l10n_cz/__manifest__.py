@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name' : 'Czech - Accounting',
-    'version' : '14.0.1.0.0',
-    'author' : '26HOUSE',
+    'name': 'Czech - Accounting',
+    'version': '14.0.1.0.0',
+    'author': '26HOUSE',
     'website': 'http://www.26house.com',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
@@ -18,7 +18,7 @@ Tento modul definuje:
 
 - Základní fiskální pozice pro českou legislativu
     """,
-    'depends' : [
+    'depends': [
         'account',
         'base_iban',
         'base_vat',
