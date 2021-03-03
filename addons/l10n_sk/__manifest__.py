@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name' : 'Slovak - Accounting',
-    'version' : '14.0.1.0.0',
-    'author' : '26HOUSE',
+    'name': 'Slovak - Accounting',
+    'version': '14.0.1.0.0',
+    'author': '26HOUSE',
     'website': 'http://www.26house.com',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
@@ -20,7 +20,7 @@ Tento modul definuje:
 Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www.26house.com.
     
     """,
-    'depends' : [
+    'depends': [
         'account',
         'base_iban',
         'base_vat',
