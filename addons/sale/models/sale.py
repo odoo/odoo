@@ -1461,7 +1461,7 @@ class SaleOrderLine(models.Model):
                     # has to be called to retrieve the subtotal without them.
                     # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
                     price_subtotal = line.tax_id.compute_all(
-                        price_subtotal,
+                        line.price_reduce,
                         currency=line.order_id.currency_id,
                         quantity=line.product_uom_qty,
                         product=line.product_id,
