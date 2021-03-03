@@ -164,7 +164,7 @@ class ProductProduct(models.Model):
             # In case of AVCO, fix rounding issue of standard price when needed.
             if self.cost_method == 'average':
                 currency = self.env.company.currency_id
-                rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
+                rounding_error = currency.round(self.standard_price * self.sudo().quantity_svl - self.value_svl)
                 if rounding_error:
                     # If it is bigger than the (smallest number of the currency * quantity) / 2,
                     # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
