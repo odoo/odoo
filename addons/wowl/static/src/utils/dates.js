@@ -44,6 +44,8 @@ function stripAlphaDupes(str) {
 }
 
 /**
+ * FIXME: signature looks wrong
+ *
  * @param {DateTime | false} date
  * @returns {boolean}
  */
