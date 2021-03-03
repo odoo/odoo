@@ -4,18 +4,19 @@
 import base64
 import collections
 import logging
-from lxml.html import clean
 import random
 import re
 import socket
 import threading
 import time
-
 from email.utils import getaddresses
-from lxml import etree
 from urllib.parse import urlparse
-from werkzeug import urls
+
 import idna
+import markupsafe
+from lxml import etree
+from lxml.html import clean
+from werkzeug import urls
 
 import odoo
 from odoo.loglevels import ustr
@@ -249,7 +250,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     if cleaned.startswith(u'<div>') and cleaned.endswith(u'</div>'):
         cleaned = cleaned[5:-6]
 
-    return cleaned
+    return markupsafe.Markup(cleaned)
 
 # ----------------------------------------------------------
 # HTML/Text management

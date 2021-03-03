@@ -45,21 +45,19 @@ will result in::
 Data output
 ===========
 
-QWeb has a primary output directive which automatically HTML-escape its
-content limiting XSS_ risks when displaying user-provided content: ``esc``.
+QWeb's output directive ``out`` will automatically HTML-escape its input,
+limiting XSS_ risks when displaying user-provided content.
 
-``esc`` takes an expression, evaluates it and prints the content::
+``out`` takes an expression, evaluates it and injects the result in the document::
 
-    <p><t t-esc="value"/></p>
+    <p><t t-out="value"/></p>
 
 rendered with the value ``value`` set to ``42`` yields::
 
     <p>42</p>
 
-There is one other output directive ``raw`` which behaves the same as
-respectively ``esc`` but *does not HTML-escape its output*. It can be useful
-to display separately constructed markup (e.g. from functions) or already
-sanitized user-provided markup.
+See :ref:`reference/qweb/advanced-output` for more advanced topics (e.g.
+injecting raw HTML, etc...).
 
 .. _reference/qweb/conditionals:
 
@@ -115,7 +113,7 @@ the collection to iterate on, and a second parameter ``t-as`` providing the
 name to use for the "current item" of the iteration::
 
     <t t-foreach="[1, 2, 3]" t-as="i">
-        <p><t t-esc="i"/></p>
+        <p><t t-out="i"/></p>
     </t>
 
 will be rendered as::
@@ -130,7 +128,7 @@ attribute, and
 ::
 
     <p t-foreach="[1, 2, 3]" t-as="i">
-        <t t-esc="i"/>
+        <t t-out="i"/>
     </p>
 
 is equivalent to the previous example.
@@ -217,7 +215,7 @@ exists in 3 different forms:
 
         <t t-foreach="[1, 2, 3]" t-as="item">
             <li t-attf-class="row {{ (item_index % 2 === 0) ? 'even' : 'odd' }}">
-                <t t-esc="item"/>
+                <t t-out="item"/>
             </li>
         </t>
 
@@ -246,6 +244,8 @@ exists in 3 different forms:
 
         <div a="b"></div>
 
+.. _reference/qweb/set:
+
 setting variables
 =================
 
@@ -260,7 +260,7 @@ to create. The value to set can be provided in two ways:
   evaluation will be set::
 
     <t t-set="foo" t-value="2 + 1"/>
-    <t t-esc="foo"/>
+    <t t-out="foo"/>
 
   will print ``3``
 * if there is no ``t-value`` attribute, the node's body is rendered and set
@@ -269,13 +269,9 @@ to create. The value to set can be provided in two ways:
     <t t-set="foo">
         <li>ok</li>
     </t>
-    <t t-esc="foo"/>
+    <t t-out="foo"/>
 
-  will generate ``&lt;li&gt;ok&lt;/li&gt;`` (the content is escaped as we
-  used the ``esc`` directive)
-
-  .. note:: using the result of this operation is a significant use-case for
-            the ``raw`` directive.
+.. _reference/qweb/call:
 
 calling sub-templates
 =====================
@@ -313,7 +309,7 @@ template as a magical ``0`` variable::
 
     <div>
         This template was called with content:
-        <t t-raw="0"/>
+        <t t-out="0"/>
     </div>
 
 being called thus::
@@ -328,6 +324,133 @@ will result in::
         This template was called with content:
         <em>content</em>
     </div>
+
+.. _reference/qweb/advanced-output:
+
+Advanced Output
+===============
+
+By default, ``out`` should HTML-escape content which needs to be escaped,
+protecting the system against XSS_
+
+Content which does *not* need to be escaped will instead be injected as-is in
+the document, and may become part of the document's actual markup.
+
+The only cross-platform "safe" content is the output of
+:ref:`t-call <reference/qweb/call>` or a :ref:`t-set <reference/qweb/set>`
+used with a "body" (as opposed to ``t-value`` or ``t-valuef``).
+
+Python
+------
+
+Usually you should not have to care too much: APIs for which it makes sense
+should generate "safe" content automatically, and things should work
+transparently.
+
+For the cases where things need to be clearer though the following APIs output
+safe content which will by default not be (re-)escaped when injected into
+templates:
+
+* :class:`HTML fields <odoo.fields.Html>`.
+* :func:`~odoo.tools.misc.html_escape` and :func:`markupsafe.escape` (they are
+  aliases, and have no risk of double-escaping).
+* :func:`~odoo.tools.mail.html_sanitize`.
+* :class:`markupsafe.Markup`.
+
+  .. warning:: :class:`markupsafe.Markup` is an unsafe API, it's an *assertion*
+               that you want the content to be markup-safe but necessarily can
+               not check that, it should be used with care.
+* :func:`~odoo.tools.pycompat.to_text` does not mark the content as safe, but
+  will not strip that information from safe content.
+
+Creating safe content using :class:`~markupsafe.Markup`
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+See the official documentation for explanations, but the big advantage of
+:class:`~markupsafe.Markup` is that it's a very rich type overrinding
+:class:`str` operations to *automatically escape parameters*.
+
+This means that it's easy to create *safe* html snippets by using
+:class:`~markupsafe.Markup` on a string literal and "formatting in"
+user-provided (and thus potentially unsafe) content:
+
+.. code-block:: pycon
+
+    >>> Markup('<em>Hello</em> ') + '<foo>'
+    Markup('<em>Hello</em> &lt;foo&gt;')
+    >>> Markup('<em>Hello</em> %s') % '<foo>'
+    Markup('<em>Hello</em> &lt;foo&gt;')
+
+though it is a very good thing, note that the effects can be odd at times:
+
+.. code-block:: pycon
+
+    >>> Markup('<a>').replace('>', 'x')
+    Markup('<a>')
+    >>> Markup('<a>').replace(Markup('>'), 'x')
+    Markup('<ax')
+    >>> Markup('<a&gt;').replace('>', 'x')
+    Markup('<ax')
+    >>> Markup('<a&gt;').replace('>', '&')
+    Markup('<a&amp;')
+
+.. tip:: Most of the content-safe APIs actually return a
+         :class:`~markupsafe.Markup` with all that implies.
+
+Javascript
+----------
+
+.. todo:: what APIs do we end up considering OK there?
+.. todo:: talk about vdom thingies?
+
+.. warning::
+
+    Due to the lack of operator overriding, :js:class:`Markup` is a much more
+    limited type than :class:`~markupsafe.Markup`.
+
+    Therefore it doesn't override methods either, and any operation involving
+    :js:class:`Markup` will return a normal :js:class:`String` (and in reality
+    not even that, but a "primitive string").
+
+    This means the fallback is safe, but it is easy to trigger double-escaping
+    when working with :js:class:`Markup` objects.
+
+forcing double-escaping
+-----------------------
+
+If content is marked as safe but for some reason needs to be escaped anyway
+(e.g. printing the markup of an HTML fields), it can just be converted back
+to a normal string to "strip" the safety flag e.g. `str(content)` in Python and
+`String(content)` in Javascript.
+
+.. note::
+
+    Because :class:`~markupsafe.Markup` is a much richer type than
+    :js:class:`Markup`, some operations will strip the safety information from
+    a :js:class:`Markup` but not a :class:`~markupsafe.Markup` e.g. string
+    concatenation (``'' + content``) in Python will result in a
+    :class:`~markupsafe.Markup` with the other operand having been properly
+    escaped, while in Javascript will yield a :js:class:`String` where the
+    other operand was *not* escaped before the concatenation.
+
+Deprecated output directives
+----------------------------
+
+``esc``
+    An alias for ``out``, would originally HTML-escape its input. Not yet
+    formally deprecated as the only difference between ``out`` and ``esc`` is
+    that the latter is a bit unclear / incorrect.
+``raw``
+    A version of ``out`` which *never* escapes its content. Content is emitted
+    as-is, whether it's safe or not.
+
+    .. deprecated:: 15.0
+
+        Use ``out`` with a :class:`markupsafe.Markup` value instead.
+
+        ``t-raw`` was deprecated because as the code *producting* the content
+        evolves it can be hard to track that it's going to be used for markup,
+        leading to more complicated reviews and more dangerous lapses.
 
 Python
 ======

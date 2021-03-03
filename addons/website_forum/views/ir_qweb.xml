@@ -12,7 +12,7 @@
                 </div>
                 <b class="mt-4"><i class="fa fa-diamond text-secondary"/> <t t-esc="object.karma"/></b>
                 <div t-if="options.get('badges')" style="display: inline-block">
-                    <t t-raw="separator"/>
+                    <t t-esc="separator"/>
                     <b>|</b>
                     <span class="fa fa-trophy badge-gold ml-2" role="img" aria-label="Gold badge" title="Gold badge"/>
                     <t t-esc="object.gold_badge"/>

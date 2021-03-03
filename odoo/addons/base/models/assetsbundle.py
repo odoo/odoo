@@ -20,11 +20,11 @@ except ImportError:
     # `sassc` executable in the path.
     libsass = None
 
-from .qweb import escape
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator
+from odoo.tools.misc import html_escape as escape
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
