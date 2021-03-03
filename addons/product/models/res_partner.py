@@ -20,8 +20,8 @@ class Partner(models.Model):
     def _compute_product_pricelist(self):
         company = self.env.context.get('force_company', False)
         res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids, company_id=company)
-        for p in self:
-            p.property_product_pricelist = res.get(p.id)
+        for partner in self:
+            partner.property_product_pricelist = res[partner.ids[0]] if partner.ids else False
 
     def _inverse_product_pricelist(self):
         for partner in self:
