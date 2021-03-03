@@ -9,7 +9,7 @@
                 <field name="overtime_deductible" invisible="1" />
                 <field name="employee_overtime" invisible="1" />
                 <div class="oe_inline" attrs="{'invisible': ['|', '|', ('hr_attendance_overtime', '=', False), ('employee_id', '=', False), ('overtime_deductible', '=', False)]}">
-                    <field name="employee_overtime" nolabel="1" widget="float_time" /> extra hours left
+                    <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" /> Extra Hours Available
                 </div>
             </xpath>
         </field>
