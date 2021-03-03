@@ -101,7 +101,7 @@ class Website(Home):
         """
         if not redirect and request.params.get('login_success'):
             if request.env['res.users'].browse(uid).has_group('base.group_user'):
-                redirect = b'/web?' + request.httprequest.query_string
+                redirect = '/web?' + request.httprequest.query_string.decode()
             else:
                 redirect = '/my'
         return super()._login_redirect(uid, redirect=redirect)

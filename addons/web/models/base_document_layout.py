@@ -48,14 +48,7 @@ class BaseDocumentLayout(models.TransientModel):
     report_layout_id = fields.Many2one('report.layout')
 
     # All the sanitization get disabled as we want true raw html to be passed to an iframe.
-    preview = fields.Html(compute='_compute_preview',
-                          sanitize=False,
-                          sanitize_tags=False,
-                          sanitize_attributes=False,
-                          sanitize_style=False,
-                          sanitize_form=False,
-                          strip_style=False,
-                          strip_classes=False)
+    preview = fields.Html(compute='_compute_preview', sanitize=False)
 
     # Those following fields are required as a company to create invoice report
     partner_id = fields.Many2one(related='company_id.partner_id', readonly=True)
