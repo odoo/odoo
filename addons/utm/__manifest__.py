@@ -7,7 +7,7 @@
     'description': """
 Enable management of UTM trackers: campaign, medium, source.
 """,
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['base', 'web'],
     'data': [
         'data/utm_data.xml',
