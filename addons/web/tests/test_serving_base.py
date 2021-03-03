@@ -71,22 +71,22 @@ class TestStaticInheritanceCommon(BaseCase):
 
             'module_2_file_1': b"""
                 <templates id="template" xml:space="preserve">
-                    <form t-name="template_2_1" t-inherit="module_1.template_1_1" t-inherit-mode="primary">
+                    <t t-name="template_2_1" t-inherit="module_1.template_1_1" t-inherit-mode="primary">
                         <xpath expr="//div[1]" position="after">
                             <div>I was petrified</div>
                         </xpath>
                         <xpath expr="//div[2]" position="after">
                             <div>But then I spent so many nights thinking how you did me wrong</div>
                         </xpath>
-                    </form>
+                    </t>
                     <div t-name="template_2_2">
                         <div>And I learned how to get along</div>
                     </div>
-                    <form t-inherit="module_1.template_1_2" t-inherit-mode="extension">
+                    <t t-inherit="module_1.template_1_2" t-inherit-mode="extension">
                         <xpath expr="//div[1]" position="after">
                             <div>And I learned how to get along</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
                 """,
         }
@@ -170,11 +170,11 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                         <div>At first I was afraid</div>
                         <div>Kept thinking I could never live without you by my side</div>
                     </form>
-                    <form t-name="template_1_2" t-inherit="template_1_1" added="true">
+                    <t t-name="template_1_2" t-inherit="template_1_1" added="true">
                         <xpath expr="//div[1]" position="after">
                             <div>I was petrified</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
             '''
         }
@@ -207,14 +207,14 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                         <div>At first I was afraid</div>
                         <div>Kept thinking I could never live without you by my side</div>
                     </form>
-                    <form t-name="template_1_2" t-inherit="template_1_1" added="true">
+                    <t t-name="template_1_2" t-inherit="template_1_1" added="true">
                         <xpath expr="//div[1]" position="after">
                             <div>I was petrified</div>
                         </xpath>
-                    </form>
-                    <form t-name="template_1_3" t-inherit="template_1_2" added="false" other="here">
+                    </t>
+                    <t t-name="template_1_3" t-inherit="template_1_2" added="false" other="here">
                         <xpath expr="//div[2]" position="replace"/>
-                    </form>
+                    </t>
                 </templates>
             '''
         }
@@ -260,11 +260,11 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
             'module_1_file_2': b'''
                 <templates id="template" xml:space="preserve">
-                    <form t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
+                    <t t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
                         <xpath expr="//div[1]" position="after">
                             <div>I was petrified</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
             '''
         }
@@ -297,11 +297,11 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                         <div>At first I was afraid</div>
                         <div>Kept thinking I could never live without you by my side</div>
                     </form>
-                    <form t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
+                    <t t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
                         <xpath expr="//div[1]" position="after">
                             <div>I was petrified</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
             ''',
         }
@@ -333,16 +333,16 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                         <div>At first I was afraid</div>
                         <div>Kept thinking I could never live without you by my side</div>
                     </form>
-                    <form t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="extension">
+                    <t t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="extension">
                         <xpath expr="//div[1]" position="after">
                             <div>I was petrified</div>
                         </xpath>
-                    </form>
-                    <form t-name="template_1_3" t-inherit="template_1_1" t-inherit-mode="primary">
+                    </t>
+                    <t t-name="template_1_3" t-inherit="template_1_1" t-inherit-mode="primary">
                         <xpath expr="//div[3]" position="after">
                             <div>But then I spent so many nights thinking how you did me wrong</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
             ''',
         }
@@ -384,21 +384,21 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
             'module_2_file_1': b'''
                 <templates id="template" xml:space="preserve">
-                    <form t-name="template_2_1" t-inherit="module_1.template_1_1" t-inherit-mode="extension">
+                    <t t-name="template_2_1" t-inherit="module_1.template_1_1" t-inherit-mode="extension">
                         <xpath expr="//div[1]" position="after">
                             <div>In constant sorrow all through his days</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
             ''',
 
             'module_3_file_1': b'''
                 <templates id="template" xml:space="preserve">
-                    <form t-name="template_3_1" t-inherit="module_1.template_1_1" t-inherit-mode="extension">
+                    <t t-name="template_3_1" t-inherit="module_1.template_1_1" t-inherit-mode="extension">
                         <xpath expr="//div[2]" position="after">
                             <div>Oh Brother !</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
             '''
         }
@@ -432,11 +432,11 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
     def test_static_misordered_templates(self):
         self.template_files['module_2_file_1'] = b"""
             <templates id="template" xml:space="preserve">
-                <form t-name="template_2_1" t-inherit="module_2.template_2_2" t-inherit-mode="primary">
+                <t t-name="template_2_1" t-inherit="module_2.template_2_2" t-inherit-mode="primary">
                     <xpath expr="//div[1]" position="after">
                         <div>I was petrified</div>
                     </xpath>
-                </form>
+                </t>
                 <div t-name="template_2_2">
                     <div>And I learned how to get along</div>
                 </div>
@@ -613,11 +613,11 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                         <div>At first I was afraid</div>
                         <form>Inner Form</form>
                     </form>
-                    <form t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
+                    <t t-name="template_1_2" t-inherit="template_1_1" t-inherit-mode="primary">
                         <xpath expr="//form" position="replace">
                             <div>Form replacer</div>
                         </xpath>
-                    </form>
+                    </t>
                 </templates>
                 """,
         }
@@ -907,6 +907,70 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
 
         self.assertXMLEqual(contents, expected)
 
+    def test_inherit_primary_change_root_crashes(self):
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+            ('module_2_file_1', None, 'module_2'),
+        ]
+        self.template_files = {
+            'module_1_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <form t-name="module_1.template_1_1">
+                        <div>At first I was afraid</div>
+                    </form>
+                </templates>
+                """,
+
+            'module_2_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <div t-name="template_2_1" t-inherit="module_1.template_1_1" t-inherit-mode="primary">
+                        <xpath expr="//div" position="after">
+                            <div>
+                                And I grew strong
+                                <p>And I learned how to get along</p>
+                            </div>
+                        </xpath>
+                    </div>
+                </templates>
+            """
+        }
+
+        with self.assertRaises(ValueError) as cm:
+            HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        self.assertEqual(str(cm.exception), 'The t-inherit directive can only be used on a t tag nodes. Module module_2 and template name template_2_1')
+
+    def test_inherit_extension_change_root_crashes(self):
+        self.modules = [
+            ('module_1_file_1', None, 'module_1'),
+            ('module_2_file_1', None, 'module_2'),
+        ]
+        self.template_files = {
+            'module_1_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <form t-name="module_1.template_1_1">
+                        <div>At first I was afraid</div>
+                    </form>
+                </templates>
+                """,
+
+            'module_2_file_1': b"""
+                <templates id="template" xml:space="preserve">
+                    <div t-name="template_2_1" t-inherit="module_1.template_1_1" t-inherit-mode="extension">
+                        <xpath expr="//div" position="after">
+                            <div>
+                                And I grew strong
+                                <p>And I learned how to get along</p>
+                            </div>
+                        </xpath>
+                    </div>
+                </templates>
+            """
+        }
+
+        with self.assertRaises(ValueError) as cm:
+            HomeStaticTemplateHelpers.get_qweb_templates(addons=self._get_module_names(), debug=True)
+        self.assertEqual(str(cm.exception), 'The t-inherit directive can only be used on a t tag nodes. Module module_2 and template name template_2_1')
+
 
 @tagged('-standard', 'static_templates_performance')
 class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
@@ -938,24 +1002,24 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
 
                     elif not t % stepInheritInModule and t >= 1:
                         _template += """
-                            <div t-name="template_%(t_number)s_mod_%(m_number)s"
+                            <t t-name="template_%(t_number)s_mod_%(m_number)s"
                                 t-inherit="template_%(t_inherit)s_mod_%(m_number)s"
                                 t-inherit-mode="primary">
                                 <xpath expr="/div/div[1]" position="before">
                                     <div>Sick XPath</div>
                                 </xpath>
-                            </div>
+                            </t>
                         """
 
                     elif not t % stepInheritPreviousModule and m >= 1:
                         _template += """
-                            <div t-name="template_%(t_number)s_mod_%(m_number)s"
+                            <t t-name="template_%(t_number)s_mod_%(m_number)s"
                                 t-inherit="mod_%(m_module_inherit)s.template_%(t_module_inherit)s_mod_%(m_module_inherit)s"
                                 t-inherit-mode="primary">
                                 <xpath expr="/div/div[1]" position="inside">
                                     <div>Mental XPath</div>
                                 </xpath>
-                            </div>
+                            </t>
                         """
                     if _template:
                         number_templates += 1

@@ -544,6 +544,9 @@ class HomeStaticTemplateHelpers(object):
                 if inherit_mode not in [self.PRIMARY_MODE, self.EXTENSION_MODE]:
                     raise ValueError(_("Invalid inherit mode. Module %s and template name %s") % (addon, template_name))
 
+                if inherit_mode and template_tree.tag != 't':
+                    raise ValueError(_('The t-inherit directive can only be used on a t tag node. Module %s and template name %s') % (addon, template_name))
+
                 parent_addon, parent_name = self._get_parent_template(addon, template_tree)
 
                 # After several performance tests, we found out that deepcopy is the most efficient
@@ -554,8 +557,7 @@ class HomeStaticTemplateHelpers(object):
                 if self.debug and inherit_mode == self.EXTENSION_MODE:
                     for xpath in xpaths:
                         xpath.insert(0, etree.Comment(" Modified by %s from %s " % (template_name, addon)))
-                elif inherit_mode == self.PRIMARY_MODE:
-                    parent_tree.tag = template_tree.tag
+
                 inherited_template = apply_inheritance_specs(parent_tree, xpaths)
 
                 if inherit_mode == self.PRIMARY_MODE:  # New template_tree: A' = B(A)
