@@ -206,8 +206,8 @@ class BaseAutomation(models.Model):
         """ Filter the records that satisfy the precondition of action ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_pre_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
-            return records.sudo().search(domain).with_env(records.env)
+            domain = safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
+            return records.sudo().filtered_domain(domain).with_env(records.env)
         else:
             return records
 
