@@ -37,6 +37,9 @@
                         <div class="o_ThreadIcon_noImStatus fa fa-question-circle" title="No IM status available"/>
                     </t>
                 </t>
+                <t t-elif="thread.channel_type === 'group'">
+                    <div class="o_ThreadIcon fa fa-users" title="Grouped Chat"/>
+                </t>
                 <t t-elif="thread.model === 'mail.box'">
                     <t t-if="thread === env.messaging.inbox">
                         <div class="o_ThreadIcon_mailboxInbox fa fa-inbox"/>

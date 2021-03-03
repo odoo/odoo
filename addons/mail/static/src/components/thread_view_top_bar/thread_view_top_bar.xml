@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadViewTopbar" owl="1">
+        <div class="o_ThreadViewTopbar">
+            <span class="o_ThreadViewTopbar_member">
+                <t t-esc="thread.name"/>
+                (<t t-esc="thread.members.length"/> members)
+            </span>
+            <Popover position="'bottom'">
+                    <button class="o_ThreadViewTopbar_buttons o_ThreadViewTopbar_buttonInvite o_ThreadViewTopbar_toolButtons btn btn-light" t-on-click="_onClickInviteButton">
+                        <i class="fa fa-user-plus"/>
+                    </button>
+                    <t t-set="opened">
+                        <PartnerSelector
+                            initialMembers="thread.members"
+                            threadLocalId="thread.localId"
+                        />
+                    </t>
+                </Popover>
+            <Popover position="'bottom'">
+                    <button class="o_ThreadViewTopbar_buttons o_ThreadViewTopbar_buttonIMore o_ThreadViewTopbar_toolButtons btn btn-light" t-on-click="">
+                        <i class="fa fa-chevron-circle-down"/>
+                    </button>
+                    <t t-set="opened">
+                        <PartnerListing
+                            members="thread.members"
+                            threadLocalId="thread.localId"
+                        />
+                    </t>
+            </Popover>
+        </div>
+    </t>
+
+</templates>

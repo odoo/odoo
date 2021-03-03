@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.PartnerListing" owl="1">
+        <div class="o_PartnerListing_popover">
+            <input type="text" t-ref="name-input" t-att-value="thread.name" t-on-keyup="_onKeyUp()"/>
+            <t t-foreach="thread.members" t-as="member" t-key="member.localId">
+                <div class="o_PartnerListing_partner">
+                    <img class="o_SelectablePartner_partnerAvatar" t-att-src="member.avatarUrl" alt=""/>
+                    <span class="o_SelectablePartner_partnerName"><t t-esc="member.name"/></span>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

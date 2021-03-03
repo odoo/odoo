@@ -5,11 +5,12 @@ import useStore from '@mail/component_hooks/use_store/use_store';
 import useUpdate from '@mail/component_hooks/use_update/use_update';
 import Composer from '@mail/components/composer/composer';
 import MessageList from '@mail/components/message_list/message_list';
+import ThreadViewTopBar from '@mail/components/thread_view_top_bar/thread_view_top_bar';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-const components = { Composer, MessageList };
+const components = { Composer, MessageList, ThreadViewTopBar };
 
 class ThreadView extends Component {
 

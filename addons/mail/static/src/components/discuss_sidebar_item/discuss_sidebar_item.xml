@@ -24,6 +24,18 @@
                         />
                     </div>
                 </t>
+                <t t-if="thread.channel_type === 'group' and discuss.renamingThreads.includes(thread)">
+                    <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name o-editable">
+                        <EditableText
+                            class="o_DiscussSidebarItem_nameInput"
+                            placeholder="thread.name"
+                            value="thread.displayName"
+                            t-on-o-cancel="_onCancelRenaming"
+                            t-on-o-clicked="_onClickedEditableText"
+                            t-on-o-validate="_onValidateEditableText"
+                        />
+                    </div>
+                </t>
                 <t t-else="">
                     <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': thread.localMessageUnreadCounter > 0 }">
                         <t t-esc="thread.displayName"/>
@@ -41,12 +53,27 @@
                                 <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandLeave fa fa-times" t-on-click="_onClickLeave" title="Leave this channel" role="img"/>
                             </t>
                         </t>
-                        <t t-if="thread.channel_type === 'chat'">
+                        <t t-if="thread.channel_type === 'chat' || thread.channel_type === 'group'">
                             <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandRename fa fa-cog" t-on-click="_onClickRename" title="Rename conversation" role="img"/>
                         </t>
                         <t t-if="hasUnpin()">
                             <t t-if="!thread.localMessageUnreadCounter">
-                                <div class="fa fa-times o_DiscussSidebarItem_command o_DiscussSidebarItem_commandUnpin" t-on-click="_onClickUnpin" title="Unpin conversation" role="img"/>
+                                <t t-if="!thread.channel_type === 'group'">
+                                    <div class="fa fa-times o_DiscussSidebarItem_command o_DiscussSidebarItem_commandUnpin" t-on-click="_onClickUnpin" title="Unpin conversation" role="img"/>
+                                </t>
+                                <t t-if="thread.channel_type === 'group'">
+                                    <div class="fa fa-times o_DiscussSidebarItem_command o_DiscussSidebarItem_commandUnpin"
+                                         t-on-click="_onClickLeaveGroupChat"
+                                         title="Leave conversation"
+                                         role="img"
+                                    />
+                                    <t t-if="state.hasLeaveConfirmDialog">
+                                        <GroupChatLeaveConfirmDialog
+                                            threadLocalId="thread.localId"
+                                            t-on-dialog-closed="_onLeaveConfirmDialogClosed"
+                                        />
+                                    </t>
+                                </t>
                             </t>
                         </t>
                     </div>

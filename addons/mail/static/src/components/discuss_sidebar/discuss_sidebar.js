@@ -88,7 +88,7 @@ class DiscussSidebar extends Component {
     get quickSearchPinnedAndOrderedChats() {
         const allOrderedAndPinnedChats = this.env.models['mail.thread']
             .all(thread =>
-                thread.channel_type === 'chat' &&
+                (thread.channel_type === 'chat' || thread.channel_type === 'group') &&
                 thread.isPinned &&
                 thread.model === 'mail.channel'
             )

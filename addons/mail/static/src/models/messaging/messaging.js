@@ -56,6 +56,19 @@ function factory(dependencies) {
             }
         }
 
+         /**
+          * @param {integer[]} partnerIds
+          * @returns {mail.thread|undefined}
+          */
+        async createGroupChat(partnerIds) {
+            const chat = await this.async(() =>
+                this.env.models['mail.thread'].performRpcCreateGroupChat({
+                    partnerIds: partnerIds,
+                })
+            );
+            return chat;
+        }
+
         /**
          * Opens a chat with the provided person and returns it.
          *
@@ -95,6 +108,22 @@ function factory(dependencies) {
                 // be closed to ensure the visibility of the view
                 this.env.messaging.messagingMenu.close();
             }
+        }
+
+        /**
+         * Opens a group chat with the provided persons and returns it.
+         *
+         * @param {mail.partner[]} persons forwarded to @see `createGroupChat()`
+         * @param {Object} [options] forwarded to @see `mail.thread:open()`
+         * @returns {mail.thread|undefined}
+         */
+        async openGroupChat(persons, options) {
+            const chat = await this.async(() => this.createGroupChat(persons));
+            if (!chat) {
+                return;
+            }
+            await this.async(() => chat.open(options));
+            return chat;
         }
 
         /**
@@ -310,6 +339,12 @@ function factory(dependencies) {
          * which are special partners notably used in livechat.
          */
         publicPartners: many2many('mail.partner'),
+        selectablePartnersList: one2one('mail.selectable_partners_list', {
+            default: [['create']],
+            inverse: 'messaging',
+            isCausal: true,
+            readonly: true,
+        }),
         /**
          * Mailbox Starred.
          */

@@ -148,9 +148,10 @@ function factory(dependencies) {
         async _initChannels({
             channel_channel = [],
             channel_direct_message = [],
+            channel_group_chat = [],
             channel_private_group = [],
         } = {}) {
-            const channelsData = channel_channel.concat(channel_direct_message, channel_private_group);
+            const channelsData = channel_channel.concat(channel_direct_message, channel_group_chat, channel_private_group);
             return executeGracefully(channelsData.map(channelData => () => {
                 const convertedData = this.env.models['mail.thread'].convertData(channelData);
                 if (!convertedData.members) {

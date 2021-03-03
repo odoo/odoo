@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.SelectablePartner" owl="1">
+        <div class="o_SelectablePartner">
+            <span><img class="o_SelectablePartner_partnerAvatar" t-att-src="partner.avatarUrl" alt=""/></span>
+            <span class="o_SelectablePartner_partnerName"><t t-esc="partner_name"/></span>
+            <div class="o-autogrow"/>
+            <input class="o_SelectablePartner_selectionStatus" type="checkbox" t-on-change="_onChange" t-ref="selection-status" t-att-checked="partner.isSelected ? 'checked' : undefined"/>
+        </div>
+    </t>
+
+</templates>

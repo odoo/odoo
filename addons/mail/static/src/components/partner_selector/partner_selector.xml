@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.PartnerSelector" owl="1">
+        <div class="o_PartnerSelector_popover">
+            Invite people
+            <input type="text" t-ref="search-input" placeholder="Type the name of a person" t-on-keyup="_onKeyUp()"/>
+            <SelectablePartnersList
+                initialMembers="initial_members_id"
+                inputSearch="state.searchInput"
+                threadLocalId="props.threadLocalId"
+            />
+        </div>
+    </t>
+
+</templates>

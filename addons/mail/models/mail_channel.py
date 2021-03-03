@@ -42,7 +42,8 @@ class Channel(models.Model):
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
     channel_type = fields.Selection([
         ('chat', 'Chat Discussion'),
-        ('channel', 'Channel')],
+        ('channel', 'Channel'),
+        ('group', 'Group Chat')],
         string='Channel Type', default='channel')
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     description = fields.Text('Description')
@@ -1096,6 +1097,10 @@ class Channel(models.Model):
         direct_message_channels = self.search([('channel_type', '=', 'chat'), ('id', 'in', pinned_channels.ids)])
         values['channel_direct_message'] = direct_message_channels.channel_info()
 
+        # get the pinned 'group chat' channel
+        group_chat_channels = self.search([('channel_type', '=', 'group'), ('id', 'in', pinned_channels.ids)])
+        values['channel_group_chat'] = group_chat_channels.channel_info()
+
         # get the private group
         values['channel_private_group'] = self.search([('channel_type', '=', 'channel'), ('public', '=', 'private'), ('channel_partner_ids', 'in', [my_partner_id])]).channel_info()
         return values
@@ -1152,6 +1157,28 @@ class Channel(models.Model):
         channel_info = new_channel.channel_info('creation')[0]
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
+
+    @api.model
+    def group_chat_create(self, partners_to):
+        """ Create a private group chat channel.
+            :param partners_to : list of res.partner ids to add to the conversation
+            :returns: channel_info of the created or existing channel
+            :rtype: dict
+        """
+        if self.env.user.partner_id.id not in partners_to:
+            partners_to.append(self.env.user.partner_id.id)
+        channel = self.create({
+            'channel_partner_ids': [Command.link(partner_id) for partner_id in partners_to],
+            'public': 'private',
+            'channel_type': 'group',
+            'email_send': False,
+            'name': ', '.join(self.env['res.partner'].sudo().search(partners_to).mapped('name')),
+        })
+        self.env['mail.channel.partner'].search(
+            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', channel.id)]).write(
+            {'is_pinned': True})
+        channel._broadcast(partners_to)
+        return channel.channel_info()[0]
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):
@@ -1269,7 +1296,7 @@ class Channel(models.Model):
         return msg
 
     def _execute_command_leave(self, **kwargs):
-        if self.channel_type == 'channel':
+        if self.channel_type == 'channel' or self.channel_type == 'group':
             self.action_unfollow()
         else:
             self.channel_pin(self.uuid, False)

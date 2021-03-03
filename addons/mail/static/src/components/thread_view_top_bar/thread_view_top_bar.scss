@@ -1,0 +1,64 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ThreadViewTopbar {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    overflow: auto;
+}
+
+.o_ThreadViewTopbar_buttons {
+    display: flex;
+    align-items: stretch;
+    align-self: stretch;
+    flex: 0 0 auto;
+    min-height: 41px; // match minimal-height of input, including border width
+
+    &:not(.o-composer-is-compact) {
+        border: 0;
+        height: auto;
+        padding: 0 10px;
+        width: 100%;
+    }
+}
+
+.o_ThreadViewTopbar_member {
+    display: flex;
+    align-items: center;
+    padding-right: 25px;
+    padding-left: 25px;
+}
+
+.o_ThreadViewTopbar_toolButtons {
+    display: flex;
+    padding-top: map-get($spacers, 1);
+    padding-bottom: map-get($spacers, 1);
+
+    &:not(.o-composer-is-compact) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex: 100%;
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadViewTopbar {
+    background-color: lighten(gray('300'), 7%);
+}
+
+.o_ThreadViewTopbar_toolButtons {
+    background-color: white;
+    border-top: 1px solid lighten(gray('400'), 5%);
+    border-bottom: 1px solid lighten(gray('400'), 5%);
+
+    &:not(.o-composer-is-compact) {
+        border-bottom: 0;
+        border-radius: initial;
+    }
+}
