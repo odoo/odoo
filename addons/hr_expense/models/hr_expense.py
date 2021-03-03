@@ -541,7 +541,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                     'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
                     'ref': expense.name,
                 })
-                move_line_dst['payment_id'] = payment.id
 
             # link move lines to move, and move to expense sheet
             move.write({'line_ids': [(0, 0, line) for line in move_line_values]})
