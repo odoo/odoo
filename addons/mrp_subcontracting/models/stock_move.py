@@ -196,7 +196,7 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
     def _update_subcontract_order_qty(self, quantity):
         for move in self:
             quantity_change = quantity - move.product_uom_qty
-            production = move.move_orig_ids.production_id
+            production = move.move_orig_ids.production_id.filtered(lambda p: p.state != 'cancel')
             if production:
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': production.id,

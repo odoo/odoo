@@ -620,6 +620,9 @@ var FieldDateRange = InputField.extend({
         if (this.$pickerContainer) {
             this.$pickerContainer.remove();
         }
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
         this._super.apply(this, arguments);
     },
     /**
@@ -691,6 +694,8 @@ var FieldDateRange = InputField.extend({
 
         this.$el.daterangepicker(this.dateRangePickerOptions);
         this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
+        this.$el.on('show.daterangepicker', this._onDateRangePickerShow.bind(this));
+        this.$el.on('hide.daterangepicker', this._onDateRangePickerHide.bind(this));
         this.$el.off('keyup.daterangepicker');
         this.$pickerContainer = this.$el.data('daterangepicker').container;
 
@@ -706,6 +711,37 @@ var FieldDateRange = InputField.extend({
         this.$pickerContainer.on('focusin.bs.modal', 'select', function (ev) {
             ev.stopPropagation();
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Unbind the scroll event handler when the daterangepicker is closed.
+     *
+     * @private
+     */
+    _onDateRangePickerHide() {
+        if (this._onScroll) {
+            window.removeEventListener('scroll', this._onScroll, true);
+        }
+    },
+    /**
+     * Bind the scroll event handle when the daterangepicker is open.
+     *
+     * @private
+     */
+    _onDateRangePickerShow() {
+        this._onScroll = ev => {
+            if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
+                let data = this.$el.data('daterangepicker');
+                if (data) {
+                    data.hide();
+                }
+            }
+        };
+        window.addEventListener('scroll', this._onScroll, true);
     },
 });
 

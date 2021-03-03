@@ -19,7 +19,7 @@
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2019
 # Iacopo Simonelli <lsi@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,9 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
+"'pending') and 'Ordine in sospeso' or 'Ordine'} (Rif. ${object.name or 'n/d'"
+" })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -657,7 +660,7 @@ msgstr "Accetta e paga"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr ""
+msgstr "Accetta e paga preventivo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -667,7 +670,7 @@ msgstr "Accetta e firma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr ""
+msgstr "Accetta e firma preventivo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -2312,7 +2315,7 @@ msgstr "Nessun ordine da proporre in più trovato"
 #: code:addons/sale/static/src/js/variant_mixin.js:0
 #, python-format
 msgid "Not available with %s"
-msgstr ""
+msgstr "Non disponibile con %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__not_done
@@ -3511,7 +3514,7 @@ msgstr "Firma e paga"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Firma e paga preventivo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -3593,7 +3596,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Stato del pannello di configurazione vendite"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3753,6 +3756,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Impossibile limitare i seguenti prodotti all'azienda %s, sono già stati utilizzati in preventivi od ordini di vendita di un'altra.:\n"
+"%s\n"
+"È possibile invece archiviarli e ricrearli riservati all'azienda, oppure lasciarli come prodotti condivisi."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4194,7 +4200,7 @@ msgstr "Voce griglia per variante"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr ""
+msgstr "Vedi preventivo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4321,6 +4327,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                    whether it's a storable product, a consumable or a service."
 msgstr ""
+"Deve essere definito un prodotto per tutto ciò che viene venduto o acquistato,\n"
+"                    che sia un prodotto stoccabile, un consumabile o un servizio."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4385,6 +4393,7 @@ msgstr "giorni"
 #, python-format
 msgid "matching the communication of the bank statement line"
 msgstr ""
+"che corrispondono all'informazione di riga dell'estratto conto bancario"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4404,4 +4413,4 @@ msgstr ""
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "uninvoiced sales orders"
-msgstr ""
+msgstr "ordini di vendita non fatturati"

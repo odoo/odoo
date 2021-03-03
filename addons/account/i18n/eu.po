@@ -19,7 +19,9 @@
 # Miren Maiz <mirenmaizz@gmail.com>, 2020
 # Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020
 # Nagore Ruiz de Escudero Zapico <nagore.ruiz.escudero@gmail.com>, 2020
-# Naomi Hidalgo <naomihid96@gmail.com>, 2020
+# 61590936fa9bf290362ee306eeabf363_944dd10 <a8bfd5a0b49b9c8455f33fc521764cc3_680674>, 2020
+# Txabi del Corte <txabi@harrobia.net>, 2021
+# Oihana Mendizabal <omendizabal@tolosaldea.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2020\n"
+"Last-Translator: Oihana Mendizabal <omendizabal@tolosaldea.com>, 2021\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +98,9 @@ msgstr "%s (kopia)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr "%s (biribiltzen)"
+msgstr ""
+"%s(biribiltzen)\n"
+"(biribiltze)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -639,12 +643,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Salesperson</strong>"
-msgstr ""
+msgstr "Saltzailea"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Oraintzeko kopurua</strong>"
+msgstr "<strong>Ordaintzeko kopurua</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -719,7 +723,7 @@ msgstr "<strong>Iturria:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr ""
+msgstr "Hasierako Balantzea"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -7573,6 +7577,12 @@ msgid "Original Bills"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr ""
@@ -8946,7 +8956,7 @@ msgstr "Berrikusi"
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__root_id
 msgid "Root"
-msgstr ""
+msgstr "Erro"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -10741,7 +10751,10 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
 msgstr ""
 
 #. module: account
@@ -12200,8 +12213,7 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
-"Ezin duzu enpresaren dirua aldatu, aldizkariko elementu batzuk lehendik "
-"baitaude"
+"Ezin duzu enpresaren moneta aldatu, egunkariko artikulu batzuk badaudelako"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12218,24 +12230,26 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
+"Ezin duzu sortu argitaratutako egoeran dagoen mugimendurik. Sortu "
+"mugimenduaren zirriborro bat eta argitaratu gero."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "You cannot delete a payment that is already posted."
-msgstr ""
+msgstr "Ezin duzu ezabatu jada erregistratuta dagoen ordainketa bat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
-msgstr ""
+msgstr "Ezin duzu ezabatu behin argitaratu den sarrera bat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr ""
+msgstr "Ezin duzu ezabatu argitaratutako sarrera bati lotutako elementu bat."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12244,6 +12258,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
+"Ezin duzu konfigurazio hori desgaitu, zure zerga batzuk eskudirutan "
+"oinarritzen direlako. Aldatu zergak konfigurazio hori desgaitu baino lehen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12268,6 +12284,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
+"Ezin duzu kontu-mugimendu baten egunkaria editatu behin argitaratu bada."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12290,6 +12307,8 @@ msgstr ""
 #, python-format
 msgid "You cannot modify a journal entry linked to a posted payment."
 msgstr ""
+"Ezin duzu aldatu erregistratutako ordainketa bati lotutako egunkariko "
+"sarrera bat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12298,6 +12317,7 @@ msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
 msgstr ""
+"Ezin duzu egunkari honetako sarrera bat aldatu, modu hertsian dagoelako."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12314,6 +12334,9 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
+"Ezin dituzu aldatu erregistratutako egunkariko elementu batekin lotutako "
+"zergak; egunkaritik  idazpena zirriborro gisa berrezarri behar duzu "
+"horretarako."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12322,13 +12345,14 @@ msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
 msgstr ""
+"Ezin dituzu balioak gainidatzi kontabilitatearen aldaezintasuna ziurtatuz."
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr ""
+msgstr "Ekintza hau ezin duzu egin egunkariko elementuak dituen kontu batean"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -12343,6 +12367,8 @@ msgid ""
 "You cannot register payments for customer invoices and credit notes at the "
 "same time."
 msgstr ""
+"Ezin dituzu aldi berean bezeroen fakturetarako ordainketak eta kreditu-"
+"oharrak erregistratu."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12351,12 +12377,14 @@ msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
 msgstr ""
+"Ezin dituzu erregistratu aldi berean hornitzaileen fakturetarako ordainketak"
+" eta hornitzaileen itzulketak."
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "You cannot remove the bank account from the journal once set."
-msgstr ""
+msgstr "Konfiguratu ondoren, ezin duzu egunkaritik banku-kontua ezabatu."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12365,6 +12393,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
 "vendor."
 msgstr ""
+"Ezin duzu ezabatu/desaktibatu bezero edo hornitzaile batentzat "
+"konfiguratutako kontu bat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12385,6 +12415,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Ezin duzu kontu honetan moneta bat ezarri, egunkari honetan idazpen batzuk "
+"dauzkalako atzerriko moneta desberdin batekin."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12393,12 +12425,14 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
+"Ezin duzu kontu bat aldatu adiskidetzea saihesteko, adiskidetze partzial "
+"batzuk oraindik egiteke badaude."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot use a deprecated account."
-msgstr ""
+msgstr "Ezin duzu kontu zaharkitu bat erabili."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12413,6 +12447,8 @@ msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
 msgstr ""
+"Ezin duzu kontu orokor hau erabili egunkari honetan, kontsultatu \"Sarrera-"
+"kontrolak\" erlaitza erlazionatutako egunkarian."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12422,12 +12458,15 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
+"Faktura bat ezin da baliozkotu guztizko zenbateko negatiboarekin. Horren "
+"ordez, kreditu-ohar bat sortu beharko zenuke. Erabili ekintzen menua "
+"kreditu-ohar edo itzulketa bihurtzeko."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "Ez duzu faktura bat erregistratzeko sarbide-eskubiderik."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12437,7 +12476,7 @@ msgstr "Badaukazu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "You have suspense account moves that match this invoice."
-msgstr ""
+msgstr "Faktura honekin bat datozen kontu-mugimendu iragankorrak ditu."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12452,18 +12491,19 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr ""
+"Erregistro-egunkarian 'Barne-transferentziako kontua' definitu behar duzu."
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "You must first define an opening move."
-msgstr "Lehenik eta behin inaugurazio mugimendu bat definitu behar duzu."
+msgstr "Lehenik eta behin, irekiera-mugimendu bat definitu behar duzu."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr ""
+msgstr "Lerro bat gehitu behar duzu argitaratu aurretik."
 
 #. module: account
 #. openerp-web
@@ -12521,7 +12561,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "and follow-up customers"
-msgstr ""
+msgstr "eta bezeroen jarraipena"
 
 #. module: account
 #. openerp-web
@@ -12544,7 +12584,7 @@ msgstr "kode"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
 msgid "days after the invoice date"
-msgstr ""
+msgstr "egunera fakturaren datatik"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -12564,7 +12604,7 @@ msgstr "adb. Kontu korrontea"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "e.g. Bank Fees"
-msgstr "adb. Banku kuota"
+msgstr "adb. banku-komisioak"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
@@ -12591,7 +12631,7 @@ msgstr "automatikoki adiskidetu dira"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "invoice(s) that will not be sent"
-msgstr "Bidaliko es diren fakturak"
+msgstr "bidaliko ez d(ir)en faktura(k)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -12602,17 +12642,17 @@ msgstr "Izena"
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
-msgstr ""
+msgstr "zergaz"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_current_month
 msgid "of the current month"
-msgstr "oraingo hilabetea"
+msgstr "hilabete honetakoa"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
-msgstr "hurrengo hilabetea"
+msgstr "hurrengo hilekoa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -12646,7 +12686,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "reconciliation models"
-msgstr "Adiskidetze ereduak"
+msgstr "adiskidetze ereduak"
 
 #. module: account
 #. openerp-web
@@ -12667,7 +12707,7 @@ msgstr "segundu transakzio bakoitzeko."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "statement lines"
-msgstr "Adierazpen lerroak"
+msgstr "adierazpen lerroak"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
@@ -12677,12 +12717,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "Guraso konpainia"
+msgstr "enpresa nagusia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr ""
+msgstr "egiaztatu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12701,21 +12741,21 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unpaid invoices"
-msgstr ""
+msgstr "ordaindu gabeko fakturak"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unreconciled entries"
-msgstr ""
+msgstr "bateratu gabeko sarrerak"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "vendor bills"
-msgstr ""
+msgstr "hornitzailearen fakturak"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

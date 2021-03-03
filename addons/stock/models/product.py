@@ -145,10 +145,10 @@ class Product(models.Model):
                 '|',
                     '&',
                         ('state', '=', 'done'),
-                        ('date', '<=', from_date),
+                        ('date', '>=', from_date),
                     '&',
                         ('state', '!=', 'done'),
-                        ('date_expected', '<=', from_date),
+                        ('date_expected', '>=', from_date),
             ]
             domain_move_in += date_date_expected_domain_from
             domain_move_out += date_date_expected_domain_from
@@ -509,7 +509,7 @@ class Product(models.Model):
         return self.env['stock.quant'].with_context(ctx)._get_quants_action(domain)
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
+        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
         action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
@@ -531,6 +531,8 @@ class Product(models.Model):
         owner_id = self.env['res.partner'].browse(owner_id)
         to_uom = self.env['uom.uom'].browse(to_uom)
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        if lot_id:
+            quants = quants.filtered(lambda q: q.lot_id == lot_id)
         theoretical_quantity = sum([quant.quantity for quant in quants])
         if to_uom and product_id.uom_id != to_uom:
             theoretical_quantity = product_id.uom_id._compute_quantity(theoretical_quantity, to_uom)
@@ -547,6 +549,13 @@ class Product(models.Model):
                     msg += '- %s \n' % product.display_name
                 raise UserError(msg)
         return res
+
+    def _filter_to_unlink(self):
+        domain = [('product_id', 'in', self.ids)]
+        lines = self.env['stock.production.lot'].read_group(domain, ['product_id'], ['product_id'])
+        linked_product_ids = [group['product_id'][0] for group in lines]
+        return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
@@ -754,7 +763,7 @@ class ProductTemplate(models.Model):
         if (self.env.user.user_has_groups(','.join(advanced_option_groups))):
             return self.action_open_quants()
         else:
-            default_product_id = len(self.product_variant_ids) == 1 and self.product_variant_id.id
+            default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
             action = self.env.ref('stock.action_change_product_quantity').read()[0]
             action['context'] = dict(
                 self.env.context,

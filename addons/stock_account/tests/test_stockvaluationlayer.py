@@ -485,6 +485,36 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 2)
         self.assertEqual(self.product1.standard_price, 15)
 
+    def test_rounding_slv_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=1.00)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=1.00)
+        move3 = self._make_in_move(self.product1, 1, unit_cost=1.01)
+
+        self.assertAlmostEqual(self.product1.value_svl, 3.01)
+
+        move_out = self._make_out_move(self.product1, 3, create_picking=True)
+
+        self.assertIn('Rounding Adjustment: -0.01', move_out.stock_valuation_layer_ids.description)
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.standard_price, 1.00)
+
+    def test_rounding_slv_2(self):
+        self._make_in_move(self.product1, 1, unit_cost=1.02)
+        self._make_in_move(self.product1, 1, unit_cost=1.00)
+        self._make_in_move(self.product1, 1, unit_cost=1.00)
+
+        self.assertAlmostEqual(self.product1.value_svl, 3.02)
+
+        move_out = self._make_out_move(self.product1, 3, create_picking=True)
+
+        self.assertIn('Rounding Adjustment: +0.01', move_out.stock_valuation_layer_ids.description)
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.standard_price, 1.01)
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     def setUp(self):

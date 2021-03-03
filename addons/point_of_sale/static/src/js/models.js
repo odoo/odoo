@@ -174,7 +174,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'res.company',
         fields: [ 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id' , 'country_id', 'state_id', 'tax_calculation_rounding_method'],
-        ids:    function(self){ return [session.user_context.allowed_company_ids[0]]; },
+        ids:    function(self){ return [session.user_context.pos_session_company_ids[0]]; },
         loaded: function(self,companies){ self.company = companies[0]; },
     },{
         model:  'decimal.precision',
@@ -1788,7 +1788,9 @@ exports.Orderline = Backbone.Model.extend({
         var taxes_ids = this.get_product().taxes_id;
         var taxes = [];
         for (var i = 0; i < taxes_ids.length; i++) {
-            taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
+            if (this.pos.taxes_by_id[taxes_ids[i]]) {
+                taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
+            }
         }
         return taxes;
     },
@@ -2000,8 +2002,8 @@ exports.Orderline = Backbone.Model.extend({
         var taxtotal = 0;
 
         var product =  this.get_product();
-        var taxes_ids = product.taxes_id;
         var taxes =  this.pos.taxes;
+        var taxes_ids = _.filter(product.taxes_id, t => t in this.pos.taxes_by_id);
         var taxdetail = {};
         var product_taxes = [];
 
@@ -2187,7 +2189,9 @@ exports.Paymentline = Backbone.Model.extend({
     set_amount: function(value){
         this.order.assert_editable();
         this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
-        this.pos.send_current_order_to_customer_facing_display();
+        if (this.pos.config.iface_customer_facing_display) {
+            this.pos.send_current_order_to_customer_facing_display();
+        }
         this.trigger('change',this);
     },
     // returns the amount of money on this paymentline

@@ -20,7 +20,7 @@
 }
 
 .o_thread_window {
-    z-index: 1002; // to go over the navbar
+    z-index: ($zindex-fixed + $zindex-modal-backdrop) / 2;
     .o_thread_date_separator {
         display: none;
     }

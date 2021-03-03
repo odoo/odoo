@@ -423,7 +423,15 @@ class account_journal(models.Model):
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:
             # Open reconciliation view for bank statements belonging to this journal
-            bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)]).mapped('line_ids')
+            limit = int(self.env["ir.config_parameter"].sudo().get_param("account.reconcile.batch", 1000))
+            bank_stmt = self.env['account.bank.statement.line'].search([
+                ('journal_id', 'in', self.ids),
+                # take not reconciled lines only. See _check_lines_reconciled method
+                ('account_id', '=', False),
+                ('journal_entry_ids', '=', False),
+                ('amount', '!=', 0),
+            ], limit=limit)
+
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',

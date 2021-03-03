@@ -274,19 +274,18 @@ class AccountMove(models.Model):
 
         return invoice_form.save()
 
-    @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, **kwargs):
+    def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
         # OVERRIDE
         # /!\ 'default_res_id' in self._context is used to don't process attachment when using a form view.
-        res = super(AccountMove, self).message_post(**kwargs)
-
+        return_values = super()._message_post_process_attachments(attachments, attachment_ids, message_values)
         if not self.env.context.get('no_new_invoice') and len(self) == 1 and self.state == 'draft' and (
             self.env.context.get('default_type', self.type) in self.env['account.move'].get_invoice_types(include_receipts=True)
             or self.env['account.journal'].browse(self.env.context.get('default_journal_id')).type in ('sale', 'purchase')
         ):
-            for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):
+            attachments = self.env['ir.attachment'].browse([c[1] for c in return_values['attachment_ids']])
+            for attachment in attachments:
                 self._create_invoice_from_attachment(attachment)
-        return res
+        return return_values
 
     def _create_invoice_from_attachment(self, attachment):
         if 'pdf' in attachment.mimetype:
@@ -311,13 +310,11 @@ class AccountMove(models.Model):
                     # '[::2]' because it's a list [fn_1, content_1, fn_2, content_2, ..., fn_n, content_2]
                     for filename_obj, content_obj in list(zip(embedded_files, embedded_files[1:]))[::2]:
                         content = content_obj.getObject()['/EF']['/F'].getData()
-
-                        if filename_obj == 'factur-x.xml':
-                            try:
-                                tree = etree.fromstring(content)
-                            except Exception:
-                                continue
-
+                        try:
+                            tree = etree.fromstring(content)
+                        except Exception:
+                            continue
+                        if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
                             self._import_facturx_invoice(tree)
                             self._remove_ocr_option()
                             buffer.close()

@@ -647,7 +647,11 @@ class Module(models.Model):
                 raise UserError(_("Can not upgrade module '%s'. It is not installed.") % (module.name,))
             self.check_external_dependencies(module.name, 'to upgrade')
             for dep in Dependency.search([('name', '=', module.name)]):
-                if dep.module_id.state == 'installed' and dep.module_id not in todo:
+                if (
+                    dep.module_id.state == 'installed'
+                    and dep.module_id not in todo
+                    and dep.module_id.name != 'studio_customization'
+                ):
                     todo.append(dep.module_id)
 
         self.browse(module.id for module in todo).write({'state': 'to upgrade'})

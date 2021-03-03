@@ -23,6 +23,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
+"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6329,6 +6330,8 @@ msgid ""
 "It seems that the taxes have been modified since the creation of the journal"
 " entry. You should create the credit note manually instead."
 msgstr ""
+"Yevmiye kaydının oluşturulmasından bu yana vergiler değiştirilmiş gibi "
+"görünüyor. Bunun yerine kredi notunu manuel olarak oluşturmalısınız."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7905,6 +7908,12 @@ msgid "Original Bills"
 msgstr "Orijinal Tedarikçi Faturaları"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Üretici Ödemesi"
@@ -8489,7 +8498,7 @@ msgstr ""
 #: code:addons/account/models/account_cash_rounding.py:33
 #, python-format
 msgid "Please set a strictly positive rounding value."
-msgstr ""
+msgstr "Lütfen kesinlikle pozitif bir yuvarlama değeri ayarlayın."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8628,7 +8637,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Presets config"
-msgstr ""
+msgstr "Presets config"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9746,7 +9755,7 @@ msgstr "Makbuzu E-posta ile Gönder"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr ""
+msgstr "Makbuzları e-posta ile gönderin"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -11241,8 +11250,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Bir derginin banka hesabı sahibi firma olmalıdır ( %s )."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -12845,6 +12857,8 @@ msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
 msgstr ""
+"Buna bağlı bazı günlük kalemleri olduğundan, analitik etiketlerinizde farklı"
+" bir şirket ayarlayamazsınız."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12910,7 +12924,7 @@ msgstr "Bir kez onaylanan bir kaydı silemezsiniz."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr ""
+msgstr "Kaydedilen bir girişe bağlı bir öğeyi silemezsiniz."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -13136,7 +13150,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "Fatura göndermek için erişim haklarına sahip değilsiniz."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

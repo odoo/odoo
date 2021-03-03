@@ -23,3 +23,15 @@ class StockPicking(models.Model):
         if bom.product_tmpl_id.cost_method in ('fifo', 'average'):
             vals = dict(vals, extra_cost=subcontract_move._get_price_unit())
         return vals
+
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    def _prepare_common_svl_vals(self):
+        # if we are subcontracting we want to have the receipt move
+        # on the svl, not the MO
+        vals = super()._prepare_common_svl_vals()
+        if self.move_dest_ids and self.move_dest_ids[0].is_subcontract:
+            vals['stock_move_id'] = self.move_dest_ids[0].id
+        return vals

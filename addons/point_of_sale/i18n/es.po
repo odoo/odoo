@@ -20,10 +20,9 @@
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Mariana Santos Romo <msn@odoo.com>, 2019
-# Luis Ernesto Torres Macías <luis_t@vauxoo.com>, 2019
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # Martin Trigaux, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -595,7 +594,7 @@ msgstr "Abrir automáticamente la caja registradora."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr "Categorías de productos PoS disponibles"
+msgstr "Categorías TPV de producto disponibles"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -1090,7 +1089,7 @@ msgstr "Conecte dispositivos a su PdV"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS through an IoT Box"
-msgstr "Conecte dispositivos a su PdV a través de una caja IoT "
+msgstr "Conecte dispositivos a su TPV a través de una IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
@@ -2672,7 +2671,7 @@ msgstr "Abrir menú TPV"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr "Sesiones de PdV abiertas que estan utilizando este método de pago."
+msgstr "Sesiones de TPV abiertas que están utilizando este método de pago."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2827,17 +2826,17 @@ msgstr "Otra información"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS Order %s"
-msgstr "Orden PdV %s"
+msgstr "Pedido de TPV %s"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
 msgid "POS Order line"
-msgstr "Línea de venta TPV"
+msgstr "Línea de pedido TPV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "POS Order lines"
-msgstr "Líneas de venta TPV"
+msgstr "Líneas de pedido TPV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -2847,7 +2846,7 @@ msgstr "Ventas TPV"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr "TPV Líneas pedido"
+msgstr "Líneas de pedido TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
@@ -2858,12 +2857,12 @@ msgstr "Ventas PdV"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
-msgstr "Línea de la orden del PdV %s"
+msgstr "Línea de pedido TPV %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_statement_id
 msgid "POS statement"
-msgstr "Extracto POS"
+msgstr "Extracto de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_paid
@@ -3096,7 +3095,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr "Configure un método de pago en su PdV."
+msgstr "Configure un método de pago en su TPV."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3169,12 +3168,12 @@ msgstr "Pedidos TPV"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "PoS Product Categories"
-msgstr "Categorías de productos PdV"
+msgstr "Categorías TPV de producto"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr "Categoría de producto PdV"
+msgstr "Categoría TPV de producto"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -3314,23 +3313,23 @@ msgstr "Configuración del punto de venta"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 msgid "Pos Order"
-msgstr "Orden PdV"
+msgstr "Pedido TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_count
 msgid "Pos Order Count"
-msgstr "Recuento de los pedidos del punto de venta"
+msgstr "Nº de pedidos de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr "Línea del pedido del punto de venta"
+msgstr "Línea de pedido TPV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Product Categories"
-msgstr "Categorías de producto para el TPV"
+msgstr "Categorías TPV de producto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pos_session_duration
@@ -3350,7 +3349,7 @@ msgstr "Nombre de usuario de la sesión del punto de venta"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Pos Sessions"
-msgstr "Sesiones de PdV"
+msgstr "Sesiones de TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -3452,7 +3451,7 @@ msgstr "Imprimir recibo"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Print a report with all the sales of the current PoS Session"
-msgstr "Imprima un informe con todas las ventas de la sesión de PdV actual"
+msgstr "Imprima un informe con todas las ventas de la sesión de TPV actual"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4136,7 +4135,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr "Especifique el número de serie / de lote en la línea de la orden PdV"
+msgstr "Especifique el número de serie/lote en la línea del pedido TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
@@ -4539,8 +4538,8 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured."
 msgstr ""
-"La lista de precios que se utiliza si no se selecciona ningún cliente o si "
-"el cliente no tiene configurada ninguna lista de los precios de venta."
+"La tarifa que se utiliza si no se selecciona ningún cliente o si el cliente "
+"no tiene configurada ninguna tarifa de venta."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_display_categ_images
@@ -4917,7 +4916,7 @@ msgstr "Para registrar nuevas órdenes, iniciar una sesión nueva."
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
-msgstr "Para devolver productos, debe abrir una sesión en el PdV %s"
+msgstr "Para devolver productos, debe abrir una sesión en el TPV %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
@@ -5151,7 +5150,7 @@ msgid ""
 "Use employee credentials to log in to the PoS session and switch cashier"
 msgstr ""
 "Utilice las credenciales de los empleados para iniciar sesión en la sesión "
-"de PdV y cambiar de cajero"
+"de TPV y cambiar de cajero"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id
@@ -5332,7 +5331,7 @@ msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
 msgstr ""
-"No puede eliminar contactos mientras haya sesiones activas de PdV. Cierre "
+"No puede eliminar contactos mientras haya sesiones activas de TPV. Cierre "
 "las sesiones %s primero."
 
 #. module: point_of_sale
