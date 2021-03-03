@@ -1218,12 +1218,16 @@ MockServer.include({
             notifications = this._mockMailNotification_NotificationFormat(
                 notifications.map(notification => notification.id)
             );
+            const trackingValueIds = this._getRecords('mail.tracking.value', [
+                ['id', 'in', message.tracking_value_ids],
+            ]);
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author_id: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
+                tracking_value_ids: trackingValueIds,
             });
             if (message.subtype_id) {
                 const subtype = this._getRecords('mail.message.subtype', [

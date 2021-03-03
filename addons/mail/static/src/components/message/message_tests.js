@@ -1042,8 +1042,8 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
     );
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValueOldValue').textContent,
-        "12.3",
-        "should display the correct old value (12.3)",
+        "12.30",
+        "should display the correct old value (12.30)",
     );
     assert.containsOnce(
         document.body,
@@ -1062,7 +1062,51 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
     );
 });
 
-QUnit.test('rendering of tracked field with change of value from non-0 to 0', async function (assert) {
+QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Total",
+            field_type: "integer",
+            id: 6,
+            new_value: 0,
+            old_value: 1,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Total:10",
+        "should display the correct content of tracked field of type integer: from non-0 to 0 (Total: 1 -> 0)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Total",
+            field_type: "integer",
+            id: 6,
+            new_value: 1,
+            old_value: 0,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Total:01",
+        "should display the correct content of tracked field of type integer: from 0 to non-0 (Total: 0 -> 1)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type float: from non-0 to 0', async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -1079,12 +1123,12 @@ QUnit.test('rendering of tracked field with change of value from non-0 to 0', as
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Total:10",
-        "should display the correct content of tracked field with change of value from non-0 to 0 (Total: 1 -> 0)"
+        "Total:1.000.00",
+        "should display the correct content of tracked field of type float: from non-0 to 0 (Total: 1.00 -> 0.00)"
     );
 });
 
-QUnit.test('rendering of tracked field with change of value from 0 to non-0', async function (assert) {
+QUnit.test('rendering of tracked field of type float: from 0 to non-0', async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -1101,12 +1145,56 @@ QUnit.test('rendering of tracked field with change of value from 0 to non-0', as
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Total:01",
-        "should display the correct content of tracked field with change of value from 0 to non-0 (Total: 0 -> 1)"
+        "Total:0.001.00",
+        "should display the correct content of tracked field of type float: from 0 to non-0 (Total: 0.00 -> 1.00)"
     );
 });
 
-QUnit.test('rendering of tracked field with change of value from true to false', async function (assert) {
+QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Total",
+            field_type: "monetary",
+            id: 6,
+            new_value: 0,
+            old_value: 1,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Total:1.000.00",
+        "should display the correct content of tracked field of type monetary: from non-0 to 0 (Total: 1.00 -> 0.00)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Total",
+            field_type: "monetary",
+            id: 6,
+            new_value: 1,
+            old_value: 0,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Total:0.001.00",
+        "should display the correct content of tracked field of type monetary: from 0 to non-0 (Total: 0.00 -> 1.00)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type boolean: from true to false', async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -1123,12 +1211,12 @@ QUnit.test('rendering of tracked field with change of value from true to false',
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Is Ready:truefalse",
-        "should display the correct content of tracked field with change of value from true to false (Is Ready: true -> false)"
+        "Is Ready:TrueFalse",
+        "should display the correct content of tracked field of type boolean: from true to false (Is Ready: True -> False)"
     );
 });
 
-QUnit.test('rendering of tracked field with change of value from false to true', async function (assert) {
+QUnit.test('rendering of tracked field of type boolean: from false to true', async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -1145,12 +1233,12 @@ QUnit.test('rendering of tracked field with change of value from false to true',
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Is Ready:falsetrue",
-        "should display the correct content of tracked field with change of value from false to true (Is Ready: false -> true)"
+        "Is Ready:FalseTrue",
+        "should display the correct content of tracked field of type boolean: from false to true (Is Ready: False -> True)"
     );
 });
 
-QUnit.test('rendering of tracked field with change of value from string to empty', async function (assert) {
+QUnit.test('rendering of tracked field of type char: from a string to empty string', async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -1168,11 +1256,11 @@ QUnit.test('rendering of tracked field with change of value from string to empty
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
         "Name:Marc",
-        "should display the correct content of tracked field with change of value from string to empty (Total: Marc ->)"
+        "should display the correct content of tracked field of type char: from a string to empty string (Name: Marc ->)"
     );
 });
 
-QUnit.test('rendering of tracked field with change of value from empty to string', async function (assert) {
+QUnit.test('rendering of tracked field of type char: from empty string to a string', async function (assert) {
     assert.expect(1);
 
     await this.start();
@@ -1190,7 +1278,227 @@ QUnit.test('rendering of tracked field with change of value from empty to string
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
         "Name:Marc",
-        "should display the correct content of tracked field with change of value from empty to string (Total: -> Marc)"
+        "should display the correct content of tracked field of type char: from empty string to a string (Name: -> Marc)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type date: from no date to a set date', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Deadline",
+            field_type: "date",
+            id: 6,
+            new_value: "2018-12-14",
+            old_value: false,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Deadline:12/14/2018",
+        "should display the correct content of tracked field of type date: from no date to a set date (Deadline: -> 12/14/2018)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type date: from a set date to no date', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Deadline",
+            field_type: "date",
+            id: 6,
+            new_value: false,
+            old_value: "2018-12-14",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Deadline:12/14/2018",
+        "should display the correct content of tracked field of type date: from a set date to no date (Deadline: 12/14/2018 ->)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Deadline",
+            field_type: "datetime",
+            id: 6,
+            new_value: "2018-12-14 13:42:28",
+            old_value: false,
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Deadline:12/14/2018 13:42:28",
+        "should display the correct content of tracked field of type datetime: from no date and time to a set date and time (Deadline: -> 12/14/2018 13:42:28)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type datetime: from a set date and time to no date and time', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Deadline",
+            field_type: "datetime",
+            id: 6,
+            new_value: false,
+            old_value: "2018-12-14 13:42:28",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Deadline:12/14/2018 13:42:28",
+        "should display the correct content of tracked field of type datetime: from a set date and time to no date and time (Deadline: 12/14/2018 13:42:28 ->)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type text: from some text to empty', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Name",
+            field_type: "text",
+            id: 6,
+            new_value: "",
+            old_value: "Marc",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Name:Marc",
+        "should display the correct content of tracked field of type text: from some text to empty (Name: Marc ->)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type text: from empty to some text', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Name",
+            field_type: "text",
+            id: 6,
+            new_value: "Marc",
+            old_value: "",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Name:Marc",
+        "should display the correct content of tracked field of type text: from empty to some text (Name: -> Marc)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type selection: from a selection to no selection', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "State",
+            field_type: "selection",
+            id: 6,
+            new_value: "",
+            old_value: "ok",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "State:ok",
+        "should display the correct content of tracked field of type selection: from a selection to no selection (State: ok ->)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type selection: from no selection to a selection', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "State",
+            field_type: "selection",
+            id: 6,
+            new_value: "ok",
+            old_value: "",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "State:ok",
+        "should display the correct content of tracked field of type selection: from no selection to a selection (State: -> ok)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type many2one: from having a related record to no related record', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Author",
+            field_type: "many2one",
+            id: 6,
+            new_value: "",
+            old_value: "Marc",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Author:Marc",
+        "should display the correct content of tracked field of type many2one: from having a related record to no related record (Author: Marc ->)"
+    );
+});
+
+QUnit.test('rendering of tracked field of type many2one: from no related record to having a related record', async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Author",
+            field_type: "many2one",
+            id: 6,
+            new_value: "Marc",
+            old_value: "",
+        }],
+    });
+    await this.createMessageComponent(message);
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValue').textContent,
+        "Author:Marc",
+        "should display the correct content of tracked field of type many2one: from no related record to having a related record (Author: -> Marc)"
     );
 });
 
