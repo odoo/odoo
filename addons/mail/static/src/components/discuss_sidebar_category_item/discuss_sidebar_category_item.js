@@ -50,6 +50,32 @@ export class DiscussSidebarCategoryItem extends Component {
         });
     }
 
+    /**
+     * @private
+     * @returns {Promise}
+     */
+    _askLeaveGroupConfirmation() {
+        return new Promise(resolve => {
+            Dialog.confirm(this,
+                this.env._t("You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"),
+                {
+                    buttons: [
+                        {
+                            text: this.env._t("Leave"),
+                            classes: 'btn-primary',
+                            close: true,
+                            click: resolve
+                        },
+                        {
+                            text: this.env._t("Discard"),
+                            close: true
+                        }
+                    ]
+                }
+            );
+        });
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -89,8 +115,11 @@ export class DiscussSidebarCategoryItem extends Component {
      */
     async _onClickLeave(ev) {
         ev.stopPropagation();
-        if (this.categoryItem.channel.creator === this.messaging.currentUser) {
+        if (this.categoryItem.channel.channel_type !== 'group' && this.categoryItem.channel.creator === this.messaging.currentUser) {
             await this._askAdminConfirmation();
+        }
+        if (this.categoryItem.channel.channel_type === 'group' && this.categoryItem.channel.members.length > 1) {
+            await this._askLeaveGroupConfirmation();
         }
         this.categoryItem.channel.unsubscribe();
     }

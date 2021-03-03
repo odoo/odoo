@@ -60,6 +60,19 @@ function factory(dependencies) {
             }
         }
 
+         /**
+          * @param {mail.partner[]} partners
+          * @returns {mail.thread|undefined}
+          */
+        async createGroupChat(partners) {
+            const chat = await this.async(() =>
+                this.messaging.models['mail.thread'].performRpcCreateGroupChat({
+                    partnerIds: partners.map(partner => partner.id),
+                })
+            );
+            return chat;
+        }
+
         /**
          * Opens a chat with the provided person and returns it.
          *
@@ -99,6 +112,22 @@ function factory(dependencies) {
                 // be closed to ensure the visibility of the view
                 this.messaging.messagingMenu.close();
             }
+        }
+
+        /**
+         * Opens a group chat with the provided persons and returns it.
+         *
+         * @param {mail.partner[]} partners forwarded to @see `createGroupChat()`
+         * @param {Object} [options] forwarded to @see `mail.thread:open()`
+         * @returns {mail.thread|undefined}
+         */
+        async openGroupChat(partners, options) {
+            const chat = await this.async(() => this.createGroupChat(partners));
+            if (!chat) {
+                return;
+            }
+            await this.async(() => chat.open(options));
+            return chat;
         }
 
         /**

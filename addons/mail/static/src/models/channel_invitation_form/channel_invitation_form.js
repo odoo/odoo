@@ -34,14 +34,32 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         async onClickInvite(ev) {
-            await this.env.services.rpc(({
-                model: 'mail.channel',
-                method: 'add_members',
-                args: [this.thread.id],
-                kwargs: {
-                    partner_ids: this.selectedPartners.map(partner => partner.id),
-                },
-            }));
+            if (this.thread.channel_type === 'chat') {
+                const channelData = await this.env.services.rpc(({
+                    model: 'mail.channel',
+                    method: 'group_chat_create',
+                    kwargs: {
+                        partners_to: [...new Set([
+                            this.messaging.currentPartner.id,
+                            ...this.thread.members.map(member => member.id),
+                            ...this.selectedPartners.map(partner => partner.id),
+                        ])],
+                    },
+                }));
+                const channel = this.messaging.models['mail.thread'].insert(
+                    this.messaging.models['mail.thread'].convertData(channelData)
+                );
+                channel.open();
+            } else {
+                await this.env.services.rpc(({
+                    model: 'mail.channel',
+                    method: 'add_members',
+                    args: [this.thread.id],
+                    kwargs: {
+                        partner_ids: this.selectedPartners.map(partner => partner.id),
+                    },
+                }));
+            }
             this.update({
                 searchTerm: "",
                 selectedPartners: unlinkAll(),
@@ -148,8 +166,14 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeInviteButtonText() {
-            if (!this.thread || this.thread.channel_type !== 'channel') {
+            if (!this.thread) {
                 return clear();
+            }
+            switch (this.thread.channel_type) {
+                case 'chat':
+                    return this.env._t("Create group chat");
+                case 'group':
+                    return this.env._t("Invite to group chat");
             }
             return this.env._t("Invite to Channel");
         }

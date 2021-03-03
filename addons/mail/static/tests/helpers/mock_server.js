@@ -206,6 +206,14 @@ MockServer.include({
         if (args.model === 'mail.channel' && args.method === 'execute_command_who') {
             return this._mockMailChannelExecuteCommandWho(args);
         }
+        if (args.model === 'mail.channel' && args.method === 'get_call_participants_data') {
+            const ids = args.args[0];
+            return this._mockMailChannelGetCallParticipantsData(ids);
+        }
+        if (args.model === 'mail.channel' && args.method === 'group_chat_create') {
+            const partners_to = args.args[0] || args.kwargs.partners_to;
+            return this._mockMailChannelGroupChatCreate(partners_to);
+        }
         if (args.model === 'mail.channel' && args.method === 'message_post') {
             const id = args.args[0];
             const kwargs = args.kwargs;
@@ -266,6 +274,12 @@ MockServer.include({
             const name = args.args[0] || args.kwargs.search;
             const limit = args.args[1] || args.kwargs.limit;
             return this._mockResPartnerImSearch(name, limit);
+        }
+        if (args.model === 'res.partner' && args.method === 'search_for_channel_invite') {
+            const search_term = args.args[0] || args.kwargs.search_term;
+            const channel_id = args.args[1] || args.kwargs.channel_id;
+            const limit = args.args[2] || args.kwargs.limit;
+            return this._mockResPartnerSearchForChannelInvite(search_term, channel_id, limit);
         }
         // mail.thread methods (can work on any model)
         if (args.method === 'message_subscribe') {
@@ -960,6 +974,36 @@ MockServer.include({
         const mentionSuggestions = mentionSuggestionsFilter(this.data['mail.channel'].records, search, limit);
 
         return mentionSuggestions;
+    },
+    /**
+     * Simulates the `/mail/get_call_participants_data` route.
+     *
+     * @private
+     * @param {integer[]} ids
+     * @returns {Object[]}
+     */
+    async _mockMailChannelGetCallParticipantsData(ids) {
+        return new Promise(() => {});
+    },
+    /**
+     * Simulates the `/mail/group_chat_create` route.
+     *
+     * @private
+     * @param {integer[]} partners_to
+     * @returns {Object}
+     */
+    async _mockMailChannelGroupChatCreate(partners_to) {
+        const partners = this._getRecords('res.partner', [['id', 'in', partners_to]]);
+        const id = this._mockCreate('mail.channel', {
+            channel_type: 'group',
+            is_pinned: true,
+            members: [[6, 0, partners_to]],
+            name: partners.map(partner => partner.name).join(", "),
+            public: 'private',
+            state: 'open',
+        });
+        this._mockMailChannel_broadcast(id, partners_to);
+        return this._mockMailChannelChannelInfo([id])[0];
     },
     /**
      * Simulates `message_post` on `mail.channel`.
@@ -1806,6 +1850,48 @@ MockServer.include({
                 "name": partner.name,
             }
         ]));
+    },
+    /**
+     * Simulates `search_for_channel_invite` on `res.partner`.
+     *
+     * @private
+     * @param {string} [search_term='']
+     * @param {integer} [channel_id]
+     * @param {integer} [limit=30]
+     * @returns {Object[]}
+     */
+    _mockResPartnerSearchForChannelInvite(search_term, channel_id, limit = 30) {
+        search_term = search_term.toLowerCase(); // simulates ILIKE
+        // simulates domain with relational parts (not supported by mock server)
+        const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
+            this._getRecords('res.users', [])
+            .filter(user => {
+                const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+                // user must have a partner
+                if (!partner) {
+                    return false;
+                }
+                // not current partner
+                if (partner.id === this.currentPartnerId) {
+                    return false;
+                }
+                // no name is considered as return all
+                if (!search_term) {
+                    return true;
+                }
+                if (partner.name && partner.name.toLowerCase().includes(search_term)) {
+                    return true;
+                }
+                return false;
+            })
+            .map(user => user.partner_id)
+        ).values()];
+        const count = matchingPartners.length;
+        matchingPartners.length = Math.min(count, limit);
+        return {
+            count,
+            partners: matchingPartners
+        };
     },
     /**
      * Simulates `_message_fetch_failed` on `res.partner`.

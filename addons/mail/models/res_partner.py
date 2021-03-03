@@ -135,6 +135,13 @@ class Partner(models.Model):
                 ('is_pinned', '=', True),
             ])),
         ])
+        # get the 'group chat' channels
+        channels |= self.env['mail.channel'].search([
+            ('channel_type', '=', 'group'),
+            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                ('partner_id', '=', self.id),
+            ])),
+        ])
         return channels
 
     @api.model
@@ -164,7 +171,7 @@ class Partner(models.Model):
         query.limit = int(limit)
         return {
             'count': self.env['res.partner'].search_count(domain),
-            'partners': [p.mail_partner_format() for p in self.env['res.partner'].browse(query)],
+            'partners': list(self.env['res.partner'].browse(query).mail_partner_format().values()),
         }
 
     @api.model

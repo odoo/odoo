@@ -198,7 +198,7 @@ function factory(dependencies) {
             if (this.thread.channel_type === 'chat' && newName !== this.thread.custom_channel_name) {
                 this.thread.setCustomName(newName);
             }
-            if (newName && this.thread.channel_type === 'channel' && newName !== this.thread.name) {
+            if (newName && ['channel', 'group'].includes(this.thread.channel_type) && newName !== this.thread.name) {
                 this.thread.rename(newName);
             }
         }
