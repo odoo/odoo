@@ -171,7 +171,7 @@ class MassMailing(models.Model):
         for key in (
             'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
             'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
-            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
             self[key] = False
         if not self.ids:
