@@ -131,6 +131,10 @@
                 vertical-align: middle;
                 padding-top: ($table-cell-padding-sm*2);
                 padding-bottom: ($table-cell-padding-sm*2);
+                &.progress {
+                    font-size: inherit;
+                    overflow: visible;
+                }
             }
             .o_group_name {
                 @include o-text-overflow(table-cell);
@@ -302,6 +306,10 @@
                 color: $link-hover-color;
                 outline: none;
             }
+        }
+
+        .progress {
+            background-color: unset;
         }
     }
 
