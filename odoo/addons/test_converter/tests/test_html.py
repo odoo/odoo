@@ -167,6 +167,7 @@ class TestCurrencyExport(TestExport):
 
 
 class TestTextExport(TestBasicExport):
+    maxDiff = None
     def test_text(self):
         converter = self.get_converter('text')
 
