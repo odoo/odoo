@@ -204,26 +204,66 @@ class AccountPayment(models.Model):
         """ The stub is the summary of paid invoices. It may spill on several pages, in which case only the check on
             first page is valid. This function returns a list of stub lines per page.
         """
-        if len(self.move_id._get_reconciled_invoices()) == 0:
-            return None
+        self.ensure_one()
 
-        multi_stub = self.company_id.account_check_printing_multi_stub
+        def prepare_vals(invoice, partials):
+            number = ' - '.join([invoice.name, invoice.ref] if invoice.ref else [invoice.name])
 
-        invoices = self.move_id._get_reconciled_invoices().sorted(key=lambda r: r.invoice_date_due or fields.Date.context_today(self))
-        debits = invoices.filtered(lambda r: r.move_type == 'in_invoice')
-        credits = invoices.filtered(lambda r: r.move_type == 'in_refund')
+            if invoice.is_outbound():
+                invoice_sign = 1
+                partial_field = 'debit_amount_currency'
+            else:
+                invoice_sign = -1
+                partial_field = 'credit_amount_currency'
 
-        # Prepare the stub lines
-        if not credits:
-            stub_lines = [self._check_make_stub_line(inv) for inv in invoices]
-        else:
+            if invoice.currency_id.is_zero(invoice.amount_residual):
+                amount_residual_str = '-'
+            else:
+                amount_residual_str = formatLang(self.env, invoice_sign * invoice.amount_residual, currency_obj=invoice.currency_id)
+
+            return {
+                'due_date': format_date(self.env, invoice.invoice_date_due),
+                'number': number,
+                'amount_total': formatLang(self.env, invoice_sign * invoice.amount_total, currency_obj=invoice.currency_id),
+                'amount_residual': amount_residual_str,
+                'amount_paid': formatLang(self.env, invoice_sign * sum(partials.mapped(partial_field)), currency_obj=self.currency_id),
+                'currency': invoice.currency_id,
+            }
+
+        # Decode the reconciliation to keep only invoices.
+        term_lines = self.line_ids.filtered(lambda line: line.account_id.internal_type in ('receivable', 'payable'))
+        invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id)\
+            .filtered(lambda x: x.is_outbound())
+        invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)
+
+        # Group partials by invoices.
+        invoice_map = {invoice: self.env['account.partial.reconcile'] for invoice in invoices}
+        for partial in term_lines.matched_debit_ids:
+            invoice = partial.debit_move_id.move_id
+            if invoice in invoice_map:
+                invoice_map[invoice] |= partial
+        for partial in term_lines.matched_credit_ids:
+            invoice = partial.credit_move_id.move_id
+            if invoice in invoice_map:
+                invoice_map[invoice] |= partial
+
+        # Prepare stub_lines.
+        if 'out_refund' in invoices.mapped('move_type'):
             stub_lines = [{'header': True, 'name': "Bills"}]
-            stub_lines += [self._check_make_stub_line(inv) for inv in debits]
+            stub_lines += [prepare_vals(invoice, partials)
+                           for invoice, partials in invoice_map.items()
+                           if invoice.move_type == 'in_invoice']
             stub_lines += [{'header': True, 'name': "Refunds"}]
-            stub_lines += [self._check_make_stub_line(inv) for inv in credits]
+            stub_lines += [prepare_vals(invoice, partials)
+                           for invoice, partials in invoice_map.items()
+                           if invoice.move_type == 'out_refund']
+        else:
+            stub_lines = [prepare_vals(invoice, partials)
+                          for invoice, partials in invoice_map.items()
+                          if invoice.move_type == 'in_invoice']
 
         # Crop the stub lines or split them on multiple pages
-        if not multi_stub:
+        if not self.company_id.account_check_printing_multi_stub:
             # If we need to crop the stub, leave place for an ellipsis line
             num_stub_lines = len(stub_lines) > INV_LINES_PER_STUB and INV_LINES_PER_STUB - 1 or INV_LINES_PER_STUB
             stub_pages = [stub_lines[:num_stub_lines]]
@@ -240,30 +280,3 @@ class AccountPayment(models.Model):
                 i += num_stub_lines
 
         return stub_pages
-
-    def _check_make_stub_line(self, invoice):
-        """ Return the dict used to display an invoice/refund in the stub
-        """
-        # Find the account.partial.reconcile which are common to the invoice and the payment
-        if invoice.move_type in ['in_invoice', 'out_refund']:
-            invoice_sign = 1
-            invoice_payment_reconcile = invoice.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.line_ids)
-        else:
-            invoice_sign = -1
-            invoice_payment_reconcile = invoice.line_ids.mapped('matched_credit_ids').filtered(lambda r: r.credit_move_id in self.line_ids)
-
-        if self.currency_id != self.journal_id.company_id.currency_id:
-            amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount_currency')))
-        else:
-            amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount')))
-
-        amount_residual = invoice_sign * invoice.amount_residual
-
-        return {
-            'due_date': format_date(self.env, invoice.invoice_date_due),
-            'number': invoice.ref and invoice.name + ' - ' + invoice.ref or invoice.name,
-            'amount_total': formatLang(self.env, invoice_sign * invoice.amount_total, currency_obj=invoice.currency_id),
-            'amount_residual': formatLang(self.env, amount_residual, currency_obj=invoice.currency_id) if amount_residual * 10**4 != 0 else '-',
-            'amount_paid': formatLang(self.env, invoice_sign * amount_paid, currency_obj=self.currency_id),
-            'currency': invoice.currency_id,
-        }
