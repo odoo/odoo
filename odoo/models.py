@@ -4289,7 +4289,7 @@ Fields:
 
         :return: the qualified field name (or expression) to use for ``field``
         """
-        if self.env.lang:
+        if self.env.lang and self.env['ir.translation']._has_field_translations(self._name, field):
             alias = query.left_join(
                 table_alias, 'id', 'ir_translation', 'res_id', field,
                 extra='"{rhs}"."type" = \'model\' AND "{rhs}"."name" = %s AND "{rhs}"."lang" = %s AND "{rhs}"."value" != %s',

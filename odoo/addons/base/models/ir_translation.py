@@ -459,6 +459,16 @@ class IrTranslation(models.Model):
             self.env.cr.execute("DELETE FROM ir_translation WHERE id IN %s", [discarded._ids])
 
     @api.model
+    @tools.ormcache_context('model_name', 'field_name', keys=('lang',))
+    def _has_field_translations(self, model_name, field_name):
+        return self.sudo().search_count([
+            ('type', '=', 'model'),
+            ('name', '=', '%s,%s' % (model_name, field_name)),
+            ('lang', '=', self.env.lang),
+            ('value', '!=', ''),
+        ]) > 0
+
+    @api.model
     @tools.ormcache_context('model_name', keys=('lang',))
     def get_field_string(self, model_name):
         """ Return the translation of fields strings in the context's language.
