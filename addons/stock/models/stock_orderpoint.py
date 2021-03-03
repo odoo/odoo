@@ -316,6 +316,27 @@ class StockWarehouseOrderpoint(models.Model):
         if not to_refill:
             return action
 
+        # Recompute the forecasted quantity for missing product today but at this time
+        # with their real lead days.
+        key_to_remove = []
+        for (product, warehouse), quantity in to_refill.items():
+            product = self.env['product.product'].browse(product)
+            warehouse = self.env['stock.warehouse'].browse(warehouse)
+            rules = product._get_rules_from_location(warehouse.lot_stock_id)
+            lead_days = rules._get_lead_days(product)[0]
+            virtual_available = product.with_context(
+                warehouse=warehouse.id,
+                to_date=fields.datetime.now() + relativedelta.relativedelta(days=lead_days)
+            ).virtual_available
+            if float_compare(virtual_available, 0, precision_rounding=product.uom_id.rounding) >= 0:
+                key_to_remove.append((product.id, warehouse.id))
+            else:
+                to_refill[(product.id, warehouse.id)] = virtual_available
+        for key in key_to_remove:
+            del to_refill[key]
+        if not to_refill:
+            return action
+
         # Remove incoming quantity from other origin than moves (e.g RFQ)
         product_ids, warehouse_ids = zip(*to_refill)
         dummy, qty_by_product_wh = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(warehouse_ids=warehouse_ids)
