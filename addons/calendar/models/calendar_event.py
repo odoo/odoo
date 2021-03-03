@@ -203,7 +203,7 @@ class Meeting(models.Model):
         'Start', required=True, tracking=True, default=fields.Date.today,
         help="Start date of an event, without time for full days events")
     stop = fields.Datetime(
-        'Stop', required=True, tracking=True, default=fields.Date.today,
+        'Stop', required=True, tracking=True, default=lambda self: fields.Datetime.today() + timedelta(hours=1),
         compute='_compute_stop', readonly=False, store=True,
         help="Stop date of an event, without time for full days events")
 
