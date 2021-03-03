@@ -7615,6 +7615,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldColorPicker');
+
+    QUnit.test('FieldColorPicker: can navigate away with TAB', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <field name="int_field" widget="color_picker"/>
+                    <field name="foo" />
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$el.find('a.oe_kanban_color_1')[0].focus();
+
+        form.$el.find('a.oe_kanban_color_1').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+        assert.strictEqual(document.activeElement, form.$el.find('input[name="foo"]')[0],
+            "foo field should be focused");
+        form.destroy();
+    });
+
+
     QUnit.module('FieldBadge');
 
     QUnit.test('FieldBadge component on a char field in list view', async function (assert) {
