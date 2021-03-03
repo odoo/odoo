@@ -3688,6 +3688,11 @@ Fields:
             real_recs._validate_fields(vals, inverse_fields)
 
             for fields in determine_inverses.values():
+                # write again on non-stored fields that have been invalidated from cache
+                for field in fields:
+                    if not field.store and any(self.env.cache.get_missing_ids(real_recs, field)):
+                        field.write(real_recs, vals[field.name])
+
                 # inverse records that are not being computed
                 try:
                     fields[0].determine_inverse(real_recs)
