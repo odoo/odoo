@@ -254,7 +254,7 @@
 
                 <div class="form-inline ml-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
                     <button class="btn btn-success btn-sm" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
-                        <i class="fa fa-plus"/> Create New
+                        Create Opportunity
                     </button>
                 </div>
             </t>
@@ -273,7 +273,7 @@
                                 <input type='text' name="contact_name" class="form-control contact_name"/>
                             </div>
                             <div class="form-group">
-                                <label class="col-form-label h4dd" for="title">Title</label>
+                                <label class="col-form-label h4dd" for="title">Opportunity</label>
                                 <input type='text' name="title" class="form-control title"/>
                             </div>
                             <div class="form-group">
@@ -569,31 +569,29 @@
                             <div class="row mb-3" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
                                 <strong class="col-12 col-sm-3">Customer</strong>
                                 <div class="col">
-                                    <div>
+                                    <div t-if="opportunity.partner_name or opportunity.contact_name">
                                         <span class="fa fa-user fa-fw" role="img" aria-label="User" title="User"/>
                                         <strong class="font-italic" t-if="opportunity.partner_name" itemprop="name" t-field="opportunity.partner_name" />
                                         <strong class="font-italic" t-else="" itemprop="name" t-field="opportunity.contact_name" />
                                     </div>
-                                    <div>
+                                    <div t-if="opportunity.phone">
                                         <span class="fa fa-phone fa-fw" role="img" aria-label="Phone" title="Phone"/>
-                                        <span t-if="opportunity.phone" itemprop="telephone" t-field="opportunity.phone"/>
-                                        <span t-else="" class="text-muted"> - </span>
+                                        <span itemprop="telephone" t-field="opportunity.phone"/>
                                     </div>
-                                    <div>
+                                    <div t-if="opportunity.mobile">
                                         <span class="fa fa-mobile fa-fw" role="img" aria-label="Mobile" title="Mobile"/>
-                                        <span t-if="opportunity.mobile" itemprop="mobile" t-field="opportunity.mobile"/>
-                                        <span t-else="" class="text-muted"> - </span>
+                                        <span itemprop="mobile" t-field="opportunity.mobile"/>
                                     </div>
-                                    <div>
+                                    <div t-if="opportunity.email_from">
                                         <span class="fa fa-envelope fa-fw" role="img" aria-label="Email" title="Email"/>
-                                        <span t-if="opportunity.email_from" itemprop="email" t-field="opportunity.email_from"/>
-                                        <span t-else="" class="text-muted"> - </span>
+                                        <span itemprop="email" t-field="opportunity.email_from"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <strong class="col-12 col-sm-3">Address</strong>
-                                <address class="col d-flex align-items-baseline mb-0">
+                                <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
+                                    class="col d-flex align-items-baseline mb-0">
                                     <span class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
                                     <div>
                                         <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
@@ -602,7 +600,7 @@
                                         <div t-if="opportunity.city or opportunity.zip">
                                             <span t-field="opportunity.city"/> <span t-field="opportunity.zip"/>
                                         </div>
-                                        <div t-if="opportunity.state_id or country_id">
+                                        <div t-if="opportunity.state_id or opportunity.country_id">
                                             <span t-field="opportunity.state_id"/> <span t-field="opportunity.country_id"/>
                                         </div>
                                     </div>
@@ -684,28 +682,35 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-form-label" for="next_activity">Next Activity</label>
-                                                <select class="form-control next_activity" name="next_activity">
-                                                    <t t-foreach="activity_types" t-as="activity_type">
-                                                        <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count" t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
-                                                    </t>
-                                                </select>
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <label class="col-form-label" for="next_activity">Next Activity</label>
+                                                        <select class="form-control next_activity" name="next_activity">
+                                                            <t t-foreach="activity_types" t-as="activity_type">
+                                                                <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id"
+                                                                    t-att-name="activity_type.name" t-att-delay_count="activity_type.delay_count"
+                                                                    t-att-delay_unit="activity_type.delay_unit" t-att-summary="activity_type.summary">
+                                                                <t t-esc="activity_type.name"/></option>
+                                                            </t>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
+                                                        <div class="input-group date" id="next_activity_div" data-target-input="nearest">
+                                                            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
+                                                            <input type="text" name="activity_date_deadline" data-target="#next_activity_div" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
+                                                            <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
+                                                                <span class="input-group-text">
+                                                                    <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label" for="activity_summary">Details Next Activity</label>
-                                                <textarea rows="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
-                                                <div class="input-group date" id="next_activity_div" data-target-input="nearest">
-                                                    <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
-                                                    <input type="text" name="activity_date_deadline" data-target="#next_activity_div" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
-                                                    <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
-                                                        <span class="input-group-text">
-                                                            <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                             </div>
                                         </main>
                                         <footer class="modal-footer">
