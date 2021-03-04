@@ -249,15 +249,19 @@ class HolidaysType(models.Model):
     @api.model
     def get_days_all_request(self):
         leave_types = sorted(self.search([]).filtered(lambda x: x.virtual_remaining_leaves or x.max_leaves), key=self._model_sorting_key, reverse=True)
-        return [(lt.name, {
-                    'remaining_leaves': ('%.2f' % lt.remaining_leaves).rstrip('0').rstrip('.'),
-                    'virtual_remaining_leaves': ('%.2f' % lt.virtual_remaining_leaves).rstrip('0').rstrip('.'),
-                    'max_leaves': ('%.2f' % lt.max_leaves).rstrip('0').rstrip('.'),
-                    'leaves_taken': ('%.2f' % lt.leaves_taken).rstrip('0').rstrip('.'),
-                    'virtual_leaves_taken': ('%.2f' % lt.virtual_leaves_taken).rstrip('0').rstrip('.'),
-                    'request_unit': lt.request_unit,
-                }, lt.allocation_type, lt.validity_stop, lt.id)
-            for lt in leave_types]
+        return [lt._format_leave_request() for lt in leave_types]
+
+    # todo rename
+    def _format_leave_request(self):
+        self.ensure_one()
+        return (self.name, {
+                'remaining_leaves': ('%.2f' % self.remaining_leaves).rstrip('0').rstrip('.'),
+                'virtual_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),
+                'max_leaves': ('%.2f' % self.max_leaves).rstrip('0').rstrip('.'),
+                'leaves_taken': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
+                'virtual_leaves_taken': ('%.2f' % self.virtual_leaves_taken).rstrip('0').rstrip('.'),
+                'request_unit': self.request_unit,
+                }, self.allocation_type, self.validity_stop, self.id)
 
     def _get_contextual_employee_id(self):
         if 'employee_id' in self._context:

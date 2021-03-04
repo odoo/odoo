@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-inherit="hr_holidays.dashboard_calendar_header" t-inherit-mode="extension">
+        <xpath expr="//div[@t-foreach='timeoffs']" position="inside">
+            <t t-set="overtime_deductible" t-value="timeoff[5]" />
+        </xpath>
+    </t>
+<!-- 
+    todo mobile
+    <t t-name="hr_holidays.dashboard_calendar_header_mobile">
+        <t t-set="need_allocation" t-value="timeoff[2] !== 'no'"/>
+        <span class="pull-right">
+            <span>
+                <t t-if="need_allocation">
+                    <strong t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_green"/> / <span t-esc="timeoff[1]['max_leaves']"/>
+                    <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t><span class="o_timeoff_green ml-2">Available </span>
+                </t>
+                <t t-else="">
+                    <strong t-esc="timeoff[1]['virtual_leaves_taken']"/> <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t><span class="o_timeoff_purple ml-2">Taken</span>
+                </t>
+            </span>
+            <span t-if="need_allocation">
+                <t t-if="timeoff[3]"> (Expire on <span t-esc="moment(timeoff[3]).format('L')"/>)</t>
+            </span>
+        </span>
+    </t> -->
+</templates>

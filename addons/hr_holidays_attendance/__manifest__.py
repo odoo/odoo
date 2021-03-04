@@ -21,4 +21,7 @@ Convert employee's extra hours to leave allocations.
     'demo': [
         'data/hr_holidays_attendance_demo.xml',
     ],
+    'qweb': [
+        'static/src/xml/time_off_calendar.xml',
+    ],
 }

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class HRLeaveType(models.Model):
@@ -18,5 +18,12 @@ class HRLeaveType(models.Model):
         for employee_id, allocations in res.items():
             for allocation_id in allocations:
                 if allocation_id in deductibles:
+                    # todo opt-y-mize
                     res[employee_id][allocation_id]['virtual_remaining_leaves'] = self.env['hr.employee'].sudo().browse(employee_id).total_overtime
+                    res[employee_id][allocation_id]['overtime_deductible'] = True
+                else:
+                    res[employee_id][allocation_id]['overtime_deductible'] = False
         return res
+
+    def _format_leave_request(self):
+        return super()._format_leave_request() + (self.overtime_deductible, )
