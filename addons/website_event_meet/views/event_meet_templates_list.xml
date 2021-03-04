@@ -87,7 +87,7 @@
                     <div class="col">
                         <h5 t-esc="meeting_room.name"/>
                         <div class="text-muted mb-2"><i class="fa fa-globe"/> <span t-esc="meeting_room.room_lang_id.name"/></div>
-                        <span t-if="meeting_room.summary" t-raw="meeting_room.summary"/>
+                        <span t-if="meeting_room.summary" t-field="meeting_room.summary"/>
                     </div>
                 </div>
             </div>
