@@ -49,8 +49,8 @@ function factory(dependencies) {
             if ('date_deadline' in data) {
                 data2.dateDeadline = data.date_deadline;
             }
-            if ('force_next' in data) {
-                data2.force_next = data.force_next;
+            if ('chaining_type' in data) {
+                data2.chaining_type = data.chaining_type;
             }
             if ('icon' in data) {
                 data2.icon = data.icon;
@@ -289,8 +289,8 @@ function factory(dependencies) {
          * In all other cases, this field value should not be trusted.
          */
         feedbackBackup: attr(),
-        force_next: attr({
-            default: false,
+        chaining_type: attr({
+            default: 'suggest',
         }),
         icon: attr(),
         id: attr({

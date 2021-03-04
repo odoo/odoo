@@ -17,9 +17,9 @@ class TestORM(TransactionCase):
     @mute_logger('odoo.models')
     def test_access_deleted_records(self):
         """ Verify that accessing deleted records works as expected """
-        p1 = self.env['res.partner'].create({'name': 'W'})
-        p2 = self.env['res.partner'].create({'name': 'Y'})
-        p1.unlink()
+        c1 = self.env['res.partner.category'].create({'name': 'W'})
+        c2 = self.env['res.partner.category'].create({'name': 'Y'})
+        c1.unlink()
 
         # read() is expected to skip deleted records because our API is not
         # transactional for a sequence of search()->read() performed from the
@@ -31,12 +31,12 @@ class TestORM(TransactionCase):
             'login': 'test2',
             'groups_id': [Command.set([self.ref('base.group_user')])],
         })
-        ps = (p1 + p2).with_user(user)
-        self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should skip deleted records")
-        self.assertEqual([], ps[0].read(['name']), "read() should skip deleted records")
+        cs = (c1 + c2).with_user(user)
+        self.assertEqual([{'id': c2.id, 'name': 'Y'}], cs.read(['name']), "read() should skip deleted records")
+        self.assertEqual([], cs[0].read(['name']), "read() should skip deleted records")
 
         # Deleting an already deleted record should be simply ignored
-        self.assertTrue(p1.unlink(), "Re-deleting should be a no-op")
+        self.assertTrue(c1.unlink(), "Re-deleting should be a no-op")
 
     @mute_logger('odoo.models')
     def test_access_partial_deletion(self):

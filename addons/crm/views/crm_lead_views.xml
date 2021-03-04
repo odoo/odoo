@@ -678,10 +678,11 @@
                     <field name="user_id" widget="many2one_avatar_user" optional="show"
                         domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="hide"/>
-                    <field name="priority" optional="hide"/>
+                    <field name="priority" optional="hide" widget="priority"/>
                     <field name="activity_ids" widget="list_activity"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
                     <field name="activity_date_deadline_my" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
+                    <field name="activity_calendar_event_id" invisible="1"/>
                     <field name="campaign_id" optional="hide"/>
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="hide"/>
@@ -696,9 +697,13 @@
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
-                    <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash"
-                        attrs="{'invisible': [('activity_date_deadline_my', '=', False)]}"/>
                     <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope"/>
+                    <button name="action_reschedule_meeting" class="text-warning" type="object" string="Reschedule"
+                        icon="fa-calendar" attrs="{'invisible': ['|', ('activity_date_deadline_my', '=', False),
+                        ('activity_calendar_event_id', '=', False)]}"/>
+                    <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d"
+                        icon="fa-bell-slash" attrs="{'invisible': ['|', ('activity_date_deadline_my', '=', False),
+                        ('activity_calendar_event_id', '!=', False)]}"/>
                 </tree>
             </field>
         </record>
