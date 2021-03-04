@@ -664,6 +664,9 @@ class JsonRequest(WebRequest):
             if isinstance(exception, SessionExpiredException):
                 error['code'] = 100
                 error['message'] = "Odoo Session Expired"
+            if isinstance(exception, odoo.exceptions.ValidationError) and exception.records:
+                error['record_ids'] = exception.records.ids
+                error['record_model'] = exception.records._name
             return self._json_response(error=error)
 
     def dispatch(self):

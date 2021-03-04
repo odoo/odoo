@@ -118,6 +118,9 @@ class ValidationError(UserError):
 
         When you try to create a new user with a login which already exist in the db.
     """
+    def __init__(self, message, records=None):
+        self.records = records
+        super().__init__(message)
 
 
 # Deprecated exceptions, only kept for backward compatibility, may be
