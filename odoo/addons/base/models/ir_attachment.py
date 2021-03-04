@@ -564,9 +564,9 @@ class IrAttachment(models.Model):
         with io.BytesIO(base64.b64decode(self.datas)) as stream:
             try:
                 input_pdf = PdfFileReader(stream)
+                max_page = input_pdf.getNumPages()
             except Exception:
                 raise exceptions.ValidationError(_("ERROR: Invalid PDF file!"))
-            max_page = input_pdf.getNumPages()
             remainder_set = set(range(0, max_page))
             new_pdf_ids = []
             if not pdf_groups:
