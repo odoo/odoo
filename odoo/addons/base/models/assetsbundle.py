@@ -123,7 +123,6 @@ class AssetsBundle(object):
             self.env.context.get('lang') or self.env.user.lang
         ).direction
         # asset-wide html "media" attribute
-        self.media = None
         for f in files:
             if css:
                 if f['atype'] == 'text/sass':
@@ -136,8 +135,6 @@ class AssetsBundle(object):
                     self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
             if js and f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
-            if self.media is None and f['media']:
-                self.media = f['media']
 
     def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
         """
