@@ -217,6 +217,7 @@ class StockWarehouseOrderpoint(models.Model):
             notification = self._get_replenishment_order_notification()
         # Forced to call compute quantity because we don't have a link.
         self._compute_qty()
+        self._compute_qty_to_order()
         self.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual').unlink()
         return notification
 
