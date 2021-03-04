@@ -26,7 +26,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.journal_id.company_id.country_id != self.env.ref('base.cl') or not \
                 self.journal_id.l10n_latam_use_documents:
-            return False
+            return super()._get_l10n_latam_documents_domain()
         if self.journal_id.type == 'sale':
             domain = super()._get_l10n_latam_documents_domain()
             document_type_ids = self.journal_id.l10n_cl_sequence_ids.mapped('l10n_latam_document_type_id').ids
