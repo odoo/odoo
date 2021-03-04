@@ -1411,3 +1411,12 @@ $ribbon-padding: 100px;
         display: none;
     }
 }
+
+// Snippet Showcase
+.s_showcase_icon {
+    // Avoid images stretched depending on title size (when icons
+    // are images an not Font Awesome icons). Because the default
+    // value of "align-self" is "strech". We put this code here to
+    // avoid having to create a new scss file in a stable version.
+    align-self: flex-start;
+}
