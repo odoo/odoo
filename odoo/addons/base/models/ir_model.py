@@ -1386,7 +1386,7 @@ class IrModelSelection(models.Model):
                 selection._get_records().write({field.name: False})
             elif ondelete == 'set default':
                 value = field.convert_to_write(field.default(Model), Model)
-                selection._get_records().write({field.name: value})
+                selection._get_records()._write({field.name: value})
             elif ondelete == 'cascade':
                 selection._get_records().unlink()
             else:
