@@ -245,29 +245,52 @@ class CRMLeadMiningRequest(models.Model):
         if results:
             self._create_leads_from_response(results)
             self.state = 'done'
-        if self.lead_type == 'lead':
-            return self.action_get_lead_action()
-        elif self.lead_type == 'opportunity':
-            return self.action_get_opportunity_action()
+            if self.lead_type == 'lead':
+                return self.action_get_lead_action()
+            elif self.lead_type == 'opportunity':
+                return self.action_get_opportunity_action()
+        else:
+            return self._action_try_again()
 
     def action_get_lead_action(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
-        action['help'] = _("""<p class="o_view_nocontent_empty_folder">
-            No leads found
-        </p><p>
-            No leads could be generated according to your search criteria
-        </p>""")
         return action
+
+    def _action_try_again(self):
+        last_mining_request = self.env['crm.iap.lead.mining.request'].search([('user_id', '=', self.env.uid)], order='create_date desc', limit=1)
+        return {
+            'name': _('Generate Leads'),
+            'res_model': 'crm.iap.lead.mining.request',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'context': {
+                'show_warning': True,
+                'is_modal': True, 'default_state': 'draft',
+                'default_lead_type': last_mining_request.lead_type,
+                'default_lead_number':last_mining_request.lead_number,
+                'default_search_type': last_mining_request.search_type,
+                'default_country_ids':last_mining_request.country_ids.ids,
+                'default_state_ids': last_mining_request.state_ids.ids,
+                'default_industry_ids':last_mining_request.industry_ids.ids,
+                'default_filter_on_size':last_mining_request.filter_on_size,
+                'default_company_size_min':last_mining_request.company_size_min,
+                'default_company_size_max':last_mining_request.company_size_max,
+                'default_team_id':last_mining_request.team_id.id,
+                'default_user_id':last_mining_request.user_id.id,
+                'default_tag_ids':last_mining_request.tag_ids.ids,
+                'default_contact_number':last_mining_request.contact_number,
+                'default_contact_filter_type':last_mining_request.contact_filter_type,
+                'default_preferred_role_id':last_mining_request.preferred_role_id.id,
+                'default_role_ids':last_mining_request.role_ids.ids,
+                'default_seniority_id':last_mining_request.seniority_id.id,
+            }
+        }
 
     def action_get_opportunity_action(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
-        action['help'] = _("""<p class="o_view_nocontent_empty_folder">
-            No opportunities found
-        </p><p>
-            No opportunities could be generated according to your search criteria
-        </p>""")
         return action
