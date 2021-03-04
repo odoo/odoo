@@ -234,7 +234,7 @@ Open the ``__manifest__.py`` you created and copy/paste the following:
         'author': 'Your name',
         'category': 'Theme/Creative',
 
-        'depends': ['website', 'website_theme_install'],
+        'depends': ['website'],
         'data': [
         ],
     }
@@ -244,9 +244,9 @@ These values will be used to identify your new theme in Odoo’s backend.
 
 ``category`` defines your module category (always “Theme”) and, after a slash, the subcategory. You can use one subcategory from the Odoo Apps categories list. (https://www.odoo.com/apps/themes)
 
-``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website and website_theme_install to install/update.
+``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website to install/update.
 If you need blogging or eCommerce features as well, you have to add those modules too.
-If you plan to offer your theme to the majority of users, it is however recommended that you only depend on website and website_theme_install for the base of your theme. You can then create a second theme, which is an extension of the first one and another Odoo feature like the eCommerce.
+If you plan to offer your theme to the majority of users, it is however recommended that you only depend on website for the base of your theme. You can then create a second theme, which is an extension of the first one and another Odoo feature like the eCommerce.
 
 .. code-block:: python
 
