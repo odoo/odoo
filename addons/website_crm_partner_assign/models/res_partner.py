@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 from odoo.addons.http_routing.models.ir_http import slug
 
 
@@ -79,3 +80,20 @@ class ResPartner(models.Model):
     def _compute_partner_weight(self):
         for partner in self:
             partner.partner_weight = partner.grade_id.partner_weight if partner.grade_id else 0
+
+    def _compute_opportunity_count(self):
+        super()._compute_opportunity_count()
+        assign_counts = {}
+        if self.ids:
+            opportunity_data = self.env['crm.lead'].with_context(active_test=False).read_group(
+                [('partner_assigned_id', 'in', self.ids)],
+                ['partner_assigned_id'], ['partner_assigned_id']
+            )
+            assign_counts = {datum['partner_assigned_id'][0]: datum['partner_assigned_id_count'] for datum in opportunity_data}
+        for partner in self:
+            partner.opportunity_count += assign_counts.get(partner.id, 0)
+
+    def action_view_opportunity(self):
+        action = super().action_view_opportunity()
+        action['domain'] = expression.OR([action.get('domain', []), [('partner_assigned_id', '=', self.id)]])
+        return action
