@@ -1750,7 +1750,8 @@ var BasicModel = AbstractModel.extend({
                 } else {
                     var fieldInfo = record.fieldsInfo[viewType][name];
                     if (!fieldInfo) {
-                        return; // ignore changes of x2many not in view
+                        // ignore changes of x2many not in view
+                        continue;
                     }
                     var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
                     list = self._makeDataPoint({
