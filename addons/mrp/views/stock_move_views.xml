@@ -98,6 +98,7 @@
                     <field name="product_uom_qty" string="To Consume"/>
                     <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)], 'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" string="Reserved"/>
                     <field name="quantity_done" string="Consumed" attrs="{'column_invisible': [('parent.state', '=', 'draft')]}" readonly="1"/>
+                    <field name="group_id" invisible="1"/>
                 </tree>
             </field>
         </record>
