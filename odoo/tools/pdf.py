@@ -85,10 +85,16 @@ class OdooPdfFileReader(PdfFileReader):
             # If the PDF is owner-encrypted, try to unwrap it by giving it an empty user password.
             self.decrypt('')
 
-        if not self.trailer["/Root"].get("/Names", {}).get("/EmbeddedFiles", {}).get("/Names"):
+        try:
+            file_path = self.trailer["/Root"].get("/Names", {}).get("/EmbeddedFiles", {}).get("/Names")
+        except Exception:
+            # malformed pdf (i.e. invalid xref page)
             return []
-        for i in range(0, len(self.trailer["/Root"]["/Names"]["/EmbeddedFiles"]["/Names"]), 2):
-            attachment = self.trailer["/Root"]["/Names"]["/EmbeddedFiles"]["/Names"][i+1].getObject()
+
+        if not file_path:
+            return []
+        for i in range(0, len(file_path), 2):
+            attachment = file_path[i+1].getObject()
             yield (attachment["/F"], attachment["/EF"]["/F"].getObject().getData())
 
 
