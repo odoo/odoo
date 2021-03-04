@@ -649,7 +649,7 @@ class TestQWeb(TransactionCase):
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
                 qweb._render(template, values=params, load=loader).strip(),
-                (result or u'').strip().encode('utf-8'),
+                (result or u'').strip().replace('&quot;', '&#34;').encode('utf-8'),
                 template
             )
 
