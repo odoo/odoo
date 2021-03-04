@@ -18,6 +18,7 @@ import lxml.html
 import tempfile
 import subprocess
 import re
+import requests
 import json
 
 from lxml import etree
@@ -665,6 +666,37 @@ class IrActionsReport(models.Model):
         writer.write(result_stream)
         return result_stream.getvalue()
 
+    def _eager_loading(self, bodies):
+        """Fixes an issue with wkhtmltopdf 0.12.5 when images are not loaded properly.
+
+        Use `<img loading="eager"/>` to force pre loading of the images as base64.
+
+        """
+        IrConfig = self.env["ir.config_parameter"].sudo()
+        base_url = IrConfig.get_param("report.url") or IrConfig.get_param("web.base.url")
+        eager_bodies = []
+        for body in bodies:
+            root = lxml.html.fromstring(body)
+            eager_imgs = root.xpath("//img[@loading='eager']")
+            if eager_imgs:
+                for node in eager_imgs:
+                    src = node.get("src")
+                    if src.startswith("data:"):
+                        continue
+                    url = src
+                    if url.startswith("/"):
+                        url = base_url + url
+                    img_res = requests.get(url)
+                    base64_src = "data:{};base64,{}".format(
+                        img_res.headers["Content-Type"],
+                        base64.b64encode(img_res.content).decode("utf-8"),
+                    )
+                    node.set("src", base64_src)
+                eager_bodies.append(lxml.html.tostring(root))
+            else:
+                eager_bodies.append(body)
+        return eager_bodies
+
     def render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
             data = {}
@@ -744,6 +776,8 @@ class IrActionsReport(models.Model):
         if self.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
                 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
+
+        bodies = self._eager_loading(bodies)
 
         pdf_content = self._run_wkhtmltopdf(
             bodies,
