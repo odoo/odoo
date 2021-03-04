@@ -57,10 +57,10 @@
                 <form string="Mailing">
                     <header style="min-height:31px;">
                         <button name="action_launch" type="object" class="oe_highlight" string="Launch"
-                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled')]}"
+                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue',  'sending', 'done')), ('schedule_type', '=', 'scheduled')]}"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="action_schedule" type="object" class="oe_highlight" string="Schedule"
-                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'now')]}"/>
+                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue',  'sending', 'done')), ('schedule_type', '=', 'now')]}"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test"/>
                         <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
                         <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
