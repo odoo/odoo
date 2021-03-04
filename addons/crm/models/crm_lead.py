@@ -785,10 +785,12 @@ class Lead(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
-    def _stage_find(self, team_id=False, domain=None, order='sequence'):
+    def _stage_find(self, team_id=False, domain=None, order='sequence', limit=1):
         """ Determine the stage of the current lead with its teams, the given domain and the given team_id
             :param team_id
             :param domain : base search domain for stage
+            :param order : base search order for stage
+            :param limit : base search limit for stage
             :returns crm.stage recordset
         """
         # collect all team_ids by adding given one, and the ones related to the current leads
@@ -807,7 +809,7 @@ class Lead(models.Model):
         if domain:
             search_domain += list(domain)
         # perform search, return the first found
-        return self.env['crm.stage'].search(search_domain, order=order, limit=1)
+        return self.env['crm.stage'].search(search_domain, order=order, limit=limit)
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -839,7 +841,18 @@ class Lead(models.Model):
         # group the leads by team_id, in order to write once by values couple (each write leads to frequency increment)
         leads_by_won_stage = {}
         for lead in self:
-            stage_id = lead._stage_find(domain=[('is_won', '=', True)])
+            won_stages = self._stage_find(domain=[('is_won', '=', True)], limit=None)
+            # ABD : We could have a mixed pipeline, with "won" stages being separated by "standard"
+            # stages. In the future, we may want to prevent any "standard" stage to have a higher
+            # sequence than any "won" stage. But while this is not the case, searching
+            # for the "won" stage while alterning the sequence order (see below) will correctly
+            # handle such a case :
+            #       stage sequence : [x] [x (won)] [y] [y (won)] [z] [z (won)]
+            #       when in stage [y] and marked as "won", should go to the stage [y (won)],
+            #       not in [x (won)] nor [z (won)]
+            stage_id = next((stage for stage in won_stages if stage.sequence > lead.stage_id.sequence), None)
+            if not stage_id:
+                stage_id = next((stage for stage in reversed(won_stages) if stage.sequence <= lead.stage_id.sequence), won_stages)
             if stage_id in leads_by_won_stage:
                 leads_by_won_stage[stage_id] |= lead
             else:
@@ -944,6 +957,14 @@ class Lead(models.Model):
             'default_team_id': self.team_id.id,
             'default_name': self.name,
         }
+        return action
+
+    def action_reschedule_meeting(self):
+        self.ensure_one()
+        action = self.action_schedule_meeting()
+        next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        if next_activity.calendar_event_id:
+            action['context']['initial_date'] = next_activity.calendar_event_id.start
         return action
 
     def action_snooze(self):
