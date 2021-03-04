@@ -13,6 +13,17 @@ class UoMCategory(models.Model):
 
     name = fields.Char('Unit of Measure Category', required=True, translate=True)
 
+<<<<<<< HEAD
+=======
+    def unlink(self):
+        uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
+        uom_categ_wtime = self.env.ref('uom.uom_categ_wtime')
+        uom_categ_kg = self.env.ref('uom.product_uom_categ_kgm')
+        if any(categ.id in (uom_categ_unit + uom_categ_wtime + uom_categ_kg).ids for categ in self):
+            raise UserError(_("You cannot delete this UoM Category as it is used by the system."))
+        return super(UoMCategory, self).unlink()
+
+>>>>>>> e3f67012c4f... temp
 
 class UoM(models.Model):
     _name = 'uom.uom'
@@ -124,6 +135,7 @@ class UoM(models.Model):
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
         return super(UoM, self).write(values)
 
+<<<<<<< HEAD
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
         locked_uoms = self._filter_protected_uoms()
@@ -132,6 +144,20 @@ class UoM(models.Model):
                 "The following units of measure are used by the system and cannot be deleted: %s\nYou can archive them instead.",
                 ", ".join(locked_uoms.mapped('name')),
             ))
+=======
+    def unlink(self):
+        uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
+        uom_categ_wtime = self.env.ref('uom.uom_categ_wtime')
+        uom_categ_kg = self.env.ref('uom.product_uom_categ_kgm')
+        if any(uom.category_id.id in (uom_categ_unit + uom_categ_wtime + uom_categ_kg).ids and uom.uom_type == 'reference' for uom in self):
+            raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
+        # UoM with external IDs shouldn't be deleted since they will most probably break the app somewhere else.
+        # For example, in addons/product/models/product_template.py, cubic meters are used in `_get_volume_uom_id_from_ir_config_parameter()`,
+        # meters in `_get_length_uom_id_from_ir_config_parameter()`, and so on.
+        if self.env['ir.model.data'].search_count([('model', '=', self._name), ('res_id', 'in', self.ids)]):
+            raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
+        return super(UoM, self).unlink()
+>>>>>>> e3f67012c4f... temp
 
     @api.model
     def name_create(self, name):
