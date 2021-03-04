@@ -245,7 +245,8 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_create_nosubscribe'):
             for thread in threads:
                 self.env['mail.followers']._insert_followers(
-                    thread._name, thread.ids, self.env.user.partner_id.ids, None,
+                    thread._name, thread.ids,
+                    self.env.user.partner_id.ids, subtypes=None,
                     customer_ids=[],
                     check_existing=False
                 )
@@ -2581,12 +2582,13 @@ class MailThread(models.AbstractModel):
 
         if not subtype_ids:
             self.env['mail.followers']._insert_followers(
-                self._name, self.ids, partner_ids, None,
+                self._name, self.ids,
+                partner_ids, subtypes=None,
                 customer_ids=customer_ids, check_existing=True, existing_policy='skip')
         else:
             self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
-                partner_ids, dict((pid, subtype_ids) for pid in partner_ids),
+                partner_ids, subtypes=dict((pid, subtype_ids) for pid in partner_ids),
                 customer_ids=customer_ids, check_existing=True, existing_policy='replace')
 
         return True
@@ -2698,7 +2700,7 @@ class MailThread(models.AbstractModel):
         if not self:
             return True
 
-        new_partners = dict()
+        new_partner_subtypes = dict()
 
         # return data related to auto subscription based on subtype matching (aka: 
         # default task subtypes or subtypes from project triggering task subtypes)
@@ -2715,29 +2717,29 @@ class MailThread(models.AbstractModel):
             # fetch "parent" subscription data (aka: subtypes on project to propagate on task)
             doc_data = [(model, [updated_values[fname] for fname in fnames]) for model, fnames in updated_relation.items()]
             res = self.env['mail.followers']._get_subscription_data(doc_data, None, include_pshare=True, include_active=True)
-            for fid, rid, pid, subtype_ids, pshare, active in res:
+            for _fol_id, _res_id, partner_id, subtype_ids, pshare, active in res:
                 # use project.task_new -> task.new link
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
                 # add checked subtypes matching model_name
                 sids += [sid for sid in subtype_ids if sid not in parent and sid in child_ids]
-                if pid and active:  # auto subscribe only active partners
+                if partner_id and active:  # auto subscribe only active partners
                     if pshare:  # remove internal subtypes for customers
-                        new_partners[pid] = set(sids) - set(all_int_ids)
+                        new_partner_subtypes[partner_id] = set(sids) - set(all_int_ids)
                     else:
-                        new_partners[pid] = set(sids)
+                        new_partner_subtypes[partner_id] = set(sids)
 
         notify_data = dict()
         res = self._message_auto_subscribe_followers(updated_values, def_ids)
-        for pid, sids, template in res:
-            new_partners.setdefault(pid, sids)
+        for partner_id, sids, template in res:
+            new_partner_subtypes.setdefault(partner_id, sids)
             if template:
-                partner = self.env['res.partner'].browse(pid)
+                partner = self.env['res.partner'].browse(partner_id)
                 lang = partner.lang if partner else None
-                notify_data.setdefault((template, lang), list()).append(pid)
+                notify_data.setdefault((template, lang), list()).append(partner_id)
 
         self.env['mail.followers']._insert_followers(
             self._name, self.ids,
-            list(new_partners), new_partners,
+            list(new_partner_subtypes), subtypes=new_partner_subtypes,
             check_existing=True, existing_policy=followers_existing_policy)
 
         # notify people from auto subscription, for example like assignation
