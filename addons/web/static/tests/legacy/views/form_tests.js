@@ -1062,6 +1062,57 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('reset local state when switching to another view', async function (assert) {
+        assert.expect(3);
+
+        serverData.views = {
+            'partner,false,form': `<form>
+                    <sheet>
+                        <field name="product_id"/>
+                        <notebook>
+                            <page string="Foo">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Bar">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            'partner,false,list': '<tree><field name="foo"/></tree>',
+            'partner,false,search': '<search></search>',
+        };
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'Partner',
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list'], [false, 'form']],
+            }
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_list_button_add'));
+        assert.containsOnce(webClient, '.o_form_view');
+
+        // click on second page tab
+        await testUtils.dom.click($(webClient.el).find('.o_notebook .nav-link:eq(1)'));
+
+        await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
+        await legacyExtraNextTick();
+        assert.containsNone(webClient, '.o_form_view');
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_list_button_add'));
+        await legacyExtraNextTick();
+        // check notebook active page is 0th page
+        assert.hasClass($(webClient.el).find('.o_notebook .nav-link:eq(0)'), 'active');
+
+    });
+
     QUnit.test('rendering stat buttons', async function (assert) {
         assert.expect(3);
 
