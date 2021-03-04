@@ -104,6 +104,19 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         this.set('title_part', {"zopenerp": "Odoo"});
         this.env = env;
         this.env.bus.on('set_title_part', this, this._onSetTitlePart);
+        // Only manage the multi company state if a session exists (in order not to interfere during js tests)
+        if (session.uid && Number.isInteger(session.uid) && session.uid > 0) {
+            this._manageMultiCompanyState();
+        }
+        if (session.user_context &&
+            session.user_context.allowed_company_ids &&
+            session.user_context.allowed_company_ids.length) {
+            this.currentCompanyId = session.user_context.allowed_company_ids[0];
+            const currentCompany = session.user_companies.allowed_companies[this.currentCompanyId];
+            const currentCompanyTimesheetUOMId = currentCompany.timesheet_uom_id || false;
+            this.currentCompanyTimesheetUOMFactor = currentCompany.timesheet_uom_factor || 1;
+            this.currentCompanyTimesheetUOM = currentCompanyTimesheetUOMId && session.uom_ids[currentCompanyTimesheetUOMId] || false;
+        }
     },
     /**
      * @override
@@ -120,28 +133,8 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 
-        var state = $.bbq.getState();
-        // If not set on the url, retrieve cids from the local storage
-        // of from the default company on the user
-        var current_company_id = session.user_companies.current_company[0]
-        if (!state.cids) {
-            state.cids = utils.get_cookie('cids') !== null ? utils.get_cookie('cids') : String(current_company_id);
-        }
-        // If a key appears several times in the hash, it is available in the
-        // bbq state as an array containing all occurrences of that key
-        const cids = Array.isArray(state.cids) ? state.cids[0] : state.cids;
-        let stateCompanyIDS = cids.split(',').map(cid => parseInt(cid, 10));
-        var userCompanyIDS = _.map(session.user_companies.allowed_companies, function(company) {return company[0]});
-        // Check that the user has access to all the companies
-        if (!_.isEmpty(_.difference(stateCompanyIDS, userCompanyIDS))) {
-            state.cids = String(current_company_id);
-            stateCompanyIDS = [current_company_id]
-        }
-        // Update the user context with this configuration
-        session.user_context.allowed_company_ids = stateCompanyIDS;
-        $.bbq.pushState(state);
         // Update favicon
-        $("link[type='image/x-icon']").attr('href', '/web/image/res.company/' + String(stateCompanyIDS[0]) + '/favicon/')
+        $("link[type='image/x-icon']").attr('href', '/web/image/res.company/' + String(this.currentCompanyId) + '/favicon/');
 
         return session.is_bound
             .then(function () {
@@ -236,6 +229,28 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
             el.destroy();
         });
         this.$el.children().remove();
+    },
+    _manageMultiCompanyState: function () {
+        let state = $.bbq.getState();
+        // If not set on the url, retrieve cids from the local storage
+        // or from the default company on the user
+        const current_company_id = session.user_companies.current_company;
+        if (!state.cids) {
+            state.cids = utils.get_cookie('cids') !== null ? utils.get_cookie('cids') : String(current_company_id);
+        }
+        // If a key appears several times in the hash, it is available in the
+        // bbq state as an array containing all occurrences of that key
+        const cids = Array.isArray(state.cids) ? state.cids[0] : state.cids;
+        let stateCompanyIDS = cids.split(',').map(cid => parseInt(cid, 10));
+        const userCompanyIDS = Object.keys(session.user_companies.allowed_companies).map(id => parseInt(id, 10));
+        // Check that the user has access to all the companies
+        if (!_.isEmpty(_.difference(stateCompanyIDS, userCompanyIDS))) {
+            state.cids = String(current_company_id);
+            stateCompanyIDS = [current_company_id];
+        }
+        // Update the user context with this configuration
+        session.user_context.allowed_company_ids = stateCompanyIDS;
+        $.bbq.pushState(state);
     },
     // --------------------------------------------------------------
     // Window title handling
