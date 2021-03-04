@@ -27,6 +27,40 @@ class TestMessageValues(TestMailCommon):
         cls.Message = cls.env['mail.message'].with_user(cls.user_employee)
 
     @mute_logger('odoo.models.unlink')
+    def test_mail_message_format(self):
+        record1 = self.env['mail.test.simple'].create({'name': 'Test1'})
+        message = self.env['mail.message'].create([{
+            'model': 'mail.test.simple',
+            'res_id': record1.id,
+        }])
+        res = message.message_format()
+        self.assertEqual(res[0].get('record_name'), 'Test1')
+
+        record1.write({"name": "Test2"})
+        res = message.message_format()
+        self.assertEqual(res[0].get('record_name'), 'Test2')
+
+    @mute_logger('odoo.models.unlink')
+    def test_mail_message_format_access(self):
+        """
+        User that doesn't have access to a record should still be able to fetch
+        the record_name inside message_format.
+        """
+        company_2 = self.env['res.company'].create({'name': 'Second Test Company'})
+        record1 = self.env['mail.test.multi.company'].create({
+            'name': 'Test1',
+            'company_id': company_2.id,
+        })
+        message = record1.message_post(body='', partner_ids=[self.user_employee.partner_id.id])
+        # We need to flush and invalidate the ORM cache since the record_name
+        # is already cached from the creation. Otherwise it will leak inside
+        # message_format.
+        message.flush()
+        message.invalidate_cache()
+        res = message.with_user(self.user_employee).message_format()
+        self.assertEqual(res[0].get('record_name'), 'Test1')
+
+    @mute_logger('odoo.models.unlink')
     def test_mail_message_values_no_document_values(self):
         msg = self.Message.create({
             'reply_to': 'test.reply@example.com',
