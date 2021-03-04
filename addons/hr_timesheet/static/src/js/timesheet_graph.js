@@ -12,10 +12,14 @@ odoo.define('hr_timesheet.GraphView', function (require) {
         _processData: function (originIndex, rawData) {
             this._super.apply(this, arguments);
             const session = this.getSession();
-            if (this.chart.measure === 'unit_amount' && session.timesheet_uom_factor !== 1) {
+            const currentCompanyId = session.user_context.allowed_company_ids[0];
+            const currentCompany = session.user_companies.allowed_companies[currentCompanyId];
+            const currentCompanyTimesheetUOMFactor = currentCompany.timesheet_uom_factor || 1;
+
+            if (this.chart.measure === 'unit_amount' && currentCompanyTimesheetUOMFactor !== 1) {
                 // recalculate the Duration values according to the timesheet_uom_factor
                 this.chart.dataPoints.forEach(function (dataPt) {
-                    dataPt.value *= session.timesheet_uom_factor;
+                    dataPt.value *= currentCompanyTimesheetUOMFactor;
                 });
             }
         },
