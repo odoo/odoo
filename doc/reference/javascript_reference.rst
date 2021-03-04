@@ -2150,8 +2150,11 @@ kanban.many2many_tags (KanbanFieldMany2ManyTags)
   - Supported field types: *many2many*
 
 many2many_checkboxes (FieldMany2ManyCheckBoxes)
-  This field displays a list of checkboxes and allow the user to select a
-  subset of the choices.
+  This field displays a list of checkboxes and allows the user to select a
+  subset of the choices. Note that the number of displayed values is limited to
+  100. This limit isn't customizable. It simply allows to handle extreme cases
+  where this widget is wrongly set on a field with a huge comodel. In those
+  cases, a list view is more adequate as it allows pagination and filtering.
 
   - Supported field types: *many2many*
 
