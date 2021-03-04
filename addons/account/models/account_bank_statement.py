@@ -1199,7 +1199,7 @@ class AccountBankStatementLine(models.Model):
         self.ensure_one()
         liquidity_lines, suspense_lines, other_lines = self._seek_for_lines()
 
-        reconciliation_overview, open_balance_vals = self._prepare_reconciliation(lines_vals_list)
+        reconciliation_overview, open_balance_vals = self._prepare_reconciliation(lines_vals_list, True)
 
         # ==== Manage res.partner.bank ====
 
