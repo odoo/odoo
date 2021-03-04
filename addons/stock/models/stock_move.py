@@ -640,14 +640,15 @@ class StockMove(models.Model):
                 for record in ops.linked_move_operation_ids:
                     move_qty = record.qty
                     move = record.move_id
-                    domain = main_domain[move.id]
-                    for lot in lot_qty:
-                        if float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(move_qty, 0, precision_rounding=rounding) > 0:
-                            qty = min(lot_qty[lot], move_qty)
-                            quants = Quant.quants_get_preferred_domain(qty, move, ops=ops, lot_id=lot, domain=domain, preferred_domain_list=[])
-                            Quant.quants_reserve(quants, move, record)
-                            lot_qty[lot] -= qty
-                            move_qty -= qty
+                    if move.id in main_domain:
+                        domain = main_domain[move.id]
+                        for lot in lot_qty:
+                            if float_compare(lot_qty[lot], 0, precision_rounding=rounding) > 0 and float_compare(move_qty, 0, precision_rounding=rounding) > 0:
+                                qty = min(lot_qty[lot], move_qty)
+                                quants = Quant.quants_get_preferred_domain(qty, move, ops=ops, lot_id=lot, domain=domain, preferred_domain_list=[])
+                                Quant.quants_reserve(quants, move, record)
+                                lot_qty[lot] -= qty
+                                move_qty -= qty
 
         # Sort moves to reserve first the ones with ancestors, in case the same product is listed in
         # different stock moves.
