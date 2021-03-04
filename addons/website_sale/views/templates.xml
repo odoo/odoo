@@ -155,7 +155,7 @@
             <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get" t-att-data-snippet="_snippet">
                 <t>$0</t>
                 <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
-                <t t-raw="0"/>
+                <t t-out="0"/>
             </form>
         </xpath>
     </template>
@@ -934,7 +934,7 @@
     <!-- We use this template where we want to give the user a link to the product of a sale order line. -->
     <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
         <a t-att-href="line.product_id.website_url">
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </a>
     </template>
 
