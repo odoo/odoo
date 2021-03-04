@@ -974,6 +974,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('set focus on notebook page from rendererState', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">' +
+                    <sheet>
+                        <field name="product_id"/>
+                        <notebook name="first_notebook">
+                            <page string="Choucroute">
+                                <field name="foo"/>
+                            </page>
+                            <page string="Cassoulet">
+                                <field name="bar"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                rendererState: { 'first_notebook': 1, },
+            },
+        });
+
+        assert.doesNotHaveClass(form.$('.o_notebook .nav .nav-link:first()'), 'active');
+        assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(1)'), 'active');
+        assert.doesNotHaveClass(form.$('.o_notebook .tab-content .tab-pane:first()'), 'active');
+        assert.hasClass(form.$('.o_notebook .tab-content .tab-pane:nth(1)'), 'active');
+
+        form.destroy();
+    });
+
     QUnit.test('invisible attrs on group are re-evaluated on field change', async function (assert) {
         assert.expect(2);
 

@@ -51,6 +51,7 @@ var FormRenderer = BasicRenderer.extend({
         // display them (e.g. in Studio, in "show invisible" mode). This flag
         // allows to disable this optimization.
         this.renderInvisible = false;
+        this.rendererState = params.rendererState;
     },
     /**
      * @override
@@ -58,6 +59,13 @@ var FormRenderer = BasicRenderer.extend({
     start: function () {
         this._applyFormSizeClass();
         return this._super.apply(this, arguments);
+    },
+    on_attach_callback: function () {
+        this._super(...arguments);
+        if (this.rendererState) {
+            this.setLocalState(this.rendererState);
+            this.rendererState = {};
+        }
     },
 
     //--------------------------------------------------------------------------

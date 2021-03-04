@@ -303,6 +303,7 @@ ActionManager.include({
                 .then(function () {
                     var viewOptions = {
                         controllerState: options.controllerState,
+                        rendererState: options.rendererState,
                         currentId: options.resID,
                     };
                     var curViewDef = self._createViewController(action, curView.type, viewOptions, {

@@ -134,6 +134,7 @@ var AbstractView = Factory.extend({
             arch: this.arch,
             isEmbedded: isEmbedded,
             noContentHelp: htmlHelp.innerText.trim() ? help : "",
+            rendererState: params.rendererState || {},
         };
 
         this.controllerParams = {

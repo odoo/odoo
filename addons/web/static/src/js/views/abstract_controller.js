@@ -161,6 +161,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     discardChanges: function (recordID, options) {
         return Promise.resolve();
     },
+    exportRenererState() {
+        return this.renderer.getLocalState();
+    },
     /**
      * Export the state of the controller containing information that is shared
      * between different controllers of a same action (like the current search

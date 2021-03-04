@@ -1039,6 +1039,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
         mode: { validate: m => ["bar", "line", "pie"].includes(m) },
         origins: { type: Array, element: String },
         processedGroupBy: { type: Array, element: String },
+        rendererState: Object,
         stacked: Boolean,
         timeRanges: Object,
         noContentHelp: { type: String, optional: 1 },
