@@ -2914,9 +2914,20 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
      */
     _onChange: function () {
         if (this.mode !== 'readonly') {
+            // Get the list of selected ids
             var ids = _.map(this.$('input:checked'), function (input) {
                 return $(input).data("record-id");
             });
+            // The number of displayed checkboxes is limited to 100 (name_search
+            // limit, server-side), to prevent extreme cases where thousands of
+            // records are fetched/displayed. If not all values are displayed, it may
+            // happen that some values that are in the relation aren't available in the
+            // widget. In this case, when the user (un)selects a value, we don't
+            // want to remove those non displayed values from the relation. For that
+            // reason, we manually add those values to the list of ids.
+            const displayedIds = this.m2mValues.map(v => v[0]);
+            const idsInRelation = this.value.res_ids;
+            ids = ids.concat(idsInRelation.filter(a => !displayedIds.includes(a)));
             this._setValue({
                 operation: 'REPLACE_WITH',
                 ids: ids,
