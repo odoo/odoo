@@ -1381,8 +1381,15 @@ class IrModelSelection(models.Model):
             if not field or not field.store or Model._abstract:
                 continue
 
-            ondelete = (field.ondelete or {}).get(selection.value) or 'set null'
-            if callable(ondelete):
+            ondelete = (field.ondelete or {}).get(selection.value)
+            # special case for custom fields
+            if ondelete is None and field.manual and not field.required:
+                ondelete = 'set null'
+
+            if ondelete is None:
+                # nothing to do, the selection does not come from a field extension
+                continue
+            elif callable(ondelete):
                 ondelete(selection._get_records())
             elif ondelete == 'set null':
                 selection._get_records().write({field.name: False})

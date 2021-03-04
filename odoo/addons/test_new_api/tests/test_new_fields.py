@@ -3056,6 +3056,16 @@ class TestSelectionOndelete(common.TransactionCase):
 
         self.assertFalse(rec.my_selection)
 
+    def test_required_base_selection_field(self):
+        # test that no ondelete action is executed on a required selection field that is not
+        # extended, only required fields that extend it with selection_add should
+        # have ondelete actions defined
+        rec = self.env[self.MODEL_REQUIRED].create({'my_selection': 'foo'})
+        self.assertEqual(rec.my_selection, 'foo')
+
+        self._unlink_option(self.MODEL_REQUIRED, 'foo')
+        self.assertEqual(rec.my_selection, 'foo')
+
 
 @common.tagged('selection_ondelete_advanced')
 class TestSelectionOndeleteAdvanced(common.TransactionCase):
