@@ -13,7 +13,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_re, email_split
+from odoo.tools import date_utils, email_re, email_split, is_html_empty
 
 from . import crm_stage
 
@@ -979,6 +979,13 @@ class Lead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
+        """ This method returns the action helpers for the leads. If help is already provided
+            on the action, the same is returned. Otherwise, we build the help message which
+            contains the alias responsible for creating the lead (if available) and return it.
+        """
+        if not is_html_empty(help):
+            return help
+
         help_title, sub_title = "", ""
         if self._context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
