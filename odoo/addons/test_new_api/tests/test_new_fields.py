@@ -2928,6 +2928,7 @@ class TestSelectionOndelete(common.TransactionCase):
     MODEL_BASE = 'test_new_api.model_selection_base'
     MODEL_REQUIRED = 'test_new_api.model_selection_required'
     MODEL_NONSTORED = 'test_new_api.model_selection_non_stored'
+    MODEL_WRITE_OVERRIDE = 'test_new_api.model_selection_required_for_write_override'
 
     def setUp(self):
         super().setUp()
@@ -3064,6 +3065,16 @@ class TestSelectionOndelete(common.TransactionCase):
         self.assertEqual(rec.my_selection, 'foo')
 
         self._unlink_option(self.MODEL_REQUIRED, 'foo')
+        self.assertEqual(rec.my_selection, 'foo')
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_write_override_selection(self):
+        # test that on override to write that raises an error does not prevent the ondelete
+        # policy from executing and cleaning up what needs to be cleaned up
+        rec = self.env[self.MODEL_WRITE_OVERRIDE].create({'my_selection': 'divinity'})
+        self.assertEqual(rec.my_selection, 'divinity')
+
+        self._unlink_option(self.MODEL_WRITE_OVERRIDE, 'divinity')
         self.assertEqual(rec.my_selection, 'foo')
 
 

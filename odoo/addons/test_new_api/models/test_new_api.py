@@ -1152,6 +1152,29 @@ class SelectionNonStored(models.Model):
     ], store=False)
 
 
+class SelectionRequiredForWriteOverride(models.Model):
+    _name = 'test_new_api.model_selection_required_for_write_override'
+    _description = "Model with required selection field for an extension with write override"
+
+    my_selection = fields.Selection([
+        ('foo', "Foo"),
+        ('bar', "Bar"),
+    ], required=True, default='foo')
+
+
+class SelectionRequiredWithWriteOverride(models.Model):
+    _inherit = 'test_new_api.model_selection_required_for_write_override'
+
+    my_selection = fields.Selection(selection_add=[
+        ('divinity', "Divinity: Original Sin 2"),
+    ], ondelete={'divinity': 'set default'})
+
+    def write(self, vals):
+        if 'my_selection' in vals:
+            raise ValueError("No... no no no")
+        return super().write(vals)
+
+
 # Special classes to ensure the correct usage of a shared cache amongst users.
 # See the method test_shared_cache_computed_field
 class SharedCacheComputeParent(models.Model):
