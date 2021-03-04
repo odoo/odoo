@@ -26,7 +26,7 @@
                 </div>
             </nav>
         </xpath>
-        <xpath expr="//div[@id='wrapwrap']/main/t[@t-raw='0']" position="before">
+        <xpath expr="//div[@id='wrapwrap']/main/t[@t-out='0']" position="before">
             <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                 <div class="container">
                     <t t-raw="o_portal_fullwidth_alert"/>
@@ -120,7 +120,7 @@
                     <t t-if="my_details">
                         <div class="row justify-content-between mt-4">
                             <div t-attf-class="col-12 col-md col-lg-6">
-                                <t t-raw="0"/>
+                                <t t-out="0"/>
                             </div>
                             <div id="o_my_sidebar" class="pt-3 pt-lg-0 col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
                                 <div class="o_my_contact" t-if="sales_user">
@@ -140,7 +140,7 @@
                         </div>
                     </t>
                     <t t-else="">
-                        <t t-raw="0"/>
+                        <t t-out="0"/>
                     </t>
                 </div>
             </div>
@@ -187,7 +187,7 @@
     <template id="portal_table" name="My Portal Table">
         <div t-attf-class="table-responsive border rounded border-top-0 #{classes if classes else ''}">
             <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
-                <t t-raw="0"/>
+                <t t-out="0"/>
             </table>
         </div>
         <div t-if="pager" class="o_portal_pager text-center">
@@ -294,7 +294,7 @@
                             </div>
                         </div>
                     </div>
-                    <t t-raw="0"/>
+                    <t t-out="0"/>
                 </div>
                 <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ml-lg-4 col-xl-4 col-md-5">
                     <div class="input-group input-group-sm w-100">

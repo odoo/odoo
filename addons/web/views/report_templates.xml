@@ -27,7 +27,7 @@
             <body t-att-class="'container' if not full_width else 'container-fluid'">
                 <div id="wrapwrap">
                     <main>
-                        <t t-raw="0"/>
+                        <t t-out="0"/>
                     </main>
                 </div>
             </body>
@@ -91,7 +91,7 @@
             </head>
             <body t-att-class="'container' if not full_width else 'container-fluid'">
                 <div id="wrapwrap">
-                        <t t-raw="0"/>
+                        <t t-out="0"/>
                 </div>
             </body>
         </html>
@@ -100,14 +100,14 @@
     <template id="html_container">
         <t t-set="body_classname" t-value="'container'"/>
         <t t-call="web.report_layout">
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </t>
     </template>
 
     <template id="html_preview_container">
         <t t-set="body_classname" t-value="'container'"/>
         <t t-call="web.report_preview_layout">
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </t>
     </template>
 
@@ -323,7 +323,7 @@
 
         <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
@@ -373,7 +373,7 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
@@ -422,7 +422,7 @@
 
         <div t-attf-class="article o_report_layout_clean o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
@@ -473,7 +473,7 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
@@ -520,8 +520,8 @@
             </t>
         </t>
 
-        <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-raw="0"/></t>
-        <t t-else="else" t-call="web.external_layout_standard"><t t-raw="0"/></t>
+        <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-out="0"/></t>
+        <t t-else="else" t-call="web.external_layout_standard"><t t-out="0"/></t>
 
     </template>
 
@@ -559,7 +559,7 @@
             </div>
         </div>
         <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-          <t t-raw="0"/>
+          <t t-out="0"/>
         </div>
     </template>
 
@@ -567,7 +567,7 @@
         <t t-call="web.html_container">
             <t t-if="not o" t-set="o" t-value="doc"/>
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-                <t t-raw="0"/>
+                <t t-out="0"/>
             </div>
         </t>
     </template>

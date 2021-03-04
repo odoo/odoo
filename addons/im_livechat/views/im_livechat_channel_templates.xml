@@ -106,7 +106,7 @@
                         var button = new im_livechat.LivechatButton(
                             rootWidget,
                             "<t t-esc="info['server_url']"/>",
-                            <t t-raw="json.dumps(info.get('options', {}))"/>
+                            <t t-out="json.dumps(info.get('options', {}))"/>
                         );
                         button.appendTo(document.body);
                         window.livechat_button = button;

@@ -19,7 +19,7 @@
     <xpath expr='//t[@t-call="website.layout"]' position="inside">
         <t t-set="pageName" t-value="'event'"/>
         <t t-set="head">
-            <t t-raw="head"/>
+            <t t-out="head"/>
             <t t-call="website_event_track.pwa_manifest"/>
         </t>
     </xpath>
@@ -29,7 +29,7 @@
     <xpath expr='//t[@t-call="website.layout"]' position="inside">
         <t t-set="pageName" t-value="'event'"/>
         <t t-set="head">
-            <t t-raw="head"/>
+            <t t-out="head"/>
             <t t-call="website_event_track.pwa_manifest"/>
         </t>
     </xpath>
