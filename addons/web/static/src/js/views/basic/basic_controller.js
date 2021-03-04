@@ -91,6 +91,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         if (this._boundOnBeforeUnload) {
             window.removeEventListener("beforeunload", this._boundOnBeforeUnload);
         }
+        this.renderer.resetLocalState();
     },
 
     //--------------------------------------------------------------------------
