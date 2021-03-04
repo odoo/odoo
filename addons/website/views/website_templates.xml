@@ -214,7 +214,7 @@
 <!-- Navbar Nav -->
 <template id="navbar_nav" name="Navbar Nav">
     <ul id="top_menu" t-attf-class="nav navbar-nav o_menu_loading #{_nav_class}">
-        <t t-raw="0"/>
+        <t t-out="0"/>
     </ul>
 </template>
 
@@ -1336,7 +1336,7 @@
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">
-            <div class="oe_website_login_container" t-raw="0"/>
+            <div class="oe_website_login_container" t-out="0"/>
         </t>
     </xpath>
 </template>
@@ -1932,7 +1932,7 @@
          t-attf-class="o_record_cover_container d-flex flex-column h-100 o_colored_level o_cc #{_cp.get('background_color_class')} #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
         <div t-attf-class="o_record_cover_component o_record_cover_image #{snippet_autofocus and 'o_we_snippet_autofocus'}" t-attf-style="background-image: #{_bg};"/>
         <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter oe_black" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
     </div>
 </template>
 
@@ -1944,7 +1944,7 @@
             <button class="btn btn-success js_publish_btn">Published</button>
             <button type="button" t-attf-class="btn btn-default dropdown-toggle dropdown-toggle-split" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown"/>
             <div class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
-                <t t-raw="0"/>
+                <t t-out="0"/>
                 <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}&amp;menu_id=#{menu or object.env['ir.model.data'].xmlid_to_res_id('website.menu_website_configuration')}"
                     title='Edit in backend' class="dropdown-item" t-if="publish_edit">Edit</a>
             </div>

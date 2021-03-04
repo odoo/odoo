@@ -90,7 +90,7 @@
                                     <li t-elif="tags" class="breadcrumb-item">All Tags</li>
                                 </ol>
                             </nav>
-                            <t t-raw="0"/>
+                            <t t-out="0"/>
                         </div>
                         <aside t-if="uid" class="d-none d-lg-flex justify-content-end col-auto">
                             <t t-call="website_forum.user_sidebar"/>
@@ -1021,7 +1021,7 @@
             t-att-data-karma="forum.karma_downvote"
             t-att-data-can-downvote="can_downvote"
             aria-label="Negative vote" title="Negative vote"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
     </div>
 </template>
 

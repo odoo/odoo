@@ -82,7 +82,7 @@ class TestQWebTField(TransactionCase):
                 <t t-name="base.dummy">
                     <root>
                         <script type="application/javascript">
-                            var s = <t t-raw="json.dumps({'key': malicious})"/>;
+                            var s = <t t-esc="json.dumps({'key': malicious})"/>;
                         </script>
                     </root>
                 </t>

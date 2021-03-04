@@ -2,7 +2,6 @@
 from __future__ import print_function
 import ast
 import copy
-import json
 import logging
 from collections import OrderedDict
 from time import time
