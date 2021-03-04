@@ -146,7 +146,7 @@ class IrMailServer(models.Model):
             except smtplib.SMTPResponseException as e:
                 raise UserError(_("Server replied with following exception:\n %s", ustr(e.smtp_error)))
             except smtplib.SMTPException as e:
-                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e.smtp_error)))
+                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e)))
             except SSLError as e:
                 raise UserError(_("An SSL exception occurred. Check connection security type.\n %s", ustr(e)))
             except Exception as e:
