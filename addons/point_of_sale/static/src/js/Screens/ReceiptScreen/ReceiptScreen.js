@@ -63,6 +63,9 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
             get nextScreen() {
                 return { name: 'ProductScreen' };
             }
+            whenClosing() {
+                this.orderDone();
+            }
             /**
              * This function is called outside the rendering call stack. This way,
              * we don't block the displaying of ReceiptScreen when it is mounted; additionally,
@@ -72,7 +75,7 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 if (this._shouldAutoPrint()) {
                     await this.printReceipt();
                     if (this.currentOrder._printed && this._shouldCloseImmediately()) {
-                        this.orderDone();
+                        this.whenClosing();
                     }
                 }
             }
