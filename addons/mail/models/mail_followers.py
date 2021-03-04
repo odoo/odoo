@@ -205,19 +205,20 @@ GROUP BY fol.id%s%s""" % (
     # Private tools methods to generate new subscription
     # --------------------------------------------------
 
-    def _insert_followers(self, res_model, res_ids, partner_ids, partner_subtypes,
+    def _insert_followers(self, res_model, res_ids,
+                          partner_ids, subtypes=None,
                           customer_ids=None, check_existing=True, existing_policy='skip'):
         """ Main internal method allowing to create or update followers for documents, given a
         res_model and the document res_ids. This method does not handle access rights. This is the
         role of the caller to ensure there is no security breach.
 
-        :param partner_subtypes: see ``_add_followers``. If not given, default ones are computed.
+        :param subtypes: see ``_add_followers``. If not given, default ones are computed.
         :param customer_ids: see ``_add_default_followers``
         :param check_existing: see ``_add_followers``;
         :param existing_policy: see ``_add_followers``;
         """
         sudo_self = self.sudo().with_context(default_partner_id=False)
-        if not partner_subtypes:  # no subtypes -> default computation, no force, skip existing
+        if not subtypes:  # no subtypes -> default computation, no force, skip existing
             new, upd = self._add_default_followers(
                 res_model, res_ids, partner_ids,
                 customer_ids=customer_ids,
@@ -226,7 +227,7 @@ GROUP BY fol.id%s%s""" % (
         else:
             new, upd = self._add_followers(
                 res_model, res_ids,
-                partner_ids, partner_subtypes,
+                partner_ids, subtypes,
                 check_existing=check_existing,
                 existing_policy=existing_policy)
         if new:
@@ -263,7 +264,7 @@ GROUP BY fol.id%s%s""" % (
 
         return self._add_followers(res_model, res_ids, partner_ids, p_stypes, check_existing=check_existing, existing_policy=existing_policy)
 
-    def _add_followers(self, res_model, res_ids, partner_ids, partner_subtypes,
+    def _add_followers(self, res_model, res_ids, partner_ids, subtypes,
                        check_existing=False, existing_policy='skip'):
         """ Internal method that generates values to insert or update followers. Callers have to
         handle the result, for example by making a valid ORM command, inserting or updating directly
@@ -274,7 +275,7 @@ GROUP BY fol.id%s%s""" % (
          * second one is a dict which keys are follower ids. Value is a dict of values valid for
            updating the related follower record;
 
-        :param partner_subtypes: optional subtypes for new partner followers. This
+        :param subtypes: optional subtypes for new partner followers. This
           is a dict whose keys are partner IDs and value subtype IDs for that
           partner.
         :param channel_subtypes: optional subtypes for new channel followers. This
@@ -312,12 +313,12 @@ GROUP BY fol.id%s%s""" % (
                     new.setdefault(res_id, list()).append({
                         'res_model': res_model,
                         'partner_id': partner_id,
-                        'subtype_ids': [Command.set(partner_subtypes[partner_id])],
+                        'subtype_ids': [Command.set(subtypes[partner_id])],
                     })
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[2]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
-                    new_sids = set(partner_subtypes[partner_id]) - set(sids)
-                    old_sids = set(sids) - set(partner_subtypes[partner_id])
+                    new_sids = set(subtypes[partner_id]) - set(sids)
+                    old_sids = set(sids) - set(subtypes[partner_id])
                     update_cmd = []
                     if fol_id and new_sids:
                         update_cmd += [Command.link(sid) for sid in new_sids]
