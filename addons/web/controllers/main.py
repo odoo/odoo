@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import babel.messages.pofile
 import base64
 import copy
 import datetime
 import functools
-import glob
 import hashlib
 import io
 import itertools
-import jinja2
 import json
 import logging
 import operator
@@ -18,17 +15,19 @@ import os
 import re
 import sys
 import tempfile
+import unicodedata
+from collections import OrderedDict, defaultdict
 
+import babel.messages.pofile
+import jinja2
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
-from collections import OrderedDict, defaultdict, Counter
-from werkzeug.urls import url_encode, url_decode, iri_to_uri
 from lxml import etree
-import unicodedata
-
+from markupsafe import Markup
+from werkzeug.urls import url_encode, url_decode, iri_to_uri
 
 import odoo
 import odoo.modules.registry
@@ -1063,7 +1062,7 @@ class Database(http.Controller):
             monodb = db_monodb()
             if monodb:
                 d['databases'] = [monodb]
-        return env.get_template("database_manager.html").render(d)
+        return Markup(env.get_template("database_manager.html").render(d))
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
