@@ -153,7 +153,7 @@
                     <field name="timesheet_invoice_id" invisible="1"/>
                     <field name="so_line"
                         attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
-                        context="{'with_remaining_hours': True}" options="{'no_create': True, 'no_open': True}"
+                        context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
                         domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', parent.project_sale_order_id)]"
                         optional="hide"/>
                 </xpath>
@@ -192,7 +192,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
-                    <attribute name="context">{'with_remaining_hours': True}</attribute>
+                    <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>
                     <attribute name="attrs">
                         {'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}
                     </attribute>
