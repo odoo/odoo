@@ -22,7 +22,7 @@ class WebSuite(odoo.tests.HttpCase):
     def _check_only_call(self, suite):
         # As we currently aren't in a request context, we can't render `web.layout`.
         # redefinied it as a minimal proxy template.
-        self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><head><meta charset="utf-8"/><t t-raw="head"/></head></t>'})
+        self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><head><meta charset="utf-8"/><t t-esc="head"/></head></t>'})
 
         for asset in self.env['ir.qweb']._get_asset_content(suite, options={})[0]:
             filename = asset['filename']
