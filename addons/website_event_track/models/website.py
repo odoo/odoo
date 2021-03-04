@@ -34,6 +34,9 @@ class Website(models.Model):
             App Icon should be in PNG format and size of at least 512x512.
         """
         for website in self:
+            if not website.favicon:
+                website.app_icon = False
+                continue
             image = ImageProcess(website.favicon)
             w, h = image.image.size
             square_size = w if w > h else h
