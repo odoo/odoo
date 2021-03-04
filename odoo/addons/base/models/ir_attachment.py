@@ -526,6 +526,90 @@ class IrAttachment(models.Model):
     def action_get(self):
         return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
 
+<<<<<<< HEAD
+=======
+    def _make_pdf(self, output, name_ext):
+        """
+        :param output: PdfFileWriter object.
+        :param name_ext: the additional name of the new attachment (page count).
+        :return: the id of the attachment.
+        """
+        self.ensure_one()
+        try:
+            stream = io.BytesIO()
+            output.write(stream)
+            return self.copy({
+                'name': self.name+'-'+name_ext,
+                'datas_fname': os.path.splitext(self.datas_fname or self.name)[0]+'-'+name_ext+".pdf",
+                'datas': base64.b64encode(stream.getvalue()),
+            })
+        except Exception:
+            raise Exception
+
+    def _split_pdf_groups(self, pdf_groups=None, remainder=False):
+        """
+        calls _make_pdf to create the a new attachment for each page section.
+        :param pdf_groups: a list of lists representing the pages to split:  pages = [[1,1], [4,5], [7,7]]
+        :returns the list of the ID's of the new PDF attachments.
+
+        """
+        self.ensure_one()
+        with io.BytesIO(base64.b64decode(self.datas)) as stream:
+            try:
+                input_pdf = PdfFileReader(stream)
+                max_page = input_pdf.getNumPages()
+            except Exception:
+                raise exceptions.ValidationError(_("ERROR: Invalid PDF file!"))
+            remainder_set = set(range(0, max_page))
+            new_pdf_ids = []
+            if not pdf_groups:
+                pdf_groups = []
+            for pages in pdf_groups:
+                pages[1] = min(max_page, pages[1])
+                pages[0] = min(max_page, pages[0])
+                if pages[0] == pages[1]:
+                    name_ext = "%s" % (pages[0],)
+                else:
+                    name_ext = "%s-%s" % (pages[0], pages[1])
+                output = PdfFileWriter()
+                for i in range(pages[0]-1, pages[1]):
+                    output.addPage(input_pdf.getPage(i))
+                new_pdf_id = self._make_pdf(output, name_ext)
+                new_pdf_ids.append(new_pdf_id)
+                remainder_set = remainder_set.difference(set(range(pages[0] - 1, pages[1])))
+            if remainder:
+                for i in remainder_set:
+                    output_page = PdfFileWriter()
+                    name_ext = "%s" % (i + 1,)
+                    output_page.addPage(input_pdf.getPage(i))
+                    new_pdf_id = self._make_pdf(output_page, name_ext)
+                    new_pdf_ids.append(new_pdf_id)
+                self.write({'active': False})
+            elif not len(remainder_set):
+                self.write({'active': False})
+            return new_pdf_ids
+
+    def split_pdf(self, indices=None, remainder=False):
+        """
+        called by the Document Viewer's Split PDF button.
+        evaluates the input string and turns it into a list of lists to be processed by _split_pdf_groups
+
+        :param indices: the formatted string of pdf split (e.g. 1,5-10, 8-22, 29-34) o_page_number_input
+        :param remainder: bool, if true splits the non specified pages, one by one. form checkbox o_remainder_input
+        :returns the list of the ID's of the newly created pdf attachments.
+        """
+        self.ensure_one()
+        if 'pdf' not in self.mimetype:
+            raise exceptions.ValidationError(_("ERROR: the file must be a PDF"))
+        if indices:
+            try:
+                pages = [[int(x) for x in x.split('-')] for x in indices.split(',')]
+            except ValueError:
+                raise exceptions.ValidationError(_("ERROR: Invalid list of pages to split. Example: 1,5-9,10"))
+            return self._split_pdf_groups(pdf_groups=[[min(x), max(x)] for x in pages], remainder=remainder)
+        return self._split_pdf_groups(remainder=remainder)
+
+>>>>>>> d4d20d30ee3... temp
     @api.model
     def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
