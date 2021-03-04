@@ -203,3 +203,25 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
                     'product_qty': production.product_uom_qty + quantity_change
                 }).change_prod_qty()
 
+    def _keep_subcontract_moves(self):
+        for move in self:
+            if move.is_subcontract:
+                production = move.move_orig_ids.production_id
+                moves = self.env.context.get('moves_todo')
+                if not moves or production not in moves.move_orig_ids.production_id:
+                    pickings = production.picking_ids
+                    stock_move_prod_cancel = self.env['stock.move'].search([('production_id','=', production.id)])
+                    stock_move_origin = self.env['stock.move'].search([('move_orig_ids', 'in', stock_move_prod_cancel.ids)])
+                    if stock_move_origin:
+                        stock_move_origin[0].move_orig_ids = [(3, p.id) for p in stock_move_prod_cancel]
+                        order_prod_origin = stock_move_origin[0].move_orig_ids.production_id
+                        production.write({'picking_ids': [(3, p.id) for p in pickings]})
+                        pickings.write({'group_id':order_prod_origin.procurement_group_id.id})
+                        pickings.mapped('move_ids_without_package').write({'group_id':order_prod_origin.procurement_group_id.id})
+                        for move_raw in order_prod_origin.move_raw_ids:
+                            for picking in pickings:
+                                for line in picking.move_ids_without_package:
+                                    if line.product_id == move_raw.product_id:
+                                        line.move_dest_ids = [(5, 0, 0)]
+                                        line.move_dest_ids = [(4, move_raw.id)]
+

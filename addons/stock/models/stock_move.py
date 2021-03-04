@@ -709,6 +709,10 @@ class StockMove(models.Model):
         """Cleanup hook used when merging moves"""
         self.write({'propagate_cancel': False})
 
+    def _keep_subcontract_moves(self):
+        pass
+
+
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
         find in their existing moves a candidate into which we can merge the move.
@@ -746,6 +750,7 @@ class StockMove(models.Model):
             moves_to_unlink |= moves[1:]
 
         if moves_to_unlink:
+            moves_to_unlink._keep_subcontract_moves()
             # We are using propagate to False in order to not cancel destination moves merged in moves[0]
             moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
