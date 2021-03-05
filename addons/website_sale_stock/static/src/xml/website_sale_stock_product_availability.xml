@@ -16,7 +16,7 @@
                     <div t-if="qty_available gt available_threshold" t-attf-class="availability_message_#{product_template} text-success mt16">In stock</div>
                 </t>
             </t>
-            <t t-if="qty_available lte 0">
+            <t t-name="website_sale_stock.product_availability.no_available" t-if="qty_available lte 0">
                 <div t-if="cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
                     You already added <t t-if="!qty_available">all</t> <t t-esc="cart_qty" /> <t t-esc="uom_name" /> in your cart.
                 </div>

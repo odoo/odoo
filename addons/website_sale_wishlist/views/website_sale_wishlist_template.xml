@@ -197,11 +197,11 @@
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
-                                        <td>
+                                        <td class="align-middle">
                                             <t t-set="combination_info" t-value="wish.product_id._get_combination_info_variant()"/>
                                             <t t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
                                         </td>
-                                        <td class='text-center td-wish-btn'>
+                                        <td class='text-center align-middle td-wish-btn'>
                                             <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
                                             <button type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >Add <span class='d-none d-md-inline'>to Cart</span></button>
                                         </td>

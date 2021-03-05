@@ -13,8 +13,6 @@
         'website_sale_stock',
         'website_sale_wishlist'
     ],
+    'qweb': ['static/src/xml/add_to_wishlist_advice.xml'],
 
-    'data': [
-        'views/website_sale_stock_wishlist_template.xml',
-    ],
 }

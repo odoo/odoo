@@ -50,7 +50,7 @@ class ProductTemplate(models.Model):
         else:
             product_template = self.sudo()
             combination_info.update({
-                'virtual_available': 0,
+                'qty_available': 0,
                 'product_type': product_template.type,
                 'inventory_availability': product_template.inventory_availability,
                 'available_threshold': product_template.available_threshold,
@@ -58,5 +58,4 @@ class ProductTemplate(models.Model):
                 'product_template': product_template.id,
                 'cart_qty': 0
             })
-        print(combination_info)
         return combination_info
