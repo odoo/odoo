@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
+import re
 
 from glob import glob
 from logging import getLogger
@@ -39,6 +40,9 @@ def fs2web(path):
     """Converts a file system path to a web path"""
     return '/'.join(path.split(os.path.sep))
 
+def get_sep(path):
+    return '\\' if re.search('\\\\', path) else '/'
+
 def get_paths(path_def, extensions, manifest_cache=None):
     """
     Returns a list of file paths matching a given glob (path_def) as well as
@@ -56,12 +60,14 @@ def get_paths(path_def, extensions, manifest_cache=None):
         manifest_cache = http.addons_manifest
 
     paths = []
-    addon = [part for part in path_def.split('/') if part][0]
+    sep = get_sep(path_def)
+    path_parts = [part for part in path_def.split(sep) if part]
+    addon = path_parts[0]
     addon_manifest = manifest_cache.get(addon)
 
     if addon_manifest:
         addons_path = os.path.join(addon_manifest['addons_path'], '')[:-1]
-        full_path = os.path.normpath(os.path.join(addons_path, path_def))
+        full_path = os.path.normpath(os.path.join(addons_path, *path_parts))
         # When fetching template file paths, we need the full paths since xml
         # files are read from the file system. But web assets (scripts and
         # stylesheets) must be loaded using relative paths, hence the trimming
@@ -78,7 +84,7 @@ def get_paths(path_def, extensions, manifest_cache=None):
     if not len(paths):
         # No file matching the path; the path_def is considered as a URL (or a
         # miswritten glob, resulting in a console error).
-        paths = [path_def if not addon or path_def.startswith('/') else '/' + path_def]
+        paths = [path_def if not addon or path_def.startswith(sep) else sep + path_def]
 
     # Paths are filtered on the extensions (if any).
     return addon, [path
@@ -313,6 +319,11 @@ class IrAsset(models.Model):
         for path, _, bundle in asset_paths:
             if path == target_path:
                 return bundle
+
+    def find_by_url(self, url):
+        sep = get_sep(url)
+        search_url = url[1:] if url.startswith(sep) else url
+        return self.search([('glob', 'like', search_url)])
 
     def _get_asset_domain(self, bundle):
         """Meant to be overridden to add additional parts to the search domain"""
