@@ -390,9 +390,9 @@ class Module(models.Model):
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
 
-            # check dependencies and update module itself
-            self.check_external_dependencies(module.name, newstate)
             if module.state in states_to_update:
+                # check dependencies and update module itself
+                self.check_external_dependencies(module.name, newstate)
                 module.write({'state': newstate, 'demo': module_demo})
 
         return demo
