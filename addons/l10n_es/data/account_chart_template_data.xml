@@ -47,6 +47,7 @@
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
             <field name="transfer_account_code_prefix">572999</field>
+            <field name="parent_id" ref="account_chart_template_common"/>
         </record>
 
         <record id="account_chart_template_pymes_canary" model="account.chart.template">
@@ -78,5 +79,6 @@
             <field name="transfer_account_code_prefix">572999</field>
             <field name="parent_id" ref="account_chart_template_common_canary"/>
         </record>
+
     </data>
 </odoo>
