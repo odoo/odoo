@@ -2,8 +2,10 @@
 
 import { uiService } from "../../src/services/ui_service";
 import { Registry } from "../../src/core/registry";
-import { getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
+import { getFixture, makeTestEnv, nextTick } from "../helpers/index";
 import { BlockUI } from "../../src/webclient/block_ui/block_ui";
+
+const { mount } = owl;
 
 let target;
 let serviceRegistry;

@@ -6,9 +6,9 @@ import { DebugManager } from "../../src/debug/debug_manager";
 import { debugService } from "../../src/debug/debug_service";
 import { modelService } from "../../src/services/model_service";
 import { useDebugManager } from "../../src/debug/debug_manager";
-import { click, getFixture, makeTestEnv, mount } from "../helpers/index";
+import { click, getFixture, makeTestEnv } from "../helpers/index";
 
-const { Component, hooks, tags } = owl;
+const { Component, hooks, mount, tags } = owl;
 const { useSubEnv } = hooks;
 
 let target;

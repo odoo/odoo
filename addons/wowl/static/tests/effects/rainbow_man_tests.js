@@ -2,13 +2,13 @@
 
 import { RainbowMan } from "../../src/effects/rainbow_man";
 import { makeTestEnv } from "../helpers/utility";
-import { click, getFixture, makeFakeUserService, mount, nextTick } from "../helpers/index";
+import { click, getFixture, makeFakeUserService, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
 import { effectService } from "../../src/effects/effect_service";
 import { EffectContainer } from "../../src/effects/effect_container";
 import { notificationService } from "../../src/notifications/notification_service";
 
-const { Component, tags } = owl;
+const { Component, mount, tags } = owl;
 
 class Parent extends Component {
   setup() {
@@ -41,7 +41,7 @@ QUnit.module("RainbowMan", (hooks) => {
     const _delays = RainbowMan.rainbowFadeouts;
     RainbowMan.rainbowFadeouts = { nextTick: 0 };
     const env = await makeTestEnv({ serviceRegistry });
-    const parent = await mount(Parent, { target, env });
+    const parent = await mount(Parent, { env, target });
     env.services.effect.create(rainbowManDefault.message, rainbowManDefault);
     await nextTick();
     assert.containsOnce(target, ".o_reward");
@@ -63,7 +63,7 @@ QUnit.module("RainbowMan", (hooks) => {
     assert.expect(3);
     rainbowManDefault.fadeout = "no";
     const env = await makeTestEnv({ serviceRegistry });
-    const parent = await mount(Parent, { target, env });
+    const parent = await mount(Parent, { env, target });
     env.services.effect.create(rainbowManDefault.message, rainbowManDefault);
     await nextTick();
     assert.containsOnce(parent.el, ".o_reward");

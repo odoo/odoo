@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { useBus } from "../../src/core/hooks";
-import { makeTestEnv, mount, nextTick } from "../helpers";
+import { getFixture, makeTestEnv, nextTick } from "../helpers";
 
-const { Component, tags } = owl;
+const { Component, mount, tags } = owl;
 
 QUnit.module("hooks");
 
@@ -21,7 +21,8 @@ QUnit.test("useBus", async function (assert) {
   MyComponent.template = tags.xml`<div/>`;
 
   const env = await makeTestEnv();
-  const comp = await mount(MyComponent, { env });
+  const target = getFixture();
+  const comp = await mount(MyComponent, { env, target });
   env.bus.trigger("test-event");
   await nextTick();
 

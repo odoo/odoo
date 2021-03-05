@@ -4,11 +4,11 @@ import { WebClient } from "../../src/webclient/webclient";
 import { Registry } from "../../src/core/registry";
 import { actionService } from "../../src/actions/action_service";
 import { notificationService } from "../../src/notifications/notification_service";
-import { mount, makeTestEnv } from "../helpers/utility";
+import { getFixture, makeTestEnv } from "../helpers/index";
 import { menuService } from "../../src/services/menu_service";
 import { fakeTitleService } from "../helpers/mocks";
 
-const { Component, tags } = owl;
+const { Component, tags, mount } = owl;
 const { xml } = tags;
 
 let baseConfig;
@@ -20,7 +20,7 @@ QUnit.module("Web Client", {
       .add(actionService.name, actionService)
       .add(notificationService.name, notificationService)
       .add(fakeTitleService.name, fakeTitleService)
-      .add("menus", menuService);
+      .add(menuService.name, menuService);
     baseConfig = { serviceRegistry, activateMockServer: true };
   },
 });
@@ -28,7 +28,8 @@ QUnit.module("Web Client", {
 QUnit.test("can be rendered", async (assert) => {
   assert.expect(1);
   const env = await makeTestEnv(baseConfig);
-  const webClient = await mount(WebClient, { env });
+  const target = getFixture();
+  const webClient = await mount(WebClient, { env, target });
   assert.containsOnce(webClient.el, "header > nav.o_main_navbar");
   webClient.destroy();
 });
@@ -40,7 +41,8 @@ QUnit.test("can render a main component", async (assert) => {
   const mainComponentRegistry = new Registry();
   mainComponentRegistry.add("mycomponent", MyComponent);
   const env = await makeTestEnv({ ...baseConfig, mainComponentRegistry });
-  const webClient = await mount(WebClient, { env });
+  const target = getFixture();
+  const webClient = await mount(WebClient, { env, target });
   assert.containsOnce(webClient.el, ".chocolate");
   webClient.destroy();
 });

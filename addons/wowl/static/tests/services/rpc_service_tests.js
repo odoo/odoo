@@ -4,16 +4,9 @@ import { useService } from "../../src/core/hooks";
 import { Registry } from "../../src/core/registry";
 import { notificationService } from "../../src/notifications/notification_service";
 import { rpcService } from "../../src/services/rpc_service";
-import {
-  getFixture,
-  makeDeferred,
-  makeMockXHR,
-  makeTestEnv,
-  mount,
-  nextTick,
-} from "../helpers/index";
+import { getFixture, makeDeferred, makeMockXHR, makeTestEnv, nextTick } from "../helpers/index";
 
-const { Component, tags } = owl;
+const { Component, mount, tags } = owl;
 const { xml } = tags;
 
 let serviceRegistry;
@@ -105,7 +98,8 @@ QUnit.test("rpc coming from destroyed components are left pending", async (asser
     serviceRegistry,
     browser: { XMLHttpRequest: MockXHR },
   });
-  const component = await mount(MyComponent, { env, target: getFixture() });
+  const target = getFixture();
+  const component = await mount(MyComponent, { env, target });
   let isResolved = false;
   let isFailed = false;
   component
@@ -137,7 +131,8 @@ QUnit.test("rpc initiated from destroyed components throw exception", async (ass
   const env = await makeTestEnv({
     serviceRegistry,
   });
-  const component = await mount(MyComponent, { env, target: getFixture() });
+  const target = getFixture();
+  const component = await mount(MyComponent, { env, target });
   component.destroy();
   try {
     await component.rpc("/my/route");

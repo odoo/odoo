@@ -1,12 +1,5 @@
 /** @odoo-module **/
-import {
-  click,
-  getFixture,
-  makeFakeRPCService,
-  makeTestEnv,
-  mount,
-  nextTick,
-} from "../helpers/index";
+import { click, getFixture, makeFakeRPCService, makeTestEnv, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
 import { DialogContainer, dialogService } from "../../src/services/dialog_service";
 import { Dialog } from "../../src/components/dialog/dialog";
@@ -14,7 +7,7 @@ import { notificationService } from "../../src/notifications/notification_servic
 import { errorService } from "../../src/errors/error_service";
 import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
 
-const { Component, tags } = owl;
+const { Component, mount, tags } = owl;
 
 let env;
 let serviceRegistry;
@@ -57,7 +50,7 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
   class CustomDialog extends Component {}
   CustomDialog.template = tags.xml`<Dialog title="'Welcome'"/>`;
   CustomDialog.components = { Dialog };
-  pseudoWebClient = await mount(PseudoWebClient, { target, env });
+  pseudoWebClient = await mount(PseudoWebClient, { env, target });
   assert.containsOnce(target, ".o_dialog_manager");
   assert.containsNone(target, ".o_dialog_manager portal");
   assert.containsNone(target, ".o_dialog_container .o_dialog");
@@ -82,7 +75,7 @@ QUnit.test("rendering with two dialogs", async (assert) => {
   class CustomDialog extends Component {}
   CustomDialog.template = tags.xml`<Dialog title="props.title"/>`;
   CustomDialog.components = { Dialog };
-  pseudoWebClient = await mount(PseudoWebClient, { target, env });
+  pseudoWebClient = await mount(PseudoWebClient, { env, target });
   assert.containsOnce(target, ".o_dialog_manager");
   assert.containsNone(target, ".o_dialog_manager portal");
   assert.containsNone(target, ".o_dialog_container .o_dialog");
@@ -134,7 +127,7 @@ QUnit.test("dialog component crashes", async (assert) => {
   componentRegistry.add("DialogContainer", DialogContainer);
   env = await makeTestEnv({ serviceRegistry, mainComponentRegistry: componentRegistry });
 
-  pseudoWebClient = await mount(PseudoWebClient, { target, env });
+  pseudoWebClient = await mount(PseudoWebClient, { env, target });
 
   const qunitUnhandledReject = QUnit.onUnhandledRejection;
   QUnit.onUnhandledRejection = (reason) => {

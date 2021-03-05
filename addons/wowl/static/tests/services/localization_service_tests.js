@@ -1,11 +1,13 @@
 /** @odoo-module **/
 
 import { useService } from "../../src/core/hooks";
-import { getFixture, makeTestEnv, mount } from "../helpers/index";
+import { getFixture, makeTestEnv } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
 import { makeFakeLocalizationService } from "../helpers/mocks";
 
+const { mount } = owl;
 const { DateTime, Settings } = luxon;
+
 const terms = { Hello: "Bonjour" };
 
 class TestComponent extends owl.Component {}

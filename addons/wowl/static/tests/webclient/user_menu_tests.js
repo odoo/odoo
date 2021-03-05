@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
 import { UserMenu } from "../../src/webclient/user_menu/user_menu";
-import { click, getFixture, makeFakeUserService, makeTestEnv, mount } from "../helpers/index";
+import { click, getFixture, makeFakeUserService, makeTestEnv } from "../helpers";
 import { Registry } from "./../../src/core/registry";
+
+const { mount } = owl;
 
 let target;
 let env;

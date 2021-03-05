@@ -2,13 +2,13 @@
 
 import { NavBar } from "../../src/webclient/navbar/navbar";
 import { click } from "../helpers/index";
-import { makeTestEnv, mount, nextTick } from "../helpers/utility";
+import { getFixture, makeTestEnv, nextTick } from "../helpers/utility";
 import { Registry } from "./../../src/core/registry";
 import { actionService } from "../../src/actions/action_service";
 import { menuService } from "./../../src/services/menu_service";
 import { notificationService } from "../../src/notifications/notification_service";
 
-const { Component, tags } = owl;
+const { Component, mount, tags } = owl;
 const { xml } = tags;
 
 class MySystrayItem extends Component {}
@@ -42,7 +42,8 @@ QUnit.module("Navbar", {
 
 QUnit.test("can be rendered", async (assert) => {
   const env = await makeTestEnv(baseConfig);
-  const navbar = await mount(NavBar, { env });
+  const target = getFixture();
+  const navbar = await mount(NavBar, { env, target });
   assert.containsOnce(
     navbar.el,
     ".o_navbar_apps_menu button.o_dropdown_toggler",
@@ -53,7 +54,8 @@ QUnit.test("can be rendered", async (assert) => {
 
 QUnit.test("dropdown menu can be toggled", async (assert) => {
   const env = await makeTestEnv(baseConfig);
-  const navbar = await mount(NavBar, { env });
+  const target = getFixture();
+  const navbar = await mount(NavBar, { env, target });
   const dropdown = navbar.el.querySelector(".o_navbar_apps_menu");
   await click(dropdown, "button.o_dropdown_toggler");
   assert.containsOnce(dropdown, "ul.o_dropdown_menu");
@@ -64,7 +66,8 @@ QUnit.test("dropdown menu can be toggled", async (assert) => {
 
 QUnit.test("navbar can display current active app", async (assert) => {
   const env = await makeTestEnv(baseConfig);
-  const navbar = await mount(NavBar, { env });
+  const target = getFixture();
+  const navbar = await mount(NavBar, { env, target });
   const dropdown = navbar.el.querySelector(".o_navbar_apps_menu");
   // Open apps menu
   await click(dropdown, "button.o_dropdown_toggler");
@@ -87,7 +90,8 @@ QUnit.test("navbar can display current active app", async (assert) => {
 
 QUnit.test("navbar can display systray items", async (assert) => {
   const env = await makeTestEnv(baseConfig);
-  const navbar = await mount(NavBar, { env });
+  const target = getFixture();
+  const navbar = await mount(NavBar, { env, target });
   assert.containsOnce(navbar.el, "li.my-item");
   navbar.destroy();
 });
@@ -125,7 +129,8 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
   systrayRegistry.add(item3.name, item3);
   systrayRegistry.add(item4.name, item4);
   const env = await makeTestEnv({ ...baseConfig, systrayRegistry });
-  const navbar = await mount(NavBar, { env });
+  const target = getFixture();
+  const navbar = await mount(NavBar, { env, target });
   const menuSystray = navbar.el.getElementsByClassName("o_menu_systray")[0];
   assert.containsN(menuSystray, "li", 4, "four systray items should be displayed");
   assert.strictEqual(menuSystray.innerText, "my item 3\nmy item 2\nmy item 4\nmy item 1");
@@ -155,7 +160,8 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
   const env = await makeTestEnv(baseConfig);
   // Set menu and mount
   env.services.menu.setCurrentMenu(1);
-  const navbar = await mount(MyNavbar, { env });
+  const target = getFixture();
+  const navbar = await mount(MyNavbar, { env, target });
   assert.containsN(
     navbar.el,
     ".o_menu_sections > *:not(.o_menu_sections_more):not(.d-none)",
@@ -237,7 +243,8 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
 
   // Set App1 menu and mount
   env.services.menu.setCurrentMenu(1);
-  const navbar = await mount(NavBar, { env });
+  const target = getFixture();
+  const navbar = await mount(NavBar, { env, target });
 
   // Force minimal width and dispatch window resize event
   navbar.el.style.width = "0%";

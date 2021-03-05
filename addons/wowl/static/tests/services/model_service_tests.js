@@ -3,9 +3,9 @@
 import { Registry } from "../../src/core/registry";
 import { useService } from "../../src/core/hooks";
 import { modelService } from "../../src/services/model_service";
-import { getFixture, makeFakeUserService, makeTestEnv, mount } from "../helpers/index";
+import { getFixture, makeFakeUserService, makeTestEnv } from "../helpers/index";
 
-const { Component, tags } = owl;
+const { Component, mount, tags } = owl;
 const { xml } = tags;
 
 let serviceRegistry;
@@ -246,6 +246,7 @@ QUnit.test("useModel take proper reference to rpc service", async (assert) => {
     },
   });
   const env = await makeTestEnv({ serviceRegistry });
-  component = await mount(MyComponent, { env, target: getFixture() });
+  const target = getFixture();
+  component = await mount(MyComponent, { env, target });
   await component.model("test").read([1], ["asfd"]);
 });

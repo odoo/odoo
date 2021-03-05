@@ -1,8 +1,9 @@
 /** @odoo-module **/
 import { Dialog } from "../../src/components/dialog/dialog";
-import { click, getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
+import { click, getFixture, makeTestEnv, nextTick } from "../helpers/index";
 
-const { useState } = owl.hooks;
+const { hooks, mount } = owl;
+const { useState } = hooks;
 
 let parent;
 let target;

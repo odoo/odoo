@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
+import { click, getFixture, makeTestEnv, nextTick } from "../helpers/index";
 import {
   ErrorDialog,
   Error504Dialog,
@@ -12,7 +12,7 @@ import {
 import { Registry } from "../../src/core/registry";
 import OdooError from "../../src/errors/odoo_error";
 
-const { Component, tags } = owl;
+const { Component, mount, tags } = owl;
 let target;
 let env;
 let parent;

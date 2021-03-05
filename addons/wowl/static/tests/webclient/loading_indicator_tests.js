@@ -3,7 +3,9 @@
 import { LoadingIndicator } from "../../src/webclient/loading_indicator/loading_indicator";
 import { uiService } from "../../src/services/ui_service";
 import { Registry } from "../../src/core/registry";
-import { getFixture, makeTestEnv, mount, nextTick } from "../helpers/index";
+import { getFixture, makeTestEnv, nextTick } from "../helpers/index";
+
+const { mount } = owl;
 
 let target;
 let serviceRegistry;
