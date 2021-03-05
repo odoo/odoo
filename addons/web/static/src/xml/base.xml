@@ -1273,8 +1273,11 @@
 </t>
 
 <t t-name="web.Many2OneAvatar">
-    <img t-att-src="url" t-att-alt="value" class="o_m2o_avatar"/>
-    <span t-esc="value"/>
+    <div class="o_m2o_avatar">
+        <img t-if="widget.value" t-att-src="url" t-att-alt="value"/>
+        <span t-elif="widget.mode === 'edit'" class="o_m2o_avatar_empty"></span>
+        <span t-if="widget.mode === 'readonly'" t-esc="value"/>
+    </div>
 </t>
 
 <t t-name="FieldReference" t-extend="FieldMany2One">
