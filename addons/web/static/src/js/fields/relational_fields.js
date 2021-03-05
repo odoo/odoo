@@ -2826,6 +2826,9 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['many2many'],
     isQuickEditable: true,
+    // set an arbitrary high limit to ensure that all data returned by the server
+    // are processed by the BasicModel (otherwise it would be 40)
+    limit: 100000,
     init: function () {
         this._super.apply(this, arguments);
         this.m2mValues = this.record.specialData[this.name];
