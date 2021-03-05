@@ -133,6 +133,33 @@ $i: 1;
         }
     }
 
+    we-button.o_we_mobile {
+        > div {
+            // FIXME maybe there is some refactoring to do so that all SVG icons
+            // can be properly aligned with extra CSS rules...
+            display: flex;
+            align-items: center;
+
+            svg {
+                width: 15px;
+                fill: $o-we-color-danger;
+                margin-bottom: 0;
+                margin-left: -3px;
+
+                &:hover {
+                    fill: darken($o-we-color-danger, 7.5%);
+                }
+            }
+        }
+        &.active > div > svg {
+            fill: $o-we-sidebar-content-field-color;
+
+            &:hover {
+                fill: $o-we-sidebar-content-field-pressed-color;
+            }
+        }
+    }
+
     //----------------------------------------------------------------------
     // 'Options' Tab Specific Components
     //----------------------------------------------------------------------
