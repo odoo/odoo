@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests import Form
+from odoo.addons.stock_account.tests.test_account_move import TestAccountMove
+from odoo.tests import Form, tagged
 
 
 class TestMrpAccount(TestMrpCommon):
@@ -188,3 +189,137 @@ class TestMrpAccount(TestMrpCommon):
 
         # 1 table head at 20 + 4 table leg at 15 + 4 bolt at 10 + 10 screw at 10 + 1*20 (extra cost)
         self.assertEqual(move_value, 141, 'Thing should have the correct price')
+
+
+@tagged("post_install", "-at_install")
+class TestMrpAccountMove(TestAccountMove):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product_B = cls.env["product.product"].create(
+            {
+                "name": "Product B",
+                "type": "product",
+                "default_code": "prda",
+                "categ_id": cls.env.ref("product.product_category_all").id,
+                "taxes_id": [(5, 0, 0)],
+                "supplier_taxes_id": [(5, 0, 0)],
+                "lst_price": 100.0,
+                "standard_price": 10.0,
+                "property_account_income_id": cls.company_data["default_account_revenue"].id,
+                "property_account_expense_id": cls.company_data["default_account_expense"].id,
+            }
+        )
+        cls.bom = cls.env['mrp.bom'].create({
+            'product_id': cls.product_A.id,
+            'product_tmpl_id': cls.product_A.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.product_B.id, 'product_qty': 1}),
+            ]})
+
+    def test_unbuild_account_00(self):
+        """Test when after unbuild, the journal entries are the reversal of the
+        journal entries created when produce the product.
+        """
+        # build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_A
+        production_form.bom_id = self.bom
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        # finished product move
+        productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('credit', '=', 0)])
+        productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('debit', '=', 0)])
+        self.assertEqual(productA_debit_line.account_id, self.stock_valuation_account)
+        self.assertEqual(productA_credit_line.account_id, self.stock_input_account)
+        # component move
+        productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('credit', '=', 0)])
+        productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('debit', '=', 0)])
+        self.assertEqual(productB_debit_line.account_id, self.stock_output_account)
+        self.assertEqual(productB_credit_line.account_id, self.stock_valuation_account)
+
+        # unbuild
+        res_dict = production.button_unbuild()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.action_validate()
+
+        # finished product move
+        productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])
+        productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('debit', '=', 0)])
+        self.assertEqual(productA_debit_line.account_id, self.stock_input_account)
+        self.assertEqual(productA_credit_line.account_id, self.stock_valuation_account)
+        # component move
+        productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('credit', '=', 0)])
+        productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('debit', '=', 0)])
+        self.assertEqual(productB_debit_line.account_id, self.stock_valuation_account)
+        self.assertEqual(productB_credit_line.account_id, self.stock_output_account)
+
+    def test_unbuild_account_01(self):
+        """Test when production location has its valuation accounts. After unbuild,
+        the journal entries are the reversal of the journal entries created when
+        produce the product.
+        """
+        # set accounts for production location
+        production_location = self.product_A.property_stock_production
+        wip_incoming_account = self.env['account.account'].create({
+            'name': 'wip incoming',
+            'code': '000001',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        wip_outgoing_account = self.env['account.account'].create({
+            'name': 'wip outgoing',
+            'code': '000002',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        production_location.write({
+            'valuation_in_account_id': wip_incoming_account.id,
+            'valuation_out_account_id': wip_outgoing_account.id,
+        })
+
+        # build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_A
+        production_form.bom_id = self.bom
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        # finished product move
+        productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('credit', '=', 0)])
+        productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product A'), ('debit', '=', 0)])
+        self.assertEqual(productA_debit_line.account_id, self.stock_valuation_account)
+        self.assertEqual(productA_credit_line.account_id, wip_outgoing_account)
+        # component move
+        productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('credit', '=', 0)])
+        productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'MO%Product B'), ('debit', '=', 0)])
+        self.assertEqual(productB_debit_line.account_id, wip_incoming_account)
+        self.assertEqual(productB_credit_line.account_id, self.stock_valuation_account)
+
+        # unbuild
+        res_dict = production.button_unbuild()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.action_validate()
+
+        productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])
+        productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('debit', '=', 0)])
+        self.assertEqual(productA_debit_line.account_id, wip_outgoing_account)
+        self.assertEqual(productA_credit_line.account_id, self.stock_valuation_account)
+        # component move
+        productB_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('credit', '=', 0)])
+        productB_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product B'), ('debit', '=', 0)])
+        self.assertEqual(productB_debit_line.account_id, self.stock_valuation_account)
+        self.assertEqual(productB_credit_line.account_id, wip_incoming_account)
