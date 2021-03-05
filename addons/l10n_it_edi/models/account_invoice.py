@@ -228,11 +228,7 @@ class AccountMove(models.Model):
         for line in self.line_ids:
             for tax in line.tax_ids:
                 if tax.amount == 0.0:
-                    tax_amount = tax.compute_all(line.price_unit, currency=line.currency_id, quantity=line.quantity, product=line.product_id, partner=line.partner_id)
-                    if tax in tax_map:
-                        tax_map[tax] += tax_amount['total_excluded']
-                    else:
-                        tax_map[tax] = tax_amount['total_excluded']
+                    tax_map[tax] = tax_map.get(tax, 0.0) + line.price_subtotal
 
         # Create file content.
         template_values = {
@@ -260,7 +256,7 @@ class AccountMove(models.Model):
         # OVERRIDE
         posted = super()._post(soft=soft)
 
-        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send'):
+        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send' and m.move_type == 'out_invoice'):
             move.send_pec_mail()
 
         return posted
