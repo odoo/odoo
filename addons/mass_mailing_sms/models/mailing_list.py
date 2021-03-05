@@ -51,3 +51,15 @@ class MailingList(models.Model):
         return super(MailingList, self)._get_contact_statistics_joins() + '''
             LEFT JOIN phone_blacklist bl_sms ON c.phone_sanitized = bl_sms.number and bl_sms.active
         '''
+
+    def _mailing_get_opt_out_list_sms(self, mailing):
+        """ Check subscription on all involved mailing lists. If user is opt_out
+        on one list but not on another, one opted in and the other one opted out,
+        send mailing anyway.
+
+        :return list: opt-outed record IDs
+        """
+        subscriptions = self.subscription_ids if self else mailing.contact_list_ids.subscription_ids
+        opt_out_contacts = subscriptions.filtered(lambda sub: sub.opt_out).mapped('contact_id')
+        opt_in_contacts = subscriptions.filtered(lambda sub: not sub.opt_out).mapped('contact_id')
+        return list(set(c.id for c in opt_out_contacts if c not in opt_in_contacts))

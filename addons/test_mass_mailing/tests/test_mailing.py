@@ -303,10 +303,13 @@ class TestMassMailing(TestMassMailCommon):
         # contact_1 is optout but same email is not optout from the same list
         # contact 3 is optout in list 1 but not in list 2
         # contact 5 is optout
-        Sub = self.env['mailing.contact.subscription']
-        Sub.search([('contact_id', '=', mailing_contact_1.id), ('list_id', '=', mailing_list_1.id)]).write({'opt_out': True})
-        Sub.search([('contact_id', '=', mailing_contact_3.id), ('list_id', '=', mailing_list_1.id)]).write({'opt_out': True})
-        Sub.search([('contact_id', '=', mailing_contact_5.id), ('list_id', '=', mailing_list_1.id)]).write({'opt_out': True})
+        subs = self.env['mailing.contact.subscription'].search([
+            '|', '|',
+            '&', ('contact_id', '=', mailing_contact_1.id), ('list_id', '=', mailing_list_1.id),
+            '&', ('contact_id', '=', mailing_contact_3.id), ('list_id', '=', mailing_list_1.id),
+            '&', ('contact_id', '=', mailing_contact_5.id), ('list_id', '=', mailing_list_1.id)
+        ])
+        subs.write({'opt_out': True})
 
         # create mass mailing record
         mailing = self.env['mailing.mailing'].create({
