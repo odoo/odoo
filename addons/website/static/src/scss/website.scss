@@ -74,8 +74,8 @@ $-seen-urls: ();
     @include print-variable('input-border-radius-sm', $input-border-radius-sm);
     @include print-variable('input-border-radius-lg', $input-border-radius-lg);
 
-    @include print-variable('number-of-color-palettes', length($o-color-palettes) - 1); // -1 since the last one is the user customized one
-    @include print-variable('color-palettes-number', $o-original-color-palette-number);
+    @include print-variable('color-palettes-name', $o-original-color-palette-name);
+
     @include print-variable('has-customized-colors', $o-has-customized-colors);
 
     // 6) Get list of colorpalette custom colors

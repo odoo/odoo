@@ -17,13 +17,13 @@ $-combination-additions: ();
 }
 
 // Colors
-$o-color-palette: o-safe-nth($o-color-palettes, $o-color-palette-number, ()) !default;
+$o-color-palette: map-get($o-color-palettes, $o-color-palette-name) or ();
 // Original color palette can contain override of the default combinations (so keep 'null' values for this merge)
 $o-color-palette: map-merge($-combination-additions, $o-color-palette);
 $o-color-palette: map-merge($o-base-color-palette, o-map-omit($o-color-palette));
 
 // Theme colors
-$o-theme-color-palette: o-safe-nth($o-theme-color-palettes, $o-theme-color-palette-number, ()) !default;
+$o-theme-color-palette: map-get($o-theme-color-palettes, $o-theme-color-palette-name) or () !default;
 @if not $o-support-13-0-color-system {
     $o-theme-color-palette: map-remove($o-theme-color-palette, 'alpha', 'beta', 'gamma', 'delta', 'epsilon');
 }
@@ -46,7 +46,7 @@ $o-theme-color-palette: map-merge($o-base-theme-color-palette, o-map-omit($o-the
 // Gray colors
 // Extend grays with transparent ones (for some reason, BS4 create black-50 and
 // white-50 but does not allow overridding that with variables).
-$o-gray-color-palette: o-safe-nth($o-gray-color-palettes, $o-gray-color-palette-number, ()) !default;
+$o-gray-color-palette: map-get($o-gray-color-palettes, $o-gray-color-palette-name) or () !default;
 $o-gray-color-palette: map-merge($o-transparent-grays, o-map-omit($o-gray-color-palette));
 $o-gray-color-palette: map-merge($o-base-gray-color-palette, o-map-omit($o-gray-color-palette));
 
