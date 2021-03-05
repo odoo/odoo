@@ -1004,20 +1004,19 @@
         </we-button-group>
     </div>
 
-    <!-- Min height of section -->
-    <div data-option-name="minHeight" data-selector="section" data-exclude="[data-snippet] .row > div *">
-        <we-button-group string="Height">
-            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
-            <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
-            <we-button data-select-class="o_full_screen_height" title="Full screen">100%</we-button>
-        </we-button-group>
-    </div>
-
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] .row > div *">
-        <we-checkbox string="Scroll down button"
+        <!-- Min height of section -->
+        <we-button-group string="Height" data-show-scroll-button="">
+            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
+            <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>
+            <we-button data-select-class="o_full_screen_height" title="Full screen" data-name="full_height_opt" data-show-scroll-button="true">100%</we-button>
+        </we-button-group>
+
+        <we-checkbox string="⌙ Scroll down button"
                      data-toggle-button="true"
                      data-no-preview="true"
+                     data-dependencies="full_height_opt"
                      data-name="scroll_button_opt"/>
         <!-- &emsp; -->
         <we-row string=" ⌙ Colors">
