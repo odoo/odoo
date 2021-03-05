@@ -92,7 +92,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing.reply_to_mode, 'new')
         self.assertEqual(mailing.reply_to, self.email_reply_to)
         # default for mailing list: depends upon contact_list_ids
-        self.assertEqual(literal_eval(mailing.mailing_domain), [])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [('list_ids', 'in', [])])
         mailing.write({
             'contact_list_ids': [(4, self.mailing_list_1.id), (4, self.mailing_list_2.id)]
         })
