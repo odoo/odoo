@@ -735,6 +735,8 @@ class MailActivityMixin(models.AbstractModel):
         help="Type of the exception activity on record.")
     activity_exception_icon = fields.Char('Icon', help="Icon to indicate an exception activity.",
         compute='_compute_activity_exception_type')
+    my_activity_date_deadline = fields.Date(compute='_compute_activity_date_deadline',
+        search='_search_my_activity_date_deadline')
 
     @api.depends('activity_ids.activity_type_id.decoration_type', 'activity_ids.activity_type_id.icon')
     def _compute_activity_exception_type(self):
@@ -837,7 +839,7 @@ class MailActivityMixin(models.AbstractModel):
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
         for record in self:
-            record.activity_date_deadline = record.activity_ids[:1].date_deadline
+            record.activity_date_deadline = record.my_activity_date_deadline = record.activity_ids[:1].date_deadline
 
     def _search_activity_date_deadline(self, operator, operand):
         if operator == '=' and not operand:
@@ -855,6 +857,10 @@ class MailActivityMixin(models.AbstractModel):
     @api.model
     def _search_activity_summary(self, operator, operand):
         return [('activity_ids.summary', operator, operand)]
+
+    def _search_my_activity_date_deadline(self, operator, operand):
+        activity_ids = self.env['mail.activity']._search([('date_deadline', operator, operand), ('user_id', '=', self.env.user.id)])
+        return [('activity_ids', 'in', activity_ids)]
 
     def write(self, vals):
         # Delete activities of archived record.
