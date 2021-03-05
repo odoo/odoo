@@ -3,4 +3,5 @@
 
 from . import phone_blacklist
 from . import mail_thread_phone
+from . import res_identity
 from . import res_partner

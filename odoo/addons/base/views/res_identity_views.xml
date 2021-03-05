@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record id="res_identity_view_search" model="ir.ui.view">
+        <field name="name">res.identity.view.search</field>
+        <field name="model">res.identity</field>
+        <field name="arch" type="xml">
+            <search string="Identities">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_identity_view_tree" model="ir.ui.view">
+        <field name="name">res.identity.view.tree</field>
+        <field name="model">res.identity</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Identities">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="res_identity_view_form" model="ir.ui.view">
+        <field name="name">res.identity.view.form</field>
+        <field name="model">res.identity</field>
+        <field name="arch" type="xml">
+            <form string="Indentity">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="res_identity_action" model="ir.actions.act_window">
+        <field name="name">Identities</field>
+        <field name="res_model">res.identity</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Identities"
+        id="res_identity_menu"
+        parent="base.menu_users"
+        action="res_identity_action"
+        sequence="4"
+        groups="base.group_no_one"/>
+
+</data></odoo>
