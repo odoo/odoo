@@ -467,14 +467,14 @@ $o-base-color-palette: (
     'o-color-5': transparent,
 ) !default;
 $o-color-palettes: (
-    (
+    'base-1': (
         'o-color-1': scale-color($o-enterprise-primary-color, $saturation: -50%, $lightness: 20%),
         'o-color-2': scale-color($o-enterprise-color, $saturation: -50%),
         'o-color-3': #F6F6F6,
         'o-color-4': #FFFFFF,
         'o-color-5': #383E45,
     ),
-    (
+    'base-2': (
         'o-color-1': #337ab7,
         'o-color-2': #e9ecef,
         'o-color-3': #F8F9FA,
@@ -486,7 +486,7 @@ $o-color-palettes: (
         'copyright': 5,
     ),
 ) !default;
-$o-color-palette-number: 1 !default;
+$o-color-palette-name: 'base-1' !default;
 
 // Theme colors
 $o-base-theme-color-palette: () !default;
@@ -494,7 +494,7 @@ $o-theme-color-palettes: (
     // alpha -> epsilon are old color names kept for compatibility.
     // They should not be used in the code base anymore and ideally they will
     // not generate any classes for >= 13.4 databases.
-    (
+    'base-1': (
         'alpha': $o-enterprise-primary-color,
         'beta': $o-enterprise-color,
         'gamma': #5C5B80,
@@ -502,7 +502,7 @@ $o-theme-color-palettes: (
         'epsilon': #E46F78,
     ),
 ) !default;
-$o-theme-color-palette-number: 1 !default;
+$o-theme-color-palette-name: 'base-1' !default;
 
 // Greyscale transparent colours
 
@@ -535,7 +535,7 @@ $o-transparent-grays: (
     'white-85': rgba(white, 0.85),
 ) !default;
 $o-gray-color-palettes: () !default;
-$o-gray-color-palette-number: 1 !default;
+$o-gray-color-palette-name: '' !default;
 
 // Color combinations
 $o-base-color-combination: (

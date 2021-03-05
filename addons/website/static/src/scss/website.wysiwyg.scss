@@ -11,12 +11,19 @@
     // without duplicating the css.
     @include print-variable('o-we-toolbar-height', $o-navbar-height);
 
-    // Need info about the color of each color palette
-    @for $index from 1 through length($o-color-palettes) - 1 { // Not the user one
-        @each $name, $color in nth($o-color-palettes, $index) {
-            @include print-variable('o-palette-#{$index}-#{$name}', $color);
+    @include print-variable('priority-palette-prefix', $o-palette-priority-prefix);
+
+    // Need the colors and name of each color palette
+    $palette-names: ();
+    @each $palette-name, $palette in $o-color-palettes {
+        @if $palette-name != 'user-palette' {
+            @each $key, $value in $palette {
+                @include print-variable('o-palette-#{$palette-name}-#{$key}', $value);
+            }
+            $palette-names: append($palette-names, $palette-name);
         }
     }
+    @include print-variable('palette-names', $palette-names);
 
     // Need info about the base grays which are used to compute the final grays
     @each $name, $color in $o-base-gray-color-palette {
