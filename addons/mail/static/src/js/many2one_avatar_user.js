@@ -20,7 +20,7 @@ const { Component } = owl;
 
 const Many2OneAvatarUser = Many2OneAvatar.extend({
     events: Object.assign({}, Many2OneAvatar.prototype.events, {
-        'click .o_m2o_avatar': '_onAvatarClicked',
+        'click .o_m2o_avatar > img': '_onAvatarClicked',
     }),
     // This widget is only supported on many2ones pointing to 'res.users'
     supportedModels: ['res.users'],
@@ -29,9 +29,6 @@ const Many2OneAvatarUser = Many2OneAvatar.extend({
         this._super(...arguments);
         if (!this.supportedModels.includes(this.field.relation)) {
             throw new Error(`This widget is only supported on many2one fields pointing to ${JSON.stringify(this.supportedModels)}`);
-        }
-        if (this.mode === 'readonly') {
-            this.className += ' o_clickable_m2o_avatar';
         }
     },
 

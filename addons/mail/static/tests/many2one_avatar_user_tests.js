@@ -72,9 +72,9 @@ QUnit.module('mail', {}, function () {
         // sanity check: later on, we'll check that clicking on the avatar doesn't open the record
         await dom.click(list.$('.o_data_row:first span'));
 
-        await dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar'));
-        await dom.click(list.$('.o_data_cell:nth(1) .o_m2o_avatar'));
-        await dom.click(list.$('.o_data_cell:nth(2) .o_m2o_avatar'));
+        await dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar > img'));
+        await dom.click(list.$('.o_data_cell:nth(1) .o_m2o_avatar > img'));
+        await dom.click(list.$('.o_data_cell:nth(2) .o_m2o_avatar > img'));
 
 
         assert.verifySteps([
@@ -111,10 +111,10 @@ QUnit.module('mail', {}, function () {
 
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
         assert.containsN(kanban, '.o_m2o_avatar', 4);
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0)').data('src'), '/web/image/res.users/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1)').data('src'), '/web/image/res.users/7/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2)').data('src'), '/web/image/res.users/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3)').data('src'), '/web/image/res.users/23/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), '/web/image/res.users/11/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1) > img').data('src'), '/web/image/res.users/7/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2) > img').data('src'), '/web/image/res.users/11/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3) > img').data('src'), '/web/image/res.users/23/image_128');
 
         kanban.destroy();
     });
