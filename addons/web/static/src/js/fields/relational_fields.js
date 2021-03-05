@@ -1174,8 +1174,14 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         // re-evaluate available actions
         const oldCanCreate = this.canCreate;
         const oldCanDelete = this.canDelete;
+        const oldCanLink = this.canLink;
+        const oldCanUnlink = this.canUnlink;
         this._computeAvailableActions(record);
-        const actionsChanged = this.canCreate !== oldCanCreate || this.canDelete !== oldCanDelete;
+        const actionsChanged =
+            this.canCreate !== oldCanCreate ||
+            this.canDelete !== oldCanDelete ||
+            this.canLink !== oldCanLink ||
+            this.canUnlink !== oldCanUnlink;
 
         // If 'fieldChanged' is false, it means that the reset was triggered by
         // the 'resetOnAnyFieldChange' mechanism. If it is the case, if neither
@@ -1252,6 +1258,12 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         this.canDelete = 'delete' in this.nodeOptions ?
             new Domain(this.nodeOptions.delete, evalContext).compute(evalContext) :
             true;
+        this.canLink = 'link' in this.nodeOptions ?
+            new Domain(this.nodeOptions.link, evalContext).compute(evalContext) :
+            true;
+        this.canUnlink = 'unlink' in this.nodeOptions ?
+            new Domain(this.nodeOptions.unlink, evalContext).compute(evalContext) :
+            true;
     },
     /**
      * Evaluates the 'column_invisible' modifier for the parent record.
@@ -1301,8 +1313,8 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      */
     _hasCreateLine: function () {
         return !this.isReadonly && (
-            (this.activeActions.create && this.canCreate) ||
-            (this.isMany2Many)
+            (!this.isMany2Many && this.activeActions.create && this.canCreate) ||
+            (this.isMany2Many && this.canLink)
         );
     },
     /**
@@ -1311,8 +1323,8 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      */
     _hasTrashIcon: function () {
         return !this.isReadonly && (
-            (this.activeActions.delete && this.canDelete) ||
-            (this.isMany2Many)
+            (!this.isMany2Many && this.activeActions.delete && this.canDelete) ||
+            (this.isMany2Many && this.canUnlink)
         );
     },
     /**
@@ -2058,6 +2070,20 @@ var FieldMany2Many = FieldX2Many.extend({
                 }
             }
         }).open();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _getButtonsRenderingContext() {
+        const renderingContext = this._super(...arguments);
+        renderingContext.noCreate = !this.canLink;
+        return renderingContext;
     },
 
     //--------------------------------------------------------------------------
