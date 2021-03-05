@@ -595,7 +595,7 @@ class Message extends Component {
     _onClickSendAgain(ev) {
         ev.preventDefault();
         this.message.update({ hasSendError: false });
-        this.message.composer.processMessagesToBeSent();
+        this.threadView.thread.sender._processMessagesToBeSent();
     }
 
     /**

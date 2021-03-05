@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/thread_cache/thread_cache.js', function (req
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
+const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -155,7 +155,7 @@ function factory(dependencies) {
                     message.id > this.lastFetchedMessage.id
                 );
             }
-            messages = messages.concat(newerMessages, this.thread.pendingMessagesToBeSent);
+            messages = messages.concat(newerMessages, this.senderPendingMessagesToBeSent);
             return [['replace', messages]];
         }
 
@@ -492,7 +492,7 @@ function factory(dependencies) {
             dependencies: [
                 'fetchedMessages',
                 'threadMessages',
-                'threadPendingMessagesToBeSent',
+                'senderPendingMessagesToBeSent',
             ],
         }),
         /**
@@ -570,6 +570,12 @@ function factory(dependencies) {
             compute: '_computeOrderedMessages',
             dependencies: ['messages'],
         }),
+        sender: one2one('mail.sender', {
+            related: 'thread.sender'
+        }),
+        senderPendingMessagesToBeSent: one2many('mail.message', {
+            related: 'sender.pendingMessagesToBeSent',
+        }),
         stringifiedDomain: attr({
             default: '[]',
         }),
@@ -590,9 +596,6 @@ function factory(dependencies) {
         }),
         threadMessages: many2many('mail.message', {
             related: 'thread.messages',
-        }),
-        threadPendingMessagesToBeSent: one2many('mail.message', {
-            related: 'thread.pendingMessagesToBeSent',
         }),
         /**
          * Serves as compute dependency.

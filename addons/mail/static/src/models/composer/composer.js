@@ -1,16 +1,9 @@
 odoo.define('mail/static/src/models/composer/composer.js', function (require) {
 'use strict';
 
-const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
 const mailUtils = require('mail.utils');
-
-const {
-    addLink,
-    escapeAndCompactTextContent,
-    parseAndTransform,
-} = require('mail.utils');
 
 function factory(dependencies) {
 
@@ -272,99 +265,6 @@ function factory(dependencies) {
             await this.env.bus.trigger('do-action', { action, options });
         }
 
-        /**
-         * Function that process the message stored to be sent.
-         */
-        async processMessagesToBeSent() {
-            if (!this.isProcessingMessagesToBeSent) {
-                this.update({
-                    isSendingMessages: true,
-                });
-                const messages = this.thread.pendingMessagesToBeSent.filter((message) => !message.hasSendError);
-                const message = messages[0];
-                try {
-                    if (message) {
-                        const thread = this.thread;
-                        let postData = {
-                            attachment_ids: message.attachments.map(attachement => attachement.id),
-                            body: message.body,
-                            channel_ids: message.channel_ids,
-                            message_type: 'comment',
-                            partner_ids: message.partner_ids,
-                            subject: message.subject,
-                        };
-                        let messageId;
-                        if (thread.model === 'mail.channel') {
-                            const command = this._getCommandFromText(postData.body);
-                            Object.assign(postData, {
-                                subtype_xmlid: 'mail.mt_comment',
-                            });
-                            if (command) {
-                                messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
-                                    channelId: thread.id,
-                                    command: command.name,
-                                    postData,
-                                }));
-                            } else {
-                                messageId = await this.async(() =>
-                                    this.env.models['mail.thread'].performRpcMessagePost({
-                                        postData,
-                                        threadId: thread.id,
-                                        threadModel: thread.model,
-                                    })
-                                );
-                            }
-                        } else {
-                            Object.assign(postData, {
-                                subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                            });
-                            if (!this.isLog) {
-                                postData.context = {
-                                    mail_post_autofollow: true,
-                                };
-                            }
-                            messageId = await this.async(() =>
-                                this.env.models['mail.thread'].performRpcMessagePost({
-                                    postData,
-                                    threadId: thread.id,
-                                    threadModel: thread.model,
-                                })
-                            );
-                            const [messageData] = await this.async(() => this.env.services.rpc({
-                                model: 'mail.message',
-                                method: 'message_format',
-                                args: [[messageId]],
-                            }, { shadow: true }));
-                            this.env.models['mail.message'].insert(Object.assign(
-                                {},
-                                this.env.models['mail.message'].convertData(messageData),
-                                {
-                                    originThread: [['insert', {
-                                        id: thread.id,
-                                        model: thread.model,
-                                    }]],
-                                })
-                            );
-                            thread.loadNewMessages();
-                        }
-                        message.delete();
-                    }
-                    if (!messages.length) {
-                        this.thread.refreshFollowers();
-                        this.thread.fetchAndUpdateSuggestedRecipients();
-                    }
-                } catch (error) {
-                    message.update({ hasSendError: true });
-                } finally {
-                    this.update({
-                        isSendingMessages: false,
-                    });
-                    if (messages.length > 0) {
-                        this.processMessagesToBeSent();
-                    }
-                }
-            }
-        }
 
         /**
          * Post a message in provided composer's thread based on current composer fields values.
@@ -459,39 +359,6 @@ function factory(dependencies) {
             } else {
                 this.thread.registerCurrentPartnerIsTyping();
             }
-        }
-
-        /**
-         * Queue a message and start to process it.
-         */
-        insertMessageToBeSent() {
-            this.thread.update({
-                pendingMessagesToBeSent: [['insert', {
-                    attachments: [['link', this.attachments]],
-                    author: [['link', this.env.messaging.currentPartner]],
-                    body: this._convertMessageToHtml(),
-                    channel_ids: this.mentionedChannels.map(channel => channel.id),
-                    composer: [['link', this]],
-                    date: moment(),
-                    id: this.env.models['mail.message'].getNextTemporaryId(),
-                    isPendingSend: true,
-                    isTemporary: true,
-                    isTransient: true,
-                    is_discussion: true,
-                    message_type: 'comment',
-                    originThread: [['insert', {
-                        id: this.thread.id,
-                        model: this.thread.model,
-                    }]],
-                    partner_ids: this.recipients.map(partner => partner.id),
-                    subject: (this.subjectContent) ? this.subjectContent : undefined,
-                }]]
-            });
-            this._reset();
-            for (const threadView of this.thread.threadViews) {
-                threadView.addComponentHint('new-message-posted');
-            }
-            this.processMessagesToBeSent();
         }
 
         setFirstSuggestionActive() {
@@ -711,27 +578,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Convert text message to HTML.
-         *
-         * @private
-         * @returns {String}
-         */
-        _convertMessageToHtml() {
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
-            return body;
-        }
-
-        /**
          * Executes the given async function, only when the last function
          * executed by this method terminates. If there is already a pending
          * function it is replaced by the new one. This ensures the result of
@@ -756,76 +602,6 @@ function factory(dependencies) {
                     this._executeOrQueueFunction(this._nextMentionRpcFunction);
                 }
             }
-        }
-
-        /**
-         * @private
-         * @param {string} htmlString
-         * @returns {string}
-         */
-        _generateEmojisOnHtml(htmlString) {
-            for (const emoji of emojis) {
-                for (const source of emoji.sources) {
-                    const escapedSource = String(source).replace(
-                        /([.*+?=^!:${}()|[\]/\\])/g,
-                        '\\$1');
-                    const regexp = new RegExp(
-                        '(\\s|^)(' + escapedSource + ')(?=\\s|$)',
-                        'g');
-                    htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
-                }
-            }
-            return htmlString;
-        }
-
-        /**
-         *
-         * Generates the html link related to the mentioned partner
-         *
-         * @private
-         * @param {string} body
-         * @returns {string}
-         */
-        _generateMentionsLinks(body) {
-            // List of mention data to insert in the body.
-            // Useful to do the final replace after parsing to avoid using the
-            // same tag twice if two different mentions have the same name.
-            const mentions = [];
-            for (const partner of this.mentionedPartners) {
-                const placeholder = `@-mention-partner-${partner.id}`;
-                const text = `@${owl.utils.escape(partner.name)}`;
-                mentions.push({
-                    class: 'o_mail_redirect',
-                    id: partner.id,
-                    model: 'res.partner',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            for (const channel of this.mentionedChannels) {
-                const placeholder = `#-mention-channel-${channel.id}`;
-                const text = `#${owl.utils.escape(channel.name)}`;
-                mentions.push({
-                    class: 'o_channel_redirect',
-                    id: channel.id,
-                    model: 'mail.channel',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            const baseHREF = this.env.session.url('/web');
-            for (const mention of mentions) {
-                const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
-                const attClass = `class='${mention.class}'`;
-                const dataOeId = `data-oe-id='${mention.id}'`;
-                const dataOeModel = `data-oe-model='${mention.model}'`;
-                const target = `target='_blank'`;
-                const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
-                body = body.replace(mention.placeholder, link);
-            }
-            return body;
         }
 
         /**
@@ -1161,12 +937,6 @@ function factory(dependencies) {
          */
         isLog: attr({
             default: false,
-        }),
-        /**
-         * Determines whether messages are sent to the server
-         */
-        isSendingMessages: attr({
-            default: false
         }),
         /**
          * Determines whether a post_message request is currently pending.

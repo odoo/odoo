@@ -2113,13 +2113,11 @@ function factory(dependencies) {
          * server.
          */
         pendingSeenMessageId: attr(),
-        /**
-         * Determine the messages pending to be sent to the server by
-         * `processMessageToBeSent`. They will be sent one by one in queue order
-         * (lastest to newest).
-         */
-        pendingMessagesToBeSent: one2many('mail.message'),
         public: attr(),
+        sender: one2one('mail.sender', {
+            inverse: 'thread',
+            default: [['create']]
+        }),
         /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending
