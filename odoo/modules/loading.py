@@ -227,7 +227,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
             # Update translations for all installed languages
             overwrite = odoo.tools.config["overwrite_existing_translations"]
-            module.with_context(overwrite=overwrite)._update_translations()
+            module._update_translations(overwrite=overwrite)
 
         if package.name is not None:
             registry._init_modules.add(package.name)
