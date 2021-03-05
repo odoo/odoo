@@ -26,6 +26,7 @@ class MessagingMenu extends Component {
          * item is not considered as a click away from messaging menu in mobile.
          */
         this.id = _.uniqueId('o_messagingMenu_');
+        this._bodyOverflow = '';
         useShouldUpdateBasedOnProps();
         useStore(props => {
             return {
@@ -49,6 +50,7 @@ class MessagingMenu extends Component {
     _constructor() {}
 
     mounted() {
+        this._bodyOverflow = document.querySelector('body').style.overflow;
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
 
@@ -164,6 +166,8 @@ class MessagingMenu extends Component {
             return;
         }
         this.messagingMenu.toggleOpen();
+        const preventScroll = this.messagingMenu.isOpen && this.env.messaging.device.isMobile;
+        document.querySelector('body').style.overflow =  preventScroll ? 'hidden' : this._bodyOverflow;
     }
 
     /**
