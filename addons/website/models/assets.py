@@ -25,7 +25,7 @@ class Assets(models.AbstractModel):
                 word hook). If a key is already in the file's map, its value is
                 overridden.
         """
-        if 'color-palettes-number' in values:
+        if 'color-palettes-name' in values:
             self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_common')
             self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_common')
             # Do not reset all theme colors for compatibility (not removing alpha -> epsilon colors)
