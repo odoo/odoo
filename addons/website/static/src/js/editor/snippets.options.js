@@ -938,7 +938,7 @@ options.registry.OptionsTab = options.Class.extend({
         }
         for (const widget of widgets) {
             if (widget.getMethodsNames().includes('customizeWebsiteVariable')
-                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color-palettes-number') {
+                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color-palettes-name') {
                 const hasCustomizedColors = weUtils.getCSSVariableValue('has-customized-colors');
                 if (hasCustomizedColors && hasCustomizedColors !== 'false') {
                     return _t("Changing the color palette will reset all your color customizations, are you sure you want to proceed?");
@@ -1034,17 +1034,21 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-number"]');
+        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-name"]');
         const style = window.getComputedStyle(document.documentElement);
         const nbPalettes = parseInt(weUtils.getCSSVariableValue('number-of-color-palettes', style));
+        const themeName = weUtils.getCSSVariableValue('theme-name', style).replace(/'/g, "");
+        const nbThemePalettes = parseInt(weUtils.getCSSVariableValue(`o-count-${themeName}`, style));
+
         for (let i = 1; i <= nbPalettes; i++) {
             const btnEl = document.createElement('we-button');
             btnEl.classList.add('o_palette_color_preview_button');
-            btnEl.dataset.customizeWebsiteVariable = i;
+            const paletteName = i <= nbThemePalettes ? `${themeName}-${i}` : `generic-${i - nbThemePalettes}`;
+            btnEl.dataset.customizeWebsiteVariable = `'${paletteName}'`;
             for (let c = 1; c <= 5; c++) {
                 const colorPreviewEl = document.createElement('span');
                 colorPreviewEl.classList.add('o_palette_color_preview');
-                const color = weUtils.getCSSVariableValue(`o-palette-${i}-o-color-${c}`, style);
+                const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
                 colorPreviewEl.style.backgroundColor = color;
                 btnEl.appendChild(colorPreviewEl);
             }

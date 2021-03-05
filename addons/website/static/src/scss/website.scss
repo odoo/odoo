@@ -74,8 +74,25 @@ $-seen-urls: ();
     @include print-variable('input-border-radius-sm', $input-border-radius-sm);
     @include print-variable('input-border-radius-lg', $input-border-radius-lg);
 
-    @include print-variable('number-of-color-palettes', length($o-color-palettes) - 1); // -1 since the last one is the user customized one
-    @include print-variable('color-palettes-number', $o-original-color-palette-number);
+    @include print-variable('number-of-color-palettes', length($o-color-palettes-compatibility-indexes));
+    @include print-variable('color-palettes-name', $o-original-color-palette-name);
+    @include print-variable('theme-name', $o-theme-name);
+
+    // Need info about the color of each color palette
+    @each $palette-name, $palette in $o-color-palettes {
+        @each $key, $value in $palette {
+            @include print-variable('o-palette-#{$palette-name}-#{$key}', $value);
+        }
+    }
+
+    // Need theme names and info about their number of custom color palette
+    $theme-names: ();
+    @each $name, $count in $o-color-palettes-counts {
+        @include print-variable('o-count-#{$name}', $count);
+        $theme-names: append($theme-names, $name);
+    }
+    @include print-variable('theme-names', $theme-names);
+
     @include print-variable('has-customized-colors', $o-has-customized-colors);
 
     // 6) Get list of colorpalette custom colors

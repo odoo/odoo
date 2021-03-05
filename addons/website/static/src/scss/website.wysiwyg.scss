@@ -10,13 +10,6 @@
     // Override css variables to influence the default style of the editor
     // without duplicating the css.
     @include print-variable('o-we-toolbar-height', $o-navbar-height);
-
-    // Need info about the color of each color palette
-    @for $index from 1 through length($o-color-palettes) - 1 { // Not the user one
-        @each $name, $color in nth($o-color-palettes, $index) {
-            @include print-variable('o-palette-#{$index}-#{$name}', $color);
-        }
-    }
 }
 
 // EDITOR TOP BAR AND POPOVER
