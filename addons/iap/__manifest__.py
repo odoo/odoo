@@ -23,5 +23,5 @@ to support In-App purchases inside Odoo. """,
     'qweb': [
         'static/src/xml/iap_templates.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
 }
