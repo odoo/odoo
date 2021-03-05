@@ -11,7 +11,6 @@
     """,
     'author': "Odoo SA",
     'category': 'Hidden/Tools',
-    'version': '1.0',
     'depends': [
         'iap_mail',
     ],
