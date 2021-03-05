@@ -28,6 +28,8 @@ class Followers(models.Model):
         'Related Document Model Name', required=True, index=True)
     res_id = fields.Many2oneReference(
         'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
+    identity_id = fields.Many2one(
+        'mail.identity', string='Identity', index=True, ondelete='restrict')
     partner_id = fields.Many2one(
         'res.partner', string='Related Partner', index=True, ondelete='cascade', required=True, domain=[('type', '!=', 'private')])
     subtype_ids = fields.Many2many(
