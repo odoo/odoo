@@ -615,22 +615,14 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
-        custom = self.endpoint.routing.get('custom')
-        if custom == True:
-            response = {}
-            if error is not None:
-                response['error'] = error
-            if result is not None:
-                response = result
-        else:
-            response = {
-                'jsonrpc': '2.0',
-                'id': self.jsonrequest.get('id')
-                }
-            if error is not None:
-                response['error'] = error
-            if result is not None:
-                response['result'] = result
+        response = {
+            'jsonrpc': '2.0',
+            'id': self.jsonrequest.get('id')
+            }
+        if error is not None:
+            response['error'] = error
+        if result is not None:
+            response['result'] = result
 
         mime = 'application/json'
         body = json.dumps(response, default=date_utils.json_default)
