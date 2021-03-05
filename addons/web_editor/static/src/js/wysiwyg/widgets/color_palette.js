@@ -54,6 +54,25 @@ const ColorPaletteWidget = Widget.extend({
         this.withCombinations = this.options.withCombinations;
 
         this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
+
+        this.tabs = [{
+            id: 'theme-colors',
+            pickers: [
+                'theme',
+                'common',
+            ],
+        },
+        {
+            id: 'custom-colors',
+            pickers: [
+                'custom',
+                'transparent_grayscale',
+                'common_grays',
+            ],
+        }];
+
+        this.sections = {};
+        this.pickers = {};
     },
     /**
      * @override
@@ -68,10 +87,61 @@ const ColorPaletteWidget = Widget.extend({
     start: async function () {
         const res = this._super.apply(this, arguments);
 
-        const $colorSection = this.$('.o_colorpicker_sections[data-color-tab="theme-colors"]');
-        const $clpicker = $(colorpickerArch || `<colorpicker><div class="o_colorpicker_section" data-name="common"></div></colorpicker>`);
-        $clpicker.find('button').addClass('o_we_color_btn');
-        $clpicker.appendTo($colorSection);
+        const switchPaneButtons = this.el.querySelectorAll('.o_we_colorpicker_switch_pane_btn');
+
+        let colorpickerEl;
+        if (colorpickerArch) {
+            colorpickerEl = $(colorpickerArch)[0];
+        } else {
+            colorpickerEl = document.createElement("colorpicker");
+            const sectionEl = document.createElement('DIV');
+            sectionEl.classList.add('o_colorpicker_section');
+            sectionEl.dataset.name = 'common';
+            colorpickerEl.appendChild(sectionEl);
+        }
+        colorpickerEl.querySelectorAll('button').forEach(el => el.classList.add('o_we_color_btn'));
+
+        // Populate tabs based on the tabs configuration indicated in this.tabs
+        _.each(this.tabs, (tab, index) => {
+            // Append pickers to section
+            const sectionEl = this.el.querySelector(`.o_colorpicker_sections[data-color-tab="${tab.id}"]`);
+            let sectionIsEmpty = true;
+            _.each(tab.pickers, pickerId => {
+                let pickerEl;
+                switch (pickerId) {
+                    case 'common_grays':
+                        pickerEl = colorpickerEl.querySelector('[data-name="common"]').cloneNode(true);
+                        break;
+                    case 'custom':
+                        pickerEl = document.createElement('DIV');
+                        pickerEl.classList.add("o_colorpicker_section");
+                        pickerEl.dataset.name = 'custom';
+                        break;
+                    default:
+                        pickerEl = colorpickerEl.querySelector(`[data-name="${pickerId}"]`).cloneNode(true);
+                }
+                sectionEl.appendChild(pickerEl);
+
+                if (!this.options.excluded.includes(pickerId)) {
+                    sectionIsEmpty = false;
+                }
+
+                this.pickers[pickerId] = pickerEl;
+            });
+
+            // Hide section and associated button if empty
+            if (sectionIsEmpty) {
+                sectionEl.classList.add('d-none');
+                switchPaneButtons[index].classList.add('d-none');
+            }
+            this.sections[tab.id] = sectionEl;
+        });
+
+        // Remove the buttons display if there is only one
+        const visibleButtons = Array.from(switchPaneButtons).filter(button => !button.classList.contains('d-none'));
+        if (visibleButtons.length === 1) {
+            visibleButtons[0].classList.add('d-none');
+        }
 
         // Remove excluded palettes (note: only hide them to still be able
         // to remove their related colors on the DOM target)
@@ -88,12 +158,11 @@ const ColorPaletteWidget = Widget.extend({
 
         // Render common colors
         if (!this.options.excluded.includes('common')) {
-            const $commonColorSection = this.$('[data-name="common"]');
             customColors.forEach((colorRow, i) => {
                 if (i === 0) {
                     return; // Ignore the wysiwyg gray palette and use ours
                 }
-                const $div = $('<div/>', {class: 'clearfix'}).appendTo($commonColorSection);
+                const $div = $('<div/>', {class: 'clearfix'}).appendTo(this.pickers['common']);
                 colorRow.forEach(color => {
                     $div.append(this._createColorButton(color, ['o_common_color']));
                 });
@@ -144,7 +213,7 @@ const ColorPaletteWidget = Widget.extend({
             this.colorPicker = new ColorpickerWidget(this, {
                 defaultColor: defaultColor,
             });
-            await this.colorPicker.prependTo($colorSection);
+            await this.colorPicker.appendTo(this.sections['custom-colors']);
         }
 
         return res;
@@ -230,9 +299,8 @@ const ColorPaletteWidget = Widget.extend({
      */
     _addCustomColorButton: function (color, classes = []) {
         classes.push('o_custom_color');
-        const $themeSection = this.$('.o_colorpicker_section[data-name="theme"]');
         const $button = this._createColorButton(color, classes);
-        return $button.appendTo($themeSection);
+        return $button.appendTo(this.pickers['custom']);
     },
     /**
      * Return a color button.
