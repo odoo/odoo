@@ -1017,10 +1017,13 @@ const Many2OneAvatar = FieldMany2One.extend({
         if (this.mode === 'readonly') {
             this.template = null;
             this.tagName = 'div';
-            this.className = 'o_field_many2one_avatar';
             // disable the redirection to the related record on click, in readonly
             this.noOpen = true;
         }
+    },
+    start() {
+        this.el.classList.add('o_field_many2one_avatar');
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1028,15 +1031,26 @@ const Many2OneAvatar = FieldMany2One.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Adds avatar image to before many2one value.
+     *
      * @override
      */
-    _renderReadonly() {
-        this.$el.empty();
-        if (this.value) {
-            this.$el.html(qweb.render(this._template, {
-                url: `/web/image/${this.field.relation}/${this.value.res_id}/image_128`,
-                value: this.m2o_value,
-            }));
+    _render() {
+        const m2oAvatar = qweb.render(this._template, {
+            url: `/web/image/${this.field.relation}/${this.value.res_id}/image_128`,
+            value: this.m2o_value,
+            widget: this,
+        });
+        if (this.mode === 'edit') {
+            this._super(...arguments);
+            if (this.el.querySelector('.o_m2o_avatar')) {
+                this.el.querySelector('.o_m2o_avatar').remove();
+            }
+            dom.prepend(this.$('.o_field_many2one_selection'), m2oAvatar);
+        }
+        if (this.mode === 'readonly') {
+            this.$el.empty();
+            dom.append(this.$el, m2oAvatar);
         }
     },
 });

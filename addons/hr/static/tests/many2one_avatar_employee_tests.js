@@ -78,7 +78,7 @@ QUnit.module('hr', {}, function () {
 
         // click on first employee
         await afterNextRender(() =>
-            dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar'))
+            dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar > img'))
         );
         assert.verifySteps(
             ['read hr.employee.public 11'],
@@ -97,7 +97,7 @@ QUnit.module('hr', {}, function () {
 
         // click on second employee
         await afterNextRender(() =>
-            dom.click(list.$('.o_data_cell:nth(1) .o_m2o_avatar')
+            dom.click(list.$('.o_data_cell:nth(1) .o_m2o_avatar > img')
         ));
         assert.verifySteps(
             ['read hr.employee.public 7'],
@@ -117,7 +117,7 @@ QUnit.module('hr', {}, function () {
 
         // click on third employee (same as first)
         await afterNextRender(() =>
-            dom.click(list.$('.o_data_cell:nth(2) .o_m2o_avatar'))
+            dom.click(list.$('.o_data_cell:nth(2) .o_m2o_avatar > img'))
         );
         assert.verifySteps(
             [],
@@ -155,10 +155,10 @@ QUnit.module('hr', {}, function () {
 
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
         assert.containsN(kanban, '.o_m2o_avatar', 4);
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0)').data('src'), '/web/image/hr.employee.public/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1)').data('src'), '/web/image/hr.employee.public/7/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2)').data('src'), '/web/image/hr.employee.public/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3)').data('src'), '/web/image/hr.employee.public/23/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), '/web/image/hr.employee.public/11/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1) > img').data('src'), '/web/image/hr.employee.public/7/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2) > img').data('src'), '/web/image/hr.employee.public/11/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3) > img').data('src'), '/web/image/hr.employee.public/23/image_128');
 
         kanban.destroy();
     });
@@ -191,7 +191,7 @@ QUnit.module('hr', {}, function () {
 
         assert.strictEqual(form.$('.o_field_widget[name=employee_id]').text().trim(), 'Mario');
 
-        await dom.click(form.$('.o_m2o_avatar'));
+        await dom.click(form.$('.o_m2o_avatar > img'));
 
         assert.verifySteps([
             'read foo 1',
