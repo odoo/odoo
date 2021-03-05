@@ -378,6 +378,10 @@ class Module(models.Model):
         demo = False
 
         for module in self:
+            if module.state not in states_to_update:
+                demo = demo or module.demo
+                continue
+
             # determine dependency modules to update/others
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
