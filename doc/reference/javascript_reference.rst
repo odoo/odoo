@@ -2417,6 +2417,8 @@ many2many (FieldMany2Many)
 
   - create_text: allow the customization of the text displayed when adding a
     new record
+  - link: domain determining whether or not records can be added to the relation (default: True).
+  - unlink: domain determining whether or not records can be removed from the relation (default: True).
 
 many2many_binary (FieldMany2ManyBinaryMultiFiles)
   This widget helps the user to upload or delete one or more files at the same
