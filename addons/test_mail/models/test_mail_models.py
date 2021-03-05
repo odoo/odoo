@@ -13,6 +13,7 @@ class MailTestSimple(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
+    message_bounce = fields.Integer(default=0)
 
 
 class MailTestGateway(models.Model):
