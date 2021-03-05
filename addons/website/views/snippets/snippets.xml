@@ -485,9 +485,11 @@
     </div>
 
     <!-- Mobile display options -->
-    <div data-js="MobileVisibility" data-selector="section .row > div"
+    <div data-js="MobileVisibility" data-selector="section, section .row > div"
          data-exclude=".s_col_no_resize.row > div">
-        <we-checkbox string="Shown On Mobile" data-show-on-mobile="true" data-no-preview="true"/>
+        <we-button class="o_we_link o_we_mobile" data-show-on-mobile="true" data-no-preview="true"
+                   data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
+                   data-active-img="/website/static/src/img/snippets_options/mobile_visible.svg"/>
     </div>
 
     <div data-js="sizing_y"

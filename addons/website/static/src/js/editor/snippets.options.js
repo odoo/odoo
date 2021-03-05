@@ -1971,6 +1971,20 @@ options.registry.topMenuColor = options.Class.extend({
  * Manage the visibility of snippets on mobile.
  */
 options.registry.MobileVisibility = options.Class.extend({
+    isTopOption: true,
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUI() {
+        await this._super(...arguments);
+        const $button = this.$el.find('we-button');
+        $button.attr('title', $button.hasClass('active') ? _t("Visible on mobile") : _t("Hidden on mobile"));
+    },
 
     //--------------------------------------------------------------------------
     // Options

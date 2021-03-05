@@ -648,6 +648,25 @@ const ButtonUserValueWidget = UserValueWidget.extend({
 
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    async willStart() {
+        await this._super(...arguments);
+        if (this.options.dataAttributes.activeImg) {
+            this.activeImgEl = await _buildImgElement(this.options.dataAttributes.activeImg);
+        }
+    },
+    /**
+     * @override
+     */
+    _makeDescriptive() {
+        const $el = this._super(...arguments);
+        if (this.activeImgEl) {
+            this.containerEl.appendChild(this.activeImgEl);
+        }
+        return $el;
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -689,6 +708,10 @@ const ButtonUserValueWidget = UserValueWidget.extend({
                 return;
             }
             active = (this.getActiveValue(methodName) === value);
+        }
+        if (this.imgEl && this.activeImgEl) {
+            this.imgEl.classList.toggle('d-none', active);
+            this.activeImgEl.classList.toggle('d-none', !active);
         }
         this.el.classList.toggle('active', active);
     },

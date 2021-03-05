@@ -238,6 +238,7 @@ body.editor_enable.editor_has_snippets {
             &.o_we_bg_#{$name} {
                 color: white;
                 background-color: $color;
+
                 &:hover {
                     background-color: darken($color, 7.5%);
                 }
@@ -637,7 +638,7 @@ body.editor_enable.editor_has_snippets {
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
                         padding: 0 $o-we-sidebar-content-field-multi-spacing;
 
-                        &.fa {
+                        &.fa, &[data-img] {
                             margin-left: $o-we-sidebar-content-field-label-spacing;
                         }
                     }
@@ -1535,7 +1536,7 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
-        }   
+        }
 
         .o_we_color_btn, .o_we_color_combination_btn {
             float: left;
