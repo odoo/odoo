@@ -47,14 +47,12 @@
     <!-- options -->
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
         <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
-            <t t-if="widget.withCombinations">
-                <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn active" data-target="color-combinations">
-                    <span>Combinations</span>
-                </button>
-                <button type="button" tabindex="2" t-attf-class="o_we_colorpicker_switch_pane_btn #{widget.withCombinations ? '' : 'active'}" data-target="theme-colors">
-                    <span>Custom</span>
-                </button>
-            </t>
+            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn active" t-attf-data-target="#{widget.withCombinations? 'color-combinations' : 'theme-colors'}">
+                <span>Theme</span>
+            </button>
+            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors">
+                <span>Custom</span>
+            </button>
             <button t-if="widget.resetButton" type="button" class="my-1 ml-auto o_we_color_btn o_colorpicker_reset">
                 <t t-if="widget.withCombinations">None</t>
                 <t t-else="">Reset</t>
@@ -69,6 +67,7 @@
             </t>
         </div>
         <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? 'd-none' : ''} py-3 px-2 bg-black-25" data-color-tab="theme-colors"/>
+        <div class="o_colorpicker_sections d-none py-3 px-2 bg-black-25" data-color-tab="custom-colors"/>
     </div>
     <t t-name="web_editor.colorpalette.combination.btn">
         <button type="button" class="o_we_color_btn o_we_color_combination_btn"

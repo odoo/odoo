@@ -1655,6 +1655,7 @@ body.editor_enable.editor_has_snippets {
     color: $o-we-sidebar-content-field-colorpicker-dropdown-color;
 
     .o_we_colorpicker_switch_panel {
+        font-size: $o-we-font-size;
         border-bottom: 1px solid $o-we-bg-dark;
         box-shadow: inset 0 1px 0 rgba(white, .2);
     }
@@ -1667,6 +1668,13 @@ body.editor_enable.editor_has_snippets {
         @extend %we-generic-button;
     }
     .o_colorpicker_sections {
+        > * {
+            padding-top: $o-we-sidebar-content-field-spacing;
+            &:first-child {
+                padding-top: 0;
+            }
+        }
+
         .o_colorpicker_widget {
             .o_hex_div, .o_rgba_div  {
                 &:focus-within {
@@ -1744,8 +1752,6 @@ body.editor_enable.editor_has_snippets {
             }
         }
         .o_colorpicker_section {
-            padding-top: $o-we-sidebar-content-field-spacing;
-
             &::after {
                 content: "";
                 display: table;
@@ -1766,7 +1772,7 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            &[data-name="transparent_grayscale"], &[data-name="theme"], &[data-name="reset"] {
+            &[data-name="transparent_grayscale"], &[data-name="theme"], &[data-name="reset"], &[data-name="custom"] {
                 .o_we_color_btn {
                     @extend %o-preview-alpha-background;
 
