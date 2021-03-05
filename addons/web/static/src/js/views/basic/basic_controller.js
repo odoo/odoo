@@ -766,6 +766,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      */
     _onLoadOptionalFields: function (ev) {
+        ev.stopPropagation();
         var res = this.call(
             'local_storage',
             'getItem',

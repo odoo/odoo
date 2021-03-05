@@ -8929,6 +8929,59 @@ QUnit.module('Views', {
         delete fieldRegistry.map.asyncwidget;
     });
 
+    QUnit.test('list view optional fields rendering inside many2one search popup calls load_optional_fields once', async function (assert) {
+        assert.expect(3);
+
+        this.data.foo.fields.translation_id = {
+            string: "Translations",
+            type: "many2one",
+            relation: "ir.translation",
+        };
+        for (var i = 0; i < 8; i++) {
+            this.data['ir.translation'].records.push({ id: 100 + i, name: 'test_' + i });
+        }
+
+        var form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form><field name="translation_id"/></form>',
+            archs: {
+                "ir.translation,false,list": '<tree>' +
+                    '<field name="lang_code"/>' +
+                    '<field name="src" optional="hide"/>' +
+                    '<field name="value"/>' +
+                    '<field name="name" optional="hide"/>' +
+                    '</tree>',
+                "ir.translation,false,search": '<search></search>',
+            },
+            intercepts: {
+                load_optional_fields: function () {
+                    throw new Error("Should not call load_optional_fields as we stop propagation of event");
+                },
+            },
+        });
+
+        await testUtils.fields.many2one.searchAndClickItem('translation_id', {
+            item: 'Search More',
+            search: '',
+        });
+
+        var $modal = $('.modal');
+        assert.containsN($modal, 'th', 2,
+            "should have 3 th, 1 for selector, 2 for columns");
+
+        assert.containsOnce($modal.find('table'), '.o_optional_columns_dropdown_toggle',
+            "should have the optional columns dropdown toggle inside the table");
+
+        // optional fields
+        await testUtils.dom.click($modal.find('table .o_optional_columns_dropdown_toggle'));
+        assert.containsN($modal, 'div.o_optional_columns div.dropdown-item', 2,
+            "dropdown have 2 optional field foo with checked and bar with unchecked");
+
+        form.destroy();
+    });
+
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
