@@ -10,7 +10,6 @@ import re
 import threading
 import werkzeug.urls
 from ast import literal_eval
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_join
 
@@ -19,17 +18,6 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
-
-MASS_MAILING_BUSINESS_MODELS = [
-    'crm.lead',
-    'event.registration',
-    'hr.applicant',
-    'res.partner',
-    'event.track',
-    'sale.order',
-    'mailing.list',
-    'mailing.contact'
-]
 
 # Syntax of the data URL Scheme: https://tools.ietf.org/html/rfc2397#section-3
 # Used to find inline images
@@ -128,7 +116,7 @@ class MassMailing(models.Model):
     mailing_model_real = fields.Char(string='Recipients Real Model', compute='_compute_model')
     mailing_model_id = fields.Many2one(
         'ir.model', string='Recipients Model', ondelete='cascade', required=True,
-        domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
+        domain=[('is_mailing_enabled', '=', True)],
         default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
     mailing_model_name = fields.Char(
         string='Recipients Model Name', related='mailing_model_id.model',
@@ -485,20 +473,16 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
 
     def _get_opt_out_list(self):
-        """Returns a set of emails opted-out in target model"""
+        """ Give list of opt-outed emails, depending on specific model-based
+        computation if available.
+
+        :return list: opt-outed emails, preferably normalized (aka not records)
+        """
         self.ensure_one()
         opt_out = {}
         target = self.env[self.mailing_model_real]
-        if self.mailing_model_real == "mailing.contact":
-            # if user is opt_out on One list but not on another
-            # or if two user with same email address, one opted in and the other one opted out, send the mail anyway
-            # TODO DBE Fixme : Optimise the following to get real opt_out and opt_in
-            target_list_contacts = self.env['mailing.contact.subscription'].search(
-                [('list_id', 'in', self.contact_list_ids.ids)])
-            opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
-            opt_in_contacts = target_list_contacts.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
-            opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
-
+        if hasattr(self.env[self.mailing_model_name], '_mailing_get_opt_out_list'):
+            opt_out = self.env[self.mailing_model_name]._mailing_get_opt_out_list(self)
             _logger.info(
                 "Mass-mailing %s targets %s, blacklist: %s emails",
                 self, target._name, len(opt_out))
@@ -848,8 +832,8 @@ class MassMailing(models.Model):
 
     def _get_default_mailing_domain(self):
         mailing_domain = []
-        if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
-            mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
+        if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
+            mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])

@@ -10,6 +10,7 @@ class MassMailingList(models.Model):
     _name = 'mailing.list'
     _order = 'name'
     _description = 'Mailing List'
+    _mailing_enabled = True
 
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
@@ -223,6 +224,24 @@ class MassMailingList(models.Model):
 
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    # ------------------------------------------------------
+    # MAILING
+    # ------------------------------------------------------
+
+    def _mailing_get_default_domain(self, mailing):
+        return [('list_ids', 'in', mailing.contact_list_ids.ids)]
+
+    def _mailing_get_opt_out_list(self, mailing):
+        """ Check subscription on all involved mailing lists. If user is opt_out
+        on one list but not on another if two users with same email address, one
+        opted in and the other one opted out, send the mail anyway. """
+        # TODO DBE Fixme : Optimize the following to get real opt_out and opt_in
+        subscriptions = self.subscription_ids if self else mailing.contact_list_ids.subscription_ids
+        opt_out_contacts = subscriptions.filtered(lambda rel: rel.opt_out).mapped('contact_id.email_normalized')
+        opt_in_contacts = subscriptions.filtered(lambda rel: not rel.opt_out).mapped('contact_id.email_normalized')
+        opt_out = set(c for c in opt_out_contacts if c not in opt_in_contacts)
+        return opt_out
 
     # ------------------------------------------------------
     # UTILITY
