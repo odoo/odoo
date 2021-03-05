@@ -79,7 +79,6 @@ function factory(dependencies) {
         }
 
         /**
-         *
          * Generates the html link related to the mentioned partner
          *
          * @private
@@ -150,6 +149,8 @@ function factory(dependencies) {
 
         /**
          * Function that process the message stored to be sent.
+         *
+         * @private
          */
         async _processMessagesToBeSent() {
             if (!this.isProcessingMessagesToBeSent) {
@@ -160,70 +161,7 @@ function factory(dependencies) {
                 const message = messages[0];
                 try {
                     if (message) {
-                        const thread = this.thread;
-                        let postData = {
-                            attachment_ids: message.attachments.map(attachement => attachement.id),
-                            body: message.body,
-                            channel_ids: message.channel_ids,
-                            message_type: 'comment',
-                            partner_ids: message.partner_ids,
-                            subject: message.subject,
-                        };
-                        let messageId;
-                        if (thread.model === 'mail.channel') {
-                            const command = this.thread.composer._getCommandFromText(postData.body);
-                            Object.assign(postData, {
-                                subtype_xmlid: 'mail.mt_comment',
-                            });
-                            if (command) {
-                                messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
-                                    channelId: thread.id,
-                                    command: command.name,
-                                    postData,
-                                }));
-                            } else {
-                                messageId = await this.async(() =>
-                                    this.env.models['mail.thread'].performRpcMessagePost({
-                                        postData,
-                                        threadId: thread.id,
-                                        threadModel: thread.model,
-                                    })
-                                );
-                            }
-                        } else {
-                            Object.assign(postData, {
-                                subtype_xmlid: this.thread.composer.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                            });
-                            if (!this.thread.composer.isLog) {
-                                postData.context = {
-                                    mail_post_autofollow: true,
-                                };
-                            }
-                            messageId = await this.async(() =>
-                                this.env.models['mail.thread'].performRpcMessagePost({
-                                    postData,
-                                    threadId: thread.id,
-                                    threadModel: thread.model,
-                                })
-                            );
-                            const [messageData] = await this.async(() => this.env.services.rpc({
-                                model: 'mail.message',
-                                method: 'message_format',
-                                args: [[messageId]],
-                            }, { shadow: true }));
-                            this.env.models['mail.message'].insert(Object.assign(
-                                {},
-                                this.env.models['mail.message'].convertData(messageData),
-                                {
-                                    originThread: [['insert', {
-                                        id: thread.id,
-                                        model: thread.model,
-                                    }]],
-                                })
-                            );
-                            thread.loadNewMessages();
-                        }
-                        message.delete();
+                        await this._postMessage(message);
                     }
                     if (!messages.length) {
                         this.thread.refreshFollowers();
@@ -235,11 +173,102 @@ function factory(dependencies) {
                     this.update({
                         isSendingMessages: false,
                     });
-                    if (messages.length > 0) {
+                    if (!messages.length) {
                         this._processMessagesToBeSent();
                     }
                 }
             }
+        }
+
+        /**
+         * Build a message and dispatch it to the relevant post function
+         *
+         * @private
+         * @param message {mail.message}
+         */
+        async _postMessage(message) {
+            let postData = {
+                attachment_ids: message.attachments.map(attachement => attachement.id),
+                body: message.body,
+                channel_ids: message.channel_ids,
+                message_type: 'comment',
+                partner_ids: message.partner_ids,
+                subject: message.subject,
+            };
+            if (this.thread.model === 'mail.channel') {
+                await this._postMessageToChannel(postData);
+            } else {
+                await this._postMessageToChatter(postData);
+            }
+            message.delete();
+        }
+
+        /**
+         * Post a message inside a channel
+         *
+         * @private
+         * @param postData {Object}
+         */
+        async _postMessageToChannel(postData) {
+            const command = this.thread.composer._getCommandFromText(postData.body);
+            Object.assign(postData, {
+                subtype_xmlid: 'mail.mt_comment',
+            });
+            if (command) {
+                await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
+                    channelId: this.thread.id,
+                    command: command.name,
+                    postData,
+                }));
+            } else {
+                await this.async(() =>
+                    this.env.models['mail.thread'].performRpcMessagePost({
+                        postData,
+                        threadId: this.thread.id,
+                        threadModel: this.thread.model,
+                    })
+                );
+            }
+        }
+
+        /**
+         * Post a message inside a chatter
+         *
+         * @private
+         * @param postData {Object}
+         */
+        async _postMessageToChatter(postData) {
+            Object.assign(postData, {
+                subtype_xmlid: this.thread.composer.isLog ? 'mail.mt_note' : 'mail.mt_comment',
+            });
+            if (!this.thread.composer.isLog) {
+                postData.context = {
+                    mail_post_autofollow: true,
+                };
+            }
+            const messageId = await this.async(() =>
+                this.env.models['mail.thread'].performRpcMessagePost({
+                    postData,
+                    threadId: this.thread.id,
+                    threadModel: this.thread.model,
+                })
+            );
+            const [messageData] = await this.async(() => this.env.services.rpc({
+                model: 'mail.message',
+                method: 'message_format',
+                args: [[messageId]],
+            }, { shadow: true }));
+            this.env.models['mail.message'].insert(Object.assign(
+                {},
+                this.env.models['mail.message'].convertData(messageData),
+                {
+                    originThread: [['insert', {
+                        id: this.thread.id,
+                        model: this.thread.model,
+                    }]],
+                })
+            );
+            this.thread.loadNewMessages();
         }
     }
 
