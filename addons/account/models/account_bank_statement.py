@@ -1252,6 +1252,7 @@ class AccountBankStatementLine(models.Model):
 
         line_vals_list = [reconciliation_vals['line_vals'] for reconciliation_vals in reconciliation_overview]
         new_lines = self.env['account.move.line'].create(line_vals_list)
+        new_lines = new_lines.with_context(skip_account_move_synchronization=True)
         for reconciliation_vals, line in zip(reconciliation_overview, new_lines):
             if reconciliation_vals.get('payment'):
                 accounts = (self.journal_id.payment_debit_account_id, self.journal_id.payment_credit_account_id)
