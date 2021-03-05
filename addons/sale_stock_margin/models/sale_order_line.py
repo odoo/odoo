@@ -15,4 +15,6 @@ class SaleOrderLine(models.Model):
                 lines_without_moves |= line
             else:
                 line.purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
+                if line.product_uom and line.product_uom != line.product_id.uom_id:
+                    line.purchase_price = line.product_id.uom_id._compute_price(line.purchase_price, line.product_uom)
         return super(SaleOrderLine, lines_without_moves)._compute_purchase_price()
