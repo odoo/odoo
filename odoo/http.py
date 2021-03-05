@@ -605,6 +605,7 @@ class JsonRequest(WebRequest):
         # Read POST content or POST Form Data named "request"
         try:
             self.jsonrequest = json.loads(request)
+            self.body_jsonstr = request
         except ValueError:
             msg = 'Invalid JSON data: %r' % (request,)
             _logger.info('%s: %s', self.httprequest.path, msg)
@@ -614,14 +615,22 @@ class JsonRequest(WebRequest):
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
-        response = {
-            'jsonrpc': '2.0',
-            'id': self.jsonrequest.get('id')
-            }
-        if error is not None:
-            response['error'] = error
-        if result is not None:
-            response['result'] = result
+        custom = self.endpoint.routing.get('custom')
+        if custom == True:
+            response = {}
+            if error is not None:
+                response['error'] = error
+            if result is not None:
+                response = result
+        else:
+            response = {
+                'jsonrpc': '2.0',
+                'id': self.jsonrequest.get('id')
+                }
+            if error is not None:
+                response['error'] = error
+            if result is not None:
+                response['result'] = result
 
         mime = 'application/json'
         body = json.dumps(response, default=date_utils.json_default)
