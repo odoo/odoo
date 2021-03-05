@@ -5,17 +5,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
-class Base(models.AbstractModel):
-    _inherit = 'base'
-
-    def _valid_field_parameter(self, field, name):
-        # allow tracking on abstract models; see also 'mail.thread'
-        return (
-            name == 'tracking' and self._abstract
-            or super()._valid_field_parameter(field, name)
-        )
-
-
 class IrModel(models.Model):
     _inherit = 'ir.model'
     _order = 'is_mail_thread DESC, name ASC'
