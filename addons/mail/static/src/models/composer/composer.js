@@ -265,84 +265,13 @@ function factory(dependencies) {
             await this.env.bus.trigger('do-action', { action, options });
         }
 
-
         /**
+         * @deprecated
+         * This function is aliased to the new sending method
          * Post a message in provided composer's thread based on current composer fields values.
          */
         async postMessage() {
-            const thread = this.thread;
-            this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            let postData = {
-                attachment_ids: this.attachments.map(attachment => attachment.id),
-                body: this._convertMessageToHtml(),
-                channel_ids: this.mentionedChannels.map(channel => channel.id),
-                message_type: 'comment',
-                partner_ids: this.recipients.map(partner => partner.id),
-            };
-            if (this.subjectContent) {
-                postData.subject = this.subjectContent;
-            }
-            let messageId;
-            if (thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(body);
-                Object.assign(postData, {
-                    subtype_xmlid: 'mail.mt_comment',
-                });
-                if (command) {
-                    messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
-                        channelId: thread.id,
-                        command: command.name,
-                        postData,
-                    }));
-                } else {
-                    messageId = await this.async(() =>
-                        this.env.models['mail.thread'].performRpcMessagePost({
-                            postData,
-                            threadId: thread.id,
-                            threadModel: thread.model,
-                        })
-                    );
-                }
-            } else {
-                Object.assign(postData, {
-                    subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                });
-                if (!this.isLog) {
-                    postData.context = {
-                        mail_post_autofollow: true,
-                    };
-                }
-                messageId = await this.async(() =>
-                    this.env.models['mail.thread'].performRpcMessagePost({
-                        postData,
-                        threadId: thread.id,
-                        threadModel: thread.model,
-                    })
-                );
-                const [messageData] = await this.async(() => this.env.services.rpc({
-                    model: 'mail.message',
-                    method: 'message_format',
-                    args: [[messageId]],
-                }, { shadow: true }));
-                this.env.models['mail.message'].insert(Object.assign(
-                    {},
-                    this.env.models['mail.message'].convertData(messageData),
-                    {
-                        originThread: [['insert', {
-                            id: thread.id,
-                            model: thread.model,
-                        }]],
-                    })
-                );
-                thread.loadNewMessages();
-            }
-            for (const threadView of this.thread.threadViews) {
-                // Reset auto scroll to be able to see the newly posted message.
-                threadView.update({ hasAutoScrollOnMessageReceived: true });
-            }
-            thread.refreshFollowers();
-            thread.fetchAndUpdateSuggestedRecipients();
-            this._reset();
+            this.thread.sender.insertMessageToBeSent();
         }
 
         /**
