@@ -15,11 +15,11 @@
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Matus Krnac <matus.krnac@gmail.com>, 2020
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # gebri <gebri@inmail.sk>, 2020
 # Jan Prokop, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
@@ -587,7 +587,7 @@ msgstr "<span role=\"separator\">Nový</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">Odsúhlasenie</span>"
+msgstr "<span role=\"separator\">Párovanie</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -658,7 +658,7 @@ msgstr "<span>Zľava %</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Date</span>"
-msgstr "<span>Dátum faktúry</span>"
+msgstr "<span>Dátum vystavenia</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -703,7 +703,7 @@ msgstr "<span>Referencia</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr "<span>Výkazy</span>"
+msgstr "<span>Prehľady</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -801,7 +801,7 @@ msgstr "<strong>Incoterm: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>Dátum vystavenia faktúry:</strong>"
+msgstr "<strong>Dátum vystavenia:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -1037,7 +1037,7 @@ msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
 msgstr ""
-"Účet %s neumožňuje zmierenie. Najskôr zmeňte konfiguráciu tohto účtu tak, "
+"Účet %s neumožňuje párovanie. Najskôr zmeňte konfiguráciu tohto účtu tak, "
 "aby to bolo možné."
 
 #. module: account
@@ -1206,12 +1206,12 @@ msgstr "Skupina učtu dane"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report
 msgid "Account Tax Report"
-msgstr "Výkaz dane z účtu"
+msgstr "Účet daňového priznania"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr "Výkazová položka účtu dane"
+msgstr "Položka účtu daňového priznania"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1372,9 +1372,8 @@ msgid ""
 "put on the regular tax account."
 msgstr ""
 "Účet použitý na prevod čiastky dane pri daniach platených v hotovosti. Bude "
-"obsahovať sumu dane, pokiaľ nebude odsúhlasená pôvodná faktúra; pri "
-"odsúhlasení sa táto suma na tomto účte zrušila a pripísala na bežný daňový "
-"účet."
+"obsahovať sumu dane, pokiaľ nebude odsúhlasená pôvodná faktúra; pri párovaní"
+" sa táto suma na tomto účte zrušila a pripísala na bežný daňový účet."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -1595,7 +1594,7 @@ msgstr "Pridaj značku"
 #: model:ir.actions.server,name:account.action_new_bank_setting
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 msgid "Add a Bank Account"
-msgstr "Pridajte bankový účet"
+msgstr "Pridať bankový účet"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1844,7 +1843,7 @@ msgstr "Povoliť produktovú maržu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
 msgid "Allow Reconciliation"
-msgstr "Povoliť odsúhlasenie"
+msgstr "Povoliť párovanie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
@@ -2078,7 +2077,7 @@ msgstr ""
 "každej účtovnej knihe. Metóda odklad typu účtu určuje\n"
 "postup pre ročné uzavretie. Výkazy, ako napríklad Výkaz\n"
 "zostatku a Výkaz ziskov a strát používajú kategóriu\n"
-"(zisk/strata alebo výkaz zostatku)."
+"(Výkaz ziskov a strát alebo Súvaha)."
 
 #. module: account
 #: code:addons/account/models/account_analytic_default.py:0
@@ -2162,7 +2161,7 @@ msgstr "Analytická distribúcia"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr "Analytické položky"
+msgstr "Hospodárske výsledky - položky"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -2296,7 +2295,7 @@ msgstr "Aktívny"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Assets"
-msgstr "Aktíva"
+msgstr "Majetok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_ids
@@ -2447,7 +2446,7 @@ msgstr "Bilancia"
 #: code:addons/account/static/src/js/account_selection.js:0
 #, python-format
 msgid "Balance Sheet"
-msgstr "Výkaz finančného zostatku"
+msgstr "Súvaha"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -2539,12 +2538,12 @@ msgstr "Bankový partner"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "Predvoľby pohybu bankového odsúhlasenia"
+msgstr "Predvoľby pohybu bankového párovania"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "Predvoľba pohybu bankového odsúhlasenia"
+msgstr "Predvoľba pohybu bankového párovania"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2622,7 +2621,7 @@ msgid ""
 "the final reconciliation allowing finding the right account."
 msgstr ""
 "Transakcie bankových výpisov sa budú účtovať na pozastavenom účte až do "
-"konečného vyrovnania, ktoré umožní nájdenie správneho účtu."
+"konečného párovania, ktoré umožní nájdenie správneho účtu."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3196,18 +3195,18 @@ msgstr "Účtovné osnovy"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 #, python-format
 msgid "Chart of Accounts"
-msgstr "Účtovná osnova"
+msgstr "Účtový rozvrh"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_tree
 msgid "Chart of Accounts Template"
-msgstr "Šablóna účtovnej osnovy"
+msgstr "Šablóna účtového rozvrhu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
 msgid "Chart of Accounts Templates"
-msgstr "Šablóny účtovnej osnovy"
+msgstr "Šablóny účtového rozvrhu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -3217,7 +3216,7 @@ msgstr "Účtovná osnova nastavená"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_list
 msgid "Chart of accounts"
-msgstr "Účtovná osnova"
+msgstr "Účtový rozvrh"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_bnk_stmt_check
@@ -3254,7 +3253,7 @@ msgid ""
 "associated with this tag in tax report computation."
 msgstr ""
 "Začiarknutím tohto políčka negujete absolútnu hodnotu zostatku riadkov "
-"spojených s touto značkou vo výpočte daňového hlásenia."
+"spojených s touto značkou vo výpočte daňového priznania."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -3470,7 +3469,7 @@ msgstr "Rozloženie firemného dokumentu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
 msgid "Company has a chart of accounts"
-msgstr "Spoločnosť má účtovnú osnovu"
+msgstr "Spoločnosť má účtový rozvrh"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__company_id
@@ -3610,7 +3609,7 @@ msgstr "Obsahuje"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__line_ids
 msgid "Content of this tax report"
-msgstr "Obsah tohto daňového hlásenia"
+msgstr "Obsah tohto daňového priznania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__body
@@ -3794,7 +3793,7 @@ msgstr "Vytvoriť nový objednateľný produkt"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "Vytvoriť nový model odsúhlasenia"
+msgstr "Vytvoriť nový model párovania"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_receipt_type
@@ -4149,7 +4148,7 @@ msgstr "Mena položky denníka na ťarchu."
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
 msgid "Current Assets"
-msgstr "Aktuálne aktíva"
+msgstr "Aktuálny majetok"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -5214,7 +5213,7 @@ msgstr "Vylúčené účtovné denníky"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
 msgid "Expects a Chart of Accounts"
-msgstr "Očakáva účtovnú osnovu"
+msgstr "Očakáva účtový rozvrh"
 
 #. module: account
 #. openerp-web
@@ -5429,7 +5428,7 @@ msgstr "Šablóna fiškánej pozície"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Fiškálne pozície"
+msgstr "Mapovanie daní"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -5450,7 +5449,7 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"Fiškálne pozície sa používajú na prispôsobenie daní a účtov pre konkrétnych "
+"Mapovanie daní sa používajú na prispôsobenie daní a účtov pre konkrétnych "
 "zákazníkov alebo zákazky odberateľa / faktúry. Predvolená hodnota pochádza "
 "od zákazníka."
 
@@ -5482,7 +5481,7 @@ msgstr "Pevná suma"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_fixed_assets
 msgid "Fixed Assets"
-msgstr "Pevné aktíva"
+msgstr "Fixný majetok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__amount
@@ -5689,7 +5688,7 @@ msgstr "Generované záznamy"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr "Všeobecné vyhlásenia"
+msgstr "Všeobecné výkazy"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -5789,8 +5788,7 @@ msgstr "Skupina daní"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Group payments into a single batch to ease the reconciliation process"
-msgstr ""
-"Zoskupte platby do jednej dávky, aby ste uľahčili proces odsúhlasovania"
+msgstr "Zoskupte platby do jednej dávky, aby ste uľahčili proces párovania"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -6027,8 +6025,8 @@ msgid ""
 "If tags are defined for a tax report line, only two are allowed on it: a "
 "positive and a negative one."
 msgstr ""
-"Ak sú pre riadok daňového výkazu definované tagy, sú v ňom povolené iba dva:"
-" kladný a záporný."
+"Ak sú pre riadok daňového priznania definované tagy, sú v ňom povolené iba "
+"dva: kladný a záporný."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__active
@@ -6290,10 +6288,10 @@ msgid ""
 "Account instead of the receivable account."
 msgstr ""
 "Záznamy došlých platieb vyvolané faktúrami / prijatými dobropismi sa "
-"zaúčtujú na účet nesplatené príjmy a v miniaplikácii odsúhlasenia banky sa "
-"zobrazia ako modré položky. Počas procesu odsúhlasenia sa príslušné "
-"transakcie zosúladia so záznamami na účte nevyrovnaných príjmov namiesto "
-"účtu pohľadávok."
+"zaúčtujú na účet nesplatené príjmy a v miniaplikácii párovania banky sa "
+"zobrazia ako modré položky. Počas procesu párovania sa príslušné transakcie "
+"zosúladia so záznamami na účte nevyrovnaných príjmov namiesto účtu "
+"pohľadávok."
 
 #. module: account
 #: code:addons/account/wizard/setup_wizards.py:0
@@ -6503,7 +6501,7 @@ msgstr "Faktúra vytvorená"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoice Date"
-msgstr "Dátum faktúry"
+msgstr "Dátum vystavenia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -6926,7 +6924,7 @@ msgstr "Skupina denníkov"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Journal Groups"
-msgstr "Skupiny denníkov"
+msgstr "Skupiny účtovných denníkov"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -7025,7 +7023,7 @@ msgstr "Účtovné denníky"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_journal
 msgid "Journals Audit"
-msgstr "Audit účtovných denníkov"
+msgstr "Tlač účtovných denníkov"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -7856,7 +7854,7 @@ msgstr "Zmena výšky dane"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr "Sledujte svoju maržu na základe faktúr"
+msgstr "Sledujte svoje produktové marže"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -7925,7 +7923,7 @@ msgstr "Získať názov súvisiaceho dokumentu."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__name
 msgid "Name of this tax report"
-msgstr "Názov tejto daňovej správy"
+msgstr "Názov tohto daňového priznania"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8066,7 +8064,7 @@ msgstr "Počet číslic použitých pre kód účtu"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
 msgid "Non-current Assets"
-msgstr "Nesúčasné aktíva"
+msgstr "Neaktuálny majetok "
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
@@ -8375,7 +8373,7 @@ msgstr "Iba validované výpisy je možné resetovať na nové."
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Only administrators can load a chart of accounts"
-msgstr "Iba správcovia môžu načítať účtovnú osnovu"
+msgstr "Iba správcovia môžu načítať účtový rozvrh"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8523,7 +8521,7 @@ msgstr "Voliteľné vytvorenie"
 #: model:ir.model.fields,help:account.field_account_account__tag_ids
 #: model:ir.model.fields,help:account.field_account_account_template__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr "Voliteľné tagy, ktoré môžete chcieť priradiť pre upravené vykazovanie"
+msgstr "Voliteľné tagy, ktoré môžete chcieť priradiť pre upravené prehľady"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
@@ -8641,10 +8639,10 @@ msgid ""
 "Account instead of the payable account."
 msgstr ""
 "Záznamy odchádzajúcich platieb vyvolané prijatými faktúrami / dobropismi sa "
-"zaúčtujú na účet neuhradených platieb a v miniaplikácii odsúhlasenia banky "
-"sa zobrazia ako modré položky. Počas procesu vyrovnania sa príslušné "
-"transakcie zosúladia so záznamami na účte neuhradených platieb namiesto na "
-"strane splatných."
+"zaúčtujú na účet neuhradených platieb a v miniaplikácii párovania banky sa "
+"zobrazia ako modré položky. Počas procesu párovania sa príslušné transakcie "
+"zosúladia so záznamami na účte neuhradených platieb namiesto na strane "
+"splatných."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -8849,7 +8847,7 @@ msgstr "Typ partnera"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Mapovanie partnerov pre modely zmierenia"
+msgstr "Mapovanie partnerov pre modely párovania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
@@ -9092,7 +9090,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_ids
 msgid ""
 "Payments generated during the reconciliation of this bank statement lines."
-msgstr "Platby generované počas odsúhlasenia týchto riadkov bankového výpisu."
+msgstr "Platby generované počas párovania týchto riadkov bankového výpisu."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -9202,7 +9200,7 @@ msgid ""
 "Please install a chart of accounts or create a miscellaneous journal before "
 "proceeding."
 msgstr ""
-"Nainštalujte prosím účtovnú osnovu alebo vytvorte zrôzny denník skôr, ako "
+"Nainštalujte prosím účtový rozvrh alebo vytvorte zrôzny denník skôr, ako "
 "budete pokračovať."
 
 #. module: account
@@ -9227,7 +9225,7 @@ msgstr "Pri platbe použite nasledujúcu komunikáciu:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__plus_report_line_ids
 msgid "Plus Tax Report Lines"
-msgstr "Riadky daňového výkazu"
+msgstr "Riadky daňového priznania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_pos_receivable_account_id
@@ -9557,7 +9555,7 @@ msgid ""
 msgstr ""
 "Vzorec Pythonu používaný na výpočet hodnoty súčtu riadkov. Toto pole sa "
 "navzájom vylučuje s tag_name, nastavením sa zmení riadok na celkový riadok. "
-"Kódy riadkov daňových výkazov možno v tomto výraze použiť ako premenné na "
+"Kódy riadkov daňového priznania možno v tomto výraze použiť ako premenné na "
 "označenie zostatku zodpovedajúcich riadkov výkazu. Vzorec nemôže odkazovať "
 "na iný riadok pomocou vzorca."
 
@@ -9720,19 +9718,19 @@ msgstr "Odsúhlasené výpisy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
 msgid "Reconciliation Model"
-msgstr "Zmierovací model"
+msgstr "Párovací model"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "Modely zosúladenia"
+msgstr "Modely párovania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
-msgstr "Časti zosúladenia"
+msgstr "Časti párovania"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9926,7 +9924,7 @@ msgstr "Možnosti výkazu"
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr "Reportovanie"
+msgstr "Prehľady"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
@@ -10120,7 +10118,7 @@ msgstr "Obrátené"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_tree
 msgid "Revert reconciliation"
-msgstr "Obrátiť rekonciliáciu"
+msgstr "Obrátiť párovanie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -10175,7 +10173,7 @@ msgstr "Zaokrúhlený strom"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr "Pravidlá modelu zmierenia"
+msgstr "Pravidlá modelu párovania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -10334,7 +10332,7 @@ msgstr "Vyhľadať šablónu účtovnej osnovy"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "Vyhľadajte fiškálne pozície"
+msgstr "Vyhľadajte mapovanie daní"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10513,7 +10511,7 @@ msgid ""
 "for such taxes on a given account during reconciliation."
 msgstr ""
 "Zvoľte, ak sa má pre daň používať hotovostný základ, ktorý vytvorí vstup pre"
-" túto daň na danom účte počas zlaďovania"
+" túto daň na danom účte počas párovania"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__invoice_warn
@@ -10766,7 +10764,7 @@ msgstr "Nastavte svoj bankový účet na synchronizáciu bankových pohybov."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Setup your chart of accounts and record initial balances."
-msgstr "Nastavte účtovnú osnovu a zaznačte počiatočné zostatky."
+msgstr "Nastavte účtový rozvrh a zaznačte počiatočné zostatky."
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -11277,12 +11275,12 @@ msgstr "Daň %.2f%%"
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Tax Adjustments"
-msgstr "Úprava dane"
+msgstr "Korekcia dane"
 
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
 msgid "Tax Adjustments Wizard"
-msgstr "Pomocník úpravy dane"
+msgstr "Pomocník korekcie dane"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -11413,17 +11411,17 @@ msgstr "Šablóna riadku rozdelenia daní"
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__report_id
 #: model:ir.ui.menu,name:account.menu_configure_tax_report
 msgid "Tax Report"
-msgstr "Daňový výkaz"
+msgstr "Daňové priznanie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_report_line_ids
 msgid "Tax Report Lines"
-msgstr "Riadky daňového výkazu"
+msgstr "Položky daňového priznania"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_configure_tax_report
 msgid "Tax Reports"
-msgstr "Daňové správy"
+msgstr "Daňové priznanie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -11549,8 +11547,8 @@ msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Riadky daňového výkazu, ktorých značka „+“ bude priradená k presunu riadkov "
-"o tento riadok rozdelenia"
+"Riadky daňového priznania, ktorých značka „+“ bude priradená k presunu "
+"riadkov o tento riadok rozdelenia"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__minus_report_line_ids
@@ -11558,8 +11556,8 @@ msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Riadky daňového výkazu, ktorých značka „-“ bude priradená k riadkom presunu "
-"o tento riadok rozdelenia"
+"Riadky daňového priznania, ktorých značka „-“ bude priradená k riadkom "
+"presunu o tento riadok rozdelenia"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__tag_ids
@@ -11631,8 +11629,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
-"Dane, fiškálne pozície, účtovná osnova &amp; zákonné prepisy pre vašu "
-"krajinu"
+"Dane, mapovanie daní, účtový rozvrh &amp; zákonné prepisy pre vašu krajinu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__display_type
@@ -11724,7 +11721,8 @@ msgid ""
 " be shown on the aged receivable/payable reports."
 msgstr ""
 "Technické pole, ktoré sa používa na určenie, ku ktorému dátumu je potrebné "
-"toto vyrovnanie zobraziť na správach o pohľadávkach / záväzkoch vo veku."
+"toto párovanie zobraziť v správach o vekovej štruktúre pohľadávok / "
+"záväzkov."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_lock_date_message
@@ -11820,9 +11818,9 @@ msgid ""
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
-"Technické pole slúžiace na sledovanie odsúhlasenia hotovostného základu "
-"dane. Toto je potrebné pri zrušení zdroja: zverejní inverzný zápis do "
-"účtovnej knihy pre zrušenie aj tej časti."
+"Technické pole slúžiace na sledovanie párovania hotovostného základu dane. "
+"Toto je potrebné pri zrušení zdroja: zverejní inverzný zápis do účtovnej "
+"knihy pre zrušenie aj tej časti."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
@@ -12149,7 +12147,7 @@ msgid ""
 msgstr ""
 "Suma zostávajúca na odsúhlasenie na tomto riadku výpisu (podpísaná podľa "
 "zostatku na riadkoch presunu) vyjadrená v mene. Toto je technické pole, "
-"ktoré sa používa na urýchlenie aplikácie modelov zmierenia."
+"ktoré sa používa na urýchlenie aplikácie modelov párovania."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12178,7 +12176,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "Bankový výpis používaný pre bankové odsúhlasenia"
+msgstr "Bankový výpis používaný pre bankové párovanie"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
@@ -12225,7 +12223,7 @@ msgstr "Spoločnosť, ktorej táto distribučná linka patrí."
 #: model:ir.model.fields,help:account.field_account_move_line__tax_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_tax_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr "Krajina, z ktorej sa majú pre túto spoločnosť použiť daňové správy"
+msgstr "Krajina, z ktorej sa majú pre túto spoločnosť použiť daňové priznanie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -12269,7 +12267,7 @@ msgid ""
 msgstr ""
 "Aktuálny stav vášho bankového výpisu: - Nový: plne upraviteľné s konceptmi "
 "interných účtovných dokladov. - Spracovanie: už nie je možné ich upravovať "
-"zverejnenými internými účtovnými dokladmi, pripravené na vyrovnanie. - "
+"zverejnenými internými účtovnými dokladmi, pripravené na párovanie. - "
 "Overené: všetky riadky sú zosúladené. Už nezostáva nič na spracovanie."
 
 #. module: account
@@ -12364,7 +12362,7 @@ msgid ""
 "though they don't generate any tag: %s . This probably means you forgot to "
 "set a tag_name on these lines."
 msgstr ""
-"Nasledujúce riadky daňového výkazu sa používajú v niektorých šablónach "
+"Nasledujúce riadky daňového priznania sa používajú v niektorých šablónach "
 "distribúcie daní, hoci negenerujú žiadnu značku: %s .To pravdepodobne "
 "znamená, že ste na týchto riadkoch zabudli nastaviť tag_name."
 
@@ -12594,7 +12592,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__report_id
 msgid "The parent tax report of this line"
-msgstr "Materská daňová správa tohto riadku"
+msgstr "Nadradené daňové priznanie tohto riadku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -12644,7 +12642,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
 msgstr ""
-"Model odsúhlasenia bude aplikovaný len na vybrané kategórie "
+"Model párovania bude aplikovaný len na vybrané kategórie "
 "zákazníkov/dodávateľov."
 
 #. module: account
@@ -12654,7 +12652,7 @@ msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
 msgstr ""
-"Model odsúhlasenia bude aplikovaný len na vybraných zákazníkov/dodávateľov."
+"Model párovania bude aplikovaný len na vybraných zákazníkov/dodávateľov."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
@@ -12665,7 +12663,7 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
-"Model odsúhlasenia sa bude aplikovať len na vybrané typy transakcií:\n"
+"Model párovania sa bude aplikovať len na vybrané typy transakcií:\n"
 "     * Prijatá suma: Uplatňuje sa iba pri prijatí sumy. \n"
 "     * Zaplatená suma: Uplatňuje sa iba pri platbe sumy.\n"
 "     * Suma zaplatená / prijatá: Platí v oboch prípadoch."
@@ -12676,7 +12674,7 @@ msgstr ""
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
-"Model odsúhlasenia bude aplikovaný len ak je nastavený zákazník/dodávateľ."
+"Model párovania bude aplikovaný len ak je nastavený zákazník/dodávateľ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -12685,8 +12683,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"Model odsúhlasenia bude aplikovaný len ak je suma väčšia než, menšia než "
-"alebo v nastavenom rozsahu. "
+"Model párovania bude aplikovaný len ak je suma väčšia než, menšia než alebo "
+"v nastavenom rozsahu. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -12697,7 +12695,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Model odsúhlasenia sa použije iba v prípade štítku:\n"
+"Model párovania sa použije iba v prípade štítku:\n"
 "        * Obsahuje: Štítok návrhu musí obsahovať tento reťazec (nerozlišujú sa malé a veľké písmená).\n"
 "        * Neobsahuje: Negácia „Obsahuje“.\n"
 "        * Match Regex: Definujte svoj vlastný regulárny výraz."
@@ -12711,7 +12709,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Model odsúhlasenia sa použije iba vtedy, keď je na vedomie:\n"
+"Model párovania sa použije iba vtedy, keď je na vedomie:\n"
 "        * Obsahuje: Propozícia musí obsahovať tento reťazec (nerozlišujú sa malé a veľké písmená).\n"
 "        * Neobsahuje: Negácia „Obsahuje“.\n"
 "        * Match Regex: Definujte svoj vlastný regulárny výraz."
@@ -12725,7 +12723,7 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Model odsúhlasenia sa použije iba v prípade typu transakcie:\n"
+"Model párovania sa použije iba v prípade typu transakcie:\n"
 "        * Obsahuje: Typ transakcie ponuky musí obsahovať tento reťazec (nerozlišujú sa malé a veľké písmená).\n"
 "        * Neobsahuje: Negácia „Obsahuje“.\n"
 "        * Match Regex: Definujte svoj vlastný regulárny výraz."
@@ -12735,7 +12733,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_journal_ids
 msgid ""
 "The reconciliation model will only be available from the selected journals."
-msgstr "Model odsúhlasenia bude dostupný pre vybrané účtovné denníky."
+msgstr "Model párovania bude dostupný pre vybrané účtovné denníky."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -12858,21 +12856,21 @@ msgid ""
 "The tags associated with tax report line objects should all have the same "
 "country set as the tax report containing these lines."
 msgstr ""
-"Všetky značky spojené s objektmi riadkov daňových správ by mali mať "
-"nastavenú rovnakú krajinu ako daňové hlásenie obsahujúce tieto riadky."
+"Všetky tagy spojené s objektmi riadkov daňového priznania by mali mať "
+"nastavenú rovnakú krajinu ako daňové priznanie obsahujúce tieto riadky."
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
 #, python-format
 msgid "The tags linked to a tax report line should always match its tag name."
 msgstr ""
-"Značky prepojené s riadkom daňového hlásenia by sa mali vždy zhodovať s "
-"názvom značky."
+"Tagy prepojené spoložkami daňové priznania by sa mali vždy zhodovať s názvom"
+" tagu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
 msgid "The tax report lines using this tag"
-msgstr "Riadky daňového výkazu, ktoré používajú túto značku"
+msgstr "Riadky daňového priznania, ktoré používajú tento tag"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__invoice_tax_id
@@ -13034,7 +13032,7 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Umožní zoskupenie platieb do jednej dávky pre uľahčenie odsúhlasovania.\n"
+"Umožní zoskupenie platieb do jednej dávky pre uľahčenie procesu párovania.\n"
 "- Nainštaluje modul account_batch_payment."
 
 #. module: account
@@ -13067,7 +13065,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr "Toto pole je ignorované pri odsúhlasovaní bankového výpisu."
+msgstr "Toto pole je ignorované pri párovaní bankového výpisu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -13199,7 +13197,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr "Tento model zmierenia zatiaľ nevytvoril žiadny záznam"
+msgstr "Tento model párovania zatiaľ nevytvoril žiadny záznam"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -13802,7 +13800,7 @@ msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
 msgstr ""
-"Overte položku výpisu automaticky (na základe odsúhlasenia podľa pravidla)."
+"Overte položku výpisu automaticky (na základe párovania podľa pravidla)."
 
 #. module: account
 #. openerp-web
@@ -14546,7 +14544,7 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
-msgstr "Nemôžete zmeniť účet pokiaľ sú otvorené čiastkové odsúhlasenia."
+msgstr "Nemôžete zmeniť účet pokiaľ sú otvorené čiastkové párovania."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14723,7 +14721,7 @@ msgstr "dní po skončení fakturačného mesiaca"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
 msgid "days after the invoice date"
-msgstr "dní po dátume vystavenia faktúry"
+msgstr "dní po dátume vystavenia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard

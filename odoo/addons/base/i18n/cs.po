@@ -71,7 +71,7 @@ msgstr ""
 "Přidání strukturované komunikace k fakturám zákazníků.\n"
 "--------------------------------------------------\n"
 "\n"
-"Použití strukturované komunikace BBA zjednodušuje sladění faktur a plateb.\n"
+"Použití strukturované komunikace BBA zjednodušuje párování faktur a plateb.\n"
 "Strukturovanou komunikaci můžete vybrat jako platební komunikaci v nastavení Fakturace / Účetnictví.\n"
 "Jsou navrženy dva algoritmy:\n"
 "\n"
@@ -377,7 +377,7 @@ msgstr ""
 "Poznámka:\n"
 "-----\n"
 "\n"
-"* Fiskální pozice „内 税“ a „外 税“ byly přidány ke zpracování zvláštních požadavků, které by mohly vyplynout z implementace POS. [1] Za normálních okolností je možná nebudete muset použít.\n"
+"* Mapování daní „内 税“ a „外 税“ byly přidány ke zpracování zvláštních požadavků, které by mohly vyplynout z implementace POS. [1] Za normálních okolností je možná nebudete muset použít.\n"
 "\n"
 "[1] Podrobnosti viz https://github.com/odoo/odoo/pull/6470."
 
@@ -521,7 +521,7 @@ msgid ""
 msgstr ""
 "\n"
 "Účetní výkazy pro Německo\n"
-"Obsahuje rozvahu, zisk a ztrátu, DIČ a partnerské DIČ\n"
+"Obsahuje Rozvahu, výnosy a náklady, DIČ a partnerské DIČ\n"
 "Přidá také možnosti exportu DATEV do obratovej předvahe"
 
 #. module: base
@@ -593,7 +593,7 @@ msgstr ""
 "\n"
 "       Účetní zprávy pro Velkou Británii\n"
 "\n"
-"        Umožňuje odeslat daňové hlášení prostřednictvím\n"
+"        Umožňuje odeslat daňové přiznání prostřednictvím\n"
 "        MTD-DPH API pro HMRC.\n"
 "    "
 
@@ -630,7 +630,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Umožňuje vygenerovat zkušební zůstatek pro závěrečný záznam.\n"
+"Umožňuje vygenerovat Hlavní knihu pro závěrečný záznam.\n"
 "\n"
 "Hovorově známý jako „Měsíc 13“"
 
@@ -767,7 +767,7 @@ msgstr ""
 "* Seznam dostupných bank v Litvě.\n"
 "* Daňové skupiny.\n"
 "* Nejběžnější litevské daně.\n"
-"* Fiskální pozice.\n"
+"* Mapování daní.\n"
 "* Značky účtu."
 
 #. module: base
@@ -901,10 +901,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Elektronické účetní výkazy\n"
-"- COA\n"
-"- Zkušební zůstatek\n"
-"DIOT Report"
+"        Elektronické účetní výkazy\n"
+"            - COA\n"
+"            - Hlavní kniha\n"
+"        DIOT Report\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_digest_enterprise
@@ -1720,7 +1721,7 @@ msgstr ""
 "\n"
 "Automatické převody účtu\n"
 "===========================\n"
-"Spravujte automatické převody mezi účty."
+"Spravujte automatické přeúčtování mezi účty."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -1734,7 +1735,7 @@ msgstr ""
 "\n"
 "Ukázka automatických převodů účtu\n"
 "================================\n"
-"Ukázková data pro modul automatických převodů účtu"
+"Ukázková data pro modul automatických přeúčtování účtu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_us_consolidation_demo
@@ -2666,7 +2667,7 @@ msgstr ""
 "\n"
 "Používají se například k přeskupení přijatých šeků před uložením v jedné dávce do banky.\n"
 "Celková vložená částka se pak zobrazí jako jedna transakce na vašem bankovním výpisu.\n"
-"Když budete pokračovat v odsouhlasení, jednoduše vyberte odpovídající dávkovou platbu, aby se všechny platby uvnitř spárovaly."
+"Když budete pokračovat v párování, jednoduše vyberte odpovídající dávkovou platbu, aby se všechny platby uvnitř spárovaly."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -3566,7 +3567,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Filtruje řádky akcií z widgetu odsouhlasení\n"
+"Filtruje řádky akcií z párování widgetu\n"
 "    "
 
 #. module: base
@@ -5033,7 +5034,7 @@ msgstr ""
 "\n"
 "Odstranění jednoho objektu ve zpracování CODA má za následek odstranění přidružených objektů. Odstraněním souboru CODA obsahujícího více výpisů z účtu budou tyto související výpisy také odstraněny.\n"
 "\n"
-"Namísto ručního přizpůsobení vygenerovaných výpisů z účtu můžete CODA znovu importovat po aktualizaci databáze OpenERP informacemi, které chyběly, aby bylo možné automatické odsouhlasení.\n"
+"Namísto ručního přizpůsobení vygenerovaných výpisů z účtu můžete CODA znovu importovat po aktualizaci databáze OpenERP informacemi, které chyběly, aby bylo možné automatické párování.\n"
 "\n"
 "Poznámka k podpoře CODA V1:\n"
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
@@ -5143,11 +5144,11 @@ msgstr ""
 "\n"
 "Mongolské účetní výkazy.\n"
 "================================================== ==\n"
-"-Zisk a ztráta\n"
+"-Výnosy a náklady\n"
 "-Rozvaha\n"
 "-Cash Flow Flow\n"
 "-DPH Zpráva o splácení\n"
-"- Zpráva o dani z příjmu\n"
+"- Daňové přiznání\n"
 "\n"
 "Přispěvatel finančních požadavků: Baskhuu Lodoikhuu. BumanIT LLC\n"
 
@@ -5220,7 +5221,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Upozorněte, že v widgetu odsouhlasení existuje odpovídající prodejní objednávka.\n"
+"Upozorněte, že v widgetu párování existuje odpovídající prodejní objednávka.\n"
 "    "
 
 #. module: base
@@ -5920,7 +5921,7 @@ msgstr ""
 "* Definuje šablony DPH pro prodej a nákup \n"
 "* Definuje daňové šablony\n"
 "* Definuje fiskální pozice pro španělskou fiskální legislativu\n"
-"* Definuje daňové zprávy mod 111, 115 a 303\n"
+"* Definuje daňové přiznání mod 111, 115 a 303\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -6664,7 +6665,8 @@ msgstr ""
 "\n"
 "Kanadské účetní grafy a lokalizace.\n"
 "\n"
-"Fiskální pozice\n"
+"Mapování daní\n"
+"\n"
 "----------------\n"
 "\n"
 "Při zvažování použití daní je důležitá provincie, kde dochází k dodávce.\n"
@@ -6746,7 +6748,7 @@ msgstr ""
 "\n"
 "Tento modul se vztahuje na společnosti se sídlem ve Francii. Nevztahuje se na společnosti se sídlem v DOM-TOM (Guadeloupe, Martinik, Guyane, Réunion, Mayotte).\n"
 "\n"
-"Tento lokalizační modul vytváří daně z DPH typu „včetně daně“ pro nákupy (je to zejména nutné, když používáte modul „hr_expense“). Mějte na paměti, že tyto „daně z přidané hodnoty“ nejsou spravovány fiskálními pozicemi poskytnutými tímto modulem (protože je složité spravovat scénáře „vyloučené daně“ i „zahrnuty do daně“ ve fiskálních pozicích).\n"
+"Tento lokalizační modul vytváří daně z DPH typu „včetně daně“ pro nákupy (je to zejména nutné, když používáte modul „hr_expense“). Mějte na paměti, že tyto „daně z přidané hodnoty“ nejsou spravovány mapování daní poskytnutými tímto modulem (protože je složité spravovat scénáře „vyloučené daně“ i „zahrnuty do daně“ ve fiskálních pozicích).\n"
 "\n"
 "Tento lokalizační modul neřeší scénář, když francouzsko-pevninská společnost prodává služby společnosti se sídlem v DOM. Mohli bychom to zvládnout ve fiskálních pozicích, ale vyžadovalo by to rozlišovat mezi „daněmi z produktů“ a daněmi ze služebních daní. Domníváme se, že je příliš „těžké“ mít to ve výchozím nastavení v l10n_fr; společnosti, které prodávají služby společnostem se sídlem v DOM, by měly aktualizovat konfiguraci svých daní a fiskálních pozic ručně.\n"
 "\n"
@@ -6963,6 +6965,9 @@ msgid ""
 "widget.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul přidává do filtru možnost filtrovat podle kontrolního čísla párování widget.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -8995,7 +9000,7 @@ msgstr "Modul pro testování exportu xlsx."
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr "Modul pro ověření mechanismu balíků aktiv."
+msgstr "Modul pro ověření mechanismu balíků majeteku."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits_depends
@@ -9201,12 +9206,12 @@ msgstr "Přístup k neautorizovaným nebo neplatným společnostem."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
-msgstr "Automatické převody účtu"
+msgstr "Automatické přeúčtování účtu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_generic_auto_transfer_demo
 msgid "Account Automatic Transfers Demo Data"
-msgstr "Demo data automatického převodu účtu"
+msgstr "Demo data automatického přeúčtování účtu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
@@ -24007,7 +24012,7 @@ msgstr "XML sestavy"
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
 #: model:ir.ui.menu,name:base.reporting_menuitem
 msgid "Reporting"
-msgstr "Sestavy"
+msgstr "Přehledy"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
