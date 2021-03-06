@@ -36,11 +36,11 @@
 # Mandy Choy <mnc@odoo.com>, 2020
 # shan wang <wangshan0901@gmail.com>, 2020
 # 晋 宋 <56457576@qq.com>, 2020
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2021
 # 稀饭~~ <wangwhai@qq.com>, 2021
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
 # Martin Trigaux, 2021
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -552,7 +552,7 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
-msgstr "<span class=\"o_form_label\">所有选定的会计分录都将被确认和审核，之后您将无法修改.</span>"
+msgstr "<span class=\"o_form_label\">所有选定的会计分录都将被验证和过账，之后您将无法修改.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1429,7 +1429,7 @@ msgstr "有分录的科目"
 #: model:ir.cron,cron_name:account.ir_cron_auto_post_draft_entry
 #: model:ir.cron,name:account.ir_cron_auto_post_draft_entry
 msgid "Account; Post draft entries with auto_post set to True up to today"
-msgstr "账户; 将auto_post设置为True的草稿条目发布到今天"
+msgstr "账户; 将auto_post设置为True的草稿条目过账到今天"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -5081,7 +5081,7 @@ msgstr "条目不属于同一公司： %s != %s"
 msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
-msgstr "默认情况下，将来的条目设置为自动发布。选中此复选框以现在发布它们。"
+msgstr "默认情况下，将来的条目设置为自动过账。选中此复选框以现在过账它们。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -9068,19 +9068,19 @@ msgstr "门户访问网址"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Post"
-msgstr "发布"
+msgstr "过账"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr "发布所有分录 "
+msgstr "过账所有分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post
 #: model:ir.model.fields,field_description:account.field_account_payment__auto_post
 msgid "Post Automatically"
-msgstr "自动发布"
+msgstr "自动过账"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -9090,17 +9090,17 @@ msgstr "过账差额在"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "登录会计凭证"
+msgstr "过账会计凭证"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 msgid "Post Payments"
-msgstr "后支付"
+msgstr "过账支付"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Post entries"
-msgstr "追加记账"
+msgstr "过账凭证"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -9116,7 +9116,7 @@ msgstr "已过账"
 #: model:ir.model.fields,field_description:account.field_account_move__posted_before
 #: model:ir.model.fields,field_description:account.field_account_payment__posted_before
 msgid "Posted Before"
-msgstr "发布时间"
+msgstr "是否已过账"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -12551,7 +12551,7 @@ msgstr "你的账户当前无结算单和付款."
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr "草稿狀態中沒有要過帳的日記帳項目"
+msgstr "草稿状态中没有要过账的日记账项目。"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -13874,7 +13874,7 @@ msgstr "您无法创建已处于发布状态的凭证。请创建一个草稿凭
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
-msgstr "你不能删除已经被发布的凭证。"
+msgstr "你不能删除已过账的凭证。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14103,7 +14103,7 @@ msgstr "您应该已经在收银机日记账上定义了一个 '内部转账科�
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr "您需要在发布前添加一行。"
+msgstr "您需要在过账前添加一行。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

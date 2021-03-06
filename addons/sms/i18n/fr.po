@@ -3,7 +3,7 @@
 # 	* sms
 # 
 # Translators:
-# Florian Laboureix <fll@odoo.com>, 2020
+# Florian <fll@odoo.com>, 2020
 # e2f <projects@e2f.com>, 2020
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Martin Trigaux, 2020
@@ -16,9 +16,9 @@
 # Celia Tydgat <cty@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # khalid chamakh <elbissat@gmail.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: khalid chamakh <elbissat@gmail.com>, 2021\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,6 +97,8 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">Pas de données</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -438,7 +440,7 @@ msgstr "A une erreur SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr ""
+msgstr "A un compte non-enregistré"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
@@ -519,6 +521,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"Si le numéro de téléphone aseptisé est sur la blacklist, le contact ne "
+"recevra plus de campagnes de mail, d'aucunes listes."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -548,6 +552,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indique si un numéro de téléphone blacklisté et aseptisé est un numéro de "
+"téléphone portable. Aide à distinguer quel numéro est blacklisté quand il y "
+"a et un champ portable et un champ téléphone dans un modèle."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -556,11 +563,14 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indique si un numéro de téléphone blacklisté et aseptisé est un numéro de "
+"téléphone portable. Aide à distinguer quel numéro est blacklisté quand il y "
+"a et un champ portable et un champ téléphone dans un modèle."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr ""
+msgstr "Indique si le composeur SMS cible un unique destinataire spécifique."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -571,13 +581,13 @@ msgstr "Crédit Insuffisant"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Invalid phone number"
-msgstr ""
+msgstr "Numéro de téléphone invalide"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "Numéro de destinataire invalide. Veuillez le mettre à jour."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
@@ -587,7 +597,7 @@ msgstr "Est un abonné"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "Est valide"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -646,7 +656,7 @@ msgstr "Dernière mise à jour le"
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_mass_keep_log
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_mass_keep_log
 msgid "Log as Note"
-msgstr ""
+msgstr "Enregistrer une note"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -721,7 +731,7 @@ msgstr "Nom"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "Pas de donnée"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -742,7 +752,7 @@ msgstr "Numéro"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "Champ numéro"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
@@ -770,11 +780,15 @@ msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
+"Nombre de destinataires qui vont recevoir le SMS si envoyé en mode en masse,"
+" sans l'application d'une valeur de domaine actif."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
 msgid "Number of records found when searching with the value in Active Domain"
 msgstr ""
+"Nombre de données trouvées en recherchant avec la valeur dans le domaine "
+"actif."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread_counter
@@ -859,7 +873,7 @@ msgstr "Destinataire"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "Numéro du destinataire"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
@@ -1132,7 +1146,7 @@ msgstr "Erreur serveur"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Set up an account"
-msgstr ""
+msgstr "Créer un compte"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1151,7 +1165,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "Mode unique"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
@@ -1166,7 +1180,7 @@ msgstr "Modèle de SMS"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "Numéro de destinataire gardé"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
@@ -1204,6 +1218,8 @@ msgstr "Type de document avec lequel ce modèle peut être utilisé"
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"Ce numéro de téléphone est blacklisté pour le marketing par SMS. Cliquez "
+"pour le déblacklister."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
@@ -1240,6 +1256,8 @@ msgid ""
 "UX field allowing to edit the recipient number. If changed it will be stored"
 " onto the recipient."
 msgstr ""
+"Champ UX permettant de modifier le numéro du destinataire. Si changé, il "
+"sera sauvegardé sur le destinataire."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread
@@ -1255,7 +1273,7 @@ msgstr "Compteur de messages non lus"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_acc
 msgid "Unregistered Account"
-msgstr ""
+msgstr "Compte non-enregistré"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1330,6 +1348,7 @@ msgstr "Vous n'avez pas accès au message et/ou au document associé."
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
 msgstr ""
+"Votre SMS doit inclure au moins un caractère n'étant pas un espace blanc."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

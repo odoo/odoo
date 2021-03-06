@@ -11,6 +11,7 @@
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
-msgstr ""
+msgstr "<span>Tùy chọn</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -75,7 +76,7 @@ msgstr "Thêm vào dòng đơn hàng"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
 msgid "All Sales"
-msgstr ""
+msgstr "All Sales"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -136,12 +137,12 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "Create standardized offers with default products"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "Create your quotation template"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -162,7 +163,7 @@ msgstr "Thời điểm tạo"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
 msgid "Default Sale Template"
-msgstr ""
+msgstr "Default Sale Template"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
@@ -184,6 +185,8 @@ msgid ""
 "Design your quotation templates using building blocks<br/>\n"
 "                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 msgstr ""
+"Design your quotation templates using building blocks<br/>\n"
+"                            <em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\">Warning: this option will install the Website app.</em>"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -239,11 +242,13 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"Forbidden product, unit price, quantity, and UoM on non-accountable sale "
+"quote line"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
+msgstr "Gives the sequence order when displaying a list of optional products."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -269,11 +274,13 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "Kpi All Sale Total Value"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest____last_update
@@ -318,7 +325,7 @@ msgstr "Dòng"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
+msgstr "Missing required product and UoM on accountable sale quote line."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -367,7 +374,7 @@ msgstr "Tùy chọn"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr ""
+msgstr "Present on Quotation"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -517,6 +524,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -531,6 +541,9 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
@@ -548,6 +561,8 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -562,18 +577,20 @@ msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
+"This field will be checked if the option line's product is already present "
+"in the quotation."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "Tip: Odoo supports configurable products"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "Tip: Sell or buy products in bulk with matrixes"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -610,6 +627,9 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                Send these quotes by email and let your customers sign online.\n"
+"                Use cross-selling and discounts to push and boost your sales."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -624,6 +644,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -639,7 +661,7 @@ msgstr ""
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Your template cannot contain products from multiple companies."
-msgstr ""
+msgstr "Your template cannot contain products from multiple companies."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -648,6 +670,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
+" Please change the company of your template or remove the products from other companies."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
