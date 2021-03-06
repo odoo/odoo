@@ -214,7 +214,9 @@ class ProductProduct(models.Model):
             params = (tuple(real_time_product_ids), self.env.user.company_id.id)
             if to_date:
                 query = query % ('AND aml.date <= %s',)
-                params = params + (to_date,)
+                # to_date should be converted back to user's timezone to capture the correct date.
+                to_date_ctx = fields.Datetime.to_string(fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(to_date)))
+                params = params + (to_date_ctx,)
             else:
                 query = query % ('',)
             self.env.cr.execute(query, params=params)
