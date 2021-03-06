@@ -25,8 +25,8 @@ class PickingType(models.Model):
     _check_company_auto = True
 
     def _default_show_operations(self):
-        return self.user_has_groups('stock.group_production_lot,'
-                                    'stock.group_stock_multi_locations,'
+        return self.user_has_groups('stock.group_production_lot',
+                                    'stock.group_stock_multi_locations',
                                     'stock.group_tracking_lot')
 
     name = fields.Char('Operation Type', required=True, translate=True)
