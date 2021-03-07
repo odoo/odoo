@@ -2,14 +2,14 @@
 # This file contains the translation of the following modules:
 # 	* sales_team
 #
-# Amir <شسی>, 2021.
+# Amir <kenevist>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 07:05+0000\n"
-"PO-Revision-Date: 2021-01-12 10:57+0330\n"
-"Last-Translator: Amir <شسی>\n"
+"POT-Creation-Date: 2021-03-07 13:17+0000\n"
+"PO-Revision-Date: 2021-03-07 17:00+0330\n"
+"Last-Translator: Amir <kenevist>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +24,8 @@ msgid ""
 "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\""
 " title=\"Manage\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\""
+" title=\"مدیریت\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -61,13 +63,18 @@ msgid ""
 "Add members to automatically assign their documents to this sales team. You "
 "can only be member of one team."
 msgstr ""
-"اعضا را اضافه کنید تا اسناد آنها را به طور خودکار به این تیم فروش اختصاص"
-" دهید. شما فقط می‌توانید عضو یک تیم باشید."
+"اعضا را اضافه کنید تا اسناد آنها را به طور خودکار به این تیم فروش اختصاص "
+"دهید. شما فقط می‌توانید عضو یک تیم باشید."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
 msgstr "مدیریت"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "آمریکا"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -129,9 +136,14 @@ msgid "Configuration"
 msgstr "پیکربندی"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "مشاوره ای"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
-msgstr "مخاطب"
+msgstr "شخص"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -182,12 +194,22 @@ msgid "Define a new sales team"
 msgstr "یک تیم فروش جدید تعریف کنید"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "طراحی"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__display_name
 #: model:ir.model.fields,field_description:sales_team.field_res_users__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "اروپا"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
@@ -205,8 +227,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"این تیم فروش را دنبال کنید تا به صورت خودکار رویدادهای مربوط به کاربران آن را"
-" پیگیری کنید."
+"این تیم فروش را دنبال کنید تا به صورت خودکار رویدادهای مربوط به کاربران آن "
+"را پیگیری کنید."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -265,6 +287,11 @@ msgid ""
 "Team without removing it."
 msgstr ""
 "بایگانی کردن این امکان را می‌دهد که این آیتم را بدون پاک کردن آن پنهان کنید."
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "اطلاعات"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -332,14 +359,19 @@ msgid "Number of unread messages"
 msgstr "تعداد پیام‌های خوانده‌نشده"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "سایر"
+
+#. module: sales_team
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "صندوق فروشگاهی"
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Sales"
-msgstr "فروش"
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "کالا"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -381,9 +413,19 @@ msgid "Sequence"
 msgstr "دنباله"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "خدمات"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "نشان دادن در داشبورد"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "نرم‌افزاز"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -422,6 +464,11 @@ msgstr "تیم‌ها"
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
 msgstr "رنگ تیم فروش"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "آموزش"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0

@@ -2,14 +2,14 @@
 # This file contains the translation of the following modules:
 # 	* crm
 #
-# Amir <شسی>, 2021.
+# Amir <kenevist>, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-13 09:31+0000\n"
-"PO-Revision-Date: 2021-01-13 20:03+0330\n"
-"Last-Translator: Amir <شسی>\n"
+"POT-Creation-Date: 2021-03-06 09:30+0000\n"
+"PO-Revision-Date: 2021-03-07 12:07+0330\n"
+"Last-Translator: Amir <kenevist>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgstr "<b> امتیازدهی پیشگویانه به سرنخ</b>"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Write a few letters</b> to look for a company, or create a new one."
-msgstr "برای جستجوی شرکت٬ و یا ساخت آن <b>چند حرف بنویسید</b> ."
+msgstr "برای جستجوی شرکت، و یا ساخت آن <b>چند حرف بنویسید</b> ."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
@@ -132,6 +132,8 @@ msgid ""
 "<i class=\"fa fa-gear\" role=\"img\" title=\"Switch to automatic "
 "probability\" aria-label=\"Switch to automatic probability\"/>"
 msgstr ""
+"<i class=\"fa fa-gear\" role=\"img\" title=\"تغییر به احتمال خودکار\""
+" aria-label=\"Switch to automatic probability\"/>"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -190,13 +192,212 @@ msgid "<span class=\"oe_grey p-2\"> at </span>"
 msgstr "<span class=\"oe_grey\"> در</span>"
 
 #. module: crm
+#: model:mail.template,body_html:crm.mail_template_demo_crm_lead
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif;"
+" color: #454748; width: 100%; border-collapse:separate;\"><tr><td"
+" align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"padding: 24px; background-color: white; color: #454748;"
+" border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"100%\" style=\"background-color: white; padding: 0;"
+" border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Lead/Opportunity<"
+"/span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.company_id.id}\""
+" style=\"padding: 0px; margin: 0px; height: 48px;\""
+" alt=\"${object.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,20"
+"4);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;li"
+"ne-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hi ${object.partner_id and object.partner_id.name"
+" or ''},<br/><br/>\n"
+"                            Welcome to ${object.company_id.name}.\n"
+"                            It's great to meet you! Now that you're on board,"
+" you'll discover what ${object.company_id.name} has to offer. My name is"
+" ${object.user_id.name} and I'll help you get the most out of Odoo. Could we"
+" plan a quick demo soon?<br/>\n"
+"                            Feel free to reach out at any time!<br/><br/>\n"
+"                            Best,<br/>\n"
+"                            % if object.user_id:\n"
+"                                <b>${object.user_id.name}</b>\n"
+"                                <br/>Email: ${object.user_id.email or ''}\n"
+"                                <br/>Phone: ${object.user_id.phone or ''}\n"
+"                            % else:\n"
+"                                ${object.company_id.name}\n"
+"                            % endif\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px;"
+" font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);borde"
+"r:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-heigh"
+"t:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b>${object.company_id.name}</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                ${object.company_id.phone}\n"
+"                % if object.company_id.email\n"
+"                    | <a href=\"'mailto:%s' % ${object.company_id.email}\""
+" style=\"text-decoration:none; color: #999999;\">${object.company_id.email}<"
+"/a>\n"
+"                % endif\n"
+"                % if object.company_id.website\n"
+"                    | <a href=\"'%s' % ${object.company_id.website}\""
+" style=\"text-decoration:none; color: #999999;\""
+">${object.company_id.website}</a>\n"
+"                % endif\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&"
+"amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif;"
+" color: #454748; width: 100%; border-collapse:separate;\"><tr><td"
+" align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"padding: 24px; background-color: white; color: #454748;"
+" border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"100%\" style=\"background-color: white; padding: 0;"
+" border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">سرنخ/موقعیت فروش شما<"
+"/span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.company_id.id}\""
+" style=\"padding: 0px; margin: 0px; height: 48px;\""
+" alt=\"${object.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,20"
+"4);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;li"
+"ne-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            ${object.partner_id and object.partner_id.name or"
+" ''} سلام،<br/><br/>\n"
+"                            به ${object.company_id.name} خوش‌آمدید.\n"
+"                            از دیدار شما بسیار خرسندیم! اکنون که به ما"
+" پیوسته‌اید، خواهید فهمید ${object.company_id.name} چه پیشنهادی دارد. نام من"
+" ${object.user_id.name} می‌باشد و من به شما کمک خواهم کرد که بیشترین بهره را"
+" از کنویست ببرید. آیا می‌توانیم به زودی یک دموی برنامه‌ریزی کنیم؟<br/>\n"
+"                            هرزمان که میل داشتید این کار را بکنید.<br/><br/>\n"
+"                            با احترام،<br/>\n"
+"                            % if object.user_id:\n"
+"                                <b>${object.user_id.name}</b>\n"
+"                                <br/>ایمیل: ${object.user_id.email or ''}\n"
+"                                <br/>تلفن: ${object.user_id.phone or ''}\n"
+"                            % else:\n"
+"                                ${object.company_id.name}\n"
+"                            % endif\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px;"
+" font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);borde"
+"r:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-heigh"
+"t:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b>${object.company_id.name}</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                ${object.company_id.phone}\n"
+"                % if object.company_id.email\n"
+"                    | <a href=\"'mailto:%s' % ${object.company_id.email}\""
+" style=\"text-decoration:none; color: #999999;\">${object.company_id.email}<"
+"/a>\n"
+"                % endif\n"
+"                % if object.company_id.website\n"
+"                    | <a href=\"'%s' % ${object.company_id.website}\""
+" style=\"text-decoration:none; color: #999999;\""
+">${object.company_id.website}</a>\n"
+"                % endif\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    ایجاد شده توسط <a target=\"_blank\" href=\"https://www.odoo.com?utm_source"
+"=db&amp;utm_medium=email\" style=\"color: #875A7B;\">کنویست</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"یک دیکشنری پایتون که برای فراهم کردن مقادیر پیش‌فرض هنگام ایجاد رکوردهای جدید"
-" برای این نام مستعار مورد  ارزیابی قرار می‌گیرد."
+"یک دیکشنری پایتون که برای فراهم کردن مقادیر پیش‌فرض هنگام ایجاد رکوردهای "
+"جدید برای این نام مستعار مورد  ارزیابی قرار می‌گیرد."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
@@ -207,13 +408,11 @@ msgid ""
 " Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
-"یک نکته عالی برای افزایش کارایی فروش این است که همیشه در هر موقعیت فروش"
-" گام بعدی تعریف کنید. برای مدیریت فعالیت‌های در حال انجام، بر روی هر وضعیت از"
-"نوار پیشرفت کلیک کنید تا موقعیت‌های فروش را براساس وضعیت فعالیت‌های بعدی آنها"
-" فیلتر کنید."
-"  روی قسمت خاکستری نوار پیشرفت کلیک کنید تا تمام موقعیت‌های فروشی را که"
-" فعالیت "
-" بعدی ندارند مشاهده کنید."
+"یک نکته عالی برای افزایش کارایی فروش این است که همیشه در هر موقعیت فروش گام "
+"بعدی تعریف کنید. برای مدیریت فعالیت‌های در حال انجام، بر روی هر وضعیت ازنوار"
+" پیشرفت کلیک کنید تا موقعیت‌های فروش را براساس وضعیت فعالیت‌های بعدی آنها "
+"فیلتر کنید.  روی قسمت خاکستری نوار پیشرفت کلیک کنید تا تمام موقعیت‌های فروشی"
+" را که فعالیت  بعدی ندارند مشاهده کنید."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -481,6 +680,11 @@ msgid "Calendar Event"
 msgstr "مناسبت گاهشمار"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "استفاده از دمو"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -602,12 +806,12 @@ msgstr "پیکربندی دامنه سفارشی"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
-msgstr ""
+msgstr "تبریک، عجب شکار بزرگی! :)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Consider leads created as of the"
-msgstr "سرنخ‌های درنظر گرفته شده٬ ایجاد شده از"
+msgstr "سرنخ‌های درنظر گرفته شده، ایجاد شده از"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -870,13 +1074,6 @@ msgid "Define a new lost reason"
 msgstr " یک علت جدید برای از دست رفتن تعریف کنید"
 
 #. module: crm
-#. openerp-web
-#: code:addons/crm/static/src/js/tours/crm.js:0
-#, python-format
-msgid "Define here the Expected Revenue of this Opportunity."
-msgstr "در اینجا درآمد مورد انتظار از این موقعیت فروش را تعریف کنید."
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Define recurring plans and revenues on Opportunities"
 msgstr "برنامه‌ها و درآمدهای دوره‌ای در موقعیت‌های فروش تعریف کنید"
@@ -917,11 +1114,9 @@ msgid ""
 "company size, business information, social media accounts, etc."
 msgstr ""
 "آیا می‌دانستید که می‌توانید یک شرکت را با نام یا شماره مالیات بر ارزش‌افزوده"
-" جستجو کنید "
-" تا بلافاصله همه اطلاعات آن را پر کنید؟ کنویست به طور خودکار همه چیز را برای"
-" شما تکمیل "
-" می‌کند: آرم، آدرس، اندازه شرکت، اطلاعات کسب و کار، حساب‌های رسانه‌های"
-" اجتماعی و غیره"
+" جستجو کنید  تا بلافاصله همه اطلاعات آن را پر کنید؟ کنویست به طور خودکار همه"
+" چیز را برای شما تکمیل  می‌کند: آرم، آدرس، اندازه شرکت، اطلاعات کسب و کار، "
+"حساب‌های رسانه‌های اجتماعی و غیره"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -930,16 +1125,14 @@ msgid ""
 " top-right map icon? A lot of screens in Odoo can be turned into a map: "
 "tasks, contacts, delivery orders, etc."
 msgstr ""
-"آیا می‌دانید با استفاده از نماد نقشه٬ بالا سمت راست٬ می‌توانید لیست"
-" موقعیت‌های "
-"فروش را به نمای نقشه تبدیل کنید؟ بسیاری از صفحه‌های نمایش در کنویست را"
-" می‌توان به "
-"نقشه تبدیل کرد: وظایف ، مخاطبین ، سفارشات تحویل و غیره"
+"آیا می‌دانید با استفاده از نماد نقشه، بالا سمت راست، می‌توانید لیست "
+"موقعیت‌های فروش را به نمای نقشه تبدیل کنید؟ بسیاری از صفحه‌های نمایش در "
+"کنویست را می‌توان به نقشه تبدیل کرد: وظایف ، مخاطبین ، سفارشات تحویل و غیره"
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
-msgstr "چکیده"
+msgstr "خلاصه کردن"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
@@ -987,7 +1180,7 @@ msgstr "مستندات"
 #, python-format
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats !"
 msgstr ""
-"هنگامی که شما معامله می‌کنید٬ موقعیت فروش خود را به <b>برد</b> منتقل کنید."
+"هنگامی که شما معامله می‌کنید، موقعیت فروش خود را به <b>برد</b> منتقل کنید."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1030,6 +1223,11 @@ msgid "Email cc"
 msgstr "رونوشت ایمیل"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
+msgid "Email: Welcome Demo"
+msgstr "ایمیل: به دمو خوش‌آمدید"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "Emails received to that address generate new leads not assigned to any Sales"
@@ -1038,9 +1236,9 @@ msgid ""
 " so, set an email alias on the Sales Team."
 msgstr ""
 "ایمیل‌هایی که دریافت می‌شوند به عنوان سرنخ ثبت شده و به هیچ تیم فروشی محول "
-"نمی‌شوند. محول کردن، هنگام تبدیل آنها به موقعیت فروش انجام می‌شود. برای اینکه "
-"ایمیل‌های دریافتی مستقیما به تیم فروش محول شوند، آدرس ایمیلی برای تیم فروش "
-"مشخص کنید."
+"نمی‌شوند. محول کردن، هنگام تبدیل آنها به موقعیت فروش انجام می‌شود. برای "
+"اینکه ایمیل‌های دریافتی مستقیما به تیم فروش محول شوند، آدرس ایمیلی برای تیم "
+"فروش مشخص کنید."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
@@ -1063,7 +1261,7 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address"
 msgstr ""
-"سرنخ‌ها را به صورت خودکار٬ با استفاده از اطلاعات بدست آمده شرکت از ایمیل‌های"
+"سرنخ‌ها را به صورت خودکار، با استفاده از اطلاعات بدست آمده شرکت از ایمیل‌های"
 " پرورش دهید"
 
 #. module: crm
@@ -1072,7 +1270,7 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
-"سرنخ‌ها را به صورت خودکار٬ با استفاده از اطلاعات بدست آمده شرکت از ایمیل‌های"
+"سرنخ‌ها را به صورت خودکار، با استفاده از اطلاعات بدست آمده شرکت از ایمیل‌های"
 " پرورش دهید."
 
 #. module: crm
@@ -1151,8 +1349,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"فیلد مورد استفاده برای نگه‌داری شماره تلفن‌های تایید شده. برای تسریع عمل"
-" جستجو و مقایسه. "
+"فیلد مورد استفاده برای نگه‌داری شماره تلفن‌های تایید شده. برای تسریع عمل "
+"جستجو و مقایسه. "
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
@@ -1164,6 +1362,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
 msgstr "جمع شده در پایپ‌لاین"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "دنبال کردن پیشنهاد قیمت"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -1183,7 +1386,7 @@ msgstr "دنبال ‌کنندگان (مخاطبین)"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "آیکون فونت عالی به عبارتی fa-tasks"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
@@ -1193,10 +1396,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
-"برای یک تیم فروش، هیچ چیز بدتر از دست خالی بودن در سرنخ نیست."
-"خوشبختانه، فقط با چند کلیک می‌توانید سرنخ‌هایی ایجاد کنید که مخصوص نیازهای "
-" شما باشد: اندازه شرکت، صنعت و غیره. برای کمک به شما در تست این ویژگی، "
-" ما به شما ۲۰۰ امتیاز به صورت رایگان می‌دهیم."
+"برای یک تیم فروش، هیچ چیز بدتر از دست خالی بودن در سرنخ نیست.خوشبختانه، فقط "
+"با چند کلیک می‌توانید سرنخ‌هایی ایجاد کنید که مخصوص نیازهای  شما باشد: "
+"اندازه شرکت، صنعت و غیره. برای کمک به شما در تست این ویژگی،  ما به شما ۲۰۰ "
+"امتیاز به صورت رایگان می‌دهیم."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1312,8 +1515,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
-"اگر این گزینه علامت خورده باشد، فروشنده را مجبور می‌کند در موقعیت‌های "
-"فروش به‌روز شده به‌روز شود. حتی اگر از قبل تنظیم شده باشد."
+"اگر این گزینه علامت خورده باشد، فروشنده را مجبور می‌کند در موقعیت‌های فروش "
+"به‌روز شده به‌روز شود. حتی اگر از قبل تنظیم شده باشد."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1325,7 +1528,8 @@ msgstr "اگر این گزینه علامت خورده باشد، پیام‌ه�
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
+msgstr ""
+"اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_partner__team_id
@@ -1362,7 +1566,7 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"اگر شماره تلفن تایید شده در بلک‌لیست باشد٬ مخاطب دیگر از هیچ لیستی پیامک "
+"اگر شماره تلفن تایید شده در بلک‌لیست باشد، مخاطب دیگر از هیچ لیستی پیامک "
 "گروهی دریافت نخواهد کرد."
 
 #. module: crm
@@ -1399,10 +1603,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"نشان می‌دهد اگر شماره تلفن تایید شده در بلک‌لیست٬ شماره تلفن همراه است یا"
-" خیر. "
-"هنگامی که فیلدهای تلفن همراه و تلفن ثابت در یک مدل وجود دارد، به تشخیص اینکه"
-" کدام شماره در لیست سیاه قرار دارد کمک می‌کند."
+"نشان می‌دهد اگر شماره تلفن تایید شده در بلک‌لیست، شماره تلفن همراه است یا "
+"خیر. هنگامی که فیلدهای تلفن همراه و تلفن ثابت در یک مدل وجود دارد، به تشخیص "
+"اینکه کدام شماره در لیست سیاه قرار دارد کمک می‌کند."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1411,9 +1614,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"نشان می‌دهد اگر شماره تلفن تایید شده در بلک‌لیست٬ شماره تلفن ثابت است یا خیر. "
-"هنگامی که فیلدهای تلفن همراه و تلفن ثابت در یک مدل وجود دارد، به تشخیص اینکه"
-" کدام شماره در لیست سیاه قرار دارد کمک می‌کند."
+"نشان می‌دهد اگر شماره تلفن تایید شده در بلک‌لیست، شماره تلفن ثابت است یا "
+"خیر. هنگامی که فیلدهای تلفن همراه و تلفن ثابت در یک مدل وجود دارد، به تشخیص "
+"اینکه کدام شماره در لیست سیاه قرار دارد کمک می‌کند."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1590,7 +1793,7 @@ msgstr "سرنخ / موقعیت فروش"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "سرنخ / موقعیت فروش"
+msgstr "سرنخ / فرصت"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
@@ -1724,8 +1927,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to "
 "keep track of everything you have to do!</i>"
 msgstr ""
-"به نظر می‌آید هیچ چیز برنامه‌ریزی نشده است:(<br><br><i> نکته: با زمان‌بندی"
-" فعالیت‌ها٬ همه کارهایی که باید انجام دهید را پیگیری کنید</i>"
+"به نظر می‌آید هیچ چیز برنامه‌ریزی نشده است:(<br><br><i> نکته: با زمان‌بندی "
+"فعالیت‌ها، همه کارهایی که باید انجام دهید را پیگیری کنید</i>"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1768,6 +1971,11 @@ msgstr "پایین"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
 msgstr "پیوست اصلی"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "ایجاد پیشنهاد قیمت"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2074,10 +2282,10 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
-"موتور هوش مصنوعی کنویست میزان موفقیت هر موقعیت فروش را براساس تاریخچه شما"
-" پیش‌بینی می‌کند. شما همیشه می‌توانید میزان موفقیت را به صورت دستی به روز"
-" کنید، اما اگر به کنویست اجازه دهید کار را انجام دهد، در حالی که موقعیت فروش"
-" در چرخه فروش شما جلو می‌رود، امتیاز به‌روز می‌شود."
+"موتور هوش مصنوعی کنویست میزان موفقیت هر موقعیت فروش را براساس تاریخچه شما "
+"پیش‌بینی می‌کند. شما همیشه می‌توانید میزان موفقیت را به صورت دستی به روز "
+"کنید، اما اگر به کنویست اجازه دهید کار را انجام دهد، در حالی که موقعیت فروش "
+"در چرخه فروش شما جلو می‌رود، امتیاز به‌روز می‌شود."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -2180,7 +2388,7 @@ msgstr "موقعیت‌ فروش ازدست رفت"
 #: model:mail.message.subtype,name:crm.mt_lead_restored
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_restored
 msgid "Opportunity Restored"
-msgstr "موقعیت‌ فروش ترمیم شد."
+msgstr "موقعیت‌ فروش بازنشانی شد."
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
@@ -2201,7 +2409,7 @@ msgstr "موقعیت‌ فروش ازدست رفت"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_restored
 msgid "Opportunity restored"
-msgstr "موقعیت‌ فروش ترمیم شد"
+msgstr "موقعیت‌ فروش بازنشانی شد"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
@@ -2242,6 +2450,7 @@ msgstr "بیش از ۵ سال"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "موقعیت‌های فروش سررسید گذشته"
 
@@ -2277,7 +2486,7 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"مدل بالادست٬ شناسه ایمیل را نگه می‌دارد. مدلی که شناسه ایمیل را نگه می‌دارد "
+"مدل بالادست، شناسه ایمیل را نگه می‌دارد. مدلی که شناسه ایمیل را نگه می‌دارد "
 "لزوما مدلی نیست که با alias_model_id داده می‌شود (مثال: پروژه  (مدل بالادست)"
 " و وظیفه (مدل))"
 
@@ -2345,10 +2554,11 @@ msgid ""
 " review with the\n"
 "                teams of the sales pipeline."
 msgstr ""
-"در تحلیل پایپ‌لاین آمار لحظه‌ایی موقعیت‌های فروشتان در دسترستان است. اطلاعاتی"
-" همچون پیش‌بینی فروش، هزینه مورد انتظار، مهلت‌های گذشته ویا تعداد اقدام انجام"
-" شده برای هر موقعیت فروش. این گزارش عمدتا مورد استفاده مدیر فروش قرار "
-"می‌گیرد تا کانال‌ها و یا پایپ‌لاین‌های فروش را به صورت دوره‌ایی بررسی کند."
+"در تحلیل پایپ‌لاین آمار لحظه‌ایی موقعیت‌های فروشتان در دسترستان است. "
+"اطلاعاتی همچون پیش‌بینی فروش، هزینه مورد انتظار، مهلت‌های گذشته ویا تعداد "
+"اقدام انجام شده برای هر موقعیت فروش. این گزارش عمدتا مورد استفاده مدیر فروش "
+"قرار می‌گیرد تا کانال‌ها و یا پایپ‌لاین‌های فروش را به صورت دوره‌ایی بررسی "
+"کند."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__name
@@ -2571,7 +2781,8 @@ msgstr "جستجوی موقعیت‌‌های فروش"
 msgid ""
 "See and manage users, companies, and leads from our mail client extensions."
 msgstr ""
-"کاربران، شرکت‌ها و سرنخ‌ها را افزونه‌های سرویس ایمیل ما مشاهده و مدیریت کنید."
+"کاربران، شرکت‌ها و سرنخ‌ها را افزونه‌های سرویس ایمیل ما مشاهده و مدیریت "
+"کنید."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -2596,8 +2807,8 @@ msgid ""
 "Set Recurring Plans on Opportunities to display the contracts' renewal "
 "periodicity<br>(e.g: Monthly, Yearly)."
 msgstr ""
-"با تنظیم برنامه‌های دوره‌ای برروی موقعیت‌های فروش می‌توان دوره تمدید قرار داد"
-" را نمایش داد <br>(برای مثال: ماهانه٬ سالانه)."
+"با تنظیم برنامه‌های دوره‌ای برروی موقعیت‌های فروش می‌توان دوره تمدید قرار "
+"داد را نمایش داد <br>(برای مثال: ماهانه، سالانه)."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -2713,8 +2924,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
-"مراحل به کارشناسان فروش کمک می‌کند تا براحتی بتوانند موقعیت یک موقعیت‌ فروش خاص "
-"را در چرخه‌ی فروش پیگیری کنند"
+"مراحل به کارشناسان فروش کمک می‌کند تا براحتی بتوانند موقعیت یک موقعیت‌ فروش "
+"خاص را در چرخه‌ی فروش پیگیری کنند"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
@@ -2859,9 +3070,8 @@ msgid ""
 "The success rate is computed based on the stage, but you can add more fields"
 " in the statistical analysis."
 msgstr ""
-"میزان موفقیت براساس مرحله محاسبه می‌شود، اما می‌توانید فیلدهای بیشتری را در"
-" تجزیه "
-"و تحلیل آماری اضافه کنید."
+"میزان موفقیت براساس مرحله محاسبه می‌شود، اما می‌توانید فیلدهای بیشتری را در "
+"تجزیه و تحلیل آماری اضافه کنید."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -2896,7 +3106,7 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
-"این فیلد برای جستجو آدرس ایمیل استفاده می‌شود٬ فیلد اصلی ایمیل می‌تواند بیش "
+"این فیلد برای جستجوی آدرس ایمیل استفاده می‌شود، فیلد اصلی ایمیل می‌تواند بیش "
 "از یک آدرس ایمیل باشد."
 
 #. module: crm
@@ -2993,8 +3203,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of 5."
 msgstr ""
-"برای جلوگیری از از دست رفتن داده‌ها، سرنخ‌ها و موقعیت‌های فروش فقط در"
-" گروه‌های ۵تایی ادغام می‌شوند."
+"برای جلوگیری از از دست رفتن داده‌ها، سرنخ‌ها و موقعیت‌های فروش فقط در "
+"گروه‌های ۵تایی ادغام می‌شوند."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3029,8 +3239,8 @@ msgid ""
 "Turn emails received in your Outlook mailbox into leads and log their "
 "content as internal notes."
 msgstr ""
-"ایمیل‌های دریافت شده در صندوق ایمیل Outlook خود را به سرنخ تبدیل کرده و"
-" محتوای آنها را به عنوان یادداشت‌های داخلی ثبت کنید."
+"ایمیل‌های دریافت شده در صندوق ایمیل Outlook خود را به سرنخ تبدیل کرده و "
+"محتوای آنها را به عنوان یادداشت‌های داخلی ثبت کنید."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -3111,7 +3321,7 @@ msgid ""
 " unqualified\n"
 "                    prospects you import, etc."
 msgstr ""
-"اگر قبل از ایجاد موقعیت فروش یا مشتری٬ به مرحله ارزیابی نیاز\n"
+"اگر قبل از ایجاد موقعیت فروش یا مشتری، به مرحله ارزیابی نیاز\n"
 "                    دارید، از سرنخ‌ها استفاده کنید. این می‌تواند یک کارت"
 " ویزیت دریافت شده،\n"
 "                    یک فرم تماس پر شده در وب سایت شما یا یک فایل وارد\n"
@@ -3128,9 +3338,9 @@ msgid ""
 msgstr ""
 "اگر احتیاج به یک مرحله ارزیابی قبل از ایجاد موقعیت فروش و یا حتی ثبت مشتری "
 "در دفتر تلفن دارید، از سرنخ استفاده کنید. سرنخ می‌تواند ازکارت ویزیتی که به "
-"شما دادند، فرم اطلاعات بازدیدکنندگان در نمایشگاه یا وب‌سایت، فایل خام اطلاعات"
-" یک صنعت و غیره تهیه شود.سرنخ در صورت ارزیابی موفق به موقعیت فروش بدل می‌شود"
-" ویا در دفتر تلفن اضافه می‌گردد."
+"شما دادند، فرم اطلاعات بازدیدکنندگان در نمایشگاه یا وب‌سایت، فایل خام "
+"اطلاعات یک صنعت و غیره تهیه شود.سرنخ در صورت ارزیابی موفق به موقعیت فروش بدل"
+" می‌شود ویا در دفتر تلفن اضافه می‌گردد."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -3146,7 +3356,7 @@ msgid ""
 "Use the top left <i>Create</i> button, or send an email to %s to test the "
 "email gateway."
 msgstr ""
-" با استفاده از دکمه <i>ایجاد</i> ٬در بالا گوشه چپ, یا فرستادن یک ایمیل به %s"
+" با استفاده از دکمه <i>ایجاد</i> ،در بالا گوشه چپ, یا فرستادن یک ایمیل به %s"
 " درگاه ایمیل را امتحان کنید."
 
 #. module: crm
@@ -3155,8 +3365,8 @@ msgid ""
 "Use this button to update the probabilities of all leads. This can take up "
 "to several minutes depending on how many there are."
 msgstr ""
-"از این دکمه برای به روزرسانی احتمالات همه سرنخ‌ها استفاده کنید. بسته به تعداد"
-" آن ممکن است این کار تا چند دقیقه به طول انجامد."
+"از این دکمه برای به روزرسانی احتمالات همه سرنخ‌ها استفاده کنید. بسته به "
+"تعداد آن ممکن است این کار تا چند دقیقه به طول انجامد."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login
@@ -3321,7 +3531,7 @@ msgstr "تعداد تیم"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
-msgstr "به CRM شما٬ این آدرس ایمیل توسط اعضای تیم فروش قابل تنظیم است."
+msgstr "به CRM شما، این آدرس ایمیل توسط اعضای تیم فروش قابل تنظیم است."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0

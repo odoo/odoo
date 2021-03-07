@@ -1,42 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
-
-# Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Morovat Guivi <tarjomac@gmail.com>, 2019
-# Hamid Darabi, 2019
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2019
-
+# 	* note
+#
+# Amir <kenevist>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Hamid Reza Kaveh <hamidrkp@riseup.net>, 2019\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
-"Language: fa\n"
+"POT-Creation-Date: 2021-03-07 13:52+0000\n"
+"PO-Revision-Date: 2021-03-07 17:29+0330\n"
+"Last-Translator: Amir <kenevist>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid ""
-"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/"
-">"
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"باز"
+" شده\"/>"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid ""
 "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
 msgstr ""
+"<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"بسته"
+" شده\"/>"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -54,6 +50,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"کنش‌ها ممکن است باعث ایجاد رفتار خاصی مانند باز کردن نمای تقویم شود و یا به "
+"طور خودکار هنگام بارگذاری سندی علامت گذاری شود."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -69,7 +67,7 @@ msgstr "فعالیت‌ها"
 #. module: note
 #: model:ir.model,name:note.model_mail_activity
 msgid "Activity"
-msgstr "فعالیت"
+msgstr "اقدام"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
@@ -84,7 +82,7 @@ msgstr "وضعیت فعالیت"
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
-msgstr "نوع فعالیت"
+msgstr "نوع اقدام"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
@@ -106,7 +104,7 @@ msgstr "اضافه کردن برچسب جدید"
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Add a note"
-msgstr "اضافه کردن یادداشت"
+msgstr "افزودن یادداشت"
 
 #. module: note
 #. openerp-web
@@ -255,8 +253,10 @@ msgstr "اگر این گزینه علامت خورده باشد، پیام‌ه�
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
+#: model:ir.model.fields,help:note.field_note_note__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
+msgstr ""
+"اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
@@ -375,6 +375,9 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
+"یادداشت‌ها خصوصی هستند، مگر اینکه آنها را با دعوت از دنبال کنندگان یادداشت به"
+" اشتراک بگذارید. \n"
+"             (برای دقایق جلسه مفید است)."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -410,7 +413,7 @@ msgstr "مالک‌"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr ""
+msgstr "مالک مرحله یادداشت"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
@@ -443,6 +446,11 @@ msgid "SAVE"
 msgstr "ذخیره"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطای تحویل پیامک"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
 #: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
@@ -450,6 +458,7 @@ msgstr "دنباله"
 
 #. module: note
 #. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
 #: code:addons/note/static/src/xml/systray.xml:0
 #, python-format
 msgid "Set date and time"
@@ -486,7 +495,7 @@ msgstr "مراحل"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
-msgstr ""
+msgstr "مرحله یادداشت‌ها"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_ids
@@ -561,10 +570,19 @@ msgstr "شمارنده پیام‌های خوانده‌نشده"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "برای مرتب کردن مراحل یادداشت استفاده می‌شود"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "کاربران"
 
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
+msgid "Website Messages"
+msgstr "پیام‌های وب‌سایت"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__website_message_ids
+msgid "Website communication history"
+msgstr "تاریخچه ارتباطات در وب‌سایت"
