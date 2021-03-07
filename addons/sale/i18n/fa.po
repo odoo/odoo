@@ -723,7 +723,7 @@ msgstr ""
 "  - دستی: مقدار هر ردیف به صورت دستی تنطیم می‌شود.\n"
 "  - تحلیل تنخواه پرسنل تایید شده: مقدار، مجموع تنخواه پرسنل تایید شده می"
 " باشد.\n"
-"  - تایم شیت: مقدار، مجموع ساعت‌های ثبت شده برای وظایف مربوط به هر ردیف این"
+"  - برگه ساعت کارکرد: مقدار، مجموع ساعت‌های ثبت شده برای وظایف مربوط به هر ردیف این"
 " فروش می‌باشد.\n"
 "  - تغییرات انبار: مقدار از روی حواله‌های انبار تاییدشده محاسبه می‌شود.\n"
 
@@ -760,7 +760,7 @@ msgstr "وضعیت اقدام"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "آیکون نوع فعالیت"
+msgstr "آیکون نوع اقدام"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -837,7 +837,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__analytic_account_id
 msgid "Analytic Account"
-msgstr "حساب تحلیلی"
+msgstr "حساب مراکز هزینه/درآمد"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -847,7 +847,7 @@ msgstr "تحلیل تنخواه پرسنل تایید شده"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "سطرتحلیلی"
+msgstr "ردیف تحلیلی"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_tag_ids
@@ -2276,7 +2276,7 @@ msgid ""
 msgstr ""
 "تنطیم مقادیر سفارش به صورت دستی: صدور فاکتور بر اساس مقدار وارد شده دستی،"
 " بدون ایجاد حساب تحلیلی.\n"
-"تایم شیت‌های قرارداد: صدور فاکتور بر مبنای ساعت‌های درج شده در تایم شیت"
+"برگه‌های ساعت کارکرد قرارداد: صدور فاکتور بر مبنای ساعت‌های درج شده در برگه ساعت کارکرد"
 " مربوطه.\n"
 "ایجاد یک وظبفه و ثبت ساعت‌ها: ایجاد وظیفه روی ارزیابی سفارش فروش و ثبت"
 " ساعت‌های کاری."
@@ -3056,16 +3056,20 @@ msgstr "پیشنهاد قیمت توسط مشتری %s دیده شد"
 #: model:ir.actions.act_window,name:sale.action_quotations_with_onboarding
 #: model:ir.model.fields,field_description:sale.field_crm_team__use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Quotations"
 msgstr "پیشنهادات قیمت"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid "Quotations"
+msgstr "پیشنهاد قیمت"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

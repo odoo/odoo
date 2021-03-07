@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-31 06:17+0000\n"
-"PO-Revision-Date: 2021-01-31 16:16+0330\n"
+"PO-Revision-Date: 2021-03-03 17:33+0330\n"
 "Last-Translator: Amir <kenevist>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "تعداد صورت‌حساب فروشندگان"
+msgstr "تعداد صورت‌حساب تامین کنندگان"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
@@ -101,17 +101,19 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        پادآوری می‌شود که تحویل سفارش خرید<strong>${object.name}</strong>\n"
+"         پادآوری می‌شود که تاریخ تحویل سفارش خرید <strong>${object.name}<"
+"/strong>\n"
 "        % if object.partner_ref:\n"
 "            <strong>(${object.partner_ref})</strong>\n"
 "        % endif \n"
 "         \n"
 "        % if object.date_planned:\n"
-"            در <strong>${format_date(object.date_planned)}</strong>می‌باشد.\n"
+"            ٬ در تاریخ <strong>${format_date(object.date_planned)}</strong>"
+" می‌باشد.\n"
 "        % else:\n"
 "            <strong>نامعین</strong> می‌باشد.\n"
 "        % endif\n"
-"        لطفا تایید کنید به موقع کالا تحویل داده می‌شود.\n"
+"        لطفا تایید کنید که کالا به موقع تحویل داده می‌شود.\n"
 "    </p>\n"
 "</div>"
 
@@ -150,19 +152,20 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        پیوست سفارش خرید شما<strong>${object.name}</strong>\n"
+"         سفارش خرید شما <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            با مرحع سفارش: ${object.partner_ref}\n"
 "        % endif\n"
-"        به تعداد <strong>${format_amount(object.amount_total,"
+"        به مبلغ <strong>${format_amount(object.amount_total,"
 " object.currency_id)}</strong>\n"
-"        از  ${object.company_id.name}. \n"
+"        از  ${object.company_id.name} به این ایمیل پیوست شده است. \n"
 "        <br/><br/>\n"
 "        % if object.date_planned:\n"
-"            دریافت محصول در <strong>${format_date(object.date_planned)}</stron"
+"            دریافت محصول در تاریخ <strong"
+">${format_date(object.date_planned)}</stron"
 "g>.\n"
 "            <br/><br/>\n"
-"            لطفا تاریخ دریافت این سفارش را تایید کنید\n"
+"            لطفا تاریخ دریافت این سفارش را تایید کنید.\n"
 "        % endif\n"
 "    </p>\n"
 "</div>"
@@ -197,11 +200,11 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        استعلام پیوست می‌باشد <strong>${object.name}</strong>\n"
+"        استعلام <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            با مرجع سفارش: ${object.partner_ref}\n"
 "        % endif\n"
-"        از ${object.company_id.name}.\n"
+"        از ${object.company_id.name} به این ایمیل پیوست شده است.\n"
 "        <br/><br/>\n"
 "        در صورتی که سوالی دارید، لطفاً با ما تماس بگیرید.\n"
 "        <br/><br/>\n"
@@ -271,7 +274,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"مقادیری که اینجا تعیین می‌شوند برای هر شرکت منحصر به فرد هستند.\" aria-label=\"Values set here are company-specific.\" "
+"<span class=\"fa fa-lg fa-building-o\" title=\"مقادیری که اینجا تعیین می‌شوند"
+" برای هر شرکت منحصر به فرد هستند.\" aria-label=\"Values set here are"
+" company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: purchase
@@ -516,7 +521,7 @@ msgstr "وضعیت اقدام"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "آیکون نوع فعالیت"
+msgstr "آیکون نوع اقدام"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -630,7 +635,7 @@ msgstr "مقدار زمان بین تاریح تصویب خرید و سفارش.
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__account_analytic_id
 msgid "Analytic Account"
-msgstr "حساب تحلیلی"
+msgstr "حساب مراکز هزینه/درآمد"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_tag_ids
@@ -698,7 +703,8 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
-"X روز قبل از تاریخ دریافت مورد انتظار، به طور خودکار برای فروشنده ایمیل ارسال"
+"X روز قبل از تاریخ دریافت مورد انتظار، به طور خودکار برای تامین کننده ایمیل"
+" ارسال"
 " کنید و از او بخواهید تاریخ ارسال را تایید کند. "
 
 #. module: purchase
@@ -1048,7 +1054,7 @@ msgid ""
 "vendor pricelist lead time then today's date."
 msgstr ""
 "تاریخ تحویلی که از تامین کننده انتظار می‌رود. این تاریخ  به صورت پیش‌فرض زمان"
-" اعلامیه قیمت فروشنده است. در غیر این صورت تاریخ پیش‌فرض٬ تاریخ امروز"
+" اعلامیه قیمت تامین کننده است. در غیر این صورت تاریخ پیش‌فرض٬ تاریخ امروز"
 " می‌باشد. "
 
 #. module: purchase
@@ -2745,7 +2751,7 @@ msgstr "اقدامات امروز"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 #, python-format
 msgid "Total"
-msgstr "جمع کل:"
+msgstr "جمع کل"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
@@ -2769,12 +2775,12 @@ msgstr "مبلغ کل"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_confirmed
 msgid "True if PO reception is confirmed by the vendor."
-msgstr "اگر پذیرش سفارش خرید توسط فروشنده تأیید شود، درست است. "
+msgstr "اگر پذیرش سفارش خرید توسط تامین کننده تایید شود، درست است. "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
 msgid "True if the reminder email is confirmed by the vendor."
-msgstr " اگر ایمیل یادآوری توسط فروشنده تأیید شود٬ درست است."
+msgstr " اگر ایمیل یادآوری توسط تامین کننده تایید شود٬ درست است."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3015,7 +3021,7 @@ msgstr ""
 " یادآوری‌های خودکار </ i> را فعال کنید. چند روز قبل از حمل و نقل، کنویست"
 " ایمیلی به تامین کننده ارسال می‌کند تا از تامین کننده درخواست کند که تاریخ"
 " ارسال را تایید کند و در صورت تاخیر شما را مطلع کند. برای دریافت آمار عملکرد"
-" فروشنده، روی میزان تحویل به موقع کلیک کنید. "
+" تامین کننده، روی میزان تحویل به موقع کلیک کنید. "
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
