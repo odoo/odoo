@@ -743,9 +743,25 @@ class WebsiteSale(http.Controller):
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             return request.redirect('/shop/address')
 
-        for f in self._get_mandatory_billing_fields():
+        required_billing_fields = self._get_mandatory_billing_fields()
+        if 'country_id' in required_billing_fields and order.partner_id.country_id:
+            if order.partner_id.country_id.state_required:
+                required_billing_fields += ['state_id']
+            if order.partner_id.country_id.zip_required:
+                required_billing_fields += ['zip']
+        for f in required_billing_fields:
             if not order.partner_id[f]:
                 return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+
+        required_shipping_fields = self._get_mandatory_shipping_fields()
+        if 'country_id' in required_shipping_fields and order.partner_shipping_id.country_id:
+            if order.partner_shipping_id.country_id.state_required:
+                required_shipping_fields += ['state_id']
+            if order.partner_shipping_id.country_id.zip_required:
+                required_shipping_fields += ['zip']
+        for f in required_shipping_fields:
+            if not order.partner_shipping_id[f]:
+                return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
 
         values = self.checkout_values(**post)
 
