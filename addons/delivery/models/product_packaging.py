@@ -14,9 +14,9 @@ class ProductPackaging(models.Model):
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
-    height = fields.Integer('Height')
-    width = fields.Integer('Width')
-    packaging_length = fields.Integer('Length')
+    height = fields.Float('Height')
+    width = fields.Float('Width')
+    packaging_length = fields.Float('Length')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
     shipper_package_code = fields.Char('Package Code')
     package_carrier_type = fields.Selection([('none', 'No carrier integration')], string='Carrier', default='none')
