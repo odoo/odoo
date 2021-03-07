@@ -12,7 +12,7 @@ Kevin McMenamin kevin.mcmenamin@solnet.co.nz https://github.com/KevinCMcMenamin
 
 List of contributors:
 
-Jonathan Chen jonathan.chen@solnet.co.nz  https://github.com/daemonblade
+Jonathan Chen jonc@chen.org.nz  https://github.com/daemonblade
 Divya Jain divya.jain@solnet.co.nz https://github.com/Divya2506
 Kevin McMenamin kevin.mcmenamin@solnet.co.nz https://github.com/KevinCMcMenamin
 Adrian Merrall adrian.merrall@solnet.co.nz https://github.com/adrianmerrall
