@@ -16,6 +16,7 @@
 # Duy BQ <duybq86@gmail.com>, 2020
 # Manh Vu <vuducmanh96vp@gmail.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -300,6 +301,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Hello,\n"
+"        <br/><br/>\n"
+"        Your\n"
+"        % if ctx.get('proforma'):\n"
+"            Pro forma invoice for ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (with reference: ${object.origin} )\n"
+"            % endif\n"
+"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> is available.\n"
+"        % else:\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (with reference: ${object.origin} )\n"
+"            % endif\n"
+"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> is ready for review.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -608,6 +634,9 @@ msgid ""
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
+"A standard invoice is issued with all the order lines ready for invoicing,"
+"         according to their invoicing policy (based on ordered or delivered "
+"quantity)."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -748,7 +777,7 @@ msgstr "Thêm khu vực"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "Add several variants to an order from a grid"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -951,6 +980,8 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
+"Check this box if you send quotations to your customers rather than "
+"confirming orders straight away."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -972,7 +1003,7 @@ msgstr "Bấm để thêm một số sản phẩm hoặc dịch vào báo giá c
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Click to define an invoicing target"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1156,6 +1187,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Creation date of draft/sent orders,\n"
+"Confirmation date of confirmed orders."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -1189,7 +1222,7 @@ msgstr "Giá trị tùy chỉnh"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Custom Values"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
@@ -1230,7 +1263,7 @@ msgstr "Khách hàng thực tế"
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "Customer Industry"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1382,6 +1415,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Delivery date you can promise to the customer, computed from the minimum "
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1587,7 +1624,7 @@ msgstr "Liên kết bên ngoài"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Extra Values"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -1612,6 +1649,9 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
+"Fiscal positions are used to adapt taxes and accounts for particular "
+"customers or sales orders/invoices.The default value comes from the "
+"customer."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1664,12 +1704,12 @@ msgstr "Hoạt động tương lai"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generate Sales Payment Link"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Generate a Payment Link"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1707,7 +1747,7 @@ msgstr "Chỉ số màu sắc theo HTML"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr ""
+msgstr "Has down payments"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute_value__html_color
@@ -1781,7 +1821,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
+msgstr "If you change the pricelist, only newly added lines will be affected."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2432,13 +2472,14 @@ msgstr "Chỉ chấp nhận giá trị số nguyên."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "Only draft orders can be marked as sent directly."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 
 #. module: sale
 #. openerp-web
@@ -2446,7 +2487,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
-msgstr ""
+msgstr "Open Sales app to send your first quotation in a few clicks."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2568,7 +2609,7 @@ msgstr "Thông tin khác"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Other payment acquirer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2930,7 +2971,7 @@ msgstr "Báo giá đã gửi"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Quotation viewed by customer %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -2979,7 +3020,7 @@ msgstr "Chi phí Tái xuất hoá đơn"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Re-Invoice Policy visible"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3056,6 +3097,7 @@ msgstr "Người phụ trách"
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
 msgstr ""
+"Revenue target for the current month (untaxed total of confirmed invoices)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -3066,7 +3108,7 @@ msgstr "Doanh thu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "Revenues generated by the campaign"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -3337,7 +3379,7 @@ msgstr "Chọn một sản phẩm, hoặc tạo mới."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
-msgstr ""
+msgstr "Select product attributes and optional products from the sales order"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3485,7 +3527,7 @@ msgstr "Ký tên &amp; Thanh toán"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Sign &amp; Pay Quotation"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -3517,7 +3559,7 @@ msgstr "Ký bởi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr ""
+msgstr "Signed On"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -3705,6 +3747,8 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
+"The delivery date is sooner than the expected date.You may be unable to "
+"honor the delivery date."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute__display_type
@@ -3716,7 +3760,7 @@ msgstr "Hiển thị loại được dùng cho phần Cấu hình sản phẩm."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "The fixed amount to be invoiced in advance, taxes excluded."
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -3726,6 +3770,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
+"%s\n"
+"You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3751,7 +3798,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "The order is not in a state requiring customer signature."
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -3760,12 +3807,14 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"The order was not confirmed despite response from the acquirer (%s): order "
+"total is %r but acquirer replied with %r."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "The ordered quantity has been updated."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -3775,7 +3824,7 @@ msgstr "Các giao tiếp thanh toán của lệnh bán này."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "The percentage of amount to be invoiced in advance, taxes excluded."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -3989,7 +4038,7 @@ msgstr "Tổng thuế"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Total Tax Excluded"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4293,6 +4342,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                    whether it's a storable product, a consumable or a service."
 msgstr ""
+"You must define a product for everything you sell or purchase,\n"
+"                    whether it's a storable product, a consumable or a service."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

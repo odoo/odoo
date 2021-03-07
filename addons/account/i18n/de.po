@@ -54,6 +54,7 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
 # Udo Hennig <info@udohennig.de>, 2021
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2021
+# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # 
 msgid ""
 msgstr ""
@@ -61,7 +62,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2021\n"
+"Last-Translator: EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1089,7 +1090,7 @@ msgstr "Kontoinhaber"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Kontoinhaber"
+msgstr "Abweichender Kontoinhaber"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
@@ -2510,7 +2511,7 @@ msgstr "Grundbetrag"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr "Konto für erhaltenen Steuerbetrag"
+msgstr "Konto für die Steuerbasis"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__repartition_type
@@ -2603,7 +2604,7 @@ msgstr "Ausstehende Rechnungen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Zu prüfende Rechnungen"
+msgstr "Lieferantenrechnungen zu prüfen"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -2837,7 +2838,7 @@ msgstr "Steuern auf Kassenbasis"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr "Cash-Basis-Übergangskonto"
+msgstr "Übergangskonto für die Steuer"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -5308,7 +5309,7 @@ msgstr "Konto für Kurserträge"
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_general
 #: model:ir.ui.menu,name:account.menu_action_account_moves_ledger_general
 msgid "General Ledger"
-msgstr "Umsätze nach Konten und Perioden"
+msgstr "Hauptbuch"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -5330,7 +5331,7 @@ msgstr "Erzeugte Datensätze"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr "Allgemeine Bankbelege"
+msgstr "Generische Berichte"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -6292,7 +6293,7 @@ msgstr "Ihnen zugeordnete Rechnungen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "Zu validierende Rechnungen"
+msgstr "Rechnungen zu prüfen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
@@ -6413,7 +6414,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
-msgstr "Artikel"
+msgstr "Posten"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -6615,7 +6616,7 @@ msgstr "Journale"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_journal
 msgid "Journals Audit"
-msgstr "Audit Journale"
+msgstr "Journalaudit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__json_activity_data
@@ -7120,7 +7121,7 @@ msgstr "Hauptwährung Ihres Unternehmens"
 #: model:ir.ui.menu,name:account.account_reports_management_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries_management
 msgid "Management"
-msgstr "Verwaltung"
+msgstr "Controlling"
 
 #. module: account
 #: model:account.payment.method,name:account.account_payment_method_manual_in
@@ -7159,7 +7160,7 @@ msgstr ""
 "Manuell: Lassen Sie sich per Bargeld, Scheck oder einer anderen Methode außerhalb von Odoo bezahlen.\n"
 "Elektronisch: Lassen Sie sich automatisch durch einen Zahlungserwerber bezahlen, indem Sie eine Transaktion auf einer Karte anfordern, die vom Kunden beim Kauf oder bei der Anmeldung im Internet gespeichert ist (Zahlungstoken).\n"
 "Überprüfen: Bezahlen Sie die Rechnung per Scheck und drucken Sie sie bei Odoo aus.\n"
-"Batch-Einzahlung: Verpacken Sie mehrere Kundenschecks auf einmal, indem Sie eine Batch-Einzahlung generieren, die Sie an Ihre Bank senden. Bei der Kodierung des Kontoauszugs in Odoo wird Ihnen vorgeschlagen, die Transaktion mit der Chargeneinzahlung abzustimmen, da für die Chargeneinzahlung das Modul account_batch_payment installiert sein muss.\n"
+"Batch-Zahlung: Verpacken Sie mehrere Kundenschecks auf einmal, indem Sie eine Batch-Zahlung generieren, die Sie an Ihre Bank senden. Bei der Kodierung des Kontoauszugs in Odoo wird Ihnen vorgeschlagen, die Transaktion mit der Chargeneinzahlung abzustimmen, da für die Chargeneinzahlung das Modul account_batch_payment installiert sein muss.\n"
 "SEPA-Überweisung: Zahlen Sie die Rechnung aus einer SEPA-Überweisungsdatei, die Sie an Ihre Bank senden. Um eine sepa-Überweisung zu ermöglichen, muss das Modul account_sepa installiert sein"
 
 #. module: account
@@ -8194,7 +8195,7 @@ msgstr "Partner ist ausgewählt & stimmt überein"
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
 #: model:ir.ui.menu,name:account.menu_action_account_moves_ledger_partner
 msgid "Partner Ledger"
-msgstr "Partner-Kontoauszug"
+msgstr "Partner-Buch"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -9129,7 +9130,7 @@ msgstr "Steuerrückerstattung"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Register Payment"
-msgstr "Einzahlung erfassen"
+msgstr "Zahlung erfassen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -10450,7 +10451,7 @@ msgstr "Steuererklärung"
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_exigibility
 msgid "Tax Due"
-msgstr "Fällige Steuer"
+msgstr "Steuerfälligkeit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -12675,7 +12676,7 @@ msgstr "Zahlungsbedingungen des Lieferanten"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr "Zahlungen des Lieferant"
+msgstr "Zahlungen des Lieferanten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -12898,9 +12899,7 @@ msgstr "Sie können die Periode nur für Posten in diesen Kontoarten ändern: "
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "You can only change the period for items that are not yet reconciled."
-msgstr ""
-"Sie können die Periode nur für Artikel ändern, die noch nicht abgestimmt "
-"sind."
+msgstr "Sie können die Periode nur für Posten in diesen Kontoarten ändern: "
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0

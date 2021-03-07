@@ -14,6 +14,7 @@
 # Duy BQ <duybq86@gmail.com>, 2020
 # Uyen Vo <uyen@trobz.com>, 2020
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgstr "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -303,6 +304,48 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"                Thank you for your interest in joining the\n"
+"                <b>${object.company_id.name}</b> team.  We wanted to\n"
+"                let you know that, although your resume is competitive,\n"
+"                our hiring team reviewed your application and <b>did not\n"
+"                select it for further consideration</b>.\n"
+"                <br/><br/>\n"
+"                Please note that recruiting is hard, and we can make\n"
+"                mistakes. Do not hesitate to reply to this email if you\n"
+"                think we made a mistake, or if you want more information\n"
+"                about our decision.\n"
+"                <br/><br/>\n"
+"                We will, however, keep your resume on record and get in\n"
+"                touch with you about future opportunities that may be a\n"
+"                better fit for your skills and experience.\n"
+"                <br/><br/>\n"
+"                We wish you all the best in your job search and hope we\n"
+"                will have the chance to consider you for another role\n"
+"                in the future.\n"
+"                <br/><br/>\n"
+"                Thank you,\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    % if object.user_id:\n"
+"                        -- <br/>\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        Email: ${object.user_id.email or ''}<br/>\n"
+"                        Phone: ${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        -- <br/>\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        The HR Team\n"
+"                    % endif\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -402,7 +445,7 @@ msgstr "Ứng viên đã được tạo"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
 msgid "Applicant email"
-msgstr ""
+msgstr "Applicant email"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -412,7 +455,7 @@ msgstr "Ứng viên đã được tuyển"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Applicant hired<br/>"
-msgstr ""
+msgstr "Applicant hired<br/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
@@ -488,7 +531,7 @@ msgstr "Ứng viên"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email"
-msgstr ""
+msgstr "Applications with the same email"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -580,7 +623,7 @@ msgstr "Theo Ví trí Công việc"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 msgid "By Job Positions"
-msgstr ""
+msgstr "By Job Positions"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
@@ -765,7 +808,7 @@ msgstr "Bằng Cấp"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
 msgid "Degree Name"
-msgstr ""
+msgstr "Degree Name"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -918,7 +961,7 @@ msgstr "Nhân viên được liên kết tới một ứng viên."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee:"
-msgstr ""
+msgstr "Employee:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues
@@ -1147,7 +1190,7 @@ msgstr "Form/Mẫu Phỏng vấn"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
 msgid "Is Favorite"
-msgstr ""
+msgstr "Is Favorite"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
@@ -1335,7 +1378,7 @@ msgstr "Kênh trung gian"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_count
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__meeting_count
 msgid "Meeting Count"
-msgstr ""
+msgstr "Meeting Count"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1370,7 +1413,7 @@ msgstr "Mục yêu thích của tôi"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_search_view
 msgid "My Job Positions"
-msgstr ""
+msgstr "My Job Positions"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1402,7 +1445,7 @@ msgstr "Ứng viên mới"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "New Applications <br/>"
-msgstr ""
+msgstr "New Applications <br/>"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1492,6 +1535,8 @@ msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
 msgstr ""
+"Number of applications that are new in the flow (typically at first step of "
+"the flow)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -1555,7 +1600,7 @@ msgstr "Đăng tải Trực tuyến"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other Applications"
-msgstr ""
+msgstr "Other Applications"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
@@ -1816,6 +1861,7 @@ msgstr "Nguồn của ứng viên"
 msgid ""
 "Specific jobs that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Specific jobs that uses this stage. Other jobs will not use this stage."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -1963,7 +2009,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "To Recruit"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2074,7 +2120,7 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
-msgstr ""
+msgstr "You must define a Contact Name for this applicant."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -2091,7 +2137,7 @@ msgstr "vd Quản lý Bán hàng"
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
 msgid "hr.applicant.resumes.server"
-msgstr ""
+msgstr "hr.applicant.resumes.server"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
