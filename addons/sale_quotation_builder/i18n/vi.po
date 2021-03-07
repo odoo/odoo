@@ -3,32 +3,26 @@
 # 	* sale_quotation_builder
 # 
 # Translators:
-# Martin Trigaux, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# fanha99 <fanha99@hotmail.com>, 2020
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Duy BQ <duybq86@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-01-12 07:32+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -82,7 +76,7 @@ msgstr "Về Chúng tôi"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
 msgid "An awesome"
-msgstr ""
+msgstr "An awesome"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -102,14 +96,26 @@ msgid "Close"
 msgstr "Đóng"
 
 #. module: sale_quotation_builder
-#: model:ir.model,name:sale_quotation_builder.model_res_config_settings
-msgid "Config Settings"
-msgstr "Cấu hình"
+#: model:ir.model,name:sale_quotation_builder.model_res_company
+msgid "Companies"
+msgstr "Công ty"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Design Template"
-msgstr ""
+msgstr "Design Template"
+
+#. module: sale_quotation_builder
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_option__display_name
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_line__display_name
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -126,6 +132,18 @@ msgstr ""
 "                                đội ngũ của bạn, các điều khoản và điều kiện, v.v."
 
 #. module: sale_quotation_builder
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__id
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_res_company__id
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_option__id
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_line__id
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid ""
 "If you edit a quotation from the 'Preview' of a quotation, you will\n"
@@ -137,6 +155,18 @@ msgstr ""
 "                        chỉ cập nhật báo giá đó. Nếu bạn chỉnh sửa mẫu báo "
 "giá \\ n                        (từ menu Cấu hình), tất cả các báo giá trong"
 " tương lai sẽ \\ n                        sử dụng mẫu sửa đổi này."
+
+#. module: sale_quotation_builder
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_res_company____last_update
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_option____last_update
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template____last_update
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_line____last_update
+#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option____last_update
+msgid "Last Modified on"
+msgstr "Sửa lần cuối vào"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
@@ -270,7 +300,7 @@ msgstr ""
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "This is a preview of the sale order template."
-msgstr ""
+msgstr "This is a preview of the sale order template."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -317,8 +347,3 @@ msgstr ""
 "                        tạo một báo giá sử dụng mô tả của các sản phẩm ở trong báo\n"
 "                        giá. Mục lục ở bên trái được tạo tự động sử dụng các style\n"
 "                        mà bạn đã sử dụng ở trong mô tả của bạn (heading 1, heading 2, ...)"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
-msgid "portal"
-msgstr ""

@@ -3,18 +3,18 @@
 # 	* iap
 # 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Duy BQ <duybq86@gmail.com>, 2020
+# Thang Duong Bao <nothingctrl@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
+"PO-Revision-Date: 2017-12-13 14:54+0000\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,17 +34,11 @@ msgstr "Token tài khoản"
 
 #. module: iap
 #. openerp-web
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Buy credits"
-msgstr ""
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
-#, python-format
-msgid "Buy credits at Odoo"
-msgstr "Mua hạn mức tại Odoo"
+msgstr "Buy credits"
 
 #. module: iap
 #. openerp-web
@@ -66,7 +60,7 @@ msgstr "Cấu hình"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
 msgid "Created by"
-msgstr "Được tạo bởi"
+msgstr "Tạo bởi"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
@@ -75,8 +69,14 @@ msgstr "Thời điểm tạo"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Tài liệu"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -98,6 +98,7 @@ msgstr "Tài khoản IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -122,6 +123,7 @@ msgstr "Tín dụng không đủ để thực hiện dịch vụ này."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
+#: model:ir.model.fields,field_description:iap.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối"
 
@@ -138,12 +140,12 @@ msgstr "Cập nhật gần đây vào"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo IAP"
-msgstr ""
+msgstr "Odoo IAP"
 
 #. module: iap
 #: model:ir.actions.server,name:iap.open_iap_account
 msgid "Open IAP Account"
-msgstr ""
+msgstr "Open IAP Account"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_name
@@ -155,22 +157,27 @@ msgstr "Tên dịch vụ"
 #: code:addons/iap/static/src/js/crash_manager.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr ""
+msgstr "Start a Trial at Odoo"
 
 #. module: iap
-#: code:addons/iap/models/iap.py:0
+#: code:addons/iap/tools/iap_tools.py:0
 #, python-format
 msgid ""
 "The url that this service requested returned an error. Please contact the "
 "author of the app. The url it tried to contact was %s"
 msgstr ""
+"The url that this service requested returned an error. Please contact the "
+"author of the app. The url it tried to contact was %s"
 
 #. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+#, python-format
 msgid "View My Services"
-msgstr ""
+msgstr "View My Services"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "View your IAP Services and recharge your credits"
-msgstr ""
+msgstr "View your IAP Services and recharge your credits"
