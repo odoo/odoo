@@ -172,7 +172,7 @@ class AccountMove(models.Model):
                 body=(_("E-Invoice is generated on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
             )
 
-    def _export_as_xml(self):
+    def _prepare_fatturapa_export_values(self):
         ''' Create the xml file content.
         :return: The XML content as str.
         '''
@@ -259,6 +259,10 @@ class AccountMove(models.Model):
             'pdf': pdf,
             'pdf_name': pdf_name,
         }
+        return template_values
+
+    def _export_as_xml(self):
+        template_values = self._prepare_fatturapa_export_values()
         content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export').render(template_values)
         return content
 
