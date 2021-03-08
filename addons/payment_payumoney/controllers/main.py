@@ -21,8 +21,15 @@ class PayuMoneyController(http.Controller):
         a new session cookie. Therefore, the previous session and all related information will be lost, so it will lead
         to undesirable behaviors. This is the reason why `save_session=False` is needed.
         """
+        return werkzeug.utils.redirect('/payment/process')
+
+    @http.route(['/payment/payumoney/webhook'], type='json', auth='public')
+    def payu_webhook(self):
+        """ Create this webhook record under https://www.payu.in/business/settings/webhooks """
+        post = http.request.jsonrequest
         _logger.info(
             'PayUmoney: entering form_feedback with post data %s', pprint.pformat(post))
         if post:
+            if post.get('status'):
+                post['status'] = post['status'].lower()
             request.env['payment.transaction'].sudo().form_feedback(post, 'payumoney')
-        return werkzeug.utils.redirect('/payment/process')

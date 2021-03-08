@@ -45,7 +45,7 @@ class PaymentAcquirerPayumoney(models.Model):
             sign = ''.join('%s|' % (values.get(k) or '') for k in keys)
             sign += self.payumoney_merchant_salt or ''
         else:
-            keys = "|status||||||||||udf1|email|firstname|productinfo|amount|txnid".split('|')
+            keys = "|status||||||||||udf1|customerEmail|customerName|productInfo|amount|merchantTransactionId".split('|')
             sign = ''.join('%s|' % (values.get(k) or '') for k in keys)
             sign = self.payumoney_merchant_salt + sign + self.payumoney_merchant_key
 
@@ -86,8 +86,8 @@ class PaymentTransactionPayumoney(models.Model):
     def _payumoney_form_get_tx_from_data(self, data):
         """ Given a data dict coming from payumoney, verify it and find the related
         transaction record. """
-        reference = data.get('txnid')
-        pay_id = data.get('mihpayid')
+        reference = data.get('merchantTransactionId')
+        pay_id = data.get('paymentId')
         shasign = data.get('hash')
         if not reference or not pay_id or not shasign:
             raise ValidationError(_('PayUmoney: received data with missing reference (%s) or pay_id (%s) or shashign (%s)') % (reference, pay_id, shasign))
@@ -123,7 +123,7 @@ class PaymentTransactionPayumoney(models.Model):
     def _payumoney_form_validate(self, data):
         status = data.get('status')
         result = self.write({
-            'acquirer_reference': data.get('payuMoneyId'),
+            'acquirer_reference': data.get('paymentId'),
             'date': fields.Datetime.now(),
         })
         if status == 'success':
