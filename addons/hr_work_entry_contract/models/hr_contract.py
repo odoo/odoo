@@ -173,6 +173,7 @@ class HrContract(models.Model):
         date_start = fields.Datetime.to_datetime(date_start)
         date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
 
+        intervals_to_generate = defaultdict(lambda: self.env['hr.contract'])
         for contract in self:
             contract_start = fields.Datetime.to_datetime(contract.date_start)
             contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()),
@@ -180,7 +181,7 @@ class HrContract(models.Model):
             date_start_work_entries = max(date_start, contract_start)
             date_stop_work_entries = min(date_stop, contract_stop)
             if force:
-                vals_list.extend(contract._get_work_entries_values(date_start_work_entries, date_stop_work_entries))
+                intervals_to_generate[(date_start_work_entries, date_stop_work_entries)] |= contract
                 continue
 
             # In case the date_generated_from == date_generated_to, move it to the date_start to
@@ -195,12 +196,16 @@ class HrContract(models.Model):
             last_generated_from = min(contract.date_generated_from, contract_stop)
             if last_generated_from > date_start_work_entries:
                 contract.date_generated_from = date_start_work_entries
-                vals_list.extend(contract._get_work_entries_values(date_start_work_entries, last_generated_from))
+                intervals_to_generate[(date_start_work_entries, last_generated_from)] |= contract
 
             last_generated_to = max(contract.date_generated_to, contract_start)
             if last_generated_to < date_stop_work_entries:
                 contract.date_generated_to = date_stop_work_entries
-                vals_list.extend(contract._get_work_entries_values(last_generated_to, date_stop_work_entries))
+                intervals_to_generate[(last_generated_to, date_stop_work_entries)] |= contract
+
+        for interval, contracts in intervals_to_generate.items():
+            date_from, date_to = interval
+            vals_list.extend(contracts._get_work_entries_values(date_from, date_to))
 
         if not vals_list:
             return self.env['hr.work.entry']
