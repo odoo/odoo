@@ -31,7 +31,10 @@ class HrContract(models.Model):
     def _get_more_vals_leave_interval(self, interval, leaves):
         return []
 
-    def _get_interval_leave_work_entry_type(self, interval, leaves):
+    def _get_bypassing_work_entry_type(self):
+        return self.env['hr.work.entry.type']
+
+    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing):
         # returns the work entry time related to the leave that
         # includes the whole interval.
         # Overriden in hr_work_entry_contract_holiday to select the
@@ -45,6 +48,7 @@ class HrContract(models.Model):
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
         contract_vals = []
+        bypassing_work_entry_type = self._get_bypassing_work_entry_type()
         for contract in self:
             employee = contract.employee_id
             calendar = contract.resource_calendar_id
@@ -129,7 +133,7 @@ class HrContract(models.Model):
                 # sql constraint error
                 if interval[0] == interval[1]:  # if start == stop
                     continue
-                leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves)
+                leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type)
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                 contract_vals += [dict([
