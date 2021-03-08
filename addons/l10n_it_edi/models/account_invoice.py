@@ -154,7 +154,7 @@ class AccountMove(models.Model):
         )
         return {'attachment': attachment}
 
-    def _export_as_xml(self):
+    def _prepare_fatturapa_export_values(self):
         ''' Create the xml file content.
         :return: The XML content as str.
         '''
@@ -249,6 +249,10 @@ class AccountMove(models.Model):
             'pdf_name': pdf_name,
             'tax_map': tax_map,
         }
+        return template_values
+
+    def _export_as_xml(self):
+        template_values = self._prepare_fatturapa_export_values()
         content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
         return content
 
