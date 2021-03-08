@@ -486,19 +486,20 @@ class TestAccountMove(AccountTestInvoicingCommon):
         moves = self.env['account.move'].create([{
             'journal_id': journals[i].id,
             'line_ids': [(0, 0, {'account_id': account.id, 'name': 'line'})],
+            'date': '2010-01-01',
         } for i in range(2)])._post()
-        year = moves[0].date.year
         for i in range(2):
-            moves[i].name = f'J{i}/{year}/00001'
+            moves[i].name = f'J{i}/2010/00001'
 
         # Check that the moves are correctly batched
         moves = self.env['account.move'].create([{
-            'journal_id': journals[i].id,
+            'journal_id': journals[journal_index].id,
             'line_ids': [(0, 0, {'account_id': account.id, 'name': 'line'})],
-        } for i in [1, 0, 1]])._post()
+            'date': f'2010-{month}-01',
+        } for journal_index, month in [(1, 1), (0, 1), (1, 2), (1, 1)]])._post()
         self.assertEqual(
             moves.mapped('name'),
-            [f'J1/{year}/00002', f'J0/{year}/00002', f'J1/{year}/00003'],
+            ['J1/2010/00002', 'J0/2010/00002', 'J1/2010/00004', 'J1/2010/00003'],
         )
 
     def test_journal_override_sequence_regex(self):

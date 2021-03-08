@@ -1111,7 +1111,7 @@ class AccountMove(models.Model):
                 if (
                     not final_batches
                     or final_batches[-1]['format'] != date_group['format']
-                    or final_batches[-1]['format_values'] != date_group['format_values']
+                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
                 ):
                     final_batches += [date_group]
                 elif date_group['reset'] == 'never':
