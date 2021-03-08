@@ -21,7 +21,7 @@ class MailTestGateway(models.Model):
     _description = 'Simple Chatter Model for Mail Gateway'
     _name = 'mail.test.gateway'
     _inherit = ['mail.thread.blacklist']
-    _primary_email = 'email_from'
+    _mail_field_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char()

@@ -28,7 +28,7 @@ class MailBlackListMixin(models.AbstractModel):
     _name = 'mail.thread.blacklist'
     _inherit = ['mail.thread']
     _description = 'Mail Blacklist mixin'
-    _primary_email = 'email'
+    _mail_field_email = 'email'
 
     email_normalized = fields.Char(
         string='Normalized Email', compute="_compute_email_normalized", compute_sudo=True,
@@ -43,11 +43,15 @@ class MailBlackListMixin(models.AbstractModel):
     # messaging
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
 
-    @api.depends(lambda self: [self._primary_email])
+    @api.depends(lambda self: self._mail_get_email_fields())
     def _compute_email_normalized(self):
         self._assert_primary_email()
         for record in self:
-            record.email_normalized = tools.email_normalize(record[self._primary_email])
+            record.email_normalized = next(
+                (tools.email_normalize(record[fname])
+                for fname in self._mail_get_email_fields()),
+                False
+            )
 
     @api.model
     def _search_is_blacklisted(self, operator, value):
@@ -92,10 +96,18 @@ class MailBlackListMixin(models.AbstractModel):
             record.is_blacklisted = record.email_normalized in blacklist
 
     def _assert_primary_email(self):
-        if not hasattr(self, "_primary_email") or not isinstance(self._primary_email, str):
+        if not self._mail_get_email_fields():
             raise UserError(_('Invalid primary email field on model %s', self._name))
-        if self._primary_email not in self._fields or self._fields[self._primary_email].type != 'char':
-            raise UserError(_('Invalid primary email field on model %s', self._name))
+        for fname in self._mail_get_email_fields():
+            if fname not in self._fields or self._fields[fname].type != 'char':
+                raise UserError(_('Invalid primary email field on model %s', self._name))
+
+    def _mail_get_email_fields(self):
+        """ Keep backward compatibility """
+        result = super(MailBlackListMixin, self)._mail_get_email_fields()
+        if hasattr(self, "_primary_email") and self._primary_email not in result:
+            result.append(self._primary_email)
+        return result
 
     def _message_receive_bounce(self, email, partner):
         """ Override of mail.thread generic method. Purpose is to increment the

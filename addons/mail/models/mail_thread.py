@@ -71,8 +71,12 @@ class MailThread(models.AbstractModel):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    _mail_flat_thread = True  # flatten the discussino history
+    # mail controls
+    _mail_field_email = False  # main email field for notification purpose
+    _mail_field_customer = False  # main res.partner field for notification purpose
+    _mail_flat_thread = True  # flatten the discussion history
     _mail_post_access = 'write'  # access required on the document to post on it
+    # custom objects
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
@@ -1466,6 +1470,18 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
+
+    def _mail_get_email_fields(self):
+        """ This method returns the fields to use to find contact emails to
+        use when notifying or mailing on a record. """
+        return [self._mail_field_email] if self._mail_field_email else []
+
+    def _mail_get_customer_fields(self):
+        """ This method returns the fields to use to find the contact to link
+        when sending an email. Having partner is not necessary, having only
+        email fields is possible. However it gives more flexibility to
+        notifications management when having partners. """
+        return [self._mail_field_customer] if self._mail_field_customer else []
 
     def _message_add_suggested_recipient(self, result, partner=None, email=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
