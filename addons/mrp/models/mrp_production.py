@@ -275,20 +275,18 @@ class MrpProduction(models.Model):
                     product_domain += [('id', 'in', production.bom_id.product_tmpl_id.product_variant_ids.ids)]
             production.allowed_product_ids = self.env['product.product'].search(product_domain)
 
-    @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
         for production in self:
-            production.mrp_production_child_count = len(production.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids)
+            production.mrp_production_child_count = len(production._get_child_productions())
 
-    @api.depends('move_dest_ids.group_id.mrp_production_ids')
     def _compute_mrp_production_source_count(self):
         for production in self:
-            production.mrp_production_source_count = len(production.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids)
+            production.mrp_production_source_count = len(production._get_source_productions())
 
     @api.depends('procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_backorder(self):
         for production in self:
-            production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
+            production.mrp_production_backorder_count = len(production._get_backorder_productions())
 
     @api.depends('move_raw_ids', 'state', 'date_planned_start', 'move_raw_ids.forecast_availability', 'move_raw_ids.forecast_expected_date')
     def _compute_components_availability(self):
@@ -835,7 +833,7 @@ class MrpProduction(models.Model):
                 workorder.duration_expected = workorder._get_duration_expected()
 
     def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
-        group_orders = self.procurement_group_id.mrp_production_ids
+        group_orders = self._get_backorder_productions()
         move_dest_ids = self.move_dest_ids
         if len(group_orders) > 1:
             move_dest_ids |= group_orders[0].move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
@@ -1007,7 +1005,7 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids
+        mrp_production_ids = self._get_child_productions().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -1027,7 +1025,7 @@ class MrpProduction(models.Model):
 
     def action_view_mrp_production_sources(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.mrp_production_ids.ids
+        mrp_production_ids = self._get_source_productions().ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -1046,7 +1044,7 @@ class MrpProduction(models.Model):
         return action
 
     def action_view_mrp_production_backorders(self):
-        backorder_ids = self.procurement_group_id.mrp_production_ids.ids
+        backorder_ids = self._get_backorder_productions().ids
         return {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -1662,6 +1660,24 @@ class MrpProduction(models.Model):
     @api.model
     def _prepare_procurement_group_vals(self, values):
         return {'name': values['name']}
+
+    def _get_backorder_productions(self):
+        product_ids = set(self.product_id.ids)
+        return self.procurement_group_id.mrp_production_ids.filtered(lambda mo: mo.product_id.id in product_ids)
+
+    def _get_child_productions(self):
+        backorder_productions = self._get_backorder_productions()
+        move_sources = backorder_productions.move_raw_ids
+        while not move_sources.created_production_id and move_sources != move_sources | move_sources.move_orig_ids:
+            move_sources |= move_sources.move_orig_ids
+        return move_sources.created_production_id._get_backorder_productions()
+
+    def _get_source_productions(self):
+        backorder_productions = self._get_backorder_productions()
+        move_dest = backorder_productions.move_dest_ids
+        while not move_dest.group_id.mrp_production_ids and move_dest != move_dest | move_dest.move_dest_ids:
+            move_dest |= move_dest.move_dest_ids
+        return move_dest.group_id.mrp_production_ids
 
     def _get_quantity_to_backorder(self):
         self.ensure_one()

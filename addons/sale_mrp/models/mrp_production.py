@@ -15,11 +15,11 @@ class MrpProduction(models.Model):
     @api.depends('procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id')
     def _compute_sale_order_count(self):
         for production in self:
-            production.sale_order_count = len(production.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id)
+            production.sale_order_count = len(production._get_backorder_productions().move_dest_ids.group_id.sale_id)
 
     def action_view_sale_orders(self):
         self.ensure_one()
-        sale_order_ids = self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.ids
+        sale_order_ids = self._get_backorder_productions().move_dest_ids.group_id.sale_id.ids
         action = {
             'res_model': 'sale.order',
             'type': 'ir.actions.act_window',
