@@ -222,9 +222,6 @@ var ListRenderer = BasicRenderer.extend({
                 return;
             }
             var $cell = $('<td>');
-            if (config.debug) {
-                $cell.addClass(column.attrs.name);
-            }
             if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
                 var value = aggregateValues[column.attrs.name].value;
