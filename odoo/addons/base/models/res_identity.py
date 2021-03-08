@@ -112,6 +112,7 @@ class ResIdentity(models.Model):
         :param str email: string hopefully holding an email. It is parsed to
           try to find an email. If not it is used to populate an identity
           name.
+
         :return: recordset of identity: either the one matching ``email``
           either a new one creted from ``email`` either void if ``email`` is
           void.
