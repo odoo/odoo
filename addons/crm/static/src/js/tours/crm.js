@@ -60,7 +60,7 @@ tour.register('crm_tour', {
 }, {
     trigger: '.modal-footer button[name="action_close_dialog"]',
     content: _t("All set. Let’s <b>Schedule</b> it."),
-    position: "bottom",
+    position: "top",  // dot NOT move to bottom, it would cause a resize flicker, see task-2476595
     run: function (actions) {
         actions.auto('.modal-footer button[special=cancel]');
     },
