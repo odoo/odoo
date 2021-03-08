@@ -21,6 +21,8 @@ class ResIdentity(models.Model):
     # link with other contact models
     partner_id = fields.Many2one('res.partner', string='Partner')
     partner_ids = fields.One2many('res.partner', 'identity_id', 'Partners')
+    user_id = fields.Many2one('res.users', string='User')
+    user_ids = fields.One2many('res.users', 'identity_id', 'Users')
     # security / access
     token = fields.Char(string='Token')
 

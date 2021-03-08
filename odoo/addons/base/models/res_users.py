@@ -282,12 +282,13 @@ class Users(models.Model):
         return image_process(image, colorize=True)
 
     # identity
+    identity_id = fields.Many2one(
+        'res.identity', string='Identity',
+        auto_join=True, ondelete='restrict', required=True)
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
-    # overridden inherited fields to bypass access rights, in case you have
-    # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
-    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    name = fields.Char(related='identity_id.name', readonly=False)
+    email = fields.Char(related='identity_id.email', readonly=False)
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     # preferences
     signature = fields.Html(string="Email Signature", default="")
