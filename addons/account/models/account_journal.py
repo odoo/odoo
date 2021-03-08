@@ -598,7 +598,7 @@ class AccountJournal(models.Model):
                 invoice = decoder[1](attachment)
                 if invoice:
                     break
-            if not invoice:
+            if not invoice or (self.env.context.get('default_move_type') and invoice.move_type[:2] != self.env.context.get('default_move_type')[:2]):
                 invoice = self.env['account.move'].create({})
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
             invoices += invoice
