@@ -63,7 +63,7 @@ class UoM(models.Model):
         if self.uom_type == 'reference':
             self.factor = 1
 
-    @api.constrains('category_id', 'uom_type', 'active')
+    @api.model
     def _check_category_reference_uniqueness(self):
         """ Force the existence of only one UoM reference per category
             NOTE: this is a constraint on the all table. This might not be a good practice, but this is
@@ -99,13 +99,32 @@ class UoM(models.Model):
             if 'factor_inv' in values:
                 factor_inv = values.pop('factor_inv')
                 values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
-        return super(UoM, self).create(vals_list)
+        uoms = super(UoM, self).create(vals_list)
+        self._check_category_reference_uniqueness()
+        return uoms
 
     def write(self, values):
         if 'factor_inv' in values:
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
-        return super(UoM, self).write(values)
+        if 'uom_type' in values and values['uom_type'] == 'reference':
+            old_factor = self.factor
+        res = super(UoM, self).write(values)
+        if 'uom_type' not in values or values['uom_type'] != 'reference':
+            self._check_category_reference_uniqueness()
+        else:
+            other_uom = self.search([
+                ('category_id', 'in', self.category_id.ids),
+                ('id', 'not in', self.ids)
+            ])
+            for uom in other_uom:
+                new_factor = uom.factor / old_factor
+                new_type = 'smaller' if new_factor < 0 else 'bigger'
+                uom.write({
+                    'factor': new_factor,
+                    'uom_type': new_type,
+                })
+        return res
 
     def unlink(self):
         uom_categ_unit = self.env.ref('uom.product_uom_categ_unit')
