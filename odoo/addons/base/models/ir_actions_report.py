@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from markupsafe import Markup
+
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
@@ -382,7 +384,11 @@ class IrActionsReport(models.Model):
             # set context language to body language
             if node.get('data-oe-lang'):
                 layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
-            body = layout_with_lang._render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            body = layout_with_lang._render({
+                'subst': False,
+                'body': Markup(lxml.html.tostring(node, encoding='unicode')),
+                'base_url': base_url
+            })
             bodies.append(body)
             if node.get('data-oe-model') == self.model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
@@ -390,7 +396,7 @@ class IrActionsReport(models.Model):
                 res_ids.append(None)
 
         if not bodies:
-            body = bytearray().join([lxml.html.tostring(c) for c in body_parent.getchildren()])
+            body = b''.join(lxml.html.tostring(c, encoding='utf-8') for c in body_parent.getchildren())
             bodies.append(body)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
@@ -400,8 +406,16 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout._render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
-        footer = layout._render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+        header = layout._render({
+            'subst': True,
+            'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
+            'base_url': base_url
+        })
+        footer = layout._render({
+            'subst': True,
+            'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
+            'base_url': base_url
+        })
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
