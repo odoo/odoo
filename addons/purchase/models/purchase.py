@@ -4,6 +4,8 @@ from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 from functools import partial
 from itertools import groupby
+
+from markupsafe import escape, Markup
 from pytz import timezone, UTC
 from werkzeug.urls import url_encode
 
@@ -308,9 +310,6 @@ class PurchaseOrder(models.Model):
     def onchange_partner_id_warning(self):
         if not self.partner_id or not self.env.user.has_group('purchase.group_warning_purchase'):
             return
-        warning = {}
-        title = False
-        message = False
 
         partner = self.partner_id
 
@@ -705,7 +704,7 @@ class PurchaseOrder(models.Model):
                 raise_exception=False,
                 email_values={'email_to': self.env.user.email, 'recipient_ids': []},
                 notif_layout="mail.mail_notification_paynow")
-            return {'toast_message': _("A sample email has been sent to %s.") % self.env.user.email}
+            return {'toast_message': escape(_("A sample email has been sent to %s.", self.env.user.email))}
 
     def _send_reminder_open_composer(self,template_id):
         self.ensure_one()
@@ -776,7 +775,7 @@ class PurchaseOrder(models.Model):
             if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
                 order.mail_reminder_confirmed = True
                 date = confirmed_date or self.date_planned.date()
-                order.message_post(body="%s confirmed the receipt will take place on %s." % (order.partner_id.name, date))
+                order.message_post(body=_("%s confirmed the receipt will take place on %s.", order.partner_id.name, date))
 
     def _approval_allowed(self):
         """Returns whether the order qualifies to be approved by the current user"""
@@ -793,7 +792,7 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state in ['purchase', 'done'] and not order.mail_reception_confirmed:
                 order.mail_reception_confirmed = True
-                order.message_post(body="The order receipt has been acknowledged by %s." % order.partner_id.name)
+                order.message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
 
     def _update_date_planned_for_lines(self, updated_dates):
         # create or update the activity
@@ -812,9 +811,14 @@ class PurchaseOrder(models.Model):
             line._update_date_planned(date)
 
     def _create_update_date_activity(self, updated_dates):
-        note = _('<p> %s modified receipt dates for the following products:</p>') % self.partner_id.name
+        note = Markup('<p>%s</p>\n') % _('%s modified receipt dates for the following products:', self.partner_id.name)
         for line, date in updated_dates:
-            note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned.date(), date.date())
+            note += Markup('<p> - %s</p>\n') % _(
+                '%(product)s from %(original_receipt_date)s to %(new_receipt_date)s',
+                product=line.product_id.display_name,
+                original_receipt_date=line.date_planned.date(),
+                new_receipt_date=date.date()
+            )
         activity = self.activity_schedule(
             'mail.mail_activity_data_warning',
             summary=_("Date Updated"),
@@ -828,7 +832,12 @@ class PurchaseOrder(models.Model):
 
     def _update_update_date_activity(self, updated_dates, activity):
         for line, date in updated_dates:
-            activity.note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned.date(), date.date())
+            activity.note += Markup('<p> - %s</p>\n') %  _(
+                '%(product)s from %(original_receipt_date)s to %(new_receipt_date)s',
+                product=line.product_id.display_name,
+                original_receipt_date=line.date_planned.date(),
+                new_receipt_date=date.date()
+            )
 
 
 class PurchaseOrderLine(models.Model):
