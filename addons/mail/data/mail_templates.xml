@@ -43,13 +43,13 @@
     </tr></tbody>
     </table>
 </div>
-<div t-raw="message.body"/>
+<div t-out="message.body"/>
 <ul t-if="tracking_values">
     <t t-foreach="tracking_values" t-as="tracking">
         <li><t t-esc="tracking[0]"/>: <t t-esc="tracking[1]"/> -&gt; <t t-esc="tracking[2]"/></li>
     </t>
 </ul>
-<div t-if="signature" t-raw="signature" style="font-size: 13px;"/>
+<div t-if="signature" t-out="signature" style="font-size: 13px;"/>
 <p style="color: #555555; margin-top:32px;">
     Sent
     <span t-if="company.name">
@@ -88,7 +88,7 @@
         <td align="center" style="min-width: 590px;">
             <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
                 <tbody><td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
-                    <t t-raw="message.body"/>
+                    <t t-out="message.body"/>
                 </td></tbody>
             </table>
         </td>
@@ -148,7 +148,7 @@
     <!-- CONTENT -->
     <tr>
         <td style="min-width: 590px;">
-            <t t-raw="message.body"/>
+            <t t-out="message.body"/>
         </td>
     </tr>
     <!-- FOOTER -->
@@ -218,7 +218,7 @@
     <!-- CONTENT -->
     <tr>
         <td style="padding: 0">
-            <t t-raw="message.body"/>
+            <t t-out="message.body"/>
             <div t-if="is_online and not record._context.get('proforma')" style="margin: 32px 0px 32px 0px; text-align: center;">
                 <a t-att-href="access_url"
                     style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
@@ -231,7 +231,7 @@
                 </div>
                 <div>&amp;nbsp;</div>
                 <div t-if="record.user_id.sudo().signature" style="font-size: 13px;">
-                    <div t-raw="record.user_id.sudo().signature"/>
+                    <div t-out="record.user_id.sudo().signature"/>
                 </div>
             </t>
         </td>
@@ -338,8 +338,8 @@
 
         <!-- Mail bounce alias mail template -->
         <template id="mail_bounce_alias_security">
-<div><t t-raw="body"/></div>
-<blockquote><t t-raw="message['body']"/></blockquote>
+<div><t t-out="body"/></div>
+<blockquote><t t-out="message['body']"/></blockquote>
         </template>
 
         <!-- Channel and moderation related data -->
