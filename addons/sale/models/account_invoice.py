@@ -60,7 +60,7 @@ class AccountMove(models.Model):
     @api.onchange('invoice_user_id')
     def onchange_user_id(self):
         if self.invoice_user_id and self.invoice_user_id.sale_team_id:
-            self.team_id = self.invoice_user_id.sale_team_id
+            self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.invoice_user_id.id, domain=[('company_id', '=', self.company_id.id)])
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE
