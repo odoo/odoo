@@ -532,10 +532,32 @@ class WebsiteSale(http.Controller):
         return values
 
     def _get_mandatory_billing_fields(self):
+        # deprecated for _get_mandatory_fields_billing which handle zip/state required
         return ["name", "email", "street", "city", "country_id"]
 
     def _get_mandatory_shipping_fields(self):
+        # deprecated for _get_mandatory_fields_shipping which handle zip/state required
         return ["name", "street", "city", "country_id"]
+
+    def _get_mandatory_fields_billing(self, country_id=False):
+        req = self._get_mandatory_billing_fields()
+        if country_id:
+            country = request.env['res.country'].browse(country_id)
+            if country.state_required:
+                req += ['state_id']
+            if country.zip_required:
+                req += ['zip']
+        return req
+
+    def _get_mandatory_fields_shipping(self, country_id=False):
+        req = self._get_mandatory_shipping_fields()
+        if country_id:
+            country = request.env['res.country'].browse(country_id)
+            if country.state_required:
+                req += ['state_id']
+            if country.zip_required:
+                req += ['zip']
+        return req
 
     def checkout_form_validate(self, mode, all_form_values, data):
         # mode: tuple ('new|edit', 'billing|shipping')
@@ -546,16 +568,10 @@ class WebsiteSale(http.Controller):
 
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
+
         # Required fields from mandatory field function
-        required_fields += mode[1] == 'shipping' and self._get_mandatory_shipping_fields() or self._get_mandatory_billing_fields()
-        # Check if state required
-        country = request.env['res.country']
-        if data.get('country_id'):
-            country = country.browse(int(data.get('country_id')))
-            if country.state_required:
-                required_fields += ['state_id']
-            if country.zip_required:
-                required_fields += ['zip']
+        country_id = int(data.get('country_id', False))
+        required_fields += mode[1] == 'shipping' and self._get_mandatory_fields_shipping(country_id) or self._get_mandatory_fields_billing(country_id)
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -570,12 +586,11 @@ class WebsiteSale(http.Controller):
         # vat validation
         Partner = request.env['res.partner']
         if data.get("vat") and hasattr(Partner, "check_vat"):
-            if data.get("country_id"):
-                data["vat"] = Partner.fix_eu_vat_number(data.get("country_id"), data.get("vat"))
+            if country_id:
+                data["vat"] = Partner.fix_eu_vat_number(country_id, data.get("vat"))
             partner_dummy = Partner.new({
                 'vat': data['vat'],
-                'country_id': (int(data['country_id'])
-                               if data.get('country_id') else False),
+                'country_id': country_id or False,
             })
             try:
                 partner_dummy.check_vat()
@@ -740,9 +755,13 @@ class WebsiteSale(http.Controller):
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             return request.redirect('/shop/address')
 
-        for f in self._get_mandatory_billing_fields():
-            if not order.partner_id[f]:
-                return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+        billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
+        if not all(order.partner_id.read(billing_fields_required)[0].values()):
+            return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+
+        shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
+        if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
+            return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
 
         values = self.checkout_values(**post)
 
