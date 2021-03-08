@@ -52,6 +52,12 @@ var Followers = AbstractField.extend({
         this.isEditable = options.isEditable;
     },
     _render: function () {
+        //if we should invisible this field 
+        //applied it when groups & attrs invisible
+        if (this.attrs.invisible) {
+            this.$el.toggleClass("o_invisible_modifier");
+            return;
+        }
         // note: the rendering of this widget is asynchronous as it needs to
         // fetch the details of the followers, but it performs a first rendering
         // synchronously (_displayGeneric), and updates its rendering once it
