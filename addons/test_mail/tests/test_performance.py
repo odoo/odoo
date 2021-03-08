@@ -832,6 +832,32 @@ class TestMailComplexPerformance(BaseMailPerformance):
             for message in res:
                 self.assertEqual(len(message['attachment_ids']), 2)
 
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('emp')
+    @warmup
+    def test_message_format_group_thread_name_by_model(self):
+        """Ensures the fetch of multiple thread names is grouped by model."""
+        records = []
+        for i in range(5):
+            records.append(self.env['mail.test.simple'].create({'name': 'Test'}))
+        records.append(self.env['mail.test.track'].create({'name': 'Test'}))
+
+        messages = self.env['mail.message'].create([{
+            'model': record._name,
+            'res_id': record.id
+        } for record in records])
+
+        with self.assertQueryCount(emp=5):
+            res = messages.message_format()
+            self.assertEqual(len(res), 6)
+
+        messages.flush()
+        messages.invalidate_cache()
+
+        with self.assertQueryCount(emp=15):
+            res = messages.message_format()
+            self.assertEqual(len(res), 6)
+
 
 @tagged('mail_performance')
 class TestMailHeavyPerformancePost(BaseMailPerformance):
