@@ -27,7 +27,7 @@ class PaymentLinkWizard(models.TransientModel):
                 'description': record.payment_reference,
                 'amount': record[amount_field],
                 'currency_id': record.currency_id.id,
-                'partner_id': record.partner_id.id,
+                'partner_id': record.commercial_partner_id.id,
                 'amount_max': record[amount_field],
             })
         return res
