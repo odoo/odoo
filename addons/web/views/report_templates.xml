@@ -49,7 +49,7 @@
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <style>
-                    <t t-raw="preview_css"/>
+                    <t t-out="preview_css"/>
 
                     /**
                         Some css is overridden as it doesn't work properly in the preview.
@@ -279,7 +279,7 @@
                 </script>
             </head>
             <body class="container" t-att-onload="subst and 'subst()'">
-                <t t-raw="body"/>
+                <t t-out="body"/>
             </body>
         </html>
     </template>
@@ -293,7 +293,7 @@
                 <t t-if="information_block">
                     <t t-set="colclass" t-value="'col-5 offset-1'"/>
                     <div name="information_block" class="col-6">
-                        <t t-raw="information_block"/>
+                        <t t-out="information_block"/>
                     </div>
                 </t>
                 <div name="address" t-att-class="colclass">
