@@ -28,7 +28,6 @@
         'data/hr_recruitment_data.xml',
         'views/hr_recruitment_views.xml',
         'views/res_config_settings_views.xml',
-        'views/hr_recruitment_templates.xml',
         'views/hr_department_views.xml',
         'views/hr_job_views.xml',
         'views/mail_activity_views.xml',
@@ -41,4 +40,18 @@
     'installable': True,
     'auto_install': False,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'hr_recruitment/static/src/scss/hr_job.scss',
+            # inside .
+            'hr_recruitment/static/src/js/recruitment.js',
+            # inside .
+            'hr_recruitment/static/src/js/tours/hr_recruitment.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            # wtf
+        ],
+    }
 }
