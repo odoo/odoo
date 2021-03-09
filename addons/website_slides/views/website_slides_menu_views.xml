@@ -32,10 +32,16 @@
         parent="website_slides_menu_courses"
         sequence="2"
         action="slide_slide_action"/>
+    <menuitem name="Quizzes"
+        id="website_slides_menu_courses_quizz"
+        parent="website_slides_menu_courses"
+        sequence="3"
+        groups="base.group_no_one"
+        action="slide_question_action"/>
     <menuitem name="Reviews"
         id="website_slides_menu_courses_reviews"
         parent="website_slides_menu_courses"
-        sequence="3"
+        sequence="4"
         action="rating_rating_action_slide_channel"/>
 
     <!-- Reporting sub-menu -->
@@ -49,16 +55,16 @@
         parent="website_slides_menu_report"
         sequence="2"
         action="slide_slide_action_report"/>
-    <menuitem name="Reviews"
-        id="website_slides_menu_report_reviews"
-        parent="website_slides_menu_report"
-        sequence="6"
-        action="rating_rating_action_slide_channel_report"/>
     <menuitem name="Quizzes"
         id="website_slides_menu_report_quizzes"
         parent="website_slides_menu_report"
-        sequence="7"
+        sequence="6"
         action="slide_question_action_report"/>
+    <menuitem name="Reviews"
+        id="website_slides_menu_report_reviews"
+        parent="website_slides_menu_report"
+        sequence="7"
+        action="rating_rating_action_slide_channel_report"/>
 
     <!-- Settings sub-menu -->
     <menuitem name="Settings"

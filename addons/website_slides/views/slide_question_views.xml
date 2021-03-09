@@ -10,6 +10,7 @@
                     <h1>
                         <field name="question" default_focus="1"/>
                     </h1>
+                    <field name="slide_id"></field>
                     <field name="answer_ids">
                         <tree editable="bottom" create="true" delete="true">
                             <field name="text_value"/>
@@ -25,27 +26,12 @@
     <record id="slide_question_view_tree" model="ir.ui.view">
         <field name="name">slide.question.view.tree</field>
         <field name="model">slide.question</field>
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <tree string="Quizzes">
                 <field name="sequence" widget="handle"/>
                 <field name="question"/>
                 <field name="slide_id"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="slide_question_view_tree_report" model="ir.ui.view">
-        <field name="name">slide.question.view.tree.report</field>
-        <field name="model">slide.question</field>
-        <field name="priority">20</field>
-        <field name="arch" type="xml">
-            <tree string="Quizzes" create="0">
-                <field name="sequence" widget="handle"/>
-                <field name="question"/>
-                <field name="slide_id"/>
-                <field name="attempts_count"/>
-                <field name="attempts_avg"/>
-                <field name="done_count"/>
             </tree>
         </field>
     </record>
@@ -57,7 +43,54 @@
             <search string="Quizzes">
                 <field name="question"/>
                 <field name="slide_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Course" name="group_course" context="{'group_by': 'slide_id'}"/>
+                </group>
             </search>
+        </field>
+    </record>
+
+    <record id="slide_question_view_tree_report" model="ir.ui.view">
+        <field name="name">slide.question.view.tree.report</field>
+        <field name="model">slide.question</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Quizzes" create="0">
+                <field name="question"/>
+                <field name="slide_id"/>
+                <field name="attempts_count"/>
+                <field name="attempts_avg"/>
+                <field name="done_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="slide_question_view_graph_report" model="ir.ui.view">
+        <field name="name">slide.question.view.graph</field>
+        <field name="model">slide.question</field>
+        <field name="arch" type="xml">
+            <graph string="Graph of questions">
+                <field name="question" type="row"/>
+                <field name="attempts_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- ir.actions.act_window -->
+
+    <record id="slide_question_action" model="ir.actions.act_window">
+        <field name="name">Quizzes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">slide.question</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="slide_question_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                There are no quizzes
+            </p>
+            <p>
+                Add quizzes at the end of your lessons to evaluate what your students understood.
+            </p>
         </field>
     </record>
 
@@ -65,8 +98,13 @@
         <field name="name">Quizzes</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">slide.question</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="slide_question_view_tree_report"/>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                     (0, 0, {'view_mode': 'graph', 'view_id': ref('slide_question_view_graph_report')}),
+                     (0, 0, {'view_mode': 'tree', 'view_id': ref('slide_question_view_tree_report')})]
+                     " />
+        <field name="context">{'search_default_group_course': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 There are no quizzes
