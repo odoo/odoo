@@ -16,7 +16,6 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/assets.xml',
         'views/event_leaderboard_templates.xml',
         'views/event_quiz_views.xml',
         'views/event_quiz_question_views.xml',
@@ -33,4 +32,14 @@
     ],
     'application': False,
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            # after //link[last()]
+            'website_event_track_quiz/static/src/scss/event_quiz.scss',
+            # after //script[last()]
+            'website_event_track_quiz/static/src/js/event_quiz.js',
+            # after //script[last()]
+            'website_event_track_quiz/static/src/js/event_quiz_leaderboard.js',
+        ],
+    }
 }
