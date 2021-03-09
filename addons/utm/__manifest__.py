@@ -11,7 +11,6 @@ Enable management of UTM trackers: campaign, medium, source.
     'depends': ['base', 'web'],
     'data': [
         'data/utm_data.xml',
-        'views/assets.xml',
         'views/utm_campaign_views.xml',
         'views/utm_views.xml',
         'security/ir.model.access.csv',
@@ -20,4 +19,12 @@ Enable management of UTM trackers: campaign, medium, source.
         'data/utm_demo.xml',
     ],
     'auto_install': False,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'utm/static/src/js/utm_campaign_kanban_examples.js',
+            # after link[last()]
+            'utm/static/src/scss/utm_views.scss',
+        ],
+    }
 }
