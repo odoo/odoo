@@ -16,12 +16,25 @@ to support In-App purchases inside Odoo. """,
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        'views/assets.xml',
         'views/iap_views.xml',
         'views/res_config_settings.xml',
     ],
-    'qweb': [
-        'static/src/xml/iap_templates.xml',
-    ],
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'iap/static/src/js/iap_credit.js',
+            # inside .
+            'iap/static/src/js/crash_manager.js',
+            # inside .
+            'iap/static/src/js/iap_buy_more_credits.js',
+        ],
+        'web.tests_assets': [
+            # inside .
+            'iap/static/tests/helpers/mock_server.js',
+        ],
+        'web.assets_qweb': [
+            'iap/static/src/xml/iap_templates.xml',
+        ],
+    }
 }
