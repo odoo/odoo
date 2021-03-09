@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-07 08:33+0000\n"
-"PO-Revision-Date: 2021-02-07 19:32+0330\n"
+"POT-Creation-Date: 2021-03-08 06:00+0000\n"
+"PO-Revision-Date: 2021-03-08 13:45+0330\n"
 "Last-Translator: Amir <kenevist>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,16 @@ msgstr "&amp; ارسال"
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
 msgid ", .s_wsale_products_searchbar_input"
 msgstr ""
+
+#. module: website_sale
+#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
+msgid "1 year"
+msgstr "1 سال"
+
+#. module: website_sale
+#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_2
+msgid "2 year"
+msgstr "2 سال"
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -178,6 +188,137 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top:"
+" 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif;"
+" color: #454748; width: 100%; border-collapse:separate;\"><tr><td"
+" align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"padding: 16px; background-color: white; color: #454748;"
+" border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    % set company = object.company_id or"
+" object.user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">Your Cart</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${company.id}\""
+" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\""
+" alt=\"${company.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line"
+"-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; padding:"
+" 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">سبد خرید شما خالی نیست!</h1"
+">\n"
+"                    آیا تمایل دارید فرآیند خرید را تکمیل کنید؟<br/><br/>\n"
+"                    % if object.order_line:\n"
+"                        % for line in object.website_order_line:\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\""
+">\n"
+"                                        <img"
+" src=\"/web/image/product.product/${line.product_id.id}/image_128\""
+" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product"
+" image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong"
+">${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        ${(line.product_uom_qty) | int}"
+" ${(line.product_uom.name)}\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        % endfor\n"
+"                        <hr/>\n"
+"                    % endif\n"
+"                    <div style=\"text-align: center; margin: 16px 0px 16px"
+" 0px; font-size: 14px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_to"
+"ken=${object.access_token}\" target=\"_blank\" style=\"background-color:"
+" #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff;"
+" border-radius: 5px; font-size:13px;\">\n"
+"                            ادامه سفارش\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"text-align: center;\"><strong>با تشکر از شما"
+" برای خرید با ${company.name}!</strong></div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line"
+"-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\""
+" width=\"590\" style=\"min-width: 590px; background-color: white; font-size:"
+" 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${company.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity:"
+" 0.7;\">\n"
+"                    ${company.phone}\n"
+"                    % if company.email\n"
+"                        | <a href=\"'mailto:%s' % ${company.email}\""
+" style=\"text-decoration:none; color: #454748;\">${company.email}</a>\n"
+"                    % endif\n"
+"                    % if company.website\n"
+"                        | <a href=\"'%s' % ${company.website}\""
+" style=\"text-decoration:none; color: #454748;\">${company.website}</a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\""
+" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748;"
+" padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        ایجاد شده توسط<a target=\"_blank\""
+" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\""
+" style=\"color: #875A7B;\">کنویست</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -282,7 +423,8 @@ msgstr ""
 " بازدید کنندگان وب‌سایت شما از بیش از یک ساعت قبل ایجاد کرده‌اند و هنوز تایید"
 " نشده‌اند. </ p> \n"
 "                         <p> برای ترغیب کردن مشتریان بهتر است به آنها ایمیل"
-" ارسال کنید! </ p> \n "
+" ارسال کنید! </ p> \n"
+" "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -318,7 +460,7 @@ msgid ""
 "label=\"Details\" title=\"Details\"/>"
 msgstr ""
 "<span class=\"fa fa-chevron-down fa-border float-right\" role=\"img\" aria-"
-"label=\"جزئیات\" title=\"جزئیات\"/>"
+"label=\"Details\" title=\"جزئیات\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -326,7 +468,7 @@ msgid ""
 "<span class=\"fa fa-chevron-left p-2\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
-"<span class=\"fa fa-chevron-left p-2\" role=\"img\" aria-label=\"قبلی\" "
+"<span class=\"fa fa-chevron-left p-2\" role=\"img\" aria-label=\"Previous\" "
 "title=\"قبلی\"/>"
 
 #. module: website_sale
@@ -362,7 +504,7 @@ msgid ""
 "<span class=\"fa fa-chevron-right p-2\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
-"<span class=\"fa fa-chevron-right p-2\" role=\"img\" aria-label=\"بعدی\" "
+"<span class=\"fa fa-chevron-right p-2\" role=\"img\" aria-label=\"Next\" "
 "title=\"بعدی\"/>"
 
 #. module: website_sale
@@ -410,8 +552,8 @@ msgstr ""
 msgid ""
 "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
 msgstr ""
-"<span class=\"s_website_form_label_content\">نظر خود را با ما درمیان بگذارید<"
-"/span>"
+"<span class=\"s_website_form_label_content\">نظر خود را با ما درمیان "
+"بگذارید</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -484,9 +626,9 @@ msgid ""
 "This should the country in which your company is headquartered or the "
 "country from which you operate your web site and mobile app."
 msgstr ""
-"یک <b>قانون حاکم </b>  به کاربران اطلاع می‌دهد که کدام قوانین بر توافق‌نامه"
-" حاکم هستند. این مربوط به کشوری می‌باشد که دفتر مرکزی شرکت شما در آن قرار"
-" دارد یا کشوری  که وب‌سایت و برنامه تلفن همراه خود را از آنجا اداره می‌کنید. "
+"یک <b>قانون حاکم </b>  به کاربران اطلاع می‌دهد که کدام قوانین بر توافق‌نامه "
+"حاکم هستند. این مربوط به کشوری می‌باشد که دفتر مرکزی شرکت شما در آن قرار "
+"دارد یا کشوری  که وب‌سایت و برنامه تلفن همراه خود را از آنجا اداره می‌کنید. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -496,11 +638,11 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
-"بند <b> محدودیت کاری که کاربران می‌توانند انجام دهند </ b> می‌تواند به"
-" کاربران اطلاع دهد که با موافقت با استفاده از خدمات شما، آنها همچنین توافق"
-" می‌کنند که کارهای خاصی را انجام ندهند. این می‌تواند بخشی از یک لیست بسیار"
-" طولانی و کامل در توافق‌نامه شرایط و ضوابط شما باشد تا بیشترین میزان"
-" استفاده‌های نادرست را در بر بگیرد. "
+"بند <b> محدودیت کاری که کاربران می‌توانند انجام دهند </ b> می‌تواند به "
+"کاربران اطلاع دهد که با موافقت با استفاده از خدمات شما، آنها همچنین توافق "
+"می‌کنند که کارهای خاصی را انجام ندهند. این می‌تواند بخشی از یک لیست بسیار "
+"طولانی و کامل در توافق‌نامه شرایط و ضوابط شما باشد تا بیشترین میزان "
+"استفاده‌های نادرست را در بر بگیرد. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -511,10 +653,10 @@ msgid ""
 " agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
 " of these third parties."
 msgstr ""
-"بند <b> پیوند به سایر وب‌سایت‌ها </ b> به کاربران اطلاع می‌دهد که شما"
-" مسئولیتی در قبال وب‌سایت‌های شخص ثالثی که به آنها پیوند می‌دهید، ندارید. این"
-" نوع بندها به طور کلی به کاربران اطلاع می‌دهد که آنها مسئول خواندن و توافق"
-" (یا مخالفت) با شرایط و ضوابط یا خط مشی‌های رازداری این اشخاص ثالث هستند."
+"بند <b> پیوند به سایر وب‌سایت‌ها </ b> به کاربران اطلاع می‌دهد که شما "
+"مسئولیتی در قبال وب‌سایت‌های شخص ثالثی که به آنها پیوند می‌دهید، ندارید. این"
+" نوع بندها به طور کلی به کاربران اطلاع می‌دهد که آنها مسئول خواندن و توافق "
+"(یا مخالفت) با شرایط و ضوابط یا خط مشی‌های رازداری این اشخاص ثالث هستند."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -524,10 +666,10 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
-"بند <b> فسخ </ b> به شما اطلاع می‌دهد که حساب‌های کاربران در وب‌سایت و برنامه"
-" تلفن همراه شما یا دسترسی کاربران به وب‌سایت و برنامه تلفن همراه شما (اگر"
-" کاربران نمی‌توانند با شما حساب کاربری داشته باشند) در صورت سواستفاده  یا به"
-" صلاحدید خودتان فسخ می‌شود."
+"بند <b> فسخ </ b> به شما اطلاع می‌دهد که حساب‌های کاربران در وب‌سایت و "
+"برنامه تلفن همراه شما یا دسترسی کاربران به وب‌سایت و برنامه تلفن همراه شما "
+"(اگر کاربران نمی‌توانند با شما حساب کاربری داشته باشند) در صورت سواستفاده  "
+"یا به صلاحدید خودتان فسخ می‌شود."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -587,10 +729,10 @@ msgid ""
 "find them in *Website > Orders > Abandoned Carts*. From there you can send "
 "recovery emails to visitors who entered their contact details."
 msgstr ""
-"سبدهای خرید ترک شده سبدهای خریدی هستند که توسط بازدید کنندگان وب‌سایت تایید"
-" نشده‌اند. می‌توانید آنها را در * وب‌سایت>سفارشات> سبدهای خرید ترک شده * پیدا"
-" کنید. از آنجا می‌توانید برای بازدیدکنندگانی که اطلاعات تماس خود را وارد"
-" کرده‌اند ایمیل بازیابی ارسال کنید. "
+"سبدهای خرید ترک شده سبدهای خریدی هستند که توسط بازدید کنندگان وب‌سایت تایید "
+"نشده‌اند. می‌توانید آنها را در * وب‌سایت>سفارشات> سبدهای خرید ترک شده * پیدا"
+" کنید. از آنجا می‌توانید برای بازدیدکنندگانی که اطلاعات تماس خود را وارد "
+"کرده‌اند ایمیل بازیابی ارسال کنید. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -604,8 +746,8 @@ msgid ""
 "Accessories show up when the customer reviews the cart before payment "
 "(cross-sell strategy)."
 msgstr ""
-"لوازم جانبی هنگامی که مشتری سبد خرید خود را بازبینی می‌کند، قبل از پرداخت"
-" (استراتژی فروش متقابل) نشان داده می‌شوند. "
+"لوازم جانبی هنگامی که مشتری سبد خرید خود را بازبینی می‌کند، قبل از پرداخت "
+"(استراتژی فروش متقابل) نشان داده می‌شوند. "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -638,6 +780,7 @@ msgstr "نشانی"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_options
 msgid "All Products"
 msgstr "همه کالاها"
 
@@ -728,6 +871,16 @@ msgid "Be aware!"
 msgstr "آگاه باشید!"
 
 #. module: website_sale
+#: model:res.country.group,name:website_sale.benelux
+msgid "BeNeLux"
+msgstr ""
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_benelux
+msgid "Benelux"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
@@ -746,6 +899,11 @@ msgid "Billing Address"
 msgstr "آدرس صورت‌حساب"
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_bins
+msgid "Bins"
+msgstr "سطل آشغال"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
@@ -756,6 +914,16 @@ msgstr ""
 "تخفیف. شرایط ویژه می‌‌تواند برای کالاها، مشتریان، مبلغ خرید حداقلی و مدت "
 "زمان تنظیم شود. پاداش‌ها می‌تواند به صورت تخفیف (درصد یا مبلغ) یا کالای "
 "مجانی باشد."
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes
+msgid "Boxes"
+msgstr "بسته‌ها"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets
+msgid "Cabinets"
+msgstr "کابینت‌ها"
 
 #. module: website_sale
 #. openerp-web
@@ -780,7 +948,7 @@ msgstr "می‌تواند منتشر کند "
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Capture order payments when the delivery is completed."
-msgstr "پس از اتمام تحویل، پرداخت‌های سفارش را بگیرید. ***"
+msgstr "پس از اتمام تحویل، پرداخت‌های معوق را دریافت کنید."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_quantity
@@ -819,12 +987,12 @@ msgstr "سبدهای خرید بعد از این مدت زمان ترک شده �
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: High to Low"
-msgstr "قیمت کاتالوگ: زیاد تا کم"
+msgstr "قیمت کاتالوگ: گرانترین"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: Low to High"
-msgstr "قیمت کاتالوگ: کم تا زیاد"
+msgstr "قیمت کاتالوگ: ارزانترین"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -844,6 +1012,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_description
 msgid "Category Description"
 msgstr "توضیحات دسته‌بندی "
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_chairs
+msgid "Chairs"
+msgstr "صندلی‌ها"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -866,12 +1039,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
-msgstr "طبقه‌بندی‌های فرزند"
+msgstr "طبقه‌بندی‌های پایین دست"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "انتخاب روش پرداخت"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_christmas
+msgid "Christmas"
+msgstr "نوروز"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -883,8 +1061,8 @@ msgstr "شهر"
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
 msgstr ""
-"برای ایجاد اولین محصول برروی <i> \"جدید\" </ i> در گوشه بالا سمت چپ کلیک"
-" کنید. "
+"برای ایجاد اولین محصول برروی <i> \"جدید\" </ i> در گوشه بالا سمت چپ کلیک "
+"کنید. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -919,6 +1097,11 @@ msgstr "شرکت‌ها"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "Company Name"
 msgstr "نام شرکت"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks_components
+msgid "Components"
+msgstr "اجزاء"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -990,7 +1173,7 @@ msgstr "سفارشات تایید شده"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
 msgid "Contact"
-msgstr "مخاطب"
+msgstr "شخص"
 
 #. module: website_sale
 #. openerp-web
@@ -999,6 +1182,11 @@ msgstr "مخاطب"
 #, python-format
 msgid "Conversion"
 msgstr "تبدیل"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_couches
+msgid "Couches"
+msgstr "کاناپه‌ها "
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -1099,8 +1287,8 @@ msgid ""
 "Delivery methods are selectable on the website: the customer pays for "
 "shipping costs"
 msgstr ""
-"روش‌های تحویل در وب‌سایت قابل انتخاب است: مشتری هزینه حمل و نقل را پرداخت"
-" می‌کند "
+"روش‌های تحویل در وب‌سایت قابل انتخاب است: مشتری هزینه حمل و نقل را پرداخت "
+"می‌کند "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
@@ -1114,10 +1302,15 @@ msgid "Description for the website"
 msgstr "توضیحات برای وب‌سایت "
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks
+msgid "Desks"
+msgstr "میزها"
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr "ترتیب نمایش در تجارت الکترونیکی وب‌سایت را تعیین کنید ***"
+msgstr "ترتیب نمایش در تجارت الکترونیکی وب‌سایت را تعیین کنید"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
@@ -1168,8 +1361,7 @@ msgstr "هنگام افزودن محصولات اختیاری به سبد خری
 #: code:addons/website_sale/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"دسترسی ندارید، برای ساخت ایمیل خلاصه کاربر از این داده‌ها صرف نظر کنید "
+msgstr "به دلیل عدم دسترسی، این آیتم از ایمیل خلاصه کاربر حذف شد."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__done
@@ -1196,6 +1388,11 @@ msgid "Drag this website block and drop it in your page."
 msgstr "این اجزای طراحی وب‌سایت را بکشید و آن را در صفحه خود رها کنید. "
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_drawers
+msgid "Drawers"
+msgstr "دراورها"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
 msgid "E-Commerce Extra Fields"
 msgstr "فیلدهای اضافی برای تجارت الکترونیکی"
@@ -1209,6 +1406,11 @@ msgstr "اطلاعات اضافی تجارت الکترونیکی که در صف
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "E-commerce Promotional Code"
 msgstr "کد تخفیف تجارت الکترونیکی"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_europe
+msgid "EUR"
+msgstr "یورو "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1281,17 +1483,17 @@ msgstr "اطلاعات بیشتر"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Extra Product Media"
-msgstr "***"
+msgstr "مدیای بیشتر برای کالا"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
 msgid "Extra Variant Images"
-msgstr "تصاویر اضافی گوناگون "
+msgstr "تصاویر بیشتر برای گونه "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 msgid "Extra Variant Media"
-msgstr "***"
+msgstr " مدیای بیشتر برای گونه"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1317,6 +1519,11 @@ msgstr "نام فیلد"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
 msgstr "از وب‌سایت"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures
+msgid "Furnitures"
+msgstr "مبلمان"
 
 #. module: website_sale
 #. openerp-web
@@ -1418,14 +1625,15 @@ msgid ""
 msgstr ""
 "اگر وب‌سایت یا برنامه‌های تلفن همراه شما به کاربران اجازه می‌دهد محتوا ایجاد"
 " کنند و آن محتوا را برای سایر کاربران عمومی کنند‌، یک بخش <b> محتوا </ b> به"
-" کاربران اطلاع می‌دهد که آنها حقوق محتوای ایجاد شده برای آنها محفوظ است. <br/"
-"> در بند \"محتوا\" معمولا ذکر شده است که کاربران باید به شما (توسعه دهنده"
-" وب‌سایت یا برنامه تلفن همراه) مجوز دهند تا بتوانید این محتوا را در وب‌سایت /"
-" برنامه تلفن همراه خود به اشتراک بگذارید و آن را در دسترس سایر کاربران قرار"
-" دهید. <br/> از آنجا که محتوا ایجاد شده توسط کاربران به صورت عموم قابل رویت"
-" است، ارسال بند اعلان DMCA (یا نقض حق نسخه برداری) برای اطلاع رسانی به"
-" کاربران و *** مفید است که اگر محتوایی حق کپی‌رایت را نقض کند، به هرگونه"
-" اخطار دریافت شده توسط DMCA پاسخ خواهید داد و محتوا را پایین خواهید آورید."
+" کاربران اطلاع می‌دهد که آنها حقوق محتوای ایجاد شده برای آنها محفوظ است. "
+"<br/> در بند \"محتوا\" معمولا ذکر شده است که کاربران باید به شما (توسعه "
+"دهنده وب‌سایت یا برنامه تلفن همراه) مجوز دهند تا بتوانید این محتوا را در "
+"وب‌سایت / برنامه تلفن همراه خود به اشتراک بگذارید و آن را در دسترس سایر "
+"کاربران قرار دهید. <br/> از آنجا که محتوا ایجاد شده توسط کاربران به صورت "
+"عموم قابل رویت است، ارسال بند اعلان DMCA (یا نقض حق نسخه برداری) برای اطلاع "
+"رسانی به کاربران و *** مفید است که اگر محتوایی حق کپی‌رایت را نقض کند، به "
+"هرگونه اخطار دریافت شده توسط DMCA پاسخ خواهید داد و محتوا را پایین خواهید "
+"آورید."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
@@ -1522,6 +1730,11 @@ msgstr "انجام شد"
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
 msgid "Kpi Website Sale Total Value"
 msgstr "شاخص ارزش کل فروش وب‌سایت"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_lamps
+msgid "Lamps"
+msgstr "لامپ‌ها"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_account_move____last_update
@@ -1628,8 +1841,8 @@ msgid ""
 "Let's now take a look at your administration dashboard to get your eCommerce"
 " website ready in no time."
 msgstr ""
-"بیایید اکنون نگاهی به داشبورد مدیریتی شما بیندازیم، تا وب‌سایت تجارت"
-" الکترونیک شما در کمترین زمان آماده شود. "
+"بیایید اکنون نگاهی به داشبورد مدیریتی شما بیندازیم، تا وب‌سایت تجارت "
+"الکترونیک شما در کمترین زمان آماده شود. "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
@@ -1661,7 +1874,7 @@ msgstr " پیشنهادات ویژه و تخفیفات را مدیریت کنی�
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Medium"
-msgstr "متوسط"
+msgstr "رسانه"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1672,6 +1885,11 @@ msgstr "شناسه حساب بازرگان"
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
 msgid "Method"
 msgstr "روش"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_multimedia
+msgid "Multimedia"
+msgstr "مولتی‌مدیا"
 
 #. module: website_sale
 #. openerp-web
@@ -1704,7 +1922,7 @@ msgstr "نام: براساس حروف الفبا"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name: Z to A"
-msgstr "نام: براساس حروف الفبا (پایین رونده)***"
+msgstr "نام: براساس عکس حروف الفبا"
 
 #. module: website_sale
 #. openerp-web
@@ -1724,7 +1942,7 @@ msgstr "جدید!"
 #: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
 #, python-format
 msgid "Next"
-msgstr "بعدی"
+msgstr "بعدش"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1863,8 +2081,8 @@ msgid ""
 "Optimization required! Reduce the image size or increase your compression "
 "settings."
 msgstr ""
-"بهینه‌سازی لازم است! اندازه تصویر را کاهش دهید یا تنظیمات فشرده‌سازی خود را"
-" افزایش دهید. "
+"بهینه‌سازی لازم است! اندازه تصویر را کاهش دهید یا تنظیمات فشرده‌سازی خود را "
+"افزایش دهید. "
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
@@ -1912,8 +2130,8 @@ msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
 msgstr ""
-"ردیف‌های سفارش نمایش داده شده در وب‌سایت. آنها نباید برای محاسبه استفاده"
-" شوند. "
+"ردیف‌های سفارش نمایش داده شده در وب‌سایت. آنها نباید برای محاسبه استفاده "
+"شوند. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -2031,7 +2249,7 @@ msgstr "تراکنش‌های پرداخت"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Payments to Capture"
-msgstr "پرداخت‌هایی برای گرفتن ***"
+msgstr "پرداخت‌های در انتظار دریافت"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -2076,7 +2294,7 @@ msgstr "هفته قبلی"
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Year"
-msgstr "سال قبلی"
+msgstr "سال قبل"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2182,7 +2400,7 @@ msgstr "قالب کالا"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "ردیف مشخصه قالب کالا"
+msgstr "ردیف ویژگی قالب کالا"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
@@ -2255,10 +2473,10 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
-"در صورت پایان پرداخت، لینک‌های خاص محصول یا محتوای قابل دانلود را در صفحه"
-" تایید فرآیند پرداخت به مشتریان ارائه دهید. برای انجام این کار، برخی از"
-" فایل‌ها را با استفاده از دکمه جدید \"فایل‌ها\" به یک محصول ضمیمه کرده و"
-" منتشر کنید."
+"در صورت پایان پرداخت، لینک‌های خاص محصول یا محتوای قابل دانلود را در صفحه "
+"تایید فرآیند پرداخت به مشتریان ارائه دهید. برای انجام این کار، برخی از "
+"فایل‌ها را با استفاده از دکمه جدید \"فایل‌ها\" به یک محصول ضمیمه کرده و "
+"منتشر کنید."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_image.py:0
@@ -2266,8 +2484,8 @@ msgstr ""
 msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
 msgstr ""
-"آدرس اینترنتی ارائه شده برای ویدیوی '%s' معتبر نیست. لطفا یک آدرس اینترنتی"
-" معتبر برای ویدیو وارد کنید. "
+"آدرس اینترنتی ارائه شده برای ویدیوی '%s' معتبر نیست. لطفا یک آدرس اینترنتی "
+"معتبر برای ویدیو وارد کنید. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -2538,8 +2756,8 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
-"<b> محصول جدید </ b> را برای ایجاد و مدیریت مشخصه‌های آن برای افزایش فروش خود"
-" انتخاب کنید. "
+"<b> محصول جدید </ b> را برای ایجاد و مدیریت مشخصه‌های آن برای افزایش فروش "
+"خود انتخاب کنید. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -2601,6 +2819,11 @@ msgstr "نام سئو"
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
 msgid "Sequence"
 msgstr "ترتیب"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.services
+msgid "Services"
+msgstr "خدمات"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2712,7 +2935,7 @@ msgstr "شیب‌دار "
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sold"
-msgstr "فروخته شده"
+msgstr "فروخته شد"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
@@ -2723,7 +2946,7 @@ msgstr "تمام شد"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr "برخی از فیلدهای مورد نیاز خالی گذاشته شده‌اند."
+msgstr "برخی از فیلدهای مورد نیاز خالی است."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -2755,7 +2978,7 @@ msgstr "ایالت / استان..."
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
-msgstr "***"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2775,12 +2998,12 @@ msgstr "خیابان <span class=\"d-none d-md-inline\"> و پلاک </span>"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "***"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr "***"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2794,8 +3017,8 @@ msgid ""
 "Suggest alternatives to your customer (upsell strategy). Those products show"
 " up on the product page."
 msgstr ""
-"گزینه‌های دیگری را برای مشتری خود پیشنهاد دهید (استراتژی Upsell). آن کالاها"
-" در صفحه‌ی کالا نشان داده می‌شوند."
+"گزینه‌های دیگری را برای مشتری خود پیشنهاد دهید (استراتژی Upsell). آن کالاها "
+"در صفحه‌ی کالا نشان داده می‌شوند."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -2810,7 +3033,7 @@ msgstr "پیشنهادها"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
-msgstr ""
+msgstr "کد اقتصادی"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2885,9 +3108,9 @@ msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
 msgstr ""
-"حالت انتخاب شده در اینجا به عنوان مبنای صدور صورت‌حساب مربوط به هر محصول"
-" جدیدی که ایجاد خواهد شد، اعمال می‌شود. اما کالاهایی که از قبل موجود هستند"
-" این حالت اعمال نمی‌شود. "
+"حالت انتخاب شده در اینجا به عنوان مبنای صدور صورت‌حساب مربوط به هر محصول "
+"جدیدی که ایجاد خواهد شد، اعمال می‌شود. اما کالاهایی که از قبل موجود هستند "
+"این حالت اعمال نمی‌شود. "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -2897,16 +3120,16 @@ msgid ""
 "Shop > Customize and enable 'eCommerce categories' to view all eCommerce "
 "categories."
 msgstr ""
-"این محصول در هر دسته تجارت الکترونیکی که ذکر شده در دسترس خواهد بود. برای"
-" مشاهده همه دسته‌های تجارت الکترونیکی، به فروشگاه>سفارشی‌سازی بروید و گزینه "
-" \"دسته‌های تجارت الکترونیکی\" فعال کنید. "
+"این محصول در هر دسته تجارت الکترونیکی که ذکر شده در دسترس خواهد بود. برای "
+"مشاهده همه دسته‌های تجارت الکترونیکی، به فروشگاه>سفارشی‌سازی بروید و گزینه  "
+"\"دسته‌های تجارت الکترونیکی\" فعال کنید. "
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
 msgstr ""
-"زمان علامت گذاری یک سبد خرید به عنوان رها شده را می‌توان در تنظیمات تغییر"
-" داد. "
+"زمان علامت گذاری یک سبد خرید به عنوان رها شده را می‌توان در تنظیمات تغییر "
+"داد. "
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -3017,6 +3240,13 @@ msgid "USPS"
 msgstr ""
 
 #. module: website_sale
+#: model:product.product,uom_name:website_sale.product_product_1
+#: model:product.product,uom_name:website_sale.product_product_1b
+#: model:product.template,uom_name:website_sale.product_product_1_product_template
+msgid "Units"
+msgstr "واحدها"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
 msgstr "پرداخت نشده"
@@ -3091,6 +3321,25 @@ msgstr "محصولات بازدید شده توسط بازدید کننده"
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_tree
 msgid "Visitor Product Views History"
 msgstr "تاریخچه محصولات بازدید شده توسط بازدید کننده"
+
+#. module: website_sale
+#: model:product.product,name:website_sale.product_product_1
+#: model:product.product,name:website_sale.product_product_1b
+#: model:product.template,name:website_sale.product_product_1_product_template
+msgid "Warranty"
+msgstr "ضمانت‌نامه"
+
+#. module: website_sale
+#: model:product.product,description_sale:website_sale.product_product_1
+#: model:product.product,description_sale:website_sale.product_product_1b
+#: model:product.template,description_sale:website_sale.product_product_1_product_template
+msgid ""
+"Warranty, issued to the purchaser of an article by its manufacturer, "
+"promising to repair or replace it if necessary within a specified period of "
+"time."
+msgstr ""
+"ضمانت‌نامه‌ای که از طرف سازنده آن برای خریدار کالا صادر شده است و ضمانت"
+" می‌کند، در صورت لزوم، در مدت زمان مشخص آن را تعمیر یا جایگزین کند."
 
 #. module: website_sale
 #. openerp-web
@@ -3187,7 +3436,7 @@ msgstr "عنوان متا وب‌سایت"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "***"
+msgstr "تصویر اپن‌گراف وب‌سایت"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id
@@ -3224,7 +3473,8 @@ msgid ""
 "from Pricelists."
 msgstr ""
 "با حالت اول می‌توانید چندین قیمت را در فرم پیکربندی محصول (از تب فروش) تنظیم"
-" کنید. با حالت دوم، قیمت‌ها و قوانین محاسبه را از لیست قیمت‌ها تعیین می‌کنید. "
+" کنید. با حالت دوم، قیمت‌ها و قوانین محاسبه را از لیست قیمت‌ها تعیین "
+"می‌کنید. "
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:0
@@ -3305,7 +3555,7 @@ msgstr "کد پستی"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
-msgstr "bpost"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -3362,8 +3612,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
-"اگر می‌خواهید سبد خرید قبلی خود را بازیابی کنید، سبد خرید فعلی شما با سبد"
-" خرید قبلی شما جایگزین می‌شود. "
+"اگر می‌خواهید سبد خرید قبلی خود را بازیابی کنید، سبد خرید فعلی شما با سبد "
+"خرید قبلی شما جایگزین می‌شود. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products

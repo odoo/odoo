@@ -886,10 +886,15 @@ msgstr "ایمیل درخواست"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 #, python-format
 msgid "Applications"
 msgstr "درخواست‌های کار"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, python-format
+msgid "Applications"
+msgstr "درخواست کار"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
@@ -958,7 +963,7 @@ msgstr "مسدود شد"
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
-msgstr "با دپارتمان"
+msgstr "بر مبنای واحد سازمانی"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
@@ -1223,7 +1228,7 @@ msgstr "حذف"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__department_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Department"
-msgstr "واحد"
+msgstr "واحد سازمانی"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__manager_id
@@ -1234,7 +1239,7 @@ msgstr "مدیر واحد"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
 msgid "Departments"
-msgstr "دپارتمان‌ها"
+msgstr "واحدهای سازمانی"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__description
@@ -2605,7 +2610,7 @@ msgstr "نکته: به داوطلبان اجازه دهید از طریق ایم
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr "استخدام نیرو"
+msgstr "در انتظار استخدام"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2758,3 +2763,8 @@ msgstr ""
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job5
 msgid "مسدود شد"
 msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,website_form_label:hr_recruitment.model_hr_applicant
+msgid "Apply for a Job"
+msgstr "درخواست کار"
