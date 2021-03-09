@@ -976,7 +976,7 @@ class MrpProduction(models.Model):
             moves_to_confirm |= additional_byproducts
 
         if moves_to_confirm:
-            moves_to_confirm._action_confirm()
+            moves_to_confirm = moves_to_confirm._action_confirm()
             # run scheduler for moves forecasted to not have enough in stock
             moves_to_confirm._trigger_scheduler()
 

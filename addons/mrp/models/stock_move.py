@@ -401,3 +401,10 @@ class StockMove(models.Model):
             self.move_line_ids = self._set_quantity_done_prepare_vals(new_qty)
         else:
             self.quantity_done = new_qty
+
+    def _update_candidate_moves_list(self, candidate_moves_list):
+        super()._update_candidate_moves_list(candidate_moves_list)
+        for production in self.mapped('raw_material_production_id'):
+            candidate_moves_list.append(production.move_raw_ids)
+        for production in self.mapped('production_id'):
+            candidate_moves_list.append(production.move_finished_ids)
