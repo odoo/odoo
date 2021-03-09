@@ -183,6 +183,7 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
+        this._makeHeaderFixed();
     },
 
     //--------------------------------------------------------------------------
@@ -280,6 +281,19 @@ var KanbanColumn = Widget.extend({
             ids.push($(r).data('record').id);
         });
         return ids;
+    },
+    _makeHeaderFixed() {
+        this.$('.o_kanban_record:first').css({ 'margin-top': this.$header.height() });
+        if (!this.folded) {
+            this.$header.css({ width: this.$el.width() });
+        } else {
+            this.$el.width(this.$header.width());
+        }
+        // temporary select action manager, this is not proper way but we do not have other way for instance
+        const left = this.$('.o_kanban_header').position().left;
+        $('.o_content').on('scroll', () => {
+            this.$('.o_kanban_header').css('left', (left + $('.o_content').scrollLeft() * (-1)) + "px");
+        });
     },
 
     //--------------------------------------------------------------------------

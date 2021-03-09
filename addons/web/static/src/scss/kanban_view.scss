@@ -440,6 +440,13 @@
         flex: 0 0 auto;
         padding: 0 $o-kanban-group-padding $o-kanban-group-padding $o-kanban-group-padding;
 
+        .o_kanban_header {
+            position: fixed;
+            z-index: 2;
+        }
+        &:not(.o_column_folded) .o_kanban_header {
+            background-color: desaturate($gray-100, 100%);
+        }
         .o_kanban_header > .o_kanban_header_title {
             @include o-kanban-header-title;
 
@@ -537,6 +544,10 @@
 
     // Kanban Grouped Layout - "Create new column" column
     .o_column_quick_create {
+        .o_column_quick_create_fixed {
+            position: fixed;
+            z-index: 2;
+        }
         .o_quick_create_folded {
             cursor: pointer;
             padding: 12px 16px;

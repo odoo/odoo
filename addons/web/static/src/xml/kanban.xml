@@ -44,26 +44,28 @@
 
 <t t-name="KanbanView.ColumnQuickCreate">
     <div class="o_column_quick_create">
-        <div class="o_quick_create_folded">
-            <span class="o_kanban_add_column"><i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
-            <span class="o_kanban_title">Add a Column</span>
-        </div>
-        <div class="o_quick_create_unfolded">
-            <div class="o_kanban_header">
-                <div class="input-group">
-                    <input type="text" class="form-control o_input" placeholder="Column title"/>
-                    <span class="input-group-append">
-                        <button class="btn btn-primary o_kanban_add" type="button">Add</button>
-                    </span>
-                </div>
-                <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
-                <t t-if="widget.examples &amp;&amp; !widget.isMobile">
-                    <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
-                </t>
+        <div class="o_column_quick_create_fixed">
+            <div class="o_quick_create_folded">
+                <span class="o_kanban_add_column"><i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
+                <span class="o_kanban_title">Add a Column</span>
             </div>
-            <div class="o_kanban_muted_record"/>
-            <div class="o_kanban_muted_record"/>
-            <div class="o_kanban_muted_record"/>
+            <div class="o_quick_create_unfolded">
+                <div class="o_kanban_header">
+                    <div class="input-group">
+                        <input type="text" class="form-control o_input" placeholder="Column title"/>
+                        <span class="input-group-append">
+                            <button class="btn btn-primary o_kanban_add" type="button">Add</button>
+                        </span>
+                    </div>
+                    <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
+                    <t t-if="widget.examples &amp;&amp; !widget.isMobile">
+                        <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
+                    </t>
+                </div>
+                <div class="o_kanban_muted_record"/>
+                <div class="o_kanban_muted_record"/>
+                <div class="o_kanban_muted_record"/>
+            </div>
         </div>
     </div>
 </t>
