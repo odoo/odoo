@@ -32,12 +32,30 @@ have real delivered quantities in sales orders.
         'wizard/project_create_invoice_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
     ],
-    'qweb': [
-        'static/src/xml/sale_project_templates.xml',
-    ],
     'demo': [
         'data/sale_service_demo.xml',
     ],
     'auto_install': True,
     'uninstall_hook': 'uninstall_hook',
+    'assets': {
+        'web.assets_frontend': [
+            # inside .
+            'sale_timesheet/static/src/scss/sale_timesheet_portal.scss',
+        ],
+        'web.assets_backend': [
+            # inside .
+            'sale_timesheet/static/src/scss/sale_timesheet.scss',
+            # inside .
+            'sale_timesheet/static/src/js/project_overview.js',
+            # inside .
+            'sale_timesheet/static/src/js/so_line_one2many.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'sale_timesheet/static/tests/tours/sale_timesheet_tour.js',
+        ],
+        'web.assets_qweb': [
+            'sale_timesheet/static/src/xml/sale_project_templates.xml',
+        ],
+    }
 }

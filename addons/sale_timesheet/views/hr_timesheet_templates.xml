@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="assets_backend" name="sale timesheet assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet.scss"/>
-                <script type="text/javascript" src="/sale_timesheet/static/src/js/project_overview.js"></script>
-            <script type="text/javascript" src="/sale_timesheet/static/src/js/so_line_one2many.js"></script>
-        </xpath>
-    </template>
-
-    <template id="assets_tests" name="Sales Timesheet Assets Tests" inherit_id="web.assets_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/sale_timesheet/static/tests/tours/sale_timesheet_tour.js"></script>
-        </xpath>
-    </template>
-
     <record id="timesheet_plan" model="ir.ui.view">
         <field name="name">Timesheet Plan</field>
         <field name="type">qweb</field>
