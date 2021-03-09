@@ -65,7 +65,7 @@ class TestWebsiteSaleStockProductWarehouse(TestWebsiteSaleProductAttributeValueC
         combination_info = product.product_tmpl_id.with_context(website_sale_stock_get_quantity=True)._get_combination_info()
 
         # Check available quantity of product is according to warehouse
-        self.assertEqual(combination_info['virtual_available'], 10, "10 units of Product A should be available in warehouse 1.")
+        self.assertEqual(combination_info['qty_available'], 10, "10 units of Product A should be available in warehouse 1.")
 
         product = product_2.with_context(website_id=current_website.id)
         combination_info = product.product_tmpl_id.with_context(website_sale_stock_get_quantity=True)._get_combination_info()

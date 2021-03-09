@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <template id="template" xml:space="preserve">
-    <t t-extend="website_sale_stock.product_availability.no_available">
-        <t t-jquery="#allow_to_order_enough_qty" t-operation="after">
-            <span>Add the item to your wishlist not be notified when product is back in stock.</span>
+    <t t-extend="website_sale_stock.product_availability">
+        <t t-jquery="div" t-operation="after">
+            <span>it works !</span>
         </t>
     </t>
 </template>

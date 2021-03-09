@@ -6,10 +6,7 @@ var publicWidget = require('web.public.widget');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var QWeb = core.qweb;
-var xml_load = ajax.loadXML(
-    '/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml',
-    QWeb
-);
+
 
 /**
  * Addition to the variant_mixin._onChangeCombination
@@ -26,6 +23,14 @@ var xml_load = ajax.loadXML(
  * @param {$.Element} $parent
  * @param {Array} combination
  */
+
+let xmlFiles = ['/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml'];
+ VariantMixin.loadXMLs = async () => {
+     const files = xmlFiles.map(f => ajax.loadXML(f, QWeb));
+     return Promise.all(files);
+ }
+
+
 VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     var product_id = 0;
     // needed for list view of variants
@@ -47,24 +52,24 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     $parent.find('#add_to_cart').removeClass('out_of_stock');
     $parent.find('#buy_now').removeClass('out_of_stock');
     if (combination.product_type === 'product' && _.contains(['always', 'threshold'], combination.inventory_availability)) {
-        combination.virtual_available -= parseInt(combination.cart_qty);
-        if (combination.virtual_available < 0) {
-            combination.virtual_available = 0;
+        combination.qty_available -= parseInt(combination.cart_qty);
+        if (combination.qty_available < 0) {
+            combination.qty_available = 0;
         }
         // Handle case when manually write in input
-        if (qty > combination.virtual_available) {
+        if (qty > combination.qty_available) {
             var $input_add_qty = $parent.find('input[name="add_qty"]');
-            qty = combination.virtual_available || 1;
+            qty = combination.qty_available || 1;
             $input_add_qty.val(qty);
         }
-        if (qty > combination.virtual_available
-            || combination.virtual_available < 1 || qty < 1) {
-            $parent.find('#add_to_cart').addClass('disabled out_of_stock');
-            $parent.find('#buy_now').addClass('disabled out_of_stock');
-        }
+        if (qty < 1 || 
+            combination.allow_order == 'enough' && (qty > combination.qty_available || combination.qty_available < 1)) {
+                $parent.find('#add_to_cart').addClass('disabled out_of_stock');
+                $parent.find('#buy_now').addClass('disabled out_of_stock');
+            }
     }
 
-    xml_load.then(function () {
+    VariantMixin.loadXMLs().then(function () {
         $('.oe_website_sale')
             .find('.availability_message_' + combination.product_template)
             .remove();
@@ -88,6 +93,9 @@ publicWidget.registry.WebsiteSale.include({
     }
 });
 
-return VariantMixin;
+return {
+        VariantMixin: VariantMixin,
+        xmlFiles: xmlFiles,
+    }
 
 });
