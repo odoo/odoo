@@ -90,6 +90,7 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         scrollTo: '_onScrollTo',
         set_title_part: '_onSetTitlePart',
         webclient_started: '_onWebClientStarted',
+        showAccessKeyOverlay: '_showAccessKeyOverlay',
     },
     init: function (parent) {
         // a flag to determine that odoo is fully loaded
@@ -461,6 +462,9 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
      */
     _onGetScrollPosition: function (ev) {
         ev.data.callback(this.getScrollPosition());
+    },
+    _showAccessKeyOverlay: function () {
+        KeyboardNavigationMixin._showAccessKeyOverlay.call(this);
     },
     /**
      * Loads an action from the database given its ID.
