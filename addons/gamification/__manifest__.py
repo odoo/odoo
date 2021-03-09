@@ -32,7 +32,6 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'data/goal_base.xml',
         'data/badge.xml',
         'data/gamification_karma_rank_data.xml',
-        'views/gamification.xml',
         'views/gamification_karma_rank_views.xml',
         'views/gamification_karma_tracking_views.xml',
         'views/res_users_views.xml',
@@ -41,4 +40,10 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'data/gamification_karma_rank_demo.xml',
         'data/gamification_karma_tracking_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'gamification/static/src/scss/gamification.scss',
+        ],
+    }
 }
