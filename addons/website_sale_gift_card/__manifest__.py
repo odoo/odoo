@@ -13,9 +13,14 @@
         'views/gift_card_views.xml',
         'views/product_views.xml',
         'views/gift_card_menus.xml',
-        'views/assets.xml',
-    ],
+        ],
     'demo': [
         'data/product_demo.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            # after script[last()]
+            'website_sale_gift_card/static/src/js/website_sale_gift_card.js',
+        ],
+    }
 }
