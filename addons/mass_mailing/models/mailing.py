@@ -737,7 +737,7 @@ class MassMailing(models.Model):
 
             mail_values = {
                 'subject': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
-                             mailing_type=self._get_pretty_mailing_type(),
+                             mailing_type=mailing._get_pretty_mailing_type(),
                              mailing_name=mailing.subject
                             ),
                 'email_from': user.email_formatted,
