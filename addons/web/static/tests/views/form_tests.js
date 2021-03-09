@@ -7756,7 +7756,7 @@ QUnit.module('Views', {
                 context: {hide_bar: true},
             },
         });
-        assert.containsOnce(form, '.o_list_view thead tr th',
+        assert.containsOnce(form, '.o_list_view thead tr th:not(.o_list_record_remove_header)',
             "there should be only one column");
         form.destroy();
     });
@@ -7784,7 +7784,7 @@ QUnit.module('Views', {
                 context: {hide_bar: true},
             },
         });
-        assert.containsOnce(form, '.o_list_view thead tr th',
+        assert.containsOnce(form, '.o_list_view thead tr th:not(.o_list_record_remove_header)',
             "there should be only one column");
         form.destroy();
     });
@@ -10480,7 +10480,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Quick Edition: Readonly one2many list', async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         this.data.partner.records[0].p.push(2);
 
@@ -10502,6 +10502,8 @@ QUnit.module('Views', {
         assert.containsOnce(form, '.o_form_view.o_form_readonly');
         assert.containsNone(form, '.o_field_x2many_list_row_add',
             'create line should not be displayed');
+        assert.containsNone(form, '.o_list_record_remove',
+            'remove buttons should not be displayed');
 
         await testUtils.dom.click(form.$('.o_field_cell:first'));
 
@@ -10509,6 +10511,8 @@ QUnit.module('Views', {
             'should switch into edit mode');
         assert.containsNone(form, '.o_field_x2many_list_row_add',
             'create line should still not be displayed');
+        assert.containsNone(form, '.o_list_record_remove',
+            'remove buttons should still not be displayed');
         assert.containsNone(form, 'input');
 
         form.destroy();
@@ -10643,6 +10647,78 @@ QUnit.module('Views', {
             'should switch into edit mode');
         assert.containsOnce(document.body, '.modal');
         assert.containsOnce(document.body, '.modal input.o_field_widget[name="foo"]');
+
+        form.destroy();
+    });
+
+    QUnit.test('Quick Edition: Editable one2many list (drop a line: editable)', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].p = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsN(form, '.o_list_record_remove', 2,
+            'remove buttons should be displayed');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'yopblip');
+
+        await testUtils.dom.click(form.$('.o_list_record_remove button')[0]);
+        await testUtils.nextTick(); // wait for quick edit
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable',
+            'should switch into edit mode');
+        assert.containsOnce(form, '.o_data_row', 'only one record should remain');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'blip');
+
+        form.destroy();
+    });
+
+    QUnit.test('Quick Edition: Editable one2many list (drop a line: not editable)', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].p = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsN(form, '.o_list_record_remove', 2,
+            'remove buttons should be displayed');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'yopblip');
+
+        await testUtils.dom.click(form.$('.o_list_record_remove button')[0]);
+        await testUtils.nextTick(); // wait for quick edit
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable',
+            'should switch into edit mode');
+        assert.containsOnce(form, '.o_data_row', 'only one record should remain');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'blip');
 
         form.destroy();
     });

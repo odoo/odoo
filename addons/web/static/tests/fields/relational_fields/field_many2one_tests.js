@@ -3432,7 +3432,7 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many");
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
@@ -3482,7 +3482,7 @@ QUnit.module('fields', {}, function () {
             });
 
             // bar is false so there should be 1 column
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be only 1 column ('foo') in the one2many");
             assert.containsOnce(form, '.o_list_view .o_data_row', "should contain one row");
 
@@ -3528,7 +3528,7 @@ QUnit.module('fields', {}, function () {
                     '</tree>',
                 },
             });
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many");
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
