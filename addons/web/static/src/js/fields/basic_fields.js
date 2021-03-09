@@ -1127,14 +1127,18 @@ var FieldMonetary = NumericField.extend({
      * @private
      */
     _renderEdit: function () {
-        this.$el.empty();
+        var def = this._prepareInput(this.$input);
+        if (this.$el.find('input').length === 0) {
+            this.$input.appendTo(this.$el);
+        }
 
-        // Prepare and add the input
-        var def = this._prepareInput(this.$input).appendTo(this.$el);
-
+        this.$el.find('.o_field_monetary_currency').remove();
         if (this.currency) {
             // Prepare and add the currency symbol
-            var $currencySymbol = $('<span>', {text: this.currency.symbol});
+            var $currencySymbol = $('<span>', {
+                text: this.currency.symbol,
+                class: 'o_field_monetary_currency'
+            });
             if (this.currency.position === "after") {
                 this.$el.append($currencySymbol);
             } else {
