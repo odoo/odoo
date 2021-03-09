@@ -16,7 +16,6 @@ It also enables the "optional products" feature.
     'depends': ['sale'],
     'data': [
         'security/ir.model.access.csv',
-        'views/assets.xml',
         'views/templates.xml',
         'views/sale_views.xml',
         'wizard/sale_product_configurator_views.xml',
@@ -24,4 +23,38 @@ It also enables the "optional products" feature.
     'demo': [
         'data/sale_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            # after script[last()]
+            'sale/static/src/js/variant_mixin.js',
+            # after script[last()]
+            'sale_product_configurator/static/src/js/product_configurator_renderer.js',
+            # after script[last()]
+            'sale_product_configurator/static/src/js/product_configurator_controller.js',
+            # after script[last()]
+            'sale_product_configurator/static/src/js/product_configurator_view.js',
+            # after script[last()]
+            'sale_product_configurator/static/src/js/product_configurator_widget.js',
+            # after script[last()]
+            'sale_product_configurator/static/src/js/product_configurator_modal.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'sale_product_configurator/static/tests/tours/product_configurator_ui.js',
+            # inside .
+            'sale_product_configurator/static/tests/tours/product_configurator_advanced_ui.js',
+            # inside .
+            'sale_product_configurator/static/tests/tours/product_configurator_edition_ui.js',
+            # inside .
+            'sale_product_configurator/static/tests/tours/product_configurator_single_custom_attribute_ui.js',
+            # inside .
+            'sale_product_configurator/static/tests/tours/product_configurator_pricelist_ui.js',
+            # inside .
+            'sale_product_configurator/static/tests/tours/product_configurator_optional_products_ui.js',
+        ],
+        'web.qunit_suite_tests': [
+            # inside .
+            'sale_product_configurator/static/tests/product_configurator.test.js',
+        ],
+    }
 }
