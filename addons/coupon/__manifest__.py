@@ -11,7 +11,6 @@
         'wizard/coupon_generate_views.xml',
         'security/ir.model.access.csv',
         'security/coupon_security.xml',
-        'views/assets.xml',
         'views/coupon_views.xml',
         'views/coupon_program_views.xml',
         'report/coupon_report.xml',
@@ -22,4 +21,10 @@
         'demo/coupon_demo.xml',
     ],
     'installable': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'coupon/static/src/js/coupon.js',
+        ],
+    }
 }
