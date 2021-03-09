@@ -28,7 +28,6 @@ The service is provided by the In App Purchase Odoo platform.
         'views/mail_notification_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
-        'views/assets.xml',
         'views/sms_sms_views.xml',
         'views/sms_template_views.xml',
         'security/ir.model.access.csv',
@@ -37,11 +36,39 @@ The service is provided by the In App Purchase Odoo platform.
         'data/sms_demo.xml',
         'data/mail_demo.xml',
     ],
-    'qweb': [
-        'static/src/bugfix/bugfix.xml',
-        'static/src/components/notification_group/notification_group.xml',
-        'static/src/components/message/message.xml',
-    ],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'sms/static/src/js/fields_phone_widget.js',
+            # inside .
+            'sms/static/src/js/fields_sms_widget.js',
+            # inside .
+            'sms/static/src/bugfix/bugfix.js',
+            # inside .
+            'sms/static/src/components/notification_group/notification_group.js',
+            # inside .
+            'sms/static/src/models/message/message.js',
+            # inside .
+            'sms/static/src/models/notification_group/notification_group.js',
+            # inside .
+            'sms/static/src/bugfix/bugfix.scss',
+        ],
+        'web.qunit_suite_tests': [
+            # inside .
+            'sms/static/tests/sms_widget_test.js',
+            # inside .
+            'sms/static/src/bugfix/bugfix_tests.js',
+            # inside .
+            'sms/static/src/components/message/message_tests.js',
+            # inside .
+            'sms/static/src/components/notification_list/notification_list_notification_group_tests.js',
+        ],
+        'web.assets_qweb': [
+            'sms/static/src/bugfix/bugfix.xml',
+            'sms/static/src/components/notification_group/notification_group.xml',
+            'sms/static/src/components/message/message.xml',
+        ],
+    }
 }
