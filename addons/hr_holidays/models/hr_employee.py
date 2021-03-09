@@ -184,3 +184,13 @@ class HrEmployeeBase(models.AbstractModel):
             allocations = self.env['hr.leave.allocation'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
         return res
+
+class HrEmployeePrivate(models.Model):
+    _inherit = 'hr.employee'
+
+class HrEmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    def _compute_leave_status(self):
+        super()._compute_leave_status()
+        self.current_leave_id = False
