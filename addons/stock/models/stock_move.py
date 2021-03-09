@@ -797,6 +797,10 @@ class StockMove(models.Model):
         """Cleanup hook used when merging moves"""
         self.write({'propagate_cancel': False})
 
+    def _update_candidate_moves_list(self, candidate_moves_list):
+        for picking in self.mapped('picking_id'):
+            candidate_moves_list.append(picking.move_lines)
+
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
         find in their existing moves a candidate into which we can merge the move.
@@ -807,8 +811,7 @@ class StockMove(models.Model):
 
         candidate_moves_list = []
         if not merge_into:
-            for picking in self.mapped('picking_id'):
-                candidate_moves_list.append(picking.move_lines)
+            self._update_candidate_moves_list(candidate_moves_list)
         else:
             candidate_moves_list.append(merge_into | self)
 
