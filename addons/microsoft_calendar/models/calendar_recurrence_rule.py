@@ -108,3 +108,6 @@ class RecurrenceRule(models.Model):
                 values += [event_value]
 
         return values
+
+    def _ensure_attendees_have_email(self):
+        self.calendar_event_ids.filtered(lambda e: e.active)._ensure_attendees_have_email()
