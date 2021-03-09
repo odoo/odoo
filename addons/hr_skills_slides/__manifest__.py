@@ -18,8 +18,14 @@ This module add completed courses to resumé for employees.
         'views/hr_templates.xml',
         'data/hr_resume_data.xml',
     ],
-    'qweb': [
-        'static/src/xml/resume_templates.xml',
-    ],
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'hr_skills_slides/static/src/scss/hr_skills.scss',
+        ],
+        'web.assets_qweb': [
+            'hr_skills_slides/static/src/xml/resume_templates.xml',
+        ],
+    }
 }
