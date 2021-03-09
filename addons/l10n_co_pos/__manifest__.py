@@ -15,7 +15,9 @@
         'views/templates.xml',
         'views/views.xml'
     ],
-    'qweb': [
-        'static/src/xml/pos.xml'
-    ],
+    'assets': {
+        'web.assets_qweb': [
+            'l10n_co_pos/static/src/xml/pos.xml',
+        ],
+    }
 }
