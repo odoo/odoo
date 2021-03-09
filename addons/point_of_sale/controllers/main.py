@@ -6,6 +6,7 @@ import werkzeug.utils
 from odoo import http
 from odoo.http import request
 from odoo.osv.expression import AND
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -53,6 +54,15 @@ class PosController(http.Controller):
             'session_info': session_info,
             'login_number': pos_session.login(),
         }
+
+        # we commit the assetbundles attachments to make sure
+        # that this worker's cached version of point_of_sale.index
+        # remains valid even in case of concurrency error
+        if not config['test_enable']:
+            ctx = dict(request.context)
+            ctx['commit_assetsbundle'] = True
+            request.context = ctx
+
         return request.render('point_of_sale.index', qcontext=context)
 
     @http.route('/pos/sale_details_report', type='http', auth='user')
