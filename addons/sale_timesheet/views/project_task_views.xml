@@ -29,7 +29,7 @@
                         </group>
                     </group>
                     <field name="sale_line_employee_ids" attrs="{'invisible': [('pricing_type', '!=', 'employee_rate')]}">
-                        <tree editable="top">
+                        <tree editable="bottom">
                             <field name="company_id" invisible="1"/>
                             <field name="project_id" invisible="1"/>
                             <field name="employee_id" options="{'no_create': True}"/>
