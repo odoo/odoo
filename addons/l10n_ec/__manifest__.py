@@ -22,13 +22,17 @@ Accounting chart and localization for Ecuador.
         'l10n_latam_invoice_document',
     ],
     'data': [
+        'data/account_type.xml',
+        #'data/account_group_data.xml',
         'data/l10n_ec_chart_data.xml',
-        'data/account.account.template.csv',
-        'data/l10n_ec_chart_post_data.xml',
-        'data/account_data.xml',
+        #'data/l10n_ec_chart_post_data.xml',
+        'data/account.tax.group.csv',
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
         'data/res.country.state.csv',
+        'data/res.bank.csv',
+        'data/account.fiscal.position.csv',
+
     ],
     'demo': [
         'demo/demo_company.xml',

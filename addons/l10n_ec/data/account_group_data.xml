@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_group_1" model="account.group.template">
+            <field name="code_prefix_start">1</field>
+            <field name="name">ACTIVO</field>
+        </record>
+        <record id="account_group_101" model="account.group.template">
+            <field name="code_prefix_start">101</field>
+            <field name="name">ACTIVO CORRIENTE </field>
+            <field name="parent_id" ref="account_group_1"/>
+        </record>
+        <record id="account_group_10101" model="account.group.template">
+            <field name="code_prefix_start">10101</field>
+            <field name="name">EFECTIVO Y EQUIVALENTES AL EFECTIVO </field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_1010101" model="account.group.template">
+            <field name="code_prefix_start">1010101</field>
+            <field name="name">CAJA</field>
+            <field name="parent_id" ref="account_group_10101"/>
+        </record>
+        <record id="account_group_1010102" model="account.group.template">
+            <field name="code_prefix_start">1010102</field>
+            <field name="name">BANCOS</field>
+            <field name="parent_id" ref="account_group_10101"/>
+        </record>
+        <record id="account_group_1010103" model="account.group.template">
+            <field name="code_prefix_start">1010103</field>
+            <field name="name">INVERSIONES</field>
+            <field name="parent_id" ref="account_group_10101"/>
+        </record>
+        <record id="account_group_10102" model="account.group.template">
+            <field name="code_prefix_start">10102</field>
+            <field name="name">ACTIVOS FINANCIEROS </field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_1010201" model="account.group.template">
+            <field name="code_prefix_start">1010201</field>
+            <field name="name">ACTIVOS FINANCIEROS A VALOR RAZONABLE CON CAMBIOS EN RESULTADOS </field>
+            <field name="parent_id" ref="account_group_10102"/>
+        </record>
+        <record id="account_group_1010202" model="account.group.template">
+            <field name="code_prefix_start">1010202</field>
+            <field name="name">ACTIVOS FINANCIEROS DISPONIBLES PARA LA VENTA </field>
+            <field name="parent_id" ref="account_group_10102"/>
+        </record>
+        <record id="account_group_1010203" model="account.group.template">
+            <field name="code_prefix_start">1010203</field>
+            <field name="name">ACTIVOS FINANCIEROS MANTENIDOS HASTA EL VENCIMIENTO </field>
+            <field name="parent_id" ref="account_group_10102"/>
+        </record>
+        <record id="account_group_1010204" model="account.group.template">
+            <field name="code_prefix_start">1010204</field>
+            <field name="name">(-) PROVISION POR DETERIORO </field>
+            <field name="parent_id" ref="account_group_10102"/>
+        </record>
+        <record id="account_group_10103" model="account.group.template">
+            <field name="code_prefix_start">10103</field>
+            <field name="name">CUENTAS Y DOCUMENTOS POR COBRAR</field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_1010301" model="account.group.template">
+            <field name="code_prefix_start">1010301</field>
+            <field name="name">COMERCIALES</field>
+            <field name="parent_id" ref="account_group_10103"/>
+        </record>
+        <record id="account_group_1010302" model="account.group.template">
+            <field name="code_prefix_start">1010302</field>
+            <field name="name">CUENTAS POR COBRAR RELACIONADAS</field>
+            <field name="parent_id" ref="account_group_10103"/>
+        </record>
+        <record id="account_group_1010303" model="account.group.template">
+            <field name="code_prefix_start">1010303</field>
+            <field name="name">OTRAS CUENTAS POR COBRAR  </field>
+            <field name="parent_id" ref="account_group_10103"/>
+        </record>
+        <record id="account_group_1010304" model="account.group.template">
+            <field name="code_prefix_start">1010304</field>
+            <field name="name">CUENTAS POR COBRAR EMPLEADOS</field>
+            <field name="parent_id" ref="account_group_10103"/>
+        </record>
+        <record id="account_group_1010305" model="account.group.template">
+            <field name="code_prefix_start">1010305</field>
+            <field name="name">PROVISION CUENTAS INCOBRABLES Y DETERIORO</field>
+            <field name="parent_id" ref="account_group_10103"/>
+        </record>
+        <record id="account_group_10104" model="account.group.template">
+            <field name="code_prefix_start">10104</field>
+            <field name="name">INVENTARIOS</field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_1010401" model="account.group.template">
+            <field name="code_prefix_start">1010401</field>
+            <field name="name">INVENTARIOS</field>
+            <field name="parent_id" ref="account_group_10104"/>
+        </record>
+        <record id="account_group_10105" model="account.group.template">
+            <field name="code_prefix_start">10105</field>
+            <field name="name">SERVICIOS Y OTROS PAGOS ANTICIPADOS </field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_1010501" model="account.group.template">
+            <field name="code_prefix_start">1010501</field>
+            <field name="name">SEGUROS Y OTROS SERVICIOS X PAGOS ANTICIPADOS </field>
+            <field name="parent_id" ref="account_group_10105"/>
+        </record>
+        <record id="account_group_10106" model="account.group.template">
+            <field name="code_prefix_start">10106</field>
+            <field name="name">ACTIVOS POR IMPUESTOS CORRIENTES </field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_1010601" model="account.group.template">
+            <field name="code_prefix_start">1010601</field>
+            <field name="name">CREDITO TRIBUTARIO DE LA COMPAÑÍA</field>
+            <field name="parent_id" ref="account_group_10106"/>
+        </record>
+        <record id="account_group_1010602" model="account.group.template">
+            <field name="code_prefix_start">1010602</field>
+            <field name="name">RETENCIONES DE IVA A FAVOR COMPAÑÍA</field>
+            <field name="parent_id" ref="account_group_10106"/>
+        </record>
+        <record id="account_group_1010603" model="account.group.template">
+            <field name="code_prefix_start">1010603</field>
+            <field name="name">CREDITO TRIBUTARIO X RETENCIONES DE IMPUESTO RENTA </field>
+            <field name="parent_id" ref="account_group_10106"/>
+        </record>
+        <record id="account_group_1010604" model="account.group.template">
+            <field name="code_prefix_start">1010604</field>
+            <field name="name">ANTICIPO FISCALES</field>
+            <field name="parent_id" ref="account_group_10106"/>
+        </record>
+        <record id="account_group_10107" model="account.group.template">
+            <field name="code_prefix_start">10107</field>
+            <field name="name">ACTIVOS CORRIENTES MANTENIDOS PARA LA VENTA Y OPERACIONES DISCONTINUADAS </field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_1010701" model="account.group.template">
+            <field name="code_prefix_start">1010701</field>
+            <field name="name">CONTRUCCIONES EN CURSO</field>
+            <field name="parent_id" ref="account_group_10107"/>
+        </record>
+        <record id="account_group_10108" model="account.group.template">
+            <field name="code_prefix_start">10108</field>
+            <field name="name">OTROS ACTUVOS CORRIENTES</field>
+            <field name="parent_id" ref="account_group_101"/>
+        </record>
+        <record id="account_group_102" model="account.group.template">
+            <field name="code_prefix_start">102</field>
+            <field name="name">ACTIVO NO CORRIENTE</field>
+            <field name="parent_id" ref="account_group_1"/>
+        </record>
+        <record id="account_group_10201" model="account.group.template">
+            <field name="code_prefix_start">10201</field>
+            <field name="name">PROPIEDADES, PLANTA Y EQUIPO </field>
+            <field name="parent_id" ref="account_group_102"/>
+        </record>
+        <record id="account_group_1020101" model="account.group.template">
+            <field name="code_prefix_start">1020101</field>
+            <field name="name">PROPIEDADES, PLANTA Y EQUIPO </field>
+            <field name="parent_id" ref="account_group_10201"/>
+        </record>
+        <record id="account_group_1020102" model="account.group.template">
+            <field name="code_prefix_start">1020102</field>
+            <field name="name">(-) DEPRECIACION ACUMULADA Y DETERIORO DE ACTIVOS</field>
+            <field name="parent_id" ref="account_group_10201"/>
+        </record>
+        <record id="account_group_10202" model="account.group.template">
+            <field name="code_prefix_start">10202</field>
+            <field name="name">ACTIVOS DE EXPLORACION</field>
+            <field name="parent_id" ref="account_group_102"/>
+        </record>
+        <record id="account_group_1020201" model="account.group.template">
+            <field name="code_prefix_start">1020201</field>
+            <field name="name">ACTIVOS DE EXPLORACION Y EXPLOTACION</field>
+            <field name="parent_id" ref="account_group_10202"/>
+        </record>
+        <record id="account_group_1020202" model="account.group.template">
+            <field name="code_prefix_start">1020202</field>
+            <field name="name">(-) AMORTIZACION Y DETERIORO DE ACTIVOS DE EXPLORACION Y EXPLOTACION</field>
+            <field name="parent_id" ref="account_group_10202"/>
+        </record>
+        <record id="account_group_10203" model="account.group.template">
+            <field name="code_prefix_start">10203</field>
+            <field name="name">PROPIEDADES DE INVERSIÓN </field>
+            <field name="parent_id" ref="account_group_102"/>
+        </record>
+        <record id="account_group_1020301" model="account.group.template">
+            <field name="code_prefix_start">1020301</field>
+            <field name="name">PROPIEDADES DE INVERSION</field>
+            <field name="parent_id" ref="account_group_10203"/>
+        </record>
+        <record id="account_group_1020302" model="account.group.template">
+            <field name="code_prefix_start">1020302</field>
+            <field name="name">(-) DEPRECIACION ACUMULADA Y DETERIORO DE ACTIVOS DE INVERSION</field>
+            <field name="parent_id" ref="account_group_10203"/>
+        </record>
+        <record id="account_group_10204" model="account.group.template">
+            <field name="code_prefix_start">10204</field>
+            <field name="name">ACTIVOS BIOLOGICOS</field>
+            <field name="parent_id" ref="account_group_102"/>
+        </record>
+        <record id="account_group_1020401" model="account.group.template">
+            <field name="code_prefix_start">1020401</field>
+            <field name="name">ACTIVOS BIOLOGICOS</field>
+            <field name="parent_id" ref="account_group_10204"/>
+        </record>
+        <record id="account_group_1020402" model="account.group.template">
+            <field name="code_prefix_start">1020402</field>
+            <field name="name">(-) DEPRECIACION ACUMULADA Y DETERIORO DE ACTIVOS BIOLOGICOS</field>
+            <field name="parent_id" ref="account_group_10204"/>
+        </record>
+        <record id="account_group_10205" model="account.group.template">
+            <field name="code_prefix_start">10205</field>
+            <field name="name">ACTIVO INTANGIBLE </field>
+            <field name="parent_id" ref="account_group_102"/>
+        </record>
+        <record id="account_group_1020501" model="account.group.template">
+            <field name="code_prefix_start">1020501</field>
+            <field name="name">PLUSVALIAS, MARCAS, PATENTES, DERECHOS DE LLAVE, ETC</field>
+            <field name="parent_id" ref="account_group_10205"/>
+        </record>
+        <record id="account_group_1020502" model="account.group.template">
+            <field name="code_prefix_start">1020502</field>
+            <field name="name">(-) AMORTIZACIÓN ACUMULADA Y DETERIORO DE ACTIVO INTANGIBLE </field>
+            <field name="parent_id" ref="account_group_10205"/>
+        </record>
+        <record id="account_group_1020503" model="account.group.template">
+            <field name="code_prefix_start">1020503</field>
+            <field name="name">OTROS INTANGIBLES </field>
+            <field name="parent_id" ref="account_group_10205"/>
+        </record>
+        <record id="account_group_10206" model="account.group.template">
+            <field name="code_prefix_start">10206</field>
+            <field name="name">ACTIVOS FINANCIEROS NO CORRIENTES </field>
+            <field name="parent_id" ref="account_group_102"/>
+        </record>
+        <record id="account_group_1020601" model="account.group.template">
+            <field name="code_prefix_start">1020601</field>
+            <field name="name">ACTIVOS FINANCIEROS NO CORRIENTES </field>
+            <field name="parent_id" ref="account_group_10206"/>
+        </record>
+        <record id="account_group_10207" model="account.group.template">
+            <field name="code_prefix_start">10207</field>
+            <field name="name">OTROS ACTIVOS NO CORRIENTES </field>
+            <field name="parent_id" ref="account_group_102"/>
+        </record>
+        <record id="account_group_1020701" model="account.group.template">
+            <field name="code_prefix_start">1020701</field>
+            <field name="name">OTROS ACTIVOS NO CORRIENTES </field>
+            <field name="parent_id" ref="account_group_10207"/>
+        </record>
+        <record id="account_group_2" model="account.group.template">
+            <field name="code_prefix_start">2</field>
+            <field name="name">PASIVO </field>
+        </record>
+        <record id="account_group_201" model="account.group.template">
+            <field name="code_prefix_start">201</field>
+            <field name="name">PASIVO CORRIENTE </field>
+            <field name="parent_id" ref="account_group_2"/>
+        </record>
+        <record id="account_group_20101" model="account.group.template">
+            <field name="code_prefix_start">20101</field>
+            <field name="name">PASIVOS FINANCIEROS A VALOR RAZONABLE CON CAMBIOS EN RESULTADO </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010101" model="account.group.template">
+            <field name="code_prefix_start">2010101</field>
+            <field name="name">PASIVOS FINANCIEROS A VALOR RAZONABLE CON CAMBIOS EN RESULTADO </field>
+            <field name="parent_id" ref="account_group_20101"/>
+        </record>
+        <record id="account_group_20102" model="account.group.template">
+            <field name="code_prefix_start">20102</field>
+            <field name="name">PASIVOS POR CONTRATOS DE ARRENDAMIENTO FINANCIEROS </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010201" model="account.group.template">
+            <field name="code_prefix_start">2010201</field>
+            <field name="name">PASIVOS POR CONTRATOS DE ARRENDAMIENTO FINANCIEROS </field>
+            <field name="parent_id" ref="account_group_20102"/>
+        </record>
+        <record id="account_group_20103" model="account.group.template">
+            <field name="code_prefix_start">20103</field>
+            <field name="name">CUENTAS Y DOCUMENTOS POR PAGAR </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010301" model="account.group.template">
+            <field name="code_prefix_start">2010301</field>
+            <field name="name">CUENTAS Y DOCUMENTOS POR PAGAR </field>
+            <field name="parent_id" ref="account_group_20103"/>
+        </record>
+        <record id="account_group_20104" model="account.group.template">
+            <field name="code_prefix_start">20104</field>
+            <field name="name">OBLIACIONES INSTITUCIONES FINANCIERAS</field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010401" model="account.group.template">
+            <field name="code_prefix_start">2010401</field>
+            <field name="name">OBLIACIONES INSTITUCIONES FINANCIERAS</field>
+            <field name="parent_id" ref="account_group_20104"/>
+        </record>
+        <record id="account_group_20105" model="account.group.template">
+            <field name="code_prefix_start">20105</field>
+            <field name="name">PROVISIONES</field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010501" model="account.group.template">
+            <field name="code_prefix_start">2010501</field>
+            <field name="name">PROVISIONES</field>
+            <field name="parent_id" ref="account_group_20105"/>
+        </record>
+        <record id="account_group_2010502" model="account.group.template">
+            <field name="code_prefix_start">2010502</field>
+            <field name="name">OTRAS PROVISIONES LOCALES</field>
+            <field name="parent_id" ref="account_group_20105"/>
+        </record>
+        <record id="account_group_2010503" model="account.group.template">
+            <field name="code_prefix_start">2010503</field>
+            <field name="name">PROVISIONES DEL EXTERIOR</field>
+            <field name="parent_id" ref="account_group_20105"/>
+        </record>
+        <record id="account_group_2010601" model="account.group.template">
+            <field name="code_prefix_start">2010601</field>
+            <field name="name">PORCIÓN CORRIENTE DE OBLIGACIONES EMITIDAS </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_20107" model="account.group.template">
+            <field name="code_prefix_start">20107</field>
+            <field name="name">OTRAS OBLIGACIONES CORRIENTES </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010701" model="account.group.template">
+            <field name="code_prefix_start">2010701</field>
+            <field name="name">CON LA ADMINISTRACIÓN TRIBUTARIA </field>
+            <field name="parent_id" ref="account_group_20107"/>
+        </record>
+        <record id="account_group_2010702" model="account.group.template">
+            <field name="code_prefix_start">2010702</field>
+            <field name="name">IMPUESTO A LA RENTA POR PAGAR DEL EJERCICIO </field>
+            <field name="parent_id" ref="account_group_20107"/>
+        </record>
+        <record id="account_group_2010703" model="account.group.template">
+            <field name="code_prefix_start">2010703</field>
+            <field name="name">CON EL INSTITUTO SEGURIDAD SOCIAL</field>
+            <field name="parent_id" ref="account_group_20107"/>
+        </record>
+        <record id="account_group_2010704" model="account.group.template">
+            <field name="code_prefix_start">2010704</field>
+            <field name="name">POR BENEFICIOS DE LEY A EMPLEADOS </field>
+            <field name="parent_id" ref="account_group_20107"/>
+        </record>
+        <record id="account_group_2010705" model="account.group.template">
+            <field name="code_prefix_start">2010705</field>
+            <field name="name">PARTICIPACIÓN TRABAJADORES POR PAGAR DEL EJERCICIO </field>
+            <field name="parent_id" ref="account_group_20107"/>
+        </record>
+        <record id="account_group_2010706" model="account.group.template">
+            <field name="code_prefix_start">2010706</field>
+            <field name="name">DIVIDENDOS POR PAGAR </field>
+            <field name="parent_id" ref="account_group_20107"/>
+        </record>
+        <record id="account_group_20108" model="account.group.template">
+            <field name="code_prefix_start">20108</field>
+            <field name="name">CUENTAS POR PAGAR DIVERSAS – RELACIONADAS </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010801" model="account.group.template">
+            <field name="code_prefix_start">2010801</field>
+            <field name="name">CUENTAS POR PAGAR DIVERSAS – RELACIONADAS </field>
+            <field name="parent_id" ref="account_group_20108"/>
+        </record>
+        <record id="account_group_20109" model="account.group.template">
+            <field name="code_prefix_start">20109</field>
+            <field name="name">OTROS PASIVOS FINANCIEROS </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2010901" model="account.group.template">
+            <field name="code_prefix_start">2010901</field>
+            <field name="name">OTROS PASIVOS FINANCIEROS </field>
+            <field name="parent_id" ref="account_group_20109"/>
+        </record>
+        <record id="account_group_20110" model="account.group.template">
+            <field name="code_prefix_start">20110</field>
+            <field name="name">ANTICIPOS DE CLIENTES </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2011001" model="account.group.template">
+            <field name="code_prefix_start">2011001</field>
+            <field name="name">ANTICIPOS DE CLIENTES </field>
+            <field name="parent_id" ref="account_group_20110"/>
+        </record>
+        <record id="account_group_20111" model="account.group.template">
+            <field name="code_prefix_start">20111</field>
+            <field name="name">PASIVOS DIRECTAMENTE ASOCIADOS CON LOS ACTIVOS NO CORRIENTES Y OPERACIONES DISCONTINUADAS </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2011101" model="account.group.template">
+            <field name="code_prefix_start">2011101</field>
+            <field name="name">PASIVOS DIRECTAMENTE ASOCIADOS CON LOS ACTIVOS NO CORRIENTES Y OPERACIONES DISCONTINUADAS </field>
+            <field name="parent_id" ref="account_group_20111"/>
+        </record>
+        <record id="account_group_20112" model="account.group.template">
+            <field name="code_prefix_start">20112</field>
+            <field name="name">PORCIÓN CORRIENTE DE PROVISIONES POR BENEFICIOS A EMPLEADOS </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2011201" model="account.group.template">
+            <field name="code_prefix_start">2011201</field>
+            <field name="name">PORCIÓN CORRIENTE DE PROVISIONES POR BENEFICIOS A EMPLEADOS </field>
+            <field name="parent_id" ref="account_group_20112"/>
+        </record>
+        <record id="account_group_20113" model="account.group.template">
+            <field name="code_prefix_start">20113</field>
+            <field name="name">OTROS PASIVOS CORRIENTES </field>
+            <field name="parent_id" ref="account_group_201"/>
+        </record>
+        <record id="account_group_2011301" model="account.group.template">
+            <field name="code_prefix_start">2011301</field>
+            <field name="name">OTROS PASIVOS CORRIENTES </field>
+            <field name="parent_id" ref="account_group_20113"/>
+        </record>
+        <record id="account_group_202" model="account.group.template">
+            <field name="code_prefix_start">202</field>
+            <field name="name">PASIVO NO CORRIENTE </field>
+            <field name="parent_id" ref="account_group_2"/>
+        </record>
+        <record id="account_group_20201" model="account.group.template">
+            <field name="code_prefix_start">20201</field>
+            <field name="name">PASIVOS POR CONTRATOS DE ARRENDAMIENTO FINANCIERO </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020101" model="account.group.template">
+            <field name="code_prefix_start">2020101</field>
+            <field name="name">PASIVOS POR CONTRATOS DE ARRENDAMIENTO FINANCIERO </field>
+            <field name="parent_id" ref="account_group_20201"/>
+        </record>
+        <record id="account_group_20202" model="account.group.template">
+            <field name="code_prefix_start">20202</field>
+            <field name="name">CUENTAS Y DOCUMENTOS POR PAGAR </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020201" model="account.group.template">
+            <field name="code_prefix_start">2020201</field>
+            <field name="name">CUENTAS Y DOCUMENTOS POR PAGAR </field>
+            <field name="parent_id" ref="account_group_20202"/>
+        </record>
+        <record id="account_group_20203" model="account.group.template">
+            <field name="code_prefix_start">20203</field>
+            <field name="name">OBLIGACIONES CON INSTITUCIONES FINANCIERAS </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020301" model="account.group.template">
+            <field name="code_prefix_start">2020301</field>
+            <field name="name">OBLIGACIONES CON INSTITUCIONES FINANCIERAS </field>
+            <field name="parent_id" ref="account_group_20203"/>
+        </record>
+        <record id="account_group_20204" model="account.group.template">
+            <field name="code_prefix_start">20204</field>
+            <field name="name">CUENTAS POR PAGAR DIVERSAS / RELACIONADAS </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020401" model="account.group.template">
+            <field name="code_prefix_start">2020401</field>
+            <field name="name">CUENTAS POR PAGAR DIVERSAS / RELACIONADAS </field>
+            <field name="parent_id" ref="account_group_20204"/>
+        </record>
+        <record id="account_group_20205" model="account.group.template">
+            <field name="code_prefix_start">20205</field>
+            <field name="name">OBLIGACIONES EMITIDAS </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020501" model="account.group.template">
+            <field name="code_prefix_start">2020501</field>
+            <field name="name">OBLIGACIONES EMITIDAS </field>
+            <field name="parent_id" ref="account_group_20205"/>
+        </record>
+        <record id="account_group_20206" model="account.group.template">
+            <field name="code_prefix_start">20206</field>
+            <field name="name">ANTICIPOS DE CLIENTES </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020601" model="account.group.template">
+            <field name="code_prefix_start">2020601</field>
+            <field name="name">ANTICIPOS DE CLIENTES </field>
+            <field name="parent_id" ref="account_group_20206"/>
+        </record>
+        <record id="account_group_20207" model="account.group.template">
+            <field name="code_prefix_start">20207</field>
+            <field name="name">PROVISIONES POR BENEFICIOS A EMPLEADOS </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020701" model="account.group.template">
+            <field name="code_prefix_start">2020701</field>
+            <field name="name">PROVISIONES POR BENEFICIOS A EMPLEADOS </field>
+            <field name="parent_id" ref="account_group_20207"/>
+        </record>
+        <record id="account_group_20208" model="account.group.template">
+            <field name="code_prefix_start">20208</field>
+            <field name="name">OTRAS PROVISIONES </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_2020801" model="account.group.template">
+            <field name="code_prefix_start">2020801</field>
+            <field name="name">OTRAS PROVISIONES </field>
+            <field name="parent_id" ref="account_group_20208"/>
+        </record>
+        <record id="account_group_20209" model="account.group.template">
+            <field name="code_prefix_start">20209</field>
+            <field name="name">PASIVO DIFERIDO </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_20210" model="account.group.template">
+            <field name="code_prefix_start">20210</field>
+            <field name="name">OTROS PASIVOS NO CORRIENTES </field>
+            <field name="parent_id" ref="account_group_202"/>
+        </record>
+        <record id="account_group_3" model="account.group.template">
+            <field name="code_prefix_start">3</field>
+            <field name="name">PATRIMONIO NETO </field>
+        </record>
+        <record id="account_group_301" model="account.group.template">
+            <field name="code_prefix_start">301</field>
+            <field name="name">CAPITAL </field>
+            <field name="parent_id" ref="account_group_3"/>
+        </record>
+        <record id="account_group_30101" model="account.group.template">
+            <field name="code_prefix_start">30101</field>
+            <field name="name">CAPITAL </field>
+            <field name="parent_id" ref="account_group_301"/>
+        </record>
+        <record id="account_group_3010101" model="account.group.template">
+            <field name="code_prefix_start">3010101</field>
+            <field name="name">CAPITAL </field>
+            <field name="parent_id" ref="account_group_30101"/>
+        </record>
+        <record id="account_group_302" model="account.group.template">
+            <field name="code_prefix_start">302</field>
+            <field name="name">APORTES DE SOCIOS O ACCIONISTAS PARA FUTURA CAPITALIZACIÓN </field>
+            <field name="parent_id" ref="account_group_3"/>
+        </record>
+        <record id="account_group_30201" model="account.group.template">
+            <field name="code_prefix_start">30201</field>
+            <field name="name">APORTES DE SOCIOS O ACCIONISTAS PARA FUTURA CAPITALIZACIÓN </field>
+            <field name="parent_id" ref="account_group_302"/>
+        </record>
+        <record id="account_group_303" model="account.group.template">
+            <field name="code_prefix_start">303</field>
+            <field name="name">PRIMA POR EMISION PRIMARIA DE ACCIONES </field>
+            <field name="parent_id" ref="account_group_3"/>
+        </record>
+        <record id="account_group_304" model="account.group.template">
+            <field name="code_prefix_start">304</field>
+            <field name="name">RESERVAS </field>
+            <field name="parent_id" ref="account_group_3"/>
+        </record>
+        <record id="account_group_30401" model="account.group.template">
+            <field name="code_prefix_start">30401</field>
+            <field name="name">RESERVAS </field>
+            <field name="parent_id" ref="account_group_304"/>
+        </record>
+        <record id="account_group_3040101" model="account.group.template">
+            <field name="code_prefix_start">3040101</field>
+            <field name="name">RESERVAS LEGAL Y FACULTATIVA</field>
+            <field name="parent_id" ref="account_group_30401"/>
+        </record>
+        <record id="account_group_305" model="account.group.template">
+            <field name="code_prefix_start">305</field>
+            <field name="name">OTROS RESULTADOS INTEGRALES </field>
+            <field name="parent_id" ref="account_group_3"/>
+        </record>
+        <record id="account_group_30501" model="account.group.template">
+            <field name="code_prefix_start">30501</field>
+            <field name="name">OTROS RESULTADOS INTEGRALES </field>
+            <field name="parent_id" ref="account_group_305"/>
+        </record>
+        <record id="account_group_3050101" model="account.group.template">
+            <field name="code_prefix_start">3050101</field>
+            <field name="name">SUPERAVIT DE ACTIVOS FINANCIEROS DISPONIBLES PARA LA VENTA</field>
+            <field name="parent_id" ref="account_group_30501"/>
+        </record>
+        <record id="account_group_30502" model="account.group.template">
+            <field name="code_prefix_start">30502</field>
+            <field name="name">SUPERAVIT POR REVALUACION DE PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="account_group_305"/>
+        </record>
+        <record id="account_group_3050201" model="account.group.template">
+            <field name="code_prefix_start">3050201</field>
+            <field name="name">SUPERAVIT POR REVALUACION DE PROPIEDADES, PLANTA Y EQUIPO</field>
+            <field name="parent_id" ref="account_group_30502"/>
+        </record>
+        <record id="account_group_30503" model="account.group.template">
+            <field name="code_prefix_start">30503</field>
+            <field name="name">SUPERAVIT POR REVALUACION DE ACTIVOS INTANGIBLES</field>
+            <field name="parent_id" ref="account_group_305"/>
+        </record>
+        <record id="account_group_3050301" model="account.group.template">
+            <field name="code_prefix_start">3050301</field>
+            <field name="name">SUPERAVIT POR REVALUACION DE ACTIVOS INTANGIBLES</field>
+            <field name="parent_id" ref="account_group_30503"/>
+        </record>
+        <record id="account_group_30504" model="account.group.template">
+            <field name="code_prefix_start">30504</field>
+            <field name="name">OTROS SUPERAVIT POR REVALUACION</field>
+            <field name="parent_id" ref="account_group_305"/>
+        </record>
+        <record id="account_group_3050401" model="account.group.template">
+            <field name="code_prefix_start">3050401</field>
+            <field name="name">OTROS SUPERAVIT POR REVALUACION</field>
+            <field name="parent_id" ref="account_group_30504"/>
+        </record>
+        <record id="account_group_306" model="account.group.template">
+            <field name="code_prefix_start">306</field>
+            <field name="name">RESULTADOS ACUMULADOS </field>
+            <field name="parent_id" ref="account_group_3"/>
+        </record>
+        <record id="account_group_30601" model="account.group.template">
+            <field name="code_prefix_start">30601</field>
+            <field name="name">RESULTADOS ACUMULADOS </field>
+            <field name="parent_id" ref="account_group_306"/>
+        </record>
+        <record id="account_group_3060101" model="account.group.template">
+            <field name="code_prefix_start">3060101</field>
+            <field name="name">GANANCIAS O PERDIDAS ACUMULADAS</field>
+            <field name="parent_id" ref="account_group_30601"/>
+        </record>
+        <record id="account_group_30602" model="account.group.template">
+            <field name="code_prefix_start">30602</field>
+            <field name="name">RESULTADOS ACUMULADOS PROVENIENTES DE LA ADOPCIÓN POR PRIMERA VEZ DE LAS NIIF </field>
+            <field name="parent_id" ref="account_group_306"/>
+        </record>
+        <record id="account_group_3060201" model="account.group.template">
+            <field name="code_prefix_start">3060201</field>
+            <field name="name">RESULTADOS ACUMULADOS PROVENIENTES DE LA ADOPCIÓN POR PRIMERA VEZ DE LAS NIIF </field>
+            <field name="parent_id" ref="account_group_30602"/>
+        </record>
+        <record id="account_group_30603" model="account.group.template">
+            <field name="code_prefix_start">30603</field>
+            <field name="name">RESERVA DE CAPITAL </field>
+            <field name="parent_id" ref="account_group_306"/>
+        </record>
+        <record id="account_group_3060301" model="account.group.template">
+            <field name="code_prefix_start">3060301</field>
+            <field name="name">RESERVA DE CAPITAL</field>
+            <field name="parent_id" ref="account_group_30603"/>
+        </record>
+        <record id="account_group_30604" model="account.group.template">
+            <field name="code_prefix_start">30604</field>
+            <field name="name">RESERVA POR DONACIONES</field>
+            <field name="parent_id" ref="account_group_306"/>
+        </record>
+        <record id="account_group_3060401" model="account.group.template">
+            <field name="code_prefix_start">3060401</field>
+            <field name="name">RESERVA POR DONACIONES</field>
+            <field name="parent_id" ref="account_group_30604"/>
+        </record>
+        <record id="account_group_30605" model="account.group.template">
+            <field name="code_prefix_start">30605</field>
+            <field name="name">RESERVA POR VALUACION</field>
+            <field name="parent_id" ref="account_group_306"/>
+        </record>
+        <record id="account_group_3060501" model="account.group.template">
+            <field name="code_prefix_start">3060501</field>
+            <field name="name">RESERVA POR VALUACION</field>
+            <field name="parent_id" ref="account_group_30605"/>
+        </record>
+        <record id="account_group_30606" model="account.group.template">
+            <field name="code_prefix_start">30606</field>
+            <field name="name">SUPERAVIT POR REVALUACION DE INVERSIONES</field>
+            <field name="parent_id" ref="account_group_306"/>
+        </record>
+        <record id="account_group_3060601" model="account.group.template">
+            <field name="code_prefix_start">3060601</field>
+            <field name="name">SUPERAVIT POR REVALUACION DE INVERSIONES</field>
+            <field name="parent_id" ref="account_group_30606"/>
+        </record>
+        <record id="account_group_307" model="account.group.template">
+            <field name="code_prefix_start">307</field>
+            <field name="name">RESULTADOS DEL EJERCICIO</field>
+            <field name="parent_id" ref="account_group_3"/>
+        </record>
+        <record id="account_group_30701" model="account.group.template">
+            <field name="code_prefix_start">30701</field>
+            <field name="name">RESULTADOS DEL EJERCICIO ACTUAL</field>
+            <field name="parent_id" ref="account_group_307"/>
+        </record>
+        <record id="account_group_3070101" model="account.group.template">
+            <field name="code_prefix_start">3070101</field>
+            <field name="name">GANANCIA O PERDIDA DEL EJERCICIO ACTUAL</field>
+            <field name="parent_id" ref="account_group_30701"/>
+        </record>
+        <record id="account_group_4" model="account.group.template">
+            <field name="code_prefix_start">4</field>
+            <field name="name">INGRESOS</field>
+        </record>
+        <record id="account_group_41" model="account.group.template">
+            <field name="code_prefix_start">41</field>
+            <field name="name">INGRESOS DE ACTIVIDADES ORDINARIAS </field>
+            <field name="parent_id" ref="account_group_4"/>
+        </record>
+        <record id="account_group_4101" model="account.group.template">
+            <field name="code_prefix_start">4101</field>
+            <field name="name">VENTA DE BIENES </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4102" model="account.group.template">
+            <field name="code_prefix_start">4102</field>
+            <field name="name">PRESTACIÓN DE SERVICIOS </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4103" model="account.group.template">
+            <field name="code_prefix_start">4103</field>
+            <field name="name">CONTRATOS DE CONSTRUCCIÓN </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4104" model="account.group.template">
+            <field name="code_prefix_start">4104</field>
+            <field name="name">SUBVENCIONES DEL GOBIERNO </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4105" model="account.group.template">
+            <field name="code_prefix_start">4105</field>
+            <field name="name">REGALÍAS </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4106" model="account.group.template">
+            <field name="code_prefix_start">4106</field>
+            <field name="name">INTERESES </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4107" model="account.group.template">
+            <field name="code_prefix_start">4107</field>
+            <field name="name">DIVIDENDOS </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4108" model="account.group.template">
+            <field name="code_prefix_start">4108</field>
+            <field name="name">GANANCIA POR MEDICIÓN A VALOR RAZONABLE DE ACTIVOS BIOLÓGICOS </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_4109" model="account.group.template">
+            <field name="code_prefix_start">4109</field>
+            <field name="name">OTROS INGRESOS DE ACTIVIDADES ORDINARIAS </field>
+            <field name="parent_id" ref="account_group_41"/>
+        </record>
+        <record id="account_group_42" model="account.group.template">
+            <field name="code_prefix_start">42</field>
+            <field name="name">(-) DESCUENTO EN VENTAS </field>
+            <field name="parent_id" ref="account_group_4"/>
+        </record>
+        <record id="account_group_4201" model="account.group.template">
+            <field name="code_prefix_start">4201</field>
+            <field name="name">(-) DESCUENTO EN VENTAS </field>
+            <field name="parent_id" ref="account_group_42"/>
+        </record>
+        <record id="account_group_4202" model="account.group.template">
+            <field name="code_prefix_start">4202</field>
+            <field name="name">(-) DEVOLUCIONES EN VENTAS </field>
+            <field name="parent_id" ref="account_group_42"/>
+        </record>
+        <record id="account_group_4203" model="account.group.template">
+            <field name="code_prefix_start">4203</field>
+            <field name="name">(-) BONIFICACIÓN EN PRODUCTO </field>
+            <field name="parent_id" ref="account_group_42"/>
+        </record>
+        <record id="account_group_4204" model="account.group.template">
+            <field name="code_prefix_start">4204</field>
+            <field name="name">(-) OTRAS REBAJAS COMERCIALES </field>
+            <field name="parent_id" ref="account_group_42"/>
+        </record>
+        <record id="account_group_43" model="account.group.template">
+            <field name="code_prefix_start">43</field>
+            <field name="name">OTROS INGRESOS </field>
+            <field name="parent_id" ref="account_group_4"/>
+        </record>
+        <record id="account_group_4301" model="account.group.template">
+            <field name="code_prefix_start">4301</field>
+            <field name="name">DIVIDENDOS </field>
+            <field name="parent_id" ref="account_group_43"/>
+        </record>
+        <record id="account_group_4302" model="account.group.template">
+            <field name="code_prefix_start">4302</field>
+            <field name="name">INTERESES FINANCIEROS </field>
+            <field name="parent_id" ref="account_group_43"/>
+        </record>
+        <record id="account_group_4303" model="account.group.template">
+            <field name="code_prefix_start">4303</field>
+            <field name="name">GANANCIA EN INVERSIONES EN ASOCIADAS / SUBSIDIARIAS Y OTRAS </field>
+            <field name="parent_id" ref="account_group_43"/>
+        </record>
+        <record id="account_group_4304" model="account.group.template">
+            <field name="code_prefix_start">4304</field>
+            <field name="name">VALUACIÓN DE INSTRUMENTOS FINANCIEROS A VALOR RAZONABLE CON CAMBIO EN RESULTADOS </field>
+            <field name="parent_id" ref="account_group_43"/>
+        </record>
+        <record id="account_group_4305" model="account.group.template">
+            <field name="code_prefix_start">4305</field>
+            <field name="name">OTRAS RENTAS </field>
+            <field name="parent_id" ref="account_group_43"/>
+        </record>
+        <record id="account_group_4306" model="account.group.template">
+            <field name="code_prefix_start">4306</field>
+            <field name="name">VENTAS DE ACTIVOS</field>
+            <field name="parent_id" ref="account_group_43"/>
+        </record>
+        <record id="account_group_51" model="account.group.template">
+            <field name="code_prefix_start">51</field>
+            <field name="name">COSTO DE VENTAS Y PRODUCCIÓN </field>
+        </record>
+        <record id="account_group_5101" model="account.group.template">
+            <field name="code_prefix_start">5101</field>
+            <field name="name">MATERIALES UTILIZADOS O PRODUCTOS VENDIDOS </field>
+            <field name="parent_id" ref="account_group_51"/>
+        </record>
+        <record id="account_group_5102" model="account.group.template">
+            <field name="code_prefix_start">5102</field>
+            <field name="name">(+) MANO DE OBRA DIRECTA </field>
+            <field name="parent_id" ref="account_group_51"/>
+        </record>
+        <record id="account_group_5103" model="account.group.template">
+            <field name="code_prefix_start">5103</field>
+            <field name="name">(+) MANO DE OBRA INDIRECTA </field>
+            <field name="parent_id" ref="account_group_51"/>
+        </record>
+        <record id="account_group_5104" model="account.group.template">
+            <field name="code_prefix_start">5104</field>
+            <field name="name">(+) OTROS COSTOS INDIRECTOS DE FABRICACIÓN </field>
+            <field name="parent_id" ref="account_group_51"/>
+        </record>
+        <record id="account_group_5105" model="account.group.template">
+            <field name="code_prefix_start">5105</field>
+            <field name="name">OTROS COSTOS DE PRODUCCION</field>
+            <field name="parent_id" ref="account_group_51"/>
+        </record>
+        <record id="account_group_6" model="account.group.template">
+            <field name="code_prefix_start">6</field>
+            <field name="name">GASTOS</field>
+        </record>
+        <record id="account_group_6101" model="account.group.template">
+            <field name="code_prefix_start">6101</field>
+            <field name="name">GASTOS VENTAS</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6102" model="account.group.template">
+            <field name="code_prefix_start">6102</field>
+            <field name="name">DEPRECIACIONES</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6103" model="account.group.template">
+            <field name="code_prefix_start">6103</field>
+            <field name="name">AMORTIZACIONES </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6104" model="account.group.template">
+            <field name="code_prefix_start">6104</field>
+            <field name="name">GASTOS DE DETERIORO</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6105" model="account.group.template">
+            <field name="code_prefix_start">6105</field>
+            <field name="name">GASTOS POR CANTIDADES ANORMALES DE UTILIZACIÓN EN EL PROCESO DE PRODUCCIÓN </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6106" model="account.group.template">
+            <field name="code_prefix_start">6106</field>
+            <field name="name">GASTO POR REESTRUCTURACIÓN </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6107" model="account.group.template">
+            <field name="code_prefix_start">6107</field>
+            <field name="name">VALOR NETO DE REALIZACIÓN DE INVENTARIOS </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6108" model="account.group.template">
+            <field name="code_prefix_start">6108</field>
+            <field name="name">PERDIDA EN INVERSION.</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6201" model="account.group.template">
+            <field name="code_prefix_start">6201</field>
+            <field name="name">GASTOS ADMINISTRATIVOS</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6202" model="account.group.template">
+            <field name="code_prefix_start">6202</field>
+            <field name="name">DEPRECIACIONES</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6203" model="account.group.template">
+            <field name="code_prefix_start">6203</field>
+            <field name="name">AMORTIZACIONES </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6204" model="account.group.template">
+            <field name="code_prefix_start">6204</field>
+            <field name="name">GASTO DETERIORO </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6205" model="account.group.template">
+            <field name="code_prefix_start">6205</field>
+            <field name="name">GASTOS POR CANTIDADES ANORMALES DE UTILIZACIÓN EN EL PROCESO DE PRODUCCIÓN </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6206" model="account.group.template">
+            <field name="code_prefix_start">6206</field>
+            <field name="name">GASTO POR REESTRUCTURACIÓN </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6207" model="account.group.template">
+            <field name="code_prefix_start">6207</field>
+            <field name="name">VALOR NETO DE REALIZACION DE INVENTARIOS</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6208" model="account.group.template">
+            <field name="code_prefix_start">6208</field>
+            <field name="name">GASTO IMPUESTO A LA RENTA (ACTIVOS Y PASIVOS DIFERIDOS) </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6209" model="account.group.template">
+            <field name="code_prefix_start">6209</field>
+            <field name="name">OTROS GASTOS ADMINISTRATIVOS</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6301" model="account.group.template">
+            <field name="code_prefix_start">6301</field>
+            <field name="name">GASTOS FINANCIEROS </field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6401" model="account.group.template">
+            <field name="code_prefix_start">6401</field>
+            <field name="name">GASTOS NO DEDUCIBLES</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+        <record id="account_group_6501" model="account.group.template">
+            <field name="code_prefix_start">6501</field>
+            <field name="name">OTROS GASTOS</field>
+            <field name="parent_id" ref="account_group_6"/>
+        </record>
+    </data>
+</odoo>
