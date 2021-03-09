@@ -56,4 +56,10 @@ The Dashboard for the Sales Manager will include
     'application': True,
     'uninstall_hook': 'uninstall_hook',
     'post_init_hook': 'post_init_hook',
+    'assets': {
+        'web.assets_frontend': [
+            # inside .
+            'sale_management/static/src/js/sale_management.js',
+        ],
+    }
 }
