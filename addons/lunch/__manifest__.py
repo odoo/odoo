@@ -39,8 +39,58 @@ If you want to save your employees' time and avoid them to always have coins in 
         'data/ir_cron_data.xml'
     ],
     'demo': ['data/lunch_demo.xml'],
-    'qweb': ['static/src/xml/lunch_templates.xml', ],
     'installable': True,
     'application': True,
     'certificate': '001292377792581874189',
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'lunch/static/src/scss/lunch_view.scss',
+            # inside .
+            'lunch/static/src/scss/lunch_kanban.scss',
+            # inside .
+            'lunch/static/src/scss/lunch_list.scss',
+            # inside .
+            'lunch/static/src/js/lunch_controller_common.js',
+            # inside .
+            'lunch/static/src/js/lunch_widget.js',
+            # inside .
+            'lunch/static/src/js/lunch_mobile.js',
+            # inside .
+            'lunch/static/src/js/lunch_payment_dialog.js',
+            # inside .
+            'lunch/static/src/js/lunch_kanban_view.js',
+            # inside .
+            'lunch/static/src/js/lunch_kanban_controller.js',
+            # inside .
+            'lunch/static/src/js/lunch_kanban_renderer.js',
+            # inside .
+            'lunch/static/src/js/lunch_kanban_record.js',
+            # inside .
+            'lunch/static/src/js/lunch_model_extension.js',
+            # inside .
+            'lunch/static/src/js/lunch_list_view.js',
+            # inside .
+            'lunch/static/src/js/lunch_list_controller.js',
+            # inside .
+            'lunch/static/src/js/lunch_list_renderer.js',
+        ],
+        'web.qunit_suite_tests': [
+            # inside .
+            'lunch/static/tests/lunch_test_utils.js',
+            # inside .
+            'lunch/static/tests/lunch_kanban_tests.js',
+            # inside .
+            'lunch/static/tests/lunch_list_tests.js',
+        ],
+        'web.qunit_mobile_suite_tests': [
+            # inside .
+            'lunch/static/tests/lunch_test_utils.js',
+            # inside .
+            'lunch/static/tests/lunch_kanban_mobile_tests.js',
+        ],
+        'web.assets_qweb': [
+            'lunch/static/src/xml/lunch_templates.xml',
+        ],
+    }
 }
