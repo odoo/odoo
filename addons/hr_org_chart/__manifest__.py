@@ -16,10 +16,25 @@ This module extend the employee form with a organizational chart.
     'depends': ['hr'],
     'auto_install': True,
     'data': [
-        'views/hr_templates.xml',
         'views/hr_views.xml'
     ],
-    'qweb': [
-        'static/src/xml/hr_org_chart.xml',
-    ]
+    'assets': {
+        'web._assets_primary_variables': [
+            # after //link[last()]
+            'hr_org_chart/static/src/scss/variables.scss',
+        ],
+        'web.assets_backend': [
+            # inside .
+            'hr_org_chart/static/src/scss/hr_org_chart.scss',
+            # inside .
+            'hr_org_chart/static/src/js/hr_org_chart.js',
+        ],
+        'web.qunit_suite_tests': [
+            # after //script[last()]
+            'hr_org_chart/static/tests/hr_org_chart_tests.js',
+        ],
+        'web.assets_qweb': [
+            'hr_org_chart/static/src/xml/hr_org_chart.xml',
+        ],
+    }
 }
