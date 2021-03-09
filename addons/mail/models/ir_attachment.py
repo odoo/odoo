@@ -34,3 +34,15 @@ class IrAttachment(models.Model):
                     related_record.message_main_attachment_id = self
                 except AccessError:
                     pass
+
+    def _attachment_format(self, main_attachment = None, safari = None):
+        return [{
+            'checksum': attachment.checksum,
+            'id': attachment.id,
+            'filename': attachment.name,
+            'name': attachment.name,
+            'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
+            'is_main': main_attachment == attachment,
+            'res_id': attachment.res_id,
+            'res_model': attachment.res_model,
+        } for attachment in self]

@@ -1011,18 +1011,7 @@ class Message(models.Model):
             main_attachment = self.env['ir.attachment']
             if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
                 main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
-            attachment_ids = []
-            for attachment in message_sudo.attachment_ids:
-                attachment_ids.append({
-                    'checksum': attachment.checksum,
-                    'id': attachment.id,
-                    'filename': attachment.name,
-                    'name': attachment.name,
-                    'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                    'is_main': main_attachment == attachment,
-                    'res_id': attachment.res_id,
-                    'res_model': attachment.res_model,
-                })
+            attachment_ids = message_sudo.attachment_ids._attachment_format(main_attachment, safari)
 
             # Tracking values
             tracking_value_ids = []
