@@ -20,7 +20,6 @@ actions(Check in/Check out) performed by them.
     'data': [
         'security/hr_attendance_security.xml',
         'security/ir.model.access.csv',
-        'views/web_asset_backend_template.xml',
         'views/hr_attendance_view.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
@@ -31,8 +30,30 @@ actions(Check in/Check out) performed by them.
     ],
     'installable': True,
     'auto_install': False,
-    'qweb': [
-        "static/src/xml/attendance.xml",
-    ],
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'hr_attendance/static/src/js/employee_kanban_view_handler.js',
+            # inside .
+            'hr_attendance/static/src/js/greeting_message.js',
+            # inside .
+            'hr_attendance/static/src/js/kiosk_mode.js',
+            # inside .
+            'hr_attendance/static/src/js/kiosk_confirm.js',
+            # inside .
+            'hr_attendance/static/src/js/my_attendances.js',
+            # inside .
+            'hr_attendance/static/src/js/time_widget.js',
+            # inside .
+            'hr_attendance/static/src/scss/hr_attendance.scss',
+        ],
+        'web.qunit_suite_tests': [
+            # after //script[contains(@src, '/web/static/tests/views/kanban_tests.js')]
+            ('after', 'web/static/tests/views/kanban_tests.js', 'hr_attendance/static/tests/hr_attendance_tests.js'),
+        ],
+        'web.assets_qweb': [
+            "hr_attendance/static/src/xml/attendance.xml",
+        ],
+    }
 }
