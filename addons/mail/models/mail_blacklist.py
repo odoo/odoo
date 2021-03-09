@@ -12,7 +12,8 @@ class MailBlackList(models.Model):
     _description = 'Mail Blacklist'
     _rec_name = 'email'
 
-    email = fields.Char(string='Email Address', required=True, index=True, help='This field is case insensitive.',
+    email = fields.Char(string='Email Address', required=True, help='This field is case insensitive.',
+                        index=False, # already provided by the UNIQUE constraint
                         tracking=True)
     active = fields.Boolean(default=True, tracking=True)
 
