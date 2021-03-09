@@ -19,7 +19,6 @@
         'views/payment_acquirer_onboarding_templates.xml',
         'views/payment_templates.xml',
         'views/payment_portal_templates.xml',
-        'views/assets.xml',
         'views/res_partner_views.xml',
         'security/ir.model.access.csv',
         'security/payment_security.xml',
@@ -28,4 +27,24 @@
     ],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'payment/static/src/scss/payment_acquirer.scss',
+        ],
+        'web.assets_frontend': [
+            # after link[last()]
+            'payment/static/src/scss/portal_payment.scss',
+            # after link[last()]
+            'payment/static/src/scss/payment_form.scss',
+            # after script[last()]
+            'payment/static/lib/jquery.payment/jquery.payment.js',
+            # after script[last()]
+            'payment/static/src/js/payment_portal.js',
+            # after script[last()]
+            'payment/static/src/js/payment_form.js',
+            # after script[last()]
+            'payment/static/src/js/payment_processing.js',
+        ],
+    }
 }
