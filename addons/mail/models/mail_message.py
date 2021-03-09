@@ -3,6 +3,7 @@
 
 import logging
 import re
+from collections import defaultdict
 
 from binascii import Error as binascii_error
 from operator import itemgetter
@@ -991,6 +992,12 @@ class Message(models.Model):
         self.check_access_rule('read')
         vals_list = self._read_format(fnames)
         safari = request and request.httprequest.user_agent.browser == 'safari'
+
+        thread_ids_by_model_name = defaultdict(set)
+        for message in self:
+            if message.model and message.res_id:
+                thread_ids_by_model_name[message.model].add(message.res_id)
+
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
 
@@ -1031,11 +1038,21 @@ class Message(models.Model):
                         'currency_id': tracking.currency_id.id,
                     })
 
+            if message_sudo.model and message_sudo.res_id:
+                record_name = self.env[message_sudo.model] \
+                    .browse(message_sudo.res_id) \
+                    .sudo() \
+                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
+                    .display_name
+            else:
+                record_name = False
+
             vals.update({
                 'author_id': author,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
+                'record_name': record_name,
             })
 
         return vals_list
