@@ -417,7 +417,7 @@ class Picking(models.Model):
         - Done: if the picking is done.
         - Cancelled: if the picking is cancelled
         '''
-        for picking in self:
+        for picking in self.filtered(lambda p: p.state != 'cancel'):
             if not picking.move_lines:
                 picking.state = 'draft'
             elif any(move.state == 'draft' for move in picking.move_lines):  # TDE FIXME: should be all ?
