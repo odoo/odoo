@@ -3540,6 +3540,10 @@ class Many2many(_RelationalMulti):
             **kwargs
         )
 
+    _description_via_relation = property(attrgetter('relation'))
+    _description_via_these = property(attrgetter('column1'))
+    _description_via_those = property(attrgetter('column2'))
+
     def _setup_regular_base(self, model):
         super(Many2many, self)._setup_regular_base(model)
         # 3 cases:
