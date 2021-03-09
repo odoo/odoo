@@ -29,7 +29,6 @@ sent mails with personal token for the invitation of the survey.
         'data/ir_actions_data.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
-        'views/assets.xml',
         'views/survey_menus.xml',
         'views/survey_survey_views.xml',
         'views/survey_user_views.xml',
@@ -56,4 +55,84 @@ sent mails with personal token for the invitation of the survey.
     'auto_install': False,
     'application': True,
     'sequence': 220,
+    'assets': {
+        'survey.survey_assets': [
+            # new asset template 
+            'web/static/lib/Chart/Chart.js',
+            # new asset template 
+            'web/static/src/js/fields/field_utils.js',
+            # new asset template 
+            'survey/static/src/js/survey_quick_access.js',
+            # new asset template 
+            'survey/static/src/js/survey_timer.js',
+            # new asset template 
+            'survey/static/src/js/survey_breadcrumb.js',
+            # new asset template 
+            'survey/static/src/js/survey_form.js',
+            # new asset template 
+            'survey/static/src/js/survey_print.js',
+            # new asset template 
+            'survey/static/src/js/survey_result.js',
+            # None None
+            ('include', 'web._assets_helpers'),
+            # None None
+            ('include', 'web._assets_frontend_helpers'),
+            # new asset template 
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            # new asset template 
+            'survey/static/src/css/survey_print.css',
+            # new asset template 
+            'survey/static/src/css/survey_result.css',
+            # new asset template 
+            'survey/static/src/scss/survey_form.scss',
+        ],
+        'survey.survey_user_input_session_assets': [
+            # new asset template 
+            'survey/static/src/js/libs/chartjs-plugin-datalabels.min.js',
+            # new asset template 
+            'survey/static/src/js/survey_session_colors.js',
+            # new asset template 
+            'survey/static/src/js/survey_session_chart.js',
+            # new asset template 
+            'survey/static/src/js/survey_session_text_answers.js',
+            # new asset template 
+            'survey/static/src/js/survey_session_leaderboard.js',
+            # new asset template 
+            'survey/static/src/js/survey_session_manage.js',
+        ],
+        'web.report_assets_pdf': [
+            # after link[last()]
+            'survey/static/src/scss/survey_reports.scss',
+        ],
+        'web.assets_backend': [
+            # inside .
+            'survey/static/src/css/survey_result.css',
+            # inside .
+            'survey/static/src/js/fields_section_one2many.js',
+            # inside .
+            'survey/static/src/js/fields_form_page_description.js',
+            # after link[last()]
+            'survey/static/src/scss/survey_views.scss',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'survey/static/tests/tours/certification_failure.js',
+            # inside .
+            'survey/static/tests/tours/certification_success.js',
+            # inside .
+            'survey/static/tests/tours/survey.js',
+            # inside .
+            'survey/static/tests/tours/survey_prefill.js',
+            # inside .
+            'survey/static/tests/tours/survey_tour_session_tools.js',
+            # inside .
+            'survey/static/tests/tours/survey_tour_session_create.js',
+            # inside .
+            'survey/static/tests/tours/survey_tour_session_start.js',
+            # inside .
+            'survey/static/tests/tours/survey_tour_session_manage.js',
+            # inside .
+            'survey/static/tests/tours/survey_session_manage_test.js',
+        ],
+    }
 }
