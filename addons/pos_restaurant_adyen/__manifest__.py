@@ -11,7 +11,14 @@
     'depends': ['pos_adyen', 'pos_restaurant', 'payment_adyen'],
     'data': [
         'views/pos_payment_method_views.xml',
-        'views/point_of_sale_assets.xml',
-    ],
+        ],
     'auto-install': True,
+    'assets': {
+        'point_of_sale.assets': [
+            # inside .
+            'pos_restaurant_adyen/static/src/js/models.js',
+            # inside .
+            'pos_restaurant_adyen/static/src/js/payment_adyen.js',
+        ],
+    }
 }
