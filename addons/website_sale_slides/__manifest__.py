@@ -11,7 +11,6 @@
     'installable': True,
     'data': [
         'report/sale_report_views.xml',
-        'views/assets.xml',
         'views/website_slides_menu_views.xml',
         'views/slide_channel_views.xml',
         'views/website_slides_templates.xml',
@@ -21,4 +20,14 @@
         'data/slide_demo.xml',
         'data/sale_order_demo.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            # after //script[last()]
+            'website_sale_slides/static/src/js/slides_course_quiz.js',
+            # after //script[last()]
+            'website_sale_slides/static/src/js/slides_course_join.js',
+            # after //script[last()]
+            'website_sale_slides/static/src/js/slides_course_unsubscribe.js',
+        ],
+    }
 }
