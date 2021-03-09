@@ -18,7 +18,6 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/event_sponsor_data.xml',
-        'views/assets.xml',
         'views/event_templates_sponsor.xml',
         'views/event_sponsor_views.xml',
         'views/event_event_views.xml',
@@ -33,4 +32,14 @@
     ],
     'application': False,
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            # after //link[last()]
+            'website_event_exhibitor/static/src/scss/event_templates_sponsor.scss',
+            # after //link[last()]
+            'website_event_exhibitor/static/src/scss/event_exhibitor_templates.scss',
+            # after //script[last()]
+            'website_event_exhibitor/static/src/js/event_exhibitor_connect.js',
+        ],
+    }
 }
