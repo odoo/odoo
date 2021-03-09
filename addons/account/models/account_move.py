@@ -2926,7 +2926,7 @@ class AccountMoveLine(models.Model):
         help="The move of this entry line.")
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index=True)
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
-    ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=False)
+    ref = fields.Char(related='move_id.ref', store=True, copy=False, index=False, readonly=False)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
     journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True, default=lambda self: self.env.company)
@@ -3773,9 +3773,7 @@ class AccountMoveLine(models.Model):
         """
         cr = self._cr
         cr.execute('DROP INDEX IF EXISTS account_move_line_partner_id_index')
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_partner_id_ref_idx',))
-        if not cr.fetchone():
-            cr.execute('CREATE INDEX account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
+        cr.execute('CREATE INDEX IF NOT EXISTS account_move_line_partner_id_ref_idx ON account_move_line (partner_id, ref)')
 
     @api.model_create_multi
     def create(self, vals_list):
