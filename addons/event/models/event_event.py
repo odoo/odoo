@@ -480,17 +480,6 @@ class EventEvent(models.Model):
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
 
-    @api.depends('name', 'date_begin', 'date_end')
-    def name_get(self):
-        result = []
-        for event in self:
-            date_begin = fields.Datetime.from_string(event.date_begin)
-            date_end = fields.Datetime.from_string(event.date_end)
-            dates = [fields.Date.to_string(fields.Datetime.context_timestamp(event, dt)) for dt in [date_begin, date_end] if dt]
-            dates = sorted(set(dates))
-            result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
-        return result
-
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['event.stage'].search([])
