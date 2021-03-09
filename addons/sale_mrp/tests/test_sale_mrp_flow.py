@@ -693,6 +693,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")
+        self.assertTrue(aml_output.reconciled, "Invoice interim line is not reconciled with component's stock move amls")
 
     def test_03_sale_mrp_simple_kit_qty_delivered(self):
         """ Test that the quantities delivered are correct when
