@@ -62,10 +62,5 @@
             <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
          </template>
 
-         <template id="assets_frontend" inherit_id="web.assets_frontend">
-            <xpath expr="script[last()]" position="after">
-                <script type="text/javascript" src="/payment_authorize/static/src/js/payment_form.js"></script>
-            </xpath>
-        </template>
-    </data>
+         </data>
 </odoo>
