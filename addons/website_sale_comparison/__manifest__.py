@@ -24,4 +24,16 @@ Finally, the module comes with an option to display an attribute summary table i
         'data/website_sale_comparison_demo.xml',
     ],
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            # inside .
+            'website_sale_comparison/static/src/scss/website_sale_comparison.scss',
+            # inside .
+            'website_sale_comparison/static/src/js/website_sale_comparison.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'website_sale_comparison/static/tests/tours/website_sale_comparison.js',
+        ],
+    }
 }
