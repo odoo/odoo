@@ -17,10 +17,17 @@ discount to a customer.
     'depends': ['point_of_sale'],
     'data': [
         'views/pos_discount_views.xml',
-        'views/pos_discount_templates.xml'
-    ],
-    'qweb': [
-        'static/src/xml/DiscountButton.xml',
-    ],
+        ],
     'installable': True,
+    'assets': {
+        'point_of_sale.assets': [
+            # inside .
+            'pos_discount/static/src/js/DiscountButton.js',
+            # inside .
+            'pos_discount/static/src/js/models.js',
+        ],
+        'web.assets_qweb': [
+            'pos_discount/static/src/xml/DiscountButton.xml',
+        ],
+    }
 }
