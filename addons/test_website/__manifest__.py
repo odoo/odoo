@@ -22,4 +22,20 @@ models which only purpose is to run tests.""",
     ],
     'installable': True,
     'application': False,
+    'assets': {
+        'web.assets_frontend': [
+            # after //script[last()]
+            'test_website/static/src/js/test_error.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'test_website/static/tests/tours/reset_views.js',
+            # inside .
+            'test_website/static/tests/tours/error_views.js',
+            # inside .
+            'test_website/static/tests/tours/json_auth.js',
+            # inside .
+            'test_website/static/tests/tours/custom_snippets.js',
+        ],
+    }
 }
