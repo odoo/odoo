@@ -16,17 +16,26 @@ Shows you a list of applications features to install from.
         'data/base_setup_data.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
-        'views/assets.xml',
-    ],
+        ],
     'demo': [],
     'installable': True,
     'auto_install': False,
 
-    'qweb': [
-        'static/src/xml/res_config_dev_tool.xml',
-        'static/src/xml/res_config_edition.xml',
-        'static/src/xml/res_config_invite_users.xml',
-    ],
-
-    
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'base_setup/static/src/scss/settings.scss',
+            # inside .
+            'base_setup/static/src/js/res_config_dev_tool.js',
+            # inside .
+            'base_setup/static/src/js/res_config_edition.js',
+            # inside .
+            'base_setup/static/src/js/res_config_invite_users.js',
+        ],
+        'web.assets_qweb': [
+            'base_setup/static/src/xml/res_config_dev_tool.xml',
+            'base_setup/static/src/xml/res_config_edition.xml',
+            'base_setup/static/src/xml/res_config_invite_users.xml',
+        ],
+    }
 }
