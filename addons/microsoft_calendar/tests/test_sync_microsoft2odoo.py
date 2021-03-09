@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftEvent
+from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService, MicrosoftEvent
+from odoo.exceptions import ValidationError
 import pytz
 from datetime import datetime, date
 from odoo.tests.common import SavepointCase
@@ -221,3 +222,20 @@ class TestSyncMicrosoft2Odoo(SavepointCase):
         events = self.env['calendar.event'].browse(event_ids).exists()
         self.assertFalse(recurrence, "It should remove recurrence")
         self.assertFalse(events, "It should remove all events")
+
+    def test_attendees_must_have_email(self):
+        """
+        Synching with a partner without mail raises a ValidationError because Microsoft don't accept attendees without one.
+        """
+        MicrosoftCal = MicrosoftCalendarService(self.env['microsoft.service'])
+        partner = self.env['res.partner'].create({
+            'name': 'SuperPartner',
+        })
+        event = self.env['calendar.event'].create({
+            'name': "SuperEvent",
+            'start': datetime(2020, 3, 16, 11, 0),
+            'stop': datetime(2020, 3, 16, 13, 0),
+            'partner_ids': [(4, partner.id)],
+        })
+        with self.assertRaises(ValidationError):
+            event._sync_odoo2microsoft(MicrosoftCal)
