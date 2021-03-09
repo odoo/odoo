@@ -98,12 +98,13 @@ def get_timedelta(qty, granularity):
     return switch[granularity]
 
 
-def start_of(value, granularity):
+def start_of(value, granularity, week_start=0):
     """
     Get start of a time period from a date or a datetime.
 
     :param value: initial date or datetime.
     :param granularity: type of period in string, can be year, quarter, month, week, day or hour.
+    :param week_start: the starting day of the week (0-6 : MONDAY-SUNDAY)
     :return: a date/datetime object corresponding to the start of the specified period.
     """
     is_datetime = isinstance(value, datetime)
@@ -120,7 +121,10 @@ def start_of(value, granularity):
     elif granularity == 'week':
         # `calendar.weekday` uses ISO8601 for start of week reference, this means that
         # by default MONDAY is the first day of the week and SUNDAY is the last.
-        result = value - relativedelta(days=calendar.weekday(value.year, value.month, value.day))
+        week_start = week_start % 7
+        iso_week_day = calendar.weekday(value.year, value.month, value.day)
+        week_day = iso_week_day - week_start + (7 if week_start > iso_week_day else 0)
+        result = value - relativedelta(days=week_day)
     elif granularity == "day":
         result = value
     elif granularity == "hour" and is_datetime:
@@ -137,12 +141,13 @@ def start_of(value, granularity):
     return datetime.combine(result, time.min) if is_datetime else result
 
 
-def end_of(value, granularity):
+def end_of(value, granularity, week_start=0):
     """
     Get end of a time period from a date or a datetime.
 
     :param value: initial date or datetime.
     :param granularity: Type of period in string, can be year, quarter, month, week, day or hour.
+    :param week_start: the starting day of the week (0-6 : MONDAY-SUNDAY)
     :return: A date/datetime object corresponding to the start of the specified period.
     """
     is_datetime = isinstance(value, datetime)
@@ -159,7 +164,10 @@ def end_of(value, granularity):
     elif granularity == 'week':
         # `calendar.weekday` uses ISO8601 for start of week reference, this means that
         # by default MONDAY is the first day of the week and SUNDAY is the last.
-        result = value + relativedelta(days=6-calendar.weekday(value.year, value.month, value.day))
+        week_start = week_start % 7
+        iso_week_day = calendar.weekday(value.year, value.month, value.day)
+        week_day = iso_week_day - week_start + (7 if week_start > iso_week_day else 0)
+        result = value + relativedelta(days=6 - week_day)
     elif granularity == "day":
         result = value
     elif granularity == "hour" and is_datetime:

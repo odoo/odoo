@@ -1968,8 +1968,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return list(result.values())
 
     @api.model
-    def _read_group_fill_temporal(self, data, groupby, aggregated_fields, annotated_groupbys,
-                                  interval=dateutil.relativedelta.relativedelta(months=1)):
+    def _read_group_fill_temporal(self, data, groupby, aggregated_fields, annotated_groupbys):
         """Helper method for filling date/datetime 'holes' in a result set.
 
         We are in a use case where data are grouped by a date field (typically
@@ -2011,12 +2010,43 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if first_a_gby['type'] not in ('date', 'datetime'):
             return data
         interval = first_a_gby['interval']
+        granularity = first_a_gby['granularity']
         groupby_name = groupby[0]
 
         # existing non null datetimes
         existing = [d[groupby_name] for d in data if d[groupby_name]]
 
-        if len(existing) < 2:
+        # fill temporal with minimal bounds
+        # the context keys : fill_temporal_from and fill_temporal_to are a way to guarantee that
+        # at least a certain date range will be returned as groups. They are not restrictive,
+        # meaning that if some data is found outside those bounds [from, to], then it will still be
+        # returned -> [earlier_data, from, to, later_data]
+        from_date = self.env.context.get('fill_temporal_from')
+        to_date = self.env.context.get('fill_temporal_to')
+        iso_week_start = babel.Locale.parse(get_lang(self.env).code).first_week_day
+        if from_date or to_date:
+            required_dates = set()
+            tz = next((date.tzinfo for date in existing if date.tzinfo), False)
+            for date_string in {from_date, to_date}:
+                if date_string:
+                    date = datetime.datetime.strptime(date_string, "%Y-%m-%d")
+                    if tz:
+                        date = tz.localize(date)
+                    required_dates.add(date)
+            last = {date_utils.end_of(max(required_dates), granularity, iso_week_start)} \
+                if len(required_dates) > 1 else set()
+            existing = sorted(last.union(
+                {date_utils.start_of(min(required_dates), granularity, iso_week_start)},
+                existing[:1],
+                existing[-1:]))
+
+        # the context key min_groups offer a way to guarantee a certain amount of returned groups.
+        # This will only work if there is at least one group to be used as a reference (starting point)
+        # to create supplementary groups if necessary.
+        # example : min_groups = 4, existing contains : [2021-03-01, 2021-04-01] ->
+        # existing will be updated to contain 4 dates : [2021-03-01, 2021-04-01, 2021-05-01, 2021-06-01]
+        min_groups = self.env.context.get('fill_temporal_min')
+        if len(existing) < 1 or (not (from_date or to_date or min_groups) and len(existing) < 2):
             return data
 
         # assumption: existing data is sorted by field 'groupby_name'
@@ -2031,9 +2061,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             grouped_data[d[groupby_name]].append(d)
 
         result = []
-
         for dt in date_utils.date_range(first, last, interval):
             result.extend(grouped_data[dt] or [dict(empty_item, **{groupby_name: dt})])
+        # if there are not enough dates in the proposed range(first, last), add more groups to get to #min_groups
+        if min_groups and len(result) < min_groups:
+            first = interval + last
+            last = (min_groups - len(result)) * interval + last
+            for dt in date_utils.date_range(first, last, interval):
+                result.extend([dict(empty_item, **{groupby_name: dt})])
 
         if False in grouped_data:
             result.extend(grouped_data[False])
@@ -2135,15 +2170,21 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
-            qualified_field = "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
+            delta_start_week = 0
+            if gb_function == 'week':
+                iso_week_start = babel.Locale.parse(get_lang(self.env).code).first_week_day
+                delta_start_week = (7 - iso_week_start) % 7
+            qualified_field = "date_trunc('{0}', {1}::timestamp + interval '{delta} days') - interval '{delta} days'".format(
+                gb_function or 'month', qualified_field, delta=delta_start_week)
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
             'field': split[0],
             'groupby': gb,
-            'type': field_type, 
+            'type': field_type,
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
-            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'interval': time_intervals[gb_function or 'month'] if temporal else None,
+            'granularity': gb_function or 'month' if temporal else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field,
         }
@@ -2288,7 +2329,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # `False` instead of a (value, label) pair. In that case,
                 # leave the `False` value alone
                 if group.get(df):
-                    group[df] = group[df][1]
+                    # ABD TODO : see end of commit message for the full reasoning
+                    # maybe store the range under another form than a string separated with /
+                    if self._fields[df.split(':')[0]].type == 'date':
+                        group[df] = {
+                            "display": group[df][1],
+                            "range": group[df][0]
+                        }
+                    else:
+                        group[df] = group[df][1]
         return result
 
     @api.model
