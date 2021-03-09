@@ -305,7 +305,7 @@
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-value="'mr-auto'"/>
                 </t>
-                <ul class="nav navbar-nav navbar-expand">
+                <ul class="nav navbar-nav navbar-expand d-none d-sm-block">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
                         <t t-set="_item_class" t-value="'nav-item'"/>
@@ -325,7 +325,7 @@
                 </t>
                 <!-- Language Selector -->
                 <t t-call="website.placeholder_header_language_selector">
-                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                    <t t-set="_div_classes" t-value="'ml-2 d-none d-sm-block'"/>
                 </t>
                 <!-- Button -->
                 <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_1"/>
@@ -339,6 +339,24 @@
                                 <t t-set="item_class" t-value="'nav-item'"/>
                                 <t t-set="link_class" t-value="'nav-link'"/>
                             </t>
+                        </t>
+                        <ul class="nav navbar-nav navbar-expand d-block d-sm-none" style="width: fit-content;">
+                            <!-- Sign In -->
+                            <t t-call="portal.placeholder_user_sign_in">
+                                <t t-set="_item_class" t-value="'nav-item'"/>
+                                <t t-set="_link_class" t-value="'nav-link'"/>
+                            </t>
+                            <!-- User Dropdown -->
+                            <t t-call="portal.user_dropdown">
+                                <t t-set="_icon" t-value="true"/>
+                                <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+                                <t t-set="_link_class" t-value="'nav-link'"/>
+                                <t t-set="_dropdown_menu_class" t-value="'position-absolute dropdown-menu-right'"/>
+                            </t>
+                        </ul>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_div_classes" t-value="'d-block d-sm-none'"/>
                         </t>
                     </t>
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_hamburger_3"/>
