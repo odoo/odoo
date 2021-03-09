@@ -1962,15 +1962,6 @@
 </template>
 
 <!-- Effect options -->
-<template id="option_ripple_effect" inherit_id="website.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/ripple_effect.scss"/>
-    </xpath>
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/content/ripple_effect.js"/>
-    </xpath>
-</template>
-
 <template id="kanban">
     <t t-set="step"><t t-esc="step or 0"/></t>
     <t t-set="scope"><t t-esc="scope or 0"/></t>
