@@ -6,7 +6,6 @@
 # e2f <projects@e2f.com>, 2020
 # Saad Thaifa <saad.thaifa@gmail.com>, 2020
 # bb76cd9ac0cb7e20167a14728edb858b, 2020
-# Martin Trigaux, 2020
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2020
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2020
 # Christophe Dubuit <cdubuit@yahoo.com>, 2020
@@ -16,7 +15,7 @@
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Rémi CAZENAVE <remi@le-filament.com>, 2020
+# Rémi CAZENAVE, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2020
 # Olivier ANDRE <frsw194@gmail.com>, 2020
@@ -24,14 +23,17 @@
 # Celia Tydgat <cty@odoo.com>, 2020
 # omaodoo <oma@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Martin Trigaux, 2020
+# Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Gilles Mangin <gilles.mangin@phidias.fr>, 2020\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +79,7 @@ msgstr "Journal des comptes"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "Action Needed"
-msgstr "Nécessite une action"
+msgstr "Nécessite une Action"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
@@ -97,7 +99,7 @@ msgstr "État de l'Activité"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icône de type d'activité"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -128,25 +130,25 @@ msgstr "Nombre de pièces jointes"
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_current_cost_price
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_current_cost_price
 msgid "By Current Cost"
-msgstr "Par coût actuel"
+msgstr "Par Coût Actuel"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_quantity
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_quantity
 msgid "By Quantity"
-msgstr "Par quantité"
+msgstr "Par Quantité"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_volume
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_volume
 msgid "By Volume"
-msgstr "Par volume"
+msgstr "Par Volume"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__by_weight
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__by_weight
 msgid "By Weight"
-msgstr "Par poids"
+msgstr "Par Poids"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -256,13 +258,13 @@ msgstr "Journal par défaut"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "Méthode de répartition par défaut"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "Méthode de répartition par défaut utilisée pour les Coûts Logisitques"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -274,6 +276,7 @@ msgstr "Description"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
@@ -350,6 +353,7 @@ msgstr "Regrouper par"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
@@ -468,6 +472,7 @@ msgstr "Coût logistique validé"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template____last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -602,6 +607,7 @@ msgstr "Veuillez configurer le compte de dépense de stock de l'article : %s."
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
 msgstr ""
+"Veuillez définir %s sur quoi ces coûts additionnels doivent s'appliquer."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -623,6 +629,11 @@ msgstr "Modèle d'article"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
 msgid "Product Type"
 msgstr "Type d'article"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Ligne de commande d'achat"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
@@ -790,3 +801,7 @@ msgid ""
 "applied for products with automated inventory valuation and FIFO or average "
 "costing method."
 msgstr ""
+"Vous ne pouvez appliquer de coûts logistiques sur le(s) %s(s) sélectionnés. "
+"Les coûts logistiques peuvent uniquement être appliqués pour des articles "
+"avec une valorisation d'inventaire automatique et une méthode de coût FIFO "
+"ou coût moyen (AVCO)."

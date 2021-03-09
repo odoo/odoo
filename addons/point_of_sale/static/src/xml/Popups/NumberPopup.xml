@@ -35,7 +35,7 @@
                         <button class="input-button number-char" t-on-mousedown.prevent="sendInput('7')">7</button>
                         <button class="input-button number-char" t-on-mousedown.prevent="sendInput('8')">8</button>
                         <button class="input-button number-char" t-on-mousedown.prevent="sendInput('9')">9</button>
-                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('-')">-</button>
+                        <button t-if="!props.isPassword" class="input-button number-char" t-on-mousedown.prevent="sendInput('-')">-</button>
                         <br />
                         <button class="input-button numpad-char" t-on-mousedown.prevent="sendInput('Delete')">C</button>
                         <button class="input-button number-char" t-on-mousedown.prevent="sendInput('0')">0</button>

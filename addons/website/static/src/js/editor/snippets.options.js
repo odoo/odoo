@@ -1671,6 +1671,7 @@ options.registry.collapse = options.Class.extend({
         var self = this;
         this.$target.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
             self.trigger_up('cover_update');
+            self.$target.trigger('content_changed');
         });
         return this._super.apply(this, arguments);
     },
@@ -1963,6 +1964,42 @@ options.registry.topMenuColor = options.Class.extend({
                 onSuccess: value => resolve(!!value),
             });
         });
+    },
+});
+
+/**
+ * Manage the visibility of snippets on mobile.
+ */
+options.registry.MobileVisibility = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to show or hide the associated snippet in mobile display mode.
+     *
+     * @see this.selectClass for parameters
+     */
+    showOnMobile(previewMode, widgetValue, params) {
+        const classes = `d-none d-md-${this.$target.css('display')}`;
+        this.$target.toggleClass(classes, !widgetValue);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'showOnMobile') {
+            const classList = [...this.$target[0].classList];
+            return classList.includes('d-none') &&
+                classList.some(className => className.startsWith('d-md-')) ? '' : 'true';
+        }
+        return await this._super(...arguments);
     },
 });
 

@@ -105,7 +105,7 @@ class StockPicking(models.Model):
         return self.picking_type_id.code == 'incoming' and any(m.is_subcontract for m in self.move_lines)
 
     def _get_subcontracted_productions(self):
-        return self.move_lines.move_orig_ids.production_id
+        return self.move_lines.filtered(lambda move: move.is_subcontract).move_orig_ids.production_id
 
     def _get_warehouse(self, subcontract_move):
         return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id

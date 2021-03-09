@@ -1651,6 +1651,16 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertNotEqual(new_disc.participants, disc.participants)
         self.assertEqual(new_disc.participants._origin, disc.participants)
 
+        # check convert_to_write
+        tag = self.env['test_new_api.multi.tag'].create({'name': 'Foo'})
+        rec = self.env['test_new_api.multi'].create({
+            'lines': [(0, 0, {'tags': [(6, 0, tag.ids)]})],
+        })
+        new = rec.new(origin=rec)
+        self.assertEqual(new.lines.tags._origin, rec.lines.tags)
+        vals = new._convert_to_write(new._cache)
+        self.assertEqual(vals['lines'], [(6, 0, rec.lines.ids)])
+
     def test_41_new_compute(self):
         """ Check recomputation of fields on new records. """
         move = self.env['test_new_api.move'].create({

@@ -295,7 +295,7 @@ var FileWidget = SearchableMediaWidget.extend({
             domain.push(['name', 'ilike', needle]);
         }
         if (!this.options.useMediaLibrary) {
-            domain.push('!', ['url', '=ilike', '/web_editor/shape/%']);
+            domain.push('|', ['url', '=', false], '!', ['url', '=ilike', '/web_editor/shape/%']);
         }
         domain.push('!', ['name', '=like', '%.crop']);
         domain.push('|', ['type', '=', 'binary'], '!', ['url', '=like', '/%/static/%']);

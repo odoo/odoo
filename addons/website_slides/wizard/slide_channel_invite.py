@@ -18,8 +18,8 @@ class SlideChannelInvite(models.TransientModel):
     _description = 'Channel Invitation Wizard'
 
     # composer content
-    subject = fields.Char('Subject', compute='_compute_template_values', readonly=False, store=True)
-    body = fields.Html('Contents', default='', sanitize_style=True, compute='_compute_template_values', readonly=False, store=True)
+    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
+    body = fields.Html('Contents', sanitize_style=True, compute='_compute_body', readonly=False, store=True)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     template_id = fields.Many2one(
         'mail.template', 'Use template',
@@ -30,11 +30,20 @@ class SlideChannelInvite(models.TransientModel):
     channel_id = fields.Many2one('slide.channel', string='Slide channel', required=True)
 
     @api.depends('template_id')
-    def _compute_template_values(self):
+    def _compute_subject(self):
         for invite in self:
             if invite.template_id:
                 invite.subject = invite.template_id.subject
+            elif not invite.subject:
+                invite.subject = False
+
+    @api.depends('template_id')
+    def _compute_body(self):
+        for invite in self:
+            if invite.template_id:
                 invite.body = invite.template_id.body_html
+            elif not invite.body:
+                invite.body = False
 
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):

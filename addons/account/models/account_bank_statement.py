@@ -1248,6 +1248,7 @@ class AccountBankStatementLine(models.Model):
 
         line_vals_list = [reconciliation_vals['line_vals'] for reconciliation_vals in reconciliation_overview]
         new_lines = self.env['account.move.line'].create(line_vals_list)
+        new_lines = new_lines.with_context(skip_account_move_synchronization=True)
         for reconciliation_vals, line in zip(reconciliation_overview, new_lines):
             if reconciliation_vals.get('payment'):
                 accounts = (self.journal_id.payment_debit_account_id, self.journal_id.payment_credit_account_id)
@@ -1267,6 +1268,10 @@ class AccountBankStatementLine(models.Model):
                                         if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
             if len(rec_overview_partners) == 1:
                 self.line_ids.write({'partner_id': rec_overview_partners.pop()})
+
+        # Refresh analytic lines.
+        self.move_id.line_ids.analytic_line_ids.unlink()
+        self.move_id.line_ids.create_analytic_lines()
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

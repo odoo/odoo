@@ -445,10 +445,10 @@ class AccountMove(models.Model):
 
         self._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
-    @api.onchange('payment_reference', 'ref')
+    @api.onchange('payment_reference')
     def _onchange_payment_reference(self):
         for line in self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-            line.name = self.payment_reference or self.ref or ''
+            line.name = self.payment_reference or ''
 
     @api.onchange('invoice_vendor_bill_id')
     def _onchange_invoice_vendor_bill(self):
@@ -963,7 +963,7 @@ class AccountMove(models.Model):
                     # Create new line.
                     create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
                     candidate = create_method({
-                        'name': self.payment_reference or self.ref or '',
+                        'name': self.payment_reference or '',
                         'debit': balance < 0.0 and -balance or 0.0,
                         'credit': balance > 0.0 and balance or 0.0,
                         'quantity': 1.0,
@@ -1154,6 +1154,9 @@ class AccountMove(models.Model):
 
         if not relaxed:
             domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
+            if self.journal_id.refund_sequence:
+                refund_types = ('out_refund', 'in_refund')
+                domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
                 reference_move_name = self.search(domain, order='date asc', limit=1).name
@@ -2510,6 +2513,7 @@ class AccountMove(models.Model):
 
     def action_post(self):
         self._post(soft=False)
+        return False
 
     def js_assign_outstanding_line(self, line_id):
         ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
@@ -4101,8 +4105,8 @@ class AccountMoveLine(models.Model):
 
         :return: A recordset of account.partial.reconcile.
         '''
-        debit_lines = iter(self.filtered('debit'))
-        credit_lines = iter(self.filtered('credit'))
+        debit_lines = iter(self.filtered(lambda line: line.balance > 0.0 or line.amount_currency > 0.0))
+        credit_lines = iter(self.filtered(lambda line: line.balance < 0.0 or line.amount_currency < 0.0))
         debit_line = None
         credit_line = None
 
@@ -4146,17 +4150,21 @@ class AccountMoveLine(models.Model):
                     credit_line_currency = credit_line.company_currency_id
 
             min_amount_residual = min(debit_amount_residual, -credit_amount_residual)
+            has_debit_residual_left = not debit_line.company_currency_id.is_zero(debit_amount_residual) and debit_amount_residual > 0.0
+            has_credit_residual_left = not credit_line.company_currency_id.is_zero(credit_amount_residual) and credit_amount_residual < 0.0
+            has_debit_residual_curr_left = not debit_line_currency.is_zero(debit_amount_residual_currency) and debit_amount_residual_currency > 0.0
+            has_credit_residual_curr_left = not credit_line_currency.is_zero(credit_amount_residual_currency) and credit_amount_residual_currency < 0.0
 
             if debit_line_currency == credit_line_currency:
                 # Reconcile on the same currency.
 
                 # The debit line is now fully reconciled.
-                if debit_line_currency.is_zero(debit_amount_residual_currency) or debit_amount_residual_currency < 0.0:
+                if not has_debit_residual_curr_left and (has_credit_residual_curr_left or not has_debit_residual_left):
                     debit_line = None
                     continue
 
                 # The credit line is now fully reconciled.
-                if credit_line_currency.is_zero(credit_amount_residual_currency) or credit_amount_residual_currency > 0.0:
+                if not has_credit_residual_curr_left and (has_debit_residual_curr_left or not has_credit_residual_left):
                     credit_line = None
                     continue
 
@@ -4168,12 +4176,12 @@ class AccountMoveLine(models.Model):
                 # Reconcile on the company's currency.
 
                 # The debit line is now fully reconciled.
-                if debit_line.company_currency_id.is_zero(debit_amount_residual) or debit_amount_residual < 0.0:
+                if not has_debit_residual_left and (has_credit_residual_left or not has_debit_residual_curr_left):
                     debit_line = None
                     continue
 
                 # The credit line is now fully reconciled.
-                if credit_line.company_currency_id.is_zero(credit_amount_residual) or credit_amount_residual > 0.0:
+                if not has_credit_residual_left and (has_debit_residual_left or not has_credit_residual_curr_left):
                     credit_line = None
                     continue
 

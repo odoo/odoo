@@ -6,6 +6,7 @@ odoo.define('website_form.s_website_form', function (require) {
     const {ReCaptcha} = require('google_recaptcha.ReCaptchaV3');
     var ajax = require('web.ajax');
     var publicWidget = require('web.public.widget');
+    const dom = require('web.dom');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -191,7 +192,14 @@ odoo.define('website_form.s_website_form', function (require) {
                     }
                     switch (successMode) {
                         case 'redirect':
-                            $(window.location).attr('href', successPage);
+                            if (successPage.charAt(0) === "#") {
+                                dom.scrollTo($(successPage)[0], {
+                                    duration: 500,
+                                    extraOffset: 0,
+                                });
+                            } else {
+                                $(window.location).attr('href', successPage);
+                            }
                             break;
                         case 'message':
                             self.$target[0].classList.add('d-none');

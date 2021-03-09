@@ -171,7 +171,7 @@ class MassMailing(models.Model):
         for key in (
             'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
             'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
-            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
             self[key] = False
         if not self.ids:
@@ -203,7 +203,6 @@ class MassMailing(models.Model):
             total = row['expected'] = (row['expected'] - row['ignored']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
-            row['clicks_ratio'] = 100.0 * row['clicked'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)

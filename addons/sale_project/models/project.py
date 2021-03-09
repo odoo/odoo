@@ -16,7 +16,7 @@ class Project(models.Model):
         help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     sale_order_id = fields.Many2one('sale.order', 'Sales Order',
-        domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id)]",
+        domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id), ('state', 'in', ['sale', 'done'])]",
         copy=False, help="Sales order to which the project is linked.")
 
     _sql_constraints = [

@@ -1,49 +1,6 @@
 include requirements.txt
 include LICENSE
 include README.md
-include odoo/addons/mail/static/scripts/odoo-mailgate.py
-recursive-include odoo *.css
-recursive-include odoo *.csv
-recursive-include odoo *.doc
-recursive-include odoo *.docx
-recursive-include odoo *.eml
-recursive-include odoo *.eot
-recursive-include odoo *.gif
-recursive-include odoo *.html
-recursive-include odoo *.ico
-recursive-include odoo *.jpeg
-recursive-include odoo *.jpg
-recursive-include odoo *.js
-recursive-include odoo *.md
-recursive-include odoo *.mp3
-recursive-include odoo *.ogg
-recursive-include odoo *.ods
-recursive-include odoo *.odt
-recursive-include odoo *.otf
-recursive-include odoo *.pdf
-recursive-include odoo *.png
-recursive-include odoo *.po
-recursive-include odoo *.pot
-recursive-include odoo *.rml
-recursive-include odoo *.rng
-recursive-include odoo *.rst
-recursive-include odoo *.scss
-recursive-include odoo *.sql
-recursive-include odoo *.svg
-recursive-include odoo *.template
-recursive-include odoo *.txt
-recursive-include odoo *.ttf
-recursive-include odoo *.woff
-recursive-include odoo *.woff2
-recursive-include odoo *.wsdl
-recursive-include odoo *.xls
-recursive-include odoo *.xsd
-recursive-include odoo *.xsl
-recursive-include odoo *.xlsx
-recursive-include odoo *.xml
-recursive-include odoo *.yml
-recursive-include odoo *.zip
-recursive-include odoo/addons/l10n_mx_edi *.xslt *.key *.cer *.txt
-recursive-include odoo/addons/l10n_mx_reports *.xslt
+graft odoo
 recursive-exclude * *.py[co]
-recursive-exclude * *.hg*
+recursive-exclude .git *

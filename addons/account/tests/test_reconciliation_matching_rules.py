@@ -96,12 +96,14 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'journal_id': cls.bank_journal.id,
                 'line_ids': [
                     (0, 0, {
+                        'date': '2020-01-01',
                         'payment_ref': 'invoice %s-%s-%s' % tuple(invoice_number.split('/')[1:]),
                         'partner_id': cls.partner_1.id,
                         'amount': 100,
                         'sequence': 1,
                     }),
                     (0, 0, {
+                        'date': '2020-01-01',
                         'payment_ref': 'xxxxx',
                         'partner_id': cls.partner_1.id,
                         'amount': 600,
@@ -113,6 +115,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'journal_id': cls.bank_journal.id,
                 'line_ids': [
                     (0, 0, {
+                        'date': '2020-01-01',
                         'payment_ref': 'nawak',
                         'narration': 'Communication: RF12 3456',
                         'partner_id': cls.partner_3.id,
@@ -120,12 +123,14 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                         'sequence': 1,
                     }),
                     (0, 0, {
+                        'date': '2020-01-01',
                         'payment_ref': 'RF12 3456',
                         'partner_id': cls.partner_3.id,
                         'amount': 600,
                         'sequence': 2,
                     }),
                     (0, 0, {
+                        'date': '2020-01-01',
                         'payment_ref': 'baaaaah',
                         'ref': 'RF12 3456',
                         'partner_id': cls.partner_3.id,
@@ -138,6 +143,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'journal_id': cls.cash_journal.id,
                 'line_ids': [
                     (0, 0, {
+                        'date': '2020-01-01',
                         'payment_ref': 'yyyyy',
                         'partner_id': cls.partner_2.id,
                         'amount': -1000,
@@ -181,6 +187,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.cash_st.balance_end_real = self.cash_st.balance_end
         (self.bank_st + self.bank_st_2 + self.cash_st).button_post()
 
+    @freeze_time('2020-01-01')
     def _check_statement_matching(self, rules, expected_values, statements=None):
         if statements is None:
             statements = self.bank_st + self.cash_st
@@ -211,7 +218,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.rule_1.match_text_location_note = False
         self._check_statement_matching(self.rule_1, {
             self.bank_line_3.id: {'aml_ids': [self.invoice_line_5.id], 'model': self.rule_1, 'partner': self.bank_line_3.partner_id},
-            self.bank_line_4.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
+            self.bank_line_4.id: {'aml_ids': [self.invoice_line_7.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
             self.bank_line_5.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_5.partner_id},
         }, statements=self.bank_st_2)
 
@@ -220,7 +227,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.rule_1.match_text_location_note = True
         self._check_statement_matching(self.rule_1, {
             self.bank_line_3.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_3.partner_id},
-            self.bank_line_4.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
+            self.bank_line_4.id: {'aml_ids': [self.invoice_line_7.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
             self.bank_line_5.id: {'aml_ids': [self.invoice_line_5.id], 'model': self.rule_1, 'partner': self.bank_line_5.partner_id},
         }, statements=self.bank_st_2)
 
@@ -229,8 +236,8 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.rule_1.match_text_location_note = False
         self._check_statement_matching(self.rule_1, {
             self.bank_line_3.id: {'aml_ids': [self.invoice_line_5.id], 'model': self.rule_1, 'partner': self.bank_line_3.partner_id},
-            self.bank_line_4.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
-            self.bank_line_5.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_5.partner_id},
+            self.bank_line_4.id: {'aml_ids': [self.invoice_line_7.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
+            self.bank_line_5.id: {'aml_ids': [self.invoice_line_7.id], 'model': self.rule_1, 'partner': self.bank_line_5.partner_id},
         }, statements=self.bank_st_2)
 
         self.rule_1.match_text_location_label = True
@@ -238,8 +245,8 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.rule_1.match_text_location_note = True
         self._check_statement_matching(self.rule_1, {
             self.bank_line_3.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_3.partner_id},
-            self.bank_line_4.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
-            self.bank_line_5.id: {'aml_ids': [self.invoice_line_6.id], 'model': self.rule_1, 'partner': self.bank_line_5.partner_id},
+            self.bank_line_4.id: {'aml_ids': [self.invoice_line_7.id], 'model': self.rule_1, 'partner': self.bank_line_4.partner_id},
+            self.bank_line_5.id: {'aml_ids': [self.invoice_line_7.id], 'model': self.rule_1, 'partner': self.bank_line_5.partner_id},
         }, statements=self.bank_st_2)
 
         self.rule_1.match_text_location_label = False
@@ -719,6 +726,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'match_total_amount_param': 95.0,
             'match_same_currency': False,
             'company_id': self.company_data['company'].id,
+            'past_months_limit': False,
         })
 
         statement = self.env['account.bank.statement'].create({
@@ -743,7 +751,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         move = self.env['account.move'].create({
             'move_type': 'entry',
             'date': '2017-01-01',
-            'journal_id': self.company_data['default_journal_sale'].id,
+            'journal_id': self.company_data['default_journal_misc'].id,
             'line_ids': [
                 # Rate is 2 GOL = 1 USD in 2017.
                 # The statement line will consider this line equivalent to 600 DAR.
@@ -777,11 +785,11 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         move_line_1 = move.line_ids.filtered(lambda line: line.debit == 100.0)
         move_line_2 = move.line_ids.filtered(lambda line: line.debit == 14.0)
 
-        with freeze_time('2017-01-01'):
-            self._check_statement_matching(matching_rule, {
-                statement_line.id: {'aml_ids': (move_line_1 + move_line_2).ids, 'model': matching_rule, 'partner': statement_line.partner_id}
-            }, statements=statement)
+        self._check_statement_matching(matching_rule, {
+            statement_line.id: {'aml_ids': (move_line_1 + move_line_2).ids, 'model': matching_rule, 'partner': statement_line.partner_id}
+        }, statements=statement)
 
+    @freeze_time('2020-01-01')
     def test_inv_matching_with_write_off(self):
         self.rule_1.match_total_amount_param = 90
         self.bank_st.line_ids[1].unlink() # We don't need this one here

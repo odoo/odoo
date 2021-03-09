@@ -287,7 +287,7 @@
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" nolabel="1" placeholder="Describe your project..." type="html"/>
-                            <div class="oe_clear"/>
+                            <div class="d-none oe_clear"/>
                         </page>
                         <page name="settings" string="Settings">
                             <group>
@@ -682,7 +682,7 @@
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" type="html"/>
-                            <div class="oe_clear"/>
+                            <div class="d-none oe_clear"/>
                         </page>
                         <page name="recurrence" string="Recurrence" attrs="{'invisible': [('recurring_task', '=', False)]}">
                             <group>

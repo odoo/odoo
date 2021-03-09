@@ -189,7 +189,7 @@ class Digest(models.Model):
         invalid_fields = []
         kpis = [
             dict(kpi_name=field_name,
-                 kpi_fullname=self._fields[field_name].string,
+                 kpi_fullname=self.env['ir.model.fields']._get(self._name, field_name).field_description,
                  kpi_action=False,
                  kpi_col1=dict(),
                  kpi_col2=dict(),

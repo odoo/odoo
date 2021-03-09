@@ -22,17 +22,17 @@
 # Jesper Carstensen <info@danodoo.dk>, 2020
 # Jarnhold Nattestad <nattestads@gmail.com>, 2020
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Ejner Sønniksen <ejner@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
+# Ejner Sønniksen <ejner@vkdata.dk>, 2021
 # Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -169,6 +169,12 @@ msgstr "-> Vis delvis udlignet poster"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr ". Det kan være du vil angive et større tal her."
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s anden)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -2511,6 +2517,13 @@ msgstr "Dårlig kunde"
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__balance
 msgid "Balance"
+msgstr "Balance"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
 msgstr "Balance"
 
 #. module: account
@@ -8605,6 +8618,12 @@ msgid "Options"
 msgstr "Valgmuligheder"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr "Eller send en regning til %s@%s"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr "Sortering"
@@ -13529,6 +13548,12 @@ msgid "Transfers"
 msgstr "Overførsler"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr "Prøv et leverandørregnings eksempel"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13735,6 +13760,12 @@ msgstr "Opdatér valutakurser automatisk"
 #, python-format
 msgid "Upload"
 msgstr "Upload"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr "Upload din egen regning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
