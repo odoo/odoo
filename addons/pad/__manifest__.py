@@ -19,5 +19,9 @@ pads (by default, http://etherpad.com/).
     ],
     'demo': ['data/pad_demo.xml'],
     'web': True,
-    'qweb': ['static/src/xml/pad.xml']
+    'assets': {
+        'web.assets_qweb': [
+            'pad/static/src/xml/pad.xml',
+        ],
+    }
 }
