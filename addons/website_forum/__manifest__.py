@@ -33,12 +33,32 @@ Ask questions, get answers, no distractions
         'data/badges_participation.xml',
         'data/badges_moderation.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml'
-    ],
     'demo': [
         'data/forum_demo.xml',
     ],
     'installable': True,
     'application': True,
+    'assets': {
+        'website.assets_editor': [
+            # inside .
+            'website_forum/static/src/js/tours/website_forum.js',
+            # inside .
+            'website_forum/static/src/js/website_forum.editor.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'website_forum/static/tests/tours/website_forum_question.js',
+        ],
+        'web.assets_frontend': [
+            # after link[last()]
+            'website_forum/static/src/scss/website_forum.scss',
+            # after script[last()]
+            'website_forum/static/src/js/website_forum.js',
+            # after script[last()]
+            'website_forum/static/src/js/website_forum.share.js',
+        ],
+        'web.assets_qweb': [
+            'website_forum/static/src/xml/*.xml',
+        ],
+    }
 }
