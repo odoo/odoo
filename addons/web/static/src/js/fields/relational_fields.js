@@ -1307,22 +1307,28 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * @private
      * @override
      * @param {Object} extraInfo
-     * @param {string} extraInfo.row
-     * @param {string} extraInfo.subFieldName
+     * @param {string} [extraInfo.type]
+     * @param {string} [extraInfo.row]
+     * @param {string} [extraInfo.subFieldName]
+     * @param {number} [extraInfo.recordId]
      */
     _quickEdit: function (extraInfo) {
-        const parts = [];
-        if (extraInfo.row) {
-            parts.push(`.o_data_row[data-id="${extraInfo.row}"]`);
-        }
-        if (extraInfo.subFieldName) {
-            parts.push(`[name="${extraInfo.subFieldName}"]`);
-        }
-
-        if (parts.length) {
-            const el = this.el.querySelector(parts.join(' '));
-            if (el) {
-                el.click();
+        if (extraInfo.type === 'remove') {
+            this._removeRecord(extraInfo.recordId);
+        } else if (extraInfo.type === 'edit') {
+            const parts = [];
+            if (extraInfo.row) {
+                parts.push(`.o_data_row[data-id="${extraInfo.row}"]`);
+            }
+            if (extraInfo.subFieldName) {
+                parts.push(`[name="${extraInfo.subFieldName}"]`);
+            }
+    
+            if (parts.length) {
+                const el = this.el.querySelector(parts.join(' '));
+                if (el) {
+                    el.click();
+                }
             }
         }
     },
@@ -1364,6 +1370,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
             ev.target.closest('.o_field_cell');
 
         return {
+            type: 'edit',
             row: row && row.dataset.id,
             subFieldName: row && field && field.getAttribute('name'),
         };
@@ -1399,10 +1406,22 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * @returns {boolean} true iff the list should add a trash icon on each row.
      */
     _hasTrashIcon: function () {
-        return !this.isReadonly && (
+        return !this.hasReadonlyModifier && (
             (!this.isMany2Many && this.activeActions.delete && this.canDelete) ||
             (this.isMany2Many && this.canUnlink)
         );
+    },
+    /**
+     * Removes the given record from the relation.
+     *
+     * @private
+     * @param {number} recordId
+     */
+    _removeRecord: function (recordId) {
+        this._setValue({
+            operation: this.isMany2Many ? 'FORGET' : 'DELETE',
+            ids: [recordId],
+        });
     },
     /**
      * Instanciates or updates the adequate renderer.
@@ -1602,11 +1621,18 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      */
     _onRemoveRecord: function (ev) {
         ev.stopPropagation();
-        var operation = this.isMany2Many ? 'FORGET' : 'DELETE';
-        this._setValue({
-            operation: operation,
-            ids: [ev.data.id],
-        });
+        if (this._canQuickEdit && this.isReadonly) {
+            this.trigger_up('quick_edit', {
+                fieldName: this.name,
+                target: this.el,
+                extraInfo: {
+                    type: 'remove',
+                    recordId: ev.data.id,
+                },
+            });
+        } else {
+            this._removeRecord(ev.data.id);
+        }
     },
     /**
      * When the discard_change event go through this field, we can just decorate
@@ -1994,11 +2020,11 @@ var FieldOne2Many = FieldX2Many.extend({
      * @private
      * @override
      * @param {Object} extraInfo
-     * @param {boolean} [extraInfo.__addRecord]
+     * @param {string} [extraInfo.type]
      * @param {Object} [extraInfo.data]
      */
     _quickEdit: function (extraInfo) {
-        if (extraInfo.__addRecord) {
+        if (extraInfo.type === 'add') {
             this._addCreateRecordRow(extraInfo.data);
         } else {
             this._super(...arguments);
@@ -2090,7 +2116,7 @@ var FieldOne2Many = FieldX2Many.extend({
             this.trigger_up('quick_edit', {
                 fieldName: this.name,
                 target: this.el,
-                extraInfo: { __addRecord: true, data },
+                extraInfo: { type: 'add', data },
             });
         } else {
             this._addCreateRecordRow(data);
