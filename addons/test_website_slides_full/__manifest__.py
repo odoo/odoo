@@ -19,8 +19,12 @@ certification flow including purchase, certification, failure and success.
     'demo': [
         'data/product_demo.xml',
     ],
-    'data': [
-        'views/assets.xml',
-    ],
+    
     'installable': True,
+    'assets': {
+        'web.assets_tests': [
+            # inside .
+            'test_website_slides_full/tests/tours/slides_certification_member.js',
+        ],
+    }
 }
