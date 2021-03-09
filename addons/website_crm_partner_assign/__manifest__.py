@@ -40,4 +40,10 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'data/res_partner_grade_demo.xml',
     ],
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            # inside .
+            'website_crm_partner_assign/static/src/js/crm_partner_assign.js',
+        ],
+    }
 }
