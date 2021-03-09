@@ -445,8 +445,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # this field 'id' must override any other column or field
         self._add_field('id', fields.Id(automatic=True))
 
-        add('display_name', fields.Char(string='Display Name', automatic=True,
-            compute='_compute_display_name'))
+        if not getattr(self, 'display_name', False):
+            add('display_name', fields.Char(string='Display Name', automatic=True,
+                compute='_compute_display_name'))
 
         if self._log_access:
             add('create_uid', fields.Many2one(
