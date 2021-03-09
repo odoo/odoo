@@ -13,7 +13,12 @@ class L10nLatamDocumentType(models.Model):
             ('invoice_in', 'Purchase Invoices'),
             ('debit_note', 'Debit Notes'),
             ('credit_note', 'Credit Notes'),
-            ('receipt_invoice', 'Receipt Invoice')])
+            ('receipt_invoice', 'Receipt Invoice'),
+            ('stock_picking', 'Stock Delivery'),
+        ],
+    )
+    l10n_cl_active = fields.Boolean(
+        'Active in localization', help='This boolean enables document to be included on invoicing')
 
     def _format_document_number(self, document_number):
         """ Make validation of Import Dispatch Number
