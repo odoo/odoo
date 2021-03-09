@@ -3362,7 +3362,7 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
         });
-        assert.containsN(form, 'th', 2,
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many");
         await testUtils.form.clickEdit(form);
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
@@ -3412,7 +3412,7 @@ QUnit.module('relational_fields', {
         });
 
         // bar is false so there should be 1 column
-        assert.containsOnce(form, 'th',
+        assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be only 1 column ('foo') in the one2many");
         assert.containsOnce(form, '.o_list_view .o_data_row', "should contain one row");
 
@@ -3459,7 +3459,7 @@ QUnit.module('relational_fields', {
                 '</tree>',
             },
         });
-        assert.containsN(form, 'th', 2,
+        assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many");
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
@@ -3507,7 +3507,7 @@ QUnit.module('relational_fields', {
         });
 
         // should have 2 columns 1 for foo and 1 for advanced dropdown
-        assert.containsN(form.$('.o_field_one2many'), 'th', 1,
+        assert.containsN(form.$('.o_field_one2many'), 'th:not(.o_list_record_remove_header)', 1,
             "should be 1 th in the one2many in readonly mode");
         assert.containsOnce(form.$('.o_field_one2many table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");

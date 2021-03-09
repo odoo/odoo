@@ -409,8 +409,8 @@ QUnit.module('fields', {}, function () {
                 "embedded one2many should not have a selector");
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 "embedded one2many should be editable");
-            assert.ok(!form.$('td.o_list_record_remove').length,
-                "embedded one2many records should not have a remove icon");
+            assert.ok(form.$('td.o_list_record_remove').length,
+                "embedded one2many records should have a remove icon");
 
             await testUtils.form.clickEdit(form);
 
@@ -2702,8 +2702,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.ok(!form.$('.o_list_record_remove').length,
-                'remove icon should not be visible in readonly');
+            assert.ok(form.$('.o_list_record_remove').length,
+                'remove icon should be visible in readonly');
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" should be visible in readonly');
 
@@ -8665,7 +8665,7 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many");
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
@@ -8803,7 +8803,7 @@ QUnit.module('fields', {}, function () {
             });
 
             // bar is false so there should be 1 column
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be only 1 column ('foo') in the one2many");
             assert.containsOnce(form, '.o_list_view .o_data_row', "should contain one row");
 
@@ -8849,7 +8849,7 @@ QUnit.module('fields', {}, function () {
                         '</tree>',
                 },
             });
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many");
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
@@ -9294,10 +9294,11 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.containsN(form, '.o_list_view thead th:visible', 2);
-            assert.containsN(form, '.o_list_view tbody .o_data_row td:visible', 2);
-            assert.containsN(form, '.o_list_view tfoot td:visible', 2);
-            assert.containsNone(form, '.o_list_record_remove_header');
+            // should have three visible columns in readonly: foo + readonly button + trash
+            assert.containsN(form, '.o_list_view thead th:visible', 3);
+            assert.containsN(form, '.o_list_view tbody .o_data_row td:visible', 3);
+            assert.containsN(form, '.o_list_view tfoot td:visible', 3);
+            assert.containsOnce(form, '.o_list_record_remove_header');
 
             await testUtils.form.clickEdit(form);
 

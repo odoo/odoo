@@ -564,8 +564,8 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.ok(!form.$('.o_list_record_remove').length,
-                'delete icon should not be visible in readonly');
+            assert.ok(form.$('.o_list_record_remove').length,
+                'delete icon should be visible in readonly');
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" should be visible in readonly');
 
