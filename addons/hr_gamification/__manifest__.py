@@ -17,7 +17,12 @@ Badge received are displayed on the user profile.
         'wizard/gamification_badge_user_wizard_views.xml',
         'views/gamification_views.xml',
         'views/hr_employee_views.xml',
-        'views/gamification_templates.xml',
-    ],
+        ],
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'hr_gamification/static/src/js/gamification.js',
+        ],
+    }
 }
