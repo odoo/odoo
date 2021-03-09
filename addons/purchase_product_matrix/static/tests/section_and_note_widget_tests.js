@@ -172,5 +172,40 @@ QUnit.module('section_and_note: purchase_product_matrix', {
 
         form.destroy();
     });
+
+    QUnit.test('_onTemplateChange is executed after product template quick create', async function (assert) {
+        assert.expect(1);
+
+        let created_product_template;
+
+        const form = await createView({
+            View: FormView,
+            model: 'purchase_order',
+            data: this.data,
+            arch: `<form>
+                    <field name="order_line_ids" widget="section_and_note_one2many">
+                        <tree editable="bottom">
+                            <field name="product_template_id" widget="matrix_configurator"/>
+                        </tree>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                if (route === '/web/dataset/call_kw/product.template/get_single_product_variant') {
+                    assert.strictEqual(args.args[0], created_product_template[0]);
+                }
+
+                const result = await this._super(...arguments);
+                if (args.method === 'name_create') {
+                    created_product_template = result;
+                }
+                return result;
+            },
+        });
+
+        await testUtils.dom.click('.o_field_x2many_list_row_add a');
+        await testUtils.fields.many2one.searchAndClickItem("product_template_id", {search: 'new product'});
+
+        form.destroy();
+    });
 });
 });
