@@ -838,7 +838,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
     def test_message_format_group_thread_name_by_model(self):
         """Ensures the fetch of multiple thread names is grouped by model."""
         records = []
-        for i in range(5):
+        for _i in range(5):
             records.append(self.env['mail.test.simple'].create({'name': 'Test'}))
         records.append(self.env['mail.test.track'].create({'name': 'Test'}))
 
@@ -854,7 +854,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=13):
+        with self.assertQueryCount(emp=15):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
