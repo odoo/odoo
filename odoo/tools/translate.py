@@ -996,7 +996,7 @@ class TranslationModuleReader:
             return
         self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id))
 
-    def _get_translatable_records(self, records):
+    def _get_translatable_records(self, imd_records):
         """ Filter the records that are translatable
 
         A record is considered as untranslatable if:
@@ -1007,7 +1007,7 @@ class TranslationModuleReader:
 
         :param records: a list of namedtuple ImdInfo belonging to the same model
         """
-        model = next(iter(records)).model
+        model = next(iter(imd_records)).model
         if model not in self.env:
             _logger.error("Unable to find object %r", model)
             return self.env["_unknown"].browse()
@@ -1015,11 +1015,12 @@ class TranslationModuleReader:
         if not self.env[model]._translate:
             return self.env[model].browse()
 
-        res_ids = [r.res_id for r in records]
+        res_ids = [r.res_id for r in imd_records]
         records = self.env[model].browse(res_ids).exists()
         if len(records) < len(res_ids):
-            missing_ids = set(records.ids) - set(res_ids)
-            _logger.warning("Unable to find objects %r with id %d", model, ', '.join(missing_ids))
+            missing_ids = set(res_ids) - set(records.ids)
+            missing_records = [f"{r.module}.{r.name}" for r in imd_records if r.res_id in missing_ids]
+            _logger.warning("Unable to find records of type %r with external ids %s", model, ', '.join(missing_records))
             if not records:
                 return records
 
