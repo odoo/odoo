@@ -129,6 +129,7 @@ class MicrosoftSync(models.AbstractModel):
             records_to_sync = self
         cancelled_records = self - records_to_sync
 
+        records_to_sync._ensure_attendees_have_email()
         updated_records = records_to_sync.filtered('microsoft_id')
         new_records = records_to_sync - updated_records
         for record in cancelled_records.filtered('microsoft_id'):
@@ -297,6 +298,7 @@ class MicrosoftSync(models.AbstractModel):
     def _microsoft_patch(self, microsoft_service: MicrosoftCalendarService, microsoft_id, values, timeout=TIMEOUT):
         with microsoft_calendar_token(self.env.user.sudo()) as token:
             if token:
+                self._ensure_attendees_have_email()
                 microsoft_service.patch(microsoft_id, values, token=token, timeout=timeout)
                 self.need_sync_m = False
 
@@ -306,6 +308,7 @@ class MicrosoftSync(models.AbstractModel):
             return
         with microsoft_calendar_token(self.env.user.sudo()) as token:
             if token:
+                self._ensure_attendees_have_email()
                 microsoft_id = microsoft_service.insert(values, token=token, timeout=timeout)
                 self.write({
                     'microsoft_id': microsoft_id,
@@ -341,6 +344,9 @@ class MicrosoftSync(models.AbstractModel):
         according to the Microsoft Calendar API
         :return: dict of Microsoft formatted values
         """
+        raise NotImplementedError()
+
+    def _ensure_attendees_have_email(self):
         raise NotImplementedError()
 
     def _get_microsoft_sync_domain(self):
