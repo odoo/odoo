@@ -13,9 +13,14 @@ This module allows a customer to give rating.
         'views/rating_rating_views.xml',
         'views/rating_template.xml',
         'views/mail_message_views.xml',
-        'views/assets.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,
     'auto_install': False,
+    'assets': {
+        'web.assets_frontend': [
+            # after link[last()]
+            'rating/static/src/scss/rating.scss',
+        ],
+    }
 }
