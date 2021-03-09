@@ -2,14 +2,15 @@
 
 import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
+import FormView from 'web.FormView';
 import KanbanView from 'web.KanbanView';
 import ListView from 'web.ListView';
-import { Many2OneAvatarUser } from '@mail/js/many2one_avatar_user';
+import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
 import { dom, mock } from 'web.test_utils';
 
 
 QUnit.module('mail', {}, function () {
-    QUnit.module('Many2OneAvatarUser', {
+    QUnit.module('M2XAvatarUser', {
         beforeEach() {
             beforeEach(this);
 
@@ -20,9 +21,10 @@ QUnit.module('mail', {}, function () {
                 'foo': {
                     fields: {
                         user_id: { string: "User", type: 'many2one', relation: 'res.users' },
+                        user_ids: { string: "Users", type: "many2many", relation: 'res.users' },
                     },
                     records: [
-                        { id: 1, user_id: 11 },
+                        { id: 1, user_id: 11, user_ids: [11, 23], },
                         { id: 2, user_id: 7 },
                         { id: 3, user_id: 11 },
                         { id: 4, user_id: 23 },
@@ -118,4 +120,82 @@ QUnit.module('mail', {}, function () {
 
         kanban.destroy();
     });
+
+    QUnit.test('many2many_avatar_user widget in form view', async function (assert) {
+        assert.expect(7);
+
+        const { widget: form } = await start({
+            hasView: true,
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form><field name="user_ids" widget="many2many_avatar_user"/></form>',
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                return this._super(...arguments);
+            },
+            res_id: 1,
+        });
+
+        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+            "should have 2 records");
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/res.users/11/image_128',
+            "should have correct avatar image");
+
+        await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));
+        await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
+
+        assert.verifySteps([
+            "read foo 1",
+            'read res.users 11,23',
+            "read res.users 11",
+            "read res.users 23",
+        ]);
+
+        form.destroy();
+    });
+
+    QUnit.test('many2many_avatar_user widget in list view', async function (assert) {
+        assert.expect(7);
+
+        const { widget: list } = await start({
+            hasView: true,
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="user_ids" widget="many2many_avatar_user"/></tree>',
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        mock.intercept(list, 'open_record', () => {
+            assert.step('open record');
+        });
+
+        assert.containsN(list.$(".o_data_cell:first"), '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+            "should have 2 records");
+        assert.strictEqual(list.$('.o_data_cell:first .o_tag_badge_text').text().trim(), 'MarioYoshi');
+
+        // sanity check: later on, we'll check that clicking on the avatar doesn't open the record
+        await dom.click(list.$('.o_data_row:first .o_field_many2manytags'));
+
+        await dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:nth(0)'));
+        await dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:nth(1)'));
+
+        assert.verifySteps([
+            'read res.users 11,23',
+            "open record",
+            "read res.users 11",
+            "read res.users 23",
+        ]);
+
+        list.destroy();
+    });
+
 });
