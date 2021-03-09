@@ -14,11 +14,20 @@
         'views/adyen_account_templates.xml',
         'views/adyen_account_views.xml',
         'views/adyen_transaction_views.xml',
-        'views/assets.xml',
-    ],
-    'qweb': [
-        "static/src/xml/adyen_account_templates.xml",
-        "static/src/xml/adyen_transactions_templates.xml",
-    ],
+        ],
     'installable': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'adyen_platforms/static/src/js/adyen_account_fields.js',
+            # inside .
+            'adyen_platforms/static/src/js/adyen_account_views.js',
+            # inside .
+            'adyen_platforms/static/src/js/adyen_transactions.js',
+        ],
+        'web.assets_qweb': [
+            "adyen_platforms/static/src/xml/adyen_account_templates.xml",
+            "adyen_platforms/static/src/xml/adyen_transactions_templates.xml",
+        ],
+    }
 }
