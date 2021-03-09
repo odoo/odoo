@@ -17,4 +17,16 @@ This module adds a Twitter scroller building block to the website builder, so th
         'views/website_twitter_snippet_templates.xml'
     ],
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            # after //link[last()]
+            'website_twitter/static/src/scss/website_twitter.scss',
+            # after //script[last()]
+            'website_twitter/static/src/js/website.twitter.animation.js',
+        ],
+        'website.assets_editor': [
+            # after //script[last()]
+            'website_twitter/static/src/js/website.twitter.editor.js',
+        ],
+    }
 }
