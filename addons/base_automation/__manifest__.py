@@ -21,4 +21,14 @@ trigger an automatic reminder email.
         'data/base_automation_data.xml',
         'views/base_automation_view.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'base_automation/static/src/js/base_automation_error_dialog.js',
+        ],
+        'web.qunit_suite_tests': [
+            # inside .
+            'base_automation/static/tests/base_automation_error_dialog.js',
+        ],
+    }
 }
