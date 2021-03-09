@@ -13,7 +13,6 @@
         'security/ir.model.access.csv',
         'security/test_new_api_security.xml',
         'views/test_new_api_views.xml',
-        'views/test_new_api_templates.xml',
         'data/test_new_api_data.xml',
     ],
     'demo': [
