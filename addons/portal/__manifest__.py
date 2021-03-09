@@ -20,13 +20,42 @@ a dependency towards website editing and customization capabilities.""",
         'security/ir.model.access.csv',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
-        'views/assets.xml',
         'views/portal_templates.xml',
         'wizard/portal_share_views.xml',
         'wizard/portal_wizard_views.xml',
     ],
-    'qweb': [
-        'static/src/xml/portal_chatter.xml',
-        'static/src/xml/portal_signature.xml',
-    ],
+    'assets': {
+        'web._assets_primary_variables': [
+            # after //link[last()]
+            'portal/static/src/scss/primary_variables.scss',
+        ],
+        'web._assets_frontend_helpers': [
+            # before //link
+            ('prepend', 'portal/static/src/scss/bootstrap_overridden.scss'),
+        ],
+        'web.assets_frontend': [
+            # after //link[last()]
+            'portal/static/src/scss/bootstrap.extend.scss',
+            # after //link[last()]
+            'portal/static/src/scss/portal.scss',
+            # after //script[last()]
+            'portal/static/src/js/portal.js',
+            # after //script[last()]
+            'portal/static/src/js/portal_chatter.js',
+            # after //script[last()]
+            'portal/static/src/js/portal_composer.js',
+            # after //script[last()]
+            'portal/static/src/js/portal_signature.js',
+            # after //script[last()]
+            'portal/static/src/js/portal_sidebar.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'portal/static/tests/tours/portal.js',
+        ],
+        'web.assets_qweb': [
+            'portal/static/src/xml/portal_chatter.xml',
+            'portal/static/src/xml/portal_signature.xml',
+        ],
+    }
 }
