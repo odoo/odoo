@@ -7,7 +7,6 @@
     'version': '1.1',
     'depends': ['website_event'],
     'data': [
-        'views/assets.xml',
         'views/event_views.xml',
         'views/event_registration_answer_views.xml',
         'views/event_registration_views.xml',
@@ -22,4 +21,10 @@
         'data/event_registration_demo.xml',
     ],
     'installable': True,
+    'assets': {
+        'web.assets_tests': [
+            # inside .
+            'website_event_questions/static/tests/tours/tickets_questions.js',
+        ],
+    }
 }
