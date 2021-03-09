@@ -29,7 +29,7 @@
         <xpath expr="//div[@id='wrapwrap']/main/t[@t-out='0']" position="before">
             <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                 <div class="container">
-                    <t t-raw="o_portal_fullwidth_alert"/>
+                    <t t-out="o_portal_fullwidth_alert"/>
                 </div>
             </div>
         </xpath>
