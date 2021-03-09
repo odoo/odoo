@@ -16,6 +16,5 @@
         'views/res_config_settings_views.xml',
     ],
     'depends': ['adyen_platforms', 'point_of_sale'],
-    'qweb': ['static/src/xml/pos.xml'],
     'installable': True,
 }

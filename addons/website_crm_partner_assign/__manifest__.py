@@ -39,6 +39,5 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'data/crm_lead_demo.xml',
         'data/res_partner_grade_demo.xml',
     ],
-    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
 }
