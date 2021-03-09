@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
-import re
 
 from glob import glob
 from logging import getLogger
@@ -38,12 +37,9 @@ DIRECTIVES_WITH_TARGET = [AFTER_DIRECTIVE, BEFORE_DIRECTIVE, REPLACE_DIRECTIVE]
 
 def fs2web(path):
     """Converts a file system path to a web path"""
-    return '/'.join(path.split(os.path.sep))
+    return '/'.join(os.path.split(path))
 
-def get_sep(path):
-    return '\\' if re.search('\\\\', path) else '/'
-
-def get_paths(path_def, extensions, manifest_cache=None):
+def get_paths(path_def, extensions=None, manifest_cache=None):
     """
     Returns a list of file paths matching a given glob (path_def) as well as
     the addon targetted by the path definition. If no file matches that glob,
@@ -60,8 +56,8 @@ def get_paths(path_def, extensions, manifest_cache=None):
         manifest_cache = http.addons_manifest
 
     paths = []
-    sep = get_sep(path_def)
-    path_parts = [part for part in path_def.split(sep) if part]
+    path_url = fs2web(path_def)
+    path_parts = [part for part in path_url.split('/') if part]
     addon = path_parts[0]
     addon_manifest = manifest_cache.get(addon)
 
@@ -84,7 +80,7 @@ def get_paths(path_def, extensions, manifest_cache=None):
     if not len(paths):
         # No file matching the path; the path_def is considered as a URL (or a
         # miswritten glob, resulting in a console error).
-        paths = [path_def if not addon or path_def.startswith(sep) else sep + path_def]
+        paths = [path_url if not addon or path_url.startswith('/') else '/' + path_url]
 
     # Paths are filtered on the extensions (if any).
     return addon, [path
@@ -161,7 +157,7 @@ class IrAsset(models.Model):
         :param xml: boolean: whether or not to include template files
         :param asset_paths: (addon, path)[]: the current list of loaded assets.
             It starts blank (initial) and is given to each subsequent call.
-        :returns: the list of tuples (addon, file_path)
+        :returns: the list of tuples (path, addon, bundle)
         """
         exts = []
         manifest_cache = self._get_manifest_cache()
@@ -290,18 +286,19 @@ class IrAsset(models.Model):
 
         return asset_paths
 
-    def get_related_bundle(self, target_path, root_bundle):
+    def get_related_bundle(self, target_path_def, root_bundle):
         """
         Returns the first bundle directly defining a glob matching the target
         path. This is useful when generating an 'ir.asset' record to override
         a specific asset and target the right bundle, i.e. the first one
         defining the target path.
 
-        :param target_path: string: path to match.
+        :param target_path_def: string: path to match.
         :root_bundle: string: bundle from which to initiate the search.
         :returns: the first matching bundle or None
         """
-        ext = target_path.split('.')[-1]
+        ext = target_path_def.split('.')[-1]
+        target_path = get_paths(target_path_def)[1][0]
 
         js = False
         css = False
@@ -320,10 +317,7 @@ class IrAsset(models.Model):
             if path == target_path:
                 return bundle
 
-    def find_by_url(self, url):
-        sep = get_sep(url)
-        search_url = url[1:] if url.startswith(sep) else url
-        return self.search([('glob', 'like', search_url)])
+        return root_bundle
 
     def _get_asset_domain(self, bundle):
         """Meant to be overridden to add additional parts to the search domain"""

@@ -60,13 +60,13 @@ class Assets(models.AbstractModel):
         res = super(Assets, self)._get_custom_attachment(custom_url, op=op)
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)
 
-    def _get_custom_asset(self, custom_url, op='='):
+    def _get_custom_asset(self, custom_url):
         """
         See web_editor.Assets._get_custom_asset
         Extend to only return the views related to the current website.
         """
         website = self.env['website'].get_current_website()
-        res = super(Assets, self)._get_custom_asset(custom_url, op=op)
+        res = super(Assets, self)._get_custom_asset(custom_url)
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)
 
     def _save_asset_hook(self):

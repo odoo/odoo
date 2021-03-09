@@ -185,16 +185,18 @@ class Assets(models.AbstractModel):
             # Create an asset with the new attachment
             IrAsset = self.env['ir.asset']
             new_asset = {
-                'name': custom_url,
                 'glob': custom_url,
                 'target': url,
                 'directive': 'replace',
             }
-            target_asset = IrAsset.find_by_url(url)
+            target_asset = self._get_custom_asset(url)
             if target_asset:
+                new_asset['name'] = target_asset.name + ' override'
                 new_asset['bundle'] = target_asset.bundle
                 new_asset['sequence'] = target_asset.sequence
             else:
+                path_parts = '/'.join(os.path.split(custom_url)).split('/')
+                new_asset['name'] = '%s: replace %s' % (bundle, path_parts[-1])
                 new_asset['bundle'] = IrAsset.get_related_bundle(url, bundle)
             new_asset.update(self._save_asset_hook())
             IrAsset.create(new_asset)
@@ -215,20 +217,19 @@ class Assets(models.AbstractModel):
         assert op in ('in', '='), 'Invalid operator'
         return self.env["ir.attachment"].search([("url", op, custom_url)])
 
-    def _get_custom_asset(self, custom_url, op='='):
+    def _get_custom_asset(self, custom_url):
         """
-        Fetch the ir.ui.view record related to the given customized asset (the
+        Fetch the ir.asset record related to the given customized asset (the
         inheriting view which replace the original asset by the customized one).
 
         Params:
             custom_url (str): the URL of the customized asset
-            op (str, default: '='): the operator to use to search the records
 
         Returns:
-            ir.ui.view()
+            ir.asset()
         """
-        assert op in ('='), 'Invalid operator'
-        return self.env['ir.asset'].search([('name', op, custom_url)])
+        url = custom_url[1:] if custom_url.startswith(('/', '\\')) else custom_url
+        return self.env['ir.asset'].search([('glob', 'like', url)])
 
     def _save_asset_hook(self):
         """
