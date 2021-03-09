@@ -46,8 +46,58 @@
     'demo': [
         'data/mass_mailing_demo.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            # inside .
+            'mass_mailing/static/src/scss/mass_mailing.scss',
+            # inside .
+            'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
+            # inside .
+            'mass_mailing/static/src/css/email_template.css',
+            # inside .
+            'mass_mailing/static/src/js/mass_mailing.js',
+            # inside .
+            'mass_mailing/static/src/js/mass_mailing_widget.js',
+            # after //script[last()]
+            'mass_mailing/static/src/js/unsubscribe.js',
+        ],
+        'mass_mailing.assets_mail_themes': [
+            # new asset template 
+            'mass_mailing/static/src/scss/themes/theme_basic.scss',
+            # new asset template 
+            'mass_mailing/static/src/scss/themes/theme_default.scss',
+            # None None
+            ('include', 'mass_mailing.mass_mailing_mail_style'),
+        ],
+        'mass_mailing.assets_mail_themes_edition': [
+            # None None
+            ('include', 'web._assets_helpers'),
+            # new asset template 
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            # new asset template 
+            'mass_mailing/static/src/scss/mass_mailing.ui.scss',
+            # new asset template 
+            'web/static/src/scss/webclient.scss',
+        ],
+        'web.assets_common': [
+            # after //script[last()]
+            'mass_mailing/static/src/js/tours/mass_mailing_tour.js',
+        ],
+        'web.qunit_suite_tests': [
+            # inside .
+            'mass_mailing/static/tests/field_html_test.js',
+            # inside .
+            'mass_mailing/static/src/js/mass_mailing_snippets.js',
+            # inside .
+            'mass_mailing/static/tests/mass_mailing_html_tests.js',
+        ],
+        'mass_mailing.mass_mailing_mail_style': [
+            # new asset template 
+            'mass_mailing/static/src/css/mail_style.css',
+        ],
+        'web.assets_qweb': [
+            'mass_mailing/static/src/xml/*.xml',
+        ],
+    }
 }
