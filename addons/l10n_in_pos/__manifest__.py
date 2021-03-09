@@ -16,8 +16,10 @@
     'demo': [
         'data/product_demo.xml',
     ],
-    'qweb': [
-        'static/src/xml/pos_receipt.xml',
-    ],
     'auto_install': True,
+    'assets': {
+        'web.assets_qweb': [
+            'l10n_in_pos/static/src/xml/pos_receipt.xml',
+        ],
+    }
 }
