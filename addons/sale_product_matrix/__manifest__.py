@@ -11,12 +11,25 @@
     'version': '1.0',
     'depends': ['sale', 'product_matrix', 'sale_product_configurator'],
     'data': [
-        'views/assets.xml',
         'views/product_template_views.xml',
         'views/sale_views.xml',
         'report/sale_report_templates.xml',
     ],
     'demo': [
         'data/product_matrix_demo.xml'
-    ]
+    ],
+    'assets': {
+        'web.assets_backend': [
+            # after script[last()]
+            'sale_product_matrix/static/src/js/product_matrix_configurator.js',
+        ],
+        'web.qunit_suite_tests': [
+            # inside .
+            'sale_product_matrix/static/tests/section_and_note_widget_tests.js',
+        ],
+        'web.assets_tests': [
+            # inside .
+            'sale_product_matrix/static/tests/tours/sale_product_matrix_tour.js',
+        ],
+    }
 }
