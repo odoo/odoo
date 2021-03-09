@@ -907,7 +907,10 @@ class Escpos:
         else:
             raise CashDrawerError()
 
-        self.get_printer_status()
+        # For some reason, some Sam4s model(s) (e.g. the Ellix30IIIS) break when reading its status.
+        # So as a workaround, lets work around this workaround.
+        if self.idVendor != 0x1c8a:
+            self.get_printer_status()
 
     def hw(self, hw):
         """ Hardware operations """
