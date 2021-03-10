@@ -4,6 +4,8 @@
 from collections import OrderedDict
 from operator import itemgetter
 
+from markupsafe import Markup
+
 from odoo import http, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
@@ -113,7 +115,7 @@ class CustomerPortal(portal.CustomerPortal):
             'all': {'label': _('All'), 'domain': []},
         }
         searchbar_inputs = {
-            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'content': {'input': 'content', 'label': Markup(_('Search <span class="nolabel"> (in Content)</span>'))},
             'message': {'input': 'message', 'label': _('Search in Messages')},
             'customer': {'input': 'customer', 'label': _('Search in Customer')},
             'stage': {'input': 'stage', 'label': _('Search in Stages')},

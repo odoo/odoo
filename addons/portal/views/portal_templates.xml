@@ -94,7 +94,7 @@
 
     <template id="portal_back_in_edit_mode" name="Back to edit mode">
         <div t-ignore="true" class="text-center">
-            <t t-if="custom_html" t-raw="custom_html"/>
+            <t t-if="custom_html" t-out="custom_html"/>
             <t t-else="">This is a preview of the customer portal.</t>
             <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to edit mode</a>
         </div>
@@ -199,9 +199,9 @@
         <div t-attf-class="#{classes}">
             <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
                 <div t-if="title" class="card-body text-center pb-2 pt-3">
-                    <t t-raw="title"/>
+                    <t t-out="title"/>
                 </div>
-                <t t-if="entries" t-raw="entries"/>
+                <t t-if="entries" t-out="entries"/>
                 <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
                     Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/src/img/logo.png" alt="Odoo Logo" height="15"/></a>
                 </div>
@@ -302,9 +302,9 @@
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"/>
                             <div class="dropdown-menu" role="menu">
                                 <t t-foreach='searchbar_inputs' t-as='input'>
-                                    <a t-att-href="'#' + searchbar_inputs[input]['input']"
-                                        t-attf-class="dropdown-item#{search_in == searchbar_inputs[input]['input'] and ' active' or ''}">
-                                        <span t-raw="searchbar_inputs[input]['label']"/>
+                                    <a t-att-href="'#' + input_value['input']"
+                                        t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
+                                        <span t-out="input_value['label']"/>
                                     </a>
                                 </t>
                             </div>
@@ -324,10 +324,10 @@
     <template id="portal_record_layout" name="Portal single record layout">
         <div t-attf-class="card mt-0 border-top-0 rounded-0 rounded-bottom #{classes if classes else ''}">
             <div t-if="card_header" t-attf-class="card-header #{header_classes if header_classes else ''}">
-                <t t-raw="card_header"/>
+                <t t-out="card_header"/>
             </div>
             <div t-if="card_body" t-attf-class="card-body #{body_classes if body_classes else ''}">
-                <t t-raw="card_body"/>
+                <t t-out="card_body"/>
             </div>
         </div>
     </template>
