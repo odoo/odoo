@@ -228,7 +228,7 @@ class Web_Editor(http.Controller):
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
             attachment = request.env['ir.attachment'].search([
-                ('url', '=like', src),
+                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
                 ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
             ], limit=1)
         if not attachment:
