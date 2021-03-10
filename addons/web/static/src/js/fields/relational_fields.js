@@ -2218,6 +2218,19 @@ var FieldMany2Many = FieldX2Many.extend({
         renderingContext.noCreate = !this.canLink;
         return renderingContext;
     },
+    /**
+     * @private
+     * @override
+     * @param {Object} extraInfo
+     * @param {string} [extraInfo.type]
+     */
+    _quickEdit: function (extraInfo) {
+        if (extraInfo.type === 'add') {
+            this.onAddRecordOpenDialog();
+        } else {
+            this._super(...arguments);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2234,7 +2247,16 @@ var FieldMany2Many = FieldX2Many.extend({
      */
     _onAddRecord: function (ev) {
         ev.stopPropagation();
-        this.onAddRecordOpenDialog();
+
+        if (this._canQuickEdit && this.isReadonly) {
+            this.trigger_up('quick_edit', {
+                fieldName: this.name,
+                target: this.el,
+                extraInfo: { type: 'add' },
+            });
+        } else {
+            this.onAddRecordOpenDialog();
+        }
     },
 
     /**
