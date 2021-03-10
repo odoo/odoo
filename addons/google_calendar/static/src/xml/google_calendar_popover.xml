@@ -2,7 +2,7 @@
 <templates>
     <t t-extend="Calendar.attendee.status.popover">
         <t t-jquery=".o_cw_popover_edit" t-operation="after">
-            <a t-if="widget.isGEventSyncedAndArchivable() and widget.isEventDetailsVisible()" href="#" class="btn btn-secondary o_cw_popover_archive_g">Archive</a>
+            <a t-if="typeof widget.isGEventSyncedAndArchivable === 'function' and widget.isGEventSyncedAndArchivable() and widget.isEventDetailsVisible()" href="#" class="btn btn-secondary o_cw_popover_archive_g">Archive</a>
         </t>
     </t>
 </templates>
