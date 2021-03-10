@@ -30,6 +30,8 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
         }
         if 'exhibitor_menu' in self.env['event.event']:
             vals['exhibitor_menu'] = False
+        if 'website_booth' in self.env['event.event']:
+            vals['website_booth'] = False
 
         event = self.env['event.event'].create(vals)
 
@@ -48,6 +50,8 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
         }
         if 'exhibitor_menu' in self.env['event.event']:
             vals['exhibitor_menu'] = False
+        if 'website_booth' in self.env['event.event']:
+            vals['website_booth'] = False
 
         event = self.env['event.event'].create(vals)
         self.assertTrue(event.website_track)
@@ -97,6 +101,8 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
         }
         if 'exhibitor_menu' in self.env['event.event']:
             vals['exhibitor_menu'] = False
+        if 'website_booth' in self.env['event.event']:
+            vals['website_booth'] = False
 
         event.write(vals)
         self._assert_website_menus(event)
