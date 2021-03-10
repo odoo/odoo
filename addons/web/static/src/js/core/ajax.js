@@ -575,6 +575,7 @@ _.extend(ajax, {
     loadLibs: loadLibs,
     get_file: get_file,
     post: post,
+    loadFile: owl.utils.loadFile,
 });
 
 return ajax;

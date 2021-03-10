@@ -39,4 +39,41 @@
         }
         originalTrigger.call(this, component, evType, payload);
     };
+
+    /**
+     * Patch owl.Component.willStart method to handle xmlDependencies class
+     * member, i.e. to lazy load templates. It may prove useful for Odoo's
+     * frontend.
+     */
+    const originalWillStart = owl.Component.prototype.willStart;
+    owl.Component.prototype.willStart = async function() {
+        const constructor = this.constructor;
+        const proms = [];
+        const unknownTemplate = !(constructor.template in this.env.qweb.templates);
+        if (unknownTemplate && this.constructor.xmlDependencies) {
+            const templateProm = this.env.services.ajax.loadOwlXML(constructor.xmlDependencies);
+            templateProm.then(results => {
+                for (const doc of results) {
+                    const frag = document.createElement('t');
+                    frag.innerHTML = doc;
+                    for (let child of frag.querySelectorAll("templates > [t-name][owl]")) {
+                        child.removeAttribute('owl');
+                        const name = child.getAttribute("t-name");
+                        this.env.qweb.addTemplate(name, child.outerHTML, true);
+                    }
+                }
+            });
+            proms.push(templateProm);
+        }
+        if (constructor.jsLibs || constructor.cssLibs || constructor.assetLibs) {
+            const libs = {
+                jsLibs: constructor.jsLibs,
+                cssLibs: constructor.cssLibs,
+                assetLibs: constructor.assetLibs,
+            }
+            proms.push(this.env.services.ajax.loadLibs(libs));
+        }
+        await Promise.all(proms);
+        return originalWillStart.apply(this, ...arguments);
+    };
 })();

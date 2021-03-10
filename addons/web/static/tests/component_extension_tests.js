@@ -3,6 +3,7 @@ odoo.define('web.component_extension_tests', function (require) {
 
     const makeTestEnvironment = require("web.test_env");
     const testUtils = require("web.test_utils");
+    const AjaxService = require('web.AjaxService');
 
     const { Component, tags } = owl;
     const { xml } = tags;
@@ -43,6 +44,106 @@ odoo.define('web.component_extension_tests', function (require) {
             await testUtils.nextTick();
 
             assert.ok(true, "Promise should still be pending");
+        });
+
+        QUnit.test("Component lazy load template", async function (assert) {
+            assert.expect(6);
+            const fixture = document.body.querySelector('#qunit-fixture');
+            const ajaxService = new AjaxService();
+            ajaxService.globalProms = null;
+            ajaxService.loadFile = function (url) {
+                assert.step(url);
+                let template;
+                if (url === 'dependency1') {
+                    template = `<templates>
+                        <div t-name="Parent.test1" owl="1">
+                            <t t-call="Parent.test2"/>
+                        </div>
+                    </templates>`;
+                } else if (url === 'dependency2') {
+                    template = `<templates>
+                        <div t-name="Parent.test2" owl="1">
+                            lazy loaded 2
+                        </div>
+                    </templates>`;
+                }
+                return Promise.resolve(template);
+            }
+            const env = {
+                services: {
+                    ajax: ajaxService,
+                }
+            }
+            class Parent extends Component {}
+            Parent.env = makeTestEnvironment(env, () => Promise.reject());
+            Parent.template = 'Parent.test1';
+            Parent.xmlDependencies = [
+                'dependency1',
+                'dependency2',
+            ];
+
+            const parent = new Parent();
+            await parent.mount(fixture);
+            assert.verifySteps([
+                'dependency1',
+                'dependency2',
+            ])
+
+            assert.strictEqual(
+                fixture.innerHTML,
+                `<div><div> lazy loaded 2 </div></div>`
+            );
+
+            parent.destroy();
+            const parent2 = new Parent();
+            await parent2.mount(fixture);
+            assert.verifySteps([]);
+
+            assert.strictEqual(
+                fixture.innerHTML,
+                `<div><div> lazy loaded 2 </div></div>`
+            );
+
+            parent2.destroy();
+        });
+
+        QUnit.test("Component lazy load libs", async function (assert) {
+            assert.expect(4);
+            const fixture = document.body.querySelector('#qunit-fixture');
+            const ajaxService = new AjaxService();
+            ajaxService.loadLibs = function () {
+                assert.deepEqual(
+                    ...arguments,
+                    {
+                        assetLibs: ["asset"],
+                        cssLibs: ["css"],
+                        jsLibs: ["js"]
+                    }
+                )
+                assert.step('loadlibs');
+                return Promise.resolve();
+            }
+            const env = {
+                services: {
+                    ajax: ajaxService,
+                }
+            }
+            class Parent extends Component {}
+            Parent.jsLibs = ['js'];
+            Parent.cssLibs = ['css'];
+            Parent.assetLibs = ['asset'];
+            Parent.template = xml`<div>Parent</div>`;
+            Parent.env = makeTestEnvironment(env, () => Promise.reject());
+
+            const parent = new Parent();
+            await parent.mount(fixture);
+            assert.verifySteps(['loadlibs']);
+            assert.strictEqual(
+                fixture.innerHTML,
+                `<div>Parent</div>`
+            );
+
+            parent.destroy();
         });
 
         QUnit.module("Custom Hooks");
