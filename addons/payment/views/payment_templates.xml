@@ -77,7 +77,7 @@
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
                         <div t-if="acquirer.pre_msg"
-                             t-raw="acquirer.pre_msg"
+                             t-out="acquirer.pre_msg"
                              class="text-muted ml-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
@@ -208,7 +208,7 @@
                         <t t-call="payment.icon_list"/>
                         <!-- === Help message === -->
                         <div t-if="acquirer.pre_msg"
-                             t-raw="acquirer.pre_msg"
+                             t-out="acquirer.pre_msg"
                              class="text-muted ml-3"/>
                     </div>
                     <!-- === Acquirer inline form === -->
@@ -335,19 +335,19 @@
         -->
         <div t-if="tx.state == 'pending'" class="alert alert-warning alert-dismissible">
             <span t-if='tx.acquirer_id.sudo().pending_msg'
-                  t-raw="tx.acquirer_id.sudo().pending_msg"/>
+                  t-out="tx.acquirer_id.sudo().pending_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
         <div t-elif="tx.state == 'authorized'" class="alert alert-success alert-dismissible">
-            <span t-if='tx.acquirer_id.sudo().auth_msg' t-raw="tx.acquirer_id.sudo().auth_msg"/>
+            <span t-if='tx.acquirer_id.sudo().auth_msg' t-out="tx.acquirer_id.sudo().auth_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
         <div t-elif="tx.state == 'done'" class="alert alert-success alert-dismissible">
-            <span t-if='tx.acquirer_id.sudo().done_msg' t-raw="tx.acquirer_id.sudo().done_msg"/>
+            <span t-if='tx.acquirer_id.sudo().done_msg' t-out="tx.acquirer_id.sudo().done_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
         <div t-elif="tx.state == 'cancel'" class="alert alert-danger alert-dismissible">
-            <span t-if='tx.acquirer_id.sudo().cancel_msg' t-raw="tx.acquirer_id.sudo().cancel_msg"/>
+            <span t-if='tx.acquirer_id.sudo().cancel_msg' t-out="tx.acquirer_id.sudo().cancel_msg"/>
             <button class="close" data-dismiss="alert" title="Dismiss">×</button>
         </div>
         <span t-if="tx.state_message" t-esc="tx.state_message"/>
