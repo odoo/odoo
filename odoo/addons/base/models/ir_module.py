@@ -152,9 +152,10 @@ STATES = [
 
 
 if config['test_enable']:
-    INSTALLED_STATES = ['installed', 'to upgrade']
+    INSTALLED_STATES = ['installed', 'to upgrade', 'to install']
 else:
     INSTALLED_STATES = ['installed']
+
 
 class Module(models.Model):
     _name = "ir.module.module"
