@@ -125,6 +125,28 @@
         </field>
     </record>
 
+    <!-- Product ribbon -->
+    <record id="product_ribbon_form_view" model="ir.ui.view">
+        <field name="name">product.ribbon form view</field>
+        <field name="model">product.ribbon</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="html" widget="char"/>
+                            <field name="text_color"/>
+                        </group>
+                        <group>
+                            <field name="html_class"/>
+                            <field name="bg_color"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <!-- Product Public Categories -->
     <record id="product_public_category_form_view" model="ir.ui.view">
         <field name="name">product.public.category.form</field>
