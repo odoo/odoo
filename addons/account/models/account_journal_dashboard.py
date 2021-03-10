@@ -480,7 +480,7 @@ class account_journal(models.Model):
             if self.type == 'sale':
                 action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
             elif self.type == 'purchase':
-                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry'))]
 
         return action
 
