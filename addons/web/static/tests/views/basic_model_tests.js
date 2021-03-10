@@ -1145,7 +1145,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 mockRPC: function (route, args) {
                     if (args.method === 'create') {
                         // has to be done before the call to _super
-                        assert.notOk('product_ids' in args.args[0], "should not have any value");
+                        assert.deepEqual(args.args[0].product_ids, [], "should not have any command");
                         assert.notOk('category' in args.args[0], "should not have other fields");
 
                         assert.strictEqual(args.kwargs.context.active_field, 2,
