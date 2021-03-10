@@ -3253,7 +3253,7 @@ var BasicModel = AbstractModel.extend({
             var type = record.fields[fieldName].type;
             var value;
             if (type === 'one2many' || type === 'many2many') {
-                if (commands[fieldName] && commands[fieldName].length) { // replace localId by commands
+                if (!options.changesOnly || (commands[fieldName] && commands[fieldName].length)) { // replace localId by commands
                     changes[fieldName] = commands[fieldName];
                 } else { // no command -> no change for that field
                     delete changes[fieldName];
@@ -3424,12 +3424,12 @@ var BasicModel = AbstractModel.extend({
                                 commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
                                 continue;
                             }
-                            changes = this._generateChanges(relRecord, _.extend({}, options, {changesOnly: true}));
+                            changes = this._generateChanges(relRecord, options);
                             if (!this.isNew(relRecord.id)) {
                                 // the subrecord already exists in db
                                 commands[fieldName].push(x2ManyCommands.link_to(relRecord.res_id));
-                                delete changes.id;
-                                if (!_.isEmpty(changes)) {
+                                if (this.isDirty(relRecord.id)) {
+                                    delete changes.id;
                                     commands[fieldName].push(x2ManyCommands.update(relRecord.res_id, changes));
                                 }
                             } else {

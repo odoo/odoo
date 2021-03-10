@@ -9687,6 +9687,82 @@ QUnit.module('fields', {}, function () {
             form.destroy();
             testUtils.unpatch(FieldOne2Many);
         });
+
+        QUnit.test('nested one2many, onchange, no command value', async function (assert) {
+            // This test ensures that we always send all values to onchange rpcs for nested
+            // one2manys, even if some field hasn't changed. In this particular test case,
+            // a first onchange returns a value for the inner one2many, and a second onchange
+            // removes it, thus restoring the field to its initial empty value. From this point,
+            // the nested one2many value must still be sent to onchange rpcs (on the main record),
+            // as it might be used to compute other fields (so the fact that the nested o2m is empty
+            // must be explicit).
+            assert.expect(3);
+
+            this.data.turtle.fields.o2m = {
+                string: "o2m", type: "one2many", relation: 'partner', relation_field: 'trululu',
+            };
+            this.data.turtle.fields.turtle_bar.default = true;
+            this.data.partner.onchanges.turtles = function (obj) {};
+            this.data.turtle.onchanges.turtle_bar = function (obj) {
+                if (obj.turtle_bar) {
+                    obj.o2m = [[5], [0, false, { display_name: "default" }]];
+                } else {
+                    obj.o2m = [[5]];
+                }
+            };
+
+            let step = 1;
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="o2m"/>
+                                <field name="turtle_bar"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, args) {
+                    if (step === 3 && args.method === 'onchange' && args.model === 'partner') {
+                        assert.deepEqual(args.args[1].turtles[0][2], {
+                            turtle_bar: false,
+                            o2m: [], // we must send a value for this field
+                        });
+                    }
+                    const result = await this._super(...arguments);
+                    if (args.model === 'turtle') {
+                        // sanity checks; this is what the onchanges on turtle must return
+                        if (step === 2) {
+                            assert.deepEqual(result.value, {
+                                o2m: [[5], [0, false, { display_name: "default" }]],
+                                turtle_bar: true,
+                            });
+                        }
+                        if (step === 3) {
+                            assert.deepEqual(result.value, {
+                                o2m: [[5]],
+                            });
+                        }
+                    }
+                    return result;
+                },
+            });
+
+            step = 2;
+            await testUtils.dom.click(form.$('.o_field_x2many_list .o_field_x2many_list_row_add a'));
+            // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
+            // (written in owl), so when we add a line, we sequentially render the list itself
+            // (including the boolean field), so we have to wait for the next animation frame, and
+            // then we render the control panel (also in owl), so we have to wait again for the
+            // next animation frame
+            await testUtils.owlCompatibilityExtraNextTick();
+            step = 3;
+            await testUtils.dom.click(form.$('.o_data_row .o_field_boolean input'));
+
+            form.destroy();
+        });
     });
 });
 });
