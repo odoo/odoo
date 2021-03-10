@@ -260,6 +260,17 @@ class MetaCase(type):
             cls.test_class = cls.__name__
 
 
+def _transform_arch_for_assert(arch_string, parser_method="xml"):
+    Parser = None
+    if parser_method == 'xml':
+        Parser = etree.XMLParser
+    elif parser_method == 'html':
+        Parser = etree.HTMLParser
+    parser = Parser(remove_blank_text=True)
+    arch_string = etree.fromstring(arch_string, parser=parser)
+    return etree.tostring(arch_string, pretty_print=True, encoding='unicode')
+
+
 class BaseCase(unittest.TestCase, metaclass=MetaCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
@@ -584,6 +595,19 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
 
         for c1, c2 in izip_longest(n1, n2):
             self.assertTreesEqual(c1, c2, msg)
+
+    def _assertXMLEqual(self, original, expected, parser="xml"):
+        if original:
+            original = _transform_arch_for_assert(original, parser)
+        if expected:
+            expected = _transform_arch_for_assert(expected, parser)
+        self.assertEqual(original, expected)
+
+    def assertXMLEqual(self, original, expected):
+        return self._assertXMLEqual(original, expected)
+
+    def assertHTMLEqual(self, original, expected):
+        return self._assertXMLEqual(original, expected, 'html')
 
 
 savepoint_seq = itertools.count()

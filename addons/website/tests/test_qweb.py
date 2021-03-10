@@ -53,12 +53,11 @@ class TestQweb(TransactionCaseWithUserDemo):
             "asset_xmlid": asset_xmlid,
             "asset_version": asset_version,
         }
-
-        self.assertEqual(html, ("""<!DOCTYPE html>
+        self.assertHTMLEqual(html, ("""<!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
-        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
+        <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
+        <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
         <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
