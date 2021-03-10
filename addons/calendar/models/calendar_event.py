@@ -815,7 +815,7 @@ class Meeting(models.Model):
             :return: tuple(my events, other events)
             """
             my = [event for event in events if (event.get('user_id') and event.get('user_id')[0] == self.env.uid) or (event.get('partner_ids') and self.env.user.partner_id.id in event.get('partner_ids'))]
-            others = [event for event in events if not event.get('user_id') or (event.get('user_id')[0] != self.env.uid and (not event.get('partner_ids') or self.env.user.partner_id.id not in event.get('partner_ids')))]
+            others = [event for event in events if not ((event.get('user_id') and event.get('user_id')[0] == self.env.uid) or (event.get('partner_ids') and self.env.user.partner_id.id in event.get('partner_ids')))]
             return my, others
 
         def obfuscated(events):

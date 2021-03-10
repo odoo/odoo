@@ -14,6 +14,7 @@ class Meeting(models.Model):
 
     google_id = fields.Char(
         'Google Calendar Event Id', compute='_compute_google_id', store=True, readonly=False)
+    google_sync_user_id = fields.Many2one('res.users', 'Google Sync User', ondelete='cascade')
 
     @api.depends('recurrence_id.google_id')
     def _compute_google_id(self):
@@ -71,7 +72,8 @@ class Meeting(models.Model):
             'attendee_ids': attendee_commands,
             'partner_ids': partner_commands,
             'alarm_ids': alarm_commands,
-            'recurrency': google_event.is_recurrent()
+            'recurrency': google_event.is_recurrent(),
+            'google_sync_user_id': self.env.user.id
         }
 
         if not google_event.is_recurrence():

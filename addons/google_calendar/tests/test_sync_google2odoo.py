@@ -152,6 +152,7 @@ class TestSyncGoogle2Odoo(TransactionCase):
             'google_id': google_id,
             'user_id': False,  # user is not owner
             'partner_ids': [(6, 0, user.partner_id.ids)],  # but user is attendee
+            'google_sync_user_id': user.id
         })
         gevent = GoogleEvent([{
             'id': google_id,
