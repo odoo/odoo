@@ -181,7 +181,7 @@ class Slide(models.Model):
     likes = fields.Integer('Likes', compute='_compute_user_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
     user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
-    embed_code = fields.Text('Embed Code', readonly=True, compute='_compute_embed_code')
+    embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
     # views
     embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
