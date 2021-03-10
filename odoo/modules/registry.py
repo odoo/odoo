@@ -13,6 +13,7 @@ from weakref import WeakValueDictionary
 import logging
 import os
 import threading
+import time
 
 import psycopg2
 
@@ -71,6 +72,7 @@ class Registry(Mapping):
     @classmethod
     def new(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Create and return a new registry for the given database name. """
+        t0 = time.time()
         with cls._lock:
             with odoo.api.Environment.manage():
                 registry = object.__new__(cls)
@@ -104,6 +106,7 @@ class Registry(Mapping):
             registry.ready = True
             registry.registry_invalidated = bool(update_module)
 
+        _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
 
     def init(self, db_name):
