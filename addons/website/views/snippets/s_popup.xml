@@ -59,11 +59,11 @@
             </we-select>
         </t>
         <div data-js="SnippetPopup" data-selector=".s_popup" data-exclude="#website_cookies_bar" data-target=".modal">
-            <t t-raw="base_popup_options"/>
-            <t t-raw="extra_popup_options"/>
+            <t t-out="base_popup_options"/>
+            <t t-out="extra_popup_options"/>
         </div>
         <div data-js="SnippetPopup" data-selector=".s_popup#website_cookies_bar" data-target=".modal">
-            <t t-raw="base_popup_options"/>
+            <t t-out="base_popup_options"/>
         </div>
     </xpath>
 </template>
