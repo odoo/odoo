@@ -33,27 +33,19 @@ actions(Check in/Check out) performed by them.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'hr_attendance/static/src/js/employee_kanban_view_handler.js',
-            # inside .
             'hr_attendance/static/src/js/greeting_message.js',
-            # inside .
             'hr_attendance/static/src/js/kiosk_mode.js',
-            # inside .
             'hr_attendance/static/src/js/kiosk_confirm.js',
-            # inside .
             'hr_attendance/static/src/js/my_attendances.js',
-            # inside .
             'hr_attendance/static/src/js/time_widget.js',
-            # inside .
             'hr_attendance/static/src/scss/hr_attendance.scss',
         ],
         'web.qunit_suite_tests': [
-            # after //script[contains(@src, '/web/static/tests/views/kanban_tests.js')]
             ('after', 'web/static/tests/views/kanban_tests.js', 'hr_attendance/static/tests/hr_attendance_tests.js'),
         ],
         'web.assets_qweb': [
-            "hr_attendance/static/src/xml/attendance.xml",
+            'hr_attendance/static/src/xml/**/*',
         ],
     }
 }

@@ -30,7 +30,7 @@ Re-implement Odoo's file import system:
     ],
     'assets': {
         'web.assets_qweb': [
-            'base_import/static/src/xml/base_import.xml',
+            'base_import/static/src/xml/**/*',
         ],
         'web.assets_backend': [
             'base_import/static/src/scss/base_import.scss',
@@ -39,7 +39,7 @@ Re-implement Odoo's file import system:
             'base_import/static/src/js/import_menu.js',
         ],
         'web.qunit_suite_tests': [
-            'base_import/static/tests/import_buttons_tests.js',
+            'base_import/static/tests/**/*',
         ],
     },
 }

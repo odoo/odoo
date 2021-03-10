@@ -19,8 +19,7 @@ This module allows a customer to give rating.
     'auto_install': False,
     'assets': {
         'web.assets_frontend': [
-            # after link[last()]
-            'rating/static/src/scss/rating.scss',
+            'rating/static/src/scss/**/*',
         ],
     }
 }

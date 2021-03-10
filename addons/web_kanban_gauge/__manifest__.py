@@ -11,10 +11,10 @@ This widget allows to display gauges using d3 library.
     'depends': ['web'],
     'assets' : {
         'web.assets_backend': [
-            'web_kanban_gauge/static/src/js/kanban_gauge.js',
+            'web_kanban_gauge/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
-            'web_kanban_gauge/static/tests/gauge_tests.js',
+            'web_kanban_gauge/static/tests/**/*',
         ],
     },
     'auto_install': True,

@@ -24,12 +24,10 @@ This module includes contact phone and mobile numbers validation.""",
     'auto_install': True,
     'assets': {
         'website.assets_editor': [
-            # inside .
-            'website_crm/static/src/js/website_crm_editor.js',
+            'website_crm/static/src/**/*',
         ],
         'web.assets_tests': [
-            # inside .
-            'website_crm/static/tests/tours/website_crm.js',
+            'website_crm/static/tests/**/*',
         ],
     }
 }

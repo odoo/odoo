@@ -23,19 +23,13 @@ Shows you a list of applications features to install from.
 
     'assets': {
         'web.assets_backend': [
-            # inside .
             'base_setup/static/src/scss/settings.scss',
-            # inside .
             'base_setup/static/src/js/res_config_dev_tool.js',
-            # inside .
             'base_setup/static/src/js/res_config_edition.js',
-            # inside .
             'base_setup/static/src/js/res_config_invite_users.js',
         ],
         'web.assets_qweb': [
-            'base_setup/static/src/xml/res_config_dev_tool.xml',
-            'base_setup/static/src/xml/res_config_edition.xml',
-            'base_setup/static/src/xml/res_config_invite_users.xml',
+            'base_setup/static/src/xml/**/*',
         ],
     }
 }

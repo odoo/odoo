@@ -56,44 +56,26 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_backend': [
-            # inside .
             'mrp/static/src/scss/mrp_workorder_kanban.scss',
-            # inside .
             'mrp/static/src/js/mrp.js',
-            # inside .
             'mrp/static/src/js/mrp_bom_report.js',
-            # inside .
             'mrp/static/src/js/mrp_workorder_popover.js',
-            # inside .
             'mrp/static/src/js/mrp_documents_controller_mixin.js',
-            # inside .
             'mrp/static/src/js/mrp_documents_document_viewer.js',
-            # inside .
             'mrp/static/src/js/mrp_documents_kanban_controller.js',
-            # inside .
             'mrp/static/src/js/mrp_documents_kanban_record.js',
-            # inside .
             'mrp/static/src/js/mrp_documents_kanban_renderer.js',
-            # inside .
             'mrp/static/src/js/mrp_document_kanban_view.js',
-            # inside .
             'mrp/static/src/js/mrp_should_consume.js',
         ],
         'web.assets_common': [
-            # inside .
             'mrp/static/src/scss/mrp_bom_report.scss',
-            # inside .
             'mrp/static/src/scss/mrp_fields.scss',
-            # inside .
             'mrp/static/src/scss/mrp_gantt.scss',
-            # inside .
             'mrp/static/src/scss/mrp_document_kanban_view.scss',
         ],
         'web.qunit_suite_tests': [
-            # after //script[last()]
-            'mrp/static/tests/mrp_tests.js',
-            # after //script[last()]
-            'mrp/static/tests/mrp_document_kanban_tests.js',
+            'mrp/static/tests/**/*',
         ],
         'web.assets_qweb': [
             'mrp/static/src/xml/*.xml',

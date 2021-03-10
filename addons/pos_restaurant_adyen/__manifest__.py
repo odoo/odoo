@@ -15,10 +15,7 @@
     'auto-install': True,
     'assets': {
         'point_of_sale.assets': [
-            # inside .
-            'pos_restaurant_adyen/static/src/js/models.js',
-            # inside .
-            'pos_restaurant_adyen/static/src/js/payment_adyen.js',
+            'pos_restaurant_adyen/static/**/*',
         ],
     }
 }

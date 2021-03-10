@@ -31,17 +31,12 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            # after //link[last()]
             'website_slides_survey/static/src/scss/website_slides_survey.scss',
-            # after //script[last()]
             'website_slides_survey/static/src/js/slides_upload.js',
-            # after //script[last()]
             'website_slides_survey/static/src/js/slides_course_fullscreen_player.js',
-            # after //script[last()]
             'website_slides_survey/static/src/js/slides_certification_upload_toast.js',
         ],
         'survey.survey_assets': [
-            # after //link[last()]
             'website_slides_survey/static/src/scss/website_slides_survey_result.scss',
         ],
     }

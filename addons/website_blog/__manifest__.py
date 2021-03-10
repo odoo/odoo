@@ -33,25 +33,17 @@
     'application': True,
     'assets': {
         'website.assets_wysiwyg': [
-            # inside .
             'website_blog/static/src/snippets/s_latest_posts/options.js',
         ],
         'website.assets_editor': [
-            # inside .
             'website_blog/static/src/js/website_blog.editor.js',
-            # inside .
             'website_blog/static/src/js/tours/website_blog.js',
         ],
         'web.assets_frontend': [
-            # inside .
             'website_blog/static/src/scss/website_blog.scss',
-            # inside .
             'website_blog/static/src/js/contentshare.js',
-            # inside .
             'website_blog/static/src/js/website_blog.js',
-            # after //link[last()]
             'website_blog/static/src/snippets/s_latest_posts/001.scss',
-            # after //script[last()]
             'website_blog/static/src/snippets/s_latest_posts/000.js',
         ],
         'web.assets_qweb': [

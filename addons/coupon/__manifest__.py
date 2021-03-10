@@ -23,8 +23,7 @@
     'installable': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'coupon/static/src/js/coupon.js',
+            'coupon/static/**/*',
         ],
     }
 }

@@ -21,8 +21,7 @@ Badge received are displayed on the user profile.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'hr_gamification/static/src/js/gamification.js',
+            'hr_gamification/static/**/*',
         ],
     }
 }

@@ -20,8 +20,7 @@ Use Epson Printers as Order Printers in the Point of Sale without the IoT Box
     'auto_install': True,
     'assets': {
         'point_of_sale.assets': [
-            # inside .
-            'pos_epson_printer_restaurant/static/src/js/multiprint.js',
+            'pos_epson_printer_restaurant/static/**/*',
         ],
     }
 }

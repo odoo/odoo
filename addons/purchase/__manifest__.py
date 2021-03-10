@@ -38,22 +38,16 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'purchase/static/src/scss/purchase.scss',
-            # inside .
             'purchase/static/src/js/purchase_dashboard.js',
-            # inside .
             'purchase/static/src/js/purchase_toaster_button.js',
-            # after script[last()]
             'purchase/static/src/js/tours/purchase.js',
         ],
         'web.assets_frontend': [
-            # inside .
             'purchase/static/src/js/purchase_datetimepicker.js',
         ],
         'web.assets_qweb': [
-            "purchase/static/src/xml/purchase_dashboard.xml",
-            "purchase/static/src/xml/purchase_toaster_button.xml",
+            'purchase/static/src/xml/**/*',
         ],
     }
 }

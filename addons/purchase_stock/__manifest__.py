@@ -34,8 +34,7 @@
     'post_init_hook': '_create_buy_rules',
     'assets': {
         'web.assets_backend': [
-            # after script[last()]
-            'purchase_stock/static/src/js/tours/purchase_stock.js',
+            'purchase_stock/static/**/*',
         ],
     }
 }

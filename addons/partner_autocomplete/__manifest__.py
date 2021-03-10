@@ -25,27 +25,20 @@
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'partner_autocomplete/static/src/scss/partner_autocomplete.scss',
-            # inside .
             'partner_autocomplete/static/src/js/partner_autocomplete_core.js',
-            # inside .
             'partner_autocomplete/static/src/js/partner_autocomplete_fieldchar.js',
-            # inside .
             'partner_autocomplete/static/src/js/partner_autocomplete_many2one.js',
-            # inside .
             'partner_autocomplete/static/src/js/web_company_autocomplete.js',
         ],
         'web.tests_assets': [
-            # after //script[last()]
-            'partner_autocomplete/static/lib/jsvat.js',
+            'partner_autocomplete/static/lib/**/*',
         ],
         'web.qunit_suite_tests': [
-            # after //script[last()]
-            'partner_autocomplete/static/tests/partner_autocomplete_tests.js',
+            'partner_autocomplete/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'partner_autocomplete/static/src/xml/partner_autocomplete.xml',
+            'partner_autocomplete/static/src/xml/**/*',
         ],
     }
 }

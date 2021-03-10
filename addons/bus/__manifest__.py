@@ -11,29 +11,17 @@
     'installable': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'bus/static/src/js/longpolling_bus.js',
-            # inside .
-            'bus/static/src/js/crosstab_bus.js',
-            # inside .
-            'bus/static/src/js/services/bus_service.js',
-            # inside .
-            'bus/static/src/js/web_client_bus.js',
+            'bus/static/src/**/*',
         ],
         'web.assets_frontend': [
-            # inside .
             'bus/static/src/js/longpolling_bus.js',
-            # inside .
             'bus/static/src/js/crosstab_bus.js',
-            # inside .
             'bus/static/src/js/services/bus_service.js',
         ],
         'web.qunit_suite_tests': [
-            # after //script[last()]
             'bus/static/tests/bus_tests.js',
         ],
         'web.assets_tests': [
-            # inside .
             'bus/static/tests/bus_tests_tour.js',
         ],
     }

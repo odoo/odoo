@@ -39,7 +39,7 @@ The module adds following features:
     'post_init_hook': '_setup_inalterability',
     'assets': {
         'web.assets_qweb': [
-            'l10n_fr_pos_cert/static/src/xml/OrderReceipt.xml',
+            'l10n_fr_pos_cert/static/src/xml/**/*',
         ],
     }
 }

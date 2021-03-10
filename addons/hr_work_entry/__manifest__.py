@@ -21,7 +21,7 @@
     ],
     'assets': {
         'web.assets_qweb': [
-            "hr_work_entry/static/src/xml/work_entry_templates.xml",
+            'hr_work_entry/static/**/*',
         ],
     }
 }

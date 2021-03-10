@@ -44,33 +44,21 @@
     'application': True,
     'assets': {
         'web.assets_common': [
-            # after //script[last()]
             'website_event/static/src/js/tours/event_tour.js',
         ],
         'web.assets_frontend': [
-            # after //link[last()]
             'website_event/static/src/scss/event_templates_common.scss',
-            # after //link[last()]
             'website_event/static/src/scss/event_templates_list.scss',
-            # after //link[last()]
             'website_event/static/src/scss/event_templates_page.scss',
-            # after //script[last()]
             'website_event/static/src/js/display_timer_widget.js',
-            # after //script[last()]
             'website_event/static/src/js/register_toaster_widget.js',
-            # after //script[last()]
             'website_event/static/src/js/website_geolocation.js',
-            # after //script[last()]
             'website_event/static/src/js/website_event.js',
-            # after //script[last()]
             'website_event/static/src/js/website_event_ticket_details.js',
-            # after //script[last()]
             'website_event/static/src/js/website_event_set_customize_options.js',
         ],
         'website.assets_editor': [
-            # inside .
             'website_event/static/src/js/website_event.editor.js',
-            # inside .
             'website_event/static/src/js/tours/website_event.js',
         ],
     }

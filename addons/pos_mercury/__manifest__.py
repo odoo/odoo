@@ -36,25 +36,16 @@ following:
     'auto_install': False,
     'assets': {
         'point_of_sale.assets': [
-            # inside .
             'pos_mercury/static/src/js/pos_mercury.js',
-            # inside .
             'pos_mercury/static/src/js/OrderReceipt.js',
-            # inside .
             'pos_mercury/static/src/js/PaymentScreen.js',
-            # inside .
             'pos_mercury/static/src/js/PaymentScreenPaymentLines.js',
-            # inside .
             'pos_mercury/static/src/js/PaymentTransactionPopup.js',
-            # inside .
             'pos_mercury/static/src/js/ProductScreen.js',
-            # inside .
             'pos_mercury/static/src/css/pos_mercury.css',
         ],
         'web.assets_qweb': [
-            'pos_mercury/static/src/xml/OrderReceipt.xml',
-            'pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml',
-            'pos_mercury/static/src/xml/PaymentTransactionPopup.xml',
+            'pos_mercury/static/src/xml/**/*',
         ],
     }
 }

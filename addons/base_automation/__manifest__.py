@@ -23,12 +23,10 @@ trigger an automatic reminder email.
     ],
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'base_automation/static/src/js/base_automation_error_dialog.js',
+            'base_automation/static/src/js/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
-            'base_automation/static/tests/base_automation_error_dialog.js',
+            'base_automation/static/tests/**/*',
         ],
     }
 }

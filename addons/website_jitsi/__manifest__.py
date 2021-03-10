@@ -21,9 +21,7 @@
     'application': False,
     'assets': {
         'web.assets_frontend': [
-            # after //link[last()]
             'website_jitsi/static/src/css/chat_room.css',
-            # after //script[last()]
             'website_jitsi/static/src/js/chat_room.js',
         ],
     }

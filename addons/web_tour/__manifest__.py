@@ -18,7 +18,7 @@ Odoo Web tours.
     ],
     'assets': {
         'web.assets_qweb': [
-            "web_tour/static/src/xml/debug_manager.xml",
+            'web_tour/static/src/xml/debug_manager.xml',
         ],
         'web.assets_common': [
             'web_tour/static/src/scss/**/*',

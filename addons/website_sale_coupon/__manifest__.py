@@ -19,8 +19,7 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
     'auto_install': True,
     'assets': {
         'web.assets_tests': [
-            # inside .
-            'website_sale_coupon/static/tests/tours/website_sale_coupon.js',
+            'website_sale_coupon/static/tests/**/*',
         ],
     }
 }

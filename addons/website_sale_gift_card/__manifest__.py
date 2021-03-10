@@ -19,8 +19,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            # after script[last()]
-            'website_sale_gift_card/static/src/js/website_sale_gift_card.js',
+            'website_sale_gift_card/static/**/*',
         ],
     }
 }

@@ -21,23 +21,16 @@
     ],
     'assets': {
         'web.assets_backend': [
-            # after script[last()]
             'mail_bot/static/src/bugfix/bugfix.js',
-            # after script[last()]
             'mail_bot/static/src/models/messaging_initializer/messaging_initializer.js',
-            # after link[last()]
             'mail_bot/static/src/scss/odoobot_style.scss',
-            # after link[last()]
             'mail_bot/static/src/bugfix/bugfix.scss',
         ],
         'web.tests_assets': [
-            # inside .
-            'mail_bot/static/tests/helpers/mock_server.js',
+            'mail_bot/static/tests/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'mail_bot/static/src/bugfix/bugfix_tests.js',
-            # inside .
             'mail_bot/static/src/models/messaging_initializer/messaging_initializer_tests.js',
         ],
         'web.assets_qweb': [

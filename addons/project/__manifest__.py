@@ -47,33 +47,22 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'project/static/src/css/project.css',
-            # inside .
             'project/static/src/js/project_form.js',
-            # inside .
             'project/static/src/js/project_kanban.js',
-            # inside .
             'project/static/src/js/project_list.js',
-            # inside .
             'project/static/src/js/project_rating_reporting.js',
-            # inside .
             'project/static/src/js/project_task_kanban_examples.js',
-            # inside .
             'project/static/src/js/tours/project.js',
-            # inside .
             'project/static/src/js/project_calendar.js',
-            # inside .
             'project/static/src/scss/project_dashboard.scss',
         ],
         'web.assets_frontend': [
-            # inside .
             'project/static/src/scss/portal_rating.scss',
-            # inside .
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_qweb': [
-            'project/static/src/xml/project_templates.xml',
+            'project/static/src/xml/**/*',
         ],
     }
 }

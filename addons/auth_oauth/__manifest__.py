@@ -20,8 +20,7 @@ Allow users to login through OAuth2 Provider.
     ],
     'assets': {
         'web.assets_frontend': [
-            # after //link[last()]
-            'auth_oauth/static/src/scss/auth_oauth.scss',
+            'auth_oauth/static/**/*',
         ],
     }
 }

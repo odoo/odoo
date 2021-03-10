@@ -26,32 +26,22 @@ a dependency towards website editing and customization capabilities.""",
     ],
     'assets': {
         'web._assets_primary_variables': [
-            # after //link[last()]
             'portal/static/src/scss/primary_variables.scss',
         ],
         'web._assets_frontend_helpers': [
-            # before //link
             ('prepend', 'portal/static/src/scss/bootstrap_overridden.scss'),
         ],
         'web.assets_frontend': [
-            # after //link[last()]
             'portal/static/src/scss/bootstrap.extend.scss',
-            # after //link[last()]
             'portal/static/src/scss/portal.scss',
-            # after //script[last()]
             'portal/static/src/js/portal.js',
-            # after //script[last()]
             'portal/static/src/js/portal_chatter.js',
-            # after //script[last()]
             'portal/static/src/js/portal_composer.js',
-            # after //script[last()]
             'portal/static/src/js/portal_signature.js',
-            # after //script[last()]
             'portal/static/src/js/portal_sidebar.js',
         ],
         'web.assets_tests': [
-            # inside .
-            'portal/static/tests/tours/portal.js',
+            'portal/static/tests/**/*',
         ],
         'web.assets_qweb': [
             'portal/static/src/xml/portal_chatter.xml',

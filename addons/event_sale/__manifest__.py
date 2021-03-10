@@ -38,19 +38,12 @@ this event.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # after script[last()]
-            'event_sale/static/src/js/event_configurator_controller.js',
-            # after script[last()]
-            'event_sale/static/src/js/event_configurator_view.js',
-            # after script[last()]
-            'event_sale/static/src/js/event_configurator_widget.js',
+            'event_sale/static/src/**/*',
         ],
         'web.assets_tests': [
-            # inside .
-            'event_sale/static/tests/tours/event_configurator_ui.js',
+            'event_sale/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'event_sale/static/tests/event_configurator.test.js',
         ],
     }

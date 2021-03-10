@@ -25,35 +25,17 @@ It also enables the "optional products" feature.
     ],
     'assets': {
         'web.assets_backend': [
-            # after script[last()]
             'sale/static/src/js/variant_mixin.js',
-            # after script[last()]
             'sale_product_configurator/static/src/js/product_configurator_renderer.js',
-            # after script[last()]
             'sale_product_configurator/static/src/js/product_configurator_controller.js',
-            # after script[last()]
             'sale_product_configurator/static/src/js/product_configurator_view.js',
-            # after script[last()]
             'sale_product_configurator/static/src/js/product_configurator_widget.js',
-            # after script[last()]
             'sale_product_configurator/static/src/js/product_configurator_modal.js',
         ],
         'web.assets_tests': [
-            # inside .
-            'sale_product_configurator/static/tests/tours/product_configurator_ui.js',
-            # inside .
-            'sale_product_configurator/static/tests/tours/product_configurator_advanced_ui.js',
-            # inside .
-            'sale_product_configurator/static/tests/tours/product_configurator_edition_ui.js',
-            # inside .
-            'sale_product_configurator/static/tests/tours/product_configurator_single_custom_attribute_ui.js',
-            # inside .
-            'sale_product_configurator/static/tests/tours/product_configurator_pricelist_ui.js',
-            # inside .
-            'sale_product_configurator/static/tests/tours/product_configurator_optional_products_ui.js',
+            'sale_product_configurator/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'sale_product_configurator/static/tests/product_configurator.test.js',
         ],
     }

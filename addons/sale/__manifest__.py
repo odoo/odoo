@@ -47,39 +47,26 @@ This module contains all the common features of Sales Management and eCommerce.
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # after link[last()]
             'sale/static/src/scss/sale_onboarding.scss',
-            # after link[last()]
             'sale/static/src/scss/product_configurator.scss',
-            # after script[last()]
             'sale/static/src/js/sale.js',
-            # after script[last()]
             'sale/static/src/js/tours/sale.js',
-            # after script[last()]
             'sale/static/src/js/product_configurator_widget.js',
-            # after script[last()]
             'sale/static/src/js/sale_order_view.js',
-            # after script[last()]
             'sale/static/src/js/product_discount_widget.js',
         ],
         'web.report_assets_common': [
-            # after link[last()]
             'sale/static/src/scss/sale_report.scss',
         ],
         'web.assets_frontend': [
-            # after link[last()]
             'sale/static/src/scss/sale_portal.scss',
-            # after script[last()]
             'sale/static/src/js/sale_portal_sidebar.js',
         ],
         'web.assets_tests': [
-            # inside .
-            'sale/static/tests/tours/sale_signature.js',
+            'sale/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'sale/static/tests/product_configurator_tests.js',
-            # inside .
             'sale/static/tests/sales_team_dashboard_tests.js',
         ],
     }

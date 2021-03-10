@@ -10,15 +10,11 @@
     ],
     'assets': {
         'web.assets_backend': [
-            # inside .
             'auth_password_policy/static/src/js/password_field.js',
-            # inside .
             'auth_password_policy/static/src/js/change_password.js',
         ],
         'web.assets_common': [
-            # inside .
             'auth_password_policy/static/src/js/password_gauge.js',
-            # inside .
             'auth_password_policy/static/src/css/password_field.css',
         ],
     }

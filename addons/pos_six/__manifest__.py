@@ -16,8 +16,7 @@
     'license': 'OEEL-1',
     'assets': {
         'web.assets_qweb': [
-            'pos_six/static/src/xml/BalanceButton.xml',
-            'pos_six/static/src/xml/Chrome.xml',
+            'pos_six/static/src/xml/**/*',
         ],
     }
 }

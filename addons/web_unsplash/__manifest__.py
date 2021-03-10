@@ -13,13 +13,10 @@
     'auto_install': True,
     'assets': {
         'web_editor.assets_wysiwyg': [
-            # inside .
             'web_unsplash/static/src/js/unsplashapi.js',
-            # inside .
             'web_unsplash/static/src/js/unsplash_image_widget.js',
         ],
         'web.assets_frontend': [
-            # inside .
             'web_unsplash/static/src/js/unsplash_beacon.js',
         ],
     }

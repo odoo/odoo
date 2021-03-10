@@ -19,16 +19,13 @@
     ],
     'assets': {
         'web.assets_backend': [
-            # after script[last()]
-            'purchase_product_matrix/static/src/js/product_matrix_configurator.js',
+            'purchase_product_matrix/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'purchase_product_matrix/static/tests/section_and_note_widget_tests.js',
         ],
         'web.assets_tests': [
-            # inside .
-            'purchase_product_matrix/static/tests/tours/purchase_product_matrix_tour.js',
+            'purchase_product_matrix/static/tests/tours/**/*',
         ],
     }
 }

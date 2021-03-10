@@ -42,16 +42,12 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'hr_recruitment/static/src/scss/hr_job.scss',
-            # inside .
             'hr_recruitment/static/src/js/recruitment.js',
-            # inside .
             'hr_recruitment/static/src/js/tours/hr_recruitment.js',
         ],
         'web.assets_tests': [
-            # inside .
-            # wtf
+            
         ],
     }
 }

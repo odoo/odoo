@@ -19,14 +19,10 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
     'installable': True,
     'assets': {
         'web.assets_frontend': [
-            # inside .
-            'website_sale_wishlist/static/src/scss/website_sale_wishlist.scss',
-            # inside .
-            'website_sale_wishlist/static/src/js/website_sale_wishlist.js',
+            'website_sale_wishlist/static/src/**/*',
         ],
         'web.assets_tests': [
-            # inside .
-            'website_sale_wishlist/static/tests/tours/website_sale_wishlist.js',
+            'website_sale_wishlist/static/tests/**/*',
         ],
     }
 }

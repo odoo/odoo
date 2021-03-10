@@ -21,11 +21,10 @@ This module add completed courses to resumé for employees.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'hr_skills_slides/static/src/scss/hr_skills.scss',
+            'hr_skills_slides/static/src/scss/**/*',
         ],
         'web.assets_qweb': [
-            'hr_skills_slides/static/src/xml/resume_templates.xml',
+            'hr_skills_slides/static/src/xml/**/*',
         ],
     }
 }

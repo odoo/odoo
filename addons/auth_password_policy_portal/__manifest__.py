@@ -6,8 +6,7 @@
     'data': ['views/templates.xml'],
     'assets': {
         'web.assets_frontend': [
-            # inside .
-            'auth_password_policy_portal/static/src/scss/portal_policy.scss',
+            'auth_password_policy_portal/static/**/*',
         ],
     }
 }

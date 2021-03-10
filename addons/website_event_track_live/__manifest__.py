@@ -25,15 +25,12 @@
     'installable': True,
     'assets': {
         'web.assets_frontend': [
-            # after //link[last()]
             'website_event_track_live/static/src/scss/website_event_track_live.scss',
-            # after //script[last()]
             'website_event_track_live/static/src/js/website_event_track_suggestion.js',
-            # after //script[last()]
             'website_event_track_live/static/src/js/website_event_track_live.js',
         ],
         'web.assets_qweb': [
-            'website_event_track_live/static/src/xml/website_event_track_live_templates.xml',
+            'website_event_track_live/static/src/xml/**/*',
         ],
     }
 }

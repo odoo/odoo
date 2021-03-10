@@ -26,8 +26,7 @@
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            # after //script[last()]
-            'website_slides_forum/static/src/js/website_slides_forum.editor.js',
+            'website_slides_forum/static/src/js/**/*',
         ],
     }
 }

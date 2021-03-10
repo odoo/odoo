@@ -24,8 +24,7 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'maintenance/static/src/scss/maintenance_team_dashboard.scss',
+            'maintenance/static/src/**/*',
         ],
     }
 }

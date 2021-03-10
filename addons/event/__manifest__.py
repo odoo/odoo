@@ -45,12 +45,10 @@ Key Features
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'event/static/src/scss/event.scss',
+            'event/static/src/scss/**/*',
         ],
         'web.assets_common': [
-            # after //script[last()]
-            'event/static/src/js/tours/event_tour.js',
+            'event/static/src/js/**/*',
         ],
     }
 }

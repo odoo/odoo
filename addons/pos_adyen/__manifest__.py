@@ -18,10 +18,7 @@
     'installable': True,
     'assets': {
         'point_of_sale.assets': [
-            # inside .
-            'pos_adyen/static/src/js/payment_adyen.js',
-            # inside .
-            'pos_adyen/static/src/js/models.js',
+            'pos_adyen/static/**/*',
         ],
     }
 }

@@ -34,10 +34,7 @@ You can assign several contracts per employee.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'hr_contract/static/src/scss/state_selection.scss',
-            # inside .
-            'hr_contract/static/src/scss/calendar_mismatch.scss',
+            'hr_contract/static/src/**/*',
         ],
     }
 }

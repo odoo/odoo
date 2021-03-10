@@ -26,8 +26,7 @@ Allow users to sign up and reset their password
     'bootstrap': True,
     'assets': {
         'web.assets_frontend': [
-            # inside .
-            'auth_signup/static/src/js/signup.js',
+            'auth_signup/static/**/*',
         ],
     }
 }

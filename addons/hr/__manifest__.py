@@ -48,37 +48,22 @@
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'hr/static/src/scss/hr.scss',
-            # inside .
             'hr/static/src/bugfix/bugfix.scss',
-            # inside .
             'hr/static/src/bugfix/bugfix.js',
-            # inside .
             'hr/static/src/js/chat.js',
-            # inside .
             'hr/static/src/js/language.js',
-            # inside .
             'hr/static/src/js/many2one_avatar_employee.js',
-            # inside .
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
-            # inside .
             'hr/static/src/models/employee/employee.js',
-            # inside .
             'hr/static/src/models/messaging/messaging.js',
-            # inside .
             'hr/static/src/models/partner/partner.js',
-            # inside .
             'hr/static/src/models/user/user.js',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'hr/static/src/bugfix/bugfix_tests.js',
-            # inside .
             'hr/static/tests/helpers/mock_models.js',
-            # inside .
             'hr/static/tests/many2one_avatar_employee_tests.js',
-            # inside .
             'hr/static/tests/standalone_m2o_avatar_employee_tests.js',
         ],
         'web.assets_qweb': [

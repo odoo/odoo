@@ -44,61 +44,34 @@ Help your customers with this chat, and analyse their feedback.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'im_livechat/static/src/js/im_livechat_channel_form_view.js',
-            # inside .
             'im_livechat/static/src/js/im_livechat_channel_form_controller.js',
-            # inside .
             'im_livechat/static/src/bugfix/bugfix.js',
-            # inside .
             'im_livechat/static/src/components/discuss/discuss.js',
-            # inside .
             'im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.js',
-            # inside .
             'im_livechat/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js',
-            # inside .
             'im_livechat/static/src/components/notification_list/notification_list.js',
-            # inside .
             'im_livechat/static/src/components/thread_needaction_preview/thread_needaction_preview.js',
-            # inside .
             'im_livechat/static/src/components/thread_preview/thread_preview.js',
-            # inside .
             'im_livechat/static/src/models/messaging_initializer/messaging_initializer.js',
-            # inside .
             'im_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js',
-            # inside .
             'im_livechat/static/src/models/partner/partner.js',
-            # inside .
             'im_livechat/static/src/models/thread/thread.js',
-            # inside .
             'im_livechat/static/src/widgets/discuss/discuss.js',
-            # inside .
             'im_livechat/static/src/bugfix/bugfix.scss',
-            # inside .
             'im_livechat/static/src/scss/im_livechat_history.scss',
-            # inside .
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'im_livechat/static/src/bugfix/bugfix_tests.js',
-            # inside .
             'im_livechat/static/src/components/chat_window_manager/chat_window_manager_tests.js',
-            # inside .
             'im_livechat/static/src/components/composer/composer_tests.js',
-            # inside .
             'im_livechat/static/src/components/discuss/discuss_tests.js',
-            # inside .
             'im_livechat/static/src/components/messaging_menu/messaging_menu_tests.js',
-            # inside .
             'im_livechat/static/src/components/thread_icon/thread_icon_tests.js',
-            # inside .
             'im_livechat/static/src/components/thread_textual_typing_status/thread_textual_typing_status_tests.js',
-            # inside .
             'im_livechat/static/src/legacy/public_livechat.js',
-            # inside .
             'im_livechat/static/tests/helpers/mock_models.js',
-            # inside .
             'im_livechat/static/tests/helpers/mock_server.js',
         ],
         'web.assets_qweb': [

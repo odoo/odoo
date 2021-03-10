@@ -26,13 +26,10 @@
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'crm_iap_lead/static/src/js/leads_tree_generate_leads.js',
-            # inside .
-            'crm_iap_lead/static/src/js/tours/crm_iap_lead.js',
+            'crm_iap_lead/static/src/js/**/*',
         ],
         'web.assets_qweb': [
-            'crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml',
+            'crm_iap_lead/static/src/xml/**/*',
         ],
     }
 }

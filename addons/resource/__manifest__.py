@@ -24,10 +24,7 @@ associated to every resource. It also manages the leaves of every resource.
     ],
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'resource/static/src/scss/section_backend.scss',
-            # inside .
-            'resource/static/src/js/section_fields_backend.js',
+            'resource/static/**/*',
         ],
     }
 }

@@ -24,7 +24,7 @@ can setup API keys to replace their main password.
     ],
     'assets': {
         'web.assets_tests': [
-            'auth_totp/static/tests/totp_flow.js',
+            'auth_totp/static/**/*',
         ],
     },
 }

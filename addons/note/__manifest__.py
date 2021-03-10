@@ -30,17 +30,14 @@
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # after //link[last()]
             'note/static/src/scss/note.scss',
-            # after //script[last()]
             'note/static/src/js/systray_activity_menu.js',
         ],
         'web.qunit_suite_tests': [
-            # inside .
-            'note/static/tests/systray_activity_menu_tests.js',
+            'note/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'note/static/src/xml/systray.xml',
+            'note/static/src/xml/**/*',
         ],
     }
 }

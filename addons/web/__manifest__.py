@@ -58,16 +58,13 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
-
             'web/static/lib/bootstrap/scss/_variables.scss',
-
             ('include', 'web._assets_common_styles'),
             ('include', 'web.assets_common_minimal'),
             ('include', 'web._assets_common_scripts'),
         ],
         'web.assets_common_lazy': [
             ('include', 'web.assets_common'),
-            # Remove assets_common_minimal
             ('remove', 'web/static/lib/es6-promise/es6-promise-polyfill.js'),
             ('remove', 'web/static/src/js/promise_extension.js'),
             ('remove', 'web/static/src/js/boot.js'),
@@ -75,16 +72,11 @@ This module provides the core of the Odoo Web Client.
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
-
             'web/static/lib/bootstrap/scss/_variables.scss',
-
             ('include', 'web._assets_bootstrap'),
-
             'base/static/src/css/modules.css',
-
             'web/static/src/scss/webclient_extra.scss',
             'web/static/src/scss/webclient_layout.scss',
-
             'web/static/src/scss/webclient.scss',
             'web/static/src/scss/domain_selector.scss',
             'web/static/src/scss/model_field_selector.scss',
@@ -123,14 +115,12 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/form_view_extra.scss',
             'web/static/src/scss/list_view_extra.scss',
             'web/static/src/scss/search_view_extra.scss',
-
             'base/static/src/js/res_config_settings.js',
             'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
             'web/static/lib/fuzzy-master/fuzzy.js',
             'web/static/lib/py.js/lib/py.js',
             'web/static/lib/py.js/lib/py_extras.js',
             'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
-
             'web/static/src/js/_deprecated/*',
             'web/static/src/js/chrome/abstract_action.js',
             'web/static/src/js/chrome/abstract_web_client.js',
@@ -215,18 +205,13 @@ This module provides the core of the Odoo Web Client.
         'web.assets_frontend': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
-
             'web/static/lib/bootstrap/scss/_variables.scss',
-
             ('include', 'web._assets_bootstrap'),
-
             'web/static/src/scss/base_frontend.scss',
             'web/static/src/scss/lazyloader.scss',
             'web/static/src/scss/navbar_mobile.scss',
             'web/static/src/scss/notification.scss',
-
             ('include', 'web.assets_frontend_minimal'),
-
             'web/static/src/js/services/session.js',
             'web/static/src/js/public/public_env.js',
             'web/static/src/js/public/public_crash_manager.js',
@@ -237,8 +222,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
-            # Remove assets_frontend_minimal
-            ('remove', 'web/static/src/js/public/lazyloader.js')
+            ('remove', 'web/static/src/js/public/lazyloader.js'),
         ],
         'web.assets_backend_prod_only': [
             'web/static/src/js/main.js',
@@ -248,17 +232,13 @@ This module provides the core of the Odoo Web Client.
         # For now, it is only use to display the PDF slide Viewer during an embed.
         # Bundlized, the size is reduced to 5300≈ lines.
         'web.pdf_js_lib': [
-            'web/static/lib/pdfjs/build/pdf.js',
-            'web/static/lib/pdfjs/build/pdf.worker.js',
+            'web/static/lib/pdfjs/build/**/*',
         ],
         'web.report_assets_common': [
             ('include', 'web._assets_helpers'),
-
             'web/static/src/scss/bootstrap_overridden_report.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
-
             ('include', 'web._assets_bootstrap'),
-
             'base/static/src/css/description.css',
             'web/static/lib/fontawesome/css/font-awesome.css',
             'web/static/src/scss/fonts.scss',
@@ -268,7 +248,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/layout_boxed.scss',
             'web/static/src/scss/layout_clean.scss',
             'web/static/src/scss/asset_styles_company_report.scss',
-
             'web/static/src/js/services/session.js',
             'web/static/src/js/public/public_root.js',
             'web/static/src/js/public/public_root_instance.js',
@@ -277,7 +256,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/js/report/report.js',
         ],
         'web.report_assets_pdf': [
-            'web/static/src/css/reset.min.css',
+            'web/static/src/css/**/*',
         ],
 
         #----------------------------------------------------------------------
@@ -308,7 +287,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_mixins.scss',
             'web/static/src/scss/bs_mixins_overrides.scss',
             'web/static/src/scss/utils.scss',
-
             ('include', 'web._assets_primary_variables'),
             ('include', 'web._assets_secondary_variables'),
         ],
@@ -440,16 +418,13 @@ This module provides the core of the Odoo Web Client.
         # ----------------------------------------------------------------------
 
         'web.assets_tests': [
-            # No tours are defined in web, but the bundle "assets_tests" is
-            # first called in web.
-            'web/static/tests/helpers/test_utils_file.js'
+            'web/static/tests/helpers/test_utils_file.js',
         ],
         'web.tests_assets': [
             'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/helpers/**/*',
-
             'web/static/lib/fullcalendar/core/main.css',
             'web/static/lib/fullcalendar/daygrid/main.css',
             'web/static/lib/fullcalendar/timegrid/main.css',

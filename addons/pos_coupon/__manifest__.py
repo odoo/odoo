@@ -24,37 +24,20 @@
     "installable": True,
     'assets': {
         'point_of_sale.assets': [
-            # inside .
             'pos_coupon/static/src/css/coupon.css',
-            # inside .
             'pos_coupon/static/src/js/coupon.js',
-            # inside .
             'pos_coupon/static/src/js/Orderline.js',
-            # inside .
             'pos_coupon/static/src/js/PaymentScreen.js',
-            # inside .
             'pos_coupon/static/src/js/ProductScreen.js',
-            # inside .
             'pos_coupon/static/src/js/ActivePrograms.js',
-            # inside .
             'pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js',
-            # inside .
             'pos_coupon/static/src/js/ControlButtons/ResetProgramsButton.js',
         ],
         'web.assets_tests': [
-            # inside .
-            'pos_coupon/static/src/js/tours/PosCouponTourMethods.js',
-            # inside .
-            'pos_coupon/static/src/js/tours/PosCoupon1.tour.js',
-            # inside .
-            'pos_coupon/static/src/js/tours/PosCoupon2.tour.js',
+            'pos_coupon/static/src/js/tours/**/*',
         ],
         'web.assets_qweb': [
-            "pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml",
-            "pos_coupon/static/src/xml/ControlButtons/ResetProgramsButton.xml",
-            "pos_coupon/static/src/xml/ActivePrograms.xml",
-            "pos_coupon/static/src/xml/OrderReceipt.xml",
-            "pos_coupon/static/src/xml/OrderWidget.xml",
+            'pos_coupon/static/src/xml/**/*',
         ],
     }
 }

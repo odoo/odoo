@@ -20,13 +20,11 @@ Please refer to Sale Matrix or Purchase Matrix for the use of this module.
     ],
     'assets': {
         'web.assets_backend': [
-            # after script[last()]
             'product_matrix/static/src/js/section_and_note_widget.js',
-            # after script[last()]
             'product_matrix/static/src/scss/product_matrix.scss',
         ],
         'web.assets_qweb': [
-            "product_matrix/static/src/xml/product_matrix.xml",
+            'product_matrix/static/src/xml/**/*',
         ],
     }
 }

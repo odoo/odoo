@@ -16,8 +16,7 @@ Allows users to send invoices by post
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'snailmail_account/static/src/js/snailmail_account_notification_manager.js',
+            'snailmail_account/static/**/*',
         ],
     }
 }

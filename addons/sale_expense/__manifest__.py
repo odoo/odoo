@@ -25,12 +25,10 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'sale_expense/static/src/js/sale_order_many2one.js',
+            'sale_expense/static/src/**/*',
         ],
         'web.qunit_suite_tests': [
-            # after //script[last()]
-            'sale_expense/static/tests/sale_order_many2one_tests.js',
+            'sale_expense/static/tests/**/*',
         ],
     }
 }

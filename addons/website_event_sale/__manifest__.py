@@ -19,8 +19,7 @@ Sell event tickets through eCommerce app.
     'auto_install': True,
     'assets': {
         'web.assets_tests': [
-            # inside .
-            'website_event_sale/static/tests/tours/website_event_sale.js',
+            'website_event_sale/static/tests/**/*',
         ],
     }
 }

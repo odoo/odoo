@@ -21,14 +21,10 @@ Configure your own methods with a pricing grid or integrate with carriers for a 
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            # inside .
-            'website_sale_delivery/static/src/js/website_sale_delivery.js',
-            # inside .
-            'website_sale_delivery/static/src/scss/website_sale_delivery.scss',
+            'website_sale_delivery/static/src/**/*',
         ],
         'web.assets_tests': [
-            # inside .
-            'website_sale_delivery/static/tests/tours/website_free_delivery.js',
+            'website_sale_delivery/static/tests/**/*',
         ],
     }
 }

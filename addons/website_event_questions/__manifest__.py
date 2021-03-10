@@ -23,8 +23,7 @@
     'installable': True,
     'assets': {
         'web.assets_tests': [
-            # inside .
-            'website_event_questions/static/tests/tours/tickets_questions.js',
+            'website_event_questions/static/tests/**/*',
         ],
     }
 }

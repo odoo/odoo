@@ -19,7 +19,7 @@
     'auto_install': True,
     'assets': {
         'web.assets_qweb': [
-            'l10n_in_pos/static/src/xml/pos_receipt.xml',
+            'l10n_in_pos/static/src/xml/**/*',
         ],
     }
 }

@@ -42,8 +42,7 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
     ],
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'gamification/static/src/scss/gamification.scss',
+            'gamification/static/src/**/*',
         ],
     }
 }

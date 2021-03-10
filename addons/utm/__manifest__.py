@@ -21,10 +21,7 @@ Enable management of UTM trackers: campaign, medium, source.
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'utm/static/src/js/utm_campaign_kanban_examples.js',
-            # after link[last()]
-            'utm/static/src/scss/utm_views.scss',
+            'utm/static/src/**/*',
         ],
     }
 }

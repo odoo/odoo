@@ -21,11 +21,8 @@
     'post_init_hook': 'init_initiating_microsoft_uuid',
     'assets': {
         'web.assets_backend': [
-            # inside .
             'microsoft_calendar/static/src/js/microsoft_calendar_popover.js',
-            # inside .
             'microsoft_calendar/static/src/js/microsoft_calendar.js',
-            # after link[last()]
             'microsoft_calendar/static/src/scss/microsoft_calendar.scss',
         ],
         'web.assets_qweb': [

@@ -23,8 +23,7 @@ certification flow including purchase, certification, failure and success.
     'installable': True,
     'assets': {
         'web.assets_tests': [
-            # inside .
-            'test_website_slides_full/tests/tours/slides_certification_member.js',
+            'test_website_slides_full/tests/tours/**/*',
         ],
     }
 }

@@ -58,8 +58,7 @@ The Dashboard for the Sales Manager will include
     'post_init_hook': 'post_init_hook',
     'assets': {
         'web.assets_frontend': [
-            # inside .
-            'sale_management/static/src/js/sale_management.js',
+            'sale_management/static/src/js/**/*',
         ],
     }
 }

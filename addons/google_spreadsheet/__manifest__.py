@@ -20,8 +20,7 @@ The module adds the possibility to display data from Odoo in Google Spreadsheets
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'google_spreadsheet/static/src/js/add_to_google_spreadsheet_menu.js',
+            'google_spreadsheet/static/src/js/**/*',
         ],
         'web.assets_qweb': [
             'google_spreadsheet/static/src/xml/*.xml',

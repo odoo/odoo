@@ -9,12 +9,10 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            # inside .
-            'auth_totp_portal/static/src/js/totp_frontend.js',
+            'auth_totp_portal/static/src/**/*',
         ],
         'web.assets_tests': [
-            # inside .
-            'auth_totp_portal/static/tests/totp_portal.js',
+            'auth_totp_portal/static/tests/**/*',
         ],
     }
 }

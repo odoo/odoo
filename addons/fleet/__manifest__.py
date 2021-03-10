@@ -48,8 +48,7 @@ Main Features
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # after script[last()]
-            'fleet/static/src/js/fleet_form.js',
+            'fleet/static/src/**/*',
         ],
     }
 }

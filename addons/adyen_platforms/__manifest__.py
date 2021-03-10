@@ -18,16 +18,10 @@
     'installable': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'adyen_platforms/static/src/js/adyen_account_fields.js',
-            # inside .
-            'adyen_platforms/static/src/js/adyen_account_views.js',
-            # inside .
-            'adyen_platforms/static/src/js/adyen_transactions.js',
+            'adyen_platforms/static/src/js/**/*',
         ],
         'web.assets_qweb': [
-            "adyen_platforms/static/src/xml/adyen_account_templates.xml",
-            "adyen_platforms/static/src/xml/adyen_transactions_templates.xml",
+            'adyen_platforms/static/src/xml/**/*',
         ],
     }
 }

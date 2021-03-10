@@ -21,11 +21,10 @@ This module adds certification to resumé for employees.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'hr_skills_survey/static/src/scss/hr_skills.scss',
+            'hr_skills_survey/static/src/scss/**/*',
         ],
         'web.assets_qweb': [
-            'hr_skills_survey/static/src/xml/resume_templates.xml',
+            'hr_skills_survey/static/src/xml/**/*',
         ],
     }
 }

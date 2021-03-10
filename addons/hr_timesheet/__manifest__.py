@@ -45,23 +45,16 @@ up a management by affair.
     'post_init_hook': 'create_internal_project',
     'assets': {
         'web.assets_backend': [
-            # inside .
             'hr_timesheet/static/src/scss/timesheets_task_form.scss',
-            # inside .
             'hr_timesheet/static/src/js/task_with_hours.js',
-            # inside .
             'hr_timesheet/static/src/js/timesheet_uom.js',
-            # inside .
             'hr_timesheet/static/src/js/timesheet_factor.js',
-            # inside .
             'hr_timesheet/static/src/js/timesheet_config_form_view.js',
-            # inside .
             'hr_timesheet/static/src/js/qr_code_action.js',
-            # inside .
             'hr_timesheet/static/src/js/timesheet_graph.js',
         ],
         'web.assets_qweb': [
-            "hr_timesheet/static/src/xml/qr_modal_template.xml",
+            'hr_timesheet/static/src/xml/**/*',
         ],
     }
 }

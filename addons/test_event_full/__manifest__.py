@@ -31,8 +31,7 @@ automatic lead generation, full Online support, ...
     'installable': True,
     'assets': {
         'web.assets_tests': [
-            # after //script[last()]
-            'test_event_full/static/src/js/tours/wevent_register_tour.js',
+            'test_event_full/static/**/*',
         ],
     }
 }

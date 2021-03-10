@@ -49,15 +49,13 @@ Print product labels with barcode.
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'product/static/src/js/product_pricelist_report.js',
+            'product/static/src/js/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
-            'product/static/tests/product_pricelist_report_test.js',
+            'product/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'product/static/src/xml/pricelist_report.xml',
+            'product/static/src/xml/**/*',
         ],
     }
 }

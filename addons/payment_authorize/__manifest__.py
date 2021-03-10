@@ -19,8 +19,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            # after script[last()]
-            'payment_authorize/static/src/js/payment_form.js',
+            'payment_authorize/static/src/js/**/*',
         ],
     }
 }

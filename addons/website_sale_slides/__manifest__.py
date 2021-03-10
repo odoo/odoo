@@ -22,12 +22,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            # after //script[last()]
-            'website_sale_slides/static/src/js/slides_course_quiz.js',
-            # after //script[last()]
-            'website_sale_slides/static/src/js/slides_course_join.js',
-            # after //script[last()]
-            'website_sale_slides/static/src/js/slides_course_unsubscribe.js',
+            'website_sale_slides/static/src/js/**/*',
         ],
     }
 }

@@ -26,16 +26,11 @@ You can configure your google Authorization Code from Settings > Configuration >
 """,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'google_drive/static/src/css/google_drive.css',
-            # inside .
             'google_drive/static/src/js/gdrive.js',
         ],
         'web.qunit_suite_tests': [
-            # inside .
-            'google_drive/static/tests/mock_server.js',
-            # inside .
-            'google_drive/static/tests/gdrive_test.js',
+            'google_drive/static/tests/**/*',
         ],
         'web.assets_qweb': [
             'google_drive/static/src/xml/*.xml',

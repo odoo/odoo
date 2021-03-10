@@ -20,21 +20,14 @@
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'google_calendar/static/src/js/google_calendar_popover.js',
-            # inside .
             'google_calendar/static/src/js/google_calendar.js',
-            # after link[last()]
             'google_calendar/static/src/scss/google_calendar.scss',
         ],
         'web.qunit_suite_tests': [
-            # inside .
-            'google_calendar/static/tests/mock_server.js',
-            # inside .
-            'google_calendar/static/tests/google_calendar_tests.js',
+            'google_calendar/static/tests/**/*',
         ],
         'web.qunit_mobile_suite_tests': [
-            # inside .
             'google_calendar/static/tests/mock_server.js',
         ],
         'web.assets_qweb': [

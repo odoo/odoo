@@ -15,9 +15,7 @@
     'auto_install': False,
     'assets': {
         'web.assets_frontend': [
-            # after //link[last()]
             'google_recaptcha/static/src/scss/recaptcha.scss',
-            # after //script[last()]
             'google_recaptcha/static/src/js/recaptcha.js',
         ],
     }

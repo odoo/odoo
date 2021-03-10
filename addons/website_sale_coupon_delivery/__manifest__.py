@@ -11,8 +11,7 @@
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            # inside .
-            'website_sale_coupon_delivery/static/src/js/website_sale_coupon_delivery.js',
+            'website_sale_coupon_delivery/static/**/*',
         ],
     }
 }

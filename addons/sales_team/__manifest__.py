@@ -30,8 +30,7 @@ Using this application you can manage Sales Teams with CRM and/or Sales
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'sales_team/static/src/scss/crm_team_views.scss',
+            'sales_team/static/**/*',
         ],
     }
 }

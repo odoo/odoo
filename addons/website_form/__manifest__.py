@@ -20,22 +20,16 @@
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            # after //link[last()]
             'website_form/static/src/snippets/s_website_form/001.scss',
-            # after //script[last()]
             'website_form/static/src/snippets/s_website_form/000.js',
         ],
         'website.assets_editor': [
-            # inside .
             'website_form/static/src/scss/wysiwyg_snippets.scss',
-            # inside .
             'website_form/static/src/snippets/s_website_form/options.js',
-            # inside .
             'website_form/static/src/js/website_form_editor_registry.js',
         ],
         'web.assets_tests': [
-            # inside .
-            'website_form/static/tests/tours/website_form_editor.js',
+            'website_form/static/tests/**/*',
         ],
     }
 }

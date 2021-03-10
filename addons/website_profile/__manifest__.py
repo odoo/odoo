@@ -20,9 +20,7 @@
     'auto_install': False,
     'assets': {
         'web.assets_frontend': [
-            # after link[last()]
             'website_profile/static/src/scss/website_profile.scss',
-            # after script[last()]
             'website_profile/static/src/js/website_profile.js',
         ],
     }

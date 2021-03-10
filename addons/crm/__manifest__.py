@@ -72,25 +72,17 @@
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'crm/static/src/js/crm_form.js',
-            # inside .
             'crm/static/src/js/crm_kanban.js',
-            # inside .
             'crm/static/src/js/systray_activity_menu.js',
-            # inside .
             'crm/static/src/js/tours/crm.js',
-            # inside .
             'crm/static/src/scss/crm_team_member_views.scss',
         ],
         'web.assets_tests': [
-            # inside .
-            'crm/static/tests/tours/crm_rainbowman.js',
+            'crm/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            # inside .
             'crm/static/tests/mock_server.js',
-            # inside .
             'crm/static/tests/crm_rainbowman_tests.js',
         ],
     }

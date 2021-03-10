@@ -22,19 +22,13 @@ to support In-App purchases inside Odoo. """,
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'iap/static/src/js/iap_credit.js',
-            # inside .
-            'iap/static/src/js/crash_manager.js',
-            # inside .
-            'iap/static/src/js/iap_buy_more_credits.js',
+            'iap/static/src/js/**/*',
         ],
         'web.tests_assets': [
-            # inside .
-            'iap/static/tests/helpers/mock_server.js',
+            'iap/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'iap/static/src/xml/iap_templates.xml',
+            'iap/static/src/xml/**/*',
         ],
     }
 }

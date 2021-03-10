@@ -49,25 +49,17 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'hr_expense/static/src/js/expense_views.js',
-            # inside .
             'hr_expense/static/src/js/expense_qr_code_action.js',
-            # inside .
             'hr_expense/static/src/js/upload_mixin.js',
-            # after link[last()]
             'hr_expense/static/src/scss/hr_expense.scss',
         ],
         'web.assets_tests': [
-            # inside .
             'hr_expense/static/src/js/tours/hr_expense.js',
-            # inside .
             'hr_expense/static/tests/tours/expense_upload_tours.js',
         ],
         'web.assets_qweb': [
-            "hr_expense/static/src/xml/documents_upload_views.xml",
-            "hr_expense/static/src/xml/expense_dashboard.xml",
-            "hr_expense/static/src/xml/expense_qr_modal_template.xml",
+            'hr_expense/static/src/xml/**/*',
         ],
     }
 }

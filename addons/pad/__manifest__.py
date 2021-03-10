@@ -21,7 +21,7 @@ pads (by default, http://etherpad.com/).
     'web': True,
     'assets': {
         'web.assets_qweb': [
-            'pad/static/src/xml/pad.xml',
+            'pad/static/src/xml/**/*',
         ],
     }
 }

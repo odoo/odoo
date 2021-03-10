@@ -42,11 +42,10 @@ Preferences
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
-            'sale_stock/static/src/js/qty_at_date_widget.js',
+            'sale_stock/static/src/js/**/*',
         ],
         'web.assets_qweb': [
-            'sale_stock/static/src/xml/sale_stock.xml',
+            'sale_stock/static/src/xml/**/*',
         ],
     }
 }

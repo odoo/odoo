@@ -21,21 +21,16 @@ Allows users to create custom dashboard.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            # inside .
             'board/static/src/scss/dashboard.scss',
-            # inside .
             'board/static/src/js/action_manager_board_action.js',
-            # inside .
             'board/static/src/js/board_view.js',
-            # inside .
             'board/static/src/js/add_to_board_menu.js',
         ],
         'web.qunit_suite_tests': [
-            # inside .
-            'board/static/tests/dashboard_tests.js',
+            'board/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'board/static/src/xml/board.xml',
+            'board/static/src/xml/**/*',
         ],
     }
 }
