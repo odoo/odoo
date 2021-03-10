@@ -1463,6 +1463,7 @@ QUnit.test('mention 2 different channels that have the same name', async functio
         {
             id: 11,
             name: "my channel",
+            public: 'public', // mentioning another channel is possible only from a public channel
         },
         {
             id: 12,

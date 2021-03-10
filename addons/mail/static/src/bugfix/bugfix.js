@@ -61,7 +61,7 @@ function executeNextInQueue() {
         return;
     }
     const { component, func } = executionQueue.shift();
-    if (!component.__owl__.isDestroyed) {
+    if (component.__owl__.status !== 5 /* DESTROYED */) {
         func();
     }
     executeNextInQueue();

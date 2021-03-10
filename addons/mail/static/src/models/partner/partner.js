@@ -3,8 +3,7 @@ odoo.define('mail/static/src/models/partner/partner.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
-
-const utils = require('web.utils');
+const { cleanSearchTerm } = require('mail/static/src/utils/utils.js');
 
 function factory(dependencies) {
 
@@ -67,11 +66,48 @@ function factory(dependencies) {
                             id: data.user_id,
                         };
                     }
+                    user.isInternalUser = data.is_internal_user;
                     data2.user = [['insert', user]];
                 }
             }
 
             return data2;
+        }
+
+        /**
+         * Fetches partners matching the given search term to extend the
+         * JS knowledge and to update the suggestion list accordingly.
+         *
+         * @static
+         * @param {string} searchTerm
+         * @param {Object} [options={}]
+         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         *  result in the context of given thread
+         */
+        static async fetchSuggestions(searchTerm, { thread } = {}) {
+            const kwargs = { search: searchTerm };
+            const isNonPublicChannel = thread && thread.model === 'mail.channel' && thread.public !== 'public';
+            if (isNonPublicChannel) {
+                kwargs.channel_id = thread.id;
+            }
+            const [
+                mainSuggestedPartners,
+                extraSuggestedPartners,
+            ] = await this.env.services.rpc(
+                {
+                    model: 'res.partner',
+                    method: 'get_mention_suggestions',
+                    kwargs,
+                },
+                { shadow: true },
+            );
+            const partnersData = mainSuggestedPartners.concat(extraSuggestedPartners);
+            const partners = this.env.models['mail.partner'].insert(partnersData.map(data =>
+                this.env.models['mail.partner'].convertData(data)
+            ));
+            if (isNonPublicChannel) {
+                thread.update({ members: [['link', partners]] });
+            }
         }
 
         /**
@@ -86,17 +122,15 @@ function factory(dependencies) {
         static async imSearch({ callback, keyword, limit = 10 }) {
             // prefetched partners
             let partners = [];
-            const searchRegexp = new RegExp(
-                _.str.escapeRegExp(utils.unaccent(keyword)),
-                'i'
-            );
+            const cleanedSearchTerm = cleanSearchTerm(keyword);
             const currentPartner = this.env.messaging.currentPartner;
             for (const partner of this.all(partner => partner.active)) {
                 if (partners.length < limit) {
                     if (
                         partner !== currentPartner &&
-                        searchRegexp.test(partner.name) &&
-                        partner.user
+                        partner.name &&
+                        partner.user &&
+                        cleanSearchTerm(partner.name).includes(cleanedSearchTerm)
                     ) {
                         partners.push(partner);
                     }
@@ -117,6 +151,56 @@ function factory(dependencies) {
                 partners.push(...newPartners);
             }
             callback(partners);
+        }
+
+        /**
+         * Returns partners that match the given search term.
+         *
+         * @static
+         * @param {string} searchTerm
+         * @param {Object} [options={}]
+         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         *  result in the context of given thread
+         * @returns {[mail.partner[], mail.partner[]]}
+         */
+        static searchSuggestions(searchTerm, { thread } = {}) {
+            let partners;
+            const isNonPublicChannel = thread && thread.model === 'mail.channel' && thread.public !== 'public';
+            if (isNonPublicChannel) {
+                // Only return the channel members when in the context of a
+                // non-public channel. Indeed, the message with the mention
+                // would be notified to the mentioned partner, so this prevents
+                // from inadvertently leaking the private message to the
+                // mentioned partner.
+                partners = thread.members;
+            } else {
+                partners = this.env.models['mail.partner'].all();
+            }
+            const cleanedSearchTerm = cleanSearchTerm(searchTerm);
+            const mainSuggestionList = [];
+            const extraSuggestionList = [];
+            for (const partner of partners) {
+                if (
+                    (!partner.active && partner !== this.env.messaging.partnerRoot) ||
+                    partner.id <= 0 ||
+                    this.env.messaging.publicPartners.includes(partner)
+                ) {
+                    // ignore archived partners (except OdooBot), temporary
+                    // partners (livechat guests), public partners (technical)
+                    continue;
+                }
+                if (
+                    (partner.nameOrDisplayName && cleanSearchTerm(partner.nameOrDisplayName).includes(cleanedSearchTerm)) ||
+                    (partner.email && cleanSearchTerm(partner.email).includes(cleanedSearchTerm))
+                ) {
+                    if (partner.user) {
+                        mainSuggestionList.push(partner);
+                    } else {
+                        extraSuggestionList.push(partner);
+                    }
+                }
+            }
+            return [mainSuggestionList, extraSuggestionList];
         }
 
         /**
@@ -166,6 +250,89 @@ function factory(dependencies) {
                 return;
             }
             return this.user.getChat();
+        }
+
+        /**
+         * Returns the text that identifies this partner in a mention.
+         *
+         * @returns {string}
+         */
+        getMentionText() {
+            return this.name;
+        }
+
+        /**
+         * Returns a sort function to determine the order of display of partners
+         * in the suggestion list.
+         *
+         * @static
+         * @param {string} searchTerm
+         * @param {Object} [options={}]
+         * @param {mail.thread} [options.thread] prioritize result in the
+         *  context of given thread
+         * @returns {function}
+         */
+        static getSuggestionSortFunction(searchTerm, { thread } = {}) {
+            const cleanedSearchTerm = cleanSearchTerm(searchTerm);
+            return (a, b) => {
+                const isAInternalUser = a.user && a.user.isInternalUser;
+                const isBInternalUser = b.user && b.user.isInternalUser;
+                if (isAInternalUser && !isBInternalUser) {
+                    return -1;
+                }
+                if (!isAInternalUser && isBInternalUser) {
+                    return 1;
+                }
+                if (thread && thread.model === 'mail.channel') {
+                    const isAMember = thread.members.includes(a);
+                    const isBMember = thread.members.includes(b);
+                    if (isAMember && !isBMember) {
+                        return -1;
+                    }
+                    if (!isAMember && isBMember) {
+                        return 1;
+                    }
+                }
+                if (thread) {
+                    const isAFollower = thread.followersPartner.includes(a);
+                    const isBFollower = thread.followersPartner.includes(b);
+                    if (isAFollower && !isBFollower) {
+                        return -1;
+                    }
+                    if (!isAFollower && isBFollower) {
+                        return 1;
+                    }
+                }
+                const cleanedAName = cleanSearchTerm(a.nameOrDisplayName || '');
+                const cleanedBName = cleanSearchTerm(b.nameOrDisplayName || '');
+                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                    return -1;
+                }
+                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                    return 1;
+                }
+                if (cleanedAName < cleanedBName) {
+                    return -1;
+                }
+                if (cleanedAName > cleanedBName) {
+                    return 1;
+                }
+                const cleanedAEmail = cleanSearchTerm(a.email || '');
+                const cleanedBEmail = cleanSearchTerm(b.email || '');
+                if (cleanedAEmail.startsWith(cleanedSearchTerm) && !cleanedAEmail.startsWith(cleanedSearchTerm)) {
+                    return -1;
+                }
+                if (!cleanedBEmail.startsWith(cleanedSearchTerm) && cleanedBEmail.startsWith(cleanedSearchTerm)) {
+                    return 1;
+                }
+                if (cleanedAEmail < cleanedBEmail) {
+                    return -1;
+                }
+                if (cleanedAEmail > cleanedBEmail) {
+                    return 1;
+                }
+                return a.id - b.id;
+            };
         }
 
         /**

@@ -16,7 +16,7 @@
                     <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name o-editable">
                         <EditableText
                             class="o_DiscussSidebarItem_nameInput"
-                            placeholder="thread.correspondent.name"
+                            placeholder="thread.correspondent ? thread.correspondent.name : thread.name"
                             value="thread.displayName"
                             t-on-o-cancel="_onCancelRenaming"
                             t-on-o-clicked="_onClickedEditableText"
