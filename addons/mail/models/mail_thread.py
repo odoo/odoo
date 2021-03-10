@@ -29,7 +29,7 @@ from odoo.exceptions import MissingError
 from odoo.osv import expression
 
 from odoo.tools import ustr
-from odoo.tools.misc import clean_context, split_every
+from odoo.tools.misc import clean_context, split_every, html_escape
 
 _logger = logging.getLogger(__name__)
 
@@ -1984,6 +1984,23 @@ class MailThread(models.AbstractModel):
         new_message = MailThread._message_create(values)
         MailThread._notify_thread(new_message, values, **notif_kwargs)
         return new_message
+
+    def _msg_txt(self, txt):
+        """
+        Puts a message in the chatter without HTML formatting, so escaping the message
+        :param txt: The text without html code in it
+        """
+        return self._message_log(body=html_escape(txt))
+
+    def _msg_html(self, html_code, txts):
+        """
+        e.g.: html_code = "<b>%s</b> <br/> <p>%s</p>
+            and txts = ["Title", "Some <rigorous> explanation"]
+        :param html_code: is HTML code with %s where you need text
+        :param txts: list of pure text messages that need escaping and inserted into the html code
+        """
+        text = html_code % tuple(html_escape(t) for t in txts)
+        return self._message_log(body=text)
 
     def _message_log(self, *, body='', author_id=None, email_from=None, subject=False, message_type='notification', **kwargs):
         """ Shortcut allowing to post note on a document. It does not perform
