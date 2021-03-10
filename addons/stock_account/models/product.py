@@ -175,8 +175,6 @@ class ProductProduct(models.Model):
                             float_repr(rounding_error, precision_digits=currency.decimal_places),
                             currency.symbol
                         )
-                    if self.quantity_svl:
-                        vals['unit_cost'] = self.value_svl / self.quantity_svl
             if self.cost_method == 'fifo':
                 vals.update(fifo_vals)
         return vals
