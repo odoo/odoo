@@ -876,11 +876,8 @@ class MailThread(models.AbstractModel):
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         fallback_model = model
 
-        # get email.message.Message variables for future processing
-        local_hostname = socket.gethostname()
-        message_id = message_dict['message_id']
-
         # compute references to find if message is a reply to an existing thread
+        message_id = message_dict['message_id']
         thread_references = message_dict['references'] or message_dict['in_reply_to']
         msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
         mail_messages = self.env['mail.message'].sudo().search([('message_id', 'in', msg_references)], limit=1, order='id desc, message_id')
@@ -1849,6 +1846,7 @@ class MailThread(models.AbstractModel):
             'channel_ids': channel_ids,
             'add_sign': add_sign,
             'record_name': record_name,
+            'message_id': tools.generate_tracking_message_id('%(res_id)s-%(model)s' % (self.id, self._name)),
         })
         attachments = attachments or []
         attachment_ids = attachment_ids or []

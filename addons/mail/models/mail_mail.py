@@ -63,6 +63,8 @@ class MailMail(models.Model):
     def create(self, values_list):
         # notification field: if not set, set if mail comes from an existing mail.message
         for values in values_list:
+            if 'message_id' not in values and not values.get('mail_message_id'):
+                values['message_id'] = tools.generate_tracking_message_id('%s-%s' % (values.get('res_id', 0), values.get('model', 'mail_mail')))
             if 'notification' not in values and values.get('mail_message_id'):
                 values['notification'] = True
 

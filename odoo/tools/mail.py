@@ -460,17 +460,17 @@ email_addr_escapes_re = re.compile(r'[\\"]')
 
 
 def generate_tracking_message_id(res_id):
-    """Returns a string that can be used in the Message-ID RFC822 header field
-
-       Used to track the replies related to a given object thanks to the "In-Reply-To"
-       or "References" fields that Mail User Agents will set.
-    """
+    """Returns a string that can be used in the Message-ID RFC822 header field.
+    Message IDs are used to find ancestors of incoming messages and retrieve
+    threads thanks to the "In-Reply-To" or "References" fields that Mail User
+    Agents will set. Exact content of message ID is not used to retrieve
+    threads, only exact matching of ids in DB is used. """
     try:
         rnd = random.SystemRandom().random()
     except NotImplementedError:
         rnd = random.random()
     rndstr = ("%.15f" % rnd)[2:]
-    return "<%s.%.15f-openerp-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
+    return "<%s.%.15f-odoo-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
