@@ -591,7 +591,7 @@
             <li t-foreach="state.sources" t-as="src" t-key="src.id"
                 t-att-id="src.id"
                 class="o_menu_item"
-                t-att-class="{ o_indent: src.parent, o_selection_focus: src_index === state.focusedItem }"
+                t-att-class="{ o_indent: src.parent and !src.parent.selection, o_selection_focus: src_index === state.focusedItem }"
                 t-on-click="_selectSource(src)"
                 t-on-mousemove="_onSourceMousemove(src_index)"
                 >
@@ -603,7 +603,9 @@
                     <i t-attf-class="fa fa-caret-{{ src.expanded ? 'down' : 'right' }}"/>
                 </a>
                 <a href="#" t-on-click.prevent="">
-                    <t t-if="src.label" t-esc="src.label"/>
+                    <t t-if="src.parent.selection">
+                        Search <em t-esc="src.parent.description"/>: <strong t-esc="src.label"/></t>
+                    <t t-elif="src.label" t-esc="src.label"/>
                     <t t-elif="['date', 'datetime'].includes(src.type)">
                         <t>Search <em t-esc="src.description"/> at: <strong t-esc="state.inputValue"/></t>
                     </t>

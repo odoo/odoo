@@ -204,7 +204,7 @@ odoo.define('web.SearchBar', function (require) {
                             }
                         });
                         if (options.length) {
-                            sources.push(source, ...options);
+                            sources.push(...options);
                         }
                     // Any other type.
                     } else if (this._validateSource(query, source)) {

@@ -19,6 +19,7 @@ odoo.define('web.search_bar_tests', function (require) {
                         birth_datetime: { string: "Birth DateTime", type: 'datetime' },
                         foo: { string: "Foo", type: 'char' },
                         bool: { string: "Bool", type: 'boolean' },
+                        status: { string: 'Status', type: 'selection', selection: [['draft', "New"], ['cancel', "Cancelled"]] },
                     },
                     records: [
                         { id: 1, display_name: "First record", foo: "yop", bar: 2, bool: true, birthday: '1983-07-15', birth_datetime: '1983-07-15 01:00:00' },
@@ -572,7 +573,7 @@ odoo.define('web.search_bar_tests', function (require) {
         });
 
         QUnit.test('autocompletion with a boolean field', async function (assert) {
-            assert.expect(9);
+            assert.expect(11);
 
             this.archs['partner,false,search'] = '<search><field name="bool"/></search>';
 
@@ -592,22 +593,23 @@ odoo.define('web.search_bar_tests', function (require) {
 
             await cpHelpers.editSearch(actionManager, "y");
 
-            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2);
-            assert.strictEqual(actionManager.$('.o_searchview_autocomplete li:last-child').text(), "Yes");
+            assert.containsOnce(actionManager, '.o_searchview_autocomplete li');
+            assert.strictEqual(actionManager.el.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: Yes");
+            assert.doesNotHaveClass(actionManager.el.querySelector('.o_searchview_autocomplete li'), 'o_indent');
 
             // select "Yes"
-            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li'));
 
             await cpHelpers.removeFacet(actionManager, 0);
 
             await cpHelpers.editSearch(actionManager, "No");
 
-            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2);
-            assert.strictEqual(actionManager.$('.o_searchview_autocomplete li:last-child').text(), "No");
+            assert.containsOnce(actionManager, '.o_searchview_autocomplete li');
+            assert.strictEqual(actionManager.el.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: No");
+            assert.doesNotHaveClass(actionManager.el.querySelector('.o_searchview_autocomplete li'), 'o_indent');
 
             // select "No"
-            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
-
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li'));
 
             assert.verifySteps([
                 JSON.stringify([]), // initial search
@@ -615,6 +617,30 @@ odoo.define('web.search_bar_tests', function (require) {
                 JSON.stringify([]),
                 JSON.stringify([["bool", "=", false]]),
             ]);
+
+            actionManager.destroy();
+        });
+
+        QUnit.test('autocompletion with a selection field', async function (assert) {
+            assert.expect(5);
+
+            this.archs['partner,false,search'] = '<search><field name="status"/></search>';
+
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs: this.archs,
+                data: this.data,
+            });
+
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "n");
+
+            assert.containsN(actionManager, '.o_searchview_autocomplete li', 2);
+            assert.strictEqual(actionManager.el.querySelector('.o_searchview_autocomplete li:first-child').innerText, "Search Status: New");
+            assert.strictEqual(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child').innerText, "Search Status: Cancelled");
+            assert.doesNotHaveClass(actionManager.el.querySelector('.o_searchview_autocomplete li:first-child'), 'o_indent');
+            assert.doesNotHaveClass(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'), 'o_indent');
 
             actionManager.destroy();
         });
