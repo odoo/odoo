@@ -30,7 +30,8 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
-from odoo.http import request, addons_manifest
+from odoo.http import request
+from odoo import http
 from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
@@ -943,7 +944,7 @@ class Module(models.Model):
     @api.model
     @tools.ormcache()
     def _installed_sorted(self):
-        loadable = list(addons_manifest)
+        loadable = list(http.addons_manifest)
         domain = [('state', 'in', INSTALLED_STATES), ('name', 'in', loadable)]
         modules = OrderedDict(
             (module.name, module.dependencies_id.mapped('name'))
