@@ -132,7 +132,7 @@
                                 HTML field associated with the transaction state, defined on the
                                 acquirer.  -->
                                 <div t-attf-class="alert alert-#{status}"
-                                     t-raw="message"
+                                     t-out="message"
                                      role="status"/>
                                 <div class="form-group row">
                                     <label for="form_partner_name" class="col-md-3 col-form-label">
