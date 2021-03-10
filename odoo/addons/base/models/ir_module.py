@@ -31,6 +31,7 @@ from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
 from odoo.http import request, addons_manifest
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -147,6 +148,12 @@ STATES = [
     ('to remove', 'To be removed'),
     ('to install', 'To be installed'),
 ]
+
+
+if config['test_enable']:
+    INSTALLED_STATES = ['installed', 'to upgrade']
+else:
+    INSTALLED_STATES = ['installed']
 
 class Module(models.Model):
     _name = "ir.module.module"
@@ -937,7 +944,7 @@ class Module(models.Model):
     @tools.ormcache()
     def _installed_sorted(self):
         loadable = list(addons_manifest)
-        domain = [('state', '=', 'installed'), ('name', 'in', loadable)]
+        domain = [('state', 'in', INSTALLED_STATES), ('name', 'in', loadable)]
         modules = OrderedDict(
             (module.name, module.dependencies_id.mapped('name'))
             for module in self.search(domain)
