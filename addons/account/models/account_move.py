@@ -672,7 +672,7 @@ class AccountMove(models.Model):
                     'credit': taxes_map_entry['balance'] < 0.0 and -taxes_map_entry['balance'] or 0.0,
                     'tax_base_amount': taxes_map_entry['tax_base_amount'],
                 })
-            elif not recompute_tax_base_amount:
+            else:
                 create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
                 tax_repartition_line_id = taxes_map_entry['grouping_dict']['tax_repartition_line_id']
                 tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_repartition_line_id)
