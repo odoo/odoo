@@ -402,3 +402,10 @@ class Meeting(models.Model):
         super(Meeting, my_cancelled_records)._cancel_microsoft()
         attendees = (self - my_cancelled_records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.state = 'declined'
+
+    def _notify_attendees(self):
+        # filter events before notifying attendees through calendar_alarm_manager
+        need_notifs = self.filtered(lambda event: event.alarm_ids and event.stop >= fields.Datetime.now())
+        partners = need_notifs.partner_ids
+        if partners:
+            self.env['calendar.alarm_manager']._notify_next_alarm(partners.ids)
