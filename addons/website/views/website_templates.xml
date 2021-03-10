@@ -176,10 +176,10 @@
 
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
     <xpath expr="//head" position="inside">
-        <t t-raw="website.custom_code_head"/>
+        <t t-out="website.custom_code_head"/>
     </xpath>
     <xpath expr="//body" position="inside">
-        <t t-raw="website.custom_code_footer"/>
+        <t t-out="website.custom_code_footer"/>
     </xpath>
 </template>
 
@@ -1995,7 +1995,7 @@
               </t>
               <t t-if="version">
                 <h1><t t-esc="res_company.name"/>
-                    <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
+                    <small>Odoo Version <t t-out="version.get('server_version')"/></small>
                 </h1>
                 <p>
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
@@ -2011,12 +2011,12 @@
                 <dl class="dl-horizontal" t-foreach="apps" t-as="app">
                     <dt>
                         <a t-att-href="app.website" t-if="app.website">
-                            <t t-raw="app.shortdesc"/>
+                            <t t-out="app.shortdesc"/>
                         </a>
-                        <span t-raw="app.shortdesc" t-if="not app.website"/>
+                        <span t-out="app.shortdesc" t-if="not app.website"/>
                     </dt>
                     <dd>
-                        <span t-raw="app.summary"/>
+                        <span t-out="app.summary"/>
                     </dd><dd class="text-muted" groups='base.group_no_one'>
                         Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                     </dd>
@@ -2027,11 +2027,11 @@
                     <dl class="dl-horizontal" t-foreach="l10n" t-as="app">
                         <dt>
                             <a t-attf-href="https://www.odoo.com/page/accounting/#{app.name}">
-                                <t t-raw="app.shortdesc"/>
+                                <t t-out="app.shortdesc"/>
                             </a>
                         </dt>
                         <dd>
-                            <span t-raw="app.summary"/>
+                            <span t-out="app.summary"/>
                         </dd><dd class="text-muted" groups='base.group_no_one'>
                             Technical name: <span t-field="app.name"/>, author: <span t-field="app.author"/>
                         </dd>
@@ -2240,7 +2240,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 #   custom   #
 ##############
 
-<t t-raw="request.website.sudo().robots_txt" />
+<t t-out="request.website.sudo().robots_txt" />
 </t>
 </template>
 
@@ -2255,7 +2255,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="sitemap_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <urlset t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <t t-raw="content"/>
+    <t t-out="content"/>
 </urlset>
 </template>
 
