@@ -38,6 +38,15 @@
                                     <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
                                 </div>
                             </button>
+                            <button name="action_show_potential_duplicates" type="object"
+                                class="oe_stat_button" icon="fa-star"
+                                attrs="{'invisible': [('duplicate_lead_count', '&lt;', 1)]}">
+                                <div class="o_stat_info">
+                                    <field name="duplicate_lead_count" class="o_stat_value"/>
+                                    <span class="o_stat_text" attrs="{'invisible': [('duplicate_lead_count', '&lt;', 2)]}">Similar Leads</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('duplicate_lead_count', '&gt;', 1)]}">Similar Lead</span>
+                                </div>
+                            </button>
                         </div>
                         <widget name="web_ribbon" title="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
@@ -511,7 +520,7 @@
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
                                 <div class="o_dropdown_kanban dropdown">
 
                                     <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
@@ -523,7 +532,7 @@
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
                                 </div>
-                                <div class="oe_kanban_content">
+                                <div class="oe_kanban_content flex-grow-1">
                                     <div class="o_kanban_record_title oe_kanban_details">
                                         <strong><field name="name"/></strong>
                                     </div>
@@ -543,6 +552,8 @@
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
+                                </div>
+                                <div class="oe_kanban_footer">
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
@@ -1063,6 +1074,52 @@ if record:
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm_lead_view_graph"/>
             <field name="act_window_id" ref="crm_lead_action_pipeline"/>
+        </record>
+
+        <record id="crm_lead_action_duplicates" model="ir.actions.act_window">
+            <field name="name">Similar Leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
+        </record>
+
+        <record id="crm_lead_view_kanban_duplicates" model="ir.ui.view">
+            <field name="name">crm.lead.view.kanban.duplicates</field>
+            <field name="model">crm.lead</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="inside">
+                    <field name="probability" invisible="1"/>
+                </xpath>
+                <xpath expr="//div" position="attributes">
+                    <attribute name="t-att-data-ribbon">((
+                        !record.active.raw_value and
+                        record.probability and
+                        record.probability.raw_value == 0
+                    ) or (
+                        record.active.raw_value and
+                        record.probability and
+                        record.probability.raw_value == 100
+                    ))</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('o_dropdown_kanban')]" position="before">
+                    <div class="ribbon ribbon-top-right"
+                        attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">
+                        <span class="bg-danger">Lost</span>
+                    </div>
+                    <div class="ribbon ribbon-top-right"
+                        attrs="{'invisible': [('probability', '&lt;', 100)]}">
+                        <span class="bg-success">Won</span>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_action_duplicates_view_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_lead_view_kanban_duplicates"/>
+            <field name="act_window_id" ref="crm_lead_action_duplicates"/>
         </record>
 
         <record id="menu_crm_opportunities" model="ir.ui.menu">
