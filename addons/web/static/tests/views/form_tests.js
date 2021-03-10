@@ -10777,6 +10777,50 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Quick Edition: Many2Many', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,false,search': '<search><field name="display_name"/></search>',
+            },
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsOnce(form, '.o_field_x2many_list_row_add',
+            'create line should be displayed');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.nextTick(); // wait for quick edit
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable',
+            'should switch into edit mode');
+        assert.containsOnce(document.body, '.modal',
+            'should display a dialog');
+
+        assert.containsNone(form, '.o_field_many2many[name="timmy"] .o_data_row');
+        await testUtils.dom.click($('.modal .o_list_view .o_data_row')[0]);
+        assert.containsOnce(form, '.o_field_many2many[name="timmy"] .o_data_row');
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: Many2Many checkbox', async function (assert) {
         assert.expect(7);
 
