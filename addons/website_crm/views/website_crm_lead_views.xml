@@ -5,7 +5,7 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+            <xpath expr="//button[@name='action_schedule_meeting']" position="after">
                 <button name="action_redirect_to_page_views" type="object" class="oe_stat_button" icon="fa-tags"
                         attrs="{'invisible': [('visitor_page_count', '=', 0)]}">
                     <field name="visitor_page_count" widget="statinfo" string="Page views"/>
