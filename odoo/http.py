@@ -1307,17 +1307,18 @@ class Root(object):
         statics = {}
         for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
-                if module not in addons_manifest:
+                static_key = '/%s/static' % module
+                if module not in addons_manifest or static_key not in statics:
                     mod_path = opj(addons_path, module)
                     path_static = opj(addons_path, module, 'static')
                     if os.path.isdir(path_static):
-                        manifest = read_manifest(addons_path, module)
+                        manifest = addons_manifest.get(module) or read_manifest(addons_path, module)
                         if not manifest or not manifest.get('installable', True):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
                         addons_manifest[module] = manifest
-                        statics['/%s/static' % module] = path_static
+                        statics[static_key] = path_static
 
         if statics:
             _logger.info("HTTP Configuring static files")
