@@ -523,6 +523,7 @@ class Website(models.Model):
             'arch': template_record.arch.replace(template, key),
             'name': name,
         })
+        result['view_id'] = view.id
 
         if view.arch_fs:
             view.arch_fs = False
@@ -535,15 +536,16 @@ class Website(models.Model):
                 'view_id': view.id,
                 'track': True,
             })
-            result['view_id'] = view.id
+            result['page_id'] = page.id
         if add_menu:
-            self.env['website.menu'].create({
+            menu = self.env['website.menu'].create({
                 'name': name,
                 'url': page_url,
                 'parent_id': website.menu_id.id,
                 'page_id': page.id,
                 'website_id': website.id,
             })
+            result['menu_id'] = menu.id
         return result
 
     @api.model

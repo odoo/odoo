@@ -19,6 +19,7 @@ class WebsiteMenu(models.Model):
                     to_update.append(fname)
 
         # call super that resumes the unlink of menus entries (including website event menus)
+        website_event_menus.unlink()
         res = super(WebsiteMenu, self).unlink()
 
         # update events
