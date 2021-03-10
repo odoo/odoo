@@ -1438,6 +1438,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.withCombinations) {
             options.withCombinations = !!this.options.dataAttributes.withCombinations;
         }
+        if (this.options.dataAttributes.selectedTab) {
+            options.selectedTab = this.options.dataAttributes.selectedTab;
+        }
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
         if (oldColorPalette) {

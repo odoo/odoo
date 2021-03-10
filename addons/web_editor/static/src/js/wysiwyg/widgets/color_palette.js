@@ -47,6 +47,7 @@ const ColorPaletteWidget = Widget.extend({
             excludeSectionOf: null,
             $editable: $(),
             withCombinations: false,
+            selectedTab: 'theme-colors',
         }, options || {});
 
         this.selectedColor = '';
@@ -129,13 +130,21 @@ const ColorPaletteWidget = Widget.extend({
                 this.pickers[pickerId] = pickerEl;
             });
 
-            // Hide section and associated button if empty
+            // If the section is empty, hide it and
+            // select the next tab if none is given in the options
             if (sectionIsEmpty) {
                 sectionEl.classList.add('d-none');
                 switchPaneButtons[index].classList.add('d-none');
+                if (this.options.selectedTab === tab.id) {
+                    this.options.selectedTab = this.tabs[(index + 1) % this.tabs.length].id;
+                }
             }
             this.sections[tab.id] = sectionEl;
         });
+
+        // Switch to the correct tab
+        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.options.selectedTab);
+        this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
 
         // Remove the buttons display if there is only one
         const visibleButtons = Array.from(switchPaneButtons).filter(button => !button.classList.contains('d-none'));
@@ -358,6 +367,18 @@ const ColorPaletteWidget = Widget.extend({
             selectedButton.classList.add('selected');
         }
     },
+    /**
+     * Display button element as selected
+     *
+     * @private
+     * @param {HTMLElement} buttonEl
+     */
+     _selectTabFromButton(buttonEl) {
+        buttonEl.classList.add('active');
+        this.el.querySelectorAll('.o_colorpicker_sections').forEach(el => {
+            el.classList.toggle('d-none', el.dataset.colorTab !== buttonEl.dataset.target);
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -430,10 +451,7 @@ const ColorPaletteWidget = Widget.extend({
         this.el.querySelectorAll('.o_we_colorpicker_switch_pane_btn').forEach(el => {
             el.classList.remove('active');
         });
-        ev.currentTarget.classList.add('active');
-        this.el.querySelectorAll('.o_colorpicker_sections').forEach(el => {
-            el.classList.toggle('d-none', el.dataset.colorTab !== ev.currentTarget.dataset.target);
-        });
+        this._selectTabFromButton(ev.currentTarget);
     },
 });
 
