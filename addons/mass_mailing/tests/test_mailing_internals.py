@@ -44,8 +44,13 @@ class TestMassMailValues(MassMailCommon):
         self.assertIn('<!DOCTYPE html>', body_html)
         self.assertIn('<head>', body_html)
         self.assertIn('viewport', body_html)
-        self.assertIn('@media', body_html)
         self.assertIn('I am Responsive body', body_html)
+        # LPE fixme: to check with chm: do we need the css to be inlined ? if so, we are in trouble
+        # self.assertIn('@media', body_html)
+        self.assertIn('mass_mailing.mass_mailing_mail_style', body_html)
+        attach = self.env['ir.attachment'].search([('name', 'ilike', 'ass_mailing.mass_mailing_mail_style')])
+        self.assertTrue(attach.exists())
+        self.assertIn(b'@media', attach.raw)
 
     @users('user_marketing')
     def test_mailing_computed_fields(self):
