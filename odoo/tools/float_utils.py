@@ -53,6 +53,13 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
            latest one always rounding down.
        :return: rounded float
     """
+
+    #this to make the process faster and avoid error on big number
+    #100,000,000 with precision_digits = 8, will result: 100,000,000.00000004 (see 4 number here, this is wrong)
+    decimalValue = value - int(value)
+    if(decimalValue == 0):
+        return value
+
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
     if rounding_factor == 0 or value == 0: return 0.0
