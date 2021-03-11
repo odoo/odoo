@@ -465,9 +465,13 @@ class ProductProduct(models.Model):
             for r in supplier_info:
                 supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
         for product in self.sudo():
-            variant = product.product_template_attribute_value_ids._get_combination_name()
+            name = product.name
+            variant = ""
+            product_template_variant_values = product.product_template_attribute_value_ids._without_no_variant_attributes()
+            if product_template_variant_values:
+                variant = ", ".join(product_template_variant_values.mapped('name'))
+                name = "%s (%s)" % (product.name, variant)
 
-            name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
                 product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
