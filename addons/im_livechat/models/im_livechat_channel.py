@@ -43,7 +43,7 @@ class ImLivechatChannel(models.Model):
         help="URL to a static page where you client can discuss with the operator of the channel.")
     are_you_inside = fields.Boolean(string='Are you inside the matrix?',
         compute='_are_you_inside', store=False, readonly=True)
-    script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
+    script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
 
     image_128 = fields.Image("Image", max_width=128, max_height=128, default=_default_image)
@@ -58,7 +58,7 @@ class ImLivechatChannel(models.Model):
             channel.are_you_inside = bool(self.env.uid in [u.id for u in channel.user_ids])
 
     def _compute_script_external(self):
-        view = self.env['ir.model.data'].get_object('im_livechat', 'external_loader')
+        view = self.env.ref('im_livechat.external_loader')
         values = {
             "url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             "dbname": self._cr.dbname,
