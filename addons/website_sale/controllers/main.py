@@ -531,16 +531,8 @@ class WebsiteSale(http.Controller):
         }
         return values
 
-    def _get_mandatory_billing_fields(self):
-        # deprecated for _get_mandatory_fields_billing which handle zip/state required
-        return ["name", "email", "street", "city", "country_id"]
-
-    def _get_mandatory_shipping_fields(self):
-        # deprecated for _get_mandatory_fields_shipping which handle zip/state required
-        return ["name", "street", "city", "country_id"]
-
     def _get_mandatory_fields_billing(self, country_id=False):
-        req = self._get_mandatory_billing_fields()
+        req = ["name", "email", "street", "city", "country_id"]
         if country_id:
             country = request.env['res.country'].browse(country_id)
             if country.state_required:
@@ -550,7 +542,7 @@ class WebsiteSale(http.Controller):
         return req
 
     def _get_mandatory_fields_shipping(self, country_id=False):
-        req = self._get_mandatory_shipping_fields()
+        req = ["name", "street", "city", "country_id"]
         if country_id:
             country = request.env['res.country'].browse(country_id)
             if country.state_required:
