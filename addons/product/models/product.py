@@ -104,6 +104,7 @@ class ProductProduct(models.Model):
         'Barcode', copy=False,
         help="International Article Number used for product identification.")
     product_template_attribute_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination', string="Attribute Values", ondelete='restrict')
+    product_template_variant_value_ids = fields.Many2many('product.template.attribute.value', relation='product_variant_combination', domain=[('attribute_id.create_variant', '!=', 'no_variant')], string="Variant Values", ondelete='restrict')
     combination_indices = fields.Char(compute='_compute_combination_indices', store=True, index=True)
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
 
@@ -470,9 +471,12 @@ class ProductProduct(models.Model):
             for r in supplier_info:
                 supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
         for product in self.sudo():
-            variant = product.product_template_attribute_value_ids._get_combination_name()
+            name = product.name
+            variant = ""
+            if product.product_template_variant_value_ids:
+                variant = ", ".join(product.product_template_variant_value_ids.mapped('name'))
+                name = "%s (%s)" % (product.name, variant)
 
-            name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
                 product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
