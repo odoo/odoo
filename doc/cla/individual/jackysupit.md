@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Jacky supit jsupit@gmail.com https://github.com/jackysupit
+Jacky supit jackysupit https://github.com/jackysupit
