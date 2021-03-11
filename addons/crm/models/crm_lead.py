@@ -1042,7 +1042,7 @@ class Lead(models.Model):
             :return dict: dictionary value for created kanban view
         """
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_action_duplicates")
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.duplicate_lead_ids.ids)]
         action['context'] = {
             'active_test': False,
