@@ -228,22 +228,30 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
             "name": "Jonas",
         })
         test_partner = test_user.partner_id
+        test_chat = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'test',
+            'channel_type': 'chat',
+            'public': 'private',
+            'channel_partner_ids': [(4, self.user_employee.partner_id.id), (4, test_partner.id)],
+        })
 
         self._join_channel(self.test_channel, self.user_employee.partner_id | test_partner)
         self._join_channel(test_channel_private, self.user_employee.partner_id | test_partner)
         self._join_channel(test_channel_group, self.user_employee.partner_id | test_partner)
 
-        # Unsubscribe archived user from the private channels, but not from public channels
+        # Unsubscribe archived user from the private channels, but not from public channels and not from chat
         self.user_employee.active = False
         self.assertEqual(test_channel_private.channel_partner_ids, test_partner)
         self.assertEqual(test_channel_group.channel_partner_ids, test_partner)
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
-        # Unsubscribe deleted user from the private channels, but not from public channels
+        # Unsubscribe deleted user from the private channels, but not from public channels and not from chat
         test_user.unlink()
         self.assertEqual(test_channel_private.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
     def test_multi_company_chat(self):
         company_A = self.env['res.company'].create({'name': 'Company A'})
