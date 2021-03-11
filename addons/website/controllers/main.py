@@ -5,7 +5,6 @@ import datetime
 import json
 import os
 import logging
-import pytz
 import requests
 import werkzeug.urls
 import werkzeug.utils
@@ -18,7 +17,8 @@ import odoo
 
 from odoo import http, models, fields, _
 from odoo.http import request
-from odoo.tools import OrderedSet
+from odoo.osv import expression
+from odoo.tools import OrderedSet, escape_psql
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -277,18 +277,26 @@ class Website(Home):
         return dynamic_filter and dynamic_filter.render(template_key, limit, search_domain, with_sample) or ''
 
     @http.route('/website/snippet/options_filters', type='json', auth='user', website=True)
-    def get_dynamic_snippet_filters(self):
+    def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
+        domain = request.website.website_domain()
+        if search_domain:
+            domain = expression.AND([domain, search_domain])
+        if model_name:
+            domain = expression.AND([
+                domain,
+                ['|', ('filter_id.model_id', '=', model_name), ('action_server_id.model_id.model', '=', model_name)]
+            ])
         dynamic_filter = request.env['website.snippet.filter'].sudo().search_read(
-            request.website.website_domain(), ['id', 'name', 'limit']
+            domain, ['id', 'name', 'limit', 'model_name'], order='id asc'
         )
         return dynamic_filter
 
     @http.route('/website/snippet/filter_templates', type='json', auth='public', website=True)
-    def get_dynamic_snippet_templates(self, filter_id=False):
-        # todo: if filter_id.model -> filter template
-        templates = request.env['ir.ui.view'].sudo().search_read(
-            [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']], ['key', 'name']
-        )
+    def get_dynamic_snippet_templates(self, filter_name=False):
+        domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
+        if filter_name:
+            domain.append(['key', 'ilike', escape_psql('_%s_' % filter_name)])
+        templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name'])
         return templates
 
     # ------------------------------------------------------

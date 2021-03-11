@@ -44,7 +44,7 @@
             'data-edit_translations': '1' if edit_translations else None,
             'data-view-xmlid': xmlid if editable or translatable else None,
             'data-viewid': viewid if editable or translatable else None,
-            'data-main-object': repr(main_object) if editable or translatable else None,
+            'data-main-object': repr(main_object),
             'data-seo-object': repr(seo_object) if seo_object else None,
             'data-oe-company-name': res_company.name,
         }"/>

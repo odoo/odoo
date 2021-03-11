@@ -8,4 +8,14 @@
       background: radial-gradient($white 50%, transparent 50%);
     }
   }
+  .dynamic_snippet_template .card-footer a, .dynamic_snippet_template .card-footer button {
+    z-index: 2;
+  }
+  .dynamic_snippet_template .card-body .card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;  
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
