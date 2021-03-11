@@ -25,7 +25,7 @@ var QWeb = core.qweb;
  */
 
 let xmlFiles = ['/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml'];
- VariantMixin.loadXMLs = async () => {
+VariantMixin.loadXMLs = async () => {
      const files = xmlFiles.map(f => ajax.loadXML(f, QWeb));
      return Promise.all(files);
  }

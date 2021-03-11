@@ -2,8 +2,10 @@
 
 <template id="template" xml:space="preserve">
     <t t-extend="website_sale_stock.product_availability">
-        <t t-jquery="div" t-operation="after">
-            <span>it works !</span>
+        <t t-jquery="div#allow_to_order_enough_qty" t-operation="replace">
+            <div t-attf-class="availability_message_#{product_template} text-success mt8">
+                Add the item to your wishlist not be notified when product is back in stock.
+            </div>
         </t>
     </t>
 </template>

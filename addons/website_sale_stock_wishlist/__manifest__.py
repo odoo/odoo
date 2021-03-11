@@ -14,5 +14,10 @@
         'website_sale_wishlist'
     ],
 
+    'data': [
+        'views/website_sale_stock_wishlist_template.xml',
+    ],
+
+    'qweb': ['static/src/xml/add_to_wishlist_advice.xml'],
 
 }

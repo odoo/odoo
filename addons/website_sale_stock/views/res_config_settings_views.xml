@@ -28,6 +28,10 @@
                         <label for="available_threshold" string="Threshold" class="col-lg-4 o_light_label" />
                         <field name="available_threshold" class="oe_inline" attrs="{'required': [('inventory_availability', '=', 'threshold')]}"/>
                     </div>
+                    <div class="row" id="availability_information_setting" attrs="{'invisible': [('inventory_availability', '=', 'never')]}">
+                        <label for="availability_information" string="Availability Information" class="col-lg-4 o_light_label" />
+                        <field name="availability_information" class="oe_inline" attrs="{'required': [('inventory_availability', 'in', ['always','threshold'])]}"/>
+                    </div>
                     <div class="row" id="custom_message_setting" attrs="{'invisible': [('inventory_availability','!=','custom')]}">
                         <label for="custom_message" string="Inventory Notification" class="col-lg-4 o_light_label"/>
                         <field name="custom_message" widget="text" class="oe_inline o_field_text" attrs="{'required': [('inventory_availability','=','custom')]}"/>
