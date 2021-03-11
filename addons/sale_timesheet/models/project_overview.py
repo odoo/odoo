@@ -3,6 +3,7 @@ import babel.dates
 from dateutil.relativedelta import relativedelta
 import itertools
 import json
+from odoo.osv import expression
 
 from odoo import fields, _, models
 from odoo.osv import expression
@@ -20,7 +21,9 @@ class Project(models.Model):
 
     def _qweb_prepare_qcontext(self, view_id, domain):
         values = super()._qweb_prepare_qcontext(view_id, domain)
-
+        project_ids = self.env.context.get('active_ids')
+        if project_ids:
+            domain = expression.AND([[('id', 'in', project_ids)], domain])
         projects = self.search(domain)
         values.update(projects._plan_prepare_values())
         values['actions'] = projects._plan_prepare_actions(values)
