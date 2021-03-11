@@ -199,7 +199,7 @@
                                 <t t-if="not message.author_id"><t t-esc="message.email_from"/></t>
                                 - <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"/> <span t-field="message.date"/>
                             </small>
-                            <div t-raw="message.body"/>
+                            <div t-out="message.body"/>
 
                             <div>
                                 <p t-if="attachments" class="mt8">
