@@ -287,6 +287,7 @@ class ProjectTask(models.Model):
     @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         billable_tasks = self.filtered('allow_billable')
+        (self - billable_tasks).update({'sale_line_id': False})
         super(ProjectTask, billable_tasks)._compute_sale_line()
         for task in billable_tasks.filtered(lambda t: not t.sale_line_id):
             task.sale_line_id = task._get_last_sol_of_customer()
