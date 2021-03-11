@@ -672,10 +672,14 @@ class AccountTaxRepartitionLine(models.Model):
         for record in self:
             record.factor = record.factor_percent / 100.0
 
-    @api.depends('invoice_tax_id.company_id', 'refund_tax_id.company_id')
+    @api.depends('invoice_tax_id.company_id', 'refund_tax_id.company_id', 'account_id.company_id')
     def _compute_company(self):
         for record in self:
-            record.company_id = record.invoice_tax_id and record.invoice_tax_id.company_id.id or record.refund_tax_id.company_id.id
+            record.company_id = (
+                record.invoice_tax_id or
+                record.refund_tax_id or
+                record.account_id
+            ).company_id
 
     @api.depends('invoice_tax_id', 'refund_tax_id')
     def _compute_tax_id(self):
