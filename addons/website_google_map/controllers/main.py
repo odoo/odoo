@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import json
-
 from odoo import http
 from odoo.http import request
-from odoo.tools import html_escape as escape
+from odoo.tools.json import scriptsafe
 
 
 class GoogleMap(http.Controller):
@@ -39,13 +37,12 @@ class GoogleMap(http.Controller):
             "partners": []
         }
         for partner in partners.with_context(show_address=True):
-            # TODO in master, do not use `escape` but `t-esc` in the qweb template.
             partner_data["partners"].append({
                 'id': partner.id,
-                'name': escape(partner.name),
-                'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
-                'latitude': escape(str(partner.partner_latitude)),
-                'longitude': escape(str(partner.partner_longitude)),
+                'name': partner.name,
+                'address': '\n'.join(partner.name_get()[0][1].split('\n')[1:]),
+                'latitude': str(partner.partner_latitude),
+                'longitude': str(partner.partner_longitude),
             })
         if 'customers' in post.get('partner_url', ''):
             partner_url = '/customers/'
@@ -55,7 +52,7 @@ class GoogleMap(http.Controller):
         google_maps_api_key = request.website.google_maps_api_key
         values = {
             'partner_url': partner_url,
-            'partner_data': json.dumps(partner_data),
+            'partner_data': scriptsafe.dumps(partner_data),
             'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_google_map.google_map", values)
