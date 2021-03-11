@@ -36,8 +36,8 @@
                         <div name="other">
                             <group name="other">
                                 <group>
-                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                    <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
+                                    <field name="company_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="default_lang_id" options="{'no_open': True, 'no_create': True}" groups="base.group_no_one"/>
                                 </group>
                             </group>
                         </div>

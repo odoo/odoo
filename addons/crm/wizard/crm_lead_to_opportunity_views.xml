@@ -11,7 +11,7 @@
                     </group>
                     <group string="Assign this opportunity to">
                         <field name="user_id" domain="[('share', '=', False)]"/>
-                        <field name="team_id" widget="selection"/>
+                        <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                         <field name="opportunity_ids" nolabel="1">

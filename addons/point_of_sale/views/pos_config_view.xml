@@ -461,7 +461,7 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
-                                        <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" widget="selection"/>
+                                        <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
                                         <field name="journal_id"/>
                                     </div>
                                     <div class="row" groups="account.group_account_user" title="Get one journal item per product rather than one journal item per receipt line. This works for any anonymous order. If the customer is set on the order, one journal item is created for each receipt line. This option is recommended for an easy review of your journal entries when managing lots of orders.">

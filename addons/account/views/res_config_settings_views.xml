@@ -32,7 +32,7 @@
                                         <div class="content-group">
                                             <div class="row mt16">
                                                 <label for="chart_template_id" string="Package" class="col-lg-3 o_light_label"/>
-                                                <field name="chart_template_id" widget="selection"/>
+                                                <field name="chart_template_id" options="{'no_open': True, 'no_create': True}"/>
                                             </div>
                                             <div>
                                                 <button name="%(account.open_account_charts_modules)d" icon="fa-arrow-right" type="action" string="Install More Packages" class="btn-link"/>

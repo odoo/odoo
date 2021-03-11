@@ -15,7 +15,7 @@
                            <group>
                              <field name="code" placeholder="code"/>
                              <field name="name"/>
-                             <field name="user_type_id" widget="selection"/>
+                             <field name="user_type_id" options="{'no_open': True, 'no_create': True}"/>
                              <field name="tax_ids" widget="many2many_tags" domain="[('company_id','=',company_id)]"/>
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
                              <field name="group_id"/>
@@ -621,7 +621,7 @@
                             <field name="journal_type" invisible="1"/>
                             <field name="cashbox_start_id" invisible="1"/>
                             <field name="cashbox_end_id" invisible="1"/>
-                            <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" widget="selection"/>
+                            <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" options="{'no_open': True, 'no_create': True}"/>
                             <field name="date" options="{'datepicker': {'warn_future': true}}" />
                             <field name="accounting_date" groups="base.group_no_one"/>
                             <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
@@ -906,7 +906,7 @@
                                     <field name="amount" class="oe_inline"/>
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
-                                <field name="journal_id" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"
+                                <field name="journal_id" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" options="{'no_open': True, 'no_create': True}"
                                        attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
@@ -923,7 +923,7 @@
                                 <field name="second_tax_id"
                                        string="Tax"
                                        domain="[('company_id', '=', company_id)]"
-                                       widget="selection"
+                                       options="{'no_open': True, 'no_create': True}"
                                        context="{'append_type_to_tax_name': True}"/>
                                 <field name="is_second_tax_price_included" invisible="1"/>
                                 <field name="second_tax_amount_type" invisible="1"/>
@@ -939,7 +939,7 @@
                                     <field name="second_amount" class="oe_inline"/>
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
-                                <field name="second_journal_id" string="Journal" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"
+                                <field name="second_journal_id" string="Journal" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" options="{'no_open': True, 'no_create': True}"
                                        attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
@@ -1888,7 +1888,7 @@
                         <field name="name"/>
                         <field name="code"/>
                         <newline/>
-                        <field name="user_type_id" widget="selection"/>
+                        <field name="user_type_id" options="{'no_open': True, 'no_create': True}"/>
                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                         <field name="tag_ids" domain="[('applicability', '!=', 'taxes')]" widget="many2many_tags" context="{'default_applicability': 'accounts'}"/>
                         <field name="reconcile"/>

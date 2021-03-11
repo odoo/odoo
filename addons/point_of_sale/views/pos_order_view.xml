@@ -88,7 +88,7 @@
                     <page name="extra" string="Extra Info">
                         <group string="General Information">
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="location_id" widget="selection" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_id" options="{'no_open': True, 'no_create': True}"  groups="stock.group_stock_multi_locations"/>
                             <field name="user_id"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                             <field name="picking_id" readonly="1"/>

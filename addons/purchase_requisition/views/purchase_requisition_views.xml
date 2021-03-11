@@ -169,7 +169,7 @@
                     <group>
                         <field name="is_quantity_copy" invisible='1'/>
                         <field name="user_id" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
-                        <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}" widget="selection"/>
+                        <field name="type_id" attrs="{'readonly': [('state','!=','draft')]}" options="{'no_open': True, 'no_create': True}"/>
                         <field name="vendor_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'required': [('is_quantity_copy', '=', 'none')], 'readonly': [('state', 'in', ['ongoing','done'])]}"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
                     </group>
@@ -178,7 +178,7 @@
                         <field name="ordering_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft','in_progress','open','ongoing'))]}"/>
                         <field name="origin" placeholder="e.g. PO0025" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                        <field name="picking_type_id" widget="selection" groups="stock.group_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="picking_type_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_adv_location" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>

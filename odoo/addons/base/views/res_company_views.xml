@@ -188,7 +188,7 @@
                             placeholder="e.g. Global Business Solutions" />
                         <field name="report_footer" string="Footer"
                             placeholder="e.g. Opening hours, bank accounts (one per line)" />
-                        <field name="paperformat_id" widget="selection" />
+                        <field name="paperformat_id" options="{'no_open': True, 'no_create': True}" />
                     </group>
                     <footer>
                         <button special="save" string="Save"

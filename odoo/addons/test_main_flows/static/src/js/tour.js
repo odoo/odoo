@@ -512,7 +512,7 @@ tour.register('main_flow_tour', {
     content: _t("Register Payment"),
     position: "bottom",
 }, {
-    trigger: "select.o_field_widget[name=journal_id]",
+    trigger: ".o_field_many2one[name=journal_id]",
     extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",
@@ -654,7 +654,7 @@ tour.register('main_flow_tour', {
     content: _t("Register Payment"),
     position: "bottom",
 }, {
-    trigger: "select.o_field_widget[name=journal_id]",
+    trigger: ".o_field_many2one[name=journal_id]",
     extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",

@@ -8,7 +8,7 @@
               <field name="arch" type="xml">
                 <form string="Price List">
                     <group string="Calculate Product Price per Unit Based on Pricelist Version.">
-                        <field name="price_list" widget="selection"/>
+                        <field name="price_list" options="{'no_open': True, 'no_create': True}"/>
                         <field name="qty1"/>
                         <field name="qty2"/>
                         <field name="qty3"/>

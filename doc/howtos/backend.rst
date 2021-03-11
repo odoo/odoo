@@ -1101,7 +1101,7 @@ predefined searches. Filters must have one of the following attributes:
         <field name="description" string="Name and description"
                filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
         <field name="inventor_id"/>
-        <field name="country_id" widget="selection"/>
+        <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
 
         <filter name="my_ideas" string="My Ideas"
                 domain="[('inventor_id', '=', uid)]"/>

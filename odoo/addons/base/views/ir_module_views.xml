@@ -81,7 +81,7 @@
                             <group>
                                 <group>
                                     <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
-                                    <field name="category_id" widget="selection"/>
+                                    <field name="category_id" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="summary"/>
                                     <field name="to_buy" invisible="1"/>
                                 </group>

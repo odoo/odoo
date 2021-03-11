@@ -72,7 +72,7 @@
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
-                                <field name="product_uom_id" widget="selection" class="oe_inline" groups="uom.group_uom"/>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <field name="tax_ids" domain="[('type_tax_use', '=', 'purchase')]" widget="many2many_tags" groups="account.group_account_user"/>
                         </group><group>

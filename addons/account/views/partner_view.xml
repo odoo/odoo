@@ -110,7 +110,7 @@
             <field name="arch" type="xml">
                 <field name="email" position="after">
                     <field name="company_id" invisible="1"/>
-                    <field name="property_payment_term_id" widget="selection"/>
+                    <field name="property_payment_term_id" options="{'no_open': True, 'no_create': True}"/>
                     <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                 </field>
             </field>
@@ -231,10 +231,10 @@
                     </group>
                 </xpath>
                 <group name="sale" position="inside">
-                    <field string="Payment Terms" name="property_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
+                    <field string="Payment Terms" name="property_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice"/>
                 </group>
                 <group name="purchase" position="inside">
-                    <field string="Payment Terms" name="property_supplier_payment_term_id" widget="selection" groups="account.group_account_invoice"/>
+                    <field string="Payment Terms" name="property_supplier_payment_term_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice"/>
                 </group>
             </field>
         </record>

@@ -15,7 +15,7 @@
                     <field name="adjustment_type"/>
                 </group>
                 <group>
-                    <field name="tax_id" widget="selection"/>
+                    <field name="tax_id" options="{'no_open': True, 'no_create': True}"/>
                 </group>
                 <group string="Accounts">
                     <field name="debit_account_id"/>

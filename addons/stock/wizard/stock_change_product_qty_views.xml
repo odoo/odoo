@@ -9,7 +9,7 @@
                     <group>
                         <field name="product_tmpl_id" invisible="1"/>
                         <field name="product_variant_count" invisible="1"/>
-                        <field name="product_id" widget="selection"
+                        <field name="product_id" options="{'no_open': True, 'no_create': True}"
                             domain="[('product_tmpl_id', '=', product_tmpl_id)]"
                             attrs="{'readonly': [('product_variant_count', '=', 1)]}"
                             readonly="context.get('default_product_id')"/>

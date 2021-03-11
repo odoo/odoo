@@ -215,7 +215,7 @@
                                 <field name="product_id"/>
                             </group>
                             <group>
-                                <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
+                                <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>

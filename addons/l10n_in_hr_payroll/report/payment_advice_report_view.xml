@@ -46,7 +46,7 @@
                 <newline/>
                  <group expand="0" string="Extended Filters...">
                     <field name="ifsc_code"/>
-                    <field name="bank_id" widget="selection"/>
+                    <field name="bank_id" options="{'no_open': True, 'no_create': True}"/>
                     <field name="employee_bank_no"/>
                     <separator orientation="vertical"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
