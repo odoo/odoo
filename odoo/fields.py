@@ -3556,7 +3556,8 @@ class Many2many(_RelationalMulti):
             )
         if self.store:
             if not (self.relation and self.column1 and self.column2):
-                self._explicit = False
+                if not self.relation:
+                    self._explicit = False
                 # table name is based on the stable alphabetical order of tables
                 comodel = model.env[self.comodel_name]
                 if not self.relation:
