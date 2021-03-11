@@ -862,18 +862,24 @@
                                         <field name="price_unit"/>
                                         <templates>
                                             <t t-name="kanban-box">
-                                                <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
+                                                <div t-attf-class="oe_kanban_card oe_kanban_global_click pl-0 pr-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
                                                     <t t-if="!record.display_type.raw_value">
-                                                        <div class="row">
-                                                            <div class="col-2">
+                                                        <div class="row no-gutters">
+                                                            <div class="col-2 pr-3">
                                                                 <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
                                                             </div>
                                                             <div class="col-10">
-                                                                <strong>
-                                                                    <span>
-                                                                        <t t-esc="record.product_id.value"/>
-                                                                    </span>
-                                                                </strong>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <strong t-esc="record.product_id.value"/>
+                                                                    </div>
+                                                                    <div class="col-auto">
+                                                                        <strong class="float-right text-right">
+                                                                            <t t-esc="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                                            <t t-esc="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                        </strong>
+                                                                    </div>
+                                                                </div>
                                                                 <div class="text-muted">
                                                                     Quantity:
                                                                     <t t-esc="record.quantity.value"/>
@@ -883,21 +889,13 @@
                                                                     Unit Price:
                                                                     <t t-esc="record.price_unit.value"/>
                                                                 </div>
-                                                                <strong>
-                                                                    <span class="float-right text-right">
-                                                                        <t t-esc="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                                                        <t t-esc="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
-                                                                    </span>
-                                                                </strong>
                                                             </div>
                                                         </div>
                                                     </t>
                                                     <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <span>
-                                                                    <t t-esc="record.name.value"/>
-                                                                </span>
+                                                                <t t-esc="record.name.value"/>
                                                             </div>
                                                         </div>
                                                     </t>
