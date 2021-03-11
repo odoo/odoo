@@ -84,11 +84,16 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain="[('id', 'in', allowed_product_ids)]",
+        domain="""[
+            ('type', 'in', ['product', 'consu']),
+            '|',
+                ('company_id', '=', False),
+                ('company_id', '=', company_id)
+        ]
+        """,
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
     product_tracking = fields.Selection(related='product_id.tracking')
-    allowed_product_ids = fields.Many2many('product.product', compute='_compute_allowed_product_ids')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
         'Quantity To Produce',
@@ -256,22 +261,6 @@ class MrpProduction(models.Model):
         ('late', 'Late')], compute='_compute_components_availability')
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
-
-    @api.depends('product_id', 'bom_id', 'company_id')
-    def _compute_allowed_product_ids(self):
-        for production in self:
-            product_domain = [
-                ('type', 'in', ['product', 'consu']),
-                '|',
-                    ('company_id', '=', False),
-                    ('company_id', '=', production.company_id.id)
-            ]
-            if production.bom_id:
-                if production.bom_id.product_id:
-                    product_domain += [('id', '=', production.bom_id.product_id.id)]
-                else:
-                    product_domain += [('id', 'in', production.bom_id.product_tmpl_id.product_variant_ids.ids)]
-            production.allowed_product_ids = self.env['product.product'].search(product_domain)
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
