@@ -75,7 +75,13 @@ class ContractHistory(models.Model):
                 AND contract.active = true
                 WINDOW w_partition AS (
                     PARTITION BY contract.employee_id
-                    ORDER BY     contract.date_start DESC
+                    ORDER BY
+                        CASE
+                            WHEN contract.state = 'open' THEN 0
+                            WHEN contract.state = 'draft' THEN 1
+                            WHEN contract.state = 'close' THEN 2
+                            ELSE 3 END,
+                        contract.date_start DESC
                     RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
                 )
             )
