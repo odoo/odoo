@@ -359,7 +359,7 @@ class ModelField {
             // single command given
             return newVal.execute(this, record, options);
         }
-        if (typeof newVal instanceof Array && newVal[0] instanceof FieldCommand) {
+        if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             // multi command given
             let hasChanged = false;
             for (const command of newVal) {
