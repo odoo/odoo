@@ -41,7 +41,7 @@ class Partner(models.Model):
         all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         all_partners.read(['parent_id'])
 
-        opportunity_data = self.env['crm.lead'].read_group(
+        opportunity_data = self.env['crm.lead'].with_context(active_test=False).read_group(
             domain=[('partner_id', 'in', all_partners.ids)],
             fields=['partner_id'], groupby=['partner_id']
         )
@@ -108,6 +108,7 @@ class Partner(models.Model):
         This function returns an action that displays the opportunities from partner.
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
+        action['context'] = {'active_test': False}
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
         else:
