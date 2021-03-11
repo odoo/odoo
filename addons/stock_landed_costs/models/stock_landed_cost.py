@@ -82,14 +82,15 @@ class LandedCost(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_picking_ids(self):
-        self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
-                                 FROM stock_move AS sm
-                           INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
-                                WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
-                             GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
         valued_picking_ids_per_company = defaultdict(list)
-        for res in self.env.cr.fetchall():
-            valued_picking_ids_per_company[res[1]].append(res[0])
+        if self.company_id:
+            self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
+                                     FROM stock_move AS sm
+                               INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
+                                    WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
+                                 GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
+            for res in self.env.cr.fetchall():
+                valued_picking_ids_per_company[res[1]].append(res[0])
         for cost in self:
             cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
 
