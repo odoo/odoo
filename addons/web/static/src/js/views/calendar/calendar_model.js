@@ -614,6 +614,10 @@ return AbstractModel.extend({
                 return;
             }
 
+            _.each(filter.filters, function (filter) {
+                filter.display = !filter.active;
+            });
+
             var fs = [];
             var undefined_fs = [];
             _.each(events, function (event) {
