@@ -684,6 +684,13 @@ ListRenderer.include({
 
         // Set the table layout to fixed
         table.style.tableLayout = 'fixed';
+
+        thElements.forEach((th, index) => {
+            // Fix relative width that ends up near zero width
+            if (th.style.width.indexOf('%') && th.offsetWidth < 70) {
+                th.style.width = '70px';
+            }
+        });
     },
     /**
      * Returns the first or last editable row of the list
