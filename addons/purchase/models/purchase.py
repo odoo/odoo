@@ -517,7 +517,8 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
             # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == (
+                line.company_id or line.order_id.company_id))
             line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
 
     @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')
