@@ -101,6 +101,13 @@ class TestMailRender(common.MailCommon):
             'model_id': cls.env['ir.model']._get('res.partner').id,
             'lang': '${object.lang}'
         })
+        cls.test_template_qweb = cls.env['mail.template'].create({
+            'name': 'Test Template QWeb',
+            'subject': cls.base_jinja_bits[0],
+            'body_view_id': cls.base_qweb_templates[1].id,
+            'model_id': cls.env['ir.model']._get('res.partner').id,
+            'lang': '${object.lang}'
+        })
 
         # some translations
         cls.env['ir.translation'].create({
@@ -131,6 +138,27 @@ class TestMailRender(common.MailCommon):
         template = self.env['mail.template'].browse(self.test_template_jinja.ids)
         partner = self.env['res.partner'].browse(self.render_object.ids)
         for fname, expected in zip(['subject', 'body_html'], self.base_rendered):
+            rendered = template._render_field(
+                fname,
+                partner.ids,
+                compute_lang=True
+            )[partner.id]
+            self.assertEqual(rendered, expected)
+
+        partner = self.env['res.partner'].browse(self.render_object_fr.ids)
+        for fname, expected in zip(['subject', 'body_html'], self.base_rendered_fr):
+            rendered = template._render_field(
+                fname,
+                partner.ids,
+                compute_lang=True
+            )[partner.id]
+            self.assertEqual(rendered, expected)
+
+    @users('employee')
+    def test_render_mail_template_qweb(self):
+        template = self.env['mail.template'].browse(self.test_template_qweb.ids)
+        partner = self.env['res.partner'].browse(self.render_object.ids)
+        for fname, expected in zip(['subject', 'body_view_id'], self.base_rendered):
             rendered = template._render_field(
                 fname,
                 partner.ids,

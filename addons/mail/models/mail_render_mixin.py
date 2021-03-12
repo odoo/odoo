@@ -254,8 +254,10 @@ class MailRenderMixin(models.AbstractModel):
     def _render_template_qweb(self, template_src, model, res_ids, add_context=None):
         """ Render a QWeb template.
 
-        :param str template_src: source QWeb template. It should be a string
-          XmlID allowing to fetch an ir.ui.view;
+        :param str template_src: source QWeb template. It can be
+        ` * an ir.ui.view singleton recordset;
+          * a string XmlID allowing to fetch an ir.ui.view (see ``get_view_id``);
+          * a string key matching View.key field (see ``get_view_id``);
         :param str model: see ``MailRenderMixin._render_field)``;
         :param list res_ids: see ``MailRenderMixin._render_field)``;
 
@@ -265,7 +267,11 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        view = self.env.ref(template_src, raise_if_not_found=False) or self.env['ir.ui.view']
+        if issubclass(type(template_src), self.pool['ir.ui.view']):
+            view = template_src
+        else:
+            view = self.env['ir.ui.view'].browse(self.env['ir.ui.view'].get_view_id(template_src))
+
         results = dict.fromkeys(res_ids, u"")
         if not view:
             return results
