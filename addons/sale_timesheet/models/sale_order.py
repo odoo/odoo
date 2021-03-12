@@ -19,17 +19,25 @@ class SaleOrder(models.Model):
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
 
-    @api.depends('analytic_account_id.line_ids')
     def _compute_timesheet_ids(self):
+        timesheet_groups = self.env['account.analytic.line'].sudo().read_group(
+            [('so_line', 'in', self.mapped('order_line').ids), ('project_id', '!=', False)],
+            ['so_line', 'ids:array_agg(id)'],
+            ['so_line'])
+        timesheets_per_sol = {group['so_line'][0]: (group['ids'], group['so_line_count']) for group in timesheet_groups}
+
         for order in self:
-            if order.analytic_account_id:
-                order.timesheet_ids = self.env['account.analytic.line'].search(
-                    [('so_line', 'in', order.order_line.ids),
-                        ('amount', '<=', 0.0),
-                        ('project_id', '!=', False)])
-            else:
-                order.timesheet_ids = []
-            order.timesheet_count = len(order.timesheet_ids)
+            timesheet_ids = []
+            timesheet_count = 0
+            for sale_line_id in order.order_line.filtered('is_service').ids:
+                list_timesheet_ids, count = timesheets_per_sol.get(sale_line_id, ([], 0))
+                timesheet_ids.extend(list_timesheet_ids)
+                timesheet_count += count
+
+            order.update({
+                'timesheet_ids': self.env['account.analytic.line'].browse(timesheet_ids),
+                'timesheet_count': timesheet_count,
+            })
 
     @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
