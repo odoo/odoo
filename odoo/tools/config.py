@@ -279,11 +279,11 @@ class configmanager(object):
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
                          help="Force a limit on the maximum number of records kept in the virtual "
-                              "osv_memory tables. The default is False, which means no count-based limit.",
+                              "osv_memory tables. By default there is no limit.",
                          type="int")
         group.add_option("--transient-age-limit", dest="transient_age_limit", my_default=1.0,
                          help="Time limit (decimal value in hours) records created with a "
-                              "TransientModel (mosly wizard) are kept in the database. Default to 1 hour.",
+                              "TransientModel (mostly wizard) are kept in the database. Default to 1 hour.",
                          type="float")
         group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=False,
                          help="Deprecated alias to the transient-age-limit option",
