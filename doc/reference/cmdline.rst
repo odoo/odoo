@@ -6,6 +6,21 @@
 Command-line interface: odoo-bin
 ================================
 
+.. _reference/cmdline/help:
+
+Help & version
+==============
+
+.. program:: odoo-bin
+
+.. option:: -h, --help
+
+    shows help text with all available options
+
+.. option:: --version
+
+   shows Odoo version e.g. "Odoo Server 13.0"
+
 .. _reference/cmdline/server:
 
 Running the server
@@ -28,8 +43,8 @@ Running the server
 
 .. option:: -u <modules>, --update <modules>
 
-    comma-separated list of modules to update before running the server
-    (requires :option:`-d`).
+    comma-separated list of modules to update before running the server.
+    Use ``all`` for all modules. (requires :option:`-d`).
 
 .. option:: --addons-path <directories>
 
@@ -38,9 +53,31 @@ Running the server
 
     .. (nb: when and why?)
 
+.. option:: --upgrade-path <upgrade_path>
+
+   specify an additional upgrade path.
+
+.. option:: --load <modules>
+
+   list of server-wide modules to load. Those modules are supposed to provide
+   features not necessarily tied to a particular database. This is in contrast
+   to modules that are always bound to a specific database when they are
+   installed (i.e. the majority of Odoo addons). Default is ``base,web``.
+
 .. option:: -c <config>, --config <config>
 
-    provide an alternate :ref:`configuration file <reference/cmdline/config>`
+    path to an alternate :ref:`configuration file <reference/cmdline/config>`.
+    If not defined, Odoo checks ``ODOO_RC`` environmental variable
+    and default location :file:`{$HOME}/.odoorc`.
+    See configuration file section :ref:`below <reference/cmdline/server/config>`.
+
+.. option:: -D <data-dir-path>, --data-dir <data-dir-path>
+
+   directory path where to store Odoo data (eg. filestore, sessions).
+   If not specified, Odoo will fallback
+   to a predefined path. On Unix systems its
+   one defined in ``$XDG_DATA_HOME`` environmental variable
+   or :file:`~/.local/share/Odoo` or :file:`/var/lib/Odoo`.
 
 .. option:: -s, --save
 
@@ -52,14 +89,49 @@ Running the server
 
     disables demo data loading for modules installed
     comma-separated, use ``all`` for all modules.
+    Requires :option:`-d` and :option:`-i`.
+
+.. option:: --pidfile=<pidfile>
+
+    path to a file where the server pid will be stored
+
+.. option:: --stop-after-init
+
+    stops the server after its initialization.
+
+.. option:: --geoip-db <path>
+
+   Absolute path to the GeoIP database file.
+
+
+.. _reference/cmdline/testing:
+
+Testing Configuration
+=====================
 
 .. option:: --test-enable
 
     runs tests after installing modules
 
-.. option:: --test-tags 'tag_1,tag_2,...,-tag_n'
+.. option:: --test-file <file>
 
-    select the tests to run by using tags.
+    runs a python test file
+
+.. option:: --test-tags <tags>
+
+    comma separated list of spec to filter which tests to
+    execute. Enable unit tests if set.
+    A filter spec has the format:
+    ``[-][tag][/module][:class][.method]``
+    The '-' specifies if we want to include or exclude
+    tests matching this spec. The
+    tag will match tags added on a class with a @tagged
+    decorator. By default tag value is 'standard' when not
+    given on include mode. '*' will match all tags. Tag
+    will also match module name (deprecated, use /module)
+    The module, class, and method will respectively match
+    the module name, test class name and test method name.
+    examples: ``:TestClass.test_func,/test_module,external``
 
 .. option:: --screenshots
 
@@ -170,6 +242,10 @@ Database
     'verify-ca' or 'verify-full'
     Default value is 'prefer'
 
+.. option:: --unaccent
+
+   Use the unaccent function provided by the database when available.
+
 .. _reference/cmdline/server/emails:
 
 Emails
@@ -247,19 +323,24 @@ Developer features
 
 .. option:: --dev <feature,feature,...,feature>
 
+    comma-separated list of features. For development purposes only. Do not use it in production.
+    Possible features are:
+
     * ``all``: all the features below are activated
 
-    * ``xml``: read template qweb from xml file directly instead of database.
+    * ``xml``: read QWeb template from xml file directly instead of database.
       Once a template has been modified in database, it will be not be read from
       the xml file until the next update/init.
 
     * ``reload``: restart server when python file are updated (may not be detected
       depending on the text editor used)
 
-    * ``qweb``: break in the evaluation of qweb template when a node contains ``t-debug='debugger'``
+    * ``qweb``: break in the evaluation of QWeb template when a node contains ``t-debug='debugger'``
 
     * ``(i)p(u)db``: start the chosen python debugger in the code when an
       unexpected error is raised before logging and returning the error.
+
+    * ``werkzeug``: display the full traceback on the frontend page in case of exception
 
 
 .. _reference/cmdline/server/http:
@@ -280,7 +361,7 @@ HTTP
     TCP/IP address on which the HTTP server listens, defaults to ``0.0.0.0``
     (all addresses)
 
-.. option:: --http-port <port>
+.. option:: -p <port> --http-port <port>
 
     Port on which the HTTP server listens, defaults to 8069.
 
@@ -292,7 +373,8 @@ HTTP
 .. option:: --proxy-mode
 
     enables the use of ``X-Forwarded-*`` headers through `Werkzeug's proxy
-    support`_.
+    support`_. Only enable this when running behind a trusted web proxy!
+
 
     .. warning:: proxy mode *must not* be enabled outside of a reverse proxy
                  scenario
@@ -515,7 +597,7 @@ This enables direct interaction with the :ref:`orm <reference/orm>` and its func
 
 .. code-block:: console
 
-   $ odoo_bin shell
+   $ odoo-bin shell
 
 .. option:: --shell-interface (ipython|ptpython|bpython|python)
 
@@ -538,7 +620,7 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 
 .. code-block:: console
 
-    $ odoo_bin scaffold my_module /addons/
+    $ odoo-bin scaffold my_module /addons/
 
 .. option:: name (required)
 
@@ -571,7 +653,7 @@ generation of the model's records to test your modules in databases containing n
 
 .. code-block:: console
 
-    $ odoo_bin populate
+    $ odoo-bin populate
 
 .. option:: --models
 
