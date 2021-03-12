@@ -7,22 +7,14 @@ from odoo import fields, models, api
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    inventory_availability = fields.Selection([
-        ('always', 'Always'),
-        ('never', 'Never'),
-        ('threshold', 'Only below a threshold'),
-    ], string='Inventory Availability', help='Adds an inventory availability status on the web product page.', default='never')
     available_threshold = fields.Float(string='Availability Threshold', default=5.0)
     allow_order = fields.Selection(selection=[
         ('always', 'Always'),
         ('enough', 'Only if enough inventory'),
-    ], string='Allow to Order', default='enough')
-    availability_information = fields.Selection([
-        ('quantity', 'Quantity Available'),
-        ('state', 'In Stock - Quantity Left - Out of stock'),
-        ('custom', 'Custom Message'),
-    ], string="Availability Information", default="state")
-    custom_message = fields.Text(string='Custom Message', default='', translate=True)
+    ], string='Allow Orders', default='enough')
+    in_stock = fields.Html(string="In Stock", translate=True, default="""<i class="text-success fa fa-check"/> <span style="color:green">In stock</span>""", sanitize_tags=False)
+    below_threshold = fields.Html(string="Below Threshold", translate=True, default="""<i class="text-warning fa fa-exclamation-triangle"/> <span style="color:orange">Only {qty_available} {uom_name} left</span>""")
+    no_stock = fields.Html(string="No Stock", translate=True, default="""<i class="text-danger fa fa-remove"/> <span style="color:red">Out Of Stock</span>""")
 
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         combination_info = super(ProductTemplate, self)._get_combination_info(
@@ -38,28 +30,27 @@ class ProductTemplate(models.Model):
             product_with_context = product.with_context(warehouse=website.warehouse_id.id)
             qty_available = product_with_context.qty_available
             qty_forecasted = product_with_context.incoming_qty
+            print('\n\n---\n\n')
             combination_info.update({
                 'qty_available': qty_available,
                 'qty_available_formatted': self.env['ir.qweb.field.float'].value_to_html(qty_available, {'decimal_precision': 'Product Unit of Measure'}),
                 'qty_forecasted': qty_forecasted,
                 'product_type': product.type,
-                'inventory_availability': product.inventory_availability,
                 'available_threshold': product.available_threshold,
                 'allow_order': product.allow_order,
-                'availability_information': product.availability_information,
-                'custom_message': product.custom_message,
                 'product_template': product.product_tmpl_id.id,
                 'cart_qty': product.cart_qty,
                 'uom_name': product.uom_id.name,
+                'in_stock': product.in_stock,
+                'below_threshold': product.below_threshold,
+                'no_stock': product.no_stock,
             })
         else:
             product_template = self.sudo()
             combination_info.update({
                 'qty_available': 0,
                 'product_type': product_template.type,
-                'inventory_availability': product_template.inventory_availability,
                 'available_threshold': product_template.available_threshold,
-                'custom_message': product_template.custom_message,
                 'product_template': product_template.id,
                 'cart_qty': 0
             })

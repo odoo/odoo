@@ -51,7 +51,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
 
     $parent.find('#add_to_cart').removeClass('out_of_stock');
     $parent.find('#buy_now').removeClass('out_of_stock');
-    if (combination.product_type === 'product' && _.contains(['always', 'threshold'], combination.inventory_availability)) {
+    if (combination.product_type === 'product') {
         combination.qty_available -= parseInt(combination.cart_qty);
         if (combination.qty_available < 0) {
             combination.qty_available = 0;

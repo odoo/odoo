@@ -18,27 +18,25 @@
                         <label for="website_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label" />
                         <field name="website_warehouse_id"/>
                     </div>
-                    <div class="row mt16"
-                        id="inventory_availability_setting"
-                        title="Default availability mode set on newly created storable products. This can be changed at the product level.">
-                        <label for="inventory_availability" string="Show Availability" class="col-lg-4 o_light_label" />
-                        <field name="inventory_availability" string="Inventory"/>
-                    </div>
-                    <div class="row" id="available_treshold_setting" attrs="{'invisible': [('inventory_availability', '!=', 'threshold')]}">
-                        <label for="available_threshold" string="Threshold" class="col-lg-4 o_light_label" />
-                        <field name="available_threshold" class="oe_inline" attrs="{'required': [('inventory_availability', '=', 'threshold')]}"/>
-                    </div>
-                    <div class="row" id="availability_information_setting" attrs="{'invisible': [('inventory_availability', '=', 'never')]}">
-                        <label for="availability_information" string="Availability Information" class="col-lg-4 o_light_label" />
-                        <field name="availability_information" class="oe_inline" attrs="{'required': [('inventory_availability', 'in', ['always','threshold'])]}"/>
-                    </div>
-                    <div class="row" id="custom_message_setting" attrs="{'invisible': [('inventory_availability','!=','custom')]}">
-                        <label for="custom_message" string="Inventory Notification" class="col-lg-4 o_light_label"/>
-                        <field name="custom_message" widget="text" class="oe_inline o_field_text" attrs="{'required': [('inventory_availability','=','custom')]}"/>
+                    <div class="row mt16" id="available_treshold_setting">
+                        <label for="available_threshold" string="Threshold" class="col-lg-3 o_light_label" />
+                        <field name="available_threshold" class="oe_inline"/>
                     </div>
                     <div class="row">
-                        <label for="allow_order" string="Allow to Order" class="col-lg-4 o_light_label"/>
+                        <label for="allow_order" string="Allow Orders" class="col-lg-3 o_light_label"/>
                         <field name="allow_order" string="Allow Order"/>
+                    </div>
+                    <div class="row ">
+                        <label for="in_stock" string="In Stock" class="col-lg-4 o_light_label"/>
+                        <field name="in_stock" string="Inr"/>
+                    </div>
+                    <div class="row">
+                        <label for="below_threshold" string="Below Threshold" class="col-lg-4 o_light_label"/>
+                        <field name="below_threshold" string="Below Threshold"/>
+                    </div>
+                    <div class="row">
+                        <label for="no_stock" string="No Stock" class="col-lg-4 o_light_label"/>
+                        <field name="no_stock" string="No Stock"/>
                     </div>
                 </div>
             </xpath>

@@ -7,38 +7,32 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    inventory_availability = fields.Selection([
-        ('always', 'Always'),
-        ('never', 'Never'),
-        ('threshold', 'Only below a threshold'),
-    ], string='Inventory Availability', default='never')
     available_threshold = fields.Float(string='Availability Threshold')
     website_warehouse_id = fields.Many2one('stock.warehouse', related='website_id.warehouse_id', domain="[('company_id', '=', website_company_id)]", readonly=False)
     allow_order = fields.Selection([
         ('always', 'Always'),
         ('enough', 'Only if enough inventory'),
-    ], string='Allow to Order', default='enough')
-    availability_information = fields.Selection([
-        ('quantity', 'Quantity Available'),
-        ('state', 'In Stock - Quantity Left - Out of stock'),
-        ('custom', 'Custom Message'),
-    ], string="Availability Information", default="state")
-    custom_message = fields.Char(string='Custom Message', default='Default Custom Message')
+    ], string='Allow Orders', default='enough')
+    in_stock = fields.Html(string="In Stock", default="<i class='text-success fa fa-check'/> In stock")
+    below_threshold = fields.Html(string="Below Threshold", default="<i class='text-warning fa fa-exclamation-triangle'/> Only {qty} {unit} left")
+    no_stock = fields.Html(string="No Stock", default="<i class='text-danger fa fa-cross'/> Out Of Stock")
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         IrDefault = self.env['ir.default'].sudo()
-        IrDefault.set('product.template', 'inventory_availability', self.inventory_availability)
-        IrDefault.set('product.template', 'available_threshold', self.available_threshold if self.inventory_availability == 'threshold' else None)
-        IrDefault.set('product.template', 'custom_message', self.custom_message if self.inventory_availability == 'custom' else None)
+        IrDefault.set('product.template', 'available_threshold', self.available_threshold)
+        IrDefault.set('product.template', 'no_stock', self.no_stock)
+        IrDefault.set('product.template', 'below_threshold', self.below_threshold)
+        IrDefault.set('product.template', 'in_stock', self.in_stock)
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         IrDefault = self.env['ir.default'].sudo()
-        res.update(inventory_availability=IrDefault.get('product.template', 'inventory_availability') or 'never',
-                   available_threshold=IrDefault.get('product.template', 'available_threshold') or 5.0,
-                   custom_message=IrDefault.get('product.template', 'custom_message') or '')
+        res.update(available_threshold=IrDefault.get('product.template', 'available_threshold') or 5.0,
+                   no_stock=IrDefault.get('product.template', 'no_stock') or 'Out of Stock',
+                   below_threshold=IrDefault.get('product.template', 'below_threshold') or 'Only {qty} {unit} left',
+                   in_stock=IrDefault.get('product.template', 'in_stock') or 'In Stock',)
         return res
 
     @api.onchange('website_company_id')

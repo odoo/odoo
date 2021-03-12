@@ -6,11 +6,11 @@
         <field name="inherit_id" ref="website_sale.product_template_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='public_categ_ids']" position="after">
-                <field name="inventory_availability" string="Show Availability" widget="selection" attrs="{'invisible': [('type', 'in', ['service', 'consu'])]}"/>
-                <field name="available_threshold" attrs="{'invisible': ['|', ('type', 'in', ['service', 'consu']), ('inventory_availability', '!=', 'threshold')], 'required': [('inventory_availability', '=', 'threshold'), ('type', '=', 'product')]}"/>
-                <field name="availability_information" attrs="{'invisible': [('inventory_availability', '=', 'never')], 'required': [('inventory_availability', 'in', ['always', 'threshold']), ('type', '=', 'product')]}"/>
-                <field name="custom_message" attrs="{'invisible': ['|', ('type', 'in', ['service', 'consu']), ('availability_information', '!=', 'custom')]}"/>
-                <field name="allow_order" string="Allow to Order" widget="selection" attrs="{'invisible': [('type', 'in', ['service', 'consu'])]}"/>
+                <field name="allow_order" widget="selection" attrs="{'invisible': [('type', 'in', ['service', 'consu'])], 'required': [('type', '=', 'product')]}"/>
+                <field name="available_threshold" attrs="{'invisible': [('type', 'in', ['service', 'consu'])], 'required': [('type', '=', 'product')]}"/>
+                <field name="in_stock" attrs="{'invisible': [('type', 'in', ['service', 'consu'])]}"/>
+                <field name="below_threshold" attrs="{'invisible': [('type', 'in', ['service', 'consu'])]}"/>
+                <field name="no_stock" attrs="{'invisible': [('type', 'in', ['service', 'consu'])]}"/>
             </xpath>
         </field>
     </record>
