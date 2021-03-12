@@ -369,7 +369,7 @@ class MailRenderMixin(models.AbstractModel):
           this could be cleaned but hey, we are in a rush
         :param str model: model name of records on which we want to perform rendering
         :param list res_ids: list of ids of records (all belonging to same model)
-        :param string engine: jinja
+        :param string engine: see ``MailRenderMixin._render_field``
         :param post_process: see ``MailRenderMixin._render_field``;
 
         :return dict: {res_id: string of rendered template based on record}
@@ -431,7 +431,7 @@ class MailRenderMixin(models.AbstractModel):
 
     def _render_field(self, field, res_ids,
                       compute_lang=False, set_lang=False,
-                      post_process=False):
+                      engine=None, post_process=False):
         """ Given some record ids, render a template located on field on all
         records. ``field`` should be a field of self (i.e. ``body_html`` on
         ``mail.template``). res_ids are record IDs linked to ``model`` field
@@ -452,6 +452,11 @@ class MailRenderMixin(models.AbstractModel):
         :return dict: {res_id: string of rendered template based on record}
         """
         self.ensure_one()
+
+        # auto detect rendering engine
+        if engine is None:
+            engine = 'qweb' if issubclass(type(self[field]), self.pool['ir.ui.view']) else 'jinja'
+
         if compute_lang:
             templates_res_ids = self._classify_per_lang(res_ids)
         elif set_lang:
@@ -459,11 +464,15 @@ class MailRenderMixin(models.AbstractModel):
         else:
             templates_res_ids = {self._context.get('lang'): (self, res_ids)}
 
+        if engine is None:
+            engine = 'qweb' if issubclass(type(self[field]), self.env['ir.ui.view']) else 'jinja'
+
         return dict(
             (res_id, rendered)
             for lang, (template, tpl_res_ids) in templates_res_ids.items()
             for res_id, rendered in template._render_template(
                 template[field], template.model, tpl_res_ids,
+                engine=engine,
                 post_process=post_process
             ).items()
         )

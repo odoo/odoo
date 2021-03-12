@@ -46,6 +46,9 @@ class MailTemplate(models.Model):
     reply_to = fields.Char('Reply-To', help="Preferred response address (placeholders may be used here)")
     # content
     body_html = fields.Html('Body', translate=True, sanitize=False)
+    body_view_id = fields.Many2one(
+        'ir.ui.view', string="QWeb Body", help="QWeb view used to render mail body",
+        domain="[('is_mail_template', '=', True)]")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
