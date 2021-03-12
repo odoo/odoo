@@ -48,7 +48,14 @@ class ThreadPreview extends Component {
          * top-level click handler when clicking on this specific button.
          */
         this._markAsReadRef = useRef('markAsRead');
+        this._constructor();
     }
+
+    /**
+     * Allows patching constructor.
+     */
+    _constructor() {}
+
 
     //--------------------------------------------------------------------------
     // Public
