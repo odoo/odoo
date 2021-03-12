@@ -14,6 +14,7 @@ from werkzeug import urls, utils
 from odoo import models, fields, api, _
 
 
+URL_MAX_SIZE = 10 * 1024 * 1024
 URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 TEXT_URL_REGEX = r'https?://[a-zA-Z0-9@:%._\+~#=/-]+(?:\?\S+)?'
 
@@ -93,7 +94,15 @@ class LinkTracker(models.Model):
     @api.depends('url')
     def _get_title_from_url(self, url):
         try:
-            page = requests.get(url, timeout=5)
+            head = requests.head(url, timeout=5)
+            if (
+                    int(head.headers.get('Content-Length', 0)) > URL_MAX_SIZE
+                    or
+                    'text/html' not in head.headers.get('Content-Type', 'text/html')
+            ):
+                return url
+            # HTML parser can work with a part of page, so ask server to limit downloading to 50 KB
+            page = requests.get(url, timeout=5, headers={"range": "bytes=0-50000"})
             p = html.fromstring(page.text.encode('utf-8'), parser=html.HTMLParser(encoding='utf-8'))
             title = p.find('.//title').text
         except:
