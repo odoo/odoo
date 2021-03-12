@@ -1174,7 +1174,7 @@ def preload_registries(dbnames):
                 t0 = time.time()
                 t0_sql = odoo.sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
-                                registry._init_modules)
+                                sorted(registry._init_modules))
                 _logger.info("Starting post tests")
                 with odoo.api.Environment.manage():
                     for module_name in module_names:

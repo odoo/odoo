@@ -8,7 +8,7 @@
 # Ralf Hilgenstock <rh@dialoge.info>, 2018
 # b4d8887ced18b222d41dc1101b082e15, 2018
 # Renzo Meister, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # e2f FFE <e2f_de_FFE@outlook.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
@@ -19,6 +19,7 @@
 # Leon Grill <leg@odoo.com>, 2019
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2019
 # Oliver Roch <oliver.roch@d9t.de>, 2019
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Oliver Roch <oliver.roch@d9t.de>, 2019\n"
+"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,7 +193,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "Vor"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
@@ -248,7 +249,7 @@ msgstr "Abrechnungsrate"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__billable_type
 msgid "Billing Type"
-msgstr ""
+msgstr "Abrechnungsart"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -444,7 +445,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr ""
+msgstr "Generierte Aufgabe"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -786,7 +787,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
 msgid "Project Currency"
-msgstr ""
+msgstr "Projekt Währung"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
@@ -1327,6 +1328,12 @@ msgid ""
 msgstr ""
 "Bereits abgerechnete Stundenzettel (verknüpft mit nach Zeit und Material "
 "abgerechneten Auftragselementen) können nicht modifiziert werden."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:76
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:18

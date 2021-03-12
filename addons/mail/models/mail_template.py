@@ -98,7 +98,7 @@ try:
         'str': str,
         'quote': urls.url_quote,
         'urlencode': urls.url_encode,
-        'datetime': datetime,
+        'datetime': tools.wrap_module(datetime, []),
         'len': len,
         'abs': abs,
         'min': min,

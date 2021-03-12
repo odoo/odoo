@@ -341,9 +341,17 @@ class MailActivity(models.Model):
         for activity in self:
             if activity.date_deadline <= fields.Date.today():
                 self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                    (self._cr.dbname, 'res.partner', activity.user_id.sudo().partner_id.id),
                     {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self.sudo()).unlink()
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.summary or record.activity_type_id.display_name
+            res.append((record.id, name))
+        return res
 
     @api.multi
     def action_notify(self):

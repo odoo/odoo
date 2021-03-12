@@ -18,6 +18,9 @@
 # Marek Pontus, 2019
 # Algo Kärp <algokarp@gmail.com>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
+# Piia Paurson <piia@avalah.ee>, 2020
+# atriine <triine@avalah.ee>, 2021
+# Andre Roomet <andreroomet@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2020\n"
+"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,6 +198,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -204,7 +209,7 @@ msgstr "<i class=\"fa fa-print\"/> Trüki"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Lisa ostukorvi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -237,6 +242,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -440,7 +448,7 @@ msgstr "Ühe toote müügihind"
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
-msgstr ""
+msgstr "Tehingut ei saa siduda teises valuutas oleva müügitellimusega."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:780
@@ -448,6 +456,7 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
+"Tehingut ei saa siduda müügitellimustega, millel on erinevad partnerid."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -648,6 +657,9 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Lisa müügitellimuste ridadele manuaalselt allahindlusi või kuva "
+"hinnakirjadest arvutatud allahindlusi (võimalus aktiveerida hinnakirja "
+"konfiguratsioonist)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -664,7 +676,7 @@ msgstr "Soetusmaksumuses"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Manuste arv"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
@@ -972,7 +984,7 @@ msgstr "Koostage uus pakkumine, mis on müügi esimene samm."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr "Looge ja vaadake arveid"
+msgstr "Loo ja vaata arveid"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__create_uid
@@ -1316,7 +1328,7 @@ msgstr "Ettemaksu toode"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr "Ettemaks (fikseeritud suurus)"
+msgstr "Ettemaks (fikseeritud summa)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1519,7 +1531,7 @@ msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1682,12 +1694,12 @@ msgstr "Lisa arvele tellitud kogused"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr "Invoiceable lines"
+msgstr "Arveldamist ootavad read"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "Arveldatavad read (arvesta ettemaks maha)"
+msgstr "Arveldamist ootavad read (arvesta ettemaks maha)"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1732,8 +1744,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"Arved luuakse mustandina, nii et saate neid üle vaadata\n"
-"                        neid enne valideerimist."
+"Arved luuakse mustandina, et saaksite need üle vaadata\n"
+"                        enne valideerimist."
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
@@ -1827,14 +1839,14 @@ msgstr ""
 #: code:addons/sale/models/sale.py:667
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "Järgmistes olekutes ei ole lubatud tellimust kinnitada: %s"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
 #: selection:res.company,sale_onboarding_sample_quotation_state:0
 #: selection:res.company,sale_quotation_onboarding_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Just tehtud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
@@ -2094,7 +2106,7 @@ msgstr "Lisamüügi tellimust ei leitud"
 #: selection:res.company,sale_onboarding_sample_quotation_state:0
 #: selection:res.company,sale_quotation_onboarding_state:0
 msgid "Not done"
-msgstr ""
+msgstr "Ei ole valmis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2133,7 +2145,7 @@ msgstr "Tegutsemist nõudvate sõnumite arv"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Kohaletoimetamise veateatega sõnumite arv"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
@@ -2328,6 +2340,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Tellitud kogus: arvelda kliendi poolt tellitud koguseid.\n"
+"Tarnitud kogus: arvelda kliendi poolt kätte saadud koguseid."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -2851,7 +2865,7 @@ msgstr "Pakkumised ja müük"
 #. module: sale
 #: selection:product.attribute,type:0
 msgid "Radio"
-msgstr ""
+msgstr "Ringidega valikud"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -2898,12 +2912,12 @@ msgstr "Aruandlus"
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "Tellimuste automaatseks kinnitamiseks küsige kliendilt veebiallkirja."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online payment to confirm orders"
-msgstr ""
+msgstr "Tellimuse kinnitamiseks taotlege veebimakset"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
@@ -2942,7 +2956,7 @@ msgstr "Müügitellimuste arv"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Müügitellimuse hoiatused"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
@@ -3065,7 +3079,7 @@ msgstr "Sales Order Lines related to a Sales Order of mine"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Müügitellimus(ed)"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:102
@@ -3156,13 +3170,13 @@ msgstr "Müügiesindaja"
 #: code:addons/sale/models/res_company.py:60
 #, python-format
 msgid "Sample Order Line"
-msgstr ""
+msgstr "Näidis tellimuse rida"
 
 #. module: sale
 #: code:addons/sale/models/res_company.py:57
 #, python-format
 msgid "Sample Product"
-msgstr ""
+msgstr "Näidistoode"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3200,7 +3214,7 @@ msgstr "Vali"
 #: code:addons/sale/static/src/js/tour.js:46
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Valige toode või looge üks siinsamas."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3234,7 +3248,7 @@ msgstr "Saada PRO FORMA arve"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr ""
+msgstr "Saada arve tasumisel tootepõhine e-kiri"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3280,7 +3294,7 @@ msgstr "Määra arveldamiste eesmärk"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set a default validity on your quotations"
-msgstr ""
+msgstr "Pange pakkumistele vaikimisi kehtivus"
 
 #. module: sale
 #. openerp-web
@@ -3449,6 +3463,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tegevuspõhised staatused\n"
+"Üle aja: Tähtaeg on juba möödas\n"
+"Täna: Tegevuse tähtaeg on täna\n"
+"Planeeritud: Tulevased tegevused"
 
 #. module: sale
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_3
@@ -3493,7 +3511,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
 msgid "Tax amount by group"
-msgstr ""
+msgstr "Maksumäär grupiviisiliselt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3511,7 +3529,7 @@ msgstr "Hoiustel kasutatatavad maksud"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Tehniline väli UX tarvis."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3551,6 +3569,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Analüütilise kontoga %s seotud müügitellimus %s on tühistatud. Te ei saa "
+"registreerida tühistatud müügitellimuse peal olevat kulu."
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:115
@@ -3560,6 +3580,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
+"Analüütilise kontoga %s  seotud müügitellimus %s on hetkel lukus. Te ei saa "
+"registreerida lukustatud müügitellimuse peal olevat kulu. Palun looge selle "
+"analüütilise kontoga seotud uus müügitellimus. "
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:111
@@ -3568,6 +3591,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
+"Analüütilise kontoga %s seotud müügitellimus %s peab enne kulude "
+"registreerimist olema valideeritud."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -3599,6 +3624,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Arve luuakse automaatselt ja on saadaval kliendiportaalis, kui makse vastuvõtja on tehingu kinnitanud.\n"
+"Makse on märgitud makstuks ja makse registreeritakse makseandmikus, mis on määratud ära makse vastuvõtja konfiguratsioonis.\n"
+"See režiim on soovitatud juhul, kui te väljastate viimase arve tellimisel ja mitte peale tarnet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3616,11 +3644,13 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"Teie arvet ei kinnitatud vaatamata arve saaja vastusele (%s): arve summa on "
+"%r , kuid saaja vastas %r."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Selle müügitellimuse maksevestlus."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:154
@@ -3648,7 +3678,7 @@ msgstr ""
 msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
-msgstr ""
+msgstr "Kursi määra seos kursiga 1 kohaldatakse vastavalt tellimuse kuupäeval"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:80
@@ -4123,6 +4153,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Te ei saa kustutada pakkumist ega kinnitatud müügitellimust. Te peate selle "
+"esmalt tühistama."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1491
@@ -4131,6 +4163,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Te ei saa eemaldada tellimuse rida peale seda, kui müügitellimus on kinnitatud.\n"
+"Te peaksite pigem muutma koguse 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4138,6 +4172,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
+"Võite selekteerida kõik tellimused ja arveldada need partiidena või "
+"selekteerida ning arveldada ühekaupa. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type
@@ -4156,6 +4192,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Te ei saa muuta müügitellimuse rea tüüpi. Selle asemel peaksite olemasoleva "
+"rea kustutama ja looma uue rea õige tüübiga."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4226,7 +4264,7 @@ msgstr "kg"
 #: code:addons/sale/models/sale.py:106
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "müügitellimus"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group

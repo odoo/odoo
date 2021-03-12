@@ -5,7 +5,6 @@
 # Translators:
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Luca Tralli, 2018
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Pietro Della Notte <pdellanotte@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
@@ -17,8 +16,8 @@
 # David Minneci <david@numeko.it>, 2018
 # Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Lorenzo Battistini <lb@takobi.online>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-02-13 07:03+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,7 +201,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:537
 #, python-format
 msgid "(count)"
-msgstr ""
+msgstr "(numero totale)"
 
 #. module: web
 #. openerp-web
@@ -253,9 +252,8 @@ msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
 msgstr ""
-"Una finestra popup è stata bloccata. Potresti aver bisogno di modificare le "
-"impostazioni del tuo browser per permettere le finestre popup per questa "
-"pagina."
+"Una finestra popup è stata bloccata. Potrebbe essere necessario modificare "
+"le impostazioni del browser per consentire le finestre popup della pagina."
 
 #. module: web
 #. openerp-web
@@ -265,6 +263,9 @@ msgid ""
 "A popup window with your report was blocked. You may need to change your "
 "browser settings to allow popup windows for this page."
 msgstr ""
+"Una finestra popup con il documento è stata bloccata. Potrebbe essere "
+"necessario modificare le impostazioni del browser per consentire le finestre"
+" popup della pagina."
 
 #. module: web
 #. openerp-web
@@ -595,7 +596,7 @@ msgstr "Archiviare veramente tutti i record selezionati?"
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:310
 #, python-format
 msgid "Are you sure that you want to remove this column ?"
-msgstr "Rimuovere veramente questa colonna ?"
+msgstr "Rimuovere veramente questa colonna?"
 
 #. module: web
 #. openerp-web
@@ -762,7 +763,7 @@ msgstr "Annulla"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:106
 #, python-format
 msgid "Cannot render chart with mode : "
-msgstr ""
+msgstr "Impossibile rappresentare il grafico in modalità :"
 
 #. module: web
 #. openerp-web
@@ -787,7 +788,7 @@ msgstr "Modifica password"
 #: code:addons/web/static/src/xml/base.xml:49
 #, python-format
 msgid "Change default:"
-msgstr "Cambia default:"
+msgstr "Cambia predefinito:"
 
 #. module: web
 #. openerp-web
@@ -925,7 +926,7 @@ msgstr "Copia testo"
 #: code:addons/web/static/src/xml/base.xml:147
 #, python-format
 msgid "Copy the full error to clipboard"
-msgstr "Copiare l'errore completo negli appunti"
+msgstr "Copia errore completo negli appunti"
 
 #. module: web
 #. openerp-web
@@ -1611,7 +1612,7 @@ msgstr "Ottieni questa e altre funzionalità aggiuntive con Odoo Enterprise."
 #: code:addons/web/static/src/js/services/crash_manager.js:18
 #, python-format
 msgid "Global Business Error"
-msgstr ""
+msgstr "Errore Logico Generico"
 
 #. module: web
 #. openerp-web
@@ -1786,7 +1787,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:105
 #, python-format
 msgid "Invalid mode for chart"
-msgstr ""
+msgstr "Modalità non valida per il grafico"
 
 #. module: web
 #. openerp-web
@@ -3223,7 +3224,7 @@ msgstr "La nuova password e quella di conferma devono essere identiche."
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
 msgstr ""
-"La vecchia password fornita non è corretta, non è quindi stata modificata."
+"La password precedente fornita non è corretta, nessuna modifica effettuata."
 
 #. module: web
 #. openerp-web
@@ -3233,6 +3234,8 @@ msgid ""
 "The operation was interrupted. This usually means that the current operation"
 " is taking too much time."
 msgstr ""
+"L'operazione è stata interrotta. Solitamente ciò significa che l'operazione "
+"corrente sta impiegando troppo tempo."
 
 #. module: web
 #. openerp-web
@@ -3263,7 +3266,15 @@ msgstr ""
 " modello \"ir.attachment\"."
 
 #. module: web
-#: code:addons/web/controllers/main.py:1513
+#: code:addons/web/controllers/main.py:1452
+#, python-format
+msgid ""
+"There are too many records (%s records, limit: %s) to export as this format."
+" Consider splitting the export."
+msgstr ""
+
+#. module: web
+#: code:addons/web/controllers/main.py:1522
 #, python-format
 msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
@@ -3492,7 +3503,7 @@ msgstr "Deminimizza"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:202
 #, python-format
 msgid "Unknown CORS error"
-msgstr ""
+msgstr "Errore CORS sconosciuto"
 
 #. module: web
 #. openerp-web
@@ -3617,7 +3628,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:258
 #, python-format
 msgid "View Fields"
-msgstr "Visualizza campi"
+msgstr "Campi della vista"
 
 #. module: web
 #. openerp-web
@@ -4116,7 +4127,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/domain_selector.js:674
 #, python-format
 msgid "not set (false)"
-msgstr ""
+msgstr "non impostato (falso)"
 
 #. module: web
 #. openerp-web
@@ -4173,4 +4184,4 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/domain_selector.js:674
 #, python-format
 msgid "set (true)"
-msgstr ""
+msgstr "impostato (vero)"

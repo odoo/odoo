@@ -160,20 +160,22 @@
 
 <form t-name="ChangePassword" name="change_password_form" method="POST" aria-atomic="true">
     <div class="o_form_view">
-        <table class="o_group o_inner_group o_label_nowrap">
-            <tr>
-                <td class="o_td_label"><label for="old_pwd" class="o_form_label">Old Password</label></td>
-                <td width="100%"><input type="password" class="o_field_widget o_input" name="old_pwd" minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
-            </tr>
-            <tr>
-                <td class="o_td_label"><label for="new_password" class="o_form_label">New Password</label></td>
-                <td width="100%"><input type="password" class="o_field_widget o_input" name="new_password" minlength="1" autocomplete="new-password"/></td>
-            </tr>
-            <tr>
-                <td class="o_td_label"><label for="confirm_pwd" class="o_form_label">Confirm New Password</label></td>
-                <td width="100%"><input type="password" class="o_field_widget o_input" name="confirm_pwd" minlength="1" autocomplete="new-password"/></td>
-            </tr>
-        </table>
+        <div class="flex-grow-1">
+            <table class="o_group o_inner_group o_label_nowrap">
+                <tr>
+                    <td class="o_td_label"><label for="old_pwd" class="o_form_label">Old Password</label></td>
+                    <td width="100%"><input type="password" class="o_field_widget o_input" name="old_pwd" minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
+                </tr>
+                <tr>
+                    <td class="o_td_label"><label for="new_password" class="o_form_label">New Password</label></td>
+                    <td width="100%"><input type="password" class="o_field_widget o_input" name="new_password" minlength="1" autocomplete="new-password"/></td>
+                </tr>
+                <tr>
+                    <td class="o_td_label"><label for="confirm_pwd" class="o_form_label">Confirm New Password</label></td>
+                    <td width="100%"><input type="password" class="o_field_widget o_input" name="confirm_pwd" minlength="1" autocomplete="new-password"/></td>
+                </tr>
+            </table>
+        </div>
 
         <button type="button" class="btn btn-primary oe_form_button">Change Password</button>
         <button type="button" class="btn btn-secondary oe_form_button oe_form_button_cancel" href="javascript:void(0)">Cancel</button>
@@ -741,12 +743,15 @@
             <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
             <div class="o_field_selector_title"/>
             <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
+            <div t-if="widget.options.showSearchInput" class="o_field_selector_search">
+                <input type="text" class="o_input"/>
+            </div>
         </div>
         <div class="o_field_selector_popover_body">
             <ul class="o_field_selector_page"/>
         </div>
         <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
-            <input type="text" class="o_input"/>
+            <input type="text" class="o_input o_field_selector_debug"/>
         </div>
     </div>
 </div>
@@ -797,7 +802,7 @@
 <t t-name="FieldRadio.button">
     <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
         <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined"
-            t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
+            t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
         <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
@@ -915,15 +920,18 @@
 </t>
 <t t-name="FieldStatus.content.button">
     <t t-set="disabled" t-value="!clickable"/>
-    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-pressed="true"
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-checked="true"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
     </button>
-    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-pressed="false"
+    <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-checked="false"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
     </button>
-    <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-pressed="false"
+    <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-checked="false"
+        t-att-role="is_dropdown ? 'menuitemradio': 'radio'"
         t-attf-class="btn o_arrow_button btn-secondary #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and !disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
     </button>
@@ -1349,7 +1357,7 @@
 </t>
 
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
-    <button t-attf-class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle#{widget.isMobile ? ' o-no-caret' : ''}" data-toggle="dropdown" aria-expanded="false" tabindex="-1" aria-label="Favorites" title="Favorites">
+    <button t-attf-class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle#{widget.isMobile ? ' o-no-caret' : ''}" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-boundary="viewport" aria-label="Favorites" title="Favorites">
         <span class="fa fa-star"/> Favorites <span t-if="widget.isMobile" class="fa fa-chevron-right float-right mt4"/>
     </button>
     <div class="dropdown-menu o_favorites_menu" role="menu">

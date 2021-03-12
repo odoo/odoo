@@ -217,14 +217,28 @@ class Product(models.Model):
         other_locations = locations - hierarchical_locations
         loc_domain = []
         dest_loc_domain = []
+
+        # To avoid to have a giant request which will cause memory error, minimize the domain
+        def minimize_domain_parent_path(location_parent_path):
+            # Sorted to get the most "parent" first
+            result = []
+            location_parent_path = sorted(location_parent_path)
+            ids_encounter = set()
+            for location_parent in location_parent_path:
+                ids_parent = location_parent.split('/')[:-1]  # Remove last one because always finish by '/'
+                if not (ids_encounter & set(ids_parent)):  # If there is a intersection, parent_path is already take in account
+                    ids_encounter.add(ids_parent[-1])  # Add only myself
+                    result.append(location_parent)
+            return result
+
         # this optimizes [('location_id', 'child_of', hierarchical_locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
-        for location in hierarchical_locations:
+        for parent_path in minimize_domain_parent_path(hierarchical_locations.mapped('parent_path')):
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
+            loc_domain.append(('location_id.parent_path', '=like', parent_path + '%'))
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
+            dest_loc_domain.append(('location_dest_id.parent_path', '=like', parent_path + '%'))
         if other_locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
             loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
@@ -406,6 +420,8 @@ class Product(models.Model):
         owner_id = self.env['res.partner'].browse(owner_id)
         to_uom = self.env['uom.uom'].browse(to_uom)
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        if lot_id:
+            quants = quants.filtered(lambda q: q.lot_id == lot_id)
         theoretical_quantity = sum([quant.quantity for quant in quants])
         if to_uom and product_id.uom_id != to_uom:
             theoretical_quantity = product_id.uom_id._compute_quantity(theoretical_quantity, to_uom)

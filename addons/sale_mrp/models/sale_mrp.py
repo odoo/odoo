@@ -18,10 +18,17 @@ class SaleOrderLine(models.Model):
                 # have changed, we don't compute the quantities but verify the move state.
                 bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
                 if bom and bom.type == 'phantom':
-                    moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
-                    bom_delivered = moves and all([move.state == 'done' for move in moves])
-                    if bom_delivered:
-                        line.qty_delivered = line.product_uom_qty
+                    # bom_delivered
+                    moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel' and m.state == 'done')
+                    outgoing_moves = moves.filtered(lambda m: m.location_dest_id.usage == "customer" and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)))
+                    bom_returned = all(
+                        [
+                            moves.filtered(lambda m: m.location_dest_id.usage != "customer" and m.to_refund and m.origin_returned_move_id.id == move.id)
+                            for move in outgoing_moves
+                        ]
+                    )
+                    if moves and not bom_returned:
+                        line.qty_delivered = line.qty_delivered_manual or line.product_uom_qty
                     else:
                         line.qty_delivered = 0.0
 

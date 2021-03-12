@@ -23,7 +23,7 @@ function get_first_visible_element($elements) {
     return $();
 }
 
-function do_before_unload(if_unload_callback, if_not_unload_callback) {
+function do_before_unload(if_unload_callback, if_not_unload_callback, if_not_unload_timeout) {
     if_unload_callback = if_unload_callback || function () {};
     if_not_unload_callback = if_not_unload_callback || if_unload_callback;
 
@@ -35,10 +35,10 @@ function do_before_unload(if_unload_callback, if_not_unload_callback) {
         if_unload_callback();
         if (old_before) return old_before.apply(this, arguments);
     };
-    reload_timeout = _.defer(function () {
+    reload_timeout = _.delay(function () {
         window.onbeforeunload = old_before;
         if_not_unload_callback();
-    });
+    }, if_not_unload_timeout || 1);
 }
 
 function get_jquery_element_from_selector(selector) {

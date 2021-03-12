@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from odoo import fields, models, api
+from odoo import fields, models, api, tools
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
@@ -41,3 +41,9 @@ class Attachment(models.Model):
         extra_domain = (extra_domain or []) + website.website_domain()
         order = ('website_id, %s' % order) if order else 'website_id'
         return super(Attachment, self).get_attachment_by_key(key, extra_domain, order)
+
+    def init(self):
+        res = super(Attachment, self).init()
+        # ir_http._xmlid_to_obj is using this index for multi-website
+        tools.create_index(self._cr, 'ir_attachment_key_website_idx', self._table, ['key', 'website_id'])
+        return res

@@ -7,7 +7,7 @@
 # Martin Trigaux, 2018
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -328,7 +328,7 @@ msgstr "<strong>Cant Min:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>Comandă</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -848,7 +848,7 @@ msgstr "Daca debifați câmpul activ, puteți ascunde o locație fără a o ște
 #: model:product.product,name:stock.product_cable_management_box
 #: model:product.template,name:stock.product_cable_management_box_product_template
 msgid "Cable Management Box"
-msgstr ""
+msgstr "Cutie de gestionare a cablurilor"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1166,7 +1166,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr ""
+msgstr "Contează proiectul de culegere"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
@@ -2337,6 +2337,9 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
+"În cazul în care ridicarea este deblocată, puteți edita cererea inițială "
+"(pentru o ridicare ciornă) sau cantitățile efective (pentru o ridicare "
+"efectuată)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_reserved
@@ -2552,19 +2555,19 @@ msgstr ""
 #: code:addons/stock/models/product.py:254
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "Operand stâng de domeniu nevalid %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:256
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr ""
+msgstr "Operator de domeniu nevalid%s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:258
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "Operand drept de domeniu nevalid %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__location_id
@@ -2726,7 +2729,7 @@ msgstr "Este urmăritor"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__is_fresh_package
 msgid "Is Fresh Package"
-msgstr ""
+msgstr "Pachetul este proaspăt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_locked
@@ -2941,7 +2944,7 @@ msgstr "Termen livrare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_type
 msgid "Lead Type"
-msgstr ""
+msgstr "Tip Pistă"
 
 #. module: stock
 #: selection:stock.rule,group_propagation_option:0
@@ -3388,7 +3391,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
-msgstr ""
+msgstr "Trasee în mai mulți pași"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_warehouses
@@ -4129,6 +4132,12 @@ msgid "Please add some items to move."
 msgstr "Vă rugăm să adăugați câteva elemente pentru a muta."
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:92
+#, python-format
+msgid "Please check the following serial number (name, id): "
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:132
 #, python-format
 msgid "Please specify at least one non-zero quantity."
@@ -4323,7 +4332,7 @@ msgstr "Reaprovizionare produs"
 #: model:ir.actions.report,name:stock.action_report_stock_rule
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Product Routes Report"
-msgstr ""
+msgstr "Raport rute produi"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4643,7 +4652,7 @@ msgstr "Poziții de stoc"
 #: code:addons/stock/models/stock_quant.py:74
 #, python-format
 msgid "Quants cannot be created for consumables or services."
-msgstr ""
+msgstr "Cotele nu pot fi create pentru consumabile sau servicii."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__rate_picking_backorders
@@ -4780,7 +4789,7 @@ msgstr "Înregistrați loturi, pachete, locație"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr ""
+msgstr "Părțile rămase de cules parțial prelucrate"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
@@ -5003,6 +5012,8 @@ msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
 msgstr ""
+"Traseele vor fi create automat pentru aprovizionarea acestui depozit din "
+"depozitele bifate"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
@@ -5010,6 +5021,8 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
 msgstr ""
+"Vor fi create trasee pentru aceste depozite de aprovizionare și le puteți "
+"selecta pe produse și categorii de produse"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -5232,7 +5245,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Warehouse Routes"
-msgstr ""
+msgstr "Setați rute pentru depozite"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
@@ -5246,7 +5259,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots &amp; serial numbers"
-msgstr ""
+msgstr "Setați date de expirare pe loturi &amp; numere de serie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5294,7 +5307,7 @@ msgstr "Recepție și Livrare"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Conectori de transport"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
@@ -5379,7 +5392,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
 msgid "Show the routes that apply on selected warehouses."
-msgstr ""
+msgstr "Afișați rutele care se aplică în depozitele selectate."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__string_availability_info
@@ -5605,7 +5618,7 @@ msgstr "Ridicare stoc"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_view_graph
 msgid "Stock Quant"
-msgstr ""
+msgstr "Cantintate Stoc"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
@@ -5636,7 +5649,7 @@ msgstr "Confirmare Traseu Stoc"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_line
 msgid "Stock Track Line"
-msgstr ""
+msgstr "Linie Urmărire Stoc"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
@@ -5723,6 +5736,8 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
+"Domeniul tehnic folosit pentru a reaproviziona rutele dintre depozite care "
+"aparțin acestei companii."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
@@ -6229,7 +6244,7 @@ msgstr "Cantitatea totală"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__total_route_ids
 msgid "Total routes"
-msgstr ""
+msgstr "Rute totale"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6257,6 +6272,8 @@ msgid ""
 "Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n"
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
+"Urmăriți următoarele date pe loturi și numere de serie: cel mai bun înainte, eliminare, sfârșitul vieții, alertă. \n"
+" Astfel de date sunt setate automat la crearea numărului de lot / serie pe baza valorilor setate pe produs (în zile)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6265,6 +6282,10 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
+"Urmăriți următoarele date pe loturi și numere de serie: cel mai bun înainte,"
+" eliminare, sfârșitul vieții, alertă. Astfel de date sunt setate automat la "
+"crearea numărului de lot / serie pe baza valorilor setate pe produs (în "
+"zile)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6677,7 +6698,7 @@ msgstr "Configurație depozit"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
 msgid "Warehouse Count"
-msgstr ""
+msgstr "Număr depozite"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -6915,6 +6936,10 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
+"Puteți defini aici principalele rute care traversează\n"
+"                depozitele dvs. și care definesc fluxurile produselor dvs. Aceste\n"
+"               rute pot fi atribuite unui produs, unei categorii de produse sau pot fi fixate\n"
+"                la achiziție sau comandă de vânzare."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7189,7 +7214,7 @@ msgstr "Puteți returna o singură ridicare pe rând."
 #: code:addons/stock/models/stock_inventory.py:22
 #, python-format
 msgid "You must define a warehouse for the company: %s."
-msgstr ""
+msgstr "Trebuie să definiți un depozit pentru companie: %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:1045

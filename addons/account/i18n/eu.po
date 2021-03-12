@@ -5,7 +5,6 @@
 # Translators:
 # Gari Araolaza <garaolaza@codesyntax.com>, 2019
 # José Miguel Andonegi <jm.andonegi@gmail.com>, 2019
-# Nagore Ruiz de Escudero <nagore.ruiz.escudero@gmail.com>, 2019
 # Eneko <eastigarraga@codesyntax.com>, 2019
 # Martin Trigaux, 2019
 # oihane <oihanecruce@gmail.com>, 2019
@@ -14,12 +13,14 @@
 # Victor Laskurain <blaskurain@binovo.es>, 2019
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2019
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2019
-# Naomi Hidalgo <naomihid96@gmail.com>, 2019
+# 61590936fa9bf290362ee306eeabf363_944dd10 <a8bfd5a0b49b9c8455f33fc521764cc3_680674>, 2019
 # Iñaki Ibarrola <inakiibarrola@yahoo.es>, 2020
 # Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020
 # mgalarza005 <mikelgalarza99@gmail.com>, 2020
 # Unai Muñoz <unaimunoz9@gmail.com>, 2020
 # Miren Maiz <mirenmaizz@gmail.com>, 2020
+# Nagore Ruiz de Escudero Zapico <nagore.ruiz.escudero@gmail.com>, 2020
+# Oihana Mendizabal <omendizabal@tolosaldea.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Miren Maiz <mirenmaizz@gmail.com>, 2020\n"
+"Last-Translator: Oihana Mendizabal <omendizabal@tolosaldea.com>, 2021\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,7 +202,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr ""
+msgstr "Faktura zirriborroa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -365,6 +366,8 @@ msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Zerga lehenetsiak</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7808,6 +7811,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Mesedez, erabili komunikazio hau zure ordainketa egiteko:"
@@ -10050,7 +10059,10 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
 msgstr ""
 
 #. module: account
@@ -11486,7 +11498,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:611
 #, python-format
 msgid "You cannot delete a payment that is already posted."
-msgstr ""
+msgstr "Ezin duzu ezabatu jada erregistratuta dagoen ordainketa bat."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:786
@@ -11512,6 +11524,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
+"Ezin duzu konfigurazio hori desgaitu, zure zerga batzuk eskudirutan "
+"oinarritzen direlako. Aldatu zergak konfigurazio hori desgaitu baino lehen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1146
@@ -11565,6 +11579,8 @@ msgstr ""
 #, python-format
 msgid "You cannot modify a journal entry linked to a posted payment."
 msgstr ""
+"Ezin duzu aldatu erregistratutako ordainketa bati lotutako egunkariko "
+"sarrera bat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:331
@@ -11587,7 +11603,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot perform this action on an account that contains journal items."
-msgstr ""
+msgstr "Ekintza hau ezin duzu egin egunkariko elementuak dituen kontu batean"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -11602,6 +11618,8 @@ msgid ""
 "You cannot register payments for customer invoices and credit notes at the "
 "same time."
 msgstr ""
+"Ezin dituzu aldi berean bezeroen fakturetarako ordainketak eta kreditu-"
+"oharrak erregistratu."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:96
@@ -11610,12 +11628,14 @@ msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
 msgstr ""
+"Ezin dituzu erregistratu aldi berean hornitzaileen fakturetarako ordainketak"
+" eta hornitzaileen itzulketak."
 
 #. module: account
 #: code:addons/account/models/account.py:644
 #, python-format
 msgid "You cannot remove the bank account from the journal once set."
-msgstr ""
+msgstr "Konfiguratu ondoren, ezin duzu egunkaritik banku-kontua ezabatu."
 
 #. module: account
 #: code:addons/account/models/account.py:332
@@ -11624,6 +11644,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
 "vendor."
 msgstr ""
+"Ezin duzu ezabatu/desaktibatu bezero edo hornitzaile batentzat "
+"konfiguratutako kontu bat."
 
 #. module: account
 #: code:addons/account/models/account.py:320
@@ -11632,6 +11654,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
+"Ezin duzu kontu honetan moneta bat ezarri, egunkari honetan idazpen batzuk "
+"dauzkalako atzerriko moneta desberdin batekin."
 
 #. module: account
 #: code:addons/account/models/account.py:294
@@ -11640,12 +11664,14 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
+"Ezin duzu kontu bat aldatu adiskidetzea saihesteko, adiskidetze partzial "
+"batzuk oraindik egiteke badaude."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1112
 #, python-format
 msgid "You cannot use a deprecated account."
-msgstr ""
+msgstr "Ezin duzu kontu zaharkitu bat erabili."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1069
@@ -11654,6 +11680,8 @@ msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
 msgstr ""
+"Ezin duzu kontu orokor hau erabili egunkari honetan, kontsultatu \"Sarrera-"
+"kontrolak\" erlaitza erlazionatutako egunkarian."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:76
@@ -11684,6 +11712,7 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr ""
+"Erregistro-egunkarian 'Barne-transferentziako kontua' definitu behar duzu."
 
 #. module: account
 #: code:addons/account/models/account.py:142
@@ -11729,12 +11758,6 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
 msgstr ""
 
 #. module: account

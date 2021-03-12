@@ -267,6 +267,14 @@ Mostly just proxies attributes to the corresponding fields on
 ``ir.actions.report``, but also automatically creates the item in the
 :guilabel:`More` menu of the report's ``model``.
 
+.. note::
+
+    You might expect the ``name`` of the ``report`` tag to become the ``ir.actions.report`` name,
+    but the value is used as ``report_name`` field value.  To specify the ``name`` field in ``ir.actions.report``,
+    you should use the ``string`` attribute of the ``report`` tag.
+
+    The detailed attributes and values supported can be found :ref:`here <reference/reports/report>`.
+
 .. ignored url, act_window and ir_set
 
 CSV data files
@@ -286,14 +294,13 @@ For this case, data files can also use csv_, this is often the case for
 Here's the first lines of the data file defining US states
 ``res.country.state.csv``
 
-.. literalinclude:: ../../odoo/addons/base/data/res.country.state.csv
+.. literalinclude:: static/res.country.state.csv
     :language: text
-    :lines: 1-15
 
 rendered in a more readable format:
 
 .. csv-table::
-    :file: ../../odoo/addons/base/data/res.country.state.csv
+    :file: static/res.country.state.csv
     :header-rows: 1
     :class: table-striped table-hover table-condensed
 

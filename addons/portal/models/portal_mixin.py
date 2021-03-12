@@ -76,9 +76,9 @@ class PortalMixin(models.AbstractModel):
     @api.multi
     def _notify_get_groups(self, message, groups):
         access_token = self._portal_ensure_token()
-        customer = self['partner_id']
 
-        if access_token and customer:
+        if access_token and 'partner_id' in self._fields and self['partner_id']:
+            customer = self['partner_id']
             additional_params = {
                 'access_token': self.access_token,
             }

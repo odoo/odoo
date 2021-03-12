@@ -34,9 +34,14 @@ Discuss.include({
      * @override
      */
     start: function () {
+        var self = this;
         this._$mainContent = this.$('.o_mail_discuss_content');
         return this._super.apply(this, arguments)
-            .then(this._updateControlPanel.bind(this));
+            .then(this._updateControlPanel.bind(this))
+            .then(function (def) {
+                self._updateContent(self._thread._type == 'mailbox' ? 'mailbox_inbox' : self._thread._type);
+                return def;
+            });
     },
     /**
      * @override
@@ -259,9 +264,8 @@ Discuss.include({
      */
     _onMobileTabClicked: function (ev) {
         var type = $(ev.currentTarget).data('type');
-        if (type === 'mailbox') {
-            var inbox = this.call('mail_service', 'getMailbox', 'inbox');
-            this._setThread(inbox);
+        if (type === 'mailbox_inbox') {
+            this._setThread(type);
         }
         this._updateContent(type);
     },

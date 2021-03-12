@@ -1288,6 +1288,12 @@ msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:86
+#, python-format
+msgid "For %s to be a kit, its product type must be 'Consumable'."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "From"
 msgstr "Fra"
@@ -3482,6 +3488,14 @@ msgid ""
 "The operations for producing this BoM.  When a routing is specified, the "
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:30
+#, python-format
+msgid ""
+"The product type of %s must be 'Consumable' because it has at least one kit-"
+"type bill of materials."
 msgstr ""
 
 #. module: mrp

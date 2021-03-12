@@ -46,6 +46,7 @@ class MrpBom(models.Model):
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
+        track_visibility='onchange',
         help="The operations for producing this BoM.  When a routing is specified, the production orders will "
              " be executed through work orders, otherwise everything is processed in the production order itself. ")
     ready_to_produce = fields.Selection([
@@ -77,6 +78,13 @@ class MrpBom(models.Model):
             else:
                 if bom.bom_line_ids.filtered(lambda x: x.product_id.product_tmpl_id == bom.product_tmpl_id):
                     raise ValidationError(_('BoM line product %s should not be same as BoM product.') % bom.display_name)
+
+    @api.constrains('product_tmpl_id', 'product_id', 'type')
+    def _check_kit_is_consumable(self):
+        for bom in self.filtered(lambda b: b.type == 'phantom'):
+            if (bom.product_id and bom.product_id.type or bom.product_tmpl_id.type) != "consu":
+                raise ValidationError(_("For %s to be a kit, its product type must be 'Consumable'."
+                                        % (bom.product_id and bom.product_id.display_name or bom.product_tmpl_id.display_name)))
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -215,7 +223,7 @@ class MrpBomLine(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Component', required=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'), required=True)

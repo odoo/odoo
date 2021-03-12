@@ -36,8 +36,10 @@
 # JEK Odoo <jek@odoo.com>, 2020
 # Tom Bache, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
-# Ermin Trevisan <trevi@twanda.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2021
+# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # 
 msgid ""
 msgstr ""
@@ -45,7 +47,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
+"Last-Translator: EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -991,7 +993,7 @@ msgstr "Kontoinhaber"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Kontoinhaber"
+msgstr "Abweichender Kontoinhaber"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
@@ -2122,7 +2124,8 @@ msgstr "automatischer Rechnungsprozess"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automate deferred revenues entries for multi-year contracts"
 msgstr ""
-"Einträge zu Umsatzabgrenzungsposten bei Mehrjahresverträgen automatisieren"
+"Einträge zu passiven Rechnungsabgrenzungsposten bei Mehrjahresverträgen "
+"automatisieren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2383,7 +2386,7 @@ msgstr "Grundbetrag"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr "Konto für erhaltenen Steuerbetrag"
+msgstr "Konto für die Steuerbasis"
 
 #. module: account
 #: code:addons/account/models/company.py:19
@@ -2476,7 +2479,7 @@ msgstr "Ausstehende Rechnungen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "zu prüfende Rechnungen"
+msgstr "Lieferantenrechnungen zu prüfen"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:178
@@ -4108,7 +4111,7 @@ msgstr "Standardsteuer für den Verkauf eines Produktes."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deferred Revenues Management"
-msgstr "Verwaltung von Umsatzabgrenzungsposten"
+msgstr "Verwaltung von passiven Rechnungsabgrenzungsposten"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_type_form
@@ -5019,7 +5022,7 @@ msgstr "Erzeuge Buchungen"
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
 msgid "Generic Statements"
-msgstr "Allgemeine Bankbelege"
+msgstr "Generische Berichte"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5266,7 +5269,7 @@ msgstr "ID"
 #: code:addons/account/models/chart_template.py:409
 #, python-format
 msgid "INV"
-msgstr "Re.:"
+msgstr "RG"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:325
@@ -5983,7 +5986,7 @@ msgstr "Ihnen zugeordnete Rechnungen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "Zu validierende Rechnungen"
+msgstr "Rechnungen zu prüfen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
@@ -6110,7 +6113,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Items"
-msgstr "Artikel"
+msgstr "Posten"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6285,7 +6288,7 @@ msgstr "Journale"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_journal
 msgid "Journals Audit"
-msgstr "Audit Journale"
+msgstr "Journalaudit"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6785,7 +6788,7 @@ msgstr "Hauptwährung Ihres Unternehmens"
 #: model:ir.ui.menu,name:account.account_reports_management_menu
 #: model:ir.ui.menu,name:account.menu_finance_entries_management
 msgid "Management"
-msgstr "Verwaltung"
+msgstr "Controlling"
 
 #. module: account
 #: model:account.payment.method,name:account.account_payment_method_manual_in
@@ -6825,7 +6828,7 @@ msgstr ""
 "Manuell: Lassen Sie sich per Bargeld, Scheck oder einer anderen Methode außerhalb von Odoo bezahlen.\n"
 "Elektronisch: Lassen Sie sich automatisch durch einen Zahlungserwerber bezahlen, indem Sie eine Transaktion auf einer Karte anfordern, die vom Kunden beim Kauf oder bei der Anmeldung im Internet gespeichert ist (Zahlungstoken).\n"
 "Überprüfen: Bezahlen Sie die Rechnung per Scheck und drucken Sie sie bei Odoo aus.\n"
-"Batch-Einzahlung: Verpacken Sie mehrere Kundenschecks auf einmal, indem Sie eine Batch-Einzahlung generieren, die Sie an Ihre Bank senden. Bei der Kodierung des Kontoauszugs in Odoo wird Ihnen vorgeschlagen, die Transaktion mit der Chargeneinzahlung abzustimmen, da für die Chargeneinzahlung das Modul account_batch_payment installiert sein muss.\n"
+"Batch-Zahlung: Verpacken Sie mehrere Kundenschecks auf einmal, indem Sie eine Batch-Zahlung generieren, die Sie an Ihre Bank senden. Bei der Kodierung des Kontoauszugs in Odoo wird Ihnen vorgeschlagen, die Transaktion mit der Chargeneinzahlung abzustimmen, da für die Chargeneinzahlung das Modul account_batch_payment installiert sein muss.\n"
 "SEPA-Überweisung: Zahlen Sie die Rechnung aus einer SEPA-Überweisungsdatei, die Sie an Ihre Bank senden. Um eine sepa-Überweisung zu ermöglichen, muss das Modul account_sepa installiert sein"
 
 #. module: account
@@ -8211,6 +8214,12 @@ msgid ""
 msgstr ""
 "Bitte installieren Sie einen Kontenplan oder erstellen Sie ein sonstiges "
 "Journal, bevor Sie fortfahren."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr "Bitte geben Sie einen rein positiven Rundungswert an."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9864,7 +9873,7 @@ msgstr "Steuerbezeichnung"
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 #: model:ir.model.fields,field_description:account.field_account_tax_template__tax_exigibility
 msgid "Tax Due"
-msgstr "Fällige Steuer"
+msgstr "Steuerfälligkeit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -10601,10 +10610,14 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
 msgstr ""
-"Der Inhaber, eines im Journal verwendeten Bankkontos, muss das Unternehmen "
-"(%s) sein."
+"Die Firma (%s) muss der Inhaber des Bankkontos eines \"Bank\"-Journals sein.\n"
+"Der Inhaber von \"%s\" ist jedoch \"%s\".\n"
+"Bitte wählen Sie ein anderes Bankkonto oder ändern Sie den Inhaber von \"%s\"."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
@@ -11223,7 +11236,7 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Diese Zahlungsbedinung wird anstelle der Standardzahlungsbedingung für "
+"Diese Zahlungsbedingung wird anstelle der Standardzahlungsbedingung für "
 "Verkaufsaufträge und Kundenrechnungen verwendet"
 
 #. module: account
@@ -11907,7 +11920,7 @@ msgstr "Zahlungsbedingungen des Verkäufers"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Vendor Payments"
-msgstr "Zahlungen des Lieferant"
+msgstr "Zahlungen des Lieferanten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -12529,12 +12542,6 @@ msgid ""
 msgstr ""
 "Um Wechselkursdifferenzen automatisch zu buchen, geben Sie in den "
 "Einstellungen bitte das Konto für Kursaufwendungen an."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr "Voreinstellung Bitte stellen Sie einen positiven Rundungswert ein."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

@@ -449,6 +449,7 @@ class MrpProduction(models.Model):
         v = self._get_raw_move_data(bom_line, line_data)
         if not v:
             return self.env['stock.move']
+        v['state'] = 'confirmed'
         return self.env['stock.move'].create(v)
 
     def _get_raw_move_data(self, bom_line, line_data):

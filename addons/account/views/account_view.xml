@@ -752,7 +752,7 @@
             <field name="model">account.bank.statement.line</field>
             <field name="priority">8</field>
             <field name="arch" type="xml">
-                <tree string="Statement lines" create="false">
+                <tree string="Statement lines" create="false" default_order="date desc, statement_id desc, sequence desc, id desc">
                     <field name="sequence" readonly="1" invisible="1"/>
                     <field name="statement_id" />
                     <field name="journal_id" invisible="1" />
@@ -1260,6 +1260,7 @@
                                     <group string="Taxes" attrs="{'invisible': [('tax_line_id','=',False), ('tax_ids','=',[])]}">
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
+                                        <field name="tax_exigible" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                     </group>
                                     <group string="Matching" attrs="{'invisible':[('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
                                         <label for="full_reconcile_id"/>
@@ -1389,7 +1390,6 @@
         <act_window
             id="action_move_line_select_tax_audit"
             name="Journal Items for Tax Audit"
-            context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
             src_model="account.account"
             view_id="account.view_move_line_tax_audit_tree"/>

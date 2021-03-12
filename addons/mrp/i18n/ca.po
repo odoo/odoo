@@ -12,6 +12,7 @@
 # M Palau <mpalau@tda.ad>, 2019
 # Arnau Ros, 2019
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
+# Josep Anton Belchi, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
+"Last-Translator: Josep Anton Belchi, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -399,7 +400,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__post_visible
 msgid "Allowed to Post Inventory"
-msgstr ""
+msgstr "Se li permet validar inventaris"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
@@ -1285,6 +1286,12 @@ msgstr "Seguidors (Canals)"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Seguidors (Clients)"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:86
+#, python-format
+msgid "For %s to be a kit, its product type must be 'Consumable'."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3517,6 +3524,14 @@ msgstr ""
 "Les operacions per produir aquest LdM. Quan s'especifica una ruta, les "
 "ordres de producció s'executen a través d'ordres de treball, en cas contrari"
 " tot és processa en la pròpia ordre de producció."
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:30
+#, python-format
+msgid ""
+"The product type of %s must be 'Consumable' because it has at least one kit-"
+"type bill of materials."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:56

@@ -8,22 +8,35 @@
     @include o-webclient-padding($top: $o-horizontal-padding/2, $bottom: $o-horizontal-padding/2);
     display: flex;
 
+    // 24 hand-picked distinguishable colors and their best contrasts for calendar items, based on luminance
+    $calendar-colors-bg:    #0000ff #ff0000 #00ff00 #00002b #ff1ab8 #ffd300 #005700 #8383ff #9e4f46 #72f6ff #00ffc1 #008395 #00007b #95d34f #f69edb #d311ff #7b1a69 #f61160 #ffc183 #72607b #232308 #8ca77b #f68308 #837200;
+    $calendar-colors-text:  #fdfdfd #fdfdfd #0d0d0d #fdfdfd #fdfdfd #0d0d0d #fdfdfd #0d0d0d #fdfdfd #0d0d0d #0d0d0d #fdfdfd #fdfdfd #0d0d0d #0d0d0d #fdfdfd #fdfdfd #fdfdfd #0d0d0d #fdfdfd #fdfdfd #0d0d0d #0d0d0d #fdfdfd;
+
     @for $index from 1 through $o-nb-calendar-colors {
-        .o_calendar_color_#{$index} {
-            color: #0D0D0D;
-            background-color: adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
-            border-color:  adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+        $color-bg: nth($calendar-colors-bg, $index);
+        $color-text: nth($calendar-colors-text, $index);
+        $color-text-hover: lighten($color-text, 30%);
+
+        @if $color-text == #fdfdfd {
+            $color-text-hover: darken($color-text, 15%);
+        }
+
+        a.o_calendar_color_#{$index} {
+            color: $color-text;
+            background-color: $color-bg;
+            border-color: mix($color-bg, $color-text, 85%);
             opacity: 0.7;
             &.o_event_hightlight {
                 opacity: 1.0;
                 color: black;
             }
             &:hover {
-                color: #666 !important;
+                color: $color-text-hover;
             }
         }
+
         .o_underline_color_#{$index} {
-            border-bottom: 4px solid adjust-hue(rgba(255, 192, 192, 0.7), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-bottom: 4px solid $color-bg;
         }
     }
 

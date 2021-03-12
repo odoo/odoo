@@ -9,6 +9,7 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2018
 # M Palau <mpalau@tda.ad>, 2019
 # Arnau Ros, 2019
+# jabelchi <jabelchi@gmail.com>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
 # 
 msgid ""
@@ -886,7 +887,7 @@ msgstr "Comanda de venda"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
 msgid "Sales Order Confirmation Date"
-msgstr ""
+msgstr "Data de confirmació de la comanda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_id
@@ -1247,12 +1248,12 @@ msgstr "Unitat(s)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Import sense impostos facturat"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Import no facturat a la factura"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
@@ -1288,6 +1289,12 @@ msgstr ""
 msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:76
+#, python-format
+msgid "You can not modify timesheets from different employees"
 msgstr ""
 
 #. module: sale_timesheet

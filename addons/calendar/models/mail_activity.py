@@ -26,6 +26,7 @@ class MailActivity(models.Model):
             'default_name': self.summary or self.res_name,
             'default_description': self.note and tools.html2plaintext(self.note).strip() or '',
             'default_activity_ids': [(6, 0, self.ids)],
+            'initial_date': self.date_deadline,
         }
         return action
 

@@ -29,3 +29,4 @@ François Honoré francois.honore@acsone.eu https://github.com/acsonefho
 Denis Robinet denis.robinet@acsone.eu https://github.com/RobinetDenisAcsone
 Benoit Aimont benoit.aimont@acsone.eu https://github.com/baimont
 Bejaoui Souheil souheil.bejaoui@acsone.eu https://github.com/sbejaoui
+Nans Lefebvre nans.lefebvre@acsone.eu https://github.com/len-foss

@@ -40,7 +40,10 @@ var ModelFieldSelector = Widget.extend({
         "click li.o_field_selector_select_button": "_onLastFieldClick",
 
         // Handle a direct change in the debug input
-        "change input": "_onInputChange",
+        "change input.o_field_selector_debug": "_onDebugInputChange",
+
+        // Handle a change in the search input
+        "keyup .o_field_selector_search > input": "_onSearchInputChange",
 
         // Handle keyboard and mouse navigation to build the field chain
         "mouseover li.o_field_selector_item": "_onItemHover",
@@ -68,6 +71,8 @@ var ModelFieldSelector = Widget.extend({
      *                   the fields itself)
      * @param {boolean|function} [options.followRelations=true]
      *                  true if can follow relation when building the chain
+     * @param {boolean} [options.showSearchInput=true]
+     *                  false to hide a search input to filter displayed fields
      * @param {boolean} [options.debugMode=false]
      *                  true if the widget is in debug mode, false otherwise
      */
@@ -84,6 +89,7 @@ var ModelFieldSelector = Widget.extend({
             filter: function () {return true;},
             followRelations: true,
             debugMode: false,
+            showSearchInput: true,
         }, options || {});
         this.options.filters = _.extend({
             searchable: true,
@@ -101,6 +107,8 @@ var ModelFieldSelector = Widget.extend({
         if (!this.options.readonly) {
             _.extend(this.events, this.editionEvents);
         }
+
+        this.searchValue = '';
     },
     /**
      * @see Widget.willStart()
@@ -119,7 +127,8 @@ var ModelFieldSelector = Widget.extend({
     start: function () {
         this.$value = this.$(".o_field_selector_value");
         this.$popover = this.$(".o_field_selector_popover");
-        this.$input = this.$popover.find("input");
+        this.$input = this.$popover.find(".o_field_selector_popover_footer > input");
+        this.$searchInput = this.$popover.find(".o_field_selector_search > input");
         this.$valid = this.$(".o_field_selector_warning");
 
         this._render();
@@ -179,6 +188,9 @@ var ModelFieldSelector = Widget.extend({
         this.dirty = true;
         this.chain = this.chain.slice(0, this.pages.length-1);
         this.chain.push(fieldName);
+
+        this.searchValue = '';
+        this.$searchInput.val('');
     },
     /**
      * Searches a field in the last page by its name.
@@ -341,6 +353,7 @@ var ModelFieldSelector = Widget.extend({
      * @private
      */
     _render: function () {
+
         // Render the chain value
         this.$value.html(core.qweb.render(this.template + ".value", {
             chain: this.chain,
@@ -360,8 +373,17 @@ var ModelFieldSelector = Widget.extend({
             if (prevField) title = prevField.string;
         }
         this.$(".o_field_selector_popover_header .o_field_selector_title").text(title);
+
+        var lines = _.filter(page, this.options.filter);
+        if (this.searchValue) {
+            var matches = fuzzy.filter(this.searchValue, _.pluck(lines, 'string'));
+            lines = _.map(_.pluck(matches, 'index'), function (i) {
+                return lines[i];
+            });
+        }
+
         this.$(".o_field_selector_page").replaceWith(core.qweb.render(this.template + ".page", {
-            lines: _.filter(page, this.options.filter),
+            lines: lines,
             followRelations: this.options.followRelations,
             debug: this.options.debugMode,
         }));
@@ -464,7 +486,7 @@ var ModelFieldSelector = Widget.extend({
     /**
      * Called when the debug input value is changed -> adapts the chain
      */
-    _onInputChange: function () {
+    _onDebugInputChange: function () {
         var userChainStr = this.$input.val();
         var userChain = userChainStr.split(".");
         if (!this.options.followRelations && userChain.length > 1) {
@@ -474,6 +496,13 @@ var ModelFieldSelector = Widget.extend({
         this.setChain(userChain).then((function () {
             this.trigger_up("field_chain_changed", {chain: this.chain});
         }).bind(this));
+    },
+    /**
+     * Called when the search input value is changed -> adapts the popover
+     */
+    _onSearchInputChange: function () {
+        this.searchValue = this.$searchInput.val();
+        this._render();
     },
     /**
      * Called when a popover field button item is hovered -> toggles its
@@ -494,6 +523,7 @@ var ModelFieldSelector = Widget.extend({
     _onKeydown: function (e) {
         if (!this.$popover.is(":visible")) return;
         var inputHasFocus = this.$input.is(":focus");
+        var searchInputHasFocus = this.$searchInput.is(":focus");
 
         switch (e.which) {
             case $.ui.keyCode.UP:
@@ -539,7 +569,7 @@ var ModelFieldSelector = Widget.extend({
                 this._hidePopover();
                 break;
             case $.ui.keyCode.ENTER:
-                if (inputHasFocus) break;
+                if (inputHasFocus || searchInputHasFocus) break;
                 e.preventDefault();
                 this._selectField(this._getLastPageField(this.$("li.o_field_selector_item.active").data("name")));
                 break;

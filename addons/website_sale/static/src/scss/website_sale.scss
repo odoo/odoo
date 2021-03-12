@@ -28,8 +28,10 @@
         }
     }
 
-    h1[itemprop="name"], .oe_product_cart form h5 {
+    h1[itemprop="name"], .oe_product_cart form h6, .td-product_name {
+        word-break: break-word;
         word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     @include media-breakpoint-down(sm) {
@@ -101,6 +103,10 @@
         font-size: 0.8em;
         overflow: hidden;
         margin-bottom: 10px;
+    }
+
+    .js_publish_management {
+        z-index: 5;
     }
 }
 

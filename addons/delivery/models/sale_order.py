@@ -49,10 +49,13 @@ class SaleOrder(models.Model):
             self.delivery_rating_success = False
             self.delivery_message = False
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_shipping_id')
     def onchange_partner_id_carrier_id(self):
-        if self.partner_id:
-            self.carrier_id = self.partner_id.property_delivery_carrier_id.filtered('active')
+        if self.partner_shipping_id:
+            self.carrier_id = (
+                self.partner_shipping_id.property_delivery_carrier_id or
+                self.partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
+            ).filtered('active')
 
     # TODO onchange sol, clean delivery price
 
@@ -121,7 +124,7 @@ class SaleOrder(models.Model):
         return sol
 
     @api.depends('state', 'order_line.invoice_status', 'order_line.invoice_lines',
-                 'order_line.is_delivery', 'order_line.is_downpayment', 'order_line.product_id.invoice_policy')
+                 'order_line.is_delivery', 'order_line.is_downpayment')
     def _get_invoiced(self):
         super(SaleOrder, self)._get_invoiced()
         for order in self:

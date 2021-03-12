@@ -19,6 +19,10 @@ class PurchaseOrder(models.Model):
     _description = "Purchase Order"
     _order = 'date_order desc, id desc'
 
+    def _default_currency_id(self):
+        company_id = self.env.context.get('force_company') or self.env.context.get('company_id') or self.env.user.company_id.id
+        return self.env['res.company'].browse(company_id).currency_id
+
     @api.depends('order_line.price_total')
     def _amount_all(self):
         for order in self:
@@ -90,8 +94,9 @@ class PurchaseOrder(models.Model):
     dest_address_id = fields.Many2one('res.partner', string='Drop Ship Address', states=READONLY_STATES,
         help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
-    currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,
-        default=lambda self: self.env.user.company_id.currency_id.id)
+    currency_id = fields.Many2one(
+        'res.currency', 'Currency', required=True, states=READONLY_STATES,
+        default=_default_currency_id)
     state = fields.Selection([
         ('draft', 'RFQ'),
         ('sent', 'RFQ Sent'),
@@ -155,9 +160,10 @@ class PurchaseOrder(models.Model):
 
     @api.model
     def create(self, vals):
+        company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
         if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
-        return super(PurchaseOrder, self).create(vals)
+            vals['name'] = self.env['ir.sequence'].with_context(force_company=company_id).next_by_code('purchase.order') or '/'
+        return super(PurchaseOrder, self.with_context(company_id=company_id)).create(vals)
 
     @api.multi
     def unlink(self):
@@ -511,7 +517,8 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
             # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == (
+                line.company_id or line.order_id.company_id))
             line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
 
     @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')

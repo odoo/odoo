@@ -40,16 +40,21 @@ models.Order = models.Order.extend({
     get_rounding_applied: function() {
         if(this.pos.config.cash_rounding) {
             var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
+            var sign = total > 0 ? 1.0 : -1.0;
 
             var rounding_applied = total - this.get_total_with_tax();
+            rounding_applied *= sign;
             // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
-            if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
+            if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
+                // https://xkcd.com/217/
+                return 0;
+            } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
                 rounding_applied += this.pos.cash_rounding[0].rounding;
             }
             else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
                 rounding_applied -= this.pos.cash_rounding[0].rounding;
             }
-            return rounding_applied;
+            return sign * rounding_applied;
         }
         return 0;
     },

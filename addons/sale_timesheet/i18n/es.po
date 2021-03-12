@@ -4,7 +4,6 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2018
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2018
 # Pablo Rojas <rojaspablo88@gmail.com>, 2018
 # Antonio Trueba, 2018
@@ -14,11 +13,13 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2018
 # RGB Consulting <odoo@rgbconsulting.com>, 2018
 # Pilar Marín <pilar@odooperu.pe>, 2018
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Jairo Llopis <yajo.sk8@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019\n"
+"Last-Translator: Jairo Llopis <yajo.sk8@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1070,6 +1071,8 @@ msgstr "Tareas asociadas a esta etapa"
 msgid ""
 "The Project should be linked to a Sale Order to select an Sale Order Items."
 msgstr ""
+"El proyecto debe estar vinculado a una orden de venta para seleccionar los "
+"artículos de una orden de venta."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:67
@@ -1078,6 +1081,10 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
+"El pedido de venta no puede ser creado porque no introdujo algunos de los "
+"empleados que han introducido partes de horas en el proyecto. Por favor "
+"revise el listado de empleados antes de crear el pedido de venta. Empleado/s"
+" faltante/s: %s"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:68
@@ -1086,6 +1093,7 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"El producto %s no debe tener un proyecto global ya que generará un proyecto."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:64
@@ -1094,6 +1102,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"El producto %s no debe tener un proyecto ni una plantilla de proyecto, ya "
+"que no generará proyecto."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:66
@@ -1102,6 +1112,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"El producto %s no debe tener una plantilla de proyecto, ya que generará una "
+"tarea en un proyecto global."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:25
@@ -1160,6 +1172,9 @@ msgid ""
 " the task, nor on the project. Please define one to save your timesheet "
 "line."
 msgstr ""
+"La línea de parte de horas no puede ser facturada: no hay línea de pedido de"
+" venta definida en la tarea ni en el proyecto. Por favor defina una para "
+"guardar su línea de parte de horas."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1310,6 +1325,8 @@ msgstr "Asistente"
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__partner_id
 msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Puede encontrar un proveedor por su nombre, NIF, correo electrónico o "
+"referencia interna."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:62
@@ -1320,6 +1337,12 @@ msgid ""
 msgstr ""
 "No puede modificar partes de tiempo ya facturados (vinculados a elementos de"
 " pedidos de venta facturados en tiempo y material)."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:76
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr "No puede modificar partes de horas de diferentes empleados"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:18
@@ -1335,6 +1358,8 @@ msgid ""
 "You cannot link the order item %s - %s to this task because it is a re-"
 "invoiced expense."
 msgstr ""
+"No puede enlazar la línea de pedido %s - %s a esta tarea porque es un gasto "
+"re-facturado."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:221
@@ -1342,6 +1367,7 @@ msgstr ""
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
 msgstr ""
+"Debe desvincular la tarea del artículo de la orden de venta para eliminarlo."
 
 #. module: sale_timesheet
 #: model:product.product,weight_uom_name:sale_timesheet.product_service_deliver_manual

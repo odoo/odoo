@@ -5,7 +5,7 @@ from lxml import etree
 import json
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountAnalyticLine(models.Model):
@@ -23,6 +23,15 @@ class AccountAnalyticLine(models.Model):
 
     employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
+
+    @api.constrains('task_id', 'project_id')
+    def _check_task_project(self):
+        for line in self:
+            if line.task_id and line.project_id and line.task_id.project_id != line.project_id:
+                raise ValidationError(_(
+                    "The project and the task's project are inconsistent. " +
+                    "The selected task must be in the selected project."
+                ))
 
     @api.onchange('project_id')
     def onchange_project_id(self):

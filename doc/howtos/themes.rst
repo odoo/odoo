@@ -4,6 +4,13 @@
 Theme Tutorial
 =====================
 
+.. warning::
+
+    This tutorial provides a great overview of what you can do creating an
+    Odoo theme. It is however incomplete. For a more advanced tutorial about
+    creating an Odoo theme, check out the Odoo 14.0 version and above of this
+    tutorial and unleash the true power of Odoo themes!
+
 .. rst-class:: lead
 
 Odoo celebrates freedom. Freedom for the designer to go further and
@@ -18,11 +25,7 @@ An introduction for web designers
 =================================
 
 If you are a web designer using Odoo for the first time, you are in the right place.
-This introduction will outline the basics of Odoo theme creation.
-
-.. note::
-
-   Odoo’s team has created a framework that’s powerful and easy to use. There’s no need to know special syntaxes to use this set of tools.
+This introduction will outline the basics of Odoo theme creation. Odoo’s team has created a framework that’s powerful and easy to use.
 
 From common CMS to Odoo
 -----------------------
@@ -60,8 +63,8 @@ Odoo default theme structure
 
   .. container:: col-sm-8
 
-    Odoo comes with a default theme structure.
-    It is a very basic “theme” that provides minimal structure and layout. When you create a new theme, you are actually extending this.
+    Odoo comes with a default website structure.
+    It is a very basic “theme” that provides minimal structure and layout. When you create a new theme, you are actually **extending** this.
     Indeed it’s always enabled in your setup and it acts exactly like the CMS’s base structure we mentioned above, except that you don’t have to create or maintain it.
     It will upgrade automatically within your Odoo installation and, since it is included in the Website Builder module, everything is smoothly integrated by default.
 
@@ -77,10 +80,10 @@ Odoo default theme structure
 
      **Main features:**
 
-     * Basic layouts for pages, blog and eCommerce
+     * Basic layouts for pages, blog, eCommerce and much more
      * Website Builder integration
      * Basic Snippets
-     * Automatic Less/Sass compiling
+     * Automatic Sass compiling
      * Automatic Js and CSS minification and combination
 
   .. container:: col-md-6
@@ -99,10 +102,10 @@ An Odoo theme is not a folder containing HTML or PHP files, it’s a modular fra
 
 Using classical web design workflows, you usually code the layout of the entire page. The result of this is a “static” web page. You can update the content, of course, but your client will need you to work on making even basic changes.
 
-Creating themes for Odoo is a total change of perspective. Instead of defining the complete layout for a page, you can create blocks (snippets) at let the user choose where to “drag&drop” them, creating the page layout on their own.
+Creating themes for Odoo is a total change of perspective. Instead of defining the complete layout for a page, you can create blocks (snippets) and let the user choose where to “drag&drop” them, creating the page layout on their own.
 We call this modular design.
 
-Imagine an Odoo theme as a “list” of elements and options that you have to create and style.
+Imagine an Odoo theme as a “list” of elements and options that you have to create or extend.
 As a designer, your goal is to style these elements in order to achieve a wonderful result, regardless of where the end user chooses to place them.
 
 Let’s take a tour of our “list” elements:
@@ -134,7 +137,7 @@ Let’s take a tour of our “list” elements:
 
      Styles
 
-     Styles are defined using standard CSS files (or Less/Sass). You can define a style as **default** or **optional**. The default styles are always active in your theme, the optional styles can be enabled or disabled by the user.
+     Styles are defined using SCSS files (or you can use standard CSS files). You can define a style as **default** or **optional**. The default styles are always active in your theme, the optional styles can be enabled or disabled by the user.
 
   .. figure:: theme_tutorial_assets/img/functionalities.jpg
      :figclass: col-sm-6
@@ -183,24 +186,6 @@ the **Odoo default structure**.  In order to do that you can use
 
 Keep reading the tutorial to learn to how properly extend it with your own code.
 
-Update your theme
------------------
-
-.. container:: row
-
-  .. container:: col-sm-6
-
-    Since XML files are only loaded when you install the theme, you will have to force reloading every time you make changes on an xml file.
-
-    To do that, click on the Upgrade button in the module’s page.
-
-    .. image:: theme_tutorial_assets/img/restart.png
-
-  .. container:: col-sm-5
-
-    .. image:: theme_tutorial_assets/img/upgrade_module.png
-
-
 
 Create a theme module
 ======================
@@ -231,9 +216,9 @@ Odoo’s themes are packaged like modules. Even if you are designing a very simp
   Use two underscore characters at the beginning
   and two at the end of odoo and init file names.
 
-The final result should be something like this:
+The final result should be like this:
 
-.. image:: theme_tutorial_assets/img/folder.jpg
+.. image:: theme_tutorial_assets/img/theme_folder.jpg
 
 Edit ``__manifest__.py``
 ------------------------
@@ -242,34 +227,32 @@ Open the ``__manifest__.py`` you created and copy/paste the following:
 
 .. code-block:: python
 
-  {
-    'name':'Tutorial theme',
-    'description': 'A description for your theme.',
-    'version':'1.0',
-    'author':'Your name',
+    {
+        'name': 'Tutorial theme',
+        'description': 'A description for your theme.',
+        'version': '1.0',
+        'author': 'Your name',
+        'category': 'Theme/Creative',
 
-    'data': [
-    ],
-    'category': 'Theme/Creative',
-    'depends': ['website', 'website_theme_install'],
-  }
+        'depends': ['website', 'website_theme_install'],
+        'data': [
+        ],
+    }
 
 Replace the first four property’s values with anything you like.
 These values will be used to identify your new theme in Odoo’s backend.
 
-The ``data`` property will contain the xml files list. Right now it’s empty, but we will add any new files created.
-
 ``category`` defines your module category (always “Theme”) and, after a slash, the subcategory. You can use one subcategory from the Odoo Apps categories list. (https://www.odoo.com/apps/themes)
 
-
-``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website and website_theme_install to install/update. If you need blogging or eCommerce features as well, you have to add those modules too.
+``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website and website_theme_install to install/update.
+If you need blogging or eCommerce features as well, you have to add those modules too.
+If you plan to offer your theme to the majority of users, it is however recommended that you only depend on website and website_theme_install for the base of your theme. You can then create a second theme, which is an extension of the first one and another Odoo feature like the eCommerce.
 
 .. code-block:: python
 
-   ...
-   'depends': ['website', 'website_theme_install', 'website_blog', 'sale'],
-   ...
+    'depends': ['theme_tutorial', 'website_sale'],
 
+The ``data`` property will contain the xml files list. Right now it’s empty, but we will add any new files created.
 
 
 Installing your theme
@@ -282,6 +265,15 @@ After that, navigate to the Odoo **Website** module, go to
 
 Under **Website** section click the **Choose a theme** button, then hover over
 your theme and click **Use this theme**.
+
+Update your theme
+-----------------
+
+Since XML files are only loaded when you install the theme, you will have to force reloading every time you make changes on an xml file.
+
+To do that, click on the Upgrade button in the theme selection screen.
+
+.. image:: theme_tutorial_assets/img/restart.png
 
 Structure of an Odoo page
 =========================
@@ -296,48 +288,216 @@ By default, Odoo provides you with a **Header** and a **Footer** (cross-pages) a
 .. image:: theme_tutorial_assets/img/page_structure.jpg
 
 To inspect the default layout, simply create a new page using the
-Website Builder.  Click on :menuselection:`Content --> New Page` and
+Website Builder.  Click on :menuselection:`New --> New Page` and
 add a page name.  Inspect the page using your browser.
 
 .. code-block:: html
 
-  <div id=“wrapwrap”>
-    <header />
-    <main />
-    <footer />
-  </div>
+    <div id=“wrapwrap”>
+        <header/>
+        <main/>
+        <footer/>
+    </div>
 
-Extend the default Header
+
+Add Styles
+==========
+
+Introduction
+------------
+
+The most important feature or your theme should be the style it provides.
+Odoo includes Bootstrap by default. This means that you can take advantage of all Bootstrap styles and layout functionalities out of the box.
+
+Of course Bootstrap is not enough if you want to provide a unique design. The following steps will guide you through how to add custom styles to your theme.
+The final result won't be pretty, but will provide you with enough information to build upon on your own.
+
+Let’s start by creating an empty file called **style.scss** and place it in a folder called **scss** in your static folder.
+Let's add an example rule which adds a top border on the footer. Copy and paste it, then save the file.
+
+.. code-block:: scss
+
+    footer {
+        border-top: 5px solid theme-color('primary');
+    }
+
+Our file is ready but it is not included in our theme yet.
+
+Let’s navigate to the view folder and create an XML file called *assets.xml*.
+Add the default Odoo xml markup as seen before then copy/paste the following
+code between the Odoo tags. Remember to replace ``theme_tutorial`` with your
+theme’s main folder name.
+
+.. code-block:: xml
+
+    <template id="assets_frontend" name="My style" inherit_id="website.assets_frontend">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_tutorial/static/scss/style.scss"/>
+        </xpath>
+    </template>
+
+We just created a template specifying our scss file. As you can see,
+our template has a special attribute called ``inherit_id``.  This
+attribute tells Odoo that our template is referring to another one in
+order to operate.
+
+In this case, we are referring to ``assets_frontend`` template,
+located in the ``website`` module. ``assets_frontend`` specifies the
+list of assets loaded by the website builder and our goal is to add
+our scss file to this list.
+
+This can be achieved using xpath with the attributes
+``expr="link[last()]"`` and ``position="after"``, which means "*take my
+style file and place it after the last link in the list of
+assets*".
+
+Placing it after the last one, we ensure that our file will
+be loaded at the end and takes priority.
+
+Finally add **assets.xml** in your **__manifest__.py** file in the data section.
+
+Update your theme.
+
+.. image:: theme_tutorial_assets/img/restart.png
+
+
+Our scss file is now included in our theme, it will be automatically compiled, minified and combined with all Odoo’s assets.
+
+You can now see the beautiful footer border on the website.
+
+
+Advanced tips for styling
 -------------------------
+
+In the introduction, we saw how to add a basic file of CSS rules into the
+system to extend the website. This is actually the last step you should need to
+add style to your theme.
+
+The Odoo website builder already allows the user to create pages by adding a
+large variety of default well-designed blocks. It also allows a large set of
+customization possibilities. What may not be straightforward for the user is to
+combine all of those options to make something really beautiful. This is where
+your theme can shine. First try to construct the spirit of your theme by
+enabling a nice set of Odoo default options. This also allows you to ensure two
+things:
+
+- You do not re-invent something which already exists. If Odoo provides an
+  option to have a border on the footer, don't recode it yourself. Enable it,
+  then extend it if needed.
+
+- You ensure that the user can still use all of Odoo features with your theme.
+  Again, if Odoo provides an option to have a border on the footer and that you
+  recode it yourself, you may break the default option or make it useless,
+  making the user have a bad experience. Your option might also not work as well
+  with all the other Odoo features relying on it.
+
+So here are the steps to create a robust and consistent style for your theme:
+
+\(1) Set the values for Odoo-provided SCSS variables
+
+Odoo declares many CSS rules, most being entirely customizable by overridding
+the related SCSS variables. First, create a new file called primary_variables.scss
+and add it the same way as the style.scss file. The only difference it that
+you won't add it in the ``assets_frontend`` template but in the ``_assets_primary_variables``
+template.
+
+.. code-block:: xml
+
+    <template id="_assets_primary_variables" name="My SCSS variables" inherit_id="website._assets_primary_variables">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_tutorial/static/scss/primary_variables.scss"/>
+        </xpath>
+    </template>
+
+
+.. important::
+
+    That file must only contain definition and overrides of SCSS variables and
+    mixins.
+
+Add those:
+
+.. code-block:: scss
+
+    $o-theme-color-palettes: (
+        (
+            'alpha': #85AFA8,
+            'beta': #7E566B,
+            'gamma': #85909A,
+            'delta': #969397,
+            'epsilon': #422335,
+        ),
+        (
+            'alpha': #54787D,
+            'beta': #6B9997,
+            'gamma': #615145,
+            'delta': #C6CCA5,
+            'epsilon': #412342,
+        ),
+    );
+
+This defines two color palettes for the user to choose from. Odoo relies
+on five named colors to be used by the website builder. By defining those in
+your theme, you ensure a consistent colored Odoo theme. Starting with Odoo 14.0,
+a lot more variable are there for you to customize.
+
+.. note::
+
+    All variables defined through those "palettes" SCSS maps can later be
+    customized by the users themselves.
+
+\(2) Set the values for Bootstrap variables that Odoo do not surcharge
+
+If Odoo does not provide the variable you are looking for, then try to find a
+Bootstrap variable which allows it. Indeed all Odoo layouts respect Bootstrap
+structures and use Bootstrap components or extensions of them. So if you
+customize a bootstrap variable, you add a generic style for the whole user
+website.
+
+Bootstrap values **must** not be overridden in the primary_variables.scss file but
+in another dedicated file, extending the ``_assets_frontend_helpers`` template.
+
+.. code-block:: xml
+
+    <template id="_assets_frontend_helpers" inherit_id="website._assets_frontend_helpers">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_tutorial/static/src/scss/bootstrap_overridden.scss"/>
+        </xpath>
+    </template>
+
+With for example:
+
+.. code-block:: scss
+
+    $dropdown-min-width: 200px;
+
+.. important::
+
+    Make sure to not override Bootstrap variables which depend on Odoo variables
+    of step (1). Otherwise, you might break the possibility for the user to
+    customize them using the Odoo website builder.
+
+\(3) Add your own CSS rules as seen in the introduction
+
+You may also want to design your snippet first, as we will see in a later
+section of this tutorial.
+
+
+Extend Odoo Layout
+==================
 
 By default, Odoo header contains a responsive navigation menu and the company’s logo. You can easily add new elements or style the existing one.
 
 To do so, create a **layout.xml** file in your **views** folder and add the default Odoo xml markup.
 
-.. code-block:: xml
-
-   <?xml version="1.0" encoding="utf-8" ?>
-   <odoo>
-
-
-
-   </odoo>
-
-Create a new template into the ``<odoo>`` tag, copy-pasting the following
-code.
+Then copy-pasting the following code.
 
 .. code-block:: xml
 
-  <!-- Customize header  -->
-  <template id="custom_header" inherit_id="website.layout" name="Custom Header">
-
-    <!-- Assign an id  -->
-    <xpath expr="//div[@id='wrapwrap']/header" position="attributes">
-      <attribute name="id">my_header</attribute>
-    </xpath>
-
+  <!-- Customize post-header  -->
+  <template id="custom_message" inherit_id="website.layout" name="Custom Header">
     <!-- Add an element after the top menu  -->
-    <xpath expr="//div[@id='wrapwrap']/header/nav" position="after">
+    <xpath expr="//div[@id='wrapwrap']/main" position="before">
       <div class="container">
         <div class="alert alert-info mt16" role="alert">
           <strong>Welcome</strong> in our website!
@@ -346,15 +506,13 @@ code.
     </xpath>
   </template>
 
-The first xpath will add the id ``my_header`` to the header. It’s the best option if you want to
-target css rules to that element and avoid these affecting other content on the page.
+This xpath will add a welcome message just before the page content. You can do
+a lot more of thing with xpath and qweb, check the related doc for more details.
 
 .. warning::
 
   Be careful replacing default elements attributes. As your theme will extend the default one,
   your changes will take priority in any future Odoo’s update.
-
-The second xpath will add a welcome message just after the navigation menu.
 
 The last step is to add layout.xml to the list of xml files used by
 the theme. To do that, edit your ``__manifest__.py`` file like this
@@ -444,7 +602,7 @@ html code into a ``<t>`` tag, like in this example.
         </field>
     </record>
 
-Using ``<t t-call="website.layout">`` we will extend the Odoo
+Using ``<t t-call="website.layout">`` we will use the Odoo
 default page layout with our code.
 
 As you can see, we wrapped our code into two ``<div>``,  one with ID ``wrap`` and the other one with class ``container``. This is to provide a minimal layout.
@@ -476,10 +634,9 @@ can fill with snippets. To achieve this, just create a ``div`` with
                                     <li>Support</li>
                                     <li>Unlimited space</li>
                                 </ul>
-
-                                <!-- === Snippets' area === -->
-                                <div class="oe_structure" />
                             </div>
+                            <!-- === Snippets' area === -->
+                            <div class="oe_structure" />
                         </div>
                     </t>
                 </t>
@@ -573,85 +730,10 @@ In our example, we set the value to ``99`` in order to place it last. I you want
 As you can see inspecting the *data.xml* file in the ``website`` module, the **Home** link is set to ``10`` and the **Contact** us one is set to ``60`` by default.
 If, for example, you want to place your link in the **middle**, you can set your link’s sequence value to ``40``.
 
-Add Styles
-==========
-
-Odoo includes Bootstrap by default. This means that you can take advantage of all Bootstrap styles and layout functionalities out of the box.
-
-Of course Bootstrap is not enough if you want to provide a unique design. The following steps will guide you through how to add custom styles to your theme.
-The final result won't be pretty, but will provide you with enough information to build upon on your own.
-
-Let’s start by creating an empty file called **style.scss** and place it in a folder called **scss** in your static folder.
-The following rules will style our *Services* page. Copy and paste it, then save the file.
-
-.. as of Pygments 2.2, the Less lexer can't handle inline comments or nested
-   rules so use scss instead, it's not quite perfect but it doesn't trigger
-   warnings/errors
-
-.. code-block:: scss
-
-   .services {
-       background: #EAEAEA;
-       padding: 1em;
-       margin: 2em 0 3em;
-       li {
-           display: block;
-           position: relative;
-           background-color: #16a085;
-           color: #FFF;
-           padding: 2em;
-           text-align: center;
-           margin-bottom: 1em;
-           font-size: 1.5em;
-       }
-   }
-
-Our file is ready but it is not included in our theme yet.
-
-Let’s navigate to the view folder and create an XML file called *assets.xml*. Add the default Odoo xml markup and copy/paste the following code. Remember to replace ``theme folder`` with your theme’s main folder name.
-
-.. code-block:: xml
-
-   <template id="mystyle" name="My style" inherit_id="website.assets_frontend">
-       <xpath expr="link[last()]" position="after">
-           <link rel="stylesheet" type="text/scss" href="/theme folder/static/scss/style.scss"/>
-       </xpath>
-   </template>
-
-We just created a template specifying our scss file. As you can see,
-our template has a special attribute called ``inherit_id``.  This
-attribute tells Odoo that our template is referring to another one in
-order to operate.
-
-In this case, we are referring to ``assets_frontend`` template,
-located in the ``website`` module. ``assets_frontend`` specifies the
-list of assets loaded by the website builder and our goal is to add
-our scss file to this list.
-
-This can be achieved using xpath with the attributes
-``expr="link[last()]"`` and ``position="after"``, which means "*take my
-style file and place it after the last link in the list of the
-assets*".
-
-Placing it after the last one, we ensure that our file will
-be loaded at the end and take priority.
-
-Finally add **assets.xml** in your **__manifest__.py** file.
-
-Update your theme
-
-.. image:: theme_tutorial_assets/img/restart.png
-
-
-Our scss file is now included in our theme, it will be automatically compiled, minified and combined with all Odoo’s assets.
-
-.. image:: theme_tutorial_assets/img/services_page_styled.png
-   :class: shadow-0
-
 Create Snippets
 ===============
 
-Since snippets are how users design and layout pages, they are the most important element of your design.
+Since snippets are how users design and layout pages, they are the most important XML elements of your design.
 Let’s create a snippet for our Service page. The snippet will display three testimonials and it will be editable by the end user using the Website Builder UI.
 Navigate to the view folder and create an XML file called **snippets.xml**.
 Add the default Odoo xml markup and copy/paste the following code.
@@ -659,29 +741,29 @@ The template contains the HTML markup that will be displayed by the snippet.
 
 .. code-block:: xml
 
-   <template id="snippet_testimonial" name="Testimonial snippet">
-     <section class="snippet_testimonial">
-       <div class="container text-center">
-         <div class="row">
-           <div class="col-lg-4">
-             <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_1.jpg"/>
-             <h3>Client Name</h3>
-             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-           </div>
-           <div class="col-lg-4">
-             <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_2.jpg"/>
-             <h3>Client Name</h3>
-             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-           </div>
-           <div class="col-lg-4">
-             <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_3.jpg"/>
-             <h3>Client Name</h3>
-             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-           </div>
-         </div>
-       </div>
-     </section>
-   </template>
+    <template id="s_testimonial" name="Testimonial snippet">
+        <section class="s_testimonial">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 text-center">
+                        <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_1.jpg"/>
+                        <h3>Client Name</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_2.jpg"/>
+                        <h3>Client Name</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <img alt="client" class="rounded-circle" src="/theme_tutorial/static/src/img/client_3.jpg"/>
+                        <h3>Client Name</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
 
 As you can see, we used Bootstrap default classes for our three columns. It’s not just about layout, these classes **will be triggered by the Website Builder to make them resizable by the user**.
 
@@ -689,12 +771,12 @@ The previous code will create the snippet’s content, but we still need to plac
 
 .. code-block:: xml
 
-   <template id="place_into_bar" inherit_id="website.snippets" name="Place into bar">
-     <xpath expr="//div[@id='snippet_structure']/div[@class='o_panel_body']" position="inside">
-       <t t-snippet="theme_tutorial.snippet_testimonial"
-          t-thumbnail="/theme_tutorial/static/src/img/ui/snippet_thumb.jpg"/>
-     </xpath>
-   </template>
+    <template id="place_into_bar" inherit_id="website.snippets" name="Place into bar">
+        <xpath expr="//div[@id='snippet_structure']/div[hasclass('o_panel_body')]" position="inside">
+            <t t-snippet="theme_tutorial.s_testimonial"
+                    t-thumbnail="/theme_tutorial/static/src/img/ui/snippet_thumb.jpg"/>
+        </xpath>
+    </template>
 
 .. rst-class:: col-sm-6
 
@@ -762,20 +844,20 @@ We start by adding a new file in our views folder - name it **options.xml** and 
 
 .. code-block:: xml
 
-  <template id="snippet_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='background']" position="after">
-      <div data-selector=".snippet_testimonial"> <!-- Options group -->
-        <div class="dropdown-submenu">
-              <a href="#" class="dropdown-item">Your Option</a>
-              <div class="dropdown-menu"><!-- Options list -->
-                  <a href="#" class="dropdown-item" data-select-class="opt_shadow">Shadow Images</a>
-                  <a href="#" class="dropdown-item" data-select-class="opt_grey_bg">Grey Bg</a>
-                  <a href="#" class="dropdown-item" data-select-class="">None</a>
-              </div>
-          </div>
-      </div>
-    </xpath>
-   </template>
+    <template id="s_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website.snippet_options">
+        <xpath expr="//div[@data-js='background']" position="after">
+            <div data-selector=".s_testimonial"> <!-- Options group -->
+                <div class="dropdown-submenu">
+                    <a href="#" class="dropdown-item">Your Option</a>
+                    <div class="dropdown-menu"><!-- Options list -->
+                        <a href="#" class="dropdown-item" data-select-class="opt_shadow">Shadow Images</a>
+                        <a href="#" class="dropdown-item" data-select-class="opt_grey_bg">Grey Bg</a>
+                        <a href="#" class="dropdown-item" data-select-class="">None</a>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
 
 .. note::
 
@@ -784,7 +866,7 @@ We start by adding a new file in our views folder - name it **options.xml** and 
 
 As you can see, we wrapped all our options inside a DIV tag that will
 group our options and that will target them to the right selector
-(``data-selector=".snippet_testimonial"``).
+(``data-selector=".s_testimonial"``).
 
 To define our options we applied ``data-select-class`` attributes to the
 ``li`` elements. When the user selects an option, the class contained in
@@ -805,26 +887,20 @@ Let’s create some css rules in order to provide a visual feedback for our opti
 
 .. code-block:: scss
 
-   .snippet_testimonial {
-     border: 1px solid #EAEAEA;
-     padding: 20px;
-   }
+    // These lines will add a default style for our snippet. Now let's create our custom rules for the options.
 
-   // These lines will add a default style for our snippet. Now let's create our custom rules for the options.
+    .s_testimonial {
+        border: 1px solid #EAEAEA;
+        padding: 20px;
 
-   .snippet_testimonial {
-     border: 1px solid #EAEAEA;
-     padding: 20px;
-
-     &.opt_shadow img {
-       box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);
-     }
-
-     &.opt_grey_bg {
-       border: none;
-       background-color: #EAEAEA;
-     }
-   }
+        &.s_testimonial_shadow img {
+            box-shadow: 0 2px 5px rgba(51, 51, 51, 0.4);
+        }
+        &.s_testimonial_grey_bg {
+            border: none;
+            background-color: #EAEAEA;
+        }
+    }
 
 .. image:: theme_tutorial_assets/img/snippet_options2.png
    :class: shadow-0
@@ -847,12 +923,12 @@ As we said before, ``data-js`` propriety can be assigned to an options group in 
 
 .. code-block:: xml
 
-   <div data-js="snippet_testimonial_options" data-selector=".snippet_testimonial">
-     [...]
-   </div>
+    <div data-js="s_testimonial_options" data-selector=".s_testimonial">
+        <!-- ... -->
+    </div>
 
 Done. From now on, the Website Builder will look for a
-``snippet_testimonial_options`` method each time the publisher enters in edit
+``s_testimonial_options`` JS option each time the publisher enters in edit
 mode.
 
 Let's go one step further by creating a javascript file, name
@@ -861,22 +937,22 @@ the following code
 
 .. code-block:: javascript
 
-    odoo.define(function (require) {
-       var options = require('web_editor.snippets.options');       
-   });
+    odoo.define('theme_tutorial.s_testimonial_options', function (require) {
+        var options = require('web_editor.snippets.options');
+    });
 
-Great, we successfully created our javascript editor file. This file will contain all the javascript functions used by our snippets in edit mode. Let’s create a new function for our testimonial snippet using the ``snippet_testimonial_options`` method that we created before.
+Great, we successfully created our javascript editor file. This file will contain all the javascript functions used by our snippets in edit mode. Let’s create a new function for our testimonial snippet using the ``s_testimonial_options`` name that we used before.
 
 .. code-block:: javascript
 
-   odoo.define(function (require) {
-       var options = require('web_editor.snippets.options');       
-       options.registry.snippet_testimonial_options = options.Class.extend({
-           onFocus: function () {
-               alert("On focus!")
-           },
-       });
-   });
+    odoo.define('theme_tutorial.s_testimonial_options', function (require) {
+        var options = require('web_editor.snippets.options');
+        options.registry.s_testimonial_options = options.Class.extend({
+            onFocus: function () {
+                alert("On focus!")
+            },
+        });
+    });
 
 As you will notice, we used a method called ``onFocus`` to trigger our function. The Website Builder provides several events you can use to trigger your custom functions.
 
@@ -889,7 +965,7 @@ Event                        Description
 ``onClone``                  Fires just after a snippet is duplicated.
 ``onRemove``                 It occurs just before that the snippet is removed.
 ``onBuilt``                  Fires just after that the snippet is drag and dropped into a drop zone. When this event is triggered, the content is already inserted in the page.
-``cleanForSave``             It trigger before the publisher save the page.
+``cleanForSave``             It trigger before the publisher saves the page.
 ===========================  ==================================
 
 Let’s add our new javascript files to the editor assets list.
@@ -898,11 +974,11 @@ This time we have to inherit ``assets_editor`` instead of ``assets_frontend``.
 
 .. code-block:: xml
 
-  <template id="my_js" inherit_id="website.assets_editor" name="My Js">
-    <xpath expr="script[last()]" position="after">
-      <script type="text/javascript" src="/theme_tutorial/static/src/js/tutorial_editor.js" />
-    </xpath>
-  </template>
+    <template id="my_js" inherit_id="website.assets_editor" name="My Js">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/theme_tutorial/static/src/js/tutorial_editor.js" />
+        </xpath>
+    </template>
 
 Update your theme
 
@@ -931,7 +1007,7 @@ Layout
   Any section element can be edited like a block of content. The publisher can move or duplicate it. It’s also possible to set a background image or color. Section is the standard main container of any snippet.
 
 ``.row > .col-lg-*``
-  Any large bootstrap columns directly descending from a .row element, will be resizable by the publisher.
+  Any large bootstrap columns directly descending from a .row element (respecting Bootstrap structure), will be resizable by the publisher.
 
 ``contenteditable="False"``
   This attribute will prevent editing to the element and all its children.
@@ -944,6 +1020,7 @@ Layout
 
 Media
 -----
+
 ``<span class=”fa” />``
   Pictogram elements. Editing this element will open the Pictogram library to replace the icon. It’s also possible to transform the elements using CSS.
 
@@ -952,14 +1029,13 @@ Media
 
 .. code-block:: html
 
-  <div class="media_iframe_video" data-src="[your url]" >
-    <div class="css_editable_mode_display"/>
-    <div class="media_iframe_video_size"/>
-    <iframe src="[your url]"/>
-  </div>
+    <div class="media_iframe_video" data-src="[your url]" >
+        <div class="css_editable_mode_display"/>
+        <div class="media_iframe_video_size"/>
+        <iframe src="[your url]"/>
+    </div>
 
 This html structure will create an ``<iframe>`` element editable by the publisher.
-
 
 
 SEO best practice

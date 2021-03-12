@@ -6,6 +6,7 @@
 # Martin Trigaux, 2018
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Udregn mængden af moms ved at angive variablen 'result'.\n"
+"\n"
+":param base_amount: decimaltal, faktisk mængde hvorpå moms skal anvendes\n"
+":param price_unit: decimaltal\n"
+":param quantity: decimaltal\n"
+":param company: res.company datasæt singleton\n"
+":param product: product.product datasæt singleton eller None\n"
+":param partner: res.partner datasæt singleton eller None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -51,6 +60,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Udregn mængden af moms ved at angive variablen 'result'.\n"
+"\n"
+":param base_amount: decimaltal, faktisk mængde hvorpå moms skal anvendes\n"
+":param price_unit: decimaltal\n"
+":param quantity: decimaltal\n"
+":param product: product.product datasæt singleton eller None\n"
+":param partner: res.partner datasæt singleton eller None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -63,6 +79,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Afgør om moms vil blive anvendt ved at angive variablen 'result' til Sandt eller Falsk.\n"
+"\n"
+":param price_unit: decimaltal\n"
+":param quantity: decimaltal\n"
+":param company: res.company datasæt singleton\n"
+":param product: product.product datasæt singleton eller None\n"
+":param partner: res.partner datasæt singleton eller None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -74,6 +97,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Afgør om momsen skal anvendes ved at angive variablen 'result' til Sandt eller Falsk.\n"
+"\n"
+":param price_unit: decimaltal\n"
+":param quantity: decimaltal\n"
+":param product: product.product datasæt singleton eller None\n"
+":param partner: res.partner datasæt singleton eller None"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0

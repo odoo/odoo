@@ -75,6 +75,8 @@ ActivityMenu.include({
                     name: data.model_name,
                     res_model:  data.res_model,
                     views: [[false, 'kanban'], [false, 'form'], [false, 'list']]
+                }, {
+                    clear_breadcrumbs: true,
                 });
             } else {
                 this._super.apply(this, arguments);

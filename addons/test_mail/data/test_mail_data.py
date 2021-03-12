@@ -434,6 +434,44 @@ Web: <a class="moz-txt-link-freetext" href="http://www.odoo.com">http://www.odoo
 --------------A6B5FD5F68F4D73ECD739009--"""
 
 
+MAIL_ATTACHMENT_BAD_ENCODING = """To: xxx@example.com
+From: "xxxx xxxx" <xxxx@example.com>
+Subject: Email with bad attachment content-id
+Message-ID: <9da1ab5f-3d93-1188-15ff-5c0a2cd1ebc3@example.com>
+Date: Wed, 26 Aug 2020 13:06:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+Content-Type: multipart/related;
+ boundary="------------897D44BC936D061BD013A65B"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------897D44BC936D061BD013A65B
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <img src="cid:01¡Â¡Á¡ã.jpg@777.42">
+  </body>
+</html>
+
+--------------897D44BC936D061BD013A65B
+Content-Type: image/gif;
+ name="attach.gif"
+Content-Transfer-Encoding: base64
+Content-ID: <cid:<81>0<87>1¡Â¡Á¡ã.jpg@777.42>
+Content-Disposition: inline;
+ filename="attach.gif"
+
+R0lGODlhAQABAAAAACH5BAEAAAAALAAAAAABAAEAAAI=
+--------------897D44BC936D061BD013A65B--
+"""
+
 MAIL_XHTML = """Return-Path: <xxxx@xxxx.com>
 Received: from xxxx.internal (xxxx.xxxx.internal [1.1.1.1])
 	 by xxxx (xxxx 1.1.1-111-g972eecc-slipenbois) with LMTPA;

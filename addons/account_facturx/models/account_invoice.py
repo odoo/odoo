@@ -140,7 +140,7 @@ class AccountInvoice(models.Model):
             # To handle both, we consider the 'a' mode and switch to 'b' if a negative amount is encountered.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:TypeCode', namespaces=tree.nsmap)
             type_code = elements[0].text
-            refund_sign = 1
+            refund_sign = type_code == '380' and 1 or -1
 
             # Total amount.
             elements = tree.xpath('//ram:GrandTotalAmount', namespaces=tree.nsmap)
@@ -208,7 +208,7 @@ class AccountInvoice(models.Model):
                         # Quantity.
                         line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
                         if line_elements:
-                            invoice_line_form.quantity = float(line_elements[0].text) * refund_sign
+                            invoice_line_form.quantity = float(line_elements[0].text)
 
                         # Price Unit.
                         line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
@@ -295,13 +295,11 @@ class AccountInvoice(models.Model):
                         # '[::2]' because it's a list [fn_1, content_1, fn_2, content_2, ..., fn_n, content_2]
                         for filename_obj, content_obj in list(pycompat.izip(embedded_files, embedded_files[1:]))[::2]:
                             content = content_obj.getObject()['/EF']['/F'].getData()
-
-                            if filename_obj == 'factur-x.xml':
-                                try:
-                                    tree = etree.fromstring(content)
-                                except:
-                                    continue
-
+                            try:
+                                tree = etree.fromstring(content)
+                            except:
+                                continue
+                            if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
                                 self._import_facturx_invoice(tree)
                                 buffer.close()
                                 return res

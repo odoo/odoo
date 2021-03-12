@@ -61,6 +61,36 @@ Running the server
 
     select the tests to run by using tags.
 
+.. option:: --screenshots
+
+    Specify directory where to write screenshots when an HttpCase.browser_js test
+    fails. It defaults to :file:`/tmp/odoo_tests/{db_name}/screenshots`
+
+.. option:: --screencasts
+
+    Enable screencasts and specify directory where to write screencasts files.
+    The ``ffmpeg`` utility needs to be installed to encode frames into a video
+    file. Otherwise frames will be kept instead of the video file.
+    
+    ``1``, ``t`` or ``true`` can be used to use the same directory as the above
+    mentioned ``--screenshots`` option.
+
+.. option:: --dev <feature,feature,...,feature>
+
+    * ``all``: all the features below are activated
+
+    * ``xml``: read template qweb from xml file directly instead of database.
+      Once a template has been modified in database, it will be not be read from
+      the xml file until the next update/init.
+
+    * ``reload``: restart server when python file are updated (may not be detected
+      depending on the text editor used)
+
+    * ``qweb``: break in the evaluation of qweb template when a node contains ``t-debug='debugger'``
+
+    * ``(i)p(u)db``: start the chosen python debugger in the code when an
+      unexpected error is raised before logging and returning the error.
+
 .. _reference/cmdline/server/database:
 
 Database

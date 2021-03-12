@@ -278,6 +278,20 @@ This section will be updated as soon as possible.
 
 .. _qunit: https://qunitjs.com/
 
+Screenshots and screencasts during browser_js tests
+---------------------------------------------------
+
+When running tests that use HttpCase.browser_js from the command line, the Chrome
+browser is used in headless mode. By default, if a test fails, a PNG screenshot is
+taken at the moment of the failure and written in
+
+.. code-block:: console
+
+  '/tmp/odoo_tests/{db_name}/screenshots/'
+
+Two new command line arguments were backported from Odoo 13.0 to control this behavior:
+:option:`--screenshots <odoo-bin --screenshots>` and :option:`--screencasts <odoo-bin --screencasts>`
+
 
 Integration Testing
 ===================

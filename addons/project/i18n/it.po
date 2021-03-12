@@ -19,7 +19,6 @@
 # Cécile Collart <cco@odoo.com>, 2018
 # Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
 # Mario Riva <mario.riva@gmail.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
@@ -246,8 +245,8 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Spett.le ${object.partner_id.name or 'customer'},<br/>\n"
-"    La ringraziamo per la sua richiesta.<br/>\n"
-"    Per qualsiasi altra domanda, non esiti a contattarci.\n"
+"    La ringraziamo per la Sua richiesta.<br/>\n"
+"    Per qualsiasi domanda, non esiti a contattarci.\n"
 "    <br/><br/>\n"
 "    Grazie,\n"
 "    <br/>\n"
@@ -1090,7 +1089,9 @@ msgstr "Nome visualizzato"
 #: code:addons/project/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Non hai accesso, salta questi dati per l'e-mail digest dell'utente"
+msgstr ""
+"Accesso non consentito, saltare questi dati nell'e-mail di riepilogo "
+"dell'utente"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1487,8 +1488,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Se il campo attivo è impostato a «Falso», consente di nascondere il progetto"
-" senza rimuoverlo."
+"Se il campo attivo è impostato a falso, consente di nascondere il progetto "
+"senza rimuoverlo."
 
 #. module: project
 #. openerp-web
@@ -1613,7 +1614,7 @@ msgstr "Descrizione kanban pronto"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "KPI - Valore lavori aperti progetto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1871,7 +1872,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:105
 #, python-format
 msgid "Newest"
-msgstr "I più recenti"
+msgstr "Più recenti"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_activity
@@ -2226,7 +2227,7 @@ msgstr "Progetto"
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Supervisore progetto"
+msgstr "Responsabile di progetto"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2292,7 +2293,7 @@ msgstr "Progetti e lavori"
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
-msgstr "Quadrimestrale"
+msgstr "Trimestrale"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
@@ -2643,7 +2644,7 @@ msgstr "Fase"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Fase cambiata"
+msgstr "Cambio di fase"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -2658,7 +2659,7 @@ msgstr "Nome fase"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Fase cambiata"
+msgstr "Cambio di fase"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form

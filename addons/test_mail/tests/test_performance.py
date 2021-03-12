@@ -56,18 +56,22 @@ class TestMailPerformance(TransactionCase):
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=3, demo=3):  # test_mail only: 3 - 3
+        with self.assertQueryCount(__system__=3, demo=4):  # test_mail only: 3 - 4
             records.write({'name': 'X'})
 
     @users('__system__', 'demo')
     @warmup
     def test_write_mail_with_recomputation(self):
         """ Write records inheriting from 'mail.thread' (with recomputation). """
+        import logging
+        logging.getLogger(__name__).info("================================================")
         records = self.env['test_performance.mail'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(__system__=5, demo=5):  # test_mail only: 5 - 5
+        with self.assertQueryCount(__system__=5, demo=6):  # test_mail only: 5 - 6
+            records._cr.sql_log = True
             records.write({'value': 42})
+            records._cr.sql_log = False
 
     @users('__system__', 'demo')
     @warmup
@@ -96,13 +100,13 @@ class TestMailPerformance(TransactionCase):
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
-        with self.assertQueryCount(__system__=13, demo=13):  # test_mail only: 13 - 13
+        with self.assertQueryCount(__system__=13, demo=14):  # test_mail only: 13 - 14
             self.env['test_performance.mail'].create({'name': 'X'})
 
     @users('__system__', 'emp')
     @warmup
     def test_create_mail_simple(self):
-        with self.assertQueryCount(__system__=8, emp=8):  # test_mail only: 8 - 8
+        with self.assertQueryCount(__system__=8, emp=9):  # test_mail only: 8 - 9
             self.env['mail.test.simple'].create({'name': 'Test'})
 
     @users('__system__', 'emp')
@@ -158,7 +162,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
 
-        with self.assertQueryCount(__system__=9, emp=8):  # test_mail only: 9 - 8
+        with self.assertQueryCount(__system__=9, emp=9):  # test_mail only: 9 - 9
             model.create({'name': 'Test'})
 
     @users('__system__', 'emp')
@@ -263,7 +267,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=52, emp=72):  # com runbot: 52 - 72 // test_mail only: 48 - 68
+        with self.assertQueryCount(__system__=53, emp=72):  # com runbot: 53 - 72 // test_mail only: 48 - 68
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,

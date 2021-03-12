@@ -1301,6 +1301,12 @@ msgid "Followers (Partners)"
 msgstr "팔로워 (협력사)"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:86
+#, python-format
+msgid "For %s to be a kit, its product type must be 'Consumable'."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "From"
 msgstr "보낸 사람"
@@ -3515,6 +3521,14 @@ msgid ""
 msgstr ""
 "이 BoM을 생산하기 위한 운영. 작업 절차가 지정되면 생산 주문서는 작업 지시서를 통해 실행되며 그렇지 않으면 모든 것이 생산 주문 "
 "자체에서 처리됩니다."
+
+#. module: mrp
+#: code:addons/mrp/models/product.py:30
+#, python-format
+msgid ""
+"The product type of %s must be 'Consumable' because it has at least one kit-"
+"type bill of materials."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:56

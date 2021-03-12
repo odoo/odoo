@@ -7,7 +7,7 @@
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Paolo Valier, 2018
 # Pietro Della Notte <pdellanotte@gmail.com>, 2018
-# mymage <stefano.consolaro@mymage.it>, 2018
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
@@ -168,7 +168,7 @@ msgstr "Calendario Google: sincronizzazione"
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr "L'ID Google dovrebbe essere univoco."
+msgstr "L'ID Google deve essere univoco."
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:688
@@ -237,7 +237,7 @@ msgstr "Reindirizzamento"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
-msgstr "Aggiorna token"
+msgstr "Token di aggiornamento"
 
 #. module: google_calendar
 #. openerp-web
@@ -266,6 +266,14 @@ msgid ""
 "one used (%s)!"
 msgstr ""
 "L'account da sincronizzare (%s) non corrisponde all'ultimo utilizzato (%s)."
+
+#. module: google_calendar
+#: code:addons/google_calendar/models/google_calendar.py:278
+#, python-format
+msgid ""
+"The event \"%s\", %s (ID: %s) cannot be synchronized because of the "
+"following error: %s"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity

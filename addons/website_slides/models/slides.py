@@ -311,7 +311,7 @@ class Slide(models.Model):
                 record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
             else:
                 record.image_medium = False
-                record.iamge_thumb = False
+                record.image_thumb = False
 
     # content
     slide_type = fields.Selection([
@@ -372,7 +372,7 @@ class Slide(models.Model):
                     # embed youtube video
                     query = urls.url_parse(record.url).query
                     query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
+                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -542,7 +542,7 @@ class Slide(models.Model):
         url_obj = urls.url_parse(url)
         if url_obj.ascii_host == 'youtu.be':
             return ('youtube', url_obj.path[1:] if url_obj.path else False)
-        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com'):
+        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'www.youtube-nocookie.com'):
             v_query_value = url_obj.decode_query().get('v')
             if v_query_value:
                 return ('youtube', v_query_value)

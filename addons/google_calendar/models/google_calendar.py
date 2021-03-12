@@ -12,6 +12,7 @@ import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import exception_to_unicode
 
@@ -264,7 +265,20 @@ class GoogleCalendar(models.AbstractModel):
         url = "/calendar/v3/calendars/%s/events?fields=%s&access_token=%s" % ('primary', urls.url_quote('id,updated'), self.get_token())
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         data_json = json.dumps(data)
-        return self.env['google.service']._do_request(url, data_json, headers, type='POST')
+        try:
+            return self.env['google.service']._do_request(url, data_json, headers, type='POST')
+        except requests.HTTPError as e:
+            try:
+                response = e.response.json()
+                error = response.get('error', {}).get('message')
+            except Exception:
+                error = None
+            if not error:
+                raise e
+            message = _('The event "%s", %s (ID: %s) cannot be synchronized because of the following error: %s') % (
+                event.name, event.start, event.id, error
+            )
+            raise UserError(message)
 
     def delete_an_event(self, event_id):
         """ Delete the given event in primary calendar of google cal.
@@ -419,7 +433,13 @@ class GoogleCalendar(models.AbstractModel):
         event.OE.event_id = res
         meeting = self.env['calendar.event'].browse(res)
         attendee_record = self.env['calendar.attendee'].search([('partner_id', '=', partner_id), ('event_id', '=', res)])
-        attendee_record.with_context(context_tmp).write({'oe_synchro_date': meeting.oe_update_date, 'google_internal_event_id': event.GG.event['id']})
+        # if on GC the user invite n email address which corresponds to contacts merged into a single partner,
+        # here the attendee_record will contain n records with same partner_id - event_id
+        # We just need to set the google_internal_event_id on the first one
+        # As this data come from GC we may not delete attendees
+        if not attendee_record.filtered(lambda att: att.google_internal_event_id):
+            attendee_record[:1].with_context(context_tmp).write({'google_internal_event_id': event.GG.event['id']})
+        attendee_record.with_context(context_tmp).write({'oe_synchro_date': meeting.oe_update_date})
         if meeting.recurrency:
             attendees = self.env['calendar.attendee'].sudo().search([('google_internal_event_id', '=ilike', '%s\_%%' % event.GG.event['id'])])
             excluded_recurrent_event_ids = set(attendee.event_id for attendee in attendees)
@@ -445,7 +465,7 @@ class GoogleCalendar(models.AbstractModel):
                 partner_email = google_attendee.get('email')
                 if type == "write":
                     for oe_attendee in event['attendee_ids']:
-                        if oe_attendee.email == google_attendee['email']:
+                        if oe_attendee.email == partner_email or partner_email in oe_attendee.partner_id.user_ids.mapped('google_calendar_cal_id'):
                             oe_attendee.write({'state': google_attendee['responseStatus'], 'google_internal_event_id': single_event_dict.get('id')})
                             google_attendee['found'] = True
                             continue
@@ -453,9 +473,11 @@ class GoogleCalendar(models.AbstractModel):
                 if google_attendee.get('found'):
                     continue
 
-                attendee = ResPartner.search([('email', '=ilike', google_attendee['email']), ('user_ids', '!=', False)], limit=1)
+                attendee = ResPartner.search([('user_ids.google_calendar_cal_id', '=ilike', partner_email)], limit=1)
                 if not attendee:
-                    attendee = ResPartner.search([('email', '=ilike', google_attendee['email'])], limit=1)
+                    attendee = ResPartner.search([('email', '=ilike', partner_email), ('user_ids', '!=', False)], limit=1)
+                if not attendee:
+                    attendee = ResPartner.search([('email', '=ilike', partner_email)], limit=1)
                 if not attendee:
                     data = {
                         'email': partner_email,
@@ -631,9 +653,16 @@ class GoogleCalendar(models.AbstractModel):
             ('event_id.final_date', '>', fields.Datetime.to_string(self.get_minTime())),
         ])
         for att in my_attendees:
-            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if
-                                other_att.google_internal_event_id and other_att.id != att.id and not other_att.google_internal_event_id.startswith('_')]
-            for other_google_id in other_google_ids:
+            # Get the attendees of the same event with google id set
+            other_attendees = att.event_id.attendee_ids.filtered(lambda other_att: other_att.google_internal_event_id and other_att.id != att.id and not other_att.google_internal_event_id.startswith('_'))
+            if att.partner_id in other_attendees.mapped('partner_id'):
+                # After a contacts merge there may be events
+                # with multiple attendee records of the same partner.
+                # Deleting duplicate attendee to avoid raising error on constraint google_id_uniq
+                att.unlink()
+                continue
+            for other_google_id in other_attendees.mapped('google_internal_event_id'):
+                # Set google id on this attendee
                 if self.get_one_event_synchro(other_google_id):
                     att.write({'google_internal_event_id': other_google_id})
                     break

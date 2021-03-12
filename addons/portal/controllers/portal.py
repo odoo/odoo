@@ -157,7 +157,7 @@ class CustomerPortal(Controller):
             'error_message': [],
         })
 
-        if post:
+        if post and request.httprequest.method == 'POST':
             error, error_message = self.details_form_validate(post)
             values.update({'error': error, 'error_message': error_message})
             values.update(post)

@@ -17,6 +17,8 @@
 # Daniel Osser <danielosser@gmail.com>, 2019
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2020
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
+# Tim Forsström <tim.forsstrom@arbetsformedlingen.se>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-02-13 07:03+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2020\n"
+"Last-Translator: Tim Forsström <tim.forsstrom@arbetsformedlingen.se>, 2020\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -992,7 +994,7 @@ msgstr "Skapa en %s"
 #: code:addons/web/static/src/xml/menu.xml:159
 #, python-format
 msgid "Create a new record"
-msgstr ""
+msgstr "Skapa ny post"
 
 #. module: web
 #. openerp-web
@@ -1179,7 +1181,7 @@ msgstr "Ignorera"
 #: code:addons/web/static/src/xml/menu.xml:150
 #, python-format
 msgid "Discard a record modification"
-msgstr ""
+msgstr "Avbryt ändring"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_report_layout__display_name
@@ -1322,7 +1324,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/menu.xml:141
 #, python-format
 msgid "Edit a record"
-msgstr ""
+msgstr "Ändra post"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -2042,14 +2044,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:646
 #, python-format
 msgid "Match records with"
-msgstr ""
+msgstr "Sök efter poster med"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:644
 #, python-format
 msgid "Match records with the following rule:"
-msgstr ""
+msgstr "Sök efter poster med detta urval:"
 
 #. module: web
 #. openerp-web
@@ -2441,28 +2443,28 @@ msgstr ""
 #: code:addons/web/static/src/xml/menu.xml:195
 #, python-format
 msgid "Open the next record"
-msgstr ""
+msgstr "Öppna nästa post"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:186
 #, python-format
 msgid "Open the previous record"
-msgstr ""
+msgstr "Öppna föregående post"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:177
 #, python-format
 msgid "Open to kanban view"
-msgstr ""
+msgstr "Öppna kanbanvy"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:168
 #, python-format
 msgid "Open to list view"
-msgstr ""
+msgstr "Öppna listvy"
 
 #. module: web
 #. openerp-web
@@ -2872,7 +2874,7 @@ msgstr "Spara som…"
 #: code:addons/web/static/src/xml/menu.xml:132
 #, python-format
 msgid "Save a record"
-msgstr ""
+msgstr "Spara post"
 
 #. module: web
 #. openerp-web
@@ -3234,7 +3236,15 @@ msgstr ""
 "'ir.attachment' modellen."
 
 #. module: web
-#: code:addons/web/controllers/main.py:1513
+#: code:addons/web/controllers/main.py:1452
+#, python-format
+msgid ""
+"There are too many records (%s records, limit: %s) to export as this format."
+" Consider splitting the export."
+msgstr ""
+
+#. module: web
+#: code:addons/web/controllers/main.py:1522
 #, python-format
 msgid ""
 "There are too many rows (%s rows, limit: 65535) to export as Excel 97-2003 "
@@ -4075,7 +4085,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:648
 #, python-format
 msgid "of the following rules:"
-msgstr ""
+msgstr "av dessa sökord:"
 
 #. module: web
 #. openerp-web

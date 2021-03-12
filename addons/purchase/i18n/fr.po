@@ -15,7 +15,8 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
-# Oriane Malburny <oma@odoo.com>, 2019
+# omaodoo <oma@odoo.com>, 2019
+# Yann Papouin <y.papouin@dec-industrie.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Oriane Malburny <oma@odoo.com>, 2019\n"
+"Last-Translator: Yann Papouin <y.papouin@dec-industrie.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +94,7 @@ msgstr ""
 "            avec la référence: ${object.partner_ref}\n"
 "        % endif\n"
 "        d'un montant de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
-"        from ${object.company_id.name}.\n"
+"        de ${object.company_id.name}.\n"
 "        <br/><br/>\n"
 "        N'hésitez pas à nous contacter pour toutes questions.\n"
 "        <br/><br/>\n"
@@ -638,7 +639,7 @@ msgstr "URL du portail client"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
 msgid "Date"
-msgstr "Date "
+msgstr "Date"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
@@ -663,7 +664,7 @@ msgstr "Délai de validation"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr "Définir vos conditions générales…"
+msgstr "Définir vos conditions générales …"
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
@@ -924,6 +925,8 @@ msgid ""
 "Load the vendor bill based on selected purchase order. Several PO can be "
 "selected."
 msgstr ""
+"Charger la facture fournisseur en fonction de la commande d'achat "
+"sélectionnée. Plusieurs PO peuvent être sélectionnés."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1501,12 +1504,12 @@ msgstr "Avertissements d'achats"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr "Commandes d'achat facturées"
+msgstr "Commandes d'achat facturées."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that include lines not invoiced."
-msgstr "Bons de commande qui possèdent des lignes non facturées"
+msgstr "Bons de commande qui possèdent des lignes non facturées."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__negociation
@@ -1623,7 +1626,7 @@ msgstr "Enregistrer une nouvelle facture fournisseur"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Record a vendor bill related to this purchase"
-msgstr ""
+msgstr "Enregistrer une facture fournisseur liée à cet achat"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
@@ -1782,7 +1785,7 @@ msgstr "Partager"
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Montrez toutes les enregistrements pour lesquelles la date des prochaines "
-"actions est pour aujourd'hui ou avant. "
+"actions est avant aujourd'hui"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -1813,7 +1816,7 @@ msgstr ""
 "Statut basé sur les activités\n"
 "En retard : la date d'échéance est déjà dépassée\n"
 "Aujourd'hui : la date d'activité est aujourd'hui\n"
-"Planifiée : activités futures"
+"Planifiée : activités futures."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -1907,7 +1910,7 @@ msgid ""
 "the current partner"
 msgstr ""
 "Cette devise sera utilisée, au lieu de celle par défaut, pour les achats "
-"depuis ce partenaire actuel."
+"depuis ce partenaire actuel"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method

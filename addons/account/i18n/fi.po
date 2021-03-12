@@ -20,7 +20,7 @@
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2018
 # Tommi Rintala <tommi.rintala@gmail.com>, 2018
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
-# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna@vividi.fi>, 2019
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2019
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2019
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
@@ -2302,7 +2302,7 @@ msgstr "Pankin tiliotteet"
 #: code:addons/account/models/account_journal_dashboard.py:36
 #, python-format
 msgid "Bank: Balance"
-msgstr ""
+msgstr "Pankki: saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__base
@@ -2575,15 +2575,13 @@ msgid ""
 "Cannot create a credit note for the invoice which is already reconciled, "
 "invoice should be unreconciled first, then only you can add credit note for "
 "this invoice."
-msgstr ""
-"Laskua, joka on jo sovitettu, ei voi luoda hyvityslaskuun, lasku olisi ensin"
-" sovitettava yhteen, mutta vain voit lisätä tämän laskun luottotiedot."
+msgstr "Täsmäytettyä laskua ei voida hyvittää. Täsmäytys täytyy ensin purkaa."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot create credit note for the draft/cancelled invoice."
-msgstr "Luotto- tai peruutettuun laskuun ei voida luoda hyvityslaskua"
+msgstr "Hyvityslaskua ei voida luoda luonnoslaskuun tai peruutettuun laskuun."
 
 #. module: account
 #: code:addons/account/models/account_move.py:358
@@ -8082,6 +8080,12 @@ msgid ""
 msgstr "Asenna tilikartta tai luo sekalaiset lokit ennen kuin jatkat."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr ""
@@ -10434,8 +10438,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Päiväkirjan pankkitilin tulee kuulua yritykselle (%s)."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
@@ -12292,12 +12299,6 @@ msgstr ""
 "Sinun pitäisi määrittää Loss Exchange Rate -tilin kirjanpitoasetuksissa, "
 "jotta voit hallita automaattisesti valuuttakurssien välisiin eroihin "
 "liittyviä kirjanpitotietoja."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund

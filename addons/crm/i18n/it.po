@@ -15,8 +15,6 @@
 # David Minneci <david@numeko.it>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2019
-# Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
-# Iacopo Simonelli <lsi@odoo.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
@@ -433,7 +431,7 @@ msgid ""
 "Classify and analyze your lead/opportunity categories like: Training, "
 "Service"
 msgstr ""
-"Classifica e analizza le categorie di contatto/opportunità come formazione o"
+"Classifica e analizza le categorie di contatto/opportunità come: formazione,"
 " servizio"
 
 #. module: crm
@@ -441,7 +439,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:32
 #, python-format
 msgid "Click here to <b>add your opportunity</b>."
-msgstr "Fai clic qui per <b>aggiungere l'opportunità</b>."
+msgstr "Fai clic qui e <b>aggiungi l'opportunità</b>."
 
 #. module: crm
 #. openerp-web
@@ -451,7 +449,7 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
-"Fai clic qui per <b>creare la tua prima opportunità </b> e aggiungerla al "
+"Fai clic qui e <b>crea la tua prima opportunità </b> aggiungendola al "
 "flusso."
 
 #. module: crm
@@ -847,7 +845,9 @@ msgstr "Nome visualizzato"
 #: code:addons/crm/models/digest.py:18 code:addons/crm/models/digest.py:29
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Non hai accesso, salta questi dati per l'e-mail digest dell'utente"
+msgstr ""
+"Accesso non consentito, saltare questi dati nell'e-mail di riepilogo "
+"dell'utente"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1156,8 +1156,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Se l'indirizzo e-mail è nella lista nera, il contatto non riceverà più "
-"e-mail massive da nessuna lista."
+"Se l'indirizzo e-mail è nella lista nera il contatto non sarà più soggetto "
+"all'invio massivo di e-mail, da nessuna lista."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1424,13 +1424,13 @@ msgstr "Persa"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
-msgstr "Motivo della perdita"
+msgstr "Motivo perdita"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr "Motivi della perdita"
+msgstr "Motivi perdita"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -1615,6 +1615,7 @@ msgstr "Il mio flusso"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__name
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__name
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Name"
 msgstr "Nome"
 
@@ -1688,7 +1689,7 @@ msgstr "Nessun addetto vendite"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
 msgid "Not enough stock"
-msgstr "Scorte insufficienti"
+msgstr "Giacenza non sufficiente"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
@@ -1904,7 +1905,7 @@ msgstr "Il partner è nella lista nera"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
 msgid "Partner linking/binding in CRM wizard"
-msgstr "Collegamento / associazione dei partner nella procedura guidata CRM"
+msgstr "Collegamenti / vincoli del partner nella procedura guidata CRM"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
@@ -2260,7 +2261,7 @@ msgstr "Fase"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Modifica della fase"
+msgstr "Cambio di fase"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__name
@@ -2275,7 +2276,7 @@ msgstr "Ricerca fase"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Modifica della fase"
+msgstr "Cambio di fase"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
@@ -2448,8 +2449,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Origine del collegamento: es. motore di ricerca, altro dominio o nome "
-"dell'elenco e-mail"
+"Origine del link: es. motore di ricerca, altro dominio o nome dell'elenco "
+"e-mail"
 
 #. module: crm
 #. openerp-web
@@ -2592,8 +2593,8 @@ msgid ""
 msgstr ""
 "Usare i contatti se è necessaria una fase di qualifica prima di creare\n"
 "                    un'opportunità o un cliente. Può essere un biglietto da visita ricevuto,\n"
-"                    un modulo di contatto compilato nel sito web o un file di prospettive\n"
-"                    non qualificate importate ecc."
+"                    un modulo di contatto compilato nel sito web o un file di potenziali clienti\n"
+"                    non qualificati importato ecc."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2606,8 +2607,8 @@ msgid ""
 msgstr ""
 "Usare i contatti se è necessaria una fase di qualifica prima di creare "
 "un'opportunità o un cliente. Può essere un biglietto da visita ricevuto, un "
-"modulo di contatto compilato nel sito web o un file di prospettive non "
-"qualificate importate ecc. Dopo tale qualifica, il contatto può essere "
+"modulo di contatto compilato nel sito web o un file di potenziali clienti "
+"non qualificati importato ecc. Dopo tale qualifica, il contatto può essere "
 "convertito in un'opportunità aziendale e/o in un nuovo cliente della "
 "rubrica."
 
@@ -2816,7 +2817,7 @@ msgstr "es. https://www.odoo.com"
 #: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
-msgstr "o invia una email a %s"
+msgstr "o invia una e-mail a %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

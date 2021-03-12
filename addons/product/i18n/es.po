@@ -10,7 +10,6 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
 # Ivan Coro <ivan@iventiva.com>, 2018
-# Martin Trigaux, 2018
 # Nans Lefebvre <len@odoo.com>, 2018
 # gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
@@ -20,6 +19,9 @@
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Luis González <lgonzalez@vauxoo.com>, 2020
+# Jairo Llopis <yajo.sk8@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Jairo Llopis <yajo.sk8@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -668,7 +670,7 @@ msgstr "Ref. Cliente"
 #: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4b_product_template
 msgid "Customizable Desk"
-msgstr ""
+msgstr "Escritorio personalizable"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history__datetime
@@ -1970,7 +1972,7 @@ msgid ""
 msgstr ""
 "Calcula el precio de modo que sea un múltiplo de este valor.\n"
 "El redondeo se aplica después del descuento y antes del incremento.\n"
-"Para que los precios terminen en 9,99, redondeo 10, incremento -0,01."
+"Para que los precios terminen en 9,99, configure el redondeo en 10, incremento -0,01."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__company_share_product
@@ -2344,6 +2346,15 @@ msgstr ""
 "empresa actual."
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:16
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2648,6 +2659,13 @@ msgid "Volume"
 msgstr "Volumen"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:33
+#: code:addons/product/models/uom_uom.py:15
+#, python-format
+msgid "Warning!"
+msgstr "¡Alerta!"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
 msgid "Website Messages"
@@ -2662,6 +2680,7 @@ msgstr "Historial de comunicaciones del sitio web"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Peso"
 
@@ -2703,6 +2722,16 @@ msgstr "Pesos"
 #: model:product.attribute.value,name:product.product_attribute_value_3
 msgid "White"
 msgstr "Blanco"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:34
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:46

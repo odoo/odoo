@@ -17,7 +17,7 @@ var Livechat = TwoUserChannel.extend({
      * @override
      * @param {Object} params
      * @param {Object} params.data
-     * @param {string} params.data.anonymous_name name of the website user
+     * @param {string} params.data.anonymous_name server name of the website user
      */
     init: function (params) {
         this._super.apply(this, arguments);

@@ -37,9 +37,9 @@ $(document).ready(function () {
             if ($thread_container) {
                 var $last_msg = $thread_container.find('li.media').last();
                 $(data).find('li.media').insertAfter($last_msg);
-                $(data).find('p.well').appendTo($thread_container);
+                $(data).find('.o_mg_read_more').parent().appendTo($thread_container);
             }
-            var $show_more = $link.parents('p.well').first();
+            var $show_more = $link.parent();
             $show_more.remove();
             return true;
         });

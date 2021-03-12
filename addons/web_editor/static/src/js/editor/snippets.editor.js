@@ -436,14 +436,20 @@ var SnippetEditor = Widget.extend({
 
         $('.oe_drop_zone').droppable({
             over: function () {
-                $('.oe_drop_zone.hide').removeClass('hide');
-                $(this).addClass('hide').first().after(self.$target);
+                if (self.dropped) {
+                    self.$target.detach();
+                    $('.oe_drop_zone').removeClass('invisible');
+                }
                 self.dropped = true;
+                $(this).first().after(self.$target).addClass('invisible');
             },
             out: function () {
-                $(this).removeClass('hide');
-                self.$target.detach();
-                self.dropped = false;
+                var prev = self.$target.prev();
+                if (this === prev[0]) {
+                    self.dropped = false;
+                    self.$target.detach();
+                    $(this).removeClass('invisible');
+                }
             },
         });
     },
@@ -734,55 +740,78 @@ var SnippetsMenu = Widget.extend({
             class: 'oe_drop_zone oe_insert',
         });
 
-        function isFullWidth($elem) {
-            return $elem.parent().width() === $elem.outerWidth(true);
+        // Check if the drop zone should be horizontal or vertical
+        function setDropZoneDirection($drop, $elem, height, $parent, $sibling) {
+            $sibling = $sibling || $elem;
+            var css = window.getComputedStyle($elem[0]);
+            var parentCss = window.getComputedStyle($parent[0]);
+            var float = css.float || css.cssFloat;
+            var display = parentCss.display;
+            var flex = parentCss.flexDirection;
+            if (float === 'left' || float === 'right' || (display === 'flex' && flex === 'row')) {
+                $drop.css('float', float);
+                if ($sibling.parent().width() !== $sibling.outerWidth(true)) {
+                    $drop.addClass('oe_vertical').css('height', height);
+                }
+            }
+        }
+
+        // If the previous sibling is a BR tag or a non-whitespace text, it
+        // should be a vertical dropzone.
+        function testPreviousSibling($drop, $zone) {
+            var node = $drop[0].previousSibling;
+            var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
+            if (test) {
+                $drop.addClass('oe_vertical').css({
+                    height: parseInt(window.getComputedStyle($zone[0]).lineHeight),
+                    float: 'none',
+                    display: 'inline-block',
+                });
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // Firstly, add a dropzone after the clone
+        var $clone = $('.oe_drop_clone');
+        if ($clone.length) {
+            var $drop = zone_template.clone();
+            var neighbor = $clone.prev()[0] || $clone.next()[0];
+            if (neighbor) {
+                var $neighbor = $(neighbor);
+                var height = Math.max($neighbor.outerHeight(), 30);
+                setDropZoneDirection($drop, $neighbor, height, $neighbor.parent());
+            }
+            $clone.after($drop);
         }
 
         if ($selectorChildren) {
             $selectorChildren.each(function () {
                 var $zone = $(this);
-                var css = window.getComputedStyle(this);
-                var parentCss = window.getComputedStyle($zone.parent()[0]);
-                var float = css.float || css.cssFloat;
-                var parentDisplay = parentCss.display;
-                var parentFlex = parentCss.flexDirection;
                 var $drop = zone_template.clone();
+                var $children = $zone.find('> :not(.oe_drop_zone, .oe_drop_clone)');
+                var height;
 
-                $zone.append($drop);
-                var node = $drop[0].previousSibling;
-                var test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
-                if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block',
-                    });
-                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
-                    if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
+                if (!$zone.children().last().is('.oe_drop_zone')) {
+                    $zone.append($drop);
+                    if (!testPreviousSibling($drop, $zone)) {
+                        var $lastChild = $children.last();
+                        height = Math.max(Math.min($zone.outerHeight(), $lastChild.outerHeight()), 30);
+                        setDropZoneDirection($drop, $zone, height, $zone, $lastChild);
                     }
                 }
 
-                $drop = $drop.clone();
-
-                $zone.prepend($drop);
-                node = $drop[0].nextSibling;
-                test = !!(node && ((!node.tagName && node.textContent.match(/\S/)) ||  node.tagName === 'BR'));
-                if (test) {
-                    $drop.addClass('oe_vertical').css({
-                        height: parseInt(window.getComputedStyle($zone[0]).lineHeight),
-                        float: 'none',
-                        display: 'inline-block'
-                    });
-                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                    $drop.css('float', float);
-                    if (!isFullWidth($zone)) {
-                        $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
+                if (!$zone.children().first().is('.oe_drop_clone')) {
+                    $drop = zone_template.clone();
+                    $zone.prepend($drop);
+                    if (!testPreviousSibling($drop, $zone)) {
+                        var $firstChild = $children.first();
+                        height = Math.max(Math.min($zone.outerHeight(), $firstChild.outerHeight()), 30);
+                        setDropZoneDirection($drop, $zone, height, $zone, $firstChild);
+                    } else {
+                        $drop.css({'float': 'none', 'display': 'inline-block'});
                     }
-                }
-                if (test) {
-                    $drop.css({'float': 'none', 'display': 'inline-block'});
                 }
             });
 
@@ -794,30 +823,18 @@ var SnippetsMenu = Widget.extend({
             $selectorSiblings.filter(':not(.oe_drop_zone):not(.oe_drop_clone)').each(function () {
                 var $zone = $(this);
                 var $drop;
-                var css = window.getComputedStyle(this);
-                var parentCss = window.getComputedStyle($zone.parent()[0]);
-                var float = css.float || css.cssFloat;
-                var parentDisplay = parentCss.display;
-                var parentFlex = parentCss.flexDirection;
+                var height;
 
-                if ($zone.prev('.oe_drop_zone:visible').length === 0) {
+                if ($zone.prev('.oe_drop_zone:visible, .oe_drop_clone').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
-                        if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
-                        }
-                    }
+                    height = Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30);
+                    setDropZoneDirection($drop, $zone, height, $zone.parent());
                     $zone.before($drop);
                 }
-                if ($zone.next('.oe_drop_zone:visible').length === 0) {
+                if ($zone.next('.oe_drop_zone:visible, .oe_drop_clone').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
-                        $drop.css('float', float);
-                        if (!isFullWidth($zone)) {
-                            $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
-                        }
-                    }
+                    height = Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30);
+                    setDropZoneDirection($drop, $zone, height, $zone.parent());
                     $zone.after($drop);
                 }
             });
@@ -1319,17 +1336,19 @@ var SnippetsMenu = Widget.extend({
 
                 $('.oe_drop_zone').droppable({
                     over: function () {
-                        if (!dropped) {
-                            dropped = true;
-                            $(this).first().after($toInsert).addClass('d-none');
+                        if (dropped) {
+                            $toInsert.detach();
+                            $('.oe_drop_zone').removeClass('invisible');
                         }
+                        dropped = true;
+                        $(this).first().after($toInsert).addClass('invisible');
                     },
                     out: function () {
                         var prev = $toInsert.prev();
                         if (this === prev[0]) {
                             dropped = false;
                             $toInsert.detach();
-                            $(this).removeClass('d-none');
+                            $(this).removeClass('invisible');
                         }
                     },
                 });

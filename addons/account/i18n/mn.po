@@ -8160,6 +8160,12 @@ msgstr ""
 " нэг журнал үүссгэнэ үү."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
 msgstr "Та төлбөрөө шилжүүлэхдээ дараах гүйлгээний утгыг ашиглана уу:"
@@ -10516,8 +10522,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:564
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "Журналын банкны дансны эзэмшигч нь (%s) компани байх ёстой."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
@@ -12425,12 +12434,6 @@ msgstr ""
 "Та санхүүгийн тохиргоонд \"Ханшийн зөрүүний алдагдлын данс\" тодорхойлох "
 "хэрэгтэй. Ингэснээр ханшүү зөрүүний алдагдлыг автоматаар хөтлөх боломжтой "
 "болно."
-
-#. module: account
-#: code:addons/account/models/account_cash_rounding.py:33
-#, python-format
-msgid "Please set a positive rounding value."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_refund
