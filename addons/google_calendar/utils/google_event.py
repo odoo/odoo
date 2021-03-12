@@ -128,11 +128,17 @@ class GoogleEvent(abc.Set):
         # UserA creates an event in Odoo (he is the owner) but userB syncs first.
         # There is no way to insert the event into userA's calendar since we don't have
         # any authentication access. The event is therefore inserted into userB's calendar
-        # (he is the orginizer in Google). The "real" owner (in Odoo) is stored as an
+        # (he is the organizer in Google). The "real" owner (in Odoo) is stored as an
         # extended property. There is currently no support to "transfert" ownership when
         # userA syncs his calendar the first time.
         real_owner_id = self.extendedProperties and self.extendedProperties.get('shared', {}).get('%s_owner_id' % env.cr.dbname)
-        real_owner = real_owner_id and env['res.users'].browse(int(real_owner_id))
+        try:
+            # If we create an event without user_id, the event properties will be 'false'
+            # and python will interpret this a a NoneType, that's why we have the 'except TypeError'
+            real_owner_id = int(real_owner_id)
+        except (ValueError, TypeError):
+            real_owner_id = False
+        real_owner = real_owner_id and env['res.users'].browse(real_owner_id) or env['res.users']
         if real_owner_id and real_owner.exists():
             return real_owner
         elif self.organizer and self.organizer.get('self'):
