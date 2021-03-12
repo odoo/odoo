@@ -8,8 +8,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 
-from odoo.addons.account.models.account_move import ImbalanceJournalEntryError
-
 class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
@@ -306,25 +304,18 @@ class PosSession(models.Model):
             self._check_if_no_draft_orders()
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
-            # Users without any accounting rights won't be able to create the journal entry. If this
-            # case, switch to sudo for creation and posting.
-            sudo = False
-            try:
-                if (
-                    not self.env['account.move'].check_access_rights('create', raise_exception=False)
-                    and self.user_has_groups('point_of_sale.group_pos_user')
-                ):
-                    sudo = True
-                    self.sudo().with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
-                else:
-                    self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
-                if self.move_id.line_ids:
-                    # Set the uninvoiced orders' state to 'done'
-                    self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
-                else:
-                    self.move_id.unlink()
+            if (
+                not self.env['account.move'].check_access_rights('create', raise_exception=False)
+                and self.user_has_groups('point_of_sale.group_pos_user')
+            ):
+                data = self.sudo().with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
+            else:
+                data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
 
-            except ImbalanceJournalEntryError as error:
+            try:
+                balance = sum(self.move_id.line_ids.mapped('balance'))
+                self.move_id._check_balanced()
+            except UserError:
                 # Creating the account move is just part of a big database transaction
                 # when closing a session. There are other database changes that will happen
                 # before attempting to create the account move, such as, creating the picking
@@ -333,12 +324,15 @@ class PosSession(models.Model):
                 # failed; therefore, we need to roll back this transaction before showing the
                 # close session wizard.
                 self.env.cr.rollback()
-                # When closing a session, single account move is checked which resulted to
-                # `ImbalanceJournalEntryError`. Thus, there should only be one value in imbalance_amounts
-                # which is what we need.
-                if len(error.imbalance_amounts) != 1:
-                    raise UserError(_("Single imbalance amount that matches the pos session's account move is expected."))
-                return self._close_session_action(error.imbalance_amounts[0])
+                return self._close_session_action(balance)
+
+            if self.move_id.line_ids:
+                self.move_id._post()
+                self._reconcile_account_move_lines(data)
+                # Set the uninvoiced orders' state to 'done'
+                self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
+            else:
+                self.move_id.unlink()
 
         self.write({'state': 'closed'})
         return {
@@ -442,10 +436,7 @@ class PosSession(models.Model):
         if balancing_account and amount_to_balance:
             data = self._create_balancing_line(data, balancing_account, amount_to_balance)
 
-        if account_move.line_ids:
-            account_move._post()
-
-        data = self._reconcile_account_move_lines(data)
+        return data
 
     def _accumulate_amounts(self, data):
         # Accumulate the amounts for each accounting lines group

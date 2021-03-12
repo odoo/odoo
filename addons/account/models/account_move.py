@@ -16,14 +16,6 @@ import json
 import re
 import warnings
 
-class ImbalanceJournalEntryError(UserError):
-    """Specialized UserError raised by `_check_balanced` method."""
-
-    def __init__(self, message, move_ids, imbalance_amounts):
-        super().__init__(message)
-        self.move_ids = move_ids
-        self.imbalance_amounts = imbalance_amounts
-
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
@@ -1687,7 +1679,7 @@ class AccountMove(models.Model):
         if query_res:
             ids = [res[0] for res in query_res]
             sums = [res[1] for res in query_res]
-            raise ImbalanceJournalEntryError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums), ids, sums)
+            raise UserError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums))
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
