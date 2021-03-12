@@ -44,9 +44,11 @@ class TestDeliveryCost(common.TransactionCase):
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure
         # that the company actually uses USD
+        # We do an invalidate_cache so the cache is aware of it too. 
         self.env.cr.execute(
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [self.env.ref('base.USD').id, self.env.company.id])
+        self.env.company.invalidate_cache()
         self.pricelist.currency_id = self.env.ref('base.USD').id
 
     def test_00_delivery_cost(self):
@@ -102,8 +104,9 @@ class TestDeliveryCost(common.TransactionCase):
             ('product_id', '=', self.normal_delivery.product_id.id)])
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
 
+        zin = str(delivery_wizard.display_price) + " " + str(delivery_wizard.delivery_price) + ' ' + line.company_id.country_id.code + line.company_id.name
         self.assertEqual(float_compare(line.price_subtotal, 10.0, precision_digits=2), 0,
-            "Delivery cost is not correspond.")
+            "Delivery cost does not correspond to 10.0. %s %s" % (line.price_subtotal, zin))
 
         # I confirm the sales order
 
