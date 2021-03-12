@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='community-menu']" position='after'>
                 <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
-                    <label class="col-lg-4" for="meeting_room_allow_creation"/> <field name="meeting_room_allow_creation"/>
+                    <label class="col" for="meeting_room_allow_creation"/> <field name="meeting_room_allow_creation"/>
                 </div>
             </xpath>
             <xpath expr="//div[@id='community-menu']" position="attributes">
