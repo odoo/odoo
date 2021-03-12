@@ -202,7 +202,7 @@ class Meeting(models.Model):
         }
         if self.privacy:
             values['visibility'] = self.privacy
-        if self.user_id != self.env.user:
+        if self.user_id and self.user_id != self.env.user:
             values['extendedProperties']['shared']['%s_owner_id' % self.env.cr.dbname] = self.user_id.id
 
         if not self.active:
