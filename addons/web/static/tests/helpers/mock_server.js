@@ -1920,6 +1920,9 @@ var MockServer = Class.extend({
 
             case 'write':
                 return Promise.resolve(this._mockWrite(args.model, args.args));
+
+            case 'get_access_rule':
+                return Promise.resolve(true);
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {

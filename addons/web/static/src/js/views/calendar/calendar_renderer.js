@@ -417,7 +417,7 @@ return AbstractRenderer.extend({
                 ]).then(function (result) {
                     eventData.canEdit = result[0];
                     eventData.canDelete = result[1];
-                });
+                }).catch(error => console.log(`Error in getting access rule ${error}`));
                 self._unselectEvent();
                 $(self.calendarElement).find(`[data-event-id=${eventData.id}]`).addClass('o_cw_custom_highlight');
                 self._renderEventPopover(eventData, $(eventClickInfo.el));
