@@ -15,6 +15,7 @@ var Tip = Widget.extend({
         mouseleave: '_onMouseLeave',
         transitionend: '_onTransitionEnd',
     },
+    CENTER_ON_TEXT_TAGS: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'],
 
     /**
      * @param {Widget} parent
@@ -317,8 +318,40 @@ var Tip = Widget.extend({
                 of: this.$anchor,
                 collision: "none",
                 using: props => {
-                    this.el.style.setProperty('top', `${props.top}px`, 'important');
-                    this.el.style.setProperty('left', `${props.left}px`, 'important');
+                    const {top} = props;
+                    let {left} = props;
+                    const anchorEl = this.$anchor[0];
+                    if (this.CENTER_ON_TEXT_TAGS.includes(anchorEl.nodeName)) {
+                        const textContainerWidth = anchorEl.getBoundingClientRect().width;
+                        const textNode = anchorEl.firstChild;
+                        const range = document.createRange();
+                        range.selectNodeContents(textNode);
+                        const textWidth = range.getBoundingClientRect().width;
+
+                        const alignment = window.getComputedStyle(anchorEl).getPropertyValue('text-align');
+                        const posVertical = (this.info.position === 'top' || this.info.position === 'bottom');
+                        if (alignment === 'left') {
+                            if (posVertical) {
+                                left = left - textContainerWidth / 2 + textWidth / 2;
+                            } else if (this.info.position === 'right') {
+                                left = left - textContainerWidth + textWidth;
+                            }
+                        } else if (alignment === 'right') {
+                            if (posVertical) {
+                                left = left + textContainerWidth / 2 - textWidth / 2;
+                            } else if (this.info.position === 'left') {
+                                left = left + textContainerWidth - textWidth;
+                            }
+                        } else if (alignment === 'center') {
+                            if (this.info.position === 'left') {
+                                left = left + textContainerWidth / 2 - textWidth / 2;
+                            } else if (this.info.position === 'right') {
+                                left = left - textContainerWidth / 2 + textWidth / 2;
+                            }
+                        }
+                    }
+                    this.el.style.setProperty('top', `${top}px`, 'important');
+                    this.el.style.setProperty('left', `${left}px`, 'important');
                 },
             });
         } else {
