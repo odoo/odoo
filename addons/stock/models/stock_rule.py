@@ -476,17 +476,6 @@ class ProcurementGroup(models.Model):
             domain = expression.AND([domain, domain_company])
         return domain
 
-    def _merge_domain(self, values, rule, group_id):
-        return [
-            ('group_id', '=', group_id), # extra logic?
-            ('location_id', '=', rule.location_src_id.id),
-            ('location_dest_id', '=', values['location_id'].id),
-            ('picking_type_id', '=', rule.picking_type_id.id),
-            ('picking_id.printed', '=', False),
-            ('picking_id.state', 'in', ['draft', 'confirmed', 'waiting', 'assigned']),
-            ('picking_id.backorder_id', '=', False),
-            ('product_id', '=', values['product_id'].id)]
-
     @api.model
     def _get_moves_to_assign_domain(self, company_id):
         moves_domain = [
