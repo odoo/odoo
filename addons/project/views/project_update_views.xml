@@ -15,11 +15,12 @@
                         <group>
                             <field name="project_id" invisible="1"/>
                             <field name="color" invisible="1"/>
-                            <field name="status_id" widget="status_with_color" domain="[('project_ids','=', project_id)]"
-                                    context="{'default_project_id': project_id}" options="{'no_open': 1, 'no_create': 1, 'color_field': 'color'}"
-                                    />
-                            <field name="progress" widget="basic_progressbar"/>
                             <field name="user_id" readonly="1"/>
+                            <field name="status_id" widget="status_with_color" domain="[('project_ids','=', project_id)]"
+                                   context="{'default_project_id': project_id}" options="{'no_open': 1, 'no_create': 1, 'color_field': 'color'}"/>
+                            <field name="progress" widget="basic_progressbar"/>
+                        </group>
+                        <group>
                             <field name="date"/>
                         </group>
                     </group>
@@ -48,6 +49,8 @@
                             <div class="o_kanban_detail_ungrouped row mx-0">
                                 <div class="col-lg-2 o_wvisitor_name mr-2">
                                     <h4><field name="name"/></h4>
+                                    <b><field name="user_id" widget="many2one_avatar_user"/></b>
+                                    <b><t t-esc="record.user_id.value"/></b>
                                 </div>
                                 <div class="col-lg-2 mx-2">
                                     <field name="color" invisible="1"/>
@@ -60,15 +63,6 @@
                                 <div class="col-lg-2 mx-2">
                                     <b><field name="date"/></b>
                                     <div>Date</div>
-                                </div>
-                                <div class="col-lg-2 mx-2">
-                                    <b><field name="user_id" widget="many2one_avatar_user"/></b>
-                                    <b><t t-esc="record.user_id.value"/></b>
-                                    <div>Author</div>
-                                </div>
-                                <separator class="form-divider-h"/>
-                                <div class="col-lg-4 mr-2"> 
-                                    <field name="description" widget="project_html_see_more"/>
                                 </div>
                             </div>
                         </div>
@@ -108,22 +102,51 @@
         </field>
     </record>
 
-    <record id="open_project_update_form" model="ir.actions.act_window">
+    <record id="open_project_update_action" model="ir.actions.act_window">
         <field name="name">Project Update</field>
         <field name="res_model">project.update</field>
         <field name="view_mode">form</field>
     </record>
 
-    <record id="project_update_posted_kanban" model="ir.actions.act_window">
+    <record id="project_update_all_action" model="ir.actions.act_window">
         <field name="name">Project Updates</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">project.update</field>
         <field name="view_mode">kanban,form</field>
         <field name="domain">[('project_id', '=', active_id)]</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Wait for visitors to come to your website to see their history.
-          </p>
+            <p class="o_view_nocontent_smiling_face">
+            No updates found. Let's create one!
+            </p><p>
+            Get a snapshot of the status of your project and share its progress with key stakeholders.
+            </p>
         </field>
+    </record>
+
+    <record id="project_milestone_view_form" model="ir.ui.view">
+        <field name="name">project.milestone.view.form</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id" invisible="1"/>
+                            <field name="is_done" widget="boolean_toggle"/>
+                            <field name="name"/>
+                            <field name="date_deadline"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_milestone_create_new" model="ir.actions.act_window">
+        <field name="name">Project Milestone</field>
+        <field name="res_model">project.milestone</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_project_id': id}</field>
     </record>
 </odoo>

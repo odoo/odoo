@@ -48,4 +48,46 @@
         <t t-esc="data.status"/>
     </span>
 
+    <t t-name="project.KanbanSidePanel" owl="1">
+        <div class="o_rightpanel">
+            <div class="o_rightpanel_section">
+                <div class="o_rightpanel_header">
+                    <div class="o_rightpanel_title">
+                        Tasks Analysis
+                    </div>
+                </div>
+
+                <div class="o_rightpanel_data">
+                    <div>
+                        <a class="btn btn-link o_rightpanel_left_button" t-on-click="onOpenTaskClick">Open Tasks</a>
+                        <span class="o_rightpanel_right_col"><t t-esc="tasks.data.open_tasks"/></span>
+                    </div>
+                    <div>
+                        <a class="btn btn-link o_rightpanel_left_button" t-on-click="onUpdatedTaskClick">Recently Updated Tasks (last 30 days)</a>
+                        <span class="o_rightpanel_right_col"><t t-esc="tasks.data.updated_tasks"/></span>
+                    </div>
+                </div>
+            </div>
+            <div class="o_rightpanel_section">
+                <div class="o_rightpanel_header">
+                    <div class="o_rightpanel_title">
+                        Milestones
+                    </div>
+                    <span class="o_rightpanel_button">
+                        <a t-on-click="onAddMilestoneClick">Add Milestone</a>
+                    </span>
+                </div>
+                <div class="o_rightpanel_data">
+                    <div t-foreach="milestones.data.data" t-as="milestone" t-key="milestone.id">
+                        <span class="o_milestone_checkbox" t-att-data-id="milestone.id" t-att-data-value="milestone.is_done and 1 or 0" t-on-click="onMilestoneClick">
+                            <i class="fa" t-att-class="{'fa-check-square': milestone.is_done, 'fa-square-o': !milestone.is_done }"></i>
+                        </span>
+                        <t t-esc="milestone.name"/>
+                        <span class="o_rightpanel_right_col"><t t-esc="milestone.date_deadline"/></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
 </templates>

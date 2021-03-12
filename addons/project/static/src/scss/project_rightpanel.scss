@@ -1,0 +1,77 @@
+// ------- View with rightpanel -------
+$o-rightpanel-active-bg: rgba(108, 193, 237, 0.3);
+$o-rightpanel-p: $o-horizontal-padding;
+$o-rightpanel-p-small: $o-horizontal-padding*0.5;
+$o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
+
+$o-rightpanel-category-default-color: $o-brand-primary;
+$o-rightpanel-filter-default-color: #D59244;
+
+.o_controller_with_rightpanel {
+    display: flex;
+    align-items: flex-start;
+
+    .o_renderer_with_rightpanel {
+        flex: 1 1 100%;
+        overflow: auto; // make the renderer and search panel scroll individually
+        max-height: 100%;
+        position: relative;
+    }
+}
+
+.o_rightpanel {
+    flex: 0 0 500px;
+    overflow: auto;
+    height: 100%;
+    padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
+    border-left: 1px solid $gray-300;
+    background-color: white;
+
+
+    .o_rightpanel_section {
+        border-bottom: 1px solid $gray-300;
+        padding-bottom: $o-rightpanel-p;
+        padding-top: $o-rightpanel-p;
+
+        .o_rightpanel_header {
+            padding: $o-rightpanel-p-tiny $o-rightpanel-p-small $o-rightpanel-p-small $o-rightpanel-p-small;
+
+            .o_rightpanel_title {
+                cursor: default;
+                padding: 8px 0;
+                font-weight: bold;
+                font-size: large;
+                display:inline;
+            }
+
+            .o_rightpanel_button {
+                padding-right: $o-rightpanel-p*2;
+                padding-top: 8px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: small;
+                color: $o-brand-primary;
+                float: right;
+            }
+        }
+
+        .o_rightpanel_data {
+            font-size: small;
+            padding-left: $o-rightpanel-p;
+            .o_rightpanel_left_button {
+                font-size: small;
+                color: $o-brand-primary;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            .o_rightpanel_right_col {
+                padding-right: $o-rightpanel-p-small*2;
+                float: right;
+            }
+            .o_milestone_checkbox {
+                padding-right: $o-rightpanel-p-tiny;
+            }
+        }
+    }
+
+}

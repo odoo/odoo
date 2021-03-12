@@ -1,14 +1,14 @@
 odoo.define('project.project_update_widget', function (require) {
     "use strict";
-    
-    var time = require('web.time');
+
+    const { _lt, qweb } = require('web.core');
     const fieldRegistry = require('web.field_registry');
     const ListRenderer = require('web.ListRenderer');
     const { FieldOne2Many, FieldMany2One } = require('web.relational_fields');
-    var FieldHtml = require('web_editor.field.html');
-    const { _lt, qweb } = require('web.core');
-    
-    var UpdatesLineRenderer = ListRenderer.extend({
+    const time = require('web.time');
+    const FieldHtml = require('web_editor.field.html');
+
+    const UpdatesLineRenderer = ListRenderer.extend({
         dataRowTemplate: 'project.status_update_data_row',
         countRows: 0,
 
@@ -22,7 +22,7 @@ odoo.define('project.project_update_widget', function (require) {
             return $('<thead/>');
         },
 
-            /**
+        /**
          * Renders a empty footer
          *
          * @override
@@ -33,8 +33,8 @@ odoo.define('project.project_update_widget', function (require) {
         },
 
         _formatData: function (data) {
-            var dateFormat = time.getLangDateFormat();
-            var date = data.date && data.date.format(dateFormat) || "";
+            const dateFormat = time.getLangDateFormat();
+            const date = data.date && data.date.format(dateFormat) || "";
             return _.extend(data, {
                 date: date,
                 status_id: data.status_id.data.display_name,
@@ -52,7 +52,7 @@ odoo.define('project.project_update_widget', function (require) {
         },
 
         _render: function () {
-            var self = this;
+            const self = this;
             this.countRows = 0;
             return this._super().then(function () {
                 self.$el.find('table').removeClass('table-striped o_list_table');
@@ -61,7 +61,7 @@ odoo.define('project.project_update_widget', function (require) {
         },
     });
 
-    var ProjectUpdateOne2ManyField = FieldOne2Many.extend({
+    const ProjectUpdateOne2ManyField = FieldOne2Many.extend({
         /**
          * @override
          * @private
@@ -71,51 +71,45 @@ odoo.define('project.project_update_widget', function (require) {
         },
     });
 
-    var ProjectUpdateMany2OneField = FieldMany2One.extend({
+    const ProjectUpdateMany2OneField = FieldMany2One.extend({
         _template: 'project.status_update',
         events: _.extend({}, FieldMany2One.prototype.events, {
             'click': '_onClick',
         }),
 
-        init: function(parent, field, props){
+        init: function (parent, field, props) {
             this._super.apply(this, arguments);
             this.parent_id = props.data.id;
         },
 
-        willStart: function(){
+        willStart: function () {
             const promises = [];
             promises.push(this._super.apply(this, arguments));
             promises.push(this._loadWidgetData());
             return Promise.all(promises);
         },
 
-        
         //--------------------------------------------------------------------------
         // Private
         //--------------------------------------------------------------------------
-        _loadWidgetData: function(){
-            var self = this;
-            return this._rpc({
+        _loadWidgetData: async function () {
+            this.data = await this._rpc({
                 model: 'project.project',
                 method: 'get_last_update_or_default',
                 args: [this.parent_id],
-            }).then(data => {
-                self.data = data;
             });
         },
 
-        _onClick(ev) {
-            ev.preventDefault();
-            var self = this;
-            return this._rpc({
+        _onClick: async function (ev) {
+            ev.stopPropagation();
+            const action = this._rpc({
                 model: 'project.project',
                 method: 'action_open_update_status',
                 args: [this.parent_id],
-            }).then(action => {
-                self.do_action(action);
             });
+            this.do_action(action);
         },
-        
+
         /**
          * @override
          */
@@ -130,14 +124,14 @@ odoo.define('project.project_update_widget', function (require) {
         },
     });
 
-    var ProjectUpdateDescriptionField = FieldHtml.extend({
+    const ProjectUpdateDescriptionField = FieldHtml.extend({
         less: true,
         events: _.extend({}, FieldHtml.prototype.events, {
             'click .o_desc_see_more': '_onClickSeeMore',
             'click .o_desc_see_less': '_onClickSeeLess',
         }),
 
-        init: function(){
+        init: function () {
             this._super.apply(this, arguments);
             this.nbrChar = this.nodeOptions.nbr_char || 100;
         },
@@ -145,10 +139,10 @@ odoo.define('project.project_update_widget', function (require) {
         /**
          * @override
          */
-        start: function() {
+        start: function () {
             var self = this;
             return this._super.apply(this, arguments).then(function () {
-                if(self.value){
+                if (self.value) {
                     self.$el.addClass('o_project_html_see_more');
                 }
             });
@@ -157,7 +151,6 @@ odoo.define('project.project_update_widget', function (require) {
         _onClickSeeMore(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            this.$el.slideUp();
             this.less = false;
             this._render();
         },
@@ -165,7 +158,6 @@ odoo.define('project.project_update_widget', function (require) {
         _onClickSeeLess(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            this.$el.slideUp();
             this.less = true;
             this._render();
         },
@@ -174,44 +166,43 @@ odoo.define('project.project_update_widget', function (require) {
          * @override
          */
         _renderReadonly() {
-            if(!this.value || this.value.length <= this.nbrChar){
+            if (!this.value || this.value.length <= this.nbrChar) {
                 this._super.apply(this, arguments);
                 return;
             }
-            if(this.old_value) {
+            if (this.old_value) {
                 this.value = this.old_value;
             }
-            if(this.less) {
+            if (this.less) {
                 this.old_value = this.value;
                 this.value = this.value.substring(0, this._computeEndOfSubstring());
             }
             this._super.apply(this, arguments);
             // render button
-            if(this.less) {
-                var span = $('<span>').addClass('o_desc_see_more');
+            if (this.less) {
+                const span = $('<span>').addClass('o_desc_see_more');
                 span.text(_lt("See more..."));
                 this.$el.append(span);
             } else {
-                var span = $('<span>').addClass('o_desc_see_less');
+                const span = $('<span>').addClass('o_desc_see_less');
                 span.text(_lt("See less"));
                 this.$el.append(span);
             }
-            this.$el.slideDown();
         },
 
         /**
          * It only verifies that we are not inside an html tag.
-         * 
+         *
          * If we are in an html element, the _super rendering will manage
          *the ending tags so we don't have to take care of html well-formed syntax
          */
         _computeEndOfSubstring() {
-            if(this.endOfSubstring){
+            if (this.endOfSubstring) {
                 return this.endOfSubstring;
             }
             var nextOpeningChevron = this.value.indexOf("<", this.nbrChar);
             var nextEndingChevron = this.value.indexOf(">", this.nbrChar);
-            if(nextOpeningChevron > nextEndingChevron){
+            if (nextOpeningChevron > nextEndingChevron) {
                 this.endOfSubstring = nextEndingChevron + 1;
             } else {
                 this.endOfSubstring = this.nbrChar + 1;
@@ -219,7 +210,7 @@ odoo.define('project.project_update_widget', function (require) {
             return this.endOfSubstring;
         }
     });
-    
+
     fieldRegistry.add('one2many_project_update', ProjectUpdateOne2ManyField);
     fieldRegistry.add('many2one_project_update', ProjectUpdateMany2OneField);
     fieldRegistry.add('project_html_see_more', ProjectUpdateDescriptionField);
@@ -229,5 +220,4 @@ odoo.define('project.project_update_widget', function (require) {
         ProjectUpdateMany2OneField,
         ProjectUpdateDescriptionField
     };
-    
 });

@@ -1,22 +1,22 @@
 odoo.define('project.status_with_color', function (require) {
     "use strict";
-    
+
+    const { qweb } = require('web.core');
     const fieldRegistry = require('web.field_registry');
     const { FieldMany2One } = require('web.relational_fields');
-    const { _lt, qweb } = require('web.core');
-    
+
     /**
      * options :
      * `color_field` : The field that must be use to color the bubble. It must be in the view. (from 0 to 11). Default : grey.
      */
-    var StatusWithColor = FieldMany2One.extend({
+    const StatusWithColor = FieldMany2One.extend({
         _template: 'project.statusWithColor',
 
         init: function () {
             this._super.apply(this, arguments);
             this.color = this.recordData[this.nodeOptions.color_field];
         },
-        
+
         /**
          * @override
          */
@@ -29,9 +29,9 @@ odoo.define('project.status_with_color', function (require) {
             }
         },
     });
-    
+
     fieldRegistry.add('status_with_color', StatusWithColor);
-    
+
     return StatusWithColor;
-    
+
 });

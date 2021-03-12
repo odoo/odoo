@@ -253,10 +253,6 @@
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
-                        <button class="oe_stat_button" type="action"
-                            name="%(project_update_posted_kanban)d" icon="fa-pencil">
-                            <field string="Updates" name="update_count" widget="statinfo"/>
-                        </button>
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-file-text-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
@@ -275,11 +271,11 @@
                                 </span>
                             </div>
                         </button>
+                        <button class="oe_stat_button">
+                            <field name="last_update_id" widget="many2one_project_update"/>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <span class="o_status_project_form">
-                        <field name="last_update_id" widget="many2one_project_update"/>
-                    </span>
                     <div class="oe_title">
                         <h1>
                             <field name="name" class="o_text_overflow" placeholder="Project Name"/>

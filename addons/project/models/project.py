@@ -7,7 +7,7 @@ from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
-from odoo.tools.misc import format_date, get_lang
+from odoo.tools.misc import format_date, get_lang, DEFAULT_SERVER_DATE_FORMAT
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -253,10 +253,11 @@ class Project(models.Model):
     update_status_ids = fields.Many2many('project.update.status', 'project_update_status_rel', 'project_id', 'update_status_id', string='Allowed Project States',
                                          default=_get_default_update_states)
     update_ids = fields.One2many('project.update', 'project_id')
+    update_count = fields.Integer(compute='_compute_update_count', string="Update Count")
     last_update_id = fields.Many2one('project.update', string='Last Update', compute='_compute_last_update')
     status_updates_template = fields.Html(
         compute='_compute_status_updates_template', store=True, readonly=False)
-    update_count = fields.Integer(compute='_compute_update_count', string="Update Count")
+    milestone_ids = fields.One2many('project.milestone', 'project_id')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
@@ -526,24 +527,16 @@ class Project(models.Model):
         return dict(action, context=action_context)
 
     def action_open_update_status(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("project.open_project_update_form")
-        if self.last_update_id:
-            action['res_id'] = self.last_update_id.id
-            return action
-        last_draft = self.env['project.update'].search_read([
-            ('project_id', '=', self.id),
-            ('user_id', '=', self.env.uid),
-            ('state', '=', 'draft')
-        ], ['id'], limit=1)
-        if last_draft:
-            action['res_id'] = last_draft[0]['id']
-            return action
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("project.project_update_all_action")
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
         action_context['default_project_id'] = self.id
+        action_context['active_id'] = self.id
         return dict(action, context=action_context)
 
     def get_last_update_or_default(self):
+        self.ensure_one()
         if self.last_update_id:
             return {
                 'status': self.last_update_id.status_id.name,
@@ -553,6 +546,30 @@ class Project(models.Model):
         return {
             'status': default_status.name,
             'color': default_status.color
+        }
+
+    def get_panel_data(self):
+        self.ensure_one()
+        return {
+            'tasks': self._get_tasks_info(),
+            'milestones': self._get_milestones(),
+        }
+
+    def _get_tasks_info(self):
+        self.ensure_one()
+        older_last_update = fields.Datetime.now() + timedelta(days=-30)
+        return {
+            'open_tasks': self.env['project.task'].search_count([('project_id', '=', self.id), ('stage_id.fold', '=', False)]),
+            'updated_tasks': self.env['project.task'].search_count([('project_id', '=', self.id), ('write_date', '>', older_last_update)]),
+            'default_action': self.env.ref('project.act_project_project_2_project_task_all').copy_data()[0],
+            'older_last_update': older_last_update.strftime(DEFAULT_SERVER_DATE_FORMAT),
+        }
+
+    def _get_milestones(self):
+        self.ensure_one()
+        return {
+            'data': [{**{'id': milestone.id}, **(milestone.copy_data()[0])} for milestone in self.milestone_ids],
+            'default_action': self.env.ref('project.project_milestone_create_new').copy_data()[0],
         }
 
     # ---------------------------------------------------

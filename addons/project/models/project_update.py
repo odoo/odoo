@@ -43,7 +43,7 @@ class ProjectUpdate(models.Model):
     progress = fields.Integer()
     user_id = fields.Many2one('res.users', string="Author", required=True, default=lambda self: self.env.user)
     description = fields.Html(default=_get_default_description)
-    date = fields.Date(default=fields.Date.today)
+    date = fields.Date(default=fields.Date.context_today)
     project_id = fields.Many2one("project.project", required=True)
     project_user_id = fields.Many2one(related='project_id.user_id', readonly=True)
     project_date_deadline = fields.Date(related='project_id.date_deadline', readonly=True)
@@ -61,7 +61,20 @@ class ProjectUpdate(models.Model):
             ('project_id', '=', self.project_id.id),
             ('user_id', '=', self.env.uid)
         ], ['id'], limit=1)
-        action = self.env["ir.actions.actions"]._for_xml_id("project.open_project_update_form")
+        action = self.env["ir.actions.actions"]._for_xml_id("project.open_project_update_action")
         if last_draft:
             action['res_id'] = last_draft[0]['id']
         return action
+
+class ProjectMilestone(models.Model):
+    _name = 'project.milestone'
+
+    def _default_project_id(self):
+        import ipdb; ipdb.set_trace()
+        return self.env.context['default_project_id']
+
+    name = fields.Char(required=True)
+    is_done = fields.Boolean(default=False)
+    date_deadline = fields.Date()
+
+    project_id = fields.Many2one('project.project', required=True, default=_default_project_id)
