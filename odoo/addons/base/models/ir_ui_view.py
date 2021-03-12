@@ -1219,8 +1219,15 @@ actual arch.
                         not self._context.get("create", True) and is_base_model):
                     node.set("create", 'false')
 
-        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
+        if node.tag in ('kanban', 'tree', 'form'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+                if (not node.get(action) and
+                        not Model.check_access_rights(operation, raise_exception=False) or
+                        not self._context.get(action, True) and is_base_model):
+                    node.set(action, 'false')
+
+        if node.tag in ('gantt',):
+            for action, operation in (('create', 'create'), ('edit', 'write')):
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or
                         not self._context.get(action, True) and is_base_model):
