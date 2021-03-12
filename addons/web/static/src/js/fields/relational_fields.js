@@ -44,7 +44,7 @@ var M2ODialog = Dialog.extend({
         this.name = name;
         this.value = value;
         this._super(parent, {
-            title: _.str.sprintf(_t('New %s'), this.name),
+            title: _.str.sprintf(_t('New %s'), this.name), 
             size: 'medium',
             buttons: [{
                 text: _t('Create'),
