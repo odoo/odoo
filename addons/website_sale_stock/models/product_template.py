@@ -30,7 +30,6 @@ class ProductTemplate(models.Model):
             product_with_context = product.with_context(warehouse=website.warehouse_id.id)
             qty_available = product_with_context.qty_available
             qty_forecasted = product_with_context.incoming_qty
-            print('\n\n---\n\n')
             combination_info.update({
                 'qty_available': qty_available,
                 'qty_available_formatted': self.env['ir.qweb.field.float'].value_to_html(qty_available, {'decimal_precision': 'Product Unit of Measure'}),
@@ -54,7 +53,4 @@ class ProductTemplate(models.Model):
                 'product_template': product_template.id,
                 'cart_qty': 0
             })
-        # To remove, combination_info dict debug print
-        for key in combination_info:
-            print(f"\t'{key}': {combination_info[key]}")
         return combination_info
