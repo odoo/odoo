@@ -1111,7 +1111,7 @@ class AccountMove(models.Model):
                 if (
                     not final_batches
                     or final_batches[-1]['format'] != date_group['format']
-                    or final_batches[-1]['format_values'] != date_group['format_values']
+                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
                 ):
                     final_batches += [date_group]
                 elif date_group['reset'] == 'never':
@@ -4727,6 +4727,7 @@ class AccountMoveLine(models.Model):
             'name': default_name,
             'date': self.date,
             'account_id': distribution.account_id.id,
+            'group_id': distribution.account_id.group_id.id,
             'partner_id': self.partner_id.id,
             'tag_ids': [(6, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
             'unit_amount': self.quantity,
