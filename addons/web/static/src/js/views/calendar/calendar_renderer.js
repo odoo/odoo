@@ -412,8 +412,8 @@ return AbstractRenderer.extend({
                 eventClickInfo.jsEvent.stopPropagation();
                 var eventData = eventClickInfo.event;
                 await Promise.all([
-                    self._rpc({model: 'calendar.event', method: 'check_access_rule', args: [parseInt(eventClickInfo.event.id), "write", false]}),
-                    self._rpc({model: 'calendar.event', method: 'check_access_rule', args: [parseInt(eventClickInfo.event.id), "unlink", false]}),
+                    self._rpc({model: 'calendar.event', method: 'get_access_rule', args: [parseInt(eventClickInfo.event.id), "write"]}),
+                    self._rpc({model: 'calendar.event', method: 'get_access_rule', args: [parseInt(eventClickInfo.event.id), "unlink"]}),
                 ]).then(function (result) {
                     eventData.canEdit = result[0];
                     eventData.canDelete = result[1];

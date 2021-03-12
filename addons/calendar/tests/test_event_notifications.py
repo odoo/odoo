@@ -20,7 +20,7 @@ class TestEventNotifications(TransactionCase, MailCase):
             'start': datetime(2019, 10, 25, 8, 0),
             'stop': datetime(2019, 10, 27, 18, 0),
         }).with_context(mail_notrack=True)
-        cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox',  groups='calendar.group_calendar_secretary')
+        cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox', groups='calendar.group_calendar_event_admin')
         cls.partner = cls.user.partner_id
 
     def test_message_invite(self):

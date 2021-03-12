@@ -895,11 +895,9 @@ class Meeting(models.Model):
             return attendee.do_decline()
         return attendee.do_tentative()
 
-    def check_access_rule(self, operation, raise_exception=True):
+    def get_access_rule(self, operation):
         try:
             super().check_access_rule(operation)
-            return None if raise_exception else True
-        except Exception as e:
-            if raise_exception:
-                raise e
+            return True
+        except:
             return False
