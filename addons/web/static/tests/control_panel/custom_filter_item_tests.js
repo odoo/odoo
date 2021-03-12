@@ -285,7 +285,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         });
 
         QUnit.test('input value parsing', async function (assert) {
-            assert.expect(6);
+            assert.expect(7);
 
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
@@ -310,16 +310,63 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.strictEqual(idInput.value, "0");
 
             // Float parsing
-            await testUtils.fields.editInput(floatInput, 4.2);
+            await testUtils.fields.editInput(floatInput, "4.2");
             assert.strictEqual(floatInput.value, "4.2");
             await testUtils.fields.editInput(floatInput, "DefinitelyValidFloat");
-            assert.strictEqual(floatInput.value, "4.2");
+            // String input in a number input gives "", which is parsed as 0
+            assert.strictEqual(floatInput.value, "0.0");
 
             // Number parsing
-            await testUtils.fields.editInput(idInput, 4);
+            await testUtils.fields.editInput(idInput, "4");
+            assert.strictEqual(idInput.value, "4");
+            await testUtils.fields.editInput(idInput, "4.2");
             assert.strictEqual(idInput.value, "4");
             await testUtils.fields.editInput(idInput, "DefinitelyValidID");
-            assert.strictEqual(idInput.value, "4");
+            // String input in a number input gives "", which is parsed as 0
+            assert.strictEqual(idInput.value, "0");
+
+            cfi.destroy();
+        });
+
+        QUnit.test('input value parsing with language', async function (assert) {
+            assert.expect(5);
+
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: {
+                    searchModel: new ActionModel(),
+                    _t: Object.assign(s => s, { database: { parameters: { decimal_point: "," } }}),
+                },
+                translateParameters: {
+                    decimal_point: ",",
+                    thousands_sep: "",
+                    grouping: [3, 0],
+                },
+            });
+
+            await cpHelpers.toggleAddCustomFilter(cfi);
+            await testUtils.dom.click('button.o_add_condition');
+
+            const [floatSelect] = cfi.el.querySelectorAll('.o_generator_menu_field');
+            await testUtils.fields.editSelect(floatSelect, 'float_field');
+
+            const [floatInput] = cfi.el.querySelectorAll('.o_generator_menu_value .o_input');
+
+            // Default values
+            assert.strictEqual(floatInput.value, "0,0");
+
+            // Float parsing
+            await testUtils.fields.editInput(floatInput, '4,');
+            assert.strictEqual(floatInput.value, "4,");
+            await testUtils.fields.editInput(floatInput, '4,2');
+            assert.strictEqual(floatInput.value, "4,2");
+            await testUtils.fields.editInput(floatInput, '4,2,');
+            assert.strictEqual(floatInput.value, "4,2");
+            await testUtils.fields.editInput(floatInput, "DefinitelyValidFloat");
+            // The input here is a string, resulting in a parsing error instead of 0
+            assert.strictEqual(floatInput.value, "4,2");
 
             cfi.destroy();
         });
