@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tests import tagged, Form
 from odoo.tests.common import users
 from odoo.tools import mute_logger, formataddr
-
 
 class TestChannelAccessRights(MailCommon):
 
@@ -91,7 +91,6 @@ class TestChannelAccessRights(MailCommon):
         # Employee cannot unlink private
         with self.assertRaises(AccessError):
             self.env['mail.channel'].browse(self.group_private.id).unlink()
-
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.models')
     @users('user_portal')
@@ -340,6 +339,50 @@ class TestChannelInternals(MailCommon):
             msg_2.id,
             "Last message id should stay the same after mark channel as seen with an older message"
         )
+
+    @mute_logger('odoo.models.unlink')
+    def test_channel_auto_unsubscribe_archived_or_deleted_users(self):
+        """Archiving / deleting a user should automatically unsubscribe related partner from private channels"""
+        test_user = self.env['res.users'].create({
+            "login": "adam",
+            "name": "Jonas",
+        })
+        test_partner = test_user.partner_id
+        test_channel_private = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'Winden caves',
+            'description': 'Channel to travel through time',
+            'public': 'private',
+            'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
+        })
+        test_channel_group = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'Sic Mundus',
+            'public': 'groups',
+            'group_public_id': self.env.ref('base.group_user').id,
+            'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
+        })
+        self.test_channel.with_context(self._test_context).write({
+            'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
+        })
+        test_chat = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'test',
+            'channel_type': 'chat',
+            'public': 'private',
+            'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
+        })
+
+        # Unsubscribe archived user from the private channels, but not from public channels and not from chat
+        self.user_employee.active = False
+        self.assertEqual(test_channel_private.channel_partner_ids, test_partner)
+        self.assertEqual(test_channel_group.channel_partner_ids, test_partner)
+        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
+
+        # Unsubscribe deleted user from the private channels, but not from public channels and not from chat
+        test_user.unlink()
+        self.assertEqual(test_channel_private.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
     def test_multi_company_chat(self):
         self._activate_multi_company()
