@@ -84,6 +84,18 @@ class TestSyncOdoo2Google(TransactionCase):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}}
         })
 
+    def test_event_without_user(self):
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'start': datetime(2020, 1, 15, 8, 0),
+            'stop': datetime(2020, 1, 15, 18, 0),
+            'user_id': False,
+            'privacy': 'private',
+            'need_sync': False,
+        })
+        values = event._google_values()
+        self.assertFalse('%s_owner_id' % self.env.cr.dbname in values.get('extendedProperties', {}).get('shared', {}))
+
     @patch_api
     def test_event_allday_creation(self):
         event = self.env['calendar.event'].create({
