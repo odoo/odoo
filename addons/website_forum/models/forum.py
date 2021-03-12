@@ -399,7 +399,7 @@ class Post(models.Model):
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
                 match = re.escape(match)  # replace parenthesis or special char in regex
-                content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
+                content = re.sub(match, match[:4] + 'rel="nofollow" ' + match[4:], content)
 
         if self.env.user.karma <= forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
