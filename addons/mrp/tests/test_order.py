@@ -1303,3 +1303,33 @@ class TestMrpOrder(TestMrpCommon):
         # of a conversion 187.5ml = 0.188L
         # thus creating an extra line with 'product_uom_qty': 0.5
         self.assertEqual(len(mo_product_final_form.move_raw_ids.move_line_ids), 1, 'One move line should exist for the MO.')
+
+    def test_unlock_done(self):
+        """ Validate a flexible production, unlock it and decrease the product quantities. The
+        production should remain in state 'done'. """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+        bom.consumption = 'flexible'
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+
+        mo.action_assign()
+
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        product_produce = produce_form.save()
+        product_produce.do_produce()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        fmove = mo.move_finished_ids.filtered('move_line_ids')
+        self.assertEqual(fmove.quantity_done, 5)
+        mo.action_toggle_is_locked()
+        fmove.move_line_ids.qty_done = 2
+        mo.action_toggle_is_locked()
+        self.assertEqual(fmove.quantity_done, 2)
+        self.assertEqual(mo.state, 'done')
+

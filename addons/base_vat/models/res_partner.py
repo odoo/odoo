@@ -82,7 +82,7 @@ _ref_vat = {
     'es': 'ESA12345674',
     'fi': 'FI12345671',
     'fr': 'FR32123456789',
-    'gb': 'GB123456782',
+    'gb': 'GB123456782 or XI123456782',
     'gr': 'GR12345670',
     'hu': 'HU12345676',
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
@@ -473,6 +473,13 @@ class ResPartner(models.Model):
                 else:
                     res.append(False)
         return all(res)
+
+    def check_vat_xi(self, vat):
+        """ Temporary Nothern Ireland VAT validation following Brexit
+        As of January 1st 2021, companies in Northern Ireland have a
+        new VAT number starting with XI
+        TODO: remove when stdnum is updated to 1.16 in supported distro"""
+        return stdnum.util.get_cc_module('gb', 'vat').is_valid(vat) if stdnum else True
 
     def default_compact(self, vat):
         return vat

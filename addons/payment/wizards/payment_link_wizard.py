@@ -80,6 +80,8 @@ class PaymentLinkWizard(models.TransientModel):
                     )
             if payment_link.company_id:
                 link += '&company_id=%s' % payment_link.company_id.id
+            if payment_link.res_model == 'account.move':
+                link += '&invoice_id=%s' % payment_link.res_id
             payment_link.link = link
 
     @api.model

@@ -92,8 +92,8 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    value_svl = fields.Float(compute='_compute_value_svl')
-    quantity_svl = fields.Float(compute='_compute_value_svl')
+    value_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
+    quantity_svl = fields.Float(compute='_compute_value_svl', compute_sudo=True)
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
 
     @api.depends('stock_valuation_layer_ids')
@@ -182,12 +182,12 @@ class ProductProduct(models.Model):
         return vals
 
     def write(self, vals):
-        res = super(ProductProduct, self).write(vals)
         if self.env.context.get('import_file') and not self.env.context.get('import_standard_price'):
             if 'standard_price' in vals:
                 for product in self:
                     counterpart_account_id = product.property_account_expense_id.id or product.categ_id.property_account_expense_categ_id.id
                     product.with_context(import_standard_price=True)._change_standard_price(vals['standard_price'], counterpart_account_id)
+        res = super(ProductProduct, self).write(vals)
         return res
 
     def _change_standard_price(self, new_price, counterpart_account_id=False):

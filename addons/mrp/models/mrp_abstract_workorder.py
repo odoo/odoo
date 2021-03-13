@@ -330,14 +330,6 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     qty_reserved = fields.Float('Reserved', digits='Product Unit of Measure')
     company_id = fields.Many2one('res.company', compute='_compute_company_id')
 
-    @api.onchange('lot_id')
-    def _onchange_lot_id(self):
-        """ When the user is encoding a produce line for a tracked product, we apply some logic to
-        help him. This onchange will automatically switch `qty_done` to 1.0.
-        """
-        if self.product_id.tracking == 'serial':
-            self.qty_done = 1
-
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id and not self.move_id:

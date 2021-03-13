@@ -24,7 +24,7 @@
 # bb76cd9ac0cb7e20167a14728edb858b, 2019
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
 # Nathan Grognet <ngr@odoo.com>, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Rémi CAZENAVE, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
 # thomas quertinmont <tqu@odoo.com>, 2019
@@ -68,6 +68,8 @@
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Yann Papouin <y.papouin@dec-industrie.com>, 2021
 # Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# adrien didenot <adrien.didenot@horanet.com>, 2021
+# Benjamin Stienon <tsb@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -75,7 +77,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Anthony Chaussin <chaussin.anthony@gmail.com>, 2021\n"
+"Last-Translator: Benjamin Stienon <tsb@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +112,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "Nombre de chiffres"
+msgstr "# de chiffres"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
@@ -13071,6 +13073,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
+"Vous ne pouvez pas éditer le journal d'une pièces comptable déjà postée."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -13089,6 +13092,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
+"Vous ne pouvez pas avoir plusieurs comptes de type \"Résultat de l'Exercice "
+"Courant\" (Comptes : %s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13196,12 +13201,16 @@ msgstr ""
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr ""
+"Vous ne pouvez pas remettre en brouillon une écriture de taxe à "
+"l'encaissement."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr ""
+"Vous ne pouvez pas remettre en brouillon une écriture de différence de "
+"change."
 
 #. module: account
 #: code:addons/account/models/account.py:0

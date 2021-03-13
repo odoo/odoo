@@ -855,17 +855,26 @@ class UoM(models.Model):
                 lambda u: any(u[f].id != int(values[f]) if f in values else False
                               for f in {'category_id'}))
             if changed:
-                stock_move_lines = self.env['stock.move.line'].search_count([
-                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
-                    ('state', '!=', 'cancel'),
-                ])
-
-                if stock_move_lines:
-                    raise UserError(_(
-                        "You cannot change the ratio of this unit of mesure as some"
-                        " products with this UoM have already been moved or are "
-                        "currently reserved."
-                    ))
+                error_msg = _(
+                    "You cannot change the ratio of this unit of mesure"
+                    " as some products with this UoM have already been moved"
+                    " or are currently reserved."
+                )
+                if self.env['stock.move'].sudo().search_count([
+                    ('product_uom', 'in', changed.ids),
+                    ('state', 'not in', ('cancel', 'done'))
+                ]):
+                    raise UserError(error_msg)
+                if self.env['stock.move.line'].sudo().search_count([
+                    ('product_uom_id', 'in', changed.ids),
+                    ('state', 'not in', ('cancel', 'done')),
+                ]):
+                    raise UserError(error_msg)
+                if self.env['stock.quant'].sudo().search_count([
+                    ('product_id.product_tmpl_id.uom_id', 'in', changed.ids),
+                    ('quantity', '!=', 0),
+                ]):
+                    raise UserError(error_msg)
         return super(UoM, self).write(values)
 
     def _adjust_uom_quantities(self, qty, quant_uom):
