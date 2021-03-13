@@ -604,6 +604,10 @@ class Users(models.Model):
                     user = self.search(self._get_login_domain(login))
                     if not user:
                         raise AccessDenied()
+                    elif(len(user) > 1):
+                        website = self.env['website'].get_current_website()
+                        # Limit the current website user
+                        user = user.filtered(lambda u: u.website_id.id == website.id)
                     user = user.sudo(user.id)
                     user._check_credentials(password)
                     user._update_last_login()
