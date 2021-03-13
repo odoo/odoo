@@ -16,8 +16,8 @@
 # Jan Prokop, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1529,7 +1529,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s by sending an email to %(email_link)s"
-msgstr ""
+msgstr "Vytvor nový %(document)s zaslaním e-mailu na adresu %(email_link)s"
 
 #. module: mail
 #. openerp-web
@@ -2887,6 +2887,8 @@ msgid ""
 "If set every modification done to this field is tracked in the chatter. "
 "Value is used to order tracking values."
 msgstr ""
+"Ak je nastavená, všetky zmeny vykonané v tomto poli sa sledujú v chatteri. "
+"Hodnota sa používa na objednanie sledovacích hodnôt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
@@ -7024,6 +7026,7 @@ msgstr "dni"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
+#: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "document"
 msgstr "dokument"
@@ -7247,4 +7250,11 @@ msgstr "týždne"
 #: code:addons/mail/static/src/models/follower/follower.js:0
 #, python-format
 msgid "The subscription preferences were successfully applied."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
 msgstr ""

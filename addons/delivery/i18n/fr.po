@@ -3,10 +3,8 @@
 # 	* delivery
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2020
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Martin Trigaux, 2020
-# David Halgand <david.halgand@gmail.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Nathan Noël <nathan070@me.com>, 2020
@@ -14,15 +12,14 @@
 # Marie Willemyns <mwi@odoo.com>, 2020
 # Elise Carton <eca@odoo.com>, 2020
 # a270031086f2a0d3514bc0cb507b48f6, 2020
-# Caroline Renson <car@odoo.com>, 2020
 # Paul Morelle <madprog@htkc.org>, 2020
 # Adrien Heyse <ahe@odoo.com>, 2020
 # omaodoo <oma@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
-# Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Frédéric GILSON <frederic.gilson@logicasoft.eu>, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
+# Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>, 2020\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +44,7 @@ msgstr "(Coût estimé)%s"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
 msgid "(computed:"
-msgstr "(Calculé"
+msgstr "(Calculé:"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -78,7 +75,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-danger\">No debug</span>"
-msgstr "Pas de debug"
+msgstr "<span class=\"text-danger\">Pas de debug</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -97,18 +94,18 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span> - Poids (estimé): </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr ""
+msgstr "<span> - Poids: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr ""
+msgstr "<span>Poids expédié: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -119,7 +116,7 @@ msgstr "<strong>Transporteur:</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>HS Code</strong>"
-msgstr "<strong>Code SH</strong>"
+msgstr "<strong>Code HS</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -136,6 +133,8 @@ msgid ""
 "<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Poids Total::</strong>\n"
+"                <br/>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -205,7 +204,7 @@ msgstr "Transporteurs disponibles"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr "Fondé sur des règles"
+msgstr "Basé sur des règles"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_bulk
@@ -513,7 +512,7 @@ msgstr "Obtenir le prix"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
 msgid "Get Rate and Create Shipment"
-msgstr "Obtenir le prix et créer le colis"
+msgstr "Obtenir le prix et créer l'étiquette"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -524,7 +523,7 @@ msgstr "Regrouper par"
 #: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template__hs_code
 msgid "HS Code"
-msgstr "Nomenclature douanière"
+msgstr "Code HS"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__height
@@ -640,7 +639,7 @@ msgstr "La longueur doit être positive"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
 msgid "Length unit of measure label"
-msgstr ""
+msgstr "Étiquette d'unité de mesure de longueur"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -726,7 +725,7 @@ msgstr "Commande"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "Package"
+msgstr "Colis"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
@@ -754,7 +753,7 @@ msgstr "Colis"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__picking_id
 msgid "Picking"
-msgstr "Opération de manutention"
+msgstr "Transfert"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -878,7 +877,7 @@ msgstr "Séquence"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr "Produit Service"
+msgstr "Article de Service"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
@@ -894,6 +893,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"Colisage envoyé au transporteur %(carrier_name)s pour expédition avec le "
+"numéro de suivi %(ref)s<br/>Coût: %(price).2f%(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -1021,11 +1022,14 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
+"Poids total des colis et des articles non emballés. Les colis sans poids "
+"spécifié utiliseront le total du poids des articles. Ce poids est utilisé "
+"pour calculer le coût d'expédition."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "Poids total de tous les articles non contenus dans un colis."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
@@ -1060,7 +1064,7 @@ msgstr "URL de suivi"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
-msgstr "Suivi :"
+msgstr "Suivi:"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1075,7 +1079,7 @@ msgstr "Transfert"
 #: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
-msgstr "Unité(s)"
+msgstr "Unités"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form

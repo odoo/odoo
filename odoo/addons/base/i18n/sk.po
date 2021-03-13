@@ -2275,7 +2275,7 @@ msgid ""
 "* Cost structure report\n"
 msgstr ""
 "\n"
-"Analytické účtovníctvo v MRP\n"
+"Manažérske účtovníctvo v MRP\n"
 "==========================\n"
 "\n"
 "* Výkaz nákladovej štruktúry\n"
@@ -3234,6 +3234,48 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU Mini One Stop Shop (MOSS) DPH za telekomunikačné, vysielacie a elektronické služby\n"
+"=============================================================================================\n"
+"\n"
+"Od 1. januára 2015 telekomunikácie, vysielanie\n"
+"a elektronické služby predávané v rámci Európskej únie\n"
+"musia byť vždy zdanené v krajine, kde je zákazník\n"
+"patrí. Z dôvodu zjednodušenia uplatňovania tejto EÚ\n"
+"smernice, registračná schéma Mini One Stop Shop (MOSS)\n"
+"umožňuje podnikateľom vytvoriť jedinečné daňové priznanie.\n"
+"\n"
+"Tento modul umožňuje pomoc pri tvorbe\n"
+"požadovaných fiškálnych pozícií a daní EÚ, aby\n"
+"automaticky uplatniť a zaznamenať požadované dane.\n"
+"\n"
+"Tento modul inštaluje sprievodcu, ktorý pomáha nastavovať fiškálne pozície\n"
+"a dane za predaj elektronických služieb v rámci EÚ.\n"
+"\n"
+"Sprievodca vám umožní zvoliť:\n"
+"- krajiny EÚ, do ktorých ich predávate\n"
+"služby\n"
+"- bude zmapovaná vaša národná daň z pridanej hodnoty za služby\n"
+"dane cieľovej krajiny\n"
+"- voliteľne: šablóna fiškálnej pozície v uvedenom poradí\n"
+"kopírovať mapovanie účtu. Mal by byť váš\n"
+"existujúca fiškálna pozícia B2C v rámci EÚ. (predvolené hodnoty\n"
+"k žiadnemu mapovaniu účtu)\n"
+"- voliteľne: účet, ktorý sa použije na zhromažďovanie\n"
+"čiastky dane (predvolené pre účet, ktorý používate\n"
+"vnútroštátna daň z pridanej hodnoty za služby)\n"
+"\n"
+"Vytvára zodpovedajúce fiškálne pozície a dane,\n"
+"automaticky použiteľné pre predaj v EÚ so zákazníkom\n"
+"vo vybraných krajinách.\n"
+"Sprievodcu je možné znova spustiť a pridať ďalšie krajiny.\n"
+"\n"
+"Referencie\n"
+"++++++++++\n"
+"- smernica 2008/8 / ES\n"
+"- Vykonávacie nariadenie Rady (EÚ) č. 1042/2013\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -3305,7 +3347,7 @@ msgid ""
 "Enable management of UTM trackers: campaign, medium, source.\n"
 msgstr ""
 "\n"
-"Povoliť správu sledovačov UTM: kampaň, médium, zdroj.\n"
+"Povoliť správu trasovania UTM: kampaň, médium, zdroj.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -9314,18 +9356,18 @@ msgstr "Na to, aby find_or_create fungoval, je potrebný e-mail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr "Analytické účtovníctvo"
+msgstr "Manažérske účtovníctvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
 msgid "Analytic Accounting Enterprise"
-msgstr "Analytické účtovníctvo enterprise"
+msgstr "Manažérske účtovníctvo podniku"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "Analytické účtovníctvo vo výrobe"
+msgstr "Manažérske účtovníctvo vo výrobe"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -11376,7 +11418,7 @@ msgstr "Nastavenie krokov sprievodcu"
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
 msgid "Config: Run Remaining Action Todo"
-msgstr "Konfigurácia: Spustiť zostávajúcu úlohu"
+msgstr "Konfigurácia: spustiť zostávajúcu úlohu"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_reporting_config
@@ -13660,7 +13702,7 @@ msgstr "Rovníková Guinea"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_maintenance
 msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
-msgstr "vybavenie, majetok, vlastný hardver, pridelenie sledovnia"
+msgstr "vybavenie, majetok, vlastný hardver, pridelenie sledovania"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -18148,7 +18190,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Manage financial and analytic accounting"
-msgstr "Riadiť finančné a analytické účtovníctvo"
+msgstr "Riadiť finančné a manažérske účtovníctvo"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -25851,6 +25893,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Tento modul obsahuje testy týkajúce sa webových stránok. Tie sú\n"
+"prítomný v samostatnom module, keď testujeme inštaláciu / odinštalovanie / aktualizáciu modulu\n"
+"a nechceme zakaždým znova načítať modul webových stránok, vrátane toho, že je to možné\n"
+"závislosti. Nechceme do modulu webových stránok pridať niektoré trasy, zobrazenia a\n"
+"modely, ktorých jediným účelom je spustenie testov."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet

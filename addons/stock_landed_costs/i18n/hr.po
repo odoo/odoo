@@ -4,21 +4,21 @@
 # 
 # Translators:
 # Ivan Marijanović <ivanm101@yahoo.com>, 2020
-# Martin Trigaux, 2020
-# Bole <bole@dajmi5.com>, 2020
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # Tina Milas, 2020
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Bole <bole@dajmi5.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Milan Tribuson <one.mile.code@gmail.com>, 2020\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,7 @@ msgstr "Status aktivnosti"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -258,6 +258,7 @@ msgstr "Opis"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
@@ -318,7 +319,7 @@ msgstr "Pratitelji (Partneri)"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -334,6 +335,7 @@ msgstr "Grupiraj po"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
@@ -452,6 +454,7 @@ msgstr "Zavisni trošak potvrđen"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template____last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -609,6 +612,11 @@ msgid "Product Type"
 msgstr "Tip artikla"
 
 #. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Stavka naloga nabave"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
 msgid "Quantity"
 msgstr "Količina"
@@ -726,7 +734,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation"
-msgstr ""
+msgstr "Vrednovanje"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
