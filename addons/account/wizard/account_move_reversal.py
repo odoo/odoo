@@ -98,6 +98,7 @@ class AccountMoveReversal(models.TransientModel):
             'name': _('Reverse Moves'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
+            'context': {"default_type": moves_to_redirect[0].type},
         }
         if len(moves_to_redirect) == 1:
             action.update({
