@@ -485,6 +485,9 @@ var dom = {
         if (options && options.prop) {
             $input.prop(options.prop);
         }
+        if (options && options.role) {
+            $input.attr('role', options.role);
+        }
         return $container.append($input, $label);
     },
     /**
