@@ -998,6 +998,7 @@ var ListRenderer = BasicRenderer.extend({
             'data-toggle': "dropdown",
             'data-display': "static",
             'aria-expanded': false,
+            'aria-label': _t('Optional columns'),
         });
         $a.appendTo($optionalColumnsDropdown);
 
@@ -1016,6 +1017,7 @@ var ListRenderer = BasicRenderer.extend({
                 (config.isDebug() ? (' (' + col.attrs.name + ')') : '');
             var $checkbox = dom.renderCheckbox({
                 text: txt,
+                role: "menuitemcheckbox",
                 prop: {
                     name: col.attrs.name,
                     checked: _.contains(self.optionalColumnsEnabled, col.attrs.name),
