@@ -29,8 +29,20 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
+        """ Limit the login search.
+
+        There may be a user.website_id == False and user.website_id != False
+        with the same login,
+
+        That occasions that the login returns two records and fails in
+        user._login (user = user.sudo(user.id) )
+        """
         website = self.env['website'].get_current_website()
-        return super(ResUsers, self)._get_login_domain(login) + website.website_domain()
+        login_domain = super(ResUsers, self)._get_login_domain(login) + website.website_domain()
+        user = self.search(login_domain)
+        if len(user) > 1:
+            login_domain += [('website_id', '=', website.id)]
+        return login_domain
 
     @api.model
     def _signup_create_user(self, values):
