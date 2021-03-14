@@ -101,7 +101,7 @@ msgstr "%s (còpia)"
 #: code:addons/stock/wizard/stock_picking_responsible.py:0
 #, python-format
 msgid "%s has a restricted access to %s"
-msgstr ""
+msgstr "%s té accés restringit a %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -115,7 +115,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr "%s: proveir producte de %s"
+msgstr "%s: proveir producte des de %s"
 
 #. module: stock
 #: code:addons/stock/models/res_company.py:0
@@ -166,10 +166,10 @@ msgid ""
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
 "* Nou: Quan el moviment d'existències s'ha creat i no s'ha confirmat encara.\n"
-"* Esperant un altre moviment: Aquest estat es dóna quan un moviment està esperant a un altre, per exemple al flux encadenat.\n"
-"* Esperant disponibilitat: S'assoleix aquest estat quan la resolució d'abastiment no és correcta.\n"
-"* Disponible: S'estableix quan es reserva productes.\n"
-"* Realitzat: Quan es processa l'enviament, llavors s'assoleix aquest estat."
+"* Esperant un altre moviment: Aquest estat es dóna quan un moviment està esperant a un altre, per exemple, en un flux encadenat.\n"
+"* Esperant disponibilitat: Aquest és l'estat quan no es pot resoldre l'abastiment. Podria ser necessari executar el planificador, fabricar un component...\n"
+"* Disponible: S'estableix quan els productes estan reservats.\n"
+"* Realitzat: Quan s'ha processat l'enviament."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -195,7 +195,7 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Accions manuals poden ser requerides."
+"            Poden requerir-se accions manuals."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -204,7 +204,7 @@ msgid ""
 "                    <strong>Here is your current inventory: </strong>"
 msgstr ""
 "<br/>\n"
-"                    <strong>Aquí està el teu inventari actual: </strong>"
+"                    <strong>Aquest és l'inventari actual: </strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -213,8 +213,8 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
-"<br>Una requeriment es creat en <b>%s</b> i es desencadena una regla per "
-"complir-ho"
+"<br>Es crea una necessitat a <b>%s</b> i s'activa una regla per a satisfer-"
+"la"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -317,8 +317,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min:</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Mínim:</span>\n"
-"<span class=\"o_stat_text\">Màxim:</span>"
+"<span class=\"o_stat_text\">Mín:</span>\n"
+"                                <span class=\"o_stat_text\">Màx:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -329,7 +329,7 @@ msgstr "<span class=\"o_stat_text\">A la mà</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Operacions</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -345,7 +345,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr "<span><strong>Direcció del client:</strong></span>"
+msgstr "<span><strong>Adreça del client:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -355,17 +355,17 @@ msgstr "<span><strong>Direcció d'enviament:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr "<span><strong>Direcció del proveïdor:</strong></span>"
+msgstr "<span><strong>Adreça del proveïdor:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr "<span><strong>Direcció de magatzem:</strong></span>"
+msgstr "<span><strong>Adreça del magatzem:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Assign Serial Numbers</span>"
-msgstr ""
+msgstr "<span>Assignar números de sèrie</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -391,7 +391,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Counted Quantity</strong>"
-msgstr ""
+msgstr "<strong>Quantat recomptada</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -427,18 +427,18 @@ msgstr "<strong>Quantiat mínima :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr ""
+msgstr "<strong>Quantitat a mà</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order:</strong>"
-msgstr ""
+msgstr "<strong>Comanda:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr ""
+msgstr "<strong>Tipus de paquet:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -448,7 +448,7 @@ msgstr "<strong>Paquet</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product Barcode</strong>"
-msgstr ""
+msgstr "<strong>Codi de barres del producte</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -476,17 +476,17 @@ msgstr "<strong>Unitats</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr ""
+msgstr "<strong>Data programada:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Shipping Date:</strong>"
-msgstr ""
+msgstr "<strong>Data d'enviament:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Estat:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -636,12 +636,12 @@ msgstr "Adreça"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__partner_address_id
 msgid "Address where goods should be delivered. Optional."
-msgstr "Direcció on s'han d'entregar els béns. Opcional."
+msgstr "Adreça on s'ha de lliurar la mercaderia. Opcional."
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrador"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -657,7 +657,7 @@ msgstr "Avançat: Aplicar regles de proveïment"
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay_alert
 msgid "Alert if Delay"
-msgstr ""
+msgstr "Alerta si hi ha retard"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -691,12 +691,12 @@ msgstr "Totes les devolucions"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
 msgid "Allowed Location"
-msgstr ""
+msgstr "Ubicació permesa"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
-msgstr ""
+msgstr "Permet començar amb un inventari buit."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
@@ -704,6 +704,8 @@ msgid ""
 "Allows to start with prefill counted quantity for each lines or with all "
 "counted quantity set to zero."
 msgstr ""
+"Permet començar amb quantitat recomptada pre-omplerta per a cada línia o amb"
+" totes les quantitats recomptades a zero. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -782,7 +784,7 @@ msgstr "Assignar propietari"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_responsible
 msgid "Assign Responsible"
-msgstr ""
+msgstr "Assignar responsable"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_assign_serial_numbers
@@ -790,7 +792,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Assign Serial Numbers"
-msgstr ""
+msgstr "Assignar números de sèrie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -840,7 +842,7 @@ msgstr "Productes disponibles"
 #: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "Abans de canviar el tipus cal establir la quantitat disponible a zero"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -898,12 +900,12 @@ msgstr "Escàner de codi de barres"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_pdf
 msgid "Barcodes (PDF)"
-msgstr ""
+msgstr "Codis de barres (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_zpl
 msgid "Barcodes (ZPL)"
-msgstr ""
+msgstr "Codis de barres (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1009,7 +1011,7 @@ msgstr "Cancel·lar l'inventari"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_cancel
 msgid "Cancel Next Move"
-msgstr ""
+msgstr "Cancel·lar següent moviment"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__state__cancel
@@ -1336,17 +1338,17 @@ msgstr "Comptador de recollida esperant"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "Counted"
-msgstr ""
+msgstr "Recomptat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__prefill_counted_quantity
 msgid "Counted Quantities"
-msgstr ""
+msgstr "Quantitats recomptades"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_qty
 msgid "Counted Quantity"
-msgstr ""
+msgstr "Quantitat recomptada"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1417,7 +1419,7 @@ msgstr "Crear un nou moviment d'estoc"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Create a new transfer"
-msgstr ""
+msgstr "Crear una nova transferència"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -5902,7 +5904,7 @@ msgstr "Obtenir de les existències"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__mts_else_mto
 msgid "Take From Stock, if unavailable, Trigger Another Rule"
-msgstr ""
+msgstr "Agafar de l'estoc. Si no n'hi ha disponible, activar una altra regla."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__procure_method
@@ -6561,7 +6563,7 @@ msgstr "Transferència"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_partner_id
 msgid "Transfer Destination Address"
-msgstr "Direcció de destí de la transferència"
+msgstr "Adreça de destí de la transferència"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_overprocessed_transfer
@@ -6616,12 +6618,12 @@ msgstr "Ubicació de Transit"
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
-msgstr "Desactivar una regla"
+msgstr "Activar una altra regla"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule If No Stock"
-msgstr ""
+msgstr "Activar una altra regla, si no hi ha estoc"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type

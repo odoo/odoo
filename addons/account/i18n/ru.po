@@ -21,7 +21,7 @@
 # Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Максим Дронь <dronmax@gmail.com>, 2019
 # Anton Ilchenko <anton.wmt@gmail.com>, 2019
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
 # Анищук Сергей <anishukserg@gmail.com>, 2020
 # GulShar Mungatova <mungatova@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
@@ -13228,6 +13228,15 @@ msgstr "родительская компания"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
 msgstr ""
 
 #. module: account
