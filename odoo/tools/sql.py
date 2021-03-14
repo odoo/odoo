@@ -24,7 +24,7 @@ def existing_tables(cr, tablenames):
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname IN %s
            AND c.relkind IN ('r', 'v', 'm')
-           AND n.nspname = 'public'
+           AND n.nspname = current_schema
     """
     cr.execute(query, [tuple(tablenames)])
     return [row[0] for row in cr.fetchall()]
@@ -43,7 +43,7 @@ def table_kind(cr, tablename):
           FROM pg_class c
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname = %s
-           AND n.nspname = 'public'
+           AND n.nspname = current_schema
     """
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
