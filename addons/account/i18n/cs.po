@@ -15,9 +15,10 @@
 # milda dvorak <milda.dvorak@optimal4.cz>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
-# trendspotter, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
+# David Kliment <daklime@gmail.com>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Michal Veselý <michal@veselyberanek.net>, 2021\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +48,11 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Skupina daní: Daň je soubor dílčích daní.\n"
+"- Pevná: Výše daně zůstává stejná nezávisle na ceně.\n"
+"- Procentní z ceny: Výše daně je procento z ceny:\n"
+"např"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -162,7 +168,7 @@ msgstr ". Možná sem budete chtít přidat vyšší číslo."
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "... (%s other)"
-msgstr ""
+msgstr "... (%s další)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8544,7 +8550,7 @@ msgstr "Možnosti"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Or send a bill to %s@%s"
-msgstr ""
+msgstr "Nebo poslat účet na %s@%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -11599,7 +11605,7 @@ msgstr "Mapování daní"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids
 msgid "Taxes that apply on the base amount"
-msgstr ""
+msgstr "Daně, které se aplikují na základní částku"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -12398,13 +12404,13 @@ msgstr "Držitelem bankovního účtu deníku musí být společnost (%s)."
 #, python-format
 msgid ""
 "The invoice already contains lines, it was not updated from the attachment."
-msgstr ""
+msgstr "Daňový doklad již obsahuje řádky, nebudou aktualizovány z přílohy."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The invoice is not a draft, it was not updated from the attachment."
-msgstr ""
+msgstr "Daňový doklad není koncept, nebude aktualizován z přílohy."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13644,7 +13650,7 @@ msgstr "Nahrát"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "Nahrát vlastní účet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14496,6 +14502,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"Nemůžete snížit počet desetinných čísel u měny, která již byla použita v "
+"účetních záznamech."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0

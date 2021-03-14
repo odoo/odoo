@@ -3,32 +3,62 @@
 # 	* website_event_track
 # 
 # Translators:
-# Ivan Marijanović <ivanm101@yahoo.com>, 2019
-# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2019
-# Marko Carević <marko.carevic@live.com>, 2019
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017
+# Marko Carević <marko.carevic@live.com>, 2018
+# Ivan Marijanović <ivanm101@yahoo.com>, 2018
 # Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Tina Milas, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
+# Martin Trigaux, 2020
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
+# Tina Milas, 2020
+# Bole <bole@dajmi5.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:42+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"POT-Creation-Date: 2021-01-12 07:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "\"Events App Name\" field is required."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+msgid "# Wishlisted"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "%s Events"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, python-format
+msgid "%s Online Events Application"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
@@ -46,14 +76,12 @@ msgid ""
 "    </div>\n"
 "    <br/><br/>\n"
 "    Thank you,\n"
-"</div>\n"
-"            "
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>"
 msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "<b>Date</b><br/>"
-msgstr "<b>Datum</b><br/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -81,17 +109,18 @@ msgid "<b>Talk Introduction</b>:"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid ""
-"<br/>\n"
-"                                <b>Duration</b><br/>"
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid ""
-"<br/>\n"
-"                                <b>Location</b><br/>"
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+msgid "<i class=\"fa fa-bell mr-2 text-muted\"/> Wishlisted Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "<i class=\"fa fa-folder-open\"/> Favorites"
 msgstr ""
 
 #. module: website_event_track
@@ -102,9 +131,26 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-msgid "<span id=\"search_number\">0</span> Found"
-msgstr "<span id=\"search_number\">0</span> pronađenih"
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "<span class=\"d-none d-md-block ml-2\">&amp;bull;</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "<span id=\"search_number\" class=\"mr-1\">0</span>Results"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span>&amp;nbsp;at&amp;nbsp;</span>"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -119,9 +165,9 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "<strong>Participate on Twitter</strong>"
-msgstr "<strong>Sudjelovati na Twitteru</strong>"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<strong>Location:</strong>"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -140,13 +186,14 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "About The Speaker"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_accepted
+msgid "Accepted Stage"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
-msgid "Accepted Stage"
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_accepted
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_accepted
+msgid "Accepted tracks are displayed in agenda views but not accessible."
 msgstr ""
 
 #. module: website_event_track
@@ -167,12 +214,17 @@ msgstr "Aktivnosti"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekoracija iznimke aktivnosti"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
 msgid "Activity State"
 msgstr "Status aktivnosti"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona tipa aktivnosti"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -186,15 +238,25 @@ msgid "Add a new track"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:0
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid "Add a new track visitor"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Agenda"
 msgstr "Agenda"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_filter
-msgid "All Tags"
-msgstr "Sve oznake"
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "All Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Allow Track Proposals"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -206,12 +268,19 @@ msgstr ""
 "za objavu na web stranici"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Always Wishlisted"
+msgstr ""
+
+#. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
 msgid "Announced"
 msgstr "Najavljeno"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "Application"
 msgstr "Aplikacija"
 
@@ -219,6 +288,13 @@ msgstr "Aplikacija"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Archived"
 msgstr "Arhivirano"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+msgid ""
+"As key track cannot be un-wishlisted, this field store the partner choice to"
+" remove the reminder for key tracks."
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
@@ -236,9 +312,34 @@ msgid "Biography"
 msgstr "Biografija"
 
 #. module: website_event_track
-#: model:event.sponsor.type,name:website_event_track.event_sponsor_type1
-msgid "Bronze"
-msgstr "Brončani"
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Book your seats to the best talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Book your talks"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+msgid "Button Target URL"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+msgid "Button Title"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+msgid "Button appears"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+msgid "CTA button is available"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -261,10 +362,31 @@ msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+msgid "Category"
+msgstr "Kategorija"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+msgid "Color"
+msgstr "Boja"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
 msgid "Color Index"
 msgstr "Indeks boje"
+
+#. module: website_event_track
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, python-format
+msgid "Coming soon"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Coming soon ..."
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
@@ -272,9 +394,14 @@ msgid "Company"
 msgstr "Tvrtka"
 
 #. module: website_event_track
-#: model:event.type,name:website_event_track.event_type_data_tracks
-msgid "Conference"
-msgstr "Konferencija"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+msgid "Company Name"
+msgstr "Tvrtka"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+msgid "Config Settings"
+msgstr "Postavke"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
@@ -287,26 +414,29 @@ msgid "Confirmed"
 msgstr "Potvrđeno"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_date
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
 msgid "Created on"
-msgstr "Kreirano"
+msgstr "Datum kreiranja"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Customer"
+msgstr "Kupac"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -317,9 +447,9 @@ msgstr "Datum"
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid ""
 "Define the steps that will be used in the event from the\n"
-"                creation of the track, up to the closing of the track.\n"
-"                You will use these stages in order to track the progress in\n"
-"                solving an event track."
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
 msgstr ""
 
 #. module: website_event_track
@@ -334,20 +464,26 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__display_name
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Documents"
-msgstr "Dokumenti"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+msgid "Done"
+msgstr "Riješeno"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -375,27 +511,28 @@ msgid "Email Template"
 msgstr "Predložak e-maila"
 
 #. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Error"
+msgstr "Greška"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "Događaj"
 
 #. module: website_event_track
-#: model:ir.model,name:website_event_track.model_event_type
-msgid "Event Category"
-msgstr "Kategorija događaja"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
 msgstr "Lokacija događaja"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 msgid "Event Locations"
 msgstr "Lokacije događaja"
 
@@ -406,25 +543,9 @@ msgid "Event Proposals Menus"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model,name:website_event_track.model_event_sponsor
-msgid "Event Sponsor"
+#: model:ir.model,name:website_event_track.model_event_type
+msgid "Event Template"
 msgstr ""
-
-#. module: website_event_track
-#: model:ir.model,name:website_event_track.model_event_sponsor_type
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_tree
-msgid "Event Sponsor Type"
-msgstr "Tip sponzora događaja"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_form
-msgid "Event Sponsor Types"
-msgstr "Tipovi sponzora događaja"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
-msgid "Event Sponsors"
-msgstr "Sponzori događaja"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
@@ -451,10 +572,13 @@ msgid "Event Track Tag"
 msgstr "Oznaka praćenja događaja"
 
 #. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_from_event
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+msgid "Event Track Tag Category"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
-#: model:ir.ui.menu,name:website_event_track.menu_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
@@ -467,9 +591,29 @@ msgid "Event Tracks Menus"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Exception Activities"
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+msgid "Events App Name"
 msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Events PWA"
+msgstr ""
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Favorite On"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Favorites"
+msgstr "Omiljeni"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -477,18 +621,14 @@ msgid "Fill this form to propose your talk."
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks..."
 msgstr "Filter praćenja..."
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid ""
-"Find out what people see and say about this event,\n"
-"                        and join the conversation."
-msgstr ""
-"Otkrijte što ljudi vide i kažu o ovom događaju,\n"
-"i uključite se u razgovor."
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Finished"
+msgstr "Dovršeno"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
@@ -511,14 +651,19 @@ msgid "Followers (Partners)"
 msgstr "Pratitelji (Partneri)"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome ikona npr. fa-tasks"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Future Activities"
 msgstr "Buduće aktivnosti"
 
 #. module: website_event_track
-#: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
-msgid "Gold"
-msgstr "Zlato"
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
@@ -528,9 +673,10 @@ msgstr "Zeleno"
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
 msgid "Grey"
-msgstr ""
+msgstr "Sivo"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "Grupiraj po"
@@ -546,13 +692,24 @@ msgid "Highest"
 msgstr "Najviši"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__id
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__id
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_event_track.field_website__id
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -564,7 +721,7 @@ msgstr "Ikona"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona za prikaz iznimki."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -576,7 +733,7 @@ msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
@@ -586,14 +743,60 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
-msgid "Image"
-msgstr "Slika"
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+msgid ""
+"If set, the talk will be starred for each attendee registered to the event. "
+"The attendee won't be able to un-star this talk."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+msgid "Image URL"
+msgstr "URL slika"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "In"
+msgstr "U"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install"
+msgstr "Instaliraj"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install Application"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Interactivity"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Introduction"
 msgstr "Uvod"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_accepted
+msgid "Is Accepted"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+msgid "Is CTA Live"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+msgid "Is Done"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
@@ -606,40 +809,89 @@ msgid "Is Published"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+msgid "Is Reminder On"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+msgid "Is Track Done"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+msgid "Is Track Live"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+msgid "Is Track Soon"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+msgid "Is Track Today"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+msgid "Is Track Upcoming"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+msgid "Is Wishlisted"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+msgid "Is reminder off"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+msgid "Job Position"
+msgstr "Radno mjesto"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
 msgstr "Kanban stanje"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor____last_update
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_event____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_type____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_uid
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_date
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
@@ -649,24 +901,33 @@ msgid "Late Activities"
 msgstr "Posljednje aktivnosti"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Live"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Live Now"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Location"
 msgstr "Lokacija"
-
-#. module: website_event_track
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
-msgid "Locations"
-msgstr "Lokacije"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
-msgid "Logo"
-msgstr "Logo"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
 msgid "Low"
 msgstr "Nizak"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+msgid "Magic Button"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
@@ -677,11 +938,6 @@ msgstr "Glavni prilog"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
 msgstr "Medij"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_id
-msgid "Menu"
-msgstr "Izbornik"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
@@ -699,14 +955,36 @@ msgid "Messages"
 msgstr "Poruke"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Minutes before CTA starts"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+msgid "Minutes before track starts"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+msgid "Minutes compare to track start"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Tracks"
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name"
 msgstr "Naziv"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name of your website's Events Progressive Web Application"
+msgstr ""
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -739,9 +1017,20 @@ msgid "Next Activity Type"
 msgstr "Tip sljedeće aktivnosti"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks
-msgid "No tracks found!"
-msgstr "Praćenja nisu pronađena!"
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "No track found."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+msgid "No track wishlisted by this visitor"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+msgid "Not Accepted"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
@@ -756,7 +1045,7 @@ msgstr "Broj akcija"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
@@ -774,12 +1063,7 @@ msgid "Number of unread messages"
 msgstr "Broj nepročitanih poruka"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor
-msgid "Our Sponsors"
-msgstr "Naši sponzori"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
 msgid "Partner"
 msgstr "Partner"
 
@@ -789,9 +1073,14 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Practical Info"
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Plan your experience by adding your favorites talks to your wishlist"
 msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Previous page"
+msgstr "Prethodna stranica"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
@@ -814,22 +1103,9 @@ msgid "Proposals on Website"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Proposed by"
-msgstr "Predložio"
-
-#. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 msgid "Published"
 msgstr "Objavljeno"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid ""
-"Put here the list of documents, like slides of\n"
-"                                the presentations. Remove the above t-if when\n"
-"                                it's implemented."
-msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
@@ -840,6 +1116,21 @@ msgstr "Crveno"
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
 msgstr "Odbijen"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+msgid "Relative time compared to track start (seconds)"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Remaining time before CTA starts (seconds)"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+msgid "Remaining time before track starts (seconds)"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
@@ -853,11 +1144,6 @@ msgid "Responsible User"
 msgstr "Odgovorna osoba"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
-msgid "Room"
-msgstr "Soba"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
 msgid "SEO optimized"
 msgstr ""
@@ -865,34 +1151,59 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
 msgid "SMS Delivery error"
+msgstr "Greška u slanju SMSa"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "Schedule some tracks to get started !"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sequence
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+msgid "Seo name"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
 msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Show all records which has next action date is before today"
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Set Favorite"
 msgstr ""
 
 #. module: website_event_track
-#: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
-msgid "Silver"
-msgstr "Srebrni"
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Show all records which has next action date is before today"
+msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "Social Stream"
-msgstr "Društvena struja"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Showcase Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+msgid "Speaker"
+msgstr "Govornik"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speaker Email"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+msgid "Speaker Photo"
 msgstr ""
 
 #. module: website_event_track
@@ -916,48 +1227,16 @@ msgid "Speaker(s) Phone"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Picture"
+msgstr ""
+
+#. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #, python-format
 msgid "Speakers"
 msgstr "Zvučnici"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_count
-msgid "Sponsor Count"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__name
-msgid "Sponsor Type"
-msgstr "Tip sponzora"
-
-#. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_type
-#: model:ir.ui.menu,name:website_event_track.menu_event_sponsor_type
-msgid "Sponsor Types"
-msgstr "Tipovi sponzora"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__url
-msgid "Sponsor Website"
-msgstr "Web stranica sponzora"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_id
-msgid "Sponsor/Customer"
-msgstr "Sponzor/Kupac"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sponsor_type_id
-msgid "Sponsoring Type"
-msgstr "Tip sponzoriranja"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
-msgid "Sponsors"
-msgstr "Sponzori"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -971,6 +1250,11 @@ msgid "Stage Name"
 msgstr "Naziv faze"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "Starting in"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
 msgid ""
 "Status based on activities\n"
@@ -978,6 +1262,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1001,7 +1289,9 @@ msgstr "Naziv oznake već postoji !"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Tags"
 msgstr "Oznake"
 
@@ -1011,7 +1301,7 @@ msgid "Talk Introduction"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:0
+#: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Talk Proposals"
 msgstr ""
@@ -1022,7 +1312,29 @@ msgid "Talk Title"
 msgstr ""
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:0
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk added to your Favorites"
+msgstr ""
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk already in your Favorites"
+msgstr ""
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk removed from your Favorites"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
 #, python-format
 msgid "Talks"
 msgstr ""
@@ -1045,6 +1357,26 @@ msgstr "Puni URL za pristup dokumentu putem web stranice."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "This event does not accept proposals."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
 msgstr ""
 
 #. module: website_event_track
@@ -1072,9 +1404,16 @@ msgid "Today Activities"
 msgstr "Današnje aktivnosti"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
 msgstr "Prati"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+msgid "Track / Visitor Link"
+msgstr ""
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
@@ -1097,8 +1436,8 @@ msgid "Track End Date"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
-msgid "Track Proposals on Website"
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
 msgstr ""
 
 #. module: website_event_track
@@ -1126,11 +1465,59 @@ msgid "Track Stages"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+msgid "Track Tag Categories"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Track Tag Category"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
 msgid "Track Tags"
 msgstr "Oznake praćenja"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+msgid "Track Tags Category"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+msgid "Track Visitor"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Track Visitors"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"Track Visitors store statistics on track attendance, including\n"
+"              wishlist management."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_soon
+msgid "Track begins soon"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_today
+msgid "Track begins today"
+msgstr ""
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -1143,10 +1530,27 @@ msgid "Track duration in hours."
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_live
+msgid "Track has started and is ongoing"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_done
+msgid "Track is finished"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_upcoming
+msgid "Track is not yet started"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
 msgid "Tracks"
 msgstr "Praćenja"
 
@@ -1159,21 +1563,26 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid ""
-"Tracks define the schedule of your event. These can be a talk, a round "
+"Tracks define the schedule of your event.<br>These can be a talk, a round "
 "table, a meeting, etc."
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Tracks on Website"
 msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Vrsta aktivnosti iznimke na zapisu."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Unpublished"
+msgstr "Neobjavljeno"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_unread
@@ -1187,11 +1596,6 @@ msgid "Unread Messages Counter"
 msgstr "Brojač nepročitanih poruka"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "Use this tag:"
-msgstr "Koristi ovu oznaku:"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
 msgstr "Pogledaj praćenje"
@@ -1199,6 +1603,33 @@ msgstr "Pogledaj praćenje"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Visitor"
+msgstr "Posjetitelj"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+msgid "Visitor Wishlist"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+msgid "Visitors Wishlist"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+msgid "Wait for visitors to wishlist your tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We did not find any track matching your"
 msgstr ""
 
 #. module: website_event_track
@@ -1224,9 +1655,29 @@ msgid "We will evaluate your proposition and get back to you shortly."
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+msgid "Website"
+msgstr "Web stranica"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+msgid "Website App Icon"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "Website Event Menu"
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+msgid "Website Image"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "Website izbornik"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
@@ -1237,6 +1688,11 @@ msgstr "Poruke webstranica"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
 msgstr "URL web stranice"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+msgid "Website Visitor"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
@@ -1265,7 +1721,38 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Wishlisted By"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+msgid "Wishlisted Tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "You're offline!"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "ago"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Get Yours Now !"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. http://www.example.com"
 msgstr ""
 
 #. module: website_event_track
@@ -1274,12 +1761,32 @@ msgid "hours"
 msgstr "sati"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-msgid "talks"
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "minutes after talk start"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks
-msgid "unpublished"
-msgstr "neobjavljeno"
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "search."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts in"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts on"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "tracks"
+msgstr ""

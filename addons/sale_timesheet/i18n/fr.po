@@ -77,19 +77,19 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
 msgid " Candidate Orders"
-msgstr ""
+msgstr "Commandes candidates"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
-msgstr ""
+msgstr "%(amount)s %(label)s seront ajoutés à votre nouveau bon de commande."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the selected Sales Order."
-msgstr ""
+msgstr "%(amount)s %(label)s seront ajoutés au bon de commande sélectionné."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -141,6 +141,9 @@ msgid ""
 "                                                                Non Billable Timesheets\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\">\n"
+"                                                                Feuilles de temps non-facturables\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -199,6 +202,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
+"Tous les revenus qui ne proviennent pas de feuilles de temps et qui sont "
+"liés au compte analytique du projet."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -207,6 +212,9 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be removed from Sales "
 "Order on save. Discard to avoid the change."
 msgstr ""
+"Toutes les heures sur la feuille de temps qui ne sont pas encore facturées "
+"seront retirées du bon de commande lors de l'enregistrement. Annulez "
+"l'opération pour éviter d'appliquer la modification."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
@@ -262,7 +270,7 @@ msgstr "Lignes analytiques"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Any cost linked to the Analytic Account of the Project."
-msgstr ""
+msgstr "N'importe quel coût lié au compte analytique du projet."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -315,7 +323,7 @@ msgstr "Facturation"
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr ""
+msgstr "Par type de facturation"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -361,6 +369,8 @@ msgid ""
 "Costs from expenses that were reinvoiced to your customer (provided that the"
 " Analytic Account of the Project was set on the Expense)."
 msgstr ""
+"Coûts des notes de frais qui ont été refacturées à votre client (à condition"
+" que le compte analytique du projet ait été défini sur la note de frais)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -412,7 +422,7 @@ msgstr "Créez une commande client"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_create_sale_order__link_selection__create
 msgid "Create a new sales order"
-msgstr ""
+msgstr "Créer un nouveau bon de commande"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__create_uid
@@ -469,17 +479,17 @@ msgstr "Jours passés"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Days recorded"
-msgstr ""
+msgstr "Jours enregistrés"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Sales Order Item"
-msgstr ""
+msgstr "Ligne de vente par défaut"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
 msgid "Display Create Order"
-msgstr ""
+msgstr "Afficher le bon de commande"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
@@ -511,7 +521,7 @@ msgstr "Employé"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
 msgid "Employee rate"
-msgstr ""
+msgstr "Taux de l'employé"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -550,7 +560,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
 msgid "Has Multi Sol"
-msgstr ""
+msgstr "A de multiples lignes de vente"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -568,7 +578,7 @@ msgstr "Heures passés"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours recorded"
-msgstr ""
+msgstr "Heures enregistrées"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
@@ -629,7 +639,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
 msgid "Info Invoice"
-msgstr ""
+msgstr "Info Facture"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -650,7 +660,7 @@ msgstr "Facturez votre temps et matériel depuis les tâches."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "Facturez votre temps et matériel à vos clients"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -671,7 +681,7 @@ msgstr "Facturation"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
 msgid "Invoicing Timesheet Enabled"
-msgstr ""
+msgstr "Facturation Feuille de Temps activée"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
@@ -744,17 +754,17 @@ msgstr "Lignes"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__link_selection
 msgid "Link Selection"
-msgstr ""
+msgstr "Sélection du Lien"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 msgid "Link to Sales Order"
-msgstr ""
+msgstr "Lien au bon de commande"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_create_sale_order__link_selection__link
 msgid "Link to an existing sales order"
-msgstr ""
+msgstr "Lien vers un bon de commande existant"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
@@ -832,7 +842,7 @@ msgstr "Tâches non facturables"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable timesheets"
-msgstr ""
+msgstr "Feuilles de temps non facturables"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
@@ -851,6 +861,10 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
+"Seules les feuilles de temps n'ayant pas encore été facturées (et validées, "
+"si applicable) de cette période seront facturées. Si la période n'est pas "
+"indiquée, toutes les feuilles de temps n'ayant pas encore été facturées (et "
+"validées, si applicable) seront facturées sans distinction."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -860,13 +874,13 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
 msgid "Other Costs"
-msgstr ""
+msgstr "Autres coûts"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__other_revenues
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other Revenues"
-msgstr ""
+msgstr "Autres revenus"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1001,7 +1015,7 @@ msgstr "Projet pour lequel nous créons un bon de commande"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
 msgid "Project rate"
-msgstr ""
+msgstr "Taux du projet"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
@@ -1024,17 +1038,17 @@ msgstr "Coûts facturés"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Recorded"
-msgstr ""
+msgstr "Enregistré"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Recorded Days and Profitability"
-msgstr ""
+msgstr "Jours enregistrés et Profitabilité"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Recorded Hours and Profitability"
-msgstr ""
+msgstr "Heures enregistrées et Profitabilité"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1068,12 +1082,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets already invoiced."
-msgstr ""
+msgstr "Revenus liés aux feuilles de temps déjà facturées"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets not yet invoiced."
-msgstr ""
+msgstr "Revenus liés aux feuilles de temps déjà facturées."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
@@ -1175,6 +1189,8 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
+"Sélectionnez un projet facturable permettant de créer des tâches. Ce "
+"paramétrage doit être configuré en fonction de chaque entreprise."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
@@ -1183,6 +1199,8 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Sélectionnez un projet facturable comme squelette du nouveau projet créé "
+"lors de la vente du produit. Ses étapes et tâches seront dupliquées."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1266,6 +1284,8 @@ msgid ""
 "The %s product is required by the Timesheet app and cannot be "
 "archived/deleted."
 msgstr ""
+"Le produit %s est requis par l'application Feuilles de Temps et ne peut pas "
+"être archivé/supprimé."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1286,7 +1306,7 @@ msgstr "Le compte analytique lié au bon de commandes."
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
-msgstr ""
+msgstr "Le projet a déjà un bon de commande."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1405,7 +1425,7 @@ msgstr "Coûts de la feuille de temps"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Duration"
-msgstr ""
+msgstr "Durée de la feuille de temps"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
@@ -1454,12 +1474,12 @@ msgstr "Feuilles de temps"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets By Billing Type"
-msgstr ""
+msgstr "Feuilles de temps par type de facturation"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr ""
+msgstr "Période des feuilles de temps"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1503,6 +1523,8 @@ msgid ""
 "Total recorded duration, expressed in the encoding UoM, and rounded to the "
 "unit"
 msgstr ""
+"Durée totale enregistrée, exprimée dans l'unité de mesure d'encodage, et "
+"arrondie à l'unité."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1547,7 +1569,7 @@ msgstr "Avertissement"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
 msgid "Warning Employee Rate"
-msgstr ""
+msgstr "Avertissement taux de l'employé"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1587,6 +1609,7 @@ msgstr "Vous ne pouvez appliquer cette action que d'un projet "
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
 msgstr ""
+"Vous ne pouvez pas retirer une feuille de temps ayant déjà été facturée."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0
@@ -1611,4 +1634,4 @@ msgstr "heures"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "in Overtime"
-msgstr ""
+msgstr "en Heures supplémentaires"

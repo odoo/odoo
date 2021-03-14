@@ -2,12 +2,20 @@
 # This file contains the translation of the following modules:
 # 	* base_import
 # 
+# Translators:
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Martin Trigaux, 2019
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,29 +27,29 @@ msgstr ""
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
+msgid "%d records successfully imported"
+msgstr "%d înregistrări importate cu succes"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#, python-format
 msgid "%d records successfully imported..."
-msgstr ""
+msgstr "%d înregistrări importate cu succes ..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "%d records were successfully imported"
-msgstr ""
+msgstr "%d înregistrări testate..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "(%d more)"
-msgstr ""
+msgstr "(%d mai mult)"
 
 #. module: base_import
 #. openerp-web
@@ -51,6 +59,8 @@ msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
 msgstr ""
+"A fost gasită o singură coloană în fișier, acest lucru înseamnă adesea că "
+"separatorul fișierului este incorect"
 
 #. module: base_import
 #. openerp-web
@@ -62,16 +72,21 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"A apărut o problemă necunoscută în timpul importului (posibil conexiune "
+"pierdută, limită de date depășită sau limite de memorie depășite). "
+"Reîncercați, în cazul în care problema este temporară. Dacă problema "
+"persistă, încercați să împărțiți fișierul în loc să îl importați dintr-o "
+"dată."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
 msgid "Base"
-msgstr ""
+msgstr "Baza"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
 msgid "Base Import"
-msgstr ""
+msgstr "Import baza"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
@@ -83,7 +98,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Limită lot"
 
 #. module: base_import
 #. openerp-web
@@ -97,7 +112,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Anulează"
 
 #. module: base_import
 #. openerp-web
@@ -110,18 +125,18 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "Coloana %s conține valori incorecte (valoare: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Coloana %s conține valori incorecte. Eroare în linia %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Etichetă coloană"
 
 #. module: base_import
 #. openerp-web
@@ -129,7 +144,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Comma"
-msgstr ""
+msgstr "Virgulă"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -144,7 +159,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "Creați dacă nu există"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -165,7 +180,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creat de"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
@@ -186,7 +201,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creat în"
 
 #. module: base_import
 #. openerp-web
@@ -202,35 +217,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
-msgstr ""
+msgstr "ID-ul Bază date"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
-msgstr ""
+msgstr "Format dată:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Format datetimp:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
-msgstr ""
+msgstr "Separator Zecimal"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -250,29 +265,31 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Don't import"
-msgstr ""
+msgstr "Nu importă"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "Punct"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Download"
-msgstr ""
+msgstr "Descarcă"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
@@ -284,27 +301,27 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
+msgstr "Datorită dimensiunii mari, fișierul va fi importat de loturi."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Encoding:"
-msgstr ""
+msgstr "Codificare:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Eroare procesare Dată  [%s:L%d]: %s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "Totul pare valabil."
 
 #. module: base_import
 #. openerp-web
@@ -312,33 +329,34 @@ msgstr ""
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
 msgstr ""
+"Fișierele Excel sunt recomandate deoarece formarea câmpurilor este automată."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
-msgstr ""
+msgstr "ID extern"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
 msgid "Field Name"
-msgstr ""
+msgstr "Nume câmp"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
-msgstr ""
+msgstr "Fișier"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr ""
+msgstr "Nume fișier"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr ""
+msgstr "Tip fișier"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -350,7 +368,7 @@ msgstr ""
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Fisier de verificat si/sau importat, binar prim (nu baza64)"
 
 #. module: base_import
 #. openerp-web
@@ -364,7 +382,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Opțiuni formatare..."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -379,7 +397,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr ""
+msgstr "Iata inceputul fisierului pe care nu l-am putut importa:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -399,8 +417,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_import
 #. openerp-web
@@ -412,6 +431,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Daca fisierul contine\n"
+"numele coloanelor, Odoo poate incerca sa detecteze automat\n"
+"campul corespunzator coloanei. Astfel, importurile sunt\n"
+"mai usor de efectuat, mai ales atunci cand fisierul are multe coloane."
 
 #. module: base_import
 #. openerp-web
@@ -425,10 +448,9 @@ msgstr ""
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
-#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import"
-msgstr ""
+msgstr "Importă"
 
 #. module: base_import
 #. openerp-web
@@ -442,21 +464,21 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Import a File"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "Import completed"
-msgstr ""
+msgstr "Importă un Fișier"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
-msgstr ""
+msgstr "Previzualizarea importului a eșuat din cauza:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Import records"
+msgstr "Importați înregistrări"
 
 #. module: base_import
 #. openerp-web
@@ -492,8 +514,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
+#: model:ir.model.fields,field_description:base_import.field_res_users____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -514,7 +537,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizare făcută de"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
@@ -535,84 +558,77 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualizare pe"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "Încarcă fișier"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Load New File"
-msgstr ""
+msgstr "Încarcă un fișier nou"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "Mapați coloane pentru import"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
-msgstr ""
+msgstr "Aveți nevoie de ajutor?"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Fără separator"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "Câmpuri obișnuite"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
 msgid "Other Variable"
-msgstr ""
+msgstr "Alte variabile"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Părinte"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Reload File"
-msgstr ""
+msgstr "Campuri de Legatura"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -624,7 +640,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
-msgstr ""
+msgstr "Reluați"
 
 #. module: base_import
 #. openerp-web
@@ -639,78 +655,86 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "A se vedea valorile posibile"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "Selectați un fișier CSV sau Excel pentru import."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Selected Sheet:"
+msgstr "Foaie selectată:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Semicolon"
-msgstr ""
+msgstr "Punct si virgula"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Separator:"
-msgstr ""
+msgstr "Separator:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "Afișare câmpuri din câmpuri relaționate (avansat)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
 msgid "Some Value"
-msgstr ""
+msgstr "Niște valori"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Space"
-msgstr ""
+msgstr "Spațiu"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Începe de la linia"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Tab"
-msgstr ""
+msgstr "Tab"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "Teste: Previzualizare model de bază de import"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Teste: Model de import de bază, caracter"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
@@ -782,7 +806,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Delimitator text:"
 
 #. module: base_import
 #. openerp-web
@@ -792,12 +816,21 @@ msgid ""
 "The first row\n"
 "                         contains the label of the column"
 msgstr ""
+"Primul rând\n"
+"conține eticheta coloanei"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
+msgstr "Acest fișier a fost importat cu succes până la linia %d."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "This is a preview of the first 10 rows of your file"
 msgstr ""
 
 #. module: base_import
@@ -805,20 +838,22 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Separator mii:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
-msgstr ""
+msgstr "Urmărește istoric în timpul importului"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"Nu se poate încărca fișierul \"{extension}\": este necesar modulul Python "
+"\"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -826,11 +861,13 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
+"Format fișier nesuportat \"{}\", import suportat numai pentru  CSV, ODS, XLS"
+" și XLSX"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Utilizatori"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char__value
@@ -847,7 +884,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__value
 msgid "Value"
-msgstr ""
+msgstr "Valoare"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
@@ -882,7 +919,7 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr ""
+msgstr "Trebuie să configurați cel puțin un câmp de importat"
 
 #. module: base_import
 #. openerp-web
@@ -896,14 +933,14 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at row %d%s"
-msgstr ""
+msgstr "la rândul %d%s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "între rândurile %d și %d"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
