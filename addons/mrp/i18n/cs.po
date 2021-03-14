@@ -12,10 +12,10 @@
 # Martin Trigaux, 2019
 # Ladislav Tomm <tomm@helemik.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +147,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -663,6 +663,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required components to "
 "make a finished product."
 msgstr ""
+"Kusovník umožňuje definovat seznam požadovaných komponentů pro výrobu "
+"hotového výrobku."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -1742,7 +1744,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "Výška obrazu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
@@ -3073,7 +3075,7 @@ msgstr "Výrobků ke spotřebě"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr ""
+msgstr "Průběh zhotovení (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date
@@ -3569,6 +3571,8 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Některé pracovní zakázky jsou již hotové, u této výrobní zakázky nelze "
+"odvolat plán."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4357,7 +4361,7 @@ msgstr "Aktualizace"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet
 msgid "Upload your PDF file."
-msgstr ""
+msgstr "Nahrajte svůj soubor PDF."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__2
@@ -4440,7 +4444,7 @@ msgstr "Čekající materiál"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Waiting for Component"
-msgstr ""
+msgstr "Čekání na komponentu"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
@@ -4774,6 +4778,9 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
+"Není povoleno vytvářet ani upravovat šarže nebo sériové číslo komponent s "
+"typem operace „Výroba“. Chcete-li to změnit, přejděte na typ operace a "
+"zaškrtněte políčko „Vytvořit nové šarže / sériová čísla pro komponenty“."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type
@@ -4819,6 +4826,8 @@ msgid ""
 "You cannot change the workcenter of a work order that is in progress or "
 "done."
 msgstr ""
+"Pracovní středisko pracovního příkazu, který právě probíhá nebo je hotový, "
+"nelze změnit."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4852,13 +4861,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
-msgstr ""
+msgstr "Tuto pracovní zakázku nelze propojit s jinou výrobní zakázkou."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
 msgstr ""
+"Jakmile je výrobní zakázka zrušena nebo hotová, nemůžete ji přesunout."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
