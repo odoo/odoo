@@ -87,7 +87,7 @@ QUnit.module('Google Calendar', {
             viewOptions: {
                 initialDate: initialDate,
             },
-            mockRPC: function (route, args) {
+            mockRPC: async function (route, args) {
                 if (route === '/google_calendar/sync_data') {
                     assert.step(route);
                     this.data['calendar.event'].records.push(
@@ -98,8 +98,10 @@ QUnit.module('Google Calendar', {
                     assert.step(route);
                 } else if (route === '/microsoft_calendar/sync_data') {
                     return Promise.resolve();
+                } else if (route === '/web/dataset/call_kw/res.partner/get_attendee_detail') {
+                    return Promise.resolve([]);
                 }
-                return this._super.apply(this, arguments);
+                return await this._super.apply(this, arguments);
             },
         });
 
