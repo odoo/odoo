@@ -499,9 +499,9 @@ return AbstractModel.extend({
                     fields: self.fieldNames,
                     domain: self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain())
             })
-            .then(function (events) {
+            .then(async function (events) {
                 self._parseServerData(events);
-                self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
+                self.data.data = await self._getCalendarEventData(events);
                 return Promise.all([
                     self._loadColors(self.data, self.data.data),
                     self._loadRecordsToFilters(self.data, self.data.data)
@@ -518,13 +518,43 @@ return AbstractModel.extend({
     _loadColors: function (element, events) {
         if (this.fieldColor) {
             var fieldName = this.fieldColor;
+            var self = this;
             _.each(events, function (event) {
                 var value = event.record[fieldName];
-                event.color_index = _.isArray(value) ? value[0] : value;
+                var filter = self.loadParams.filters[fieldName];
+                var color = filter && _.map(filter.filters, f => f.value) || value;
+                var everyoneFilter = filter && (_.find(filter.filters, f => f.value === "all") || {}).active || false;
+                if (!everyoneFilter) {
+                    color = [event.attendee_id || value]
+                } else {
+                    color = value.includes(self.getSession().partner_id) ? self.getSession().partner_id : value
+                }
+                event.color_index = _.isArray(color) ? self._getColorIndex(value, color[0]) : color;
             });
             this.model_color = this.fields[fieldName].relation || element.model;
         }
         return Promise.resolve();
+    },
+    /**
+     * Get the color index used to render the event and the filter.
+     * Since we have a maximum of 30 colors, we have to adapt the color
+     * index in case the id exceeds the number of colors available.
+     * 
+     * - actual_color_list contains the list of color already used in the filter
+     * - color_index is the color we try to apply for the event
+     * 
+     * @private
+     * @param {Array} actual_color_list
+     * @param {Integer} color_index
+     * @returns {Integer}
+     */
+    _getColorIndex: function(actual_color_list, color_index) {
+        var actual_color_list = actual_color_list || [0];
+        var new_color_index = color_index % 30;
+        if (new_color_index !== color_index && actual_color_list.includes(new_color_index)) {
+            new_color_index = this._getColorIndex(actual_color_list, new_color_index + 3);
+        }
+        return new_color_index;
     },
     /**
      * @private
@@ -613,7 +643,7 @@ return AbstractModel.extend({
             if (filter.write_model) {
                 if (field.relation === self.model_color) {
                     _.each(filter.filters, function (f) {
-                        f.color_index = f.value;
+                        f.color_index = self._getColorIndex(_.map(filter.filters, f => f.value), f.value);
                     });
                 }
                 return;
@@ -777,6 +807,9 @@ return AbstractModel.extend({
 
         return r;
     },
+    _getCalendarEventData: function (events) {
+        return _.map(events, this._recordToCalendarEvent.bind(this));
+    }
 });
 
 });

@@ -3,7 +3,7 @@ odoo.define('calendar.CalendarView', function (require) {
 
 var CalendarController = require('calendar.CalendarController');
 var CalendarModel = require('calendar.CalendarModel');
-const CalendarRenderer = require('calendar.CalendarRenderer');
+const CalendarRenderer = require('calendar.CalendarRenderer').AttendeeCalendarRenderer;
 var CalendarView = require('web.CalendarView');
 var viewRegistry = require('web.view_registry');
 
