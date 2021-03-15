@@ -11,7 +11,10 @@ class AccountChartTemplate(models.Model):
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         journal_data = super(AccountChartTemplate, self)._prepare_all_journals(
             acc_template_ref, company, journals_dict)
+        if company.country_id.code != 'FR':
+            return journal_data
+
         for journal in journal_data:
-            if journal['type'] in ('sale', 'purchase') and company.country_id.code == "FR":
+            if journal['type'] in ('sale', 'purchase'):
                 journal.update({'refund_sequence': True})
         return journal_data
