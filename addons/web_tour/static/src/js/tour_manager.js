@@ -130,7 +130,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _register: function (do_update, tour, name) {
         if (tour.ready) return Promise.resolve();
         const tour_is_consumed = this._isTourConsumed(name);
-
         return tour.wait_for.then((function () {
             tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
             tour.steps = _.filter(tour.steps, (function (step) {
