@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 
 class PosSession(models.Model):
@@ -304,13 +304,13 @@ class PosSession(models.Model):
             self._check_if_no_draft_orders()
             if self.update_stock_at_closing:
                 self._create_picking_at_end_of_session()
-            if (
-                not self.env['account.move'].check_access_rights('create', raise_exception=False)
-                and self.user_has_groups('point_of_sale.group_pos_user')
-            ):
-                data = self.sudo().with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
-            else:
+            try:
                 data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
+            except AccessError as e:
+                if self.user_has_groups('point_of_sale.group_pos_user'):
+                    data = self.sudo().with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
+                else:
+                    raise e
 
             try:
                 balance = sum(self.move_id.line_ids.mapped('balance'))
