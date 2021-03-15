@@ -2591,37 +2591,6 @@ options.registry.ScrollButton = options.Class.extend({
     },
 });
 
-/**
- * Allows for images to be replaced.
- */
-options.registry.ReplaceImage = options.Class.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        const $button = this.$el.find('we-button');
-        const $overlayArea = this.$overlay.find('.oe_snippet_remove');
-        $button.insertBefore($overlayArea);
-
-        return this._super(...arguments);
-    },
-    
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Replaces the image.
-     *
-     * @see this.selectClass for parameters
-     */
-    replaceImage: async function () {
-        // TODO: simulates a double click on an image from summernote,
-        // to be refactored when the new editor is merged
-        this.$target.dblclick();
-    },
-});
-
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,

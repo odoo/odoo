@@ -3780,6 +3780,63 @@ registry['sizing_y'] = registry.sizing.extend({
     },
 });
 
+/**
+ * Allows for media to be replaced.
+ */
+registry.ReplaceMedia = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    start() {
+        const $button = this.$el.find('we-button.fa');
+        this.$overlayRemove = this.$overlay.find('.oe_snippet_remove');
+        $button.insertBefore(this.$overlayRemove);
+
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        this.$overlayRemove.toggleClass('d-none', this.$target.is('.fa'));
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replaces the media.
+     *
+     * @see this.selectClass for parameters
+     */
+    async replaceMedia() {
+        // TODO for now, this simulates a double click on the media,
+        // to be refactored when the new editor is merged
+        this.$target.dblclick();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'replace_media_overlay_opt') {
+            return !this.$target.is('.fa');
+        }
+        return this._super(...arguments);
+    }
+});
+
 /*
  * Abstract option to be extended by the ImageOptimize and BackgroundOptimize
  * options that handles all the common parts.

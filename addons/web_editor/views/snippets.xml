@@ -353,6 +353,18 @@
     <div data-js="VersionControl"
          data-selector="[data-snippet]"/>
 
+    <!-- Replace a media -->
+    <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
+    <!-- TODO enable on span.fa, i.fa too but in current editor, this is problematic so best not waste more time for now -->
+    <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video">
+        <!-- Overlay button -->
+        <we-button data-name="replace_media_overlay_opt" title="Replace" class="fa fa-refresh" data-replace-media="true" data-no-preview="true"/>
+        <!-- Panel button-->
+        <we-row string="Media">
+            <we-button class="o_we_bg_success" data-replace-media="true" data-no-preview="true">Replace</we-button>
+        </we-row>
+    </div>
+
     <div data-js="ImageOptimize"
          data-selector="img">
         <t t-call="web_editor.snippet_options_image_optimization_widgets"/>

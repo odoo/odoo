@@ -270,6 +270,12 @@ var SnippetEditor = Widget.extend({
         if (this.$target.is('img')) {
             return _t("Image");
         }
+        if (this.$target.is('.fa')) {
+            return _t("Icon");
+        }
+        if (this.$target.is('.media_iframe_video')) {
+            return _t("Video");
+        }
         if (this.$target.parent('.row').length) {
             return _t("Column");
         }
