@@ -16,7 +16,7 @@ from odoo.addons.calendar.models.calendar_attendee import Attendee
 from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RRULE_TYPE_SELECTION, END_TYPE_SELECTION, MONTH_BY_SELECTION, WEEKDAY_SELECTION, BYDAY_SELECTION
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import pycompat
+from odoo.tools import pycompat, html_escape
 from odoo.exceptions import UserError, ValidationError, AccessError
 
 _logger = logging.getLogger(__name__)
@@ -287,7 +287,11 @@ class Meeting(models.Model):
 
     def _compute_attendee(self):
         for meeting in self:
-            attendee = meeting._find_my_attendee()
+            attendee = next(
+                (attendee for attendee in self.attendee_ids
+                 if attendee.partner_id == self.env.user.partner_id),
+                self.env['calendar.attendee']
+            )
             meeting.attendee_status = attendee.state if attendee else 'needsAction'
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
@@ -477,7 +481,11 @@ class Meeting(models.Model):
             start_date = fields.Datetime.to_datetime(values.get('start'))
             # Only notify on future events
             if start_date and start_date >= fields.Datetime.now():
-                (current_attendees & previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_changedate', ignore_recurrence=not update_recurrence)
+                (current_attendees & previous_attendees).with_context(
+                    calendar_template_ignore_recurrence=not update_recurrence
+                )._send_mail_to_attendees(
+                    'calendar.calendar_template_meeting_changedate'
+                )
 
         return True
 
@@ -713,15 +721,13 @@ class Meeting(models.Model):
             return attendee.do_decline()
         return attendee.do_tentative()
 
-    def _find_my_attendee(self):
-        """ Return the first attendee where the user connected has been invited
-            from all the meeting_ids in parameters.
-        """
+    def find_partner_customer(self):
         self.ensure_one()
-        for attendee in self.attendee_ids:
-            if self.env.user.partner_id == attendee.partner_id:
-                return attendee
-        return False
+        return next(
+            (attendee.partner_id for attendee in self.attendee_ids.sorted('create_date')
+             if attendee.partner_id != self.user_id.partner_id),
+            self.env['calendar.attendee']
+        )
 
     # ------------------------------------------------------------
     # TOOLS
@@ -920,3 +926,56 @@ class Meeting(models.Model):
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}
+
+    def description_to_html_lines(self):
+        """ Description could contain some structure content, depending on
+        its use. Notably appointment could add some structured data in it
+        in addition to free text. Purpose of this method is to generate a
+        simple html.
+
+        Input (self.description) example:
+Some free text salespeople added
+as multi line
+ * Mobile: +320475000000
+ * Email: my.email@test.example.com
+ * SingleLine: answer
+ * MultiLine:
+Answer1
+Answer2
+Answer3
+ * Dropdown: answer
+ * Radio: answer
+ * Checkboxes: answer1, answer2
+Some free text salespeople added
+as multi line
+
+        Output: a list of items[
+'Some free text salespeople added<br />as multi line',
+'Mobile: +320475000000',
+'Email: my.email@test.example.com',
+'SingleLine: answer',
+'MultiLine:<br />Answer1<br />Answer2<br />Answer3',
+'Dropdown: answer',
+'Radio: answer',
+'Checkboxes: answer1, answer2',
+'Some free text salespeople added<br .>as multi line']
+
+        Each item of returned list is escaped so that only our intended <br />
+        are html tags. It should therefore be safe.
+        """
+
+        final_lines = []
+        parsed_lines = []
+        for line in self.description.split('\n'):
+            if not line.strip():
+                continue
+            # new line
+            if line.startswith(' *'):
+                if parsed_lines:
+                    final_lines.append('<br />'.join(html_escape(line) for line in parsed_lines))
+                parsed_lines = [line.lstrip(' *')]
+            else:
+                parsed_lines.append(line)
+        if parsed_lines:
+            final_lines.append('<br />'.join(html_escape(line) for line in parsed_lines))
+        return final_lines
