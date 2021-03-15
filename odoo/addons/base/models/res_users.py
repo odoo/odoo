@@ -278,7 +278,8 @@ class Users(models.Model):
             https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/res/res_partner.py
         """
         image_path = get_module_resource('base', 'static/img', 'avatar.png')
-        image = base64.b64encode(open(image_path, 'rb').read())
+        with open(image_path, 'rb') as fd:
+            image = base64.b64encode(fd.read())
         return image_process(image, colorize=True)
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
