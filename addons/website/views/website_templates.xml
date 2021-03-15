@@ -581,10 +581,6 @@
                 <t t-call="website.placeholder_header_brand"/>
                 <!-- Navbar Toggler -->
                 <t t-call="website.navbar_toggler"/>
-                <!-- Language Selector -->
-                <t t-call="website.placeholder_header_language_selector">
-                    <t t-set="_div_classes" t-value="'ml-2'"/>
-                </t>
                 <!-- Navbar Collapse -->
                 <div id="top_menu_collapse" class="collapse navbar-collapse flex-column align-self-stretch align-items-stretch">
                     <t t-call="website.navbar_nav">
@@ -597,6 +593,10 @@
                             </t>
                         </t>
                     </t>
+                                    <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
                     <div class="oe_structure oe_structure_solo" id="oe_structure_header_sidebar_1"/>
                     <ul class="nav navbar-nav">
                         <!-- Sign In -->
