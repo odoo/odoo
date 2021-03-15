@@ -1672,15 +1672,15 @@ class AccountMove(models.Model):
 
             is_invoice = vals.get('type') in self.get_invoice_types(include_receipts=True)
 
-            if is_invoice:
-                if vals.get('invoice_line_ids') and not vals.get('line_ids'):
-                    vals['line_ids'] = vals['invoice_line_ids']
-
-            vals.pop('invoice_line_ids', None)
-
-            if not is_invoice:
+            if 'line_ids' in vals:
+                vals.pop('invoice_line_ids', None)
                 new_vals_list.append(vals)
                 continue
+
+            if is_invoice and 'invoice_line_ids' in vals:
+                vals['line_ids'] = vals['invoice_line_ids']
+
+            vals.pop('invoice_line_ids', None)
 
             move = self_ctx.new(vals)
             new_vals_list.append(move._move_autocomplete_invoice_lines_values())
