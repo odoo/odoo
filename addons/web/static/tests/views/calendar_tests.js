@@ -543,6 +543,7 @@ QUnit.module('Views', {
         assert.containsOnce($('body'), '.modal', "there should be only one open modal");
 
         calendar.destroy();
+        testUtils.mock.unpatch(ViewDialogs.FormViewDialog);
     });
 
     QUnit.test('create event with timezone in week mode European locale', async function (assert) {
