@@ -27,37 +27,21 @@
     font-weight: bold;
 }
 
-$lightgrey: #f2f2f2;
-$font-muted: #6b6d70;
-$font-color: #282f33;
-$white: #ffffff;
-$purple: #875A7B;
-$gold: #d7a520;
-$blue: #263e86;
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    zoom: 117.2%;
-}
-
 #o_survey_certification.certification-wrapper {
     width: 297mm;
     height: 210mm;
-    background-color: $purple;
+    background-color: #875A7B;
     position: relative;
     display: flex;
     margin-left: -15px;
     margin-right: -15px;
 
     &.blue {
-        background-color: $blue;
+        background-color: #263e86;
     }
 
     &.gold {
-        background-color: $gold;
+        background-color: #d7a520;
     }
 
     .test-entry {
@@ -100,21 +84,21 @@ body {
         .certification-content {
             p {
                 font-size: 16pt;
-                color: $font-muted;
+                color: #6b6d70;
 
                 .user-name {
                     font-family: certification-cursive, cursive;
                     font-size: 50pt;
                     line-height: 2;
-                    color: $font-color;
-                    border-bottom: 1pt solid $font-color;
+                    color: #282f33;
+                    border-bottom: 1pt solid #282f33;
                 }
 
                 .certification-name {
                     font-size: 18pt;
                     line-height: 1.5;
                     text-transform: uppercase;
-                    color: $font-color;
+                    color: #282f33;
                 }
             }
         }
@@ -129,7 +113,7 @@ body {
                 text-align: center;
 
                 .certification-date {
-                    border-bottom: 1pt solid $font-color;
+                    border-bottom: 1pt solid #282f33;
                 }
             }
 
@@ -147,7 +131,7 @@ body {
             }
         }
         .certification-number {
-            color: $font-muted;
+            color: #6b6d70;
             position: absolute;
             font-size: 10pt;
         }
@@ -157,7 +141,7 @@ body {
     &.classic {
 
         &.blue .certification {
-            color: $blue;
+            color: #263e86;
 
             .certification-top {
                 &:before, &:after {
@@ -166,12 +150,12 @@ body {
             }
 
             .certification-content p .certification-name {
-                color: $blue;
+                color: #263e86;
             }
         }
 
         &.gold .certification {
-            color: $gold;
+            color: #d7a520;
 
             .certification-top {
                 &:before, &:after{
@@ -179,7 +163,7 @@ body {
                 }
             }
             .certification-content p .certification-name {
-                color: $gold;
+                color: #d7a520;
             }
         }
 
@@ -191,7 +175,7 @@ body {
             width: 295mm;
             height: 208mm;
             margin: 1mm;
-            color: $purple;
+            color: #875A7B;
 
             .certification-top {
                 padding-top: 10mm;
@@ -220,7 +204,7 @@ body {
                 margin-bottom: 10mm;
 
                 p .certification-name {
-                    color: $purple;
+                    color: #875A7B;
                 }
             }
 
@@ -231,7 +215,7 @@ body {
                 .certification-date-wrapper {
                     margin-left: 40mm;
                     font-size: 18pt;
-                    color: $font-muted;
+                    color: #6b6d70;
 
                     span {
                         font-size: 18pt;
@@ -283,7 +267,7 @@ body {
             width: 272mm;
             height: 185mm;
             margin: 12.5mm;
-            background-color: $lightgrey;
+            background-color: #f2f2f2;
             text-align: center;
 
             .certification-seal {
@@ -298,7 +282,7 @@ body {
             .certification-top {
                 padding-top: 28mm;
                 padding-bottom: 10mm;
-                color: $font-color;
+                color: #282f33;
 
                 h1 b {
                     font-weight: bold;
@@ -314,12 +298,12 @@ body {
 
                     .certification-date {
                         font-size: 18pt;
-                        color: $font-color;
+                        color: #282f33;
                     }
 
                     span {
                         font-size: 14pt;
-                        color: $font-muted;
+                        color: #6b6d70;
                     }
 
                 }
