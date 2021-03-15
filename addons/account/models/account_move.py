@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
+from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.tools import float_compare, date_utils, email_split, email_re
 from odoo.tools.misc import formatLang, format_date, get_lang
+from odoo.addons.account.exceptions import (
+    ImbalanceMoveValidationError,
+    SequenceMixinValidationError,
+    UniqueSequenceValidationError,
+    UniqueReferenceValidationError,
+)
 
 from datetime import date, timedelta
 from collections import defaultdict
@@ -15,15 +21,6 @@ import ast
 import json
 import re
 import warnings
-
-class ImbalanceJournalEntryError(UserError):
-    """Specialized UserError raised by `_check_balanced` method."""
-
-    def __init__(self, message, move_ids, imbalance_amounts):
-        super().__init__(message)
-        self.move_ids = move_ids
-        self.imbalance_amounts = imbalance_amounts
-
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
@@ -1072,73 +1069,22 @@ class AccountMove(models.Model):
         def journal_key(move):
             return (move.journal_id, move.journal_id.refund_sequence and move.move_type)
 
-        def date_key(move):
-            return (move.date.year, move.date.month)
+        def order_key(move):
+            return (move.date, move.ref or '', move.id)
 
-        grouped = defaultdict(  # key: journal_id, move_type
-            lambda: defaultdict(  # key: first adjacent (date.year, date.month)
-                lambda: {
-                    'records': self.env['account.move'],
-                    'format': False,
-                    'format_values': False,
-                    'reset': False
-                }
-            )
-        )
-        self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
-        highest_name = self[0]._get_last_sequence() if self else False
+        to_compute = self.filtered(lambda m: (not m.name or m.name == '/') and m.posted_before)
+        try:
+            draft_with_name = self.filtered(lambda m: m.name and m.name != '/' and not m.posted_before)
+            draft_with_name._constrains_date_sequence()
+        except SequenceMixinValidationError as smve:
+            to_compute += smve.records
 
-        # Group the moves by journal and month
-        for move in self:
-            if not highest_name and move == self[0] and not move.posted_before:
-                # In the form view, we need to compute a default sequence so that the user can edit
-                # it. We only check the first move as an approximation (enough for new in form view)
-                pass
-            elif (move.name and move.name != '/') or move.state != 'posted':
-                try:
-                    if not move.posted_before:
-                        move._constrains_date_sequence()
-                    # Has already a name or is not posted, we don't add to a batch
-                    continue
-                except ValidationError:
-                    # Has never been posted and the name doesn't match the date: recompute it
-                    pass
-            group = grouped[journal_key(move)][date_key(move)]
-            if not group['records']:
-                # Compute all the values needed to sequence this whole group
-                move._set_next_sequence()
-                group['format'], group['format_values'] = move._get_sequence_format_param(move.name)
-                group['reset'] = move._deduce_sequence_number_reset(move.name)
-            group['records'] += move
+        if self and not self[0].id and self[0] not in to_compute and not self[0]._get_last_sequence():
+            # In the form view, we need to compute a default sequence so that the user can edit
+            # it. We only check the first move as an approximation (enough for new in form view)
+            to_compute += self[0]
 
-        # Fusion the groups depending on the sequence reset and the format used because `seq` is
-        # the same counter for multiple groups that might be spread in multiple months.
-        final_batches = []
-        for journal_group in grouped.values():
-            for date_group in journal_group.values():
-                if (
-                    not final_batches
-                    or final_batches[-1]['format'] != date_group['format']
-                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
-                ):
-                    final_batches += [date_group]
-                elif date_group['reset'] == 'never':
-                    final_batches[-1]['records'] += date_group['records']
-                elif (
-                    date_group['reset'] == 'year'
-                    and final_batches[-1]['records'][0].date.year == date_group['records'][0].date.year
-                ):
-                    final_batches[-1]['records'] += date_group['records']
-                else:
-                    final_batches += [date_group]
-
-        # Give the name based on previously computed values
-        for batch in final_batches:
-            for move in batch['records']:
-                move.name = batch['format'].format(**batch['format_values'])
-                batch['format_values']['seq'] += 1
-            batch['records']._compute_split_sequence()
-
+        to_compute._set_next_sequence_batch(grouping_key=journal_key, order_key=order_key)
         self.filtered(lambda m: not m.name).name = '/'
 
     @api.depends('journal_id', 'date')
@@ -1621,8 +1567,7 @@ class AccountMove(models.Model):
         ''', [tuple(moves.ids)])
         res = self._cr.fetchall()
         if res:
-            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
-                                    'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
+            raise UniqueSequenceValidationError(self.browse(r[0] for r in res))
 
     @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date')
     def _check_duplicate_supplier_reference(self):
@@ -1654,9 +1599,7 @@ class AccountMove(models.Model):
         ''', [tuple(moves.ids)])
         duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
         if duplicated_moves:
-            raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
-                duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {'ref': m.ref, 'partner': m.partner_id.display_name, 'date': format_date(self.env, m.date)})
-            ))
+            raise UniqueReferenceValidationError(duplicated_moves)
 
     def _check_balanced(self):
         ''' Assert the move is fully balanced debit = credit.
@@ -1685,9 +1628,7 @@ class AccountMove(models.Model):
 
         query_res = self._cr.fetchall()
         if query_res:
-            ids = [res[0] for res in query_res]
-            sums = [res[1] for res in query_res]
-            raise ImbalanceJournalEntryError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums), ids, sums)
+            raise ImbalanceMoveValidationError(self.browse([r[0] for r in query_res]))
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
@@ -2451,6 +2392,7 @@ class AccountMove(models.Model):
             to_post = self - future_moves
         else:
             to_post = self
+        self.env['redirect.wizard'].check_confirm("Are you sure about that?")
 
         # `user_has_group` won't be bypassed by `sudo()` since it doesn't change the user anymore.
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
@@ -2559,6 +2501,7 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
+        self.env['redirect.wizard'].check_confirm("Check pls")
         self._post(soft=False)
         return False
 
@@ -2774,7 +2717,7 @@ class AccountMove(models.Model):
 
     def action_switch_invoice_into_refund_credit_note(self):
         if any(move.move_type not in ('in_invoice', 'out_invoice') for move in self):
-            raise ValidationError(_("This action isn't available for this document."))
+            raise UserError(_("This action isn't available for this document."))
 
         for move in self:
             reversed_move = move._reverse_move_vals({}, False)

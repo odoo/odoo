@@ -3,7 +3,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.addons.account.exceptions import UniqueReferenceValidationError
 
 
 @tagged('post_install', '-at_install')
@@ -1474,7 +1474,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.invoice.ref = 'a supplier reference'
         invoice2 = self.invoice.copy(default={'invoice_date': self.invoice.invoice_date})
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UniqueReferenceValidationError):
             invoice2.ref = 'a supplier reference'
 
     def test_in_invoice_switch_in_refund_1(self):

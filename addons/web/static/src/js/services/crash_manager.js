@@ -261,6 +261,27 @@ var CrashManager = AbstractService.extend({
             return;
         }
 
+        let options = {};
+        if (error.redirect_action) {
+            this.do_action(JSON.parse(error.redirect_action));
+            return;
+        }
+        if (error.record_ids) {
+            options.buttons = [
+                {text: _t("Open"), classes : "btn-primary", click: function() {
+                    this.do_action({
+                        type:'ir.actions.act_window',
+                        view_mode: 'list',
+                        res_model: error.record_model,
+                        views: [[false, 'list'], [false, 'form']],
+                        domain: [['id', 'in', error.record_ids]],
+                    });
+                    this.destroy();
+                }, close: true},
+                {text: _t("Cancel"), click: function() { this.destroy(); }, close: true}
+            ];
+        }
+
         // Odoo custom exception: UserError, AccessError, ...
         if (_.has(this.odooExceptionTitleMap, error.data.name)) {
             error = _.extend({}, error, {
@@ -269,7 +290,7 @@ var CrashManager = AbstractService.extend({
                     title: this.odooExceptionTitleMap[error.data.name],
                 }),
             });
-            this.show_warning(error);
+            this.show_warning(error, options);
             return;
         }
 

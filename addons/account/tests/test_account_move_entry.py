@@ -3,7 +3,11 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 from odoo import fields, api, SUPERUSER_ID
-from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.exceptions import UserError, RedirectWarning
+from odoo.addons.account.exceptions import (
+    UniqueSequenceValidationError,
+    ImbalanceMoveValidationError,
+)
 from odoo.tools import mute_logger
 
 from dateutil.relativedelta import relativedelta
@@ -328,11 +332,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_misc_always_balanced_move(self):
         ''' Ensure there is no way to make '''
         # You can't remove a journal item making the journal entry unbalanced.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(ImbalanceMoveValidationError), self.cr.savepoint():
             self.test_move.line_ids[0].unlink()
 
         # Same check using write instead of unlink.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(ImbalanceMoveValidationError), self.cr.savepoint():
             balance = self.test_move.line_ids[0].balance + 5
             self.test_move.line_ids[0].write({
                 'debit': balance if balance > 0.0 else 0.0,
@@ -545,7 +549,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copies[5].name, 'XMISC/2019/00004')
 
         # Can't have twice the same name
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(UniqueSequenceValidationError):
             copies[0].name = 'XMISC/2019/00001'
 
         # Lets remove the order by date

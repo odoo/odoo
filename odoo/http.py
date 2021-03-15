@@ -107,9 +107,13 @@ def replace_request_password(args):
 # don't trigger debugger for those exceptions, they carry user-facing warnings
 # and indications, they're not necessarily indicative of anything being
 # *broken*
-NO_POSTMORTEM = (odoo.exceptions.AccessDenied,
-                 odoo.exceptions.UserError,
-                 odoo.exceptions.RedirectWarning)
+NO_POSTMORTEM = (
+    odoo.exceptions.RedirectWarning,
+    odoo.exceptions.AccessDenied,
+    odoo.exceptions.ValidationError,
+    odoo.exceptions.UserError,
+    odoo.exceptions.RedirectWarning2,
+)
 
 
 def dispatch_rpc(service_name, method, params):
@@ -651,6 +655,13 @@ class JsonRequest(WebRequest):
                 'message': "Odoo Server Error",
                 'data': serialize_exception(exception),
             }
+            if isinstance(exception, odoo.exceptions.RedirectWarning2):
+                env = odoo.api.Environment(request.cr, self.uid, self.context)
+                error['redirect_action'] = json.dumps(env['redirect.wizard'].redirect(
+                    *exception.args,
+                    **exception.kwargs,
+                ))
+                env.cr.commit()
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
                 error['code'] = 404
@@ -661,6 +672,9 @@ class JsonRequest(WebRequest):
             if isinstance(exception, SessionExpiredException):
                 error['code'] = 100
                 error['message'] = "Odoo Session Expired"
+            if isinstance(exception, odoo.exceptions.ValidationError) and exception.records:
+                error['record_ids'] = exception.records.ids
+                error['record_model'] = exception.records._name
             return self._json_response(error=error)
 
     def dispatch(self):
@@ -698,8 +712,9 @@ class JsonRequest(WebRequest):
 
 
 def serialize_exception(e):
+    _type = next((ex for ex in NO_POSTMORTEM if isinstance(e, ex)), type(e))
     return {
-        "name": type(e).__module__ + "." + type(e).__name__ if type(e).__module__ else type(e).__name__,
+        "name": _type.__module__ + "." + _type.__name__ if _type.__module__ else _type.__name__,
         "debug": traceback.format_exc(),
         "message": ustr(e),
         "arguments": e.args,

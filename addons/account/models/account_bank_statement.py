@@ -405,9 +405,7 @@ class AccountBankStatement(models.Model):
 
         self._check_balance_end_real_same_as_computed()
 
-        for statement in self:
-            if not statement.name:
-                statement._set_next_sequence()
+        self.filtered(lambda s: not s.name)._set_next_sequence_batch(lambda s: s.journal_id)
 
         self.write({'state': 'posted'})
         self.line_ids.move_id._post(soft=False)
