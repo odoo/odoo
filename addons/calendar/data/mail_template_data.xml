@@ -11,26 +11,46 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="html">
 <div>
-    % set colors = ctx.get('colors', {})
-    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']
+    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
+    % set is_online = 'appointment_type_id' in object.event_id and object.event_id.appointment_type_id
+    % set customer = object.event_id.find_partner_customer()
+    % set target_responsible = object.partner_id == object.event_id.partner_id
+    % set target_customer = object.partner_id == customer
     <p>
         Hello ${object.common_name},<br/><br/>
-        ${object.event_id.user_id.partner_id.name} invited you to the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.
+
+        % if is_online and target_customer:
+        Your appointment <strong>${object.event_id.appointment_type_id.name}</strong> with ${object.event_id.user_id.name} has been booked.
+
+        % elif is_online and target_responsible:
+        % if customer
+        ${customer.name} scheduled the following appointment <strong>${object.event_id.appointment_type_id.name}</strong> with you.
+        % else
+        Your appointment <strong>${object.event_id.appointment_type_id.name}</strong> has been booked.
+        % endif
+
+        % elif not target_responsible:
+        ${object.event_id.user_id.partner_id.name} invited you for the <strong>${object.event_id.name}</strong> meeting.
+
+        % else:
+        Your meeting <strong>${object.event_id.name}</strong> has been booked.
+        % endif
     </p>
     <div style="text-align: center; margin: 16px 0px 16px 0px;">
-        % set target = 'recurrence' if recurrent else 'meeting'
-        <a href="/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
+        % if not is_online or object.state != 'accepted':
+        <a href="/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a href="/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
+        % endif
         <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
-            View</a>
+            ${'Reschedule' if is_online and target_customer else 'View'}
+        </a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
-        % if not recurrent:
         <td width="130px;">
             <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
                 ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
@@ -46,23 +66,34 @@
             </div>
         </td>
         <td width="20px;"/>
-        % endif
         <td style="padding-top: 5px;">
             <p><strong>Details of the event</strong></p>
             <ul>
+                % if is_online:
+                    <li>Appointment Type: ${object.event_id.appointment_type_id.name}</li>
+                % endif
                 % if object.event_id.location:
                     <li>Location: ${object.event_id.location}
                         (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
                     </li>
-                % endif
-                % if object.event_id.description :
-                    <li>Description: ${object.event_id.description}</li>
                 % endif
                 % if recurrent:
                     <li>When: ${object.recurrence_id.name}</li>
                 % endif
                 % if not object.event_id.allday and object.event_id.duration
                     <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
+                % endif
+                % if not is_online and object.event_id.description :
+                    <li>Description: ${object.event_id.description}</li>
+                % elif is_online and object.event_id.description:
+                    % set splitted_description = object.event_id.description_to_html_lines()
+                    <li>Description:
+                        <ul>
+                            % for description_line in splitted_description:
+                            <li>${description_line | safe}</li>
+                            % endfor
+                        </ul>
+                    </li>
                 % endif
                 <li>Attendees
                 <ul>
@@ -105,18 +136,38 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="html">
 <div>
-    % set colors = ctx.get('colors', {})
-    % set recurrent = object.recurrence_id and not ctx['ignore_recurrence']
+    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
+    % set is_online = 'appointment_type_id' in object.event_id and object.event_id.appointment_type_id
+    % set customer = object.event_id.find_partner_customer()
+    % set target_responsible = object.partner_id == object.event_id.partner_id
+    % set target_customer = object.partner_id == customer
     <p>
         Hello ${object.common_name},<br/><br/>
-        The date of the meeting has been updated. The meeting ${object.event_id.name} created by ${object.event_id.user_id.partner_id.name} is now scheduled for ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
+        % if is_online and target_responsible:
+        % if customer:
+        The date of your appointment with ${customer.name} has been updated.
+        % else
+        Your appointment has been updated.
+        % endif
+        The appointment <strong>${object.event_id.appointment_type_id.name}</strong> is now scheduled for
+        ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
+
+        % elif is_online and target_customer:
+        The date of your appointment with ${object.event_id.user_id.partner_id.name} has been updated.
+        The appointment <strong>${object.event_id.appointment_type_id.name}</strong> is now scheduled for
+        ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
+
+        % else:
+        The date of the meeting has been updated.
+        The meeting <strong>${object.event_id.name}</strong> created by ${object.event_id.user_id.partner_id.name} is now scheduled for
+        ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.
+        % endif
     </p>
     <div style="text-align: center; margin: 16px 0px 16px 0px;">
-        % set target = 'recurrence' if recurrent else 'meeting'
-        <a href="/calendar/${target}/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a href="/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/${target}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a href="/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
         <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}"
@@ -124,7 +175,6 @@
             View</a>
     </div>
     <table border="0" cellpadding="0" cellspacing="0"><tr>
-        % if not recurrent:
         <td width="130px;">
             <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
                 ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
@@ -140,7 +190,6 @@
             </div>
         </td>
         <td width="20px;"/>
-        % endif
         <td style="padding-top: 5px;">
             <p><strong>Details of the event</strong></p>
             <ul>
@@ -149,14 +198,23 @@
                         (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
                     </li>
                 % endif
-                % if object.event_id.description :
-                    <li>Description: ${object.event_id.description}</li>
-                % endif
                 % if recurrent:
                     <li>When: ${object.recurrence_id.name}</li>
                 % endif
                 % if not object.event_id.allday and object.event_id.duration
                     <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
+                % endif
+                % if not is_online and object.event_id.description :
+                    <li>Description: ${object.event_id.description}</li>
+                % elif is_online and object.event_id.description:
+                    % set splitted_description = object.event_id.description_to_html_lines()
+                    <li>Description:
+                        <ul>
+                            % for description_line in splitted_description:
+                            <li>${description_line | safe}</li>
+                            % endfor
+                        </ul>
+                    </li>
                 % endif
                 <li>Attendees
                 <ul>
@@ -199,21 +257,18 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="html">
 <div>
-    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}
-    <!--
-        In a recurring event case, the object.event_id is always the first event
-        This makes the event date (and a lot of other information) incorrect
-    -->
-    % set event_id = ctx.get('force_event_id') or object.event_id
+    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}
+    % set is_online = 'appointment_type_id' in object.event_id and object.event_id.appointment_type_id
+    % set recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')
     <p>
         Hello ${object.common_name},<br/><br/>
         This is a reminder for the below event :
     </p>
     <div style="text-align: center; margin: 16px 0px 16px 0px;">
-        <a href="/calendar/meeting/accept?token=${object.access_token}&amp;id=${object.event_id.id}" 
+        <a href="/calendar/${'recurrence' if recurrent else 'meeting'}/accept?token=${object.access_token}&amp;id=${object.event_id.id}" 
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Accept</a>
-        <a href="/calendar/meeting/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
+        <a href="/calendar/${'recurrence' if recurrent else 'meeting'}/decline?token=${object.access_token}&amp;id=${object.event_id.id}"
             style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
         <a href="/calendar/meeting/view?token=${object.access_token}&amp;id=${object.event_id.id}" 
@@ -223,16 +278,16 @@
     <table border="0" cellpadding="0" cellspacing="0"><tr>
         <td width="130px;">
             <div style="border-top-left-radius: 3px; border-top-right-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
-                ${event_id.get_interval('dayname', tz=object.partner_id.tz if not event_id.allday else None)}
+                ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}
             </div>
             <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
-                ${event_id.get_interval('day', tz=object.partner_id.tz if not event_id.allday else None)}
+                ${object.event_id.get_interval('day', tz=object.partner_id.tz if not object.event_id.allday else None)}
             </div>
             <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
-                ${event_id.get_interval('month', tz=object.partner_id.tz if not event_id.allday else None)}
+                ${object.event_id.get_interval('month', tz=object.partner_id.tz if not object.event_id.allday else None)}
             </div>
             <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-right-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-left-radius: 3px;">
-                ${not event_id.allday and event_id.get_interval('time', tz=object.partner_id.tz) or ''}
+                ${not object.event_id.allday and object.event_id.get_interval('time', tz=object.partner_id.tz) or ''}
             </div>
         </td>
         <td width="20px;"/>
@@ -244,11 +299,23 @@
                         (<a target="_blank" href="http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}">View Map</a>)
                     </li>
                 % endif
-                % if object.event_id.description :
-                    <li>Description: ${object.event_id.description}</li>
+                % if recurrent:
+                    <li>When: ${object.recurrence_id.name}</li>
                 % endif
                 % if not object.event_id.allday and object.event_id.duration
-                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>
+                    <li>Duration: ${('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60))}</li>
+                % endif
+                % if not is_online and object.event_id.description :
+                    <li>Description: ${object.event_id.description}</li>
+                % elif is_online and object.event_id.description:
+                    % set splitted_description = object.event_id.description_to_html_lines()
+                    <li>Description:
+                        <ul>
+                            % for description_line in splitted_description:
+                            <li>${description_line | safe}</li>
+                            % endfor
+                        </ul>
+                    </li>
                 % endif
                 <li>Attendees
                 <ul>

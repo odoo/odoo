@@ -9,11 +9,11 @@ class Attendee(models.Model):
     _name = 'calendar.attendee'
     _inherit = 'calendar.attendee'
 
-    def _send_mail_to_attendees(self, template_xmlid, force_send=False, ignore_recurrence=False):
+    def _send_mail_to_attendees(self, template_xmlid, force_send=False):
         """ Override
         If not synced with Google, let Odoo in charge of sending emails
         Otherwise, nothing to do: Google will send them
         """
         with google_calendar_token(self.env.user.sudo()) as token:
             if not token:
-                super()._send_mail_to_attendees(template_xmlid, force_send, ignore_recurrence)
+                super()._send_mail_to_attendees(template_xmlid, force_send)
