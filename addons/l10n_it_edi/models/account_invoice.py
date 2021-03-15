@@ -149,9 +149,8 @@ class AccountMove(models.Model):
             'type': 'binary',
             })
 
-        self.message_post(
-            body=(_("E-Invoice is generated on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
-        )
+        self._message_log_text(_("E-Invoice is generated on %s by %s") % (fields.Datetime.now(),
+                                                                          self.env.user.display_name))
         return {'attachment': attachment}
 
     def _export_as_xml(self):
@@ -270,9 +269,8 @@ class AccountMove(models.Model):
             or not self.company_id.l10n_it_mail_pec_server_id.active
             or not self.company_id.l10n_it_address_send_fatturapa
         ):
-            self.message_post(
-                body=(_("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
-                )
+            self._message_log_text(
+                    _("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
             self.l10n_it_send_state = 'invalid'
             return
 

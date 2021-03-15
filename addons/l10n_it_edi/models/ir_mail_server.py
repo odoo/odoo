@@ -221,9 +221,7 @@ class FetchmailServer(models.Model):
                 return
             related_invoice.l10n_it_send_state = 'delivered'
             info = self._return_multi_line_xml(tree, ['//IdentificativoSdI', '//DataOraRicezione', '//DataOraConsegna', '//Note'])
-            related_invoice.message_post(
-                body=(_("E-Invoice is delivery to the destinatory:<br/>%s") % (info))
-            )
+            related_invoice._message_log_html("%s <br/>%s", (_("E-Invoice is delivery to the destinatory:"), info))
 
         elif receipt_type == 'NS':
             # Rejection notice

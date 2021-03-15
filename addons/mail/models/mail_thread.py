@@ -1985,14 +1985,14 @@ class MailThread(models.AbstractModel):
         MailThread._notify_thread(new_message, values, **notif_kwargs)
         return new_message
 
-    def _msg_txt(self, txt):
+    def _message_log_text(self, text):
         """
         Puts a message in the chatter without HTML formatting, so escaping the message
         :param txt: The text without html code in it
         """
-        return self._message_log(body=html_escape(txt))
+        return self._message_log(body=html_escape(text))
 
-    def _msg_html(self, html_code, txts):
+    def _message_log_html(self, html_code, txts, attachments=[]):
         """
         e.g.: html_code = "<b>%s</b> <br/> <p>%s</p>
             and txts = ["Title", "Some <rigorous> explanation"]

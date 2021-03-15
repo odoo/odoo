@@ -57,9 +57,8 @@ class AccountEdiFormat(models.Model):
         invoice._check_before_xml_exporting()
         res = invoice.invoice_generate_xml()
         if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
-            invoice.message_post(
-                body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
-            )
+            invoice._message_log_text(
+                _("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
         else:
             invoice.l10n_it_send_state = 'to_send'
         return {invoice: res}
@@ -84,10 +83,7 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         if self._is_fattura_pa(filename, tree):
             if len(tree.xpath('//FatturaElettronicaBody')) > 1:
-                invoice.message_post(body='The attachment contains multiple invoices, this invoice was not updated from it.',
-                                     message_type='comment',
-                                     subtype_xmlid='mail.mt_note',
-                                     author_id=self.env.ref('base.partner_root').id)
+                invoice._message_log_text(_('The attachment contains multiple invoices, this invoice was not updated from it.'))
             else:
                 return self._import_fattura_pa(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)

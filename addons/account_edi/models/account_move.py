@@ -244,7 +244,7 @@ class AccountMove(models.Model):
                     to_cancel_documents |= doc
                     is_move_marked = True
             if is_move_marked:
-                move.message_post(body=_("A cancellation of the EDI has been requested."))
+                move._message_log_text(_("A cancellation of the EDI has been requested."))
 
         to_cancel_documents.write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
 
@@ -261,7 +261,7 @@ class AccountMove(models.Model):
                     documents |= doc
                     is_move_marked = True
             if is_move_marked:
-                move.message_post(body=_("A request for cancellation of the EDI has been called off."))
+                move._message_log_text(_("A request for cancellation of the EDI has been called off."))
 
         documents.write({'state': 'sent'})
 
