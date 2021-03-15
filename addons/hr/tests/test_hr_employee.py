@@ -3,6 +3,9 @@
 
 from odoo.tests import Form
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.fields import Datetime as FieldsDatetime
+from datetime import datetime
+from unittest.mock import patch
 
 
 class TestHrEmployee(TestHrCommon):
@@ -45,3 +48,26 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee.name, 'Raoul Grosbedon')
         self.assertEqual(employee.work_email, self.res_users_hr_officer.email)
         self.assertEqual(employee.tz, _tz)
+
+    def test_employee_working_now(self):
+        #arrange
+        _tz = 'Europe/Brussels'
+        self.calendar_jean = self.env['resource.calendar'].create({
+            'name': '8h on Mon',
+            'tz': 'Europe/Brussels',
+            'attendance_ids': [
+                (0, 0, {
+                    'name': '8h_on_Mon_0',
+                    'hour_from': 8,
+                    'hour_to': 16,
+                    'dayofweek': '0'
+                })
+            ]
+        })
+        with patch('odoo.fields.datetime', wraps=FieldsDatetime) as mock_datetime:
+            mock_datetime.now.return_value = datetime(2021, 3, 15, 9, 30, 28) #Monday 09:30
+            # act
+            Employee = self.env['hr.employee'].with_user(self.res_users_hr_officer)
+            result = Employee._get_employee_working_now()
+            #assert
+            self.assertEqual(result, True)
