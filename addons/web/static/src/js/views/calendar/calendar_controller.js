@@ -254,8 +254,9 @@ var CalendarController = AbstractController.extend({
                 method: 'search',
                 args: [domain],
             });
-            let val = {};
-            val[event.target.filter_field] = event.data.active;
+            let val = {
+                [event.target.filter_field]: event.data.active,
+            };
             await this._rpc({
                 model: event.target.write_model,
                 method: 'write',

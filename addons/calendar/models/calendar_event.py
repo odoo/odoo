@@ -119,6 +119,9 @@ class Meeting(models.Model):
         that period of time.")
     is_highlighted = fields.Boolean(
         compute='_compute_is_highlighted', string='Is the Event Highlighted')
+    is_organizer_alone = fields.Boolean(compute='_compute_is_organizer_alone', string="Is the Organizer Alone",
+        help="""Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined
+        the event (only if the organizer is not the only attendee)""")
     # filtering
     active = fields.Boolean(
         'Active', default=True,
@@ -222,6 +225,20 @@ class Meeting(models.Model):
             for event in self:
                 event.is_highlighted = False
 
+    @api.depends('partner_id', 'attendee_ids')
+    def _compute_is_organizer_alone(self):
+        """
+            Check if the organizer of the event is the only one who has accepted the event.
+            It does not apply if the organizer is the only attendee of the event because it
+            would represent a personnal event.
+            The goal of this field is to highlight to the user that the others attendees are
+            not available for this event.
+        """
+        for event in self:
+            organizer = event.attendee_ids.filtered(lambda a: a.partner_id == event.partner_id)
+            all_declined = not any((event.attendee_ids - organizer).filtered(lambda a: a.state != 'declined'))
+            event.is_organizer_alone = len(event.attendee_ids) > 1 and all_declined
+
     def _compute_display_time(self):
         for meeting in self:
             meeting.display_time = self._get_display_time(meeting.start, meeting.stop, meeting.duration, meeting.allday)
@@ -287,11 +304,7 @@ class Meeting(models.Model):
 
     def _compute_attendee(self):
         for meeting in self:
-            attendee = next(
-                (attendee for attendee in self.attendee_ids
-                 if attendee.partner_id == self.env.user.partner_id),
-                self.env['calendar.attendee']
-            )
+            attendee = meeting._find_attendee()
             meeting.attendee_status = attendee.state if attendee else 'needsAction'
 
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
@@ -364,8 +377,10 @@ class Meeting(models.Model):
                                 activity_vals['user_id'] = user_id
                             values['activity_ids'] = [(0, 0, activity_vals)]
 
+        # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
+        self_partner_id = [(4, self.env.user.partner_id.id)]
         vals_list = [
-            dict(vals, attendee_ids=self._attendees_values(vals['partner_ids'])) if 'partner_ids' in vals else vals
+            dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', self_partner_id)))
             for vals in vals_list
         ]
         recurrence_fields = self._get_recurrent_fields()
@@ -746,6 +761,28 @@ class Meeting(models.Model):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
+
+    def _find_attendee(self):
+        """ Return the first attendee where the user connected has been invited
+            or the attendee selected in the filter that is the owner
+            from all the meeting_ids in parameters.
+        """
+        self.ensure_one()
+
+        my_attendee = self.attendee_ids.filtered(lambda att: att.partner_id == self.env.user.partner_id)
+        if my_attendee:
+            return my_attendee
+
+        event_checked_attendees = self.env['calendar.contacts'].search([
+            ('user_id', '=', self.env.user.id),
+            ('partner_id', 'in', self.attendee_ids.partner_id.ids),
+            ('partner_checked', '=', True)
+        ]).mapped('partner_id')
+        if self.partner_id in event_checked_attendees and self.partner_id in self.attendee_ids.partner_id:
+            return self.attendee_ids.filtered(lambda attendee: attendee.partner_id == self.partner_id)
+
+        attendee = self.attendee_ids.filtered(lambda att: att.partner_id in event_checked_attendees and att.state != "needsAction")
+        return attendee
 
     def _get_start_date(self):
         """Return the event starting date in the event's timezone.
