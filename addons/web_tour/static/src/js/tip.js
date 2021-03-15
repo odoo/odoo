@@ -57,12 +57,15 @@ var Tip = Widget.extend({
      * Attaches the tip to the provided $anchor and $altAnchor.
      * $altAnchor is an alternative trigger that can consume the step. The tip is
      * however only displayed on the $anchor.
+     * 
+     * Note that the returned promise stays pending if the Tip widget was
+     * destroyed in the meantime.
      *
      * @param {jQuery} $anchor the node on which the tip should be placed
      * @param {jQuery} $altAnchor an alternative node that can consume the step
      * @return {Promise}
      */
-    attach_to: function ($anchor, $altAnchor) {
+    attach_to: async function ($anchor, $altAnchor) {
         this._setupAnchor($anchor, $altAnchor);
 
         this.is_anchor_fixed_position = this.$anchor.css("position") === "fixed";
@@ -70,7 +73,10 @@ var Tip = Widget.extend({
         // The body never needs to have the o_tooltip_parent class. It is a
         // safe place to put the tip in the DOM at initialization and be able
         // to compute its dimensions and reposition it if required.
-        return this.appendTo(document.body);
+        await this.appendTo(document.body);
+        if (this.isDestroyed()) {
+            return new Promise(() => {});
+        }
     },
     start() {
         this.$tooltip_overlay = this.$(".o_tooltip_overlay");
@@ -132,8 +138,12 @@ var Tip = Widget.extend({
                 $el.removeClass("o_tooltip_parent");
             }
         };
-        _removeParentClass(this.$ideal_location);
-        _removeParentClass(this.$furtherIdealLocation);
+        if (this.$el && this.$ideal_location) {
+            _removeParentClass(this.$ideal_location);
+        }
+        if (this.$el && this.$furtherIdealLocation) {
+            _removeParentClass(this.$furtherIdealLocation);
+        }
 
         return this._super.apply(this, arguments);
     },
@@ -393,9 +403,15 @@ var Tip = Widget.extend({
         return $consumeEventAnchors;
     },
     _unbind_anchor_events: function () {
-        this.$anchor.off(".anchor");
-        this.$consumeEventAnchors.off(".anchor");
-        this.$scrolableElement.off('.Tip');
+        if (this.$anchor) {
+            this.$anchor.off(".anchor");
+        }
+        if (this.$consumeEventAnchors) {
+            this.$consumeEventAnchors.off(".anchor");
+        }
+        if (this.$scrolableElement) {
+            this.$scrolableElement.off('.Tip');
+        }
     },
     _get_spaced_inverted_position: function (position) {
         if (position === "right") return "left+" + this.info.space;
