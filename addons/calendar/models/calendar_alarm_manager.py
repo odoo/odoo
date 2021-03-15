@@ -167,10 +167,9 @@ class AlarmManager(models.AbstractModel):
         # Executed via cron
         events = self._get_events_to_notify('email')
         attendees = events.attendee_ids.filtered(lambda a: a.state != 'declined')
-        attendees._send_mail_to_attendees(
+        attendees.with_context(calendar_template_ignore_recurrence=True)._send_mail_to_attendees(
             'calendar.calendar_template_meeting_reminder',
             force_send=True,
-            ignore_recurrence=True,
         )
 
     @api.model
