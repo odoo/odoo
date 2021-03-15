@@ -25,7 +25,7 @@ odoo.define('sale.SaleOrderView', function (require) {
          *  (3) Discount is the same in all sale order line
          */
         _onOpenDiscountWizard(ev) {
-            const orderLines = this.renderer.state.data.order_line.data;
+            const orderLines = this.renderer.state.data.order_line.data.filter(line => !line.data.display_type);
             const recordData = ev.target.recordData;
             const isEqualDiscount = orderLines.slice(1).every(line => line.data.discount === recordData.discount);
             if (orderLines.length >= 3 && recordData.sequence === orderLines[0].data.sequence && isEqualDiscount) {
