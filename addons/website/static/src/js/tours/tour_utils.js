@@ -1,4 +1,4 @@
-odoo.define("website.tour_utils", function (require) {
+odoo.define("website.tour_utils", async function (require) {
 "use strict";
 
 const core = require("web.core");
@@ -254,13 +254,6 @@ function prepend_trigger(steps, prepend_text = '') {
     return steps;
 }
 
-// TODO: use a generic tour when survey has been completed
-function getSurveyTourSteps() {
-    return [
-        clickOnSave(),
-    ];
-}
-
 const snippets = [
     {
         id: 's_cover',
@@ -317,8 +310,8 @@ const theme_snippets = {
     'odoo_experts_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[7] },
     'real_estate_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[7] },
     'zap_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[5] },
-    'avantgarde_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[1] },
     'bookstore_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[6] },
+    'avantgarde_tour': { title: { snippet: snippets[3], element: 'h2' }, image: snippets[1] },
     'nano_tour': { title: { snippet: snippets[3], element: 'h2' }, image: snippets[7] },
     'yes_tour': { title: { snippet: snippets[3], element: 'h2' }, image: snippets[6] },
     'notes_tour': { title: { snippet: snippets[3], element: 'h2' }, image: snippets[7] },
@@ -335,22 +328,22 @@ function getSurveyTourSteps(name) {
     ]
 }
 
+const surveyState = await rpc.query({
+    model: 'website',
+    method: 'get_survey_state',
+});
+
 function registerThemeHomepageTour(name, steps) {
-    return rpc.query({
-        model: 'website',
-        method: 'get_survey_state',
-    }).then((surveyState) => {
-        const tourSteps = surveyState === 'done' ? getSurveyTourSteps(name) : steps;
-        if(tourSteps.length)
-            tour.register(name, {
-                url: "/?enable_editor=1",
-                sequence: 1010,
-                saveAs: "homepage",
-            }, prepend_trigger(
-                tourSteps,
-                "html[data-view-xmlid='website.homepage'] "
-            ));
-    });
+    const tourSteps = surveyState === 'done' ? getSurveyTourSteps(name) : steps;
+    if(tourSteps.length > 0)
+        tour.register(name, {
+            url: "/?enable_editor=1",
+            sequence: 1010,
+            saveAs: "homepage",
+        }, prepend_trigger(
+            tourSteps,
+            "html[data-view-xmlid='website.homepage'] "
+        ));
 }
 
 return {
