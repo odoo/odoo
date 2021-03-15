@@ -176,10 +176,6 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
 
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
-    # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
-    src = src.replace(u'<%', misc.html_escape(u'<%'))
-    src = src.replace(u'%>', misc.html_escape(u'%>'))
-
     kwargs = {
         'page_structure': True,
         'style': strip_style,              # True = remove style tags/attrs
@@ -228,8 +224,6 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace(u'%5B', u'[')
         cleaned = cleaned.replace(u'%5D', u']')
         cleaned = cleaned.replace(u'%7C', u'|')
-        cleaned = cleaned.replace(u'&lt;%', u'<%')
-        cleaned = cleaned.replace(u'%&gt;', u'%>')
         # html considerations so real html content match database value
         cleaned.replace(u'\xa0', u'&nbsp;')
     except etree.ParserError as e:
