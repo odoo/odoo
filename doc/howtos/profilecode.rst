@@ -10,7 +10,7 @@ Profiling Odoo code
 Graph a method
 ==============
 
-Odoo embeds a profiler of code. This embeded profiler output can be used to
+Odoo embeds a profiler of code. This embedded profiler output can be used to
 generate a graph of calls triggered by the method, number of queries, percentage
 of time taken in the method itself as well as the time that the method took and
 its sub-called methods.
