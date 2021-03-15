@@ -2392,6 +2392,7 @@ class AccountMove(models.Model):
             to_post = self - future_moves
         else:
             to_post = self
+        self.env['redirect.wizard'].check_confirm("Are you sure about that?")
 
         # `user_has_group` won't be bypassed by `sudo()` since it doesn't change the user anymore.
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
@@ -2500,6 +2501,7 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
+        self.env['redirect.wizard'].check_confirm("Check pls")
         self._post(soft=False)
         return False
 

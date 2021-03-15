@@ -61,6 +61,11 @@ class RedirectWarning(Exception):
             DeprecationWarning)
         return self.args[0]
 
+class RedirectWarning2(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        self.args = args
+        self.kwargs = kwargs
 
 class AccessDenied(UserError):
     """Login/password error.

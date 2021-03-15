@@ -112,6 +112,7 @@ NO_POSTMORTEM = (
     odoo.exceptions.AccessDenied,
     odoo.exceptions.ValidationError,
     odoo.exceptions.UserError,
+    odoo.exceptions.RedirectWarning2,
 )
 
 
@@ -654,6 +655,13 @@ class JsonRequest(WebRequest):
                 'message': "Odoo Server Error",
                 'data': serialize_exception(exception),
             }
+            if isinstance(exception, odoo.exceptions.RedirectWarning2):
+                env = odoo.api.Environment(request.cr, self.uid, self.context)
+                error['redirect_action'] = json.dumps(env['redirect.wizard'].redirect(
+                    *exception.args,
+                    **exception.kwargs,
+                ))
+                env.cr.commit()
             if isinstance(exception, werkzeug.exceptions.NotFound):
                 error['http_status'] = 404
                 error['code'] = 404

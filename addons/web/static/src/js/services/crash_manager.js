@@ -262,6 +262,10 @@ var CrashManager = AbstractService.extend({
         }
 
         let options = {};
+        if (error.redirect_action) {
+            this.do_action(JSON.parse(error.redirect_action));
+            return;
+        }
         if (error.record_ids) {
             options.buttons = [
                 {text: _t("Open"), classes : "btn-primary", click: function() {
