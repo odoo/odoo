@@ -126,7 +126,7 @@ var FormViewDialog = ViewDialog.extend({
                     text: options.save_text || (multi_select ? _t("Save & Close") : _t("Save")),
                     classes: "btn-primary",
                     click: function () {
-                        self._save().then(self.close.bind(self));
+                        this._save().then(this.close.bind(this));
                     }
                 });
 

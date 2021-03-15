@@ -74,7 +74,7 @@
                         Milestones
                     </div>
                     <span class="o_rightpanel_button">
-                        <a t-on-click="onAddMilestoneClick">Add Milestone</a>
+                        <AddMilestone context="context"/>
                     </span>
                 </div>
                 <div class="o_rightpanel_data">
@@ -87,6 +87,24 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </t>
+
+    <t t-name="project.AddMilestone" owl="1">
+        <div class="brol">
+            <a t-on-click="onAddMilestoneClick">Add Milestone</a>
+            <FormViewDialogComponentAdapter
+                Component="FormViewDialog"
+                params="{
+                    context: context,
+                    on_saved: _onDialogSaved,
+                    res_id: false,
+                    res_model: 'project.milestone',
+                    title: NEW_PROJECT_MILESTONE,
+                    disable_multiple_selection: true,
+                }"
+                t-ref="dialog"
+            />
         </div>
     </t>
 
