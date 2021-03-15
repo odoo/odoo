@@ -40,12 +40,12 @@ try:
     # Python code that may break the security of the server.
     from jinja2.sandbox import SandboxedEnvironment
     jinja_template_env = SandboxedEnvironment(
-        block_start_string="<%",
-        block_end_string="%>",
+        block_start_string="{%",
+        block_end_string="%}",
         variable_start_string="${",
         variable_end_string="}",
-        comment_start_string="<%doc>",
-        comment_end_string="</%doc>",
+        comment_start_string="{#",
+        comment_end_string="#}",
         line_statement_prefix="%",
         line_comment_prefix="##",
         trim_blocks=True,               # do not output newline after blocks

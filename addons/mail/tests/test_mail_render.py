@@ -131,7 +131,7 @@ class TestMailRender(common.MailCommon):
         source = """<p>
 % set line_statement_variable = 3
 <span>We have ${line_statement_variable} cookies in stock</span>
-<span>We have <% set block_variable = 4 %>${block_variable} cookies in stock</span>
+<span>We have {% set block_variable = 4 %}${block_variable} cookies in stock</span>
 </p>"""
         partner = self.env['res.partner'].browse(self.render_object.ids)
         result = self.env['mail.render.mixin']._render_template(
