@@ -5,7 +5,8 @@ const core = require("web.core");
 const _t = core._t;
 
 var tour = require("web_tour.tour");
-var rpc = require('web.rpc');
+const rpc = require('web.rpc');
+
 /**
 
 const snippets = [
@@ -244,7 +245,7 @@ function selectSnippetColumn(snippet, index = 0, position = "bottom") {
     };
 }
 
-function prepend_trigger(steps, prepend_text='') {
+function prepend_trigger(steps, prepend_text = '') {
     for (const step of steps) {
         if (!step.noPrepend && prepend_text) {
             step.trigger = prepend_text + step.trigger;
@@ -256,28 +257,101 @@ function prepend_trigger(steps, prepend_text='') {
 // TODO: use a generic tour when survey has been completed
 function getSurveyTourSteps() {
     return [
-        goBackToBlocks(),
-        goToOptions(),
+        clickOnSave(),
     ];
 }
 
-async function registerThemeHomepageTour(name, steps) {
-    await rpc.query({
+const snippets = [
+    {
+        id: 's_cover',
+        name: 'Cover',
+    },
+    {
+        id: 's_text_image',
+        name: 'Text - Image',
+    },
+    {
+        id: 's_banner',
+        name: 'Banner',
+    },
+    {
+        id: 's_carousel',
+        name: 'Carousel',
+    },
+    {
+        id: 's_images_wall',
+        name: 'Images Wall',
+    },
+    {
+        id: 's_masonry_block',
+        name: 'Masonry',
+    },
+    {
+        id: 's_picture',
+        name: 'Picture',
+    },
+    {
+        id: 's_text_image',
+        name: 'Image - Text',
+    },
+];
+
+const theme_snippets = {
+    'anelusia_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[4] },
+    'beauty_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[1] },
+    'monglia_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[1] },
+    'bewise_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[1] },
+    'bistro_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[7] },
+    'clean_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[1] },
+    'graphene_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[1] },
+    'kea_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[6] },
+    'loftspace_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[6] },
+    'orchid_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[7] },
+    'treehouse_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[7] },
+    'vehicle_tour': { title: { snippet: snippets[0], element: 'h1' }, image: snippets[1] },
+    'paptic_tour': { title: { snippet: snippets[1], element: 'h2' }, image: snippets[7] },
+    'cobalt_tour': { title: { snippet: snippets[1], element: 'h2' }, image: snippets[7] },
+    'artists_tour': { title: { snippet: snippets[1], element: 'h2' }, image: snippets[1] },
+    'enark_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[1] },
+    'kiddo_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[7] },
+    'odoo_experts_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[7] },
+    'real_estate_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[7] },
+    'zap_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[5] },
+    'avantgarde_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[1] },
+    'bookstore_tour': { title: { snippet: snippets[2], element: 'h1' }, image: snippets[6] },
+    'nano_tour': { title: { snippet: snippets[3], element: 'h2' }, image: snippets[7] },
+    'yes_tour': { title: { snippet: snippets[3], element: 'h2' }, image: snippets[6] },
+    'notes_tour': { title: { snippet: snippets[3], element: 'h2' }, image: snippets[7] },
+};
+
+function getSurveyTourSteps(name) {
+    const { title = undefined, image = undefined } = theme_snippets[name] || {};
+    return !title ? [] : [
+        clickOnText(title.snippet, title.element),
+        goToOptions(),
+        changeBackgroundColor(),
+        changeImage(image),
+        clickOnSave(),
+    ]
+}
+
+function registerThemeHomepageTour(name, steps) {
+    return rpc.query({
         model: 'website',
         method: 'get_survey_state',
     }).then((surveyState) => {
-        const tourSteps = surveyState === 'done' ? getSurveyTourSteps() : steps;
-        tour.register(name, {
-            url: "/?enable_editor=1",
-            sequence: 1010,
-            saveAs: "homepage",
-        }, prepend_trigger(
-            tourSteps,
-            "html[data-view-xmlid='website.homepage'] "
-        ));
+        const tourSteps = surveyState === 'done' ? getSurveyTourSteps(name) : steps;
+        if(tourSteps.length)
+            tour.register(name, {
+                url: "/?enable_editor=1",
+                sequence: 1010,
+                saveAs: "homepage",
+            }, prepend_trigger(
+                tourSteps,
+                "html[data-view-xmlid='website.homepage'] "
+            ));
     });
 }
-
 
 return {
     addMedia,
