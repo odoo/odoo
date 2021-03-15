@@ -139,9 +139,32 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.lead_team_1_lost.action_set_lost()
         (cls.lead_team_1_won | cls.lead_team_1_lost).flush()
 
+        # email / phone data
+        cls.test_email_data = [
+            '"Planet Express" <planet.express@test.example.com>',
+            '"Philip, J. Fry" <philip.j.fry@test.example.com>',
+            '"Turanga Leela" <turanga.leela@test.example.com>',
+        ]
+        cls.test_email_data_normalized = [
+            'planet.express@test.example.com',
+            'philip.j.fry@test.example.com',
+            'turanga.leela@test.example.com',
+        ]
+        cls.test_pĥone_data = [
+            '+1 202 555 0122',  # formatted US number
+            '202 555 0999',  # local US number
+            '202 555 0888',  # local US number
+        ]
+        cls.test_pĥone_data_sanitized = [
+            '+12025550122',
+            '+12025550999',
+            '+12025550888',
+        ]
+
+        # create some test contact and companies
         cls.contact_company_1 = cls.env['res.partner'].create({
             'name': 'Planet Express',
-            'email': 'planet.express@test.example.com',
+            'email': cls.test_email_data[0],
             'is_company': True,
             'street': '57th Street',
             'city': 'New New York',
@@ -150,8 +173,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
         cls.contact_1 = cls.env['res.partner'].create({
             'name': 'Philip J Fry',
-            'email': 'philip.j.fry@test.example.com',
-            'mobile': '+1 202 555 0122',
+            'email': cls.test_email_data[1],
+            'mobile': cls.test_pĥone_data[0],
             'title': cls.env.ref('base.res_partner_title_mister').id,
             'function': 'Delivery Boy',
             'phone': False,
@@ -164,13 +187,14 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
         cls.contact_2 = cls.env['res.partner'].create({
             'name': 'Turanga Leela',
-            'email': 'turanga.leela@test.example.com',
+            'email': cls.test_email_data[2],
+            'mobile': cls.test_pĥone_data[1],
+            'phone': cls.test_pĥone_data[2],
             'parent_id': False,
             'is_company': False,
             'street': 'Cookieville Minimum-Security Orphanarium',
             'city': 'New New York',
             'country_id': cls.env.ref('base.us').id,
-            'mobile': '+1 202 555 0999',
             'zip': '97648',
         })
 
