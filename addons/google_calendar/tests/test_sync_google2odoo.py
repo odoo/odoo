@@ -54,6 +54,57 @@ class TestSyncGoogle2Odoo(SavepointCase):
         self.assertEqual(event.partner_ids, event.attendee_ids.partner_id)
         self.assertEqual('needsAction', admin_attendee.state)
 
+    def test_invalid_owner_property(self):
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'extendedProperties': {
+                'shared':  {'%s_owner_id' % self.env.cr.dbname: "invalid owner id"}
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertEqual(event.user_id, self.env.user)
+
+    def test_valid_owner_property(self):
+        user = new_test_user(self.env, login='calendar-user')
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'extendedProperties': {
+                'shared':  {'%s_owner_id' % self.env.cr.dbname: str(user.id)}
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertEqual(event.user_id, user)
+
     def test_cancelled(self):
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
