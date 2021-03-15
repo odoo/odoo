@@ -179,7 +179,7 @@ QUnit.module('HR Attendance', {
         assert.strictEqual(clientActions.length, 3, 'Number of clientActions must = 3.');
         assert.strictEqual(rpcCount, 2, 'RPC call should have been done only twice.');
 
-        _.each(clientActions, function(clientAction) {
+        _.each(clientActions.reverse(), function(clientAction) {
             clientAction.destroy();
         });
     });
