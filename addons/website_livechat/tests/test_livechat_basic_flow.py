@@ -47,6 +47,12 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         # Remove livechat_username
         self.operator.livechat_username = False
 
+        # This fixes an issue in the controller, possibly related to the testing
+        # environment.  The business code unexpectedly uses two cache objects
+        # (env.cache), which triggers cache misses: a field is computed with its
+        # value stored into one cache and retrieved from another cache :-/
+        self.operator.name
+
         # Open a new live chat
         res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
