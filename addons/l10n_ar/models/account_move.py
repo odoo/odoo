@@ -250,25 +250,22 @@ class AccountMove(models.Model):
                 'other_perc_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '09' and r.tax_line_id.tax_group_id != profits_tax_group).mapped(amount_field)),
                 }
 
-    def _get_vat(self, company_currency=False):
+    def _get_vat(self):
         """ Applies on wsfe web service and in the VAT digital books """
-        amount_field = company_currency and 'balance' or 'price_subtotal'
-        # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
-        sign = -1 if (company_currency and self.is_inbound()) else 1
         res = []
         vat_taxable = self.env['account.move.line']
         # get all invoice lines that are vat taxable
         for line in self.line_ids:
-            if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line[amount_field]:
+            if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line['price_subtotal']:
                 vat_taxable |= line
         for vat in vat_taxable:
-            base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)).mapped(amount_field))
+            base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)).mapped('price_subtotal'))
             res += [{'Id': vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code,
-                     'BaseImp': sign * base_imp,
-                     'Importe': sign * vat[amount_field]}]
+                     'BaseImp': base_imp,
+                     'Importe': vat['price_subtotal']}]
 
         # Report vat 0%
-        vat_base_0 = sign * sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped(amount_field))
+        vat_base_0 = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped('price_subtotal'))
         if vat_base_0:
             res += [{'Id': '3', 'BaseImp': vat_base_0, 'Importe': 0.0}]
 
