@@ -93,7 +93,7 @@ class ResPartner(models.Model):
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
             'account_token': account.account_token,
             'country_code': self.env.company.country_id.code,
-            'zip': self.env.company.zip,
+            'zip': self.sudo().env.company.zip,
         })
         try:
             return jsonrpc(url=url, params=params, timeout=timeout), False
