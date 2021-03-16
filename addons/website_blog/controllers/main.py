@@ -298,14 +298,3 @@ class WebsiteBlog(http.Controller):
         """
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
         return werkzeug.utils.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
-
-    @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
-    def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
-        dom = expression.AND([
-            [('website_published', '=', True), ('post_date', '<=', fields.Datetime.now())],
-            request.website.website_domain()
-        ])
-        if domain:
-            dom = expression.AND([dom, domain])
-        posts = request.env['blog.post'].search(dom, limit=limit, order=order)
-        return request.website.viewref(template)._render({'posts': posts})
