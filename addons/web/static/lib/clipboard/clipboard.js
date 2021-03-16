@@ -227,8 +227,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     this.fakeHandlerCallback = null;
                 }
 
-                if (this.fakeElem) {
-                    this.container.removeChild(this.fakeElem);
+                if (this.fakeElem && this.fakeElem.parentNode) {
+                    this.fakeElem.parentNode.removeChild(this.fakeElem);
                     this.fakeElem = null;
                 }
             }
