@@ -150,31 +150,40 @@ class MetaModel(api.Meta):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
     """
-
     module_to_models = defaultdict(list)
 
     def __new__(meta, name, bases, attrs):
+        # this prevents assignment of non-fields on recordsets
         attrs.setdefault('__slots__', ())
+        # this collects the fields defined on the class (via Field.__set_name__())
+        attrs.setdefault('_field_definitions', [])
+
+        if attrs.get('_register', True):
+            # determine '_module'
+            if '_module' not in attrs:
+                module = attrs['__module__']
+                assert module.startswith('odoo.addons.'), \
+                    f"Invalid import of {module}.{name}, it should start with 'odoo.addons'."
+                attrs['_module'] = module.split('.')[2]
+
+            # determine model '_name' and normalize '_inherits'
+            inherit = attrs.get('_inherit', ())
+            if isinstance(inherit, str):
+                inherit = attrs['_inherit'] = [inherit]
+            if '_name' not in attrs:
+                attrs['_name'] = inherit[0] if len(inherit) == 1 else name
+
         return super().__new__(meta, name, bases, attrs)
 
     def __init__(self, name, bases, attrs):
-        if not self._register:
-            self._register = True
-            super(MetaModel, self).__init__(name, bases, attrs)
-            return
+        super().__init__(name, bases, attrs)
 
-        if not hasattr(self, '_module'):
-            assert self.__module__.startswith('odoo.addons.'), \
-                "Invalid import of %s.%s, it should start with 'odoo.addons'." % (self.__module__, name)
-            self._module = self.__module__.split('.')[2]
+        if not attrs.get('_register', True):
+            return
 
         # Remember which models to instantiate for this module.
         if self._module:
             self.module_to_models[self._module].append(self)
-
-        for key, val in attrs.items():
-            if isinstance(val, Field):
-                val.args['_module'] = self._module
 
 
 class NewId(object):
@@ -354,7 +363,7 @@ def is_registry_class(cls):
     return getattr(cls, 'pool', None) is not None
 
 
-class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
+class BaseModel(metaclass=MetaModel):
     """Base class for Odoo models.
 
     Odoo models are created by inheriting one of the following:
@@ -409,9 +418,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     _name = None                #: the model name (in dot-notation, module namespace)
     _description = None         #: the model's informal name
+    _module = None              #: the model's module (in the Odoo sense)
     _custom = False             #: should be True for custom models only
 
-    _inherit = None
+    _inherit = ()
     """Python-inherited models:
 
     :type: str or list(str)
@@ -501,6 +511,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
         setattr(cls, name, field)
+        field.__set_name__(cls, name)
         cls._fields[name] = field
 
         # basic setup of field
@@ -604,16 +615,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # instance when exporting translations
         cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
-        # determine inherited models
-        parents = cls._inherit
-        parents = [parents] if isinstance(parents, str) else (parents or [])
-
-        # determine the model's name
-        name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
-
         # all models except 'base' implicitly inherit from 'base'
+        name = cls._name
+        parents = list(cls._inherit)
         if name != 'base':
-            parents = list(parents) + ['base']
+            parents.append('base')
 
         # create or retrieve the model's class
         if name in parents:
@@ -627,10 +633,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_name': name,
                 '_register': False,
                 '_original_module': cls._module,
-                '_inherit_module': dict(),              # map parent to introducing module
+                '_inherit_module': {},                  # map parent to introducing module
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
-                '_fields': OrderedDict(),               # populated in _setup_base()
+                '_fields': {},                          # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
 
@@ -709,8 +715,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for base in reversed(cls.__bases__):
             if is_definition_class(base):
                 # the following attributes are not taken from registry classes
-                parents = [base._inherit] if base._inherit and isinstance(base._inherit, str) else (base._inherit or [])
-                if cls._name not in parents and not base._description:
+                if cls._name not in base._inherit and not base._description:
                     _logger.warning("The model %s has no _description", cls._name)
                 cls._description = base._description or cls._description
                 cls._table = base._table or cls._table
@@ -2898,11 +2903,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # avoid clashes with inheritance between different models
             for name in cls._fields:
                 delattr(cls, name)
-            cls._fields = OrderedDict()
-            for name, field in sorted(getmembers(cls, Field.__instancecheck__), key=lambda f: f[1]._sequence):
-                # do not retrieve magic, custom and inherited fields
-                if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
-                    self._add_field(name, field.new())
+            cls._fields.clear()
+
+            # collect the definitions of each field (base definition + overrides)
+            definitions = defaultdict(list)
+            for klass in reversed(cls.mro()):
+                if is_definition_class(klass):
+                    for field in klass._field_definitions:
+                        definitions[field.name].append(field)
+            for name, fields_ in definitions.items():
+                self._add_field(name, fields_[-1].new(_base_fields=fields_))
+
             self._add_magic_fields()
             cls._model_fields = list(cls._fields)
 
