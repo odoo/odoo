@@ -527,12 +527,17 @@ class SaleOrder(models.Model):
         overridden to implement custom invoice generation (making sure to call super() to establish
         a clean extension chain).
         """
+        # TODO: process multi in master
         self.ensure_one()
         # ensure a correct context for the _get_default_journal method and company-dependent fields
         self = self.with_context(default_company_id=self.company_id.id, force_company=self.company_id.id)
         journal = self.env['account.move'].with_context(default_type='out_invoice')._get_default_journal()
         if not journal:
             raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
+
+        invoiceable_lines = self._get_invoiceable_lines(final=self._context.get('final', False))
+        if not invoiceable_lines:
+            raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
 
         invoice_vals = {
             'ref': self.client_order_ref or '',
@@ -553,7 +558,7 @@ class SaleOrder(models.Model):
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_payment_ref': self.reference,
             'transaction_ids': [(6, 0, self.transaction_ids.ids)],
-            'invoice_line_ids': [],
+            'invoice_line_ids': [(0,0, vals) for vals in invoiceable_lines._prepare_invoice_lines_vals_list()],
             'company_id': self.company_id.id,
         }
         return invoice_vals
@@ -636,22 +641,7 @@ class SaleOrder(models.Model):
         # 1) Create invoices.
         invoice_vals_list = []
         for order in self:
-
-            invoice_vals = order._prepare_invoice()
-            invoiceable_lines = order._get_invoiceable_lines(final)
-
-            if not invoiceable_lines and not invoice_vals['invoice_line_ids']:
-                raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
-
-            # there is a chance the invoice_vals['invoice_line_ids'] already contains data when
-            # another module extends the method `_prepare_invoice()`. Therefore, instead of
-            # replacing the invoice_vals['invoice_line_ids'], we append invoiceable lines into it
-            invoice_vals['invoice_line_ids'] += [
-                (0, 0, line._prepare_invoice_line())
-                for line in invoiceable_lines
-            ]
-
-            invoice_vals_list.append(invoice_vals)
+            invoice_vals_list.append(order.with_context(final=final)._prepare_invoice())
 
         if not invoice_vals_list:
             raise UserError(_(
@@ -1495,6 +1485,20 @@ class SaleOrderLine(models.Model):
         :return:          the sequence of the SO line, by default the new one.
         """
         return new or old
+
+    def _prepare_invoice_lines_vals_list(self):
+        """
+        Prepare the list of dict of values to create the new invoice lines for the sales orders. This method may be
+        overridden to implement custom invoice lines generation (e.g. add more lines among the existing ones).
+        Making sure to call super() to establish a clean extension chain.
+        
+        :return: list of dict of values for new invoice line creation
+        :rtype: list
+        """
+        vals_list = []
+        for line in self:
+            vals_list.append(line._prepare_invoice_line())
+        return vals_list
 
     def _prepare_invoice_line(self):
         """
