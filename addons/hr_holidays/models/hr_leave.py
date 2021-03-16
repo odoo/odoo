@@ -414,7 +414,7 @@ class HolidaysRequest(models.Model):
             calendar = holiday.employee_id.sudo().resource_calendar_id or self.env.user.company_id.resource_calendar_id
             if holiday.date_from and holiday.date_to:
                 number_of_hours = calendar.get_work_hours_count(holiday.date_from, holiday.date_to)
-                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
+                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY))
             else:
                 holiday.number_of_hours_display = 0
 
