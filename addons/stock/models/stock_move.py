@@ -1032,7 +1032,8 @@ class StockMove(models.Model):
                 move.product_id, move.product_uom_qty, move.product_uom,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
-        self.env['procurement.group'].run(procurement_requests)
+        if procurement_requests:
+            self.env['procurement.group'].run(procurement_requests)
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
