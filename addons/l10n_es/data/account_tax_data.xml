@@ -1073,6 +1073,17 @@
         <field name="tax_group_id" ref="tax_group_retenciones_9"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
+    <record id="account_tax_template_p_irpf24" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="l10n_es.account_common_4751"/>
+        <field name="name">Retenciones IRPF 24%</field>
+        <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
+    </record>
     <record id="account_tax_template_s_irpf20" model="account.tax.template">
         <field name="description">Retención 20%</field>
         <field name="type_tax_use">sale</field>
@@ -1094,6 +1105,17 @@
         <field name="amount" eval="-20"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
+    </record>
+    <record id="account_tax_template_s_irpf24" model="account.tax.template">
+        <field name="description">Retención 24%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="l10n_es.account_common_473"/>
+        <field name="name">Retenciones a cuenta IRPF 24%</field>
+        <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
     </record>
     <record id="account_tax_template_p_iva12_agr" model="account.tax.template">
         <field name="description"/> <!-- for resetting the value on existing DBs -->
