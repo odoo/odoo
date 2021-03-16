@@ -30,6 +30,9 @@ class PurchaseOrder(models.Model):
             self.grid_update = False
             self.grid = json.dumps(self._get_matrix(self.grid_product_tmpl_id))
 
+    def _must_delete_date_planned(self, field_name):
+        return super()._must_delete_date_planned(field_name) or field_name == "grid"
+
     @api.onchange('grid')
     def _apply_grid(self):
         if self.grid and self.grid_update:
