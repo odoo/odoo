@@ -16,13 +16,12 @@ EventAdditionalTourSteps.include({
         this._super.apply(this, arguments);
         return [{
                 trigger: '.o_event_form_view button[name="is_published"]',
-                extra_trigger: 'div.o_form_buttons_view:not(.o_hidden)',
                 content: _t("Use this <b>shortcut</b> to easily access your event web page."),
                 position: 'bottom',
             }, {
                 trigger: 'li#edit-page-menu a',
                 extra_trigger: '.o_wevent_event',
-                content: _t("With the Edit button, you can <b>customize</b> the web page visitors will see when registrating."),
+                content: _t("With the Edit button, you can <b>customize</b> the web page visitors will see when registering."),
                 position: 'bottom',
             }, {
                 trigger: 'div[name="Image - Text"] .oe_snippet_thumbnail',
