@@ -65,6 +65,9 @@ class WebsiteSnippetFilter(models.Model):
         if self.website_id and self.env['website'].get_current_website() != self.website_id:
             return ''
 
+        if self.model_name.replace('.', '_') not in template_key:
+            return ''
+
         records = self._prepare_values(limit, search_domain)
         is_sample = with_sample and not records
         if is_sample:
@@ -173,10 +176,11 @@ class WebsiteSnippetFilter(models.Model):
         sample = []
         model = self.env[self.model_name]
         sample_data = self._get_hardcoded_sample(model)
-        for index in range(0, length):
-            single_sample_data = sample_data[index % len(sample_data)].copy()
-            self._fill_sample(single_sample_data, index)
-            sample.append(model.new(single_sample_data))
+        if sample_data:
+            for index in range(0, length):
+                single_sample_data = sample_data[index % len(sample_data)].copy()
+                self._fill_sample(single_sample_data, index)
+                sample.append(model.new(single_sample_data))
         return sample
 
     def _fill_sample(self, sample, index):
