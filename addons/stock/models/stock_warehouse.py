@@ -96,7 +96,8 @@ class Warehouse(models.Model):
     def _onchange_company_id(self):
         group_user = self.env.ref('base.group_user')
         group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
-        if group_stock_multi_warehouses not in group_user.implied_ids:
+        group_stock_multi_location = self.env.ref('stock.group_stock_multi_locations')
+        if group_stock_multi_warehouses not in group_user.implied_ids and group_stock_multi_location not in group_user.implied_ids:
             return {
                 'warning': {
                     'title': _('Warning'),
