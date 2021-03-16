@@ -899,5 +899,5 @@ class Meeting(models.Model):
         try:
             super().check_access_rule(operation)
             return True
-        except Exception as e:
+        except Exception:
             return False

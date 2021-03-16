@@ -29,6 +29,7 @@ class Meeting(models.Model):
 
     microsoft_id = fields.Char('Microsoft Calendar Event Id')
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
+    microsoft_sync_user_id = fields.Many2one('res.users', 'Microsoft Sync User', ondelete='cascade')
 
     @api.model
     def _get_microsoft_synced_fields(self):
@@ -97,7 +98,8 @@ class Meeting(models.Model):
             'start': start,
             'stop': stop,
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
-            'recurrency': microsoft_event.is_recurrent()
+            'recurrency': microsoft_event.is_recurrent(),
+            'microsoft_sync_user_id': self.env.user.id
         }
 
         values['microsoft_id'] = microsoft_event.id
@@ -129,7 +131,6 @@ class Meeting(models.Model):
     def _odoo_attendee_commands_m(self, microsoft_event):
         commands_attendee = []
         commands_partner = []
-
         microsoft_attendees = microsoft_event.attendees or []
         emails = [a.get('emailAddress').get('address') for a in microsoft_attendees]
         existing_attendees = self.env['calendar.attendee']
@@ -137,12 +138,18 @@ class Meeting(models.Model):
             existing_attendees = self.env['calendar.attendee'].search([
                 ('event_id', '=', microsoft_event.odoo_id(self.env)),
                 ('email', 'in', emails)])
-        elif self.env.user.partner_id.email not in emails:
-            commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
-            commands_partner += [(4, self.env.user.partner_id.id)]
+        # [TBD] The following code is commented, which is generated from PR odoo#66103
+        # [TDB] It will add the odoo user to the attendee, although the user's outlook email has already beeb in the attendee list.
+        # [TDB] It is not necessary for the current task. Maybe we can create a new task for it.
+        # [TBD] The sync user's outlook email is added to the env.user.microsoft_email.
+        # [TBD] There will be no error described in the PR
+        # elif self.env.user.partner_id.email not in emails:
+        #     commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
+        #     commands_partner += [(4, self.env.user.partner_id.id)]
         attendees_by_emails = {a.email: a for a in existing_attendees}
         for attendee in microsoft_attendees:
             email = attendee.get('emailAddress').get('address')
+            email = self.env.user.email if email and email.lower() == self.env.user.microsoft_email.lower() else email
             state = ATTENDEE_CONVERTER_M2O.get(attendee.get('status').get('response'))
 
             if email in attendees_by_emails:
