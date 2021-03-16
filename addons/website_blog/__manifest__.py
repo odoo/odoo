@@ -21,7 +21,6 @@
         'views/website_blog_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_blog_posts.xml',
-        'views/snippets/s_latest_posts.xml',
         'security/ir.model.access.csv',
         'security/website_blog_security.xml',
     ],
