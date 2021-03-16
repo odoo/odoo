@@ -2850,9 +2850,6 @@ class BaseModel(metaclass=MetaModel):
         cls = type(self)
         cls._setup_done = False
 
-        # the classes that define this model's base fields and methods
-        cls._model_classes = tuple(c for c in cls.mro() if not is_registry_class(c))
-
         # reset those attributes on the model's class for _setup_fields() below
         for attr in ('_rec_name', '_active_name'):
             try:
@@ -2869,51 +2866,23 @@ class BaseModel(metaclass=MetaModel):
 
         # 1. determine the proper fields of the model: the fields defined on the
         # class and magic fields, not the inherited or custom ones
-        cls0 = cls.pool.model_cache.get(cls._model_classes)
 
-        if cls0 and cls0._model_classes == cls._model_classes:
-            # cls0 is either a model class from another registry, or cls itself.
-            # The point is that it has the same base classes. We retrieve stuff
-            # from cls0 to optimize the setup of cls. cls0 is guaranteed to be
-            # properly set up: registries are loaded under a global lock,
-            # therefore two registries are never set up at the same time.
+        # retrieve fields from parent classes, and duplicate them on cls to
+        # avoid clashes with inheritance between different models
+        for name in cls._fields:
+            delattr(cls, name)
+        cls._fields.clear()
 
-            # remove fields that are not proper to cls
-            for name in set(cls._fields).difference(cls0._model_fields):
-                delattr(cls, name)
-                del cls._fields[name]
+        # collect the definitions of each field (base definition + overrides)
+        definitions = defaultdict(list)
+        for klass in reversed(cls.mro()):
+            if is_definition_class(klass):
+                for field in klass._field_definitions:
+                    definitions[field.name].append(field)
+        for name, fields_ in definitions.items():
+            self._add_field(name, fields_[-1].new(_base_fields=fields_))
 
-            if cls0 is not cls:
-                # collect proper fields on cls0, and add them on cls
-                for name in cls0._model_fields:
-                    field = cls0._fields[name]
-                    # regular fields are shared, while related fields are setup from scratch
-                    if not field.related:
-                        self._add_field(name, field)
-                    else:
-                        self._add_field(name, field.new(**field.args))
-                cls._model_fields = list(cls._fields)
-
-        else:
-            # retrieve fields from parent classes, and duplicate them on cls to
-            # avoid clashes with inheritance between different models
-            for name in cls._fields:
-                delattr(cls, name)
-            cls._fields.clear()
-
-            # collect the definitions of each field (base definition + overrides)
-            definitions = defaultdict(list)
-            for klass in reversed(cls.mro()):
-                if is_definition_class(klass):
-                    for field in klass._field_definitions:
-                        definitions[field.name].append(field)
-            for name, fields_ in definitions.items():
-                self._add_field(name, fields_[-1].new(_base_fields=fields_))
-
-            self._add_magic_fields()
-            cls._model_fields = list(cls._fields)
-
-        cls.pool.model_cache[cls._model_classes] = cls
+        self._add_magic_fields()
 
         # 2. add manual fields
         if self.pool._init_modules:

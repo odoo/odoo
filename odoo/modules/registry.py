@@ -9,7 +9,6 @@ from collections.abc import Mapping
 from contextlib import closing, contextmanager
 from functools import partial
 from operator import attrgetter
-from weakref import WeakValueDictionary
 import logging
 import os
 import threading
@@ -37,9 +36,6 @@ class Registry(Mapping):
     """
     _lock = threading.RLock()
     _saved_lock = None
-
-    # a cache for model classes, indexed by their base classes
-    model_cache = WeakValueDictionary()
 
     @lazy_classproperty
     def registries(cls):
