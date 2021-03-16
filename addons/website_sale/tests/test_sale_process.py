@@ -35,7 +35,7 @@ class TestUi(HttpCaseWithUserDemo):
             'sequence': 2,
         })
         self.product_product_11_product_template = self.env['product.template'].create({
-            'name': 'Conference Chair (CONFIG)',
+            'name': 'Conference Chair',
             'list_price': 16.50,
             'accessory_product_ids': [(4, product_product_7.id)],
         })
