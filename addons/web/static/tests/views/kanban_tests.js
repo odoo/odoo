@@ -5862,6 +5862,54 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars active filter should remove from old column when record drag and drop to new column', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records.push({id: 5, bar: false, foo: "gnap", product_id: 5, state: "gnap"});
+        this.data.partner.records.push({id: 6, bar: false, foo: "blip", product_id: 5, state: "blip"});
+        this.data.partner.records.push({id: 7, bar: false, foo: "blip", product_id: 5, state: "blip"});
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="name"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "4",
+        "Group 1 counter should contain the correct value");
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_counter_progress .progress-bar[data-filter="gnap"]'));
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "1",
+        "After applying filter group 1 counter should contain the correct value");
+
+        await testUtils.dom.dragAndDrop(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:eq(0)'), kanban.$('.o_kanban_group:eq(1)'));
+        await nextTick();  // wait for update resulting from drag and drop
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_counter_side').text(), "3",
+        "After drag and drop group 1 counter should contain the correct value");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "4",
+        "Group 2 counter should contain the correct value");
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.progress-bar')].map(el => el.getAttribute('data-original-title')),
+            ['0 yop', '0 gnap', '3 blip', '0 __false', '1 yop', '2 gnap', '1 blip', '0 __false']
+        );
+
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars: "false" bar is clickable', async function (assert) {
         assert.expect(8);
 
@@ -6258,7 +6306,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('RPCs when (de)activating kanban view progressbar filters', async function (assert) {
-        assert.expect(8);
+        assert.expect(14);
 
         const kanban = await createView({
             View: KanbanView,
@@ -6297,9 +6345,15 @@ QUnit.module('Views', {
             // activate filter
             '/web/dataset/search_read',
             // activate another filter (switching)
+            'web_read_group',
+            'read_progress_bar',
             '/web/dataset/search_read',
             // deactivate active filter
+            'web_read_group',
+            'read_progress_bar',
             '/web/dataset/search_read',
+            'web_read_group',
+            'read_progress_bar',
         ]);
 
         kanban.destroy();

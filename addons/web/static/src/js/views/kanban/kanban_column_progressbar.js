@@ -92,10 +92,13 @@ var KanbanColumnProgressBar = Widget.extend({
         const subgroupCounts = {};
         for (const key of Object.keys(this.colors)) {
             const subgroupCount = this.columnState.progressBarValues.counts[key] || 0;
-            if (this.activeFilter.value === key && subgroupCount === 0) {
+            if (this.activeFilter.value === key && this.columnState.count === 0 && subgroupCount <= 0) {
                 this.activeFilter = {};
+                this.trigger_up('kanban_load_column_records', {
+                    activeFilter: this.activeFilter
+                });
             }
-            subgroupCounts[key] = subgroupCount;
+            subgroupCounts[key] = this.activeFilter.value === key ? this.columnState.count : subgroupCount;
         }
 
         this.groupCount = this.columnState.count;
