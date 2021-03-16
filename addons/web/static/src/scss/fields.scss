@@ -406,6 +406,10 @@
     &.o_field_image {
         position: relative;
 
+        &.o_field_empty {
+            display: none;
+        }
+
         .o_form_image_controls {
             @include o-position-absolute(0, 0);
             width: 100%;
