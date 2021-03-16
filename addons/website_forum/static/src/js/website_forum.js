@@ -126,7 +126,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 ['table', ['table']],
             ];
             if (hasFullEdit) {
-                toolbar.push(['insert', ['link']]);
+                toolbar.push(['insert', ['link', 'picture']]);
             }
             toolbar.push(['history', ['undo', 'redo']]);
 
@@ -141,6 +141,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                disableFullMediaDialog: true,
                 disableResizeImage: true,
             };
             if (!hasFullEdit) {
