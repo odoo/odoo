@@ -227,6 +227,12 @@ var AbstractField = Widget.extend({
             return self._render();
         });
     },
+    destroy() {
+        if (this.el) {
+            this.el.removeEventListener("focusout", this.removeHighlightClassHandler);
+        }
+        this._super();
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -301,12 +307,12 @@ var AbstractField = Widget.extend({
     highlightActivated() {
         if (this.mode === 'edit' && this.isFocusable()) {
             // add o_active_field class on current focusable element and remove when blurred
-            const handler = () => {
+            this.removeHighlightClassHandler = () => {
                 this.el.classList.remove('o_active_field');
-                this.el.removeEventListener("focusout", handler);
+                this.el.removeEventListener("focusout", this.removeHighlightClassHandler);
             };
             this.el.classList.add("o_active_field");
-            this.el.addEventListener("focusout", handler);
+            this.el.addEventListener("focusout", this.removeHighlightClassHandler);
         }
     },
     /**

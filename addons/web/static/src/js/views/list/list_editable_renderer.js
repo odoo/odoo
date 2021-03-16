@@ -886,13 +886,12 @@ ListRenderer.include({
     _highlightActivated(widget) {
         this._super(...arguments);
         [...this.el.querySelectorAll('.o_selected_row .o_data_cell')].map(el => el.classList.remove('o_active_cell'));
-        const activeField = [...this.el.querySelectorAll('.o_selected_row .o_data_cell')].find((el) => {
-            return el.querySelector('.o_active_field') && el;
-        });
+        const activeField = this.el.querySelector('.o_active_field');
         if (activeField) {
-            activeField.classList.add('o_active_cell');
+            const activeFieldCell = activeField.closest('td');
+            activeFieldCell.classList.add('o_active_cell');
             activeField.addEventListener('focusout', function handler() {
-                this.classList.remove('o_active_cell');
+                this.closest('td').classList.remove('o_active_cell');
                 this.removeEventListener("focusout", handler);
             });
         }

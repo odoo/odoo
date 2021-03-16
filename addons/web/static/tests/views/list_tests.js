@@ -8109,6 +8109,104 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: active field highlighted using navigation', async function (assert) {
+        assert.expect(23);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                    <field name="date"/>
+                    <field name="m2o"/>
+                    <field name="m2m" widget="many2many_tags"/>
+                    <field name="qux"/>
+                    <field name="amount"/>
+                    <field name="text"/>
+                </tree>`,
+            data: this.data,
+            intercepts: {
+                switch_view: function (event) {
+                    assert.strictEqual(event.data.res_id, 3,
+                        "'switch_view' event has been triggered");
+                },
+            },
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.ok(document.activeElement.classList.contains('o_searchview_input'),
+            'default focus should be in search view');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
+        await testUtils.fields.triggerKeydown(document.activeElement, 'enter');
+
+        assert.hasClass(list.$('.o_data_row:eq(0)'), 'o_selected_row',
+            "the first row should be selected");
+        assert.strictEqual(document.activeElement, list.$('.o_selected_row input[name="foo"]')[0],
+            "the first field of first row should have focus");
+        assert.hasClass(list.$('.o_selected_row input[name="foo"]'), 'o_active_field',
+            "the first field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(0)'), 'o_active_cell',
+            "the first cell should have o_active_cell class");
+
+        const tabKey = { keyCode: $.ui.keyCode.TAB, which: $.ui.keyCode.TAB };
+        const shiftTabKey = { keyCode: $.ui.keyCode.TAB, which: $.ui.keyCode.TAB, shiftKey: true };
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
+        assert.hasClass(list.$('.o_selected_row input[name="int_field"]'), 'o_active_field',
+            "the second field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(1)'), 'o_active_cell',
+            "the second cell should have o_active_cell class");
+        assert.doesNotHaveClass(list.$('.o_selected_row input[name="foo"]'), 'o_active_field',
+            "the first field should not have o_active_field class");
+        assert.doesNotHaveClass(list.$('.o_selected_row .o_data_cell:eq(0)'), 'o_active_cell',
+            "the first cell should not have o_active_cell class");
+
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
+        assert.hasClass(list.$('.o_selected_row .o_field_date'), 'o_active_field',
+            "the third field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(2)'), 'o_active_cell',
+            "the third cell should have o_active_cell class");
+
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
+        assert.hasClass(list.$('.o_selected_row .o_field_many2one[name="m2o"]'), 'o_active_field',
+            "the fourth field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(3)'), 'o_active_cell',
+            "the fourth cell should have o_active_cell class");
+
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
+        assert.hasClass(list.$('.o_selected_row .o_field_many2manytags'), 'o_active_field',
+            "the fifth field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(4)'), 'o_active_cell',
+            "the fifth cell should have o_active_cell class");
+
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
+        assert.hasClass(list.$('.o_selected_row input[name="qux"]'), 'o_active_field',
+            "the sixth field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(5)'), 'o_active_cell',
+            "the sixth cell should have o_active_cell class");
+
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
+        assert.hasClass(list.$('.o_selected_row .o_field_monetary'), 'o_active_field',
+            "the seventh field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(6)'), 'o_active_cell',
+            "the seventh cell should have o_active_cell class");
+
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
+        assert.hasClass(list.$('.o_selected_row textarea[name="text"]'), 'o_active_field',
+            "the eighth field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(7)'), 'o_active_cell',
+            "the eighth cell should have o_active_cell class");
+
+        await testUtils.dom.triggerEvent(document.activeElement, 'keydown', shiftTabKey);
+        assert.hasClass(list.$('.o_selected_row .o_field_monetary'), 'o_active_field',
+            "the seventh field should have o_active_field class");
+        assert.hasClass(list.$('.o_selected_row .o_data_cell:eq(6)'), 'o_active_cell',
+            "the seventh cell should have o_active_cell class");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition: edit and validate last row', async function (assert) {
         assert.expect(3);
 

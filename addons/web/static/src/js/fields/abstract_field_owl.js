@@ -101,6 +101,9 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             this._lastSetValue = undefined;
             return super.willUpdateProps(nextProps);
         }
+        willUnmount() {
+            this.el.removeEventListener("focusout", this.removeHighlightClassHandler);
+        }
 
         //----------------------------------------------------------------------
         // Getters
@@ -381,12 +384,12 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         highlightActivated() {
             if (this.mode === 'edit' && this.isFocusable) {
                 // add o_active_field class on current focusable element and remove when blurred
-                const handler = () => {
+                this.removeHighlightClassHandler = () => {
                     this.el.classList.remove('o_active_field');
-                    this.el.removeEventListener("focusout", handler);
+                    this.el.removeEventListener("focusout", this.removeHighlightClassHandler);
                 };
                 this.el.classList.add("o_active_field");
-                this.el.addEventListener("focusout", handler);
+                this.el.addEventListener("focusout", this.removeHighlightClassHandler);
             }
         }
         /**
