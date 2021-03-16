@@ -212,6 +212,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _modules = None                     # modules that define this field
     _setup_done = None                  # the field's setup state: None, 'base' or 'full'
     _sequence = None                    # absolute ordering of the field
+    _base_fields = ()                   # the fields defining self, in override order
 
     automatic = False                   # whether the field is automatically created ("magic" field)
     inherited = False                   # whether the field is inherited (_inherits)
@@ -274,6 +275,20 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Base field setup: things that do not depend on other models/fields
     #
+    # When several definition classes of the same model redefine a given field,
+    # the field occurrences are "merged" into one new field instantiated at
+    # runtime on the registry class of the model.  The occurrences of the field
+    # are given to the new field as the parameter '_base_fields'; it is a list
+    # of fields in override order (or reverse MRO).
+
+    def __set_name__(self, owner, name):
+        assert issubclass(owner, BaseModel)
+        self.model_name = owner._name
+        self.name = name
+        if is_definition_class(owner):
+            # only for fields on definition classes, not registry classes
+            self._module = owner._module
+            owner._field_definitions.append(self)
 
     def setup_base(self, model, name):
         """ Base setup: things that do not depend on other models/fields. """
@@ -298,23 +313,25 @@ class Field(MetaField('DummyField', (object,), {})):
     def _get_attrs(self, model, name):
         """ Return the field parameter attributes as a dictionary. """
         # determine all inherited field attributes
-        modules = set()
         attrs = {}
-        if self.args.get('automatic') and resolve_mro(model, name, self._can_setup_from):
-            # prevent an automatic field from overriding a real field
-            self.args.clear()
-        if not (self.args.get('automatic') or self.args.get('manual')):
-            # magic and custom fields do not inherit from parent classes
-            for field in reversed(resolve_mro(model, name, self._can_setup_from)):
-                attrs.update(field.args)
-                if '_module' in field.args:
-                    modules.add(field.args['_module'])
-        attrs.update(self.args)         # necessary in case self is not in class
+        modules = []
+        for field in self.args.get('_base_fields', ()):
+            if not self._can_setup_from(field):
+                attrs.clear()
+                modules.clear()
+                continue
+            attrs.update(field.args)
+            if field._module:
+                modules.append(field._module)
+        attrs.update(self.args)
+        if self._module:
+            modules.append(self._module)
 
         attrs['args'] = self.args
         attrs['model_name'] = model._name
         attrs['name'] = name
-        attrs['_modules'] = modules
+        attrs['_module'] = modules[-1] if modules else None
+        attrs['_modules'] = set(modules)
 
         # initialize ``self`` with ``attrs``
         if name == 'state':
@@ -2313,12 +2330,14 @@ class Selection(Field):
 
     def _setup_attrs(self, model, name):
         super(Selection, self)._setup_attrs(model, name)
+        if not self._base_fields:
+            return
 
         # determine selection (applying 'selection_add' extensions)
         values = None
         labels = {}
 
-        for field in reversed(resolve_mro(model, name, self._can_setup_from)):
+        for field in self._base_fields:
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs``.
             if 'selection' in field.args:
@@ -2390,7 +2409,7 @@ class Selection(Field):
             return {}
         value_modules = defaultdict(set)
         for field in reversed(resolve_mro(model, self.name, self._can_setup_from)):
-            module = field.args.get('_module')
+            module = field._module
             if not module:
                 continue
             if 'selection' in field.args:
@@ -4001,5 +4020,8 @@ def apply_required(model, field_name):
 
 
 # imported here to avoid dependency cycle issues
+# pylint: disable=wrong-import-position
 from .exceptions import AccessError, MissingError, UserError
-from .models import check_pg_name, BaseModel, NewId, IdType, expand_ids, PREFETCH_MAX
+from .models import (
+    check_pg_name, expand_ids, is_definition_class, BaseModel, IdType, NewId, PREFETCH_MAX,
+)
