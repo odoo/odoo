@@ -54,7 +54,11 @@ class AccountTaxReport(models.Model):
         copied_report = super(AccountTaxReport, self).copy(default=copy_default) #This copies the report without its lines
 
         lines_map = {} # maps original lines to their copies (using ids)
-        for line in self.line_ids:
+        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id))
+        while lines_to_treat:
+            line = lines_to_treat.pop()
+            lines_to_treat += list(line.children_line_ids)
+
             copy = line.copy({'parent_id': lines_map.get(line.parent_id.id, None), 'report_id': copied_report.id})
             lines_map[line.id] = copy.id
 
@@ -65,10 +69,10 @@ class AccountTaxReport(models.Model):
         ar all directly followed by their children.
         """
         self.ensure_one()
-        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id)) # Used as a stack, whose index 0 is the top
+        lines_to_treat = list(self.line_ids.filtered(lambda x: not x.parent_id).sorted(lambda x: x.sequence)) # Used as a stack, whose index 0 is the top
         while lines_to_treat:
             to_yield = lines_to_treat[0]
-            lines_to_treat = list(to_yield.children_line_ids) + lines_to_treat[1:]
+            lines_to_treat = list(to_yield.children_line_ids.sorted(lambda x: x.sequence)) + lines_to_treat[1:]
             yield to_yield
 
     def get_checks_to_perform(self, d):
