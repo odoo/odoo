@@ -46,7 +46,6 @@ class PortalShare(models.TransientModel):
 
     def action_send_mail(self):
         active_record = self.env[self.res_model].browse(self.res_id)
-        template = self.env.ref('portal.portal_share_template', False)
         note = self.env.ref('mail.mt_note')
         signup_enabled = self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope') == 'b2c'
 
@@ -57,6 +56,9 @@ class PortalShare(models.TransientModel):
         # if partner already user or record has access token send common link in batch to all user
         for partner in self.partner_ids:
             share_link = active_record.get_base_url() + active_record._get_share_url(redirect=True, pid=partner.id)
+            saved_lang = self.env.lang
+            self = self.with_context(lang=partner.lang)
+            template = self.env.ref('portal.portal_share_template', False)
             active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
                         'share_link': share_link},
@@ -64,11 +66,15 @@ class PortalShare(models.TransientModel):
                 subtype_id=note.id,
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=[(6, 0, partner.ids)])
+            self = self.with_context(lang=saved_lang)
         # when partner not user send individual mail with signup token
         for partner in self.partner_ids - partner_ids:
             #  prepare partner for signup and send singup url with redirect url
             partner.signup_get_auth_param()
             share_link = partner._get_signup_url_for_action(action='/mail/view', res_id=self.res_id, model=self.model)[partner.id]
+            saved_lang = self.env.lang
+            self = self.with_context(lang=partner.lang)
+            template = self.env.ref('portal.portal_share_template', False)
             active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
                         'share_link': share_link},
@@ -76,4 +82,5 @@ class PortalShare(models.TransientModel):
                 subtype_id=note.id,
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=[(6, 0, partner.ids)])
+            self = self.with_context(lang=saved_lang)
         return {'type': 'ir.actions.act_window_close'}
