@@ -143,6 +143,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                disableFullMediaDialog: true,
                 disableResizeImage: true,
             };
             if (!hasFullEdit) {
