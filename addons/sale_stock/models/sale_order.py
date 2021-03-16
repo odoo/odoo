@@ -323,10 +323,10 @@ class SaleOrderLine(models.Model):
         for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
             if not (line.product_id and line.display_qty_widget):
                 continue
-            grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
+            grouped_lines[(line.warehouse_id.lot_stock_id.id, line.order_id.commitment_date or line._expected_date())] |= line
 
-        for (warehouse, scheduled_date), lines in grouped_lines.items():
-            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse=warehouse).read([
+        for (location, scheduled_date), lines in grouped_lines.items():
+            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, location=location).read([
                 'qty_available',
                 'free_qty',
                 'virtual_available',

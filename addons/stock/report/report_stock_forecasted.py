@@ -82,7 +82,7 @@ class ReplenishmentReport(models.AbstractModel):
             ], limit=1)
             self.env.context = dict(self.env.context, warehouse=warehouse.id)
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
-            [('id', 'child_of', warehouse.view_location_id.id)],
+            [('id', 'child_of', warehouse.lot_stock_id.id)],
             ['id'],
         )]
         res['active_warehouse'] = warehouse.display_name
