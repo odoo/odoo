@@ -171,7 +171,7 @@ $.fn.extend({
             // Search for a body child which is at least as tall as the body
             // and which has the ability to scroll if enough content in it. If
             // found, suppose this is the top scrolling element.
-            if (el.scrollHeight < bodyHeight) {
+            if (bodyHeight - el.scrollHeight > 1) {
                 continue;
             }
             const $el = $(el);
