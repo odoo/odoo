@@ -1824,28 +1824,23 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_60_many2many_domain(self):
         """ test the cache consistency of a many2many field with a domain """
-        discussion = self.env.ref('test_new_api.discussion_0')
-        category = self.env['test_new_api.category'].create({'name': "Foo"})
-        discussion.categories = category
-        discussion.flush()
-        discussion.invalidate_cache()
+        tag = self.env['test_new_api.multi.tag'].create({'name': 'bar'})
+        record = self.env['test_new_api.multi'].create({'tags': tag.ids})
+        record.flush()
+        record.invalidate_cache()
 
-        # patch the many2many field to give it a domain (this simply avoids
-        # adding yet another test model)
-        field = discussion._fields['categories']
-        self.patch(field, 'domain', [('color', '!=', 42)])
-        self.registry.setup_models(self.cr)
+        self.assertEqual(type(record).tags.domain, [('name', 'ilike', 'a')])
 
-        # the category is in the many2many
-        self.assertIn(category, discussion.categories)
+        # the tag is in the many2many
+        self.assertIn(tag, record.tags)
 
-        # modify the category; it should not longer be in the many2many
-        category.color = 42
-        self.assertNotIn(category, discussion.categories)
+        # modify the tag; it should not longer be in the many2many
+        tag.name = 'foo'
+        self.assertNotIn(tag, record.tags)
 
-        # modify again the category; it should be back in the many2many
-        category.color = 69
-        self.assertIn(category, discussion.categories)
+        # modify again the tag; it should be back in the many2many
+        tag.name = 'baz'
+        self.assertIn(tag, record.tags)
 
     def test_70_x2many_write(self):
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -2676,7 +2671,6 @@ class TestMagicFields(common.TransactionCase):
 
         # check setup of models in alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items())))
-        registry.model_cache.clear()
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertFalse(field.automatic)
@@ -2684,7 +2678,6 @@ class TestMagicFields(common.TransactionCase):
 
         # check setup of models in reverse alphanumeric order
         self.patch(registry, 'models', OrderedDict(sorted(models.items(), reverse=True)))
-        registry.model_cache.clear()
         registry.setup_models(self.cr)
         field = registry['test_new_api.display'].display_name
         self.assertFalse(field.automatic)
@@ -3094,7 +3087,6 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
         for model_name in (self.MODEL_BASE, self.MODEL_REQUIRED):
             Model = self.registry[model_name]
             self.addCleanup(setattr, Model, '__bases__', Model.__bases__)
-        self.addCleanup(self.registry.model_cache.clear)
 
     def test_ondelete_unexisting_policy(self):
         class Foo(models.Model):
@@ -3155,7 +3147,6 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
 class TestFieldParametersValidation(common.TransactionCase):
     def test_invalid_parameter(self):
-        self.addCleanup(self.registry.model_cache.clear)
 
         class Foo(models.Model):
             _module = None
