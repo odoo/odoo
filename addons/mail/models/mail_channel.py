@@ -460,13 +460,24 @@ class Channel(models.Model):
           ``MailThread._notify_thread()`` for more details about its content
           and use;
         """
-        recipients_data = []
+        # get values from msg_vals or from message if msg_vals doen't exists
+        msg_sudo = message.sudo()
         mailing_channels = self.filtered('email_send')
+        message_type = msg_vals.get('message_type', 'email') if msg_vals else msg_sudo.message_type
+        pids = msg_vals.get('partner_ids', []) if msg_vals else msg_sudo.partner_ids.ids
+
+        # notify only user input (comment or incoming emails)
+        if message_type not in ('comment', 'email'):
+            return {'partners': [], 'channels': []}
+        # notify only mailing lists or if mentioning recipients
+        if not mailing_channels and not pids:
+            return {'partners': [], 'channels': []}
+
+        email_from = tools.email_normalize(msg_vals.get('email_from') or msg_sudo.email_from)
+        author_id = msg_vals.get('author_id') or msg_sudo.author_id.id
+
+        recipients_data = []
         if mailing_channels:
-            msg_sudo = message.sudo()
-            email_from = tools.email_normalize(msg_vals.get('email_from') or msg_sudo.email_from)
-            author_id = msg_vals.get('author_id') or message.author_id.id
-            except_pids = [author_id] if author_id else []
             sql_query = """
                 SELECT DISTINCT ON (partner.id) partner.id
                   FROM res_partner partner
@@ -477,16 +488,44 @@ class Channel(models.Model):
                        AND (partner.email != %s or partner.email IS NULL)
                        AND channel.id = ANY(%s)
                        AND partner.id != ANY(%s)"""
-            self.env.cr.execute(sql_query, (email_from, mailing_channels.ids, except_pids, ))
-            for partner_id in self._cr.fetchall():
+            self.env.cr.execute(
+                sql_query,
+                (email_from, mailing_channels.ids, [author_id] if author_id else [], )
+            )
+            for partner_id, in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
                 recipients_data.append({
-                    'id': partner_id[0],
+                    'id': partner_id,
                     'share': True,
                     'active': True,
                     'notif': 'email',
                     'type': 'channel_email',
                     'groups': []
+                })
+        remaining = [pid for pid in pids if pid not in [recipient['id'] for recipient in recipients_data]]
+        if remaining:
+            sql_query = """
+                SELECT DISTINCT ON (partner.id) partner.id,
+                       partner.partner_share,
+                       users.notification_type
+                  FROM res_partner partner
+             LEFT JOIN res_users users on partner.id = users.partner_id
+                 WHERE partner.active IS TRUE
+                       AND partner.email != %s
+                       AND partner.id = ANY(%s) AND partner.id != ANY(%s)"""
+            self.env.cr.execute(
+                sql_query,
+                (email_from, remaining, [author_id] if author_id else [], )
+            )
+            for partner_id, partner_share, notif in self._cr.fetchall():
+                # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
+                recipients_data.append({
+                    'id': partner_id,
+                    'share': partner_share,
+                    'active': True,
+                    'notif': notif or 'email',
+                    'type': 'user' if not partner_share and notif else 'customer',
+                    'groups': [],
                 })
 
         return {'partners': recipients_data, 'channels': []}
