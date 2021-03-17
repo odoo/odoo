@@ -6,6 +6,7 @@ var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
+var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var ListView = require('web.ListView');
@@ -150,7 +151,14 @@ QUnit.module('basic_fields', {
                 }]
             },
         };
-    }
+
+        testUtils.mock.patch(FormController, {
+            'multiClickTime': 0,
+        });
+    },
+    afterEach() {
+        testUtils.mock.unpatch(FormController);
+    },
 }, function () {
 
     QUnit.module('DebouncedField');
