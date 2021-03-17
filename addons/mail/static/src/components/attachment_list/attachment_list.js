@@ -11,69 +11,25 @@ export class AttachmentList extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.attachment[]}
+     * @returns {mail.attachment_list[]}
      */
-    get attachments() {
-        return this.messaging && this.messaging.models['mail.attachment'].all().filter(attachment =>
-            this.props.attachmentLocalIds.includes(attachment.localId)
-        );
-    }
-
-    /**
-     * @returns {mail.attachment[]}
-     */
-    get imageAttachments() {
-        return this.attachments.filter(attachment => attachment.fileType === 'image');
-    }
-
-    /**
-     * @returns {mail.attachment[]}
-     */
-    get nonImageAttachments() {
-        return this.attachments.filter(attachment => attachment.fileType !== 'image');
-    }
-
-    /**
-     * @returns {mail.attachment[]}
-     */
-    get viewableAttachments() {
-        return this.attachments.filter(attachment => attachment.isViewable);
+    get attachmentList() {
+        return this.messaging && this.messaging.models['mail.attachment_list'].get(this.props.attachmentListLocalId);
     }
 
 }
 
 Object.assign(AttachmentList, {
     defaultProps: {
-        attachmentLocalIds: [],
-    },
+        isCompact: false,
+   },
     props: {
-        areAttachmentsDownloadable: {
-            type: Boolean,
-            optional: true,
-        },
         areAttachmentsEditable: {
             type: Boolean,
             optional: true,
         },
-        attachmentLocalIds: {
-            type: Array,
-            element: String,
-        },
-        attachmentsDetailsMode: {
-            type: String,
-            optional: true,
-            validate: prop => ['auto', 'card', 'hover', 'none'].includes(prop),
-        },
-        attachmentsImageSize: {
-            type: String,
-            optional: true,
-            validate: prop => ['small', 'medium', 'large'].includes(prop),
-        },
-        showAttachmentsExtensions: {
-            type: Boolean,
-            optional: true,
-        },
-        showAttachmentsFilenames: {
+        attachmentListLocalId: String,
+        isCompact: {
             type: Boolean,
             optional: true,
         },
@@ -81,4 +37,4 @@ Object.assign(AttachmentList, {
     template: 'mail.AttachmentList',
 });
 
-registerMessagingComponent(AttachmentList, { propsCompareDepth: { attachmentLocalIds: 1 } });
+registerMessagingComponent(AttachmentList);

@@ -97,7 +97,7 @@ QUnit.test('fileType', async function (assert) {
     assert.strictEqual(attachment, this.messaging.models['mail.attachment'].findFromIdentifyingData({
         id: 750,
     }));
-    assert.strictEqual(attachment.fileType, 'text');
+    assert.ok(attachment.isText);
 });
 
 QUnit.test('isTextFile', async function (assert) {
@@ -115,7 +115,7 @@ QUnit.test('isTextFile', async function (assert) {
     assert.ok(attachment);
     assert.ok(this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
     assert.strictEqual(attachment, this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
-    assert.ok(attachment.isTextFile);
+    assert.ok(attachment.isText);
 });
 
 QUnit.test('isViewable', async function (assert) {
