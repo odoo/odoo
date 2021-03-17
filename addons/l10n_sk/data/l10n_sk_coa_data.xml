@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Account Tax Group -->
+        <record id="sk_chart_template" model="account.chart.template">
+            <field name="name">Slovenská účtová osnova</field>
+            <field name="code_digits">6</field>
+            <field name="bank_account_code_prefix">221</field>
+            <field name="cash_account_code_prefix">211</field>
+            <field name="transfer_account_code_prefix">261</field>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+    </data>
+</odoo>
