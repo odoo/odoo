@@ -73,7 +73,7 @@ class MailResendMessage(models.TransientModel):
                         else:  # has no user, is therefore customer
                             email_partners_data.append(dict(pdata, type='customer'))
 
-                record._notify_record_by_email(message, {'partners': email_partners_data}, check_existing=True, send_after_commit=False)
+                record._notify_record_by_email(message, email_partners_data, check_existing=True, send_after_commit=False)
 
             self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}
