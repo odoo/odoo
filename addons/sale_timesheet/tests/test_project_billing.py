@@ -249,6 +249,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         self.assertEqual(task.sale_line_id, self.project_employee_rate.sale_line_id, "Task created in a project billed on 'employee rate' should be linked to the SOL defined in the project.")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
+        task.write({'sale_line_id': False})  # remove the SOL to check if the timesheet has no SOL when there is no SOL in the task
+
         # log timesheet on task
         timesheet1 = Timesheet.create({
             'name': 'Test Line',
@@ -395,10 +397,10 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
         subtask._onchange_project()
 
-        self.assertFalse(task.sale_line_id, "Task moved in a employee rate billable project have empty so line")
+        self.assertEqual(task.sale_line_id, task.project_id.sale_line_id, "Task moved in a employee rate billable project have the SOL of the project")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
-        self.assertFalse(subtask.sale_line_id, "Subask moved in a employee rate billable project have empty so line")
+        self.assertEqual(subtask.sale_line_id, task.project_id.sale_line_id, "Subask moved in a employee rate billable project have the SOL of the project")
         self.assertEqual(subtask.partner_id, task.project_id.partner_id, "Subask created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
     def test_customer_change_in_project(self):

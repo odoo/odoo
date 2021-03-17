@@ -147,6 +147,20 @@ class Project(models.Model):
                 sol = project.sale_line_id or project.sale_line_employee_ids.sale_line_id[:1]
                 project.partner_id = sol.order_partner_id
 
+    @api.depends('partner_id')
+    def _compute_sale_line_id(self):
+        super()._compute_sale_line_id()
+        for project in self.filtered(lambda p: not p.sale_line_id and p.partner_id and p.pricing_type == 'employee_rate'):
+            # Give a SOL by default either the last SOL with service product and remaining_hours > 0
+            sol = self.env['sale.order.line'].search([
+                ('is_service', '=', True),
+                ('order_partner_id', 'child_of', project.partner_id.commercial_partner_id.id),
+                ('is_expense', '=', False),
+                ('state', 'in', ['sale', 'done']),
+                ('remaining_hours', '>', 0)
+            ], limit=1)
+            project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
+
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
         for project in self.filtered(lambda project: project.sale_line_id):
