@@ -119,6 +119,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
+            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
             'payment_method_id': self.custom_payment_method_in.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -152,6 +153,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
+            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
             'payment_method_id': self.custom_payment_method_in.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -186,6 +188,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
+            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
             'payment_method_id': self.custom_payment_method_in.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -228,6 +231,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
+            'ref': 'INV/2017/01/0001 INV/2017/01/0002',
             'payment_method_id': self.custom_payment_method_in.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -270,6 +274,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
+            'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
             'payment_method_id': self.custom_payment_method_in.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -312,6 +317,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [{
+            'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
             'payment_method_id': self.custom_payment_method_in.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
@@ -349,8 +355,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [
-            {'payment_method_id': self.manual_payment_method_in.id},
-            {'payment_method_id': self.manual_payment_method_in.id},
+            {
+                'ref': 'INV/2017/01/0001',
+                'payment_method_id': self.manual_payment_method_in.id,
+            },
+            {
+                'ref': 'INV/2017/01/0002',
+                'payment_method_id': self.manual_payment_method_in.id,
+            },
         ])
         self.assertRecordValues(payments[0].line_ids.sorted('balance') + payments[1].line_ids.sorted('balance'), [
             # == Payment 1: to pay out_invoice_1 ==
@@ -399,8 +411,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [
-            {'payment_method_id': self.manual_payment_method_out.id},
-            {'payment_method_id': self.manual_payment_method_out.id},
+            {
+                'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
+                'payment_method_id': self.manual_payment_method_out.id,
+            },
+            {
+                'ref': 'BILL/2017/01/0003',
+                'payment_method_id': self.manual_payment_method_out.id,
+            },
         ])
         self.assertRecordValues(payments[0].line_ids.sorted('balance') + payments[1].line_ids.sorted('balance'), [
             # == Payment 1: to pay in_invoice_1 & in_invoice_2 ==
@@ -449,9 +467,18 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertRecordValues(payments, [
-            {'payment_method_id': self.manual_payment_method_out.id},
-            {'payment_method_id': self.manual_payment_method_out.id},
-            {'payment_method_id': self.manual_payment_method_out.id},
+            {
+                'ref': 'BILL/2017/01/0001',
+                'payment_method_id': self.manual_payment_method_out.id,
+            },
+            {
+                'ref': 'BILL/2017/01/0002',
+                'payment_method_id': self.manual_payment_method_out.id,
+            },
+            {
+                'ref': 'BILL/2017/01/0003',
+                'payment_method_id': self.manual_payment_method_out.id,
+            },
         ])
         self.assertRecordValues(payments[0].line_ids.sorted('balance') + payments[1].line_ids.sorted('balance') + payments[2].line_ids.sorted('balance'), [
             # == Payment 1: to pay in_invoice_1 ==
