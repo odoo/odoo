@@ -12,7 +12,7 @@ Dominik Ketys dominik.kertys@26house.com https://github.com/dominikkertys
 
 List of contributors:
 
-Dominik Ketys dominik.kertys@26house.com https://github.com/dominikkertys
+Dominik Kertys dominik.kertys@26house.com https://github.com/dominikkertys
 
 Peter Dovičovič peter.dovicovic@26house.com https://github.com/peterdovicovic
 
