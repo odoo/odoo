@@ -122,6 +122,7 @@ class Meeting(models.Model):
     # filtering
     active = fields.Boolean(
         'Active', default=True,
+        tracking=True,
         help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")
     categ_ids = fields.Many2many(
         'calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
