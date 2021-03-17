@@ -3711,7 +3711,7 @@ var BasicModel = AbstractModel.extend({
         // in general, the actual "company_id" field of the form should be used for m2o domains, not this fallback
         let current_company_id;
         if (session.user_context.allowed_company_ids) {
-            current_company_id = Object.keys(session.user_context.allowed_company_ids)[0];
+            current_company_id = session.user_context.allowed_company_ids[0];
         } else {
             current_company_id = session.user_companies ?
                 session.user_companies.current_company :
