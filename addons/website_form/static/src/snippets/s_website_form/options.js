@@ -903,7 +903,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     renderListItems: async function (previewMode, value, params) {
         const valueList = JSON.parse(value);
         const field = this._getActiveField(true);
-        field.records = valueList.map(val => params.records.find(rec => rec.id === val));
+        field.records = valueList;
         await this._replaceField(field);
     },
 
@@ -940,10 +940,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             }
             case 'toggleRequired':
                 return this.$target[0].classList.contains(params.activeValue) ? params.activeValue : 'false';
-            case 'renderListItems': {
-                const values = this._getListItems().map(el => el.id);
-                return JSON.stringify(values);
-            }
+            case 'renderListItems':
+                return JSON.stringify(this._getListItems());
         }
         return this._super(...arguments);
     },
