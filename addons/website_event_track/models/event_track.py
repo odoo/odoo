@@ -354,6 +354,8 @@ class Track(models.Model):
     def _synchronize_with_stage(self, stage):
         if stage.is_done:
             self.is_published = True
+        elif stage.is_cancel:
+            self.is_published = False
 
     # ------------------------------------------------------------
     # MESSAGING
