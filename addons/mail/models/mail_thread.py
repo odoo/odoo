@@ -906,8 +906,7 @@ class MailThread(models.AbstractModel):
         # "Unfold" long header bodies in order to avoid situations
         # when Message Id is splited and can't be matched in DB
         # https://tools.ietf.org/html/rfc2822#section-2.2.3
-        for crlf_wsp in ['\n ', '\r ', '\r\n ']:
-            msg_references = list(map(lambda ref: ref.replace(crlf_wsp, ''), msg_references))
+        msg_references = list(map(lambda ref: re.sub(r'(\r\n)([\t ])', r'\2', ref), msg_references))
         mail_messages = self.env['mail.message'].sudo().search([('message_id', 'in', msg_references)], limit=1, order='id desc, message_id')
         is_a_reply = bool(mail_messages)
         reply_model, reply_thread_id = mail_messages.model, mail_messages.res_id
