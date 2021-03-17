@@ -5,6 +5,7 @@ var AbstractField = require('web.AbstractField');
 var AbstractStorageService = require('web.AbstractStorageService');
 const ControlPanel = require('web.ControlPanel');
 const fieldRegistry = require('web.field_registry');
+var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var KanbanRecord = require('web.KanbanRecord');
 var ListRenderer = require('web.ListRenderer');
@@ -162,7 +163,14 @@ QUnit.module('fields', {}, function () {
                     }]
                 },
             };
-        }
+
+            testUtils.mock.patch(FormController, {
+                'multiClickTime': 0,
+            });
+        },
+        afterEach: function () {
+            testUtils.mock.unpatch(FormController);
+        },
     }, function () {
         QUnit.module('FieldOne2Many');
 
