@@ -559,13 +559,13 @@ class ProductProduct(models.Model):
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in stock_valuation_layers.mapped('product_id')}
         for out_stock_valuation_layer in stock_valuation_layers:
             product = out_stock_valuation_layer.product_id
-            expense_account = product._get_product_accounts()['expense']
-            if not expense_account:
-                raise UserError(_('Please define an expense account for this product: "%s" (id:%d) - or for its category: "%s".') % (product.name, product.id, self.name))
+            stock_input_account = product_accounts[product.id].get('stock_input')
+            if not stock_input_account:
+                raise UserError(_('You don\'t have any stock input account defined on your product category. You must define one before processing this operation.'))
             if not product_accounts[product.id].get('stock_valuation'):
                 raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
 
-            debit_account_id = expense_account.id
+            debit_account_id = stock_input_account.id
             credit_account_id = product_accounts[product.id]['stock_valuation'].id
             value = out_stock_valuation_layer.value
             move_vals = {
