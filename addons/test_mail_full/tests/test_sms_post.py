@@ -41,7 +41,7 @@ class TestSMSPost(TestMailFullCommon, TestMailFullRecipients):
 
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            test_record._notify_record_by_sms(messages, {'partners': [{'id': self.partner_1.id, 'notif': 'sms'}]}, check_existing=True)
+            test_record._notify_record_by_sms(messages, [{'id': self.partner_1.id, 'notif': 'sms'}], check_existing=True)
         self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
 
     def test_message_sms_internals_sms_numbers(self):

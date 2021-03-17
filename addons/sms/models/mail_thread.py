@@ -269,7 +269,7 @@ class MailThread(models.AbstractModel):
         }
 
         # notify from computed recipients_data (followers, specific recipients)
-        partners_data = [r for r in recipients_data['partners'] if r['notif'] == 'sms']
+        partners_data = [r for r in recipients_data if r['notif'] == 'sms']
         partner_ids = [r['id'] for r in partners_data]
         if partner_ids:
             for partner in self.env['res.partner'].sudo().browse(partner_ids):

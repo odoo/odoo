@@ -90,7 +90,7 @@ class TestProjectCommon(TransactionCase):
                            model=None, target_model='project.task', target_field='name'):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
-        self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
+        self.env['mail.thread'].message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def test_delete_project_with_tasks(self):

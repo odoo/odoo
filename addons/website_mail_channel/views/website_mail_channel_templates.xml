@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-lg-2">
                     <i class='fa fa-fw fa-user' role="img" aria-label="Recipients" title="Recipients"/> <t t-esc="group_data[group.id]['members_count']"/> members<br />
-                    <i class='fa fa-fw fa-envelope-o' role="img" aria-label="Traffic" title="Traffic"/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
+                    <i class='fa fa-fw fa-envelope-o' role="img" aria-label="Traffic" title="Traffic"/> <t t-esc="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
                 <div class="col-lg-3">
                     <!--<t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>-->
@@ -202,20 +202,28 @@
                             <div t-raw="message.body"/>
 
                             <div>
-                                <p t-if="message.attachment_ids" class="mt8">
+                                <p t-if="attachments" class="mt8">
                                     <a href="#" class="o_mg_link_hide">
-                                        <i class="fa fa-chevron-right" role="img" aria-label="Hide attachments" title="Hide attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
+                                        <i class="fa fa-chevron-right" role="img" aria-label="Hide attachments" title="Hide attachments"/> <t t-esc="len(attachments)"/> attachments
                                     </a>
                                     <a href="#" class="o_mg_link_show">
-                                        <i class="fa fa-chevron-down" role="img" aria-label="Show attachments" title="Show attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
+                                        <i class="fa fa-chevron-down" role="img" aria-label="Show attachments" title="Show attachments"/> <t t-esc="len(attachments)"/> attachments
                                     </a>
                                 </p>
                                 <div class="o_mg_link_content">
-                                    <div class="col-lg-2 col-md-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
-                                        <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
-                                            <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
-                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
-                                        </a>
+                                    <div class="col-lg-2 col-md-3 text-center" t-foreach='attachments' t-as='attachment'>
+                                        <t t-if="attachment.access_token">
+                                            <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
+                                                <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
+                                                <div class='oe_attachment_name'><t t-esc='attachment.name' /></div>
+                                            </a>
+                                        </t>
+                                        <t t-else="">
+                                            <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                                                <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
+                                                <div class='oe_attachment_name'><t t-esc='attachment.name' /></div>
+                                            </a>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
@@ -265,10 +273,10 @@
                     </small>
                     <p t-if="thread.child_ids" class="mt8">
                         <a href="#" class="o_mg_link_hide">
-                            <i class="fa fa-chevron-right" role="img" aria-label="Hide replies" title="Hide replies"/> <t t-raw="len(thread.child_ids)"/> replies
+                            <i class="fa fa-chevron-right" role="img" aria-label="Hide replies" title="Hide replies"/> <t t-esc="len(thread.child_ids)"/> replies
                         </a>
                         <a href="#" class="o_mg_link_show">
-                            <i class="fa fa-chevron-down" role="img" aria-label="Show replies" title="Show replies"/> <t t-raw="len(thread.child_ids)"/> replies
+                            <i class="fa fa-chevron-down" role="img" aria-label="Show replies" title="Show replies"/> <t t-esc="len(thread.child_ids)"/> replies
                         </a>
                     </p>
                     <div class="o_mg_link_content o_mg_replies">

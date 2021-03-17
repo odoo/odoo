@@ -3,24 +3,6 @@
 
 from odoo import api, fields, models, _
 
-class ChannelPartner(models.Model):
-    _inherit = 'mail.channel.partner'
-
-    @api.autovacuum
-    def _gc_unpin_livechat_sessions(self):
-        """ Unpin livechat sessions with no activity for at least one day to
-            clean the operator's interface """
-        self.env.cr.execute("""
-            UPDATE mail_channel_partner
-            SET is_pinned = false
-            WHERE id in (
-                SELECT cp.id FROM mail_channel_partner cp
-                INNER JOIN mail_channel c on c.id = cp.channel_id
-                WHERE c.channel_type = 'livechat' AND cp.is_pinned is true AND
-                    cp.write_date < current_timestamp - interval '1 day'
-            )
-        """)
-
 
 class MailChannel(models.Model):
     """ Chat Session
@@ -61,7 +43,7 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat' and channel.public == 'private':
                 notifications.append([channel.uuid, notifications[0][1]])
         if not message.author_id:
-            unpinned_channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: not cp.is_pinned)
+            unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
             if unpinned_channel_partner:
                 unpinned_channel_partner.write({'is_pinned': True})
                 notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
@@ -92,8 +74,14 @@ class MailChannel(models.Model):
     @api.model
     def channel_fetch_slot(self):
         values = super(MailChannel, self).channel_fetch_slot()
-        pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
-        values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('id', 'in', pinned_channels.ids)]).channel_info()
+        livechat_channels = self.env['mail.channel'].search([
+            ('channel_type', '=', 'livechat'),
+            ('channel_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+                ('partner_id', '=', self.env.user.partner_id.id),
+                ('is_pinned', '=', True)])
+            ),
+        ])
+        values['channel_livechat'] = livechat_channels.channel_info()
         return values
 
     def _channel_get_livechat_visitor_info(self):
@@ -143,8 +131,8 @@ class MailChannel(models.Model):
             FROM mail_channel C
             WHERE NOT EXISTS (
                 SELECT *
-                FROM mail_message_mail_channel_rel R
-                WHERE R.mail_channel_id = C.id
+                FROM mail_message M
+                WHERE M.res_id = C.id AND m.model = 'mail.channel'
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
                 COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
                 < ((now() at time zone 'UTC') - interval %s)""", ("%s hours" % hours,))
@@ -189,7 +177,7 @@ class MailChannel(models.Model):
         if self.livechat_active:
             self.livechat_active = False
             # avoid useless notification if the channel is empty
-            if not self.channel_message_ids:
+            if not self.message_ids:
                 return
             # Notify that the visitor has left the conversation
             self.message_post(author_id=self.env.ref('base.partner_root').id,

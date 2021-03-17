@@ -86,12 +86,12 @@ class SMSResend(models.TransientModel):
             numbers = [r.sms_number for r in self.recipient_ids if r.resend and not r.partner_id]
 
             rdata = []
-            for pid, cid, active, pshare, ctype, notif, groups in self.env['mail.followers']._get_recipient_data(record, 'sms', False, pids=pids):
+            for pid, active, pshare, notif, groups in self.env['mail.followers']._get_recipient_data(record, 'sms', False, pids=pids):
                 if pid and notif == 'sms':
                     rdata.append({'id': pid, 'share': pshare, 'active': active, 'notif': notif, 'groups': groups or [], 'type': 'customer' if pshare else 'user'})
             if rdata or numbers:
                 record._notify_record_by_sms(
-                    self.mail_message_id, {'partners': rdata}, check_existing=True,
+                    self.mail_message_id, rdata, check_existing=True,
                     sms_numbers=numbers, sms_pid_to_number=sms_pid_to_number,
                     put_in_queue=False
                 )

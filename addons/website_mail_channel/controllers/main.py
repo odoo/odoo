@@ -175,8 +175,19 @@ class MailGroup(http.Controller):
             base_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id)]
         next_message = Message.search(base_domain + [('date', '<', message.date)], order="date DESC", limit=1) or None
         prev_message = Message.search(base_domain + [('date', '>', message.date)], order="date", limit=1) or None
+
+        # handle access to attachments for public / portal
+        if request.env.user.has_group('base.group_user'):
+            attachments = message.attachment_ids
+        else:
+            # portal / external people cannot access attachments -> grant access
+            # as message is ok, generate access tokens
+            attachments = message.sudo().attachment_ids
+            attachments.generate_access_token()
+
         values = {
             'message': message,
+            'attachments': attachments,
             'group': group,
             'mode': mode,
             'archives': self._get_archives(group.id),

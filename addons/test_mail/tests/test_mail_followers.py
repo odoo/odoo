@@ -47,13 +47,12 @@ class BaseFollowersTest(TestMailCommon):
 
     def test_field_followers(self):
         test_record = self.test_record.with_user(self.user_employee)
-        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id], channel_ids=[self.channel_listen.id])
+        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id])
         followers = self.env['mail.followers'].search([
             ('res_model', '=', 'mail.test.simple'),
             ('res_id', '=', test_record.id)])
         self.assertEqual(followers, test_record.message_follower_ids)
         self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.channel_listen)
 
     def test_followers_subtypes_default(self):
         test_record = self.test_record.with_user(self.user_employee)
@@ -92,12 +91,10 @@ class BaseFollowersTest(TestMailCommon):
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef)
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_noforce(self):
@@ -106,13 +103,11 @@ class BaseFollowersTest(TestMailCommon):
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
         # set new subtypes with force=False, meaning no rewriting of the subscription is done -> result should not change
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
-        self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_update(self):
@@ -130,28 +125,6 @@ class BaseFollowersTest(TestMailCommon):
         # remove one subtype `mt_mg_def` and set new subtype `mt_al_def`
         test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_cl_def.id, self.mt_al_def.id])
         self.assertEqual(follower.subtype_ids, self.mt_cl_def | self.mt_al_def)
-
-    def test_followers_no_DID(self):
-        """Test that a follower cannot suffer from dissociative identity disorder.
-           It cannot be both a partner and a channel.
-        """
-        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
-            self.env['mail.followers'].create({
-                'res_model': self.test_record._name,
-                'res_id': self.test_record.id,
-                'partner_id': self.user_employee.partner_id.id,
-                'channel_id': self.channel_listen.id,
-            })
-
-    def test_followers_default_partner_context(self):
-        """Test that a follower partner_id is not taken from context
-           when channel id is also defined.
-        """
-        test_record = self.test_record.with_user(self.user_employee)
-        test_record.with_context(default_partner_id=1).message_subscribe(
-            partner_ids=[self.user_employee.partner_id.id, self.user_admin.partner_id.id],
-            channel_ids=[self.channel_listen.id]
-        )
 
     @users('employee')
     def test_followers_inactive(self):
@@ -450,10 +423,10 @@ class DuplicateNotificationTest(TestMailCommon):
         self.assertEqual(notif.notification_type, 'email')
 
         subtype = self.env.ref('mail.mt_comment')
-        res = self.env['mail.followers']._get_recipient_data(test, 'comment',  subtype.id, pids=common_partner.ids)
+        res = self.env['mail.followers']._get_recipient_data(test, 'comment', subtype.id, pids=common_partner.ids)
         partner_notif = [r for r in res if r[0] == common_partner.id]
         self.assertEqual(len(partner_notif), 1)
-        self.assertEqual(partner_notif[0][5], 'email')
+        self.assertEqual(partner_notif[0][3], 'email')
 
 @tagged('post_install', '-at_install')
 class UnlinkedNotificationTest(TestMailCommon):

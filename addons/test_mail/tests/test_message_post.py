@@ -128,7 +128,6 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(msg.body, _body)
         self.assertEqual(msg.partner_ids, self.partner_1 | self.partner_2)
         self.assertEqual(msg.notified_partner_ids, self.user_admin.partner_id | self.partner_1 | self.partner_2)
-        self.assertEqual(msg.channel_ids, self.env['mail.channel'])
 
         # notifications emails should have been deleted
         self.assertFalse(self.env['mail.mail'].sudo().search([('mail_message_id', '=', msg.id)]),

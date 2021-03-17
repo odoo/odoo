@@ -91,16 +91,6 @@ class FollowerListMenu extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAddChannels(ev) {
-        ev.preventDefault();
-        this._hide();
-        this.thread.promptAddChannelFollower();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickAddFollowers(ev) {
         ev.preventDefault();
         this._hide();

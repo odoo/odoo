@@ -32,6 +32,10 @@ class MockEmail(common.BaseCase):
                     ('cancel', 'Cancelled')
     """
 
+    # ------------------------------------------------------------
+    # GATEWAY MOCK
+    # ------------------------------------------------------------
+
     @contextmanager
     def mock_mail_gateway(self, mail_unlink_sent=False, sim_error=None):
         build_email_origin = IrMailServer.build_email
@@ -116,7 +120,7 @@ class MockEmail(common.BaseCase):
             msg_id = "<%.7f-test@iron.sky>" % (time.time())
 
         mail = self.format(template, to=to, subject=subject, cc=cc, return_path=return_path, extra=extra, email_from=email_from, msg_id=msg_id)
-        self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
+        self.env['mail.thread'].message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):

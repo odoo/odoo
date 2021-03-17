@@ -43,7 +43,6 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         channel = self.env['mail.channel'].with_user(self.user_employee).with_context({
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
-            'mail_channel_noautofollow': True,
         }).create({
             'channel_partner_ids': [(4, partner.id), (4, partner2.id)],
             'public': 'private',
@@ -52,8 +51,11 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'name': 'test'
         })
         channel_info = channel.channel_info()[0]
-        self.assertFalse(channel_info['members'][0]['out_of_office_date_end'], "current user should not be out of office")
-        self.assertEqual(channel_info['members'][1]['out_of_office_date_end'], leave_date_end, "correspondent should be out of office")
+        self.assertEqual(len(channel_info['members']), 2, "Channel info should get info for the 2 members")
+        partner_info = next(c for c in channel_info['members'] if c['email'] == partner.email)
+        partner2_info = next(c for c in channel_info['members'] if c['email'] == partner2.email)
+        self.assertFalse(partner2_info['out_of_office_date_end'], "current user should not be out of office")
+        self.assertEqual(partner_info['out_of_office_date_end'], leave_date_end, "correspondent should be out of office")
 
 
 @tagged('out_of_office')

@@ -47,7 +47,6 @@ QUnit.test('mark as read', async function (assert) {
         message_unread_counter: 1,
     });
     this.data['mail.message'].records.push({
-        channel_ids: [11],
         id: 100,
         model: 'mail.channel',
         res_id: 11,

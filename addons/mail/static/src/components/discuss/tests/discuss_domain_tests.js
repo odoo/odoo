@@ -82,10 +82,12 @@ QUnit.test('discuss should keep filter domain on changing thread', async functio
     this.data['mail.channel'].records.push({ id: 20 });
     this.data['mail.message'].records.push({
         body: "test",
-        channel_ids: [20],
+        model: "mail.channel",
+        res_id: 20,
     }, {
         body: "not empty",
-        channel_ids: [20],
+        model: "mail.channel",
+        res_id: 20,
     });
     await this.start();
     const channel = this.env.models['mail.thread'].findFromIdentifyingData({

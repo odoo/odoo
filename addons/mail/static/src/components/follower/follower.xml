@@ -5,7 +5,7 @@
         <div class="o_Follower">
             <t t-if="follower">
                 <a class="o_Follower_details" t-att-class="{ 'o-inactive': !follower.isActive }" href="#" t-on-click="_onClickDetails">
-                    <img class="o_Follower_avatar" t-attf-src="/web/image/{{ follower.resModel }}/{{ follower.resId }}/image_128" alt="Avatar"/>
+                    <img class="o_Follower_avatar" t-att-src="follower.partner.avatarUrl" alt="Avatar"/>
                     <span class="o_Follower_name" t-esc="follower.name"/>
                 </a>
                 <t t-if="follower.isEditable">
