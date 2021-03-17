@@ -206,6 +206,12 @@ function factory(dependencies) {
         id: attr({
             required: true,
         }),
+        /**
+         * Determines whether this user is an internal user. An internal user is
+         * a member of the group `base.group_user`. This is the inverse of the
+         * `share` field in python.
+         */
+        isInternalUser: attr(),
         display_name: attr({
             compute: '_computeDisplayName',
             dependencies: [
