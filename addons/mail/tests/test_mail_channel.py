@@ -254,6 +254,16 @@ class TestChannelInternals(MailCommon):
                 channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertSentEmail(self.partner_employee, [self.test_partner])
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_channel_recipients_mention(self):
+        """ Posting a message on a classic channel should support mentioning somebody """
+        self.test_channel.write({'alias_name': False})
+        with self.mock_mail_gateway():
+            self.test_channel.message_post(
+                body="Test", partner_ids=self.test_partner.ids,
+                message_type='comment', subtype_xmlid='mail.mt_comment')
+        self.assertSentEmail(self.test_channel.env.user.partner_id, [self.test_partner])
+
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
         """Archiving / deleting a user should automatically unsubscribe related partner from private channels"""
