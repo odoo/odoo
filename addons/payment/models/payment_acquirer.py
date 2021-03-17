@@ -420,17 +420,6 @@ class PaymentAcquirer(models.Model):
         """
         return True
 
-    def _get_base_url(self):
-        """ Get the base url of the website on which the payment is made.
-
-        Note: self.ensure_one()
-
-        :return: The website base url
-        :rtype: str
-        """
-        self.ensure_one()
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
     def _compute_fees(self, amount, currency, country):
         """ Compute the transaction fees.
 

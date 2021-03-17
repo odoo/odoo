@@ -205,7 +205,7 @@ class AdyenAccount(models.Model):
                 'res_id': self.env.company.adyen_account_id.id,
                 'type': 'ir.actions.act_window',
             }
-        return_url = url_join(self.env['ir.config_parameter'].sudo().get_param('web.base.url'), 'adyen_platforms/create_account')
+        return_url = url_join(self.env.company.get_base_url(), 'adyen_platforms/create_account')
         onboarding_url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.onboarding_url')
         return {
             'type': 'ir.actions.act_url',

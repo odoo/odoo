@@ -42,7 +42,7 @@ class PaymentTransaction(models.Model):
         if self.provider != 'buckaroo':
             return res
 
-        return_url = urls.url_join(self.acquirer_id._get_base_url(), BuckarooController._return_url)
+        return_url = urls.url_join(self.acquirer_id.get_base_url(), BuckarooController._return_url)
         rendering_values = {
             'api_url': self.acquirer_id._buckaroo_get_api_url(),
             'Brq_websitekey': self.acquirer_id.buckaroo_website_key,

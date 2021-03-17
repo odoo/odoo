@@ -86,7 +86,7 @@ class AdyenController(http.Controller):
         :rtype: dict
         """
         acquirer_sudo = request.env['payment.acquirer'].browse(acquirer_id).sudo()
-        domain = acquirer_sudo._get_base_url()
+        domain = acquirer_sudo.get_base_url()
         data = {
             'originDomains': [domain],
         }
@@ -144,10 +144,10 @@ class AdyenController(http.Controller):
                 'allow3DS2': True
             },
             'channel': 'web',  # Required to support 3DS
-            'origin': acquirer_sudo._get_base_url(),  # Required to support 3DS
+            'origin': acquirer_sudo.get_base_url(),  # Required to support 3DS
             'browserInfo': browser_info,  # Required to support 3DS
             'returnUrl': urls.url_join(
-                acquirer_sudo._get_base_url(),
+                acquirer_sudo.get_base_url(),
                 # Include the reference in the return url to be able to match it after redirection.
                 # The key 'merchantReference' is chosen on purpose to be the same than that returned
                 # by the /payments endpoint of Adyen.
