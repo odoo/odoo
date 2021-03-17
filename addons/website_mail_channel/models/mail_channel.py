@@ -45,8 +45,11 @@ class MailGroup(models.Model):
                 force_send=True,
                 email_values={
                     'recipient_ids': [(4, partner_id)],
-                    'email_from': website.company_id.email,
-                }
+                    'email_from': website.company_id.email_formatted,
+                    'author_id': self.create_uid.partner_id.id,
+                    'message_type': 'user_notification',
+                },
+                notif_layout='mail.mail_notification_light',
             )
 
         return True

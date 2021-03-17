@@ -18,7 +18,7 @@ class MailChannel(models.Model):
          delete mail_channel as not useful to keep empty chat
          """
         super(MailChannel, self)._execute_channel_pin(pinned)
-        if self.livechat_active and not self.channel_message_ids:
+        if self.livechat_active and not self.message_ids:
             self.unlink()
 
     def channel_info(self, extra_info=False):

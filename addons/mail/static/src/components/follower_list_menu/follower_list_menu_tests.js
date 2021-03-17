@@ -120,7 +120,7 @@ QUnit.test('base rendering editable', async function (assert) {
 });
 
 QUnit.test('click on "add followers" button', async function (assert) {
-    assert.expect(16);
+    assert.expect(15);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -129,10 +129,6 @@ QUnit.test('click on "add followers" button', async function (assert) {
             payload.action.context.default_res_model,
             'res.partner',
             "'The 'add followers' action should contain thread model in context'"
-        );
-        assert.notOk(
-            payload.action.context.mail_invite_follower_channel_only,
-            "The 'add followers' action should not be restricted to channels only"
         );
         assert.strictEqual(
             payload.action.context.default_res_id,
@@ -237,124 +233,6 @@ QUnit.test('click on "add followers" button', async function (assert) {
     );
 });
 
-QUnit.test('click on "add channels" button', async function (assert) {
-    assert.expect(16);
-
-    const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('action:open_view');
-        assert.strictEqual(
-            payload.action.context.default_res_model,
-            'res.partner',
-            "'The 'add channels' action should contain thread model in context'"
-        );
-        assert.ok(
-            payload.action.context.mail_invite_follower_channel_only,
-            "The 'add channels' action should be restricted to channels only"
-        );
-        assert.strictEqual(
-            payload.action.context.default_res_id,
-            100,
-            "The 'add channels' action should contain thread id in context"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'mail.wizard.invite',
-            "The 'add channels' action should be a wizard invite of mail module"
-        );
-        assert.strictEqual(
-            payload.action.type,
-            "ir.actions.act_window",
-            "The 'add channels' action should be of type 'ir.actions.act_window'"
-        );
-        const partner = this.data['res.partner'].records.find(
-            partner => partner.id === payload.action.context.default_res_id
-        );
-        partner.message_follower_ids.push(1);
-        payload.options.on_close();
-    });
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.followers'].records.push({
-        channel_id: 42,
-        email: "bla@bla.bla",
-        id: 1,
-        is_active: true,
-        is_editable: true,
-        name: "Supa channel",
-        res_id: 100,
-        res_model: 'res.partner',
-    });
-    await this.start({
-        env: { bus },
-    });
-    const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
-    });
-    await this.createFollowerListMenuComponent(thread);
-
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu',
-        "should have followers menu component"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
-        "0",
-        "Followers counter should be equal to 0"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu_buttonFollowers',
-        "should have followers button"
-    );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu_dropdown',
-        "followers dropdown should be opened"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu_addChannelsButton',
-        "followers dropdown should contain a 'Add channels' button"
-    );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_addChannelsButton').click();
-    });
-    assert.containsNone(
-        document.body,
-        '.o_FollowerListMenu_dropdown',
-        "followers dropdown should be closed after click on 'add channels'"
-    );
-    assert.verifySteps([
-        'action:open_view',
-    ]);
-    assert.strictEqual(
-        document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
-        "1",
-        "Followers counter should now be equal to 1"
-    );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    });
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerMenu_follower',
-        "Follower list should be refreshed and contain a follower"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_Follower_name').textContent,
-        "Supa channel",
-        "Follower added in follower list should be the one added"
-    );
-});
-
 QUnit.test('click on remove follower', async function (assert) {
     assert.expect(6);
 
@@ -365,7 +243,7 @@ QUnit.test('click on remove follower', async function (assert) {
                 assert.step('message_unsubscribe');
                 assert.deepEqual(
                     args.args,
-                    [[100], [self.env.messaging.currentPartner.id], []],
+                    [[100], [self.env.messaging.currentPartner.id]],
                     "message_unsubscribe should be called with right argument"
                 );
             }

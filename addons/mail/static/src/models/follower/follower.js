@@ -19,18 +19,6 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
-            if ('channel_id' in data) {
-                if (!data.channel_id) {
-                    data2.channel = [['unlink-all']];
-                } else {
-                    const channelData = {
-                        id: data.channel_id,
-                        model: 'mail.channel',
-                        name: data.name,
-                    };
-                    data2.channel = [['insert', channelData]];
-                }
-            }
             if ('id' in data) {
                 data2.id = data.id;
             }
@@ -67,10 +55,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {
-            if (this.partner) {
-                return this.partner.openProfile();
-            }
-            return this.channel.openProfile();
+            return this.partner.openProfile();
         }
 
         /**
@@ -78,16 +63,11 @@ function factory(dependencies) {
          */
         async remove() {
             const partner_ids = [];
-            const channel_ids = [];
-            if (this.partner) {
-                partner_ids.push(this.partner.id);
-            } else {
-                channel_ids.push(this.channel.id);
-            }
+            partner_ids.push(this.partner.id);
             await this.async(() => this.env.services.rpc({
                 model: this.followedThread.model,
                 method: 'message_unsubscribe',
-                args: [[this.followedThread.id], partner_ids, channel_ids]
+                args: [[this.followedThread.id], partner_ids]
             }));
             const followedThread = this.followedThread;
             this.delete();
@@ -149,8 +129,6 @@ function factory(dependencies) {
                 };
                 if (this.partner) {
                     kwargs.partner_ids = [this.partner.id];
-                } else {
-                    kwargs.channel_ids = [this.channel.id];
                 }
                 await this.async(() => this.env.services.rpc({
                     model: this.followedThread.model,
@@ -177,69 +155,9 @@ function factory(dependencies) {
             return `${this.modelName}_${data.id}`;
         }
 
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeName() {
-            if (this.channel) {
-                return this.channel.name;
-            }
-            if (this.partner) {
-                return this.partner.name;
-            }
-            return '';
-        }
-
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeResId() {
-            if (this.partner) {
-                return this.partner.id;
-            }
-            if (this.channel) {
-                return this.channel.id;
-            }
-            return 0;
-        }
-
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeResModel() {
-            if (this.partner) {
-                return this.partner.model;
-            }
-            if (this.channel) {
-                return this.channel.model;
-            }
-            return '';
-        }
-
     }
 
     Follower.fields = {
-        resId: attr({
-            compute: '_computeResId',
-            default: 0,
-            dependencies: [
-                'channelId',
-                'partnerId',
-            ],
-        }),
-        channel: many2one('mail.thread'),
-        channelId: attr({
-            related: 'channel.id',
-        }),
-        channelModel: attr({
-            related: 'channel.model',
-        }),
-        channelName: attr({
-            related: 'channel.name',
-        }),
         followedThread: many2one('mail.thread', {
             inverse: 'followers',
         }),
@@ -253,29 +171,13 @@ function factory(dependencies) {
             default: false,
         }),
         name: attr({
-            compute: '_computeName',
-            dependencies: [
-                'channelName',
-                'partnerName',
-            ],
-        }),
-        partner: many2one('mail.partner'),
-        partnerId: attr({
-            related: 'partner.id',
-        }),
-        partnerModel: attr({
-            related: 'partner.model',
-        }),
-        partnerName: attr({
             related: 'partner.name',
         }),
-        resModel: attr({
-            compute: '_computeResModel',
-            default: '',
-            dependencies: [
-                'channelModel',
-                'partnerModel',
-            ],
+        partner: many2one('mail.partner', {
+            required: true,
+        }),
+        partnerId: attr({
+            related: 'partner.id',
         }),
         selectedSubtypes: many2many('mail.follower_subtype'),
         subtypes: many2many('mail.follower_subtype'),

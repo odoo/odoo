@@ -20,7 +20,6 @@ class ServerActions(models.Model):
         ], ondelete={'email': 'cascade', 'followers': 'cascade', 'next_activity': 'cascade'})
     # Followers
     partner_ids = fields.Many2many('res.partner', string='Add Followers')
-    channel_ids = fields.Many2many('mail.channel', string='Add Channels')
     # Template
     template_id = fields.Many2one(
         'mail.template', 'Email Template', ondelete='set null',
@@ -65,9 +64,9 @@ class ServerActions(models.Model):
 
     def _run_action_followers_multi(self, eval_context=None):
         Model = self.env[self.model_name]
-        if self.partner_ids or self.channel_ids and hasattr(Model, 'message_subscribe'):
+        if self.partner_ids and hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
-            records.message_subscribe(self.partner_ids.ids, self.channel_ids.ids)
+            records.message_subscribe(partner_ids=self.partner_ids.ids)
         return False
 
     def _is_recompute(self):

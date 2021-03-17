@@ -24,7 +24,6 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
-        self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_no_subscribe_recipients(self):
@@ -32,7 +31,6 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
-        self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients(self):
@@ -40,7 +38,6 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
-        self.assertEqual(self.test_record.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     def test_chatter_mail_create_nolog(self):
         """ Test disable of automatic chatter message at create """
@@ -136,8 +133,14 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             # mark all as read clear needactions
             msg1 = self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[employee_partner.id])
             self._reset_bus()
-            employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg1.id], 'needaction_inbox_counter': 0 }])
+            with self.assertBus(
+                    [(self.cr.dbname, 'res.partner', employee_partner.id)],
+                    message_items=[
+                        {'type': 'mark_as_read',
+                         'message_ids': [msg1.id],
+                         'needaction_inbox_counter': 0}
+                    ]):
+                employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
 
@@ -155,8 +158,14 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             self.assertEqual(na_count, 1, "message not accessible is currently still counted")
 
             self._reset_bus()
-            employee_partner.env['mail.message'].mark_all_as_read(domain=[])
-            self.assertBusNotifications([(self.cr.dbname, 'res.partner', employee_partner.id)], [{ 'type': 'mark_as_read', 'message_ids': [msg2.id], 'needaction_inbox_counter': 0 }])
+            with self.assertBus(
+                    [(self.cr.dbname, 'res.partner', employee_partner.id)],
+                    message_items=[
+                        {'type': 'mark_as_read',
+                         'message_ids': [msg2.id],
+                         'needaction_inbox_counter': 0}
+                    ]):
+                employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
 

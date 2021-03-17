@@ -136,11 +136,6 @@ class TestMassMailFeatures(MassMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_channel_blacklisted_recipients(self):
         """ Posting a message on a channel should send one email to all recipients, except the blacklisted ones """
-        def _join_channel(channel, partners):
-            for partner in partners:
-                channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner.id})]})
-            channel.invalidate_cache()
-
         test_channel = self.env['mail.channel'].create({
             'name': 'Test',
             'description': 'Description',
@@ -163,8 +158,7 @@ class TestMassMailFeatures(MassMailCommon):
             'email': 'test@black.list',
         })
 
-        _join_channel(test_channel, test_partner)
-        _join_channel(test_channel, blacklisted_partner)
+        test_channel._action_add_members(test_partner + blacklisted_partner)
         with self.mock_mail_gateway():
             test_channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
 

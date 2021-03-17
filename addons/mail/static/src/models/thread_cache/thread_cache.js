@@ -253,9 +253,7 @@ function factory(dependencies) {
          */
         _extendMessageDomain(domain) {
             const thread = this.thread;
-            if (thread.model === 'mail.channel') {
-                return domain.concat([['channel_ids', 'in', [thread.id]]]);
-            } else if (thread === this.env.messaging.inbox) {
+            if (thread === this.env.messaging.inbox) {
                 return domain.concat([['needaction', '=', true]]);
             } else if (thread === this.env.messaging.starred) {
                 return domain.concat([

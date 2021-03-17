@@ -251,15 +251,13 @@ MockServer.include({
         if (args.method === 'message_subscribe') {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
-            const channel_ids = args.args[2] || args.kwargs.channel_ids;
-            const subtype_ids = args.args[3] || args.kwargs.subtype_ids;
-            return this._mockMailThreadMessageSubscribe(args.model, ids, partner_ids, channel_ids, subtype_ids);
+            const subtype_ids = args.args[2] || args.kwargs.subtype_ids;
+            return this._mockMailThreadMessageSubscribe(args.model, ids, partner_ids, subtype_ids);
         }
         if (args.method === 'message_unsubscribe') {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
-            const channel_ids = args.args[2] || args.kwargs.channel_ids;
-            return this._mockMailThreadMessageUnsubscribe(args.model, ids, partner_ids, channel_ids);
+            return this._mockMailThreadMessageUnsubscribe(args.model, ids, partner_ids);
         }
         if (args.method === 'message_post') {
             const id = args.args[0];
@@ -600,7 +598,10 @@ MockServer.include({
     _mockMailChannelChannelFetched(ids) {
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
         for (const channel of channels) {
-            const channelMessages = this._getRecords('mail.message', [['channel_ids', 'in', channel.id]]);
+            const channelMessages = this._getRecords('mail.message', [
+                ['model', '=', 'mail.channel'],
+                ['res_id', '=', channel.id],
+            ]);
             const lastMessage = channelMessages.reduce((lastMessage, message) => {
                 if (message.id > lastMessage.id) {
                     return message;
@@ -636,7 +637,10 @@ MockServer.include({
     _mockMailChannelChannelFetchPreview(ids) {
         const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
         return channels.map(channel => {
-            const channelMessages = this._getRecords('mail.message', [['channel_ids', 'in', channel.id]]);
+            const channelMessages = this._getRecords('mail.message', [
+                ['model', '=', 'mail.channel'],
+                ['res_id', '=', channel.id],
+            ]);
             const lastMessage = channelMessages.reduce((lastMessage, message) => {
                 if (message.id > lastMessage.id) {
                     return message;
@@ -729,7 +733,8 @@ MockServer.include({
         return channels.map(channel => {
             const members = channel.members.map(partnerId => partnerInfos[partnerId]);
             const messages = this._getRecords('mail.message', [
-                ['channel_ids', 'in', [channel.id]],
+                ['model', '=', 'mail.channel'],
+                ['res_id', '=', channel.id],
             ]);
             const lastMessageId = messages.reduce((lastMessageId, message) => {
                 if (!lastMessageId || message.id > lastMessageId) {
@@ -806,8 +811,9 @@ MockServer.include({
         }
         const channel = this._getRecords('mail.channel', [['id', '=', channel_id]])[0];
         const messagesBeforeGivenLastMessage = this._getRecords('mail.message', [
-            ['channel_ids', 'in', [channel.id]],
             ['id', '<=', last_message_id],
+            ['model', '=', 'mail.channel'],
+            ['res_id', '=', channel.id],
         ]);
         if (!messagesBeforeGivenLastMessage || messagesBeforeGivenLastMessage.length === 0) {
             return;
@@ -882,8 +888,9 @@ MockServer.include({
                     ["dbName", 'res.partner', this.currentPartnerId],
                     {
                         'body': `<span class="o_mail_notification">${message}</span>`,
-                        'channel_ids': [channel.id],
                         'info': 'transient_message',
+                        'model': 'mail.channel',
+                        'res_id': channel.id,
                     }
                 ];
                 this._widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -971,15 +978,10 @@ MockServer.include({
                 moderation_status = 'pending_moderation';
             }
         }
-        let channel_ids = [];
-        if (moderation_status === 'accepted') {
-            channel_ids = [[4, channel.id]];
-        }
         const messageId = this._mockMailThreadMessagePost(
             'mail.channel',
             [id],
             Object.assign(kwargs, {
-                channel_ids,
                 message_type,
                 moderation_status,
             }),
@@ -1274,7 +1276,7 @@ MockServer.include({
                 this._mockWrite('mail.message', [[message.id], {
                     moderation_status: 'accepted',
                 }]);
-                this._mockMailThread_NotifyThread(model, message.channel_ids, message.id);
+                this._mockMailThread_NotifyThread(model, [message.res_id], message.id);
             }
         }
     },
@@ -1340,9 +1342,7 @@ MockServer.include({
                     ),
                 },
             ]);
-            // NOTE server is sending grouped notifications per channel_ids but
-            // this optimization is not needed here.
-            const data = { type: 'mark_as_read', message_ids: [message.id], channel_ids: message.channel_ids, needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
+            const data = { type: 'mark_as_read', message_ids: [message.id], needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
             const busNotifications = [[[false, 'res.partner', this.currentPartnerId], data]];
             this._widget.call('bus_service', 'trigger', 'notification', busNotifications);
         }
@@ -1613,11 +1613,10 @@ MockServer.include({
      * @param {string} model not in server method but necessary for thread mock
      * @param {integer[]} ids
      * @param {integer[]} partner_ids
-     * @param {integer[]} channel_ids
      * @param {integer[]} subtype_ids
      * @returns {boolean}
      */
-    _mockMailThreadMessageSubscribe(model, ids, partner_ids, channel_ids, subtype_ids) {
+    _mockMailThreadMessageSubscribe(model, ids, partner_ids, subtype_ids) {
         // message_subscribe is too complex for a generic mock.
         // mockRPC should be considered for a specific result.
     },
@@ -1644,7 +1643,7 @@ MockServer.include({
             notifications.push([[false, 'res.partner', message.author_id], notificationData]);
         }
         // members
-        const channels = this._getRecords('mail.channel', [['id', 'in', message.channel_ids]]);
+        const channels = this._getRecords('mail.channel', [['id', '=', message.res_id]]);
         for (const channel of channels) {
             notifications.push([[false, 'mail.channel', channel.id], messageFormat]);
         }
@@ -1657,19 +1656,16 @@ MockServer.include({
      * @param {string} model not in server method but necessary for thread mock
      * @param {integer[]} ids
      * @param {integer[]} partner_ids
-     * @param {integer[]} channel_ids
      * @returns {boolean|undefined}
      */
-    _mockMailThreadMessageUnsubscribe(model, ids, partner_ids, channel_ids) {
-        if (!partner_ids && !channel_ids) {
+    _mockMailThreadMessageUnsubscribe(model, ids, partner_ids) {
+        if (!partner_ids) {
             return true;
         }
         const followers = this._getRecords('mail.followers', [
             ['res_model', '=', model],
             ['res_id', 'in', ids],
-            '|',
             ['partner_id', 'in', partner_ids || []],
-            ['channel_id', 'in', channel_ids || []],
         ]);
         this._mockUnlink(model, [followers.map(follower => follower.id)]);
     },

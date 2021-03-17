@@ -14,18 +14,14 @@ class MailChannel(models.Model):
     def _execute_command_lead(self, **kwargs):
         partner = self.env.user.partner_id
         key = kwargs['body']
-        channel_partners = self.env['mail.channel.partner'].search([
-            ('partner_id', '!=', partner.id),
-            ('channel_id', '=', self.id)], limit=1
-        )
         if key.strip() == '/lead':
             msg = self._define_command_lead()['help']
         else:
-            lead = self._convert_visitor_to_lead(partner, channel_partners, key)
+            lead = self._convert_visitor_to_lead(partner, key)
             msg = _('Created a new lead: <a href="#" data-oe-id="%s" data-oe-model="crm.lead">%s</a>') % (lead.id, html_escape(lead.name))
         self._send_transient_message(partner, msg)
 
-    def _convert_visitor_to_lead(self, partner, channel_partners, key):
+    def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command
         :param partner: internal user partner (operator) that created the lead;
         :param channel_partners: channel members;
@@ -33,13 +29,13 @@ class MailChannel(models.Model):
         """
         description = ''.join(
             '%s: %s\n' % (message.author_id.name or self.anonymous_name, message.body)
-            for message in self.channel_message_ids.sorted('id')
+            for message in self.message_ids.sorted('id')
         )
         # if public user is part of the chat: consider lead to be linked to an
         # anonymous user whatever the participants. Otherwise keep only share
         # partners (no user or portal user) to link to the lead.
         customers = self.env['res.partner']
-        for customer in channel_partners.partner_id.filtered('partner_share'):
+        for customer in self.channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
             if customer.user_ids and all(user._is_public() for user in customer.user_ids):
                 customers = self.env['res.partner']
                 break

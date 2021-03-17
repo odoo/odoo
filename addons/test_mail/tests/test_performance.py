@@ -18,6 +18,7 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_notrack': True,
+            'mail_channel_nosubscribe': True,
         }
         self.user_employee = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'Ernest Employee',
@@ -270,7 +271,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(__system__=24, emp=31):
+        with self.assertQueryCount(__system__=23, emp=29):
             composer.send_mail()
 
     @users('__system__', 'emp')
@@ -290,7 +291,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer.onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=32, emp=39):
+        with self.assertQueryCount(__system__=31, emp=37):
             composer.send_mail()
 
         # remove created partner to ensure tests are the same each run
@@ -311,7 +312,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=18, emp=21):
+        with self.assertQueryCount(__system__=17, emp=19):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -367,7 +368,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=12, emp=17):
+        with self.assertQueryCount(__system__=11, emp=15):
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -437,10 +438,6 @@ class TestMailComplexPerformance(BaseMailPerformance):
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'example.com')
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', 'test-catchall')
         self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'test-bounce')
-
-        self.channel = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
-            'name': 'Listener',
-        })
 
         # prepare recipients to test for more realistic workload
         self.customer = self.env['res.partner'].with_context(self._quick_create_ctx).create({
@@ -522,7 +519,6 @@ class TestMailComplexPerformance(BaseMailPerformance):
     @warmup
     def test_complex_message_subscribe(self):
         pids = self.partners.ids
-        cids = self.channel.ids
         subtypes = self.env.ref('mail.mt_comment') | self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         subtype_ids = subtypes.ids
         rec = self.env['mail.test.ticket'].create({
@@ -534,40 +530,33 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id)
-        self.assertEqual(rec1.message_channel_ids, self.env['mail.channel'])
 
         # subscribe new followers with forced given subtypes
-        with self.assertQueryCount(__system__=8, emp=8):
+        with self.assertQueryCount(__system__=7, emp=7):
             rec.message_subscribe(
                 partner_ids=pids[:4],
-                channel_ids=cids,
                 subtype_ids=subtype_ids
             )
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:4])
-        self.assertEqual(rec1.message_channel_ids, self.channel)
 
         # subscribe existing and new followers with force=False, meaning only some new followers will be added
         with self.assertQueryCount(__system__=6, emp=6):
             rec.message_subscribe(
                 partner_ids=pids[:6],
-                channel_ids=cids,
                 subtype_ids=None
             )
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners[:6])
-        self.assertEqual(rec1.message_channel_ids, self.channel)
 
         # subscribe existing and new followers with force=True, meaning all will have the same subtypes
         with self.assertQueryCount(__system__=7, emp=7):
             rec.message_subscribe(
                 partner_ids=pids,
-                channel_ids=cids,
                 subtype_ids=subtype_ids
             )
 
         self.assertEqual(rec1.message_partner_ids, self.env.user.partner_id | self.user_portal.partner_id | self.partners)
-        self.assertEqual(rec1.message_channel_ids, self.channel)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('__system__', 'emp')
@@ -826,7 +815,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=17):
+        with self.assertQueryCount(emp=16):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
@@ -847,14 +836,14 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'res_id': record.id
         } for record in records])
 
-        with self.assertQueryCount(emp=5):
+        with self.assertQueryCount(emp=4):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=15):
+        with self.assertQueryCount(emp=12):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
@@ -919,39 +908,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             'name': 'partner',
             'email': 'partner@example.com',
         })
-        # channels user/partner
-        self.partner_channel_inbox = self.env['res.partner'].with_context(self._quick_create_ctx).create({
-            'name': 'partner_channel_inbox',
-            'email': 'partner_channel_inbox@example.com',
-        })
-        self.partner_channel_email = self.env['res.partner'].with_context(self._quick_create_ctx).create({
-            'name': 'partner_channel_email',
-            'email': 'partner_channel_email@example.com',
-        })
-        self.user_channel_inbox = self.env['res.users'].with_context(self._quick_create_ctx).create({
-            'name': 'user_channel_inbox',
-            'login': 'user_channel_inbox',
-            'email': 'user_channel_inbox@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
-        })
-        self.user_channel_email = self.env['res.users'].with_context(self._quick_create_ctx).create({
-            'name': 'user_channel_email',
-            'login': 'user_channel_email',
-            'email': 'user_channel_email@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_user').id])],
-        })
-        # channels
-        self.channel_inbox = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
-            'name': 'channel_inbox',
-            'channel_partner_ids': [(4, self.partner_channel_inbox.id), (4, self.user_channel_inbox.partner_id.id)]
-        })
-        self.channel_email = self.env['mail.channel'].with_context(self._quick_create_ctx).create({
-            'name': 'channel_email',
-            'email_send': True,
-            'channel_partner_ids': [(4, self.partner_channel_email.id), (4, self.user_channel_email.partner_id.id)]
-        })
         self.vals = [{
             'datas': base64.b64encode(bytes("attachement content %s" % i, 'utf-8')),
             'name': 'fileText_test%s.txt' % i,
@@ -968,7 +924,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
     def test_complete_message_post(self):
         # aims to cover as much features of message_post as possible
         partner_ids = [self.user_inbox.partner_id.id, self.user_email.partner_id.id, self.partner.id]
-        channel_ids = [self.channel_inbox.id, self.channel_email.id]
         record = self.record.with_user(self.env.user)
         attachements = [  # not linear on number of attachements
             ('attach tuple 1', "attachement tupple content 1"),
@@ -977,7 +932,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         ]
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=76):
+        with self.assertQueryCount(emp=65):
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
@@ -985,7 +940,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 message_type='notification',
                 subtype_xmlid=None,
                 partner_ids=partner_ids,
-                channel_ids=channel_ids,
                 parent_id=False,
                 attachments=attachements,
                 attachment_ids=attachement_ids,
