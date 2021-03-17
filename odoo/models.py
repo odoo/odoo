@@ -55,7 +55,7 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
-                   groupby
+                   groupby, discardattr
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
@@ -324,11 +324,27 @@ VALID_AGGREGATE_FUNCTIONS = {
 # depends on the presence or absence of each definition class, which itself
 # depends on the modules loaded in the registry.
 #
-# In order to avoid any ambiguity in a field's definition, all the fields of a
-# model are recreated on its registry class.  When a field is set up, it
-# retrieves its definition(s) from its model's ancestor classes.  It also
-# collects other information from its model's (registry) class, like compute
-# dependencies.
+# By design, the registry class has access to all the fields on the model's
+# definition classes.  When possible, the field is used directly from the
+# model's registry class.  There are a number of cases where the field cannot be
+# used directly:
+#  - the field is related (and bits may not be shared);
+#  - the field is overridden on definition classes;
+#  - the field is defined for another model (and accessible by mixin).
+#
+# The last case prevents sharing the field, because the field object is specific
+# to a model, and is used as a key in several key dictionaries, like the record
+# cache and pending computations.
+#
+# Setting up a field on its definition class helps saving memory and time.
+# Indeed, when sharing is possible, the field's setup is almost entirely done
+# where the field was defined.  It is thus done when the definition class was
+# created, and it may be reused across registries.
+#
+# In the example below, the field 'foo' appears once on its model's definition
+# classes.  Assuming that it is not related, that field can be set up directly
+# on its definition class.  If the model appears in several registries, the
+# field 'foo' is effectively shared across registries.
 #
 #       class A1(Model):                      Model
 #           _name = 'a'                        / \
@@ -338,20 +354,12 @@ VALID_AGGREGATE_FUNCTIONS = {
 #       class A2(Model):                      \   /
 #           _inherit = 'a'                     \ /
 #           bar = ...                           a
-#                                                foo
 #                                                bar
 #
-#
-# SHARING FIELDS
-#
-# The registry class of a model is actually specific to a given registry.  In
-# order to reduce the memory footprint of a registry, the fields on registry
-# classes can be shared across registries.  A field on a registry class may
-# actually be shared with another registry class, provided it is not related and
-# the definition classes in the MRO of the registry classes are the same.
-# Related fields are banned from sharing, because one of their attribute refers
-# to another field from their registry, which is likely to not be shared across
-# the given registries.
+# On the other hand, the field 'bar' is overridden in its model's definition
+# classes.  In that case, the framework recreates the field on the model's
+# registry class.  The field's setup will be based on its definitions, and will
+# not be shared across registries.
 
 def is_definition_class(cls):
     """ Return whether ``cls`` is a model definition class. """
@@ -511,6 +519,7 @@ class BaseModel(metaclass=MetaModel):
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
         setattr(cls, name, field)
+        field._toplevel = True
         field.__set_name__(cls, name)
         cls._fields[name] = field
 
@@ -521,8 +530,7 @@ class BaseModel(metaclass=MetaModel):
         """
         cls = type(self)
         field = cls._fields.pop(name, None)
-        if hasattr(cls, name):
-            delattr(cls, name)
+        discardattr(cls, name)
         if cls._rec_name == name:
             # fixup _rec_name and display_name's dependencies
             cls._rec_name = None
@@ -2852,10 +2860,7 @@ class BaseModel(metaclass=MetaModel):
 
         # reset those attributes on the model's class for _setup_fields() below
         for attr in ('_rec_name', '_active_name'):
-            try:
-                delattr(cls, attr)
-            except AttributeError:
-                pass
+            discardattr(cls, attr)
 
     @api.model
     def _setup_base(self):
@@ -2870,7 +2875,7 @@ class BaseModel(metaclass=MetaModel):
         # retrieve fields from parent classes, and duplicate them on cls to
         # avoid clashes with inheritance between different models
         for name in cls._fields:
-            delattr(cls, name)
+            discardattr(cls, name)
         cls._fields.clear()
 
         # collect the definitions of each field (base definition + overrides)
@@ -2880,7 +2885,10 @@ class BaseModel(metaclass=MetaModel):
                 for field in klass._field_definitions:
                     definitions[field.name].append(field)
         for name, fields_ in definitions.items():
-            self._add_field(name, fields_[-1].new(_base_fields=fields_))
+            if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
+                cls._fields[name] = fields_[0]
+            else:
+                self._add_field(name, fields_[-1].new(_base_fields=fields_))
 
         self._add_magic_fields()
 
