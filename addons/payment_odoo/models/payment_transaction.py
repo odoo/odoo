@@ -41,7 +41,7 @@ class PaymentTransaction(models.Model):
         # match in https://docs.adyen.com/checkout/components-web/localization-components, we simply
         # provide the lang string as is (after adapting the format) and let Adyen find the best fit.
         lang_code = (self._context.get('lang') or 'en-US').replace('_', '-')
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         signature = payment_utils.generate_access_token(
             converted_amount, self.currency_id.name, self.reference
         )
@@ -91,7 +91,7 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(
             self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
         )
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         signature = payment_utils.generate_access_token(
             converted_amount, self.currency_id.name, self.reference
         )

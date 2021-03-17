@@ -12,7 +12,7 @@ class MailGroup(models.Model):
 
     def _notify_email_header_dict(self):
         headers = super(MailGroup, self)._notify_email_header_dict()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.get_base_url()
         headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self))
         headers['List-Subscribe'] = '<%s/groups>' % (base_url)
         headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,)

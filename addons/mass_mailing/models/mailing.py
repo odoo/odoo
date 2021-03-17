@@ -596,9 +596,8 @@ class MassMailing(models.Model):
         return [rid for rid in res_ids if rid not in done_res_ids]
 
     def _get_unsubscribe_url(self, email_to, res_id):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         url = werkzeug.urls.url_join(
-            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
@@ -610,9 +609,8 @@ class MassMailing(models.Model):
         return url
 
     def _get_view_url(self, email_to, res_id):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         url = werkzeug.urls.url_join(
-            base_url, 'mailing/%(mailing_id)s/view?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
@@ -799,10 +797,10 @@ class MassMailing(models.Model):
             random_tip = random.choice(random_tip).tip_description
 
         formatted_date = tools.format_datetime(
-            self.env, self.sent_date, self.user_id.tz, 'MMM dd, YYYY',  self.user_id.lang
+            self.env, self.sent_date, self.user_id.tz, 'MMM dd, YYYY', self.user_id.lang
         ) if self.sent_date else False
 
-        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        web_base_url = self.get_base_url()
 
         return {
             'title': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',

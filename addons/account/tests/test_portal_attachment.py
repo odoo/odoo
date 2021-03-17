@@ -26,7 +26,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             ],
         })
 
-        cls.base_url = cls.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        cls.base_url = cls.out_invoice.get_base_url()
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_portal_attachment(self):

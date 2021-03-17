@@ -334,10 +334,12 @@ class Slide(models.Model):
 
     @api.depends('document_id', 'slide_type', 'mime_type')
     def _compute_embed_code(self):
-        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        if base_url[-1] == '/':
-            base_url = base_url[:-1]
+        base_url = request and request.httprequest.url_root
         for record in self:
+            if not base_url:
+                base_url = record.get_base_url()
+            if base_url[-1] == '/':
+                base_url = base_url[:-1]
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
                 slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
                 record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
@@ -515,10 +517,9 @@ class Slide(models.Model):
     # ---------------------------------------------------------
 
     def _post_publication(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context(base_url=base_url)._render_field('body_html', slide.ids)[slide.id]
+            html_body = publish_template.with_context(base_url=slide.get_base_url())._render_field('body_html', slide.ids)[slide.id]
             subject = publish_template._render_field('subject', slide.ids)[slide.id]
             # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
             # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
@@ -548,12 +549,11 @@ class Slide(models.Model):
     def _send_share_email(self, email, fullscreen):
         # TDE FIXME: template to check
         mail_ids = []
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
             template = record.channel_id.share_template_id.with_context(
                 user=self.env.user,
                 email=email,
-                base_url=base_url,
+                base_url=record.get_base_url(),
                 fullscreen=fullscreen
             )
             email_values = {'email_to': email}

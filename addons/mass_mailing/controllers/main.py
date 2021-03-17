@@ -114,10 +114,10 @@ class MassMailController(http.Controller):
                 raise exceptions.AccessDenied()
 
             res = mailing.convert_links()
-            base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url').rstrip('/')
+            base_url = mailing.get_base_url().rstrip('/')
             urls_to_replace = [
-               (base_url + '/unsubscribe_from_list', mailing._get_unsubscribe_url(email, res_id)),
-               (base_url + '/view', mailing._get_view_url(email, res_id))
+                (base_url + '/unsubscribe_from_list', mailing._get_unsubscribe_url(email, res_id)),
+                (base_url + '/view', mailing._get_view_url(email, res_id))
             ]
             for url_to_replace, new_url in urls_to_replace:
                 if url_to_replace in res[mailing_id]:

@@ -52,8 +52,7 @@ class Users(models.Model):
                 'email': self.email
             }
             params.update(kwargs)
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            token_url = base_url + '/profile/validate_email?%s' % urls.url_encode(params)
+            token_url = self.get_base_url() + '/profile/validate_email?%s' % urls.url_encode(params)
             with self._cr.savepoint():
                 activation_template.sudo().with_context(token_url=token_url).send_mail(
                     self.id, force_send=True, raise_exception=True)

@@ -15,7 +15,6 @@ class SmsSms(models.Model):
     def _update_body_short_links(self):
         """ Override to tweak shortened URLs by adding statistics ids, allowing to
         find customer back once clicked. """
-        shortened_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
         res = dict.fromkeys(self.ids, False)
         for sms in self:
             if not sms.mailing_id or not sms.body:
@@ -24,7 +23,7 @@ class SmsSms(models.Model):
 
             body = sms.body
             for url in re.findall(tools.TEXT_URL_REGEX, body):
-                if url.startswith(shortened_schema):
+                if url.startswith(sms.get_base_url() + '/r/'):
                     body = body.replace(url, url + '/s/%s' % sms.id)
             res[sms.id] = body
         return res

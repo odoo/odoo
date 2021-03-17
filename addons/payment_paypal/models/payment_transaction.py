@@ -34,7 +34,7 @@ class PaymentTransaction(models.Model):
         if self.provider != 'paypal':
             return res
 
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         notify_url = self.acquirer_id.paypal_use_ipn \
                      and urls.url_join(base_url, PaypalController._notify_url)

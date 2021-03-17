@@ -60,17 +60,16 @@ class ImLivechatChannel(models.Model):
     def _compute_script_external(self):
         view = self.env.ref('im_livechat.external_loader')
         values = {
-            "url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             "dbname": self._cr.dbname,
         }
         for record in self:
             values["channel_id"] = record.id
+            values["url"] = record.get_base_url()
             record.script_external = view._render(values) if record.id else False
 
     def _compute_web_page_link(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id) if record.id else False
+            record.web_page = "%s/im_livechat/support/%i" % (record.get_base_url(), record.id) if record.id else False
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
@@ -228,7 +227,7 @@ class ImLivechatChannel(models.Model):
             username = _('Visitor')
         info = {}
         info['available'] = len(self._get_available_users()) > 0
-        info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        info['server_url'] = self.get_base_url()
         if info['available']:
             info['options'] = self._get_channel_infos()
             info['options']['current_partner_id'] = self.env.user.partner_id.id

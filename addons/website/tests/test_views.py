@@ -1162,7 +1162,7 @@ class Crawler(HttpCase):
         #       | Filter By Country
 
         self.authenticate("admin", "admin")
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = website_1.get_base_url()
 
         # Simulate website 2 (that use only generic views)
         self.url_open(base_url + '/website/force/%s' % website_2.id)
@@ -1373,7 +1373,7 @@ class Crawler(HttpCase):
         # ########################################################
         # Test the controller (which is calling get_related_views)
         self.authenticate("admin", "admin")
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = website_1.get_base_url()
 
         # Simulate website 2
         self.url_open(base_url + '/website/force/%s' % website_2.id)

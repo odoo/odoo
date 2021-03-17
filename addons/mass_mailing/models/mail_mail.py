@@ -25,9 +25,8 @@ class MailMail(models.Model):
         return mails
 
     def _get_tracking_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         token = tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', self.id)
-        return werkzeug.urls.url_join(base_url, 'mail/track/%s/%s/blank.gif' % (self.id, token))
+        return werkzeug.urls.url_join(self.get_base_url(), 'mail/track/%s/%s/blank.gif' % (self.id, token))
 
     def _send_prepare_body(self):
         """ Override to add the tracking URL to the body and to add
@@ -62,14 +61,14 @@ class MailMail(models.Model):
     def _send_prepare_values(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         res = super(MailMail, self)._send_prepare_values(partner)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url').rstrip('/')
         if self.mailing_id and res.get('body') and res.get('email_to'):
+            base_url = self.mailing_id.get_base_url()
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
 
             urls_to_replace = [
-               (base_url + '/unsubscribe_from_list', self.mailing_id._get_unsubscribe_url(email_to, self.res_id)),
-               (base_url + '/view', self.mailing_id._get_view_url(email_to, self.res_id))
+                (base_url + '/unsubscribe_from_list', self.mailing_id._get_unsubscribe_url(email_to, self.res_id)),
+                (base_url + '/view', self.mailing_id._get_view_url(email_to, self.res_id))
             ]
 
             for url_to_replace, new_url in urls_to_replace:

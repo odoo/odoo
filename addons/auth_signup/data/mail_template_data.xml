@@ -140,7 +140,7 @@
                                 Accept invitation
                             </a>
                         </div>
-                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                        % set website_url = object.get_base_url()
                         Your Odoo domain is: <b><a href='${website_url}'>${website_url}</a></b><br />
                         Your sign in email is: <b><a href="/web/login?login=${object.email}" target="_blank">${object.email}</a></b><br /><br />
                         Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.
