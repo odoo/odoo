@@ -4,6 +4,7 @@ odoo.define('web.basic_model_tests', function (require) {
     var BasicModel = require('web.BasicModel');
     var FormView = require('web.FormView');
     var testUtils = require('web.test_utils');
+    const session = require('web.session');
 
     var createModel = testUtils.createModel;
     var createView = testUtils.createView;
@@ -2528,6 +2529,75 @@ odoo.define('web.basic_model_tests', function (require) {
             var resultID = await model.load(this.params);
             var record = model.get(resultID);
             assert.equal(model.getActiveField(record), 'active', 'should have returned "active" field name');
+        });
+    });
+    QUnit.module('Multi Company', function (hooks) {
+        let sessionUserCompaniesBackup;
+        let sessionUserContextBackup;
+        hooks.before(function (assert) {
+            // Backups session parts that this testing module will alter in order to restore it at the end.
+            sessionUserCompaniesBackup = 'user_companies' in session && session.user_companies || false;
+            sessionUserContextBackup = 'user_context' in session && session.user_context || false;
+            session.user_companies = {
+                current_company: 3,
+                allowed_companies: {
+                     1: {
+                         id: 1,
+                         name: 'Company 1',
+                     },
+                     2: {
+                         id: 2,
+                         name: 'Company 2',
+                     },
+                     3: {
+                         id: 3,
+                         name: 'Company 3',
+                     },
+                 },
+            };
+            session.user_context = {
+                allowed_company_ids: [1, 2],
+            };
+        });
+        hooks.after(function (assert) {
+            if (sessionUserCompaniesBackup !== false) {
+                session.user_companies = sessionUserCompaniesBackup || { };
+            } else {
+                delete session.user_companies;
+            }
+            if (sessionUserContextBackup !== false) {
+                session.user_context = sessionUserContextBackup || { };
+            } else {
+                delete session.user_context;
+            }
+        });
+        QUnit.test('basic_model _getEvalContext returns a correct current_company_id', async function(assert) {
+            assert.expect(3);
+
+            const model = await createModel({
+                Model: BasicModel,
+                data: this.data,
+            });
+
+            let context = model._getEvalContext({ });
+            assert.strictEqual(
+                context.current_company_id,
+                session.user_context.allowed_company_ids[0],
+                'basic_model _getEvalContext returns the first entry in session.user_context.allowed_company_ids array');
+
+            session.user_context.allowed_company_ids = [2, 1];
+            context = model._getEvalContext({ });
+            assert.strictEqual(
+                context.current_company_id,
+                session.user_context.allowed_company_ids[0],
+                'basic_model _getEvalContext returns the first entry in session.user_context.allowed_company_ids array');
+
+            delete session.user_context.allowed_company_ids;
+            context = model._getEvalContext({ });
+            assert.strictEqual(
+                context.current_company_id,
+                session.user_companies.current_company,
+                'basic_model _getEvalContext returns session.user_companies.current_company when session.user_context.allowed_company_ids is not set');
         });
     });
 });
