@@ -366,9 +366,28 @@ class Product(models.Model):
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
         quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
+
+        # check if we need include zero values in result
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=') or
+            value > 0.0 and operator in ('<', '<=') or
+            value == 0.0 and operator in ('>=', '<=', '=')
+        )
+
+        processed_product_ids = set()
         for quant in quants_groupby:
+            product_id = quant['product_id'][0]
+            if include_zero:
+                processed_product_ids.add(product_id)
             if OPERATORS[operator](quant['quantity'], value):
-                product_ids.add(quant['product_id'][0])
+                product_ids.add(product_id)
+
+        if include_zero:
+            products_without_quants_in_domain = self.env['product.product'].search([
+                ('type', '=', 'product'),
+                ('id', 'not in', list(processed_product_ids))]
+            )
+            product_ids |= set(products_without_quants_in_domain.ids)
         return list(product_ids)
 
     def _compute_nbr_reordering_rules(self):
