@@ -697,6 +697,13 @@ def attrgetter(*items):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
 
+def discardattr(obj, key):
+    """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
+    try:
+        delattr(obj, key)
+    except AttributeError:
+        pass
+
 # ---------------------------------------------
 # String management
 # ---------------------------------------------
