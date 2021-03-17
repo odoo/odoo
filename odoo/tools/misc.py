@@ -135,124 +135,74 @@ def exec_pg_command_pipe(name, *args):
 #----------------------------------------------------------
 # File paths
 #----------------------------------------------------------
-#file_path_root = os.getcwd()
-#file_path_addons = os.path.join(file_path_root, 'addons')
 
-def file_open(name, mode="r", subdir='addons', pathinfo=False):
-    """Open a file from the OpenERP root, using a subdir folder.
+def file_path(file_path, filter_ext=('',)):
+    """Verify that a file exists under a known `addons_path` directory and return its full path.
 
-    Example::
+    Examples::
 
-    >>> file_open('hr/report/timesheer.xsl')
-    >>> file_open('addons/hr/report/timesheet.xsl')
+    >>> file_path('hr')
+    >>> file_path('hr/static/description/icon.png')
+    >>> file_path('hr/static/description/icon.png', filter_ext=('.png', '.jpg'))
 
-    @param name name of the file
-    @param mode file open mode
-    @param subdir subdirectory
-    @param pathinfo if True returns tuple (fileobject, filepath)
-
-    @return fileobject if pathinfo is False else (fileobject, filepath)
+    :param str file_path: absolute file path, or relative path within any `addons_path` directory
+    :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :return: the absolute path to the file
+    :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
+    :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
-    adps = odoo.addons.__path__
-    rtp = os.path.normcase(os.path.abspath(config['root_path']))
+    root_path = os.path.abspath(config['root_path'])
+    addons_paths = odoo.addons.__path__ + [root_path]
+    is_abs = os.path.isabs(file_path)
+    normalized_path = os.path.normpath(os.path.normcase(file_path))
 
-    basename = name
+    if filter_ext and not normalized_path.lower().endswith(filter_ext):
+        raise ValueError("Unsupported file: " + file_path)
 
-    if os.path.isabs(name):
-        # It is an absolute path
-        # Is it below 'addons_path' or 'root_path'?
-        name = os.path.normcase(os.path.normpath(name))
-        for root in adps + [rtp]:
-            root = os.path.normcase(os.path.normpath(root)) + os.sep
-            if name.startswith(root):
-                base = root.rstrip(os.sep)
-                name = name[len(base) + 1:]
-                break
-        else:
-            # It is outside the OpenERP root: skip zipfile lookup.
-            base, name = os.path.split(name)
-        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename)
+    # ignore leading 'addons/' if present, it's the final component of root_path, but
+    # may sometimes be included in relative paths
+    if normalized_path.startswith('addons' + os.sep):
+        normalized_path = normalized_path[7:]
 
-    if name.replace(os.sep, '/').startswith('addons/'):
-        subdir = 'addons'
-        name2 = name[7:]
-    elif subdir:
-        name = os.path.join(subdir, name)
-        if name.replace(os.sep, '/').startswith('addons/'):
-            subdir = 'addons'
-            name2 = name[7:]
-        else:
-            name2 = name
+    for addons_dir in addons_paths:
+        # final path sep required to avoid partial match
+        parent_path = os.path.normpath(os.path.normcase(addons_dir)) + os.sep
+        fpath = (normalized_path if is_abs else
+                 os.path.normpath(os.path.normcase(os.path.join(parent_path, file_path))))
+        if fpath.startswith(parent_path) and os.path.exists(fpath):
+            return fpath
 
-    # First, try to locate in addons_path
-    if subdir:
-        for adp in adps:
-            try:
-                return _fileopen(name2, mode=mode, basedir=adp,
-                                 pathinfo=pathinfo, basename=basename)
-            except IOError:
-                pass
+    raise FileNotFoundError("File not found: " + file_path)
 
-    # Second, try to locate in root_path
-    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename)
+def file_open(name, mode="r", filter_ext=None):
+    """Open a file from within the addons_path directories, as an absolute or relative path.
 
+    Examples::
 
-def _fileopen(path, mode, basedir, pathinfo, basename=None):
-    name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
+    >>> file_open('hr/static/description/icon.png')
+    >>> file_open('hr/static/description/icon.png', filter_ext=('.png', '.jpg'))
+    >>> with file_open('/opt/odoo/addons/hr/static/description/icon.png', 'rb') as f:
+    ...     contents = f.read()
 
-    paths = odoo.addons.__path__ + [config['root_path']]
-    for addons_path in paths:
-        addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
-        if name.startswith(addons_path):
-            break
-    else:
-        raise ValueError("Unknown path: %s" % name)
-
-    if basename is None:
-        basename = name
-    # Give higher priority to module directories, which is
-    # a more common case than zipped modules.
-    if os.path.isfile(name):
-        if 'b' in mode:
-            fo = open(name, mode)
-        else:
-            fo = io.open(name, mode, encoding='utf-8')
-        if pathinfo:
-            return fo, name
-        return fo
-
-    # Support for loading modules in zipped form.
-    # This will not work for zipped modules that are sitting
-    # outside of known addons paths.
-    head = os.path.normpath(path)
-    zipname = False
-    while os.sep in head:
-        head, tail = os.path.split(head)
-        if not tail:
-            break
-        if zipname:
-            zipname = os.path.join(tail, zipname)
-        else:
-            zipname = tail
-        zpath = os.path.join(basedir, head + '.zip')
-        if zipfile.is_zipfile(zpath):
-            zfile = zipfile.ZipFile(zpath)
-            try:
-                fo = io.BytesIO()
-                fo.write(zfile.read(os.path.join(
-                    os.path.basename(head), zipname).replace(
-                        os.sep, '/')))
-                fo.seek(0)
-                if pathinfo:
-                    return fo, name
-                return fo
-            except Exception:
-                pass
-    # Not found
-    if name.endswith('.rml'):
-        raise IOError('Report %r does not exist or has been deleted' % basename)
-    raise IOError('File not found: %s' % basename)
-
+    :param name: absolute or relative path to a file located inside an addon
+    :param mode: file open mode, as for `open()`
+    :param list[str] filter_ext: optional list of supported extensions (lowercase, with leading dot)
+    :return: file object, as returned by `open()`
+    :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
+    :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
+    """
+    path = file_path(name, filter_ext=filter_ext)
+    if os.path.isfile(path):
+        if 'b' not in mode:
+            # Force encoding for text mode, as system locale could affect default encoding,
+            # even with the latest Python 3 versions.
+            # Note: This is not covered by a unit test, due to the platform dependency.
+            #       For testing purposes you should be able to force a non-UTF8 encoding with:
+            #         `sudo locale-gen fr_FR; LC_ALL=fr_FR.iso8859-1 python3 ...'
+            # See also PEP-540, although we can't rely on that at the moment.
+            return open(path, mode, encoding="utf-8")
+        return open(path, mode)
+    raise FileNotFoundError("Not a file: " + name)
 
 #----------------------------------------------------------
 # iterables
