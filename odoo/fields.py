@@ -217,6 +217,8 @@ class Field(MetaField('DummyField', (object,), {})):
     _sequence = None                    # absolute ordering of the field
     _base_fields = ()                   # the fields defining self, in override order
     _extra_keys = ()                    # unknown attributes set on the field
+    _direct = False                     # whether self may be used directly (shared)
+    _toplevel = False                   # whether self is on the model's registry class
 
     automatic = False                   # whether the field is automatically created ("magic" field)
     inherited = False                   # whether the field is inherited (_inherits)
@@ -291,6 +293,25 @@ class Field(MetaField('DummyField', (object,), {})):
     # runtime on the registry class of the model.  The occurrences of the field
     # are given to the new field as the parameter '_base_fields'; it is a list
     # of fields in override order (or reverse MRO).
+    #
+    # In order to save memory, a field should avoid having field.args and/or
+    # many attributes when possible.  We call "direct" a field that can be set
+    # up directly from its definition class.  Direct fields are non-related
+    # fields defined on models, and can be shared across registries.  We call
+    # "toplevel" a field that is put on the model's registry class, and is
+    # therefore specific to the registry.
+    #
+    # Toplevel field are set up once, and are no longer set up from scratch
+    # after that.  Those fields can save memory by discarding field.args and
+    # field._base_fields once set up, because those are no longer necessary.
+    #
+    # Non-toplevel non-direct fields are the fields on definition classes that
+    # may not be shared.  In other words, those fields are never used directly,
+    # and are always recreated as toplevel fields.  On those fields, the base
+    # setup is useless, because only field.args is used for setting up other
+    # fields.  We therefore skip the base setup for those fields.  The only
+    # attributes of those fields are: '_sequence', 'args', 'model_name', 'name'
+    # and '_module', which makes their __dict__'s size minimal.
 
     def __set_name__(self, owner, name):
         """ Perform the base setup of a field.
@@ -305,7 +326,15 @@ class Field(MetaField('DummyField', (object,), {})):
             # only for fields on definition classes, not registry classes
             self._module = owner._module
             owner._field_definitions.append(self)
-        self._setup_attrs(owner, name)
+
+        if not self.args.get('related'):
+            self._direct = True
+        if self._direct or self._toplevel:
+            self._setup_attrs(owner, name)
+            if self._toplevel:
+                # free memory, self.args and self._base_fields are no longer useful
+                self.__dict__.pop('args', None)
+                self.__dict__.pop('_base_fields', None)
 
     #
     # Setup field parameter attributes
