@@ -3,9 +3,10 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
+import os.path
 import pytz
 
-from odoo.tools import misc, date_utils, merge_sequences, remove_accents
+from odoo.tools import config, misc, date_utils, file_open, file_path, merge_sequences, remove_accents
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -357,3 +358,96 @@ class TestRemoveAccents(BaseCase):
     def test_non_latin(self):
         self.assertEqual(remove_accents('العربية'), 'العربية')
         self.assertEqual(remove_accents('русский алфавит'), 'русскии алфавит')
+
+
+class TestAddonsFileAccess(BaseCase):
+
+    def assertCannotAccess(self, path, ExceptionType=FileNotFoundError, filter_ext=None):
+        with self.assertRaises(ExceptionType):
+            file_path(path, filter_ext=filter_ext)
+
+    def assertCanRead(self, path, needle='', mode='r', filter_ext=None):
+        with file_open(path, mode, filter_ext) as f:
+            self.assertIn(needle, f.read())
+
+    def assertCannotRead(self, path, ExceptionType=FileNotFoundError, filter_ext=None):
+        with self.assertRaises(ExceptionType):
+            file_open(path, filter_ext=filter_ext)
+
+    def test_file_path(self):
+        # absolute path
+        self.assertEqual(__file__, file_path(__file__))
+        self.assertEqual(__file__, file_path(__file__, filter_ext=None)) # means "no filter" too
+        self.assertEqual(__file__, file_path(__file__, filter_ext=('.py',)))
+
+        # directory target is ok
+        self.assertEqual(os.path.dirname(__file__), file_path(os.path.join(__file__, '..')))
+
+        # relative path
+        relpath = os.path.join(*(__file__.split(os.sep)[-3:])) # 'base/tests/test_misc.py'
+        self.assertEqual(__file__, file_path(relpath))
+        self.assertEqual(__file__, file_path(relpath, filter_ext=('.py',)))
+
+        # leading 'addons/' is ignored if present
+        relpath = os.path.join('addons', relpath) # 'addons/base/tests/test_misc.py'
+        self.assertEqual(__file__, file_path(relpath))
+
+        # files in root_path are allowed
+        self.assertTrue(file_path('tools/misc.py'))
+
+        # errors when outside addons_paths
+        self.assertCannotAccess('/doesnt/exist')
+        self.assertCannotAccess('/tmp')
+        self.assertCannotAccess('../../../../../../../../../tmp')
+        self.assertCannotAccess(os.path.join(__file__, '../../../../../'))
+
+        # data_dir is forbidden
+        self.assertCannotAccess(config['data_dir'])
+
+        # errors for illegal extensions
+        self.assertCannotAccess(__file__, ValueError, filter_ext=('.png',))
+        # file doesnt exist but has wrong extension
+        self.assertCannotAccess(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))
+
+    def test_file_open(self):
+        # The needle includes UTF8 so we test reading non-ASCII files at the same time.
+        # This depends on the system locale and is harder to unit test, but if you manage to run the
+        # test with a non-UTF8 locale (`LC_ALL=fr_FR.iso8859-1 python3...`) it should not crash ;-)
+        test_needle = "A needle with non-ascii bytes: ♥"
+
+        # absolute path
+        self.assertCanRead(__file__, test_needle)
+        self.assertCanRead(__file__, test_needle.encode(), mode='rb')
+        self.assertCanRead(__file__, test_needle.encode(), mode='rb', filter_ext=('.py',))
+
+        # directory target *is* an error
+        with self.assertRaises(FileNotFoundError):
+            file_open(os.path.join(__file__, '..'))
+
+        # relative path
+        relpath = os.path.join(*(__file__.split(os.sep)[-3:])) # 'base/tests/test_misc.py'
+        self.assertCanRead(relpath, test_needle)
+        self.assertCanRead(relpath, test_needle.encode(), mode='rb')
+        self.assertCanRead(relpath, test_needle.encode(), mode='rb', filter_ext=('.py',))
+
+        # leading 'addons/' is ignored if present
+        relpath = os.path.join('addons', relpath) # 'addons/base/tests/test_misc.py'
+        self.assertCanRead(relpath, test_needle)
+
+        # files in root_path are allowed
+        self.assertCanRead('tools/misc.py')
+
+        # errors when outside addons_paths
+        self.assertCannotRead('/doesnt/exist')
+        self.assertCannotRead('')
+        self.assertCannotRead('/tmp')
+        self.assertCannotRead('../../../../../../../../../tmp')
+        self.assertCannotRead(os.path.join(__file__, '../../../../../'))
+
+        # data_dir is forbidden
+        self.assertCannotRead(config['data_dir'])
+
+        # errors for illegal extensions
+        self.assertCannotRead(__file__, ValueError, filter_ext=('.png',))
+        # file doesnt exist but has wrong extension
+        self.assertCannotRead(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))
