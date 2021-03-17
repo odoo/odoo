@@ -182,6 +182,20 @@ function createPropertyProxy(obj, propertyName, value) {
         },
     });
 }
+/**
+ * Creates and registers a UserValueWidget by tag-name
+ *
+ * @param {string} widgetName
+ * @param {SnippetOptionWidget|UserValueWidget|null} parent
+ * @param {string} title
+ * @param {Object} options
+ * @returns {UserValueWidget}
+ */
+function registerUserValueWidget(widgetName, parent, title, options, $target) {
+    const widget = new userValueWidgetsRegistry[widgetName](parent, title, options, $target);
+    parent.registerSubWidget(widget);
+    return widget;
+}
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -473,7 +487,7 @@ const UserValueWidget = Widget.extend({
         // If the widget has no associated method, it should not notify user
         // value changes
         if (!this._methodsNames.length) {
-            return;
+            console.warn('UserValueWidget with no methods notifying value change');
         }
 
         // In the case we notify a change update, force a preview update if it
@@ -1754,20 +1768,31 @@ const ListUserValueWidget = UserValueWidget.extend({
         'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
         'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
         'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
-        'click we-select.o_we_user_value_widget': '_onAddItemSelectClick',
+        'click we-select.o_we_user_value_widget.o_we_add_list_item': '_onAddItemSelectClick',
         'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
-        'input table input': '_onListItemInput',
+        'change table input': '_onListItemChange',
     },
 
     /**
      * @override
      */
+    willStart() {
+        if (this.options.createWidget) {
+            this.createWidget = this.options.createWidget;
+            this.createWidget.setParent(this);
+            this.registerSubWidget(this.createWidget);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     start() {
-        this.addItemTitle = this.el.dataset.addItemTitle;
+        this.addItemTitle = this.el.dataset.addItemTitle || _t("Add");
         if (this.el.dataset.availableRecords) {
             this.records = JSON.parse(this.el.dataset.availableRecords);
         } else {
-            this.isCustom = true;
+            this.isCustom = !this.el.dataset.notEditable;
         }
         if (this.el.dataset.defaults || this.el.dataset.hasDefault) {
             this.hasDefault = this.el.dataset.hasDefault || 'unique';
@@ -1780,6 +1805,9 @@ const ListUserValueWidget = UserValueWidget.extend({
         this.containerEl.appendChild(tableWrapper);
         this.el.classList.add('o_we_fw');
         this._makeListItemsSortable();
+        if (this.createWidget) {
+            return this.createWidget.appendTo(this.containerEl);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1804,30 +1832,53 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (this.addItemButton) {
             this.addItemButton.remove();
         }
-        if (this.isCustom) {
-            this.addItemButton = document.createElement('we-button');
-            this.addItemButton.textContent = this.addItemTitle;
-            this.addItemButton.classList.add('o_we_list_add_optional');
-            currentValues.forEach(el => this._addItemToTable(el, el));
+
+        if (this.createWidget) {
+            const selectedIds = currentValues.map(({ id }) => id)
+                .filter(id => typeof id === 'number');
+            this.createWidget.options.domain = ['!', ['id', 'in', selectedIds]];
+            this.createWidget.setValue('');
+            this.createWidget.inputEl.value = '';
+            $(this.createWidget.inputEl).trigger('input');
         } else {
-            // TODO use a real select widget ?
-            this.addItemButton = document.createElement('we-select');
-            this.addItemButton.classList.add('o_we_user_value_widget');
-            const divEl = document.createElement('div');
-            this.addItemButton.appendChild(divEl);
-            const togglerEl = document.createElement('we-toggler');
-            togglerEl.textContent = this.addItemTitle;
-            divEl.appendChild(togglerEl);
-            this.selectMenuEl = document.createElement('we-selection-items');
-            divEl.appendChild(this.selectMenuEl);
-            currentValues.forEach(val => {
-                const record = this.records.find(rec => rec.id === val);
-                this._addItemToTable(record.id, record.display_name);
-            });
+            if (this.isCustom) {
+                this.addItemButton = document.createElement('we-button');
+                this.addItemButton.textContent = this.addItemTitle;
+                this.addItemButton.classList.add('o_we_list_add_optional');
+            } else {
+                // TODO use a real select widget ?
+                this.addItemButton = document.createElement('we-select');
+                this.addItemButton.classList.add('o_we_user_value_widget', 'o_we_add_list_item');
+                const divEl = document.createElement('div');
+                this.addItemButton.appendChild(divEl);
+                const togglerEl = document.createElement('we-toggler');
+                togglerEl.textContent = this.addItemTitle;
+                divEl.appendChild(togglerEl);
+                this.selectMenuEl = document.createElement('we-selection-items');
+                divEl.appendChild(this.selectMenuEl);
+            }
+            this.containerEl.appendChild(this.addItemButton);
+        }
+        currentValues.forEach(value => {
+            if (typeof value === 'object') {
+                this._addItemToTable(value.id, value.display_name);
+            } else {
+                this._addItemToTable(value, value);
+            }
+        });
+        if (!this.createWidget && !this.isCustom) {
             this._reloadSelectDropdown(currentValues);
         }
-        this.containerEl.appendChild(this.addItemButton);
         this._makeListItemsSortable();
+    },
+    /**
+     * @override
+     */
+    getValue(methodName) {
+        if (this.createWidget && this.createWidget.getMethodsNames().includes(methodName)) {
+            return this.createWidget.getValue(methodName);
+        }
+        return this._value;
     },
 
     //----------------------------------------------------------------------
@@ -1839,31 +1890,30 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @param {string || integer} id
      * @param {string} text
      */
-    _addItemToTable(id, text) {
-        if (text === undefined) {
-            text = _t("Item");
+    _addItemToTable(id, text = _t("Item")) {
+        const trEl = document.createElement('tr');
+        if (!this.el.dataset.unsortable) {
+            const draggableEl = document.createElement('we-button');
+            draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
+            draggableEl.dataset.noPreview = 'true';
+            const draggableTdEl = document.createElement('td');
+            draggableTdEl.appendChild(draggableEl);
+            trEl.appendChild(draggableTdEl);
         }
-        const draggableEl = document.createElement('we-button');
-        draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
-        draggableEl.dataset.noPreview = 'true';
         const inputEl = document.createElement('input');
         inputEl.type = 'text';
         if (text) {
             inputEl.value = text;
         }
-        if (!this.isCustom && id) {
+        if (id) {
             inputEl.name = id;
         }
         inputEl.disabled = !this.isCustom;
-        const trEl = document.createElement('tr');
         const buttonEl = document.createElement('we-button');
         buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
         buttonEl.dataset.removeOption = id;
-        const draggableTdEl = document.createElement('td');
         const inputTdEl = document.createElement('td');
-        const buttonTdEl = document.createElement('td');
-        draggableTdEl.appendChild(draggableEl);
-        trEl.appendChild(draggableTdEl);
+        inputTdEl.classList.add('o_we_list_record_name');
         inputTdEl.appendChild(inputEl);
         trEl.appendChild(inputTdEl);
         if (this.hasDefault) {
@@ -1881,17 +1931,18 @@ const ListUserValueWidget = UserValueWidget.extend({
             checkboxTdEl.appendChild(checkboxEl);
             trEl.appendChild(checkboxTdEl);
         }
+        const buttonTdEl = document.createElement('td');
         buttonTdEl.appendChild(buttonEl);
         trEl.appendChild(buttonTdEl);
         this.listTable.appendChild(trEl);
-        if (this.isCustom) {
-            inputEl.focus();
-        }
     },
     /**
      * @private
      */
     _makeListItemsSortable() {
+        if (this.el.dataset.unsortable) {
+            return;
+        }
         $(this.listTable).sortable({
             axis: 'y',
             handle: '.o_we_drag_handle',
@@ -1910,11 +1961,12 @@ const ListUserValueWidget = UserValueWidget.extend({
         const values = [...this.listTable.querySelectorAll('input')].map(el => {
             const id = this.isCustom ? el.value : el.name;
             const idInt = parseInt(id);
-            return isNaN(idInt) ? id : idInt;
+            return {
+                id: isNaN(idInt) ? id : idInt,
+                name: el.value,
+                display_name: el.value,
+            };
         });
-        if (this.isCustom) {
-            this.records = values.map(v => ({id: v, display_name: v}));
-        }
         if (this.hasDefault) {
             const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
             this.selected = checkboxes.map(el => {
@@ -1923,13 +1975,13 @@ const ListUserValueWidget = UserValueWidget.extend({
                 const idInt = parseInt(id);
                 return isNaN(idInt) ? id : idInt;
             });
-            this.records.forEach(r => {
-                r.selected = this.selected.includes(r.id);
+            values.forEach(v => {
+                v.selected = this.selected.includes(v.id);
             });
         }
         this._value = JSON.stringify(values);
-        this.notifyValueChange(true);
-        if (!this.isCustom) {
+        this.notifyValueChange(false);
+        if (!this.createWidget && !this.isCustom) {
             this._reloadSelectDropdown(values);
         }
     },
@@ -1940,7 +1992,7 @@ const ListUserValueWidget = UserValueWidget.extend({
     _reloadSelectDropdown(currentValues) {
         this.selectMenuEl.innerHTML = '';
         this.records.forEach(el => {
-            if (!currentValues.includes(el.id)) {
+            if (!currentValues.find(v => v.id === el.id)) {
                 const option = document.createElement('we-button');
                 option.classList.add('o_we_list_add_existing');
                 option.dataset.addOption = el.id;
@@ -2000,7 +2052,7 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
-    _onListItemInput() {
+    _onListItemChange() {
         this._notifyCurrentState();
     },
     /**
@@ -2008,10 +2060,31 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @param {Event} ev
      */
     _onRemoveItemClick(ev) {
-        if (ev.target.closest('table').querySelectorAll('tr').length > 1) {
+        const minElements = this.el.dataset.allowEmpty ? 0 : 1;
+        if (ev.target.closest('table').querySelectorAll('tr').length > minElements) {
             ev.target.closest('tr').remove();
             this._notifyCurrentState();
         }
+    },
+    /**
+     * @override
+     */
+    _onUserValueNotification(ev) {
+        const { widget, previewMode, prepare } = ev.data;
+        if (widget && widget === this.createWidget) {
+            if (widget.options.createMethod && widget.getValue(widget.options.createMethod)) {
+                return this._super(ev);
+            }
+            ev.stopPropagation();
+            if (previewMode) {
+                return;
+            }
+            prepare();
+            const { id, display_name } = JSON.parse(widget.getMethodsParams('addRecord').recordData);
+            this._addItemToTable(id, display_name);
+            this._notifyCurrentState();
+        }
+        return this._super(ev);
     },
 });
 
@@ -2201,7 +2274,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     }),
     // Data-attributes that will be read into `this.options` on init and not
     // transfered to inner buttons.
-    configAttributes: ['model', 'fields', 'limit', 'domain', 'callWith'],
+    configAttributes: ['model', 'fields', 'limit', 'domain', 'callWith', 'createMethod'],
 
     /**
      * @override
@@ -2247,6 +2320,35 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         this.searchMore.classList.add('o_we_m2o_search_more');
         this.searchMore.textContent = _t("Search more...");
         this.searchMore.title = _t("Search to show more records");
+
+        if (this.options.createMethod) {
+            this.createInput = new InputUserValueWidget(this, undefined, {
+                classes: ['o_we_large_input'],
+                dataAttributes: { noPreview: 'true' },
+            }, this.$target);
+            this.createButton = new ButtonUserValueWidget(this, undefined, {
+                classes: ['flex-grow-0'],
+                dataAttributes: {
+                    noPreview: 'true',
+                    [this.options.createMethod]: '', // Value through getValue.
+                },
+                childNodes: [document.createTextNode(_t("Create"))],
+            }, this.$target);
+            // Override isActive so it doesn't show up in toggler
+            this.createButton.isActive = () => false;
+
+            await Promise.all([
+                this.createInput.appendTo(document.createDocumentFragment()),
+                this.createButton.appendTo(document.createDocumentFragment()),
+            ]);
+            this.registerSubWidget(this.createInput);
+            this.registerSubWidget(this.createButton);
+            this.createWidget = _buildRowElement('', {
+                classes: ['o_we_full_row', 'o_we_m2o_create', 'p-1'],
+                childNodes: [this.createInput.el, this.createButton.el],
+            });
+        }
+
         return this._search('');
     },
     /**
@@ -2254,11 +2356,25 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     async setValue(value, methodName) {
         await this._super(...arguments);
-        // The currently selected value is not present in the search, need to read
-        // its display name.
-        if (this.menuTogglerEl.textContent === '/' && value !== '') {
-            this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
+        if (this.menuTogglerEl.textContent === '/') {
+            // The currently selected value is not present in the search, need to read
+            // its display name.
+            if (value !== '') {
+                // FIXME: value may not be an id if callWith is specified!
+                this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
+            } else {
+                this.menuTogglerEl.textContent = _t("Choose a record...");
+            }
         }
+    },
+    /**
+     * @override
+     */
+    getValue(methodName) {
+        if (methodName === this.options.createMethod && this.createInput) {
+            return this.createInput._value;
+        }
+        return this._super(...arguments);
     },
     /**
      * Prevents double widget instanciation for we-buttons that have been
@@ -2269,6 +2385,15 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     isContainer() {
         return false;
+    },
+    /**
+     * @override
+     */
+    open() {
+        if (this.createInput) {
+            this.createInput.setValue('');
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -2281,6 +2406,18 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     async _search(needle) {
+        this._userValueWidgets = this._userValueWidgets.filter(widget => !widget.isDestroyed());
+        // Remove select options
+        this._userValueWidgets
+            .filter(widget => {
+                return widget instanceof ButtonUserValueWidget &&
+                    widget.el.parentElement.matches('we-selection-items');
+            }).forEach(button => {
+                if (button.isPreviewed()) {
+                    button.notifyValueChange('reset');
+                }
+                button.destroy();
+            });
         const recTuples = await this._rpc({
             model: this.options.model,
             method: 'name_search',
@@ -2308,6 +2445,8 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             Object.keys(buttonDataAttributes).forEach(key => {
                 buttonDataAttributes[key] = buttonDataAttributes[key] || record[this.options.callWith];
             });
+            // REMARK: this syntax is very similar to React.createComponent, maybe we could
+            // write a transformer like there is for JSX?
             const buttonWidget = new ButtonUserValueWidget(this, undefined, {
                 dataAttributes: Object.assign({recordData: JSON.stringify(record)}, buttonDataAttributes),
                 childNodes: [document.createTextNode(record.display_name)],
@@ -2334,6 +2473,10 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             this.searchMore.classList.remove('d-none');
         } else {
             this.searchMore.classList.add('d-none');
+        }
+
+        if (this.createWidget) {
+            this.menuEl.appendChild(this.createWidget);
         }
 
         this.waitingForSearch = false;
@@ -2365,7 +2508,8 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     _onClick(ev) {
         // Prevent dropdown from closing if you click on the search or has_more
-        if (ev.target.closest('.o_we_m2o_search_more, .o_we_m2o_search')) {
+        if (ev.target.closest('.o_we_m2o_search_more, .o_we_m2o_search, .o_we_m2o_create') &&
+                !ev.target.closest('we-button')) {
             ev.stopPropagation();
             return;
         }
@@ -2383,12 +2527,6 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         clearTimeout(this.searchIntent);
         this.waitingForSearch = true;
         this.searchIntent = setTimeout(() => {
-            this._userValueWidgets.forEach(widget => {
-                if (widget.isPreviewed()) {
-                    widget.notifyValueChange('reset');
-                }
-                widget.destroy();
-            });
             this._search(ev.target.value);
         }, 500);
     },
@@ -2402,7 +2540,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             return;
         }
         const action = () => {
-            const firstButton = this.menuEl.querySelector('we-button');
+            const firstButton = this.menuEl.querySelector(':scope > we-button');
             if (firstButton) {
                 firstButton.click();
             }
@@ -2420,6 +2558,152 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     _onSearchMoreClick(ev) {
         this.inputEl.focus();
+    },
+    /**
+     * @override
+     */
+    _onUserValueNotification(ev) {
+        const { widget } = ev.data;
+        if (widget && widget === this.createInput) {
+            ev.stopPropagation();
+            return;
+        }
+        if (widget && widget === this.createButton) {
+            if (!this.createInput._value) {
+                ev.stopPropagation();
+            }
+            return;
+        }
+        if (widget !== this.createButton && this.createInput) {
+            this.createInput._value = '';
+        }
+        return this._super(ev);
+    },
+});
+
+const Many2manyUserValueWidget = UserValueWidget.extend({
+    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod'],
+
+    /**
+     * @override
+     */
+    init(parent, title, options, $target) {
+        const { dataAttributes } = options;
+        this.configAttributes.forEach(attr => {
+            if (dataAttributes.hasOwnProperty(attr)) {
+                options[attr] = dataAttributes[attr];
+                delete dataAttributes[attr];
+            }
+        });
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        await this._super(...arguments);
+        const { model, recordId, m2oField } = this.options;
+        const [record] = await this._rpc({
+            model: model,
+            method: 'read',
+            args: [[parseInt(recordId)], [m2oField]],
+        });
+        const selectedRecordIds = record[m2oField];
+        // TODO: handle no record
+        const [modelData] = await this._rpc({
+            model: 'ir.model.fields',
+            method: 'search_read',
+            args: [[['model', '=', model], ['name', '=', m2oField]], ['relation', 'field_description']],
+        });
+        // TODO: simultaneously fly both RPCs
+        this.m2oModel = modelData.relation;
+        this.m2oName = modelData.field_description; // Use as string attr?
+
+        const selectedRecords = await this._rpc({
+            model: this.m2oModel,
+            method: 'read',
+            args: [selectedRecordIds, ['display_name']],
+        });
+        // TODO: reconcile the fact that this widget sets its own initial value
+        // instead of it coming through setValue(_computeWidgetState)
+        this._value = JSON.stringify(selectedRecords);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        this.el.classList.add('o_we_m2m');
+        const m2oDataAttributes = Object.entries(this.options.dataAttributes).filter(([attrName]) => {
+            return Many2oneUserValueWidget.prototype.configAttributes.includes(attrName);
+        });
+        m2oDataAttributes.push(
+            ['model', this.m2oModel],
+            ['addRecord', ''],
+            ['createMethod', this.options.createMethod],
+        );
+        // Don't register this one as a subWidget because it will be a subWidget
+        // of the listWidget
+        this.createWidget = new Many2oneUserValueWidget(null, undefined, {
+            dataAttributes: Object.fromEntries(m2oDataAttributes),
+        }, this.$target);
+
+        this.listWidget = registerUserValueWidget('we-list', this, undefined, {
+            dataAttributes: { unsortable: 'true', notEditable: 'true', allowEmpty: 'true' },
+            createWidget: this.createWidget,
+        }, this.$target);
+        await this.listWidget.appendTo(this.containerEl);
+
+        // Make this.el the select's offsetParent so the we-selection-items has
+        // the correct width
+        this.listWidget.el.querySelector('we-select').style.position = 'static';
+        this.el.style.position = 'relative';
+    },
+    /**
+     * @override
+     */
+    loadMethodsData(validMethodNames, ...rest) {
+        // TODO: check that addRecord is still needed.
+        this._super(['addRecord', ...validMethodNames], ...rest);
+        this._methodsNames = this._methodsNames.filter(name => name !== 'addRecord');
+    },
+    /**
+     * @override
+     */
+    setValue(value, methodName) {
+        if (methodName === this.options.createMethod) {
+            return this.createWidget.setValue(value, methodName);
+        }
+        if (!value) {
+            // TODO: why do we need this.
+            value = this._value;
+        }
+        this._super(value, methodName);
+        this.listWidget.setValue(this._value);
+    },
+    /**
+     * @override
+     */
+    getValue(methodName) {
+        return this.listWidget.getValue(methodName);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onUserValueNotification(ev) {
+        const { widget, previewMode } = ev.data;
+        if (!widget) {
+            return this._super(ev);
+        }
+        if (widget === this.listWidget) {
+            ev.stopPropagation();
+            this._value = widget._value;
+            this.notifyValueChange(previewMode);
+        }
     },
 });
 
@@ -2439,6 +2723,7 @@ const userValueWidgetsRegistry = {
     'we-range': RangeUserValueWidget,
     'we-select-pager': SelectPagerUserValueWidget,
     'we-many2one': Many2oneUserValueWidget,
+    'we-many2many': Many2manyUserValueWidget,
 };
 
 /**
@@ -2594,6 +2879,14 @@ const SnippetOptionWidget = Widget.extend({
      * @return {Promise|undefined}
      */
     cleanForSave: async function () {},
+    /**
+     * Adds the given widget to the known list of user value widgets
+     *
+     * @param {UserValueWidget} widget
+     */
+    registerSubWidget(widget) {
+        this._userValueWidgets.push(widget);
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -3142,23 +3435,6 @@ const SnippetOptionWidget = Widget.extend({
     },
     /**
      * @private
-     * @param {string} widgetName
-     * @param {UserValueWidget|this|null} parent
-     * @param {string} title
-     * @param {Object} options
-     * @returns {UserValueWidget}
-     */
-    _registerUserValueWidget: function (widgetName, parent, title, options) {
-        const widget = new userValueWidgetsRegistry[widgetName](parent, title, options, this.$target);
-        if (!parent || parent === this) {
-            this._userValueWidgets.push(widget);
-        } else {
-            parent.registerSubWidget(widget);
-        }
-        return widget;
-    },
-    /**
-     * @private
      * @param {HTMLElement} uiFragment
      * @returns {Promise}
      */
@@ -3229,7 +3505,7 @@ const SnippetOptionWidget = Widget.extend({
             }
 
             const infos = this._extraInfoFromDescriptionElement(el);
-            const widget = this._registerUserValueWidget(widgetName, parentWidget || this, infos.title, infos.options);
+            const widget = registerUserValueWidget(widgetName, parentWidget || this, infos.title, infos.options, this.$target);
             return widget.insertAfter(el).then(() => {
                 // Remove the original element afterwards as the insertion
                 // operation may move some of its inner content during
