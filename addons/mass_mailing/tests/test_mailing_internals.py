@@ -49,7 +49,7 @@ class TestMassMailValues(MassMailCommon):
         })
 
         mail_values = composer.get_mail_values([recipient.id])
-        body_html = str(mail_values[recipient.id]['body_html'])
+        body_html = mail_values[recipient.id]['body_html']
 
         self.assertIn('<!DOCTYPE html>', body_html)
         self.assertIn('<head>', body_html)
