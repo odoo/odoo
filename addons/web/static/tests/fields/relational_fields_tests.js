@@ -2,6 +2,7 @@ odoo.define('web.relational_fields_tests', function (require) {
 "use strict";
 
 var AbstractStorageService = require('web.AbstractStorageService');
+var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var RamStorage = require('web.RamStorage');
@@ -169,6 +170,13 @@ QUnit.module('relational_fields', {
                 onchanges: {},
             },
         };
+
+        testUtils.mock.patch(FormController, {
+            'multiClickTime': 0,
+        });
+    },
+    afterEach: function () {
+        testUtils.mock.unpatch(FormController);
     },
 }, function () {
 
