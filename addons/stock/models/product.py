@@ -674,6 +674,10 @@ class ProductTemplate(models.Model):
         'product_variant_ids.incoming_qty',
         'product_variant_ids.outgoing_qty',
     )
+<<<<<<< HEAD
+=======
+    @api.depends_context('company', 'location', 'warehouse')
+>>>>>>> e4cf41f4eb9... temp
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
