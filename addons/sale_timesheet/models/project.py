@@ -49,6 +49,7 @@ class Project(models.Model):
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
+    partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
 
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
     def _compute_pricing_type(self):
@@ -136,6 +137,15 @@ class Project(models.Model):
         super()._compute_project_overview()
         for project in self.filtered(lambda p: not p.project_overview):
             project.project_overview = project.allow_billable or project.allow_timesheets
+
+    @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
+    def _compute_partner_id(self):
+        for project in self:
+            if project.partner_id:
+                continue
+            if project.allow_billable and project.allow_timesheets and project.pricing_type != 'task_rate':
+                sol = project.sale_line_id or project.sale_line_employee_ids.sale_line_id[:1]
+                project.partner_id = sol.order_partner_id
 
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
