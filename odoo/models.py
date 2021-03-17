@@ -514,9 +514,6 @@ class BaseModel(metaclass=MetaModel):
         field.__set_name__(cls, name)
         cls._fields[name] = field
 
-        # basic setup of field
-        field.setup_base(self, name)
-
     @api.model
     def _pop_field(self, name):
         """ Remove the field with the given ``name`` from the model.
@@ -2827,7 +2824,7 @@ class BaseModel(metaclass=MetaModel):
                 from .fields import Many2one
                 field = Many2one(table, string="Automatically created field to link to parent %s" % table, required=True, ondelete="cascade")
                 self._add_field(field_name, field)
-            elif not field.required or field.ondelete.lower() not in ("cascade", "restrict"):
+            elif not (field.required and (field.ondelete or "").lower() in ("cascade", "restrict")):
                 _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 field.required = True
                 field.ondelete = "cascade"
@@ -2883,11 +2880,7 @@ class BaseModel(metaclass=MetaModel):
                 delattr(cls, name)
                 del cls._fields[name]
 
-            if cls0 is cls:
-                # simply reset up fields
-                for name, field in cls._fields.items():
-                    field.setup_base(self, name)
-            else:
+            if cls0 is not cls:
                 # collect proper fields on cls0, and add them on cls
                 for name in cls0._model_fields:
                     field = cls0._fields[name]
@@ -2935,6 +2928,9 @@ class BaseModel(metaclass=MetaModel):
 
         cls._setup_done = True
 
+        for field in cls._fields.values():
+            field.prepare_setup()
+
         # 5. determine and validate rec_name
         if cls._rec_name:
             assert cls._rec_name in cls._fields, \
@@ -2965,7 +2961,7 @@ class BaseModel(metaclass=MetaModel):
         bad_fields = []
         for name, field in cls._fields.items():
             try:
-                field.setup_full(self)
+                field.setup(self)
             except Exception:
                 if field.base_field.manual:
                     # Something goes wrong when setup a manual field.

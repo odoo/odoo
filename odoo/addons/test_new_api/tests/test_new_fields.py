@@ -2862,12 +2862,12 @@ class TestRequiredMany2one(common.TransactionCase):
         Model = self.env['test_new_api.req_m2o']
         field = Model._fields['foo']
 
-        # invalidate registry to redo the setup afterwards
-        self.registry.registry_invalidated = True
+        # clean up registry after this test
+        self.addCleanup(self.registry.reset_changes)
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field._setup_regular_base(Model)
+            field.setup_nonrelated(Model)
 
 
 class TestRequiredMany2oneTransient(common.TransactionCase):
@@ -2884,12 +2884,12 @@ class TestRequiredMany2oneTransient(common.TransactionCase):
         Model = self.env['test_new_api.req_m2o_transient']
         field = Model._fields['foo']
 
-        # invalidate registry to redo the setup afterwards
-        self.registry.registry_invalidated = True
+        # clean up registry after this test
+        self.addCleanup(self.registry.reset_changes)
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field._setup_regular_base(Model)
+            field.setup_nonrelated(Model)
 
 
 @common.tagged('m2oref')

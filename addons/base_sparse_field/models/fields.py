@@ -35,8 +35,8 @@ fields.Field.__doc__ += """
 fields.Field.sparse = None
 
 @monkey_patch(fields.Field)
-def _get_attrs(self, model, name):
-    attrs = _get_attrs.super(self, model, name)
+def _get_attrs(self, model_class, name):
+    attrs = _get_attrs.super(self, model_class, name)
     if attrs.get('sparse'):
         # by default, sparse fields are not stored and not copied
         attrs['store'] = False
