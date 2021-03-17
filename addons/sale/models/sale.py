@@ -640,7 +640,7 @@ class SaleOrder(models.Model):
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)
 
-            if not invoiceable_lines:
+            if not invoiceable_lines and not invoice_vals['invoice_line_ids']:
                 raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
 
             # there is a chance the invoice_vals['invoice_line_ids'] already contains data when
