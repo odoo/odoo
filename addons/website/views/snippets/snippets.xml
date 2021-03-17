@@ -5,9 +5,8 @@
 <template id="snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
     <xpath expr="//div[@id='snippets_menu']" position="inside">
         <button type="button" tabindex="3" class="o_we_customize_theme_btn text-uppercase"
-                data-title="Customize your theme"
                 groups="website.group_website_designer" accesskey="2">
-            <span>Options</span>
+            <span>Theme</span>
         </button>
     </xpath>
     <xpath expr="//t[@id='default_snippets']" position="replace">
@@ -438,6 +437,11 @@
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
     </div>
 
+    <!-- Replace an image -->
+    <div data-js="ReplaceImage" data-selector="img">
+        <we-button class="fa fa-refresh" data-replace-image="true" data-no-preview="true"/>
+    </div>
+
     <!-- Background -->
     <t t-set="only_bg_color_selector" t-value="'section .row > div, .s_text_highlight'"/>
     <t t-set="only_bg_color_exclude" t-value="'.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .o_mega_menu .row > div, .s_image_gallery .row > div'"/>
@@ -481,7 +485,7 @@
     </div>
 
     <!-- Mobile display options -->
-    <div data-js="MobileVisibility" data-option-name="showMobile" data-selector="section .row > div"
+    <div data-js="MobileVisibility" data-selector="section .row > div"
          data-exclude=".s_col_no_resize.row > div">
         <we-checkbox string="Shown On Mobile" data-show-on-mobile="true" data-no-preview="true"/>
     </div>
@@ -507,7 +511,8 @@
         data-drop-in=".content, nav"/>
 
     <div data-js="SnippetSave"
-        t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}">
+        t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}"
+        data-exclude=".o_no_save">
         <we-button class="fa fa-fw fa-save o_we_link o_we_hover_warning"
                    title="Save the block to use it elsewhere"
                    data-save-snippet=""

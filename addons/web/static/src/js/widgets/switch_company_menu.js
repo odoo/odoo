@@ -38,15 +38,12 @@ var SwitchCompanyMenu = Widget.extend({
      * @override
      */
     willStart: function () {
-        var self = this;
         this.allowed_company_ids = String(session.user_context.allowed_company_ids)
                                     .split(',')
                                     .map(function (id) {return parseInt(id);});
         this.user_companies = session.user_companies.allowed_companies;
         this.current_company = this.allowed_company_ids[0];
-        this.current_company_name = _.find(session.user_companies.allowed_companies, function (company) {
-            return company[0] === self.current_company;
-        })[1];
+        this.current_company_name = session.user_companies.allowed_companies[this.current_company]['name'];
         return this._super.apply(this, arguments);
     },
 

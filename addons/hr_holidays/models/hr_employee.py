@@ -28,7 +28,6 @@ class HrEmployeeBase(models.AbstractModel):
             ('validate', 'Approved'),
             ('cancel', 'Cancelled')
         ])
-    current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_leave_status', string="Current Time Off Type")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
     leaves_count = fields.Float('Number of Time Off', compute='_compute_remaining_leaves')
@@ -125,13 +124,11 @@ class HrEmployeeBase(models.AbstractModel):
             leave_data[holiday.employee_id.id]['leave_date_from'] = holiday.date_from.date()
             leave_data[holiday.employee_id.id]['leave_date_to'] = holiday.date_to.date()
             leave_data[holiday.employee_id.id]['current_leave_state'] = holiday.state
-            leave_data[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
 
         for employee in self:
             employee.leave_date_from = leave_data.get(employee.id, {}).get('leave_date_from')
             employee.leave_date_to = leave_data.get(employee.id, {}).get('leave_date_to')
             employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
-            employee.current_leave_id = leave_data.get(employee.id, {}).get('current_leave_id')
             employee.is_absent = leave_data.get(employee.id) and leave_data.get(employee.id, {}).get('current_leave_state') not in ['cancel', 'refuse', 'draft']
 
     @api.depends('parent_id')
@@ -204,3 +201,22 @@ class HrEmployeeBase(models.AbstractModel):
             allocations = self.env['hr.leave.allocation'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
         return res
+
+class HrEmployee(models.Model):
+    _inherit = 'hr.employee'
+
+    current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_current_leave', string="Current Time Off Type",
+                                       groups="hr.group_hr_user")
+
+    def _compute_current_leave(self):
+        self.current_leave_id = False
+
+        holidays = self.env['hr.leave'].sudo().search([
+            ('employee_id', 'in', self.ids),
+            ('date_from', '<=', fields.Datetime.now()),
+            ('date_to', '>=', fields.Datetime.now()),
+            ('state', 'not in', ('cancel', 'refuse'))
+        ])
+        for holiday in holidays:
+            employee = self.filtered(lambda e: e.id == holiday.employee_id.id)
+            employee.current_leave_id = holiday.holiday_status_id.id

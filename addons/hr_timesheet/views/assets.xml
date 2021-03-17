@@ -11,4 +11,11 @@
             <script type="text/javascript" src="/hr_timesheet/static/src/js/timesheet_graph.js"/>
         </xpath>
     </template>
+    <template id="qunit_suite" name="hr tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/hr_timesheet/static/tests/timesheet_uom_common.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/tests/timesheet_uom_tests.js"/>
+            <script type="text/javascript" src="/hr_timesheet/static/tests/timesheet_graph_tests.js"/>
+        </xpath>
+    </template>
 </odoo>

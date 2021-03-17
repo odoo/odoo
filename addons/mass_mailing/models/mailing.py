@@ -188,7 +188,7 @@ class MassMailing(models.Model):
         for key in (
             'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
             'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
-            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
             self[key] = False
         if not self.ids:
@@ -217,7 +217,7 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = row['expected'] = (row['expected'] - row['ignored']) or 1
+            total = (row['expected'] - row['ignored']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
@@ -358,6 +358,11 @@ class MassMailing(models.Model):
 
     def action_put_in_queue(self):
         self.write({'state': 'in_queue'})
+        cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue')
+        cron._trigger(
+            schedule_date or fields.Datetime.now()
+            for schedule_date in self.mapped('schedule_date')
+        )
 
     def action_cancel(self):
         self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
@@ -732,7 +737,7 @@ class MassMailing(models.Model):
 
             mail_values = {
                 'subject': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
-                             mailing_type=self._get_pretty_mailing_type(),
+                             mailing_type=mailing._get_pretty_mailing_type(),
                              mailing_name=mailing.subject
                             ),
                 'email_from': user.email_formatted,

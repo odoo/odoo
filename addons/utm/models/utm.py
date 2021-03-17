@@ -44,7 +44,7 @@ class UtmCampaign(models.Model):
         'utm.tag', 'utm_tag_rel',
         'tag_id', 'campaign_id', string='Tags')
 
-    is_website = fields.Boolean(default=False, help="Allows us to filter relevant Campaign")
+    is_auto_campaign = fields.Boolean(default=False, string="Automatically Generated Campaign", help="Allows us to filter relevant Campaigns")
     color = fields.Integer(string='Color Index')
 
     @api.model

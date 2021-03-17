@@ -7,9 +7,15 @@
         </xpath>
     </template>
 
-    <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_content">
-        <xpath expr="//td[@id='product_name']" position="inside">
-            <a t-if="timesheets and len(timesheets.filtered(lambda t: t.so_line == line)) > 0" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % line.order_id.name">View Timesheets</a>
+    <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//li[.//a[@id='print_invoice_report']]" position="after">
+            <li t-if="sale_order.timesheet_count > 0 and sale_order.state in ('sale', 'done')" class="list-group-item flex-grow-1">
+                <div class="btn-toolbar flex-sm-nowrap justify-content-center">
+                    <div class="btn-group">
+                        <a t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name">View Timesheets</a>
+                    </div>
+                </div>
+            </li>
         </xpath>
     </template>
 
@@ -27,6 +33,40 @@
                     </t>
                 </th>
                 <th colspan="1" class="text-right text-muted font-weight-normal">
+                    <t t-if="is_uom_day">
+                        Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                    </t>
+                    <t t-else="">
+                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </th>
+            </t>
+            <t t-elif="groupby == 'so'">
+                <t t-set="so" t-value="timesheets[0].order_id"/>
+                <th colspan="6">
+                    <t t-if="so">
+                        <em class="font-weight-normal text-muted">Timesheets for sales order:</em>
+                        <span t-field="so.display_name"/>
+                    </t>
+                </th>
+                <th colspan="1" class="text-right text-muted">
+                    <t t-if="is_uom_day">
+                        Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                    </t>
+                    <t t-else="">
+                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </th>
+            </t>
+            <t t-elif="groupby == 'invoice'">
+                <t t-set="invoice" t-value="timesheets[0].timesheet_invoice_id"/>
+                <th colspan="6">
+                    <t t-if="invoice">
+                        <em class="font-weight-normal text-muted">Timesheets for Invoice:</em>
+                        <span t-field="invoice.display_name"/>
+                    </t>
+                </th>
+                <th colspan="1" class="text-right text-muted">
                     <t t-if="is_uom_day">
                         Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
                     </t>

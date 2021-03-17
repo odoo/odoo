@@ -22,7 +22,7 @@
                     <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
                         <i class="fa fa-chevron-left"/>
                     </li>
-                    <li data-target="#slideshow_sample" data-slide-to="0" style="background-image: url(/web/image/website.library_image_08)"/>
+                    <li data-target="#slideshow_sample" data-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active"/>
                     <li data-target="#slideshow_sample" data-slide-to="1" style="background-image: url(/web/image/website.library_image_03)"/>
                     <li data-target="#slideshow_sample" data-slide-to="2" style="background-image: url(/web/image/website.library_image_02)"/>
                     <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
@@ -97,12 +97,9 @@
                 <we-button data-columns="6">6</we-button>
                 <we-button data-columns="12">12</we-button>
             </we-select>
-            <we-select string="Images spacing" data-dependencies="!slideshow_mode_opt">
-                <we-button data-select-class="o_spc-none">None</we-button>
-                <we-button data-select-class="o_spc-small">Small</we-button>
-                <we-button data-select-class="o_spc-medium">Medium</we-button>
-                <we-button data-select-class="o_spc-big">Big</we-button>
-            </we-select>
+            <we-range string="Images Spacing"
+                data-dependencies="!slideshow_mode_opt"
+                data-select-class="o_spc-none|o_spc-small|o_spc-medium|o_spc-big"/>
             <we-select string="Styling" data-apply-to="img">
                 <we-button data-select-class="">Standard</we-button>
                 <we-button data-select-class="img-thumbnail">Thumbnails</we-button>

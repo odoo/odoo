@@ -7756,7 +7756,7 @@ QUnit.module('Views', {
                 context: {hide_bar: true},
             },
         });
-        assert.containsOnce(form, '.o_list_view thead tr th',
+        assert.containsOnce(form, '.o_list_view thead tr th:not(.o_list_record_remove_header)',
             "there should be only one column");
         form.destroy();
     });
@@ -7784,7 +7784,7 @@ QUnit.module('Views', {
                 context: {hide_bar: true},
             },
         });
-        assert.containsOnce(form, '.o_list_view thead tr th',
+        assert.containsOnce(form, '.o_list_view thead tr th:not(.o_list_record_remove_header)',
             "there should be only one column");
         form.destroy();
     });
@@ -10480,7 +10480,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Quick Edition: Readonly one2many list', async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         this.data.partner.records[0].p.push(2);
 
@@ -10502,6 +10502,8 @@ QUnit.module('Views', {
         assert.containsOnce(form, '.o_form_view.o_form_readonly');
         assert.containsNone(form, '.o_field_x2many_list_row_add',
             'create line should not be displayed');
+        assert.containsNone(form, '.o_list_record_remove',
+            'remove buttons should not be displayed');
 
         await testUtils.dom.click(form.$('.o_field_cell:first'));
 
@@ -10509,6 +10511,8 @@ QUnit.module('Views', {
             'should switch into edit mode');
         assert.containsNone(form, '.o_field_x2many_list_row_add',
             'create line should still not be displayed');
+        assert.containsNone(form, '.o_list_record_remove',
+            'remove buttons should still not be displayed');
         assert.containsNone(form, 'input');
 
         form.destroy();
@@ -10647,6 +10651,78 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Quick Edition: Editable one2many list (drop a line: editable)', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].p = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsN(form, '.o_list_record_remove', 2,
+            'remove buttons should be displayed');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'yopblip');
+
+        await testUtils.dom.click(form.$('.o_list_record_remove button')[0]);
+        await testUtils.nextTick(); // wait for quick edit
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable',
+            'should switch into edit mode');
+        assert.containsOnce(form, '.o_data_row', 'only one record should remain');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'blip');
+
+        form.destroy();
+    });
+
+    QUnit.test('Quick Edition: Editable one2many list (drop a line: not editable)', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].p = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsN(form, '.o_list_record_remove', 2,
+            'remove buttons should be displayed');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'yopblip');
+
+        await testUtils.dom.click(form.$('.o_list_record_remove button')[0]);
+        await testUtils.nextTick(); // wait for quick edit
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable',
+            'should switch into edit mode');
+        assert.containsOnce(form, '.o_data_row', 'only one record should remain');
+        assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), 'blip');
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: Date picker', async function (assert) {
         assert.expect(4);
 
@@ -10697,6 +10773,50 @@ QUnit.module('Views', {
 
         assert.containsOnce(form, '.o_form_view.o_form_readonly');
         assert.verifySteps(['read', 'get_formview_action'])
+
+        form.destroy();
+    });
+
+    QUnit.test('Quick Edition: Many2Many', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,false,search': '<search><field name="display_name"/></search>',
+            },
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsOnce(form, '.o_field_x2many_list_row_add',
+            'create line should be displayed');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.nextTick(); // wait for quick edit
+
+        assert.containsOnce(form, '.o_form_view.o_form_editable',
+            'should switch into edit mode');
+        assert.containsOnce(document.body, '.modal',
+            'should display a dialog');
+
+        assert.containsNone(form, '.o_field_many2many[name="timmy"] .o_data_row');
+        await testUtils.dom.click($('.modal .o_list_view .o_data_row')[0]);
+        assert.containsOnce(form, '.o_field_many2many[name="timmy"] .o_data_row');
 
         form.destroy();
     });
@@ -11017,6 +11137,78 @@ QUnit.module('Views', {
 
         delete fieldRegistry.map.customwidget;
     });
+
+    QUnit.test('field "length" with value 0: can apply onchange', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.length = {string: 'Length', type: 'float', default: 0 };
+        this.data.partner.fields.foo.default = "foo default";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="foo"/><field name="length"/></form>',
+        });
+
+        assert.strictEqual(form.$('input[name=foo]').val(), "foo default",
+                        "should contain input with initial value");
+
+        form.destroy();
+    });
+
+    QUnit.test('field "length" with value 0: readonly fields are not sent when saving', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.length = {string: 'Length', type: 'float', default: 0 };
+        this.data.partner.fields.foo.default = "foo default";
+
+        // define an onchange on display_name to check that the value of readonly
+        // fields is correctly sent for onchanges
+        this.data.partner.onchanges = {
+            display_name: function () {},
+            p: function () {},
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form string="Partners">
+                            <field name="length"/>
+                            <field name="display_name"/>
+                            <field name="foo" attrs="{\'readonly\': [[\'display_name\', \'=\', \'readonly\']]}"/>
+                        </form>
+                    </field>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        p: [[0, args.args[0].p[0][1], {length: 0, display_name: 'readonly'}]]
+                    }, "should not have sent the value of the readonly field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.containsOnce(document.body, '.modal input.o_field_widget[name=foo]',
+            'foo should be editable');
+        await testUtils.fields.editInput($('.modal .o_field_widget[name=foo]'), 'foo value');
+        await testUtils.fields.editInput($('.modal .o_field_widget[name=display_name]'), 'readonly');
+        assert.containsOnce(document.body, '.modal span.o_field_widget[name=foo]',
+            'foo should be readonly');
+        await testUtils.dom.clickFirst($('.modal-footer .btn-primary'));
+
+        await testUtils.form.clickSave(form); // save the record
+        form.destroy();
+    });
+
 });
 
 });

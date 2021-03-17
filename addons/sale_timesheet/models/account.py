@@ -21,6 +21,8 @@ class AccountAnalyticLine(models.Model):
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
+    # we needed to store it only in order to be able to groupby in the portal
+    order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=False)
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
 
     # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to pricing_type of project (See in master)
@@ -88,7 +90,7 @@ class AccountAnalyticLine(models.Model):
                     return map_entry.sale_line_id
             if project.sale_line_id:
                 return project.sale_line_id
-        if task.allow_billable:
+        if task.allow_billable and task.sale_line_id:
             if task.pricing_type in ('task_rate', 'fixed_rate'):
                 return task.sale_line_id
             else:  # then pricing_type = 'employee_rate'

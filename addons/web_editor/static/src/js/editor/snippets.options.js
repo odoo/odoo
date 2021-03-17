@@ -1469,15 +1469,14 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
      */
     async start() {
         await this._super(...arguments);
-        const iconEl = document.createElement('i');
         if (this.options.dataAttributes.buttonStyle) {
+            const iconEl = document.createElement('i');
             iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
+            $(this.containerEl).prepend(iconEl);
         } else {
-            iconEl.classList.add('fa', 'fa-fw', 'fa-refresh', 'mr-1');
-            this.el.classList.add('o_we_no_toggle');
+            this.el.classList.add('o_we_no_toggle', 'o_we_bg_success');
             this.containerEl.textContent = _t("Replace");
         }
-        $(this.containerEl).prepend(iconEl);
     },
 
     //--------------------------------------------------------------------------
@@ -1582,7 +1581,9 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         'blur input': '_onInputBlur',
         'change.datetimepicker': '_onDateTimePickerChange',
         'error.datetimepicker': '_onDateTimePickerError',
+        'input input': '_onDateInputInput',
     },
+    defaultFormat: time.getLangDatetimeFormat(),
 
     /**
      * @override
@@ -1613,9 +1614,10 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
                 close: 'fa fa-check primary',
             },
             locale: moment.locale(),
-            format: time.getLangDatetimeFormat(),
+            format: this.defaultFormat,
             sideBySide: true,
             buttons: {
+                showClear: true,
                 showClose: true,
                 showToday: true,
             },
@@ -1651,6 +1653,14 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     /**
      * @override
      */
+    getMethodsParams: function () {
+        return _.extend(this._super(...arguments), {
+            format: this.defaultFormat,
+        });
+    },
+    /**
+     * @override
+     */
     isPreviewed: function () {
         return this._super(...arguments) || !!$(this.inputEl).data('datetimepicker').widget;
     },
@@ -1659,9 +1669,12 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      */
     async setValue() {
         await this._super(...arguments);
-        let momentObj = moment.unix(this._value);
-        if (!momentObj.isValid()) {
-            momentObj = moment();
+        let momentObj = null;
+        if (this._value) {
+            momentObj = moment.unix(this._value);
+            if (!momentObj.isValid()) {
+                momentObj = moment();
+            }
         }
         this.__libInput++;
         $(this.inputEl).datetimepicker('date', momentObj);
@@ -1681,9 +1694,10 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
             return;
         }
         if (!ev.date || !ev.date.isValid()) {
-            return;
+            this._value = '';
+        } else {
+            this._value = ev.date.unix().toString();
         }
-        this._value = ev.date.unix().toString();
         this._onUserValuePreview(ev);
     },
     /**
@@ -1692,6 +1706,289 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
      */
     _onDateTimePickerError: function (ev) {
         ev.stopPropagation();
+    },
+    /**
+     * Handles the clear button of the datepicker.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onDateInputInput(ev) {
+        if (!this.inputEl.value) {
+            this._value = '';
+            this._onUserValuePreview(ev);
+        }
+    },
+});
+
+const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({
+    defaultFormat: time.getLangDateFormat(),
+});
+
+const ListUserValueWidget = UserValueWidget.extend({
+    tagName: 'we-list',
+    events: {
+        'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
+        'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
+        'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
+        'click we-select.o_we_user_value_widget': '_onAddItemSelectClick',
+        'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
+        'input table input': '_onListItemInput',
+    },
+
+    /**
+     * @override
+     */
+    start() {
+        this.addItemTitle = this.el.dataset.addItemTitle;
+        if (this.el.dataset.availableRecords) {
+            this.records = JSON.parse(this.el.dataset.availableRecords);
+        } else {
+            this.isCustom = true;
+        }
+        if (this.el.dataset.defaults || this.el.dataset.hasDefault) {
+            this.hasDefault = this.el.dataset.hasDefault || 'unique';
+            this.selected = this.el.dataset.defaults ? JSON.parse(this.el.dataset.defaults) : [];
+        }
+        this.listTable = document.createElement('table');
+        const tableWrapper = document.createElement('div');
+        tableWrapper.classList.add('o_we_table_wrapper');
+        tableWrapper.appendChild(this.listTable);
+        this.containerEl.appendChild(tableWrapper);
+        this.el.classList.add('o_we_fw');
+        this._makeListItemsSortable();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getMethodsParams() {
+        return _.extend(this._super(...arguments), {
+            records: this.records,
+        });
+    },
+    /**
+     * @override
+     */
+    setValue() {
+        this._super(...arguments);
+        const currentValues = JSON.parse(this._value);
+        this.listTable.innerHTML = '';
+        if (this.addItemButton) {
+            this.addItemButton.remove();
+        }
+        if (this.isCustom) {
+            this.addItemButton = document.createElement('we-button');
+            this.addItemButton.textContent = this.addItemTitle;
+            this.addItemButton.classList.add('o_we_list_add_optional');
+            currentValues.forEach(el => this._addItemToTable(el, el));
+        } else {
+            // TODO use a real select widget ?
+            this.addItemButton = document.createElement('we-select');
+            this.addItemButton.classList.add('o_we_user_value_widget');
+            const divEl = document.createElement('div');
+            this.addItemButton.appendChild(divEl);
+            const togglerEl = document.createElement('we-toggler');
+            togglerEl.textContent = this.addItemTitle;
+            divEl.appendChild(togglerEl);
+            this.selectMenuEl = document.createElement('we-selection-items');
+            divEl.appendChild(this.selectMenuEl);
+            currentValues.forEach(val => {
+                const record = this.records.find(rec => rec.id === val);
+                this._addItemToTable(record.id, record.display_name);
+            });
+            this._reloadSelectDropdown(currentValues);
+        }
+        this.containerEl.appendChild(this.addItemButton);
+        this._makeListItemsSortable();
+    },
+
+    //----------------------------------------------------------------------
+    // Private
+    //----------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string || integer} id
+     * @param {string} text
+     */
+    _addItemToTable(id, text) {
+        if (text === undefined) {
+            text = _t("Item");
+        }
+        const draggableEl = document.createElement('we-button');
+        draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
+        draggableEl.dataset.noPreview = 'true';
+        const inputEl = document.createElement('input');
+        inputEl.type = 'text';
+        if (text) {
+            inputEl.value = text;
+        }
+        if (!this.isCustom && id) {
+            inputEl.name = id;
+        }
+        inputEl.disabled = !this.isCustom;
+        const trEl = document.createElement('tr');
+        const buttonEl = document.createElement('we-button');
+        buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
+        buttonEl.dataset.removeOption = id;
+        const draggableTdEl = document.createElement('td');
+        const inputTdEl = document.createElement('td');
+        const buttonTdEl = document.createElement('td');
+        draggableTdEl.appendChild(draggableEl);
+        trEl.appendChild(draggableTdEl);
+        inputTdEl.appendChild(inputEl);
+        trEl.appendChild(inputTdEl);
+        if (this.hasDefault) {
+            const checkboxEl = document.createElement('we-button');
+            checkboxEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
+            if (this.selected.includes(id)) {
+                checkboxEl.classList.add('active');
+            }
+            const div = document.createElement('div');
+            const checkbox = document.createElement('we-checkbox');
+            div.appendChild(checkbox);
+            checkboxEl.appendChild(div);
+            checkboxEl.appendChild(checkbox);
+            const checkboxTdEl = document.createElement('td');
+            checkboxTdEl.appendChild(checkboxEl);
+            trEl.appendChild(checkboxTdEl);
+        }
+        buttonTdEl.appendChild(buttonEl);
+        trEl.appendChild(buttonTdEl);
+        this.listTable.appendChild(trEl);
+        if (this.isCustom) {
+            inputEl.focus();
+        }
+    },
+    /**
+     * @private
+     */
+    _makeListItemsSortable() {
+        $(this.listTable).sortable({
+            axis: 'y',
+            handle: '.o_we_drag_handle',
+            items: 'tr',
+            cursor: 'move',
+            opacity: 0.6,
+            stop: (event, ui) => {
+                this._notifyCurrentState();
+            },
+        });
+    },
+    /**
+     * @private
+     */
+    _notifyCurrentState() {
+        const values = [...this.listTable.querySelectorAll('input')].map(el => {
+            const id = this.isCustom ? el.value : el.name;
+            const idInt = parseInt(id);
+            return isNaN(idInt) ? id : idInt;
+        });
+        if (this.isCustom) {
+            this.records = values.map(v => ({id: v, display_name: v}));
+        }
+        if (this.hasDefault) {
+            const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
+            this.selected = checkboxes.map(el => {
+                const input = el.parentElement.previousSibling.firstChild;
+                const id = input.name || input.value;
+                const idInt = parseInt(id);
+                return isNaN(idInt) ? id : idInt;
+            });
+            this.records.forEach(r => {
+                r.selected = this.selected.includes(r.id);
+            });
+        }
+        this._value = JSON.stringify(values);
+        this.notifyValueChange(true);
+        if (!this.isCustom) {
+            this._reloadSelectDropdown(values);
+        }
+    },
+    /**
+     * @private
+     * @param {Array} currentValues
+     */
+    _reloadSelectDropdown(currentValues) {
+        this.selectMenuEl.innerHTML = '';
+        this.records.forEach(el => {
+            if (!currentValues.includes(el.id)) {
+                const option = document.createElement('we-button');
+                option.classList.add('o_we_list_add_existing');
+                option.dataset.addOption = el.id;
+                option.dataset.noPreview = 'true';
+                const divEl = document.createElement('div');
+                divEl.textContent = el.display_name;
+                option.appendChild(divEl);
+                this.selectMenuEl.appendChild(option);
+            }
+        });
+        if (!this.selectMenuEl.children.length) {
+            const title = document.createElement('we-title');
+            title.textContent = _("No more records");
+            this.selectMenuEl.appendChild(title);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAddCustomItemClick() {
+        this._addItemToTable();
+        this._notifyCurrentState();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddExistingItemClick(ev) {
+        const value = ev.currentTarget.dataset.addOption;
+        this._addItemToTable(value, ev.currentTarget.textContent);
+        this._notifyCurrentState();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddItemSelectClick(ev) {
+        ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onAddItemCheckboxClick: function (ev) {
+        const isActive = ev.currentTarget.classList.contains('active');
+        if (this.hasDefault === 'unique') {
+            this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active').forEach(el => el.classList.remove('active'));
+        }
+        ev.currentTarget.classList.toggle('active', !isActive);
+        this._notifyCurrentState();
+    },
+    /**
+     * @private
+     */
+    _onListItemInput() {
+        this._notifyCurrentState();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onRemoveItemClick(ev) {
+        if (ev.target.closest('table').querySelectorAll('tr').length > 1) {
+            ev.target.closest('tr').remove();
+            this._notifyCurrentState();
+        }
     },
 });
 
@@ -1715,9 +2012,7 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
             [min, max] = [max, min];
             this.input.classList.add('o_we_inverted_range');
         }
-        this.input.setAttribute('min', min);
-        this.input.setAttribute('max', max);
-        this.input.setAttribute('step', step);
+        this._setInputAttributes(min, max, step);
         this.containerEl.appendChild(this.input);
     },
 
@@ -1728,9 +2023,31 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     /**
      * @override
      */
+    loadMethodsData(validMethodNames) {
+        this._super(...arguments);
+        for (const methodName of this._methodsNames) {
+            const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+            if (possibleValues.length > 1) {
+                this._setInputAttributes(0, possibleValues.length - 1, 1);
+                break;
+            }
+        }
+    },
+    /**
+     * @override
+     */
     async setValue(value, methodName) {
         await this._super(...arguments);
-        this.input.value = this._value;
+        const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+        this.input.value = possibleValues.length > 1 ? possibleValues.indexOf(value) : this._value;
+    },
+    /**
+     * @override
+     */
+    getValue(methodName) {
+        const value = this._super(...arguments);
+        const possibleValues = this._methodsParams.optionsPossibleValues[methodName];
+        return possibleValues.length > 1 ? possibleValues[+value] : value;
     },
 
     //--------------------------------------------------------------------------
@@ -1743,6 +2060,14 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
     _onInputChange(ev) {
         this._value = ev.target.value;
         this._onUserValueChange(ev);
+    },
+    /**
+     * @private
+     */
+    _setInputAttributes(min, max, step) {
+        this.input.setAttribute('min', min);
+        this.input.setAttribute('max', max);
+        this.input.setAttribute('step', step);
     },
 });
 
@@ -2075,6 +2400,8 @@ const userValueWidgetsRegistry = {
     'we-multi': MultiUserValueWidget,
     'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
+    'we-datepicker': DatePickerUserValueWidget,
+    'we-list': ListUserValueWidget,
     'we-imagepicker': ImagepickerUserValueWidget,
     'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
@@ -2116,6 +2443,12 @@ const SnippetOptionWidget = Widget.extend({
      * @type {boolean}
      */
     forceNoDeleteButton: false,
+    /**
+     * The option needs the handles overlay to be displayed on the snippet.
+     *
+     * @type {boolean}
+     */
+    displayHandles: false,
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -2285,7 +2618,27 @@ const SnippetOptionWidget = Widget.extend({
      */
     selectAttribute: function (previewMode, widgetValue, params) {
         const value = this._selectAttributeHelper(widgetValue, params);
-        this.$target[0].setAttribute(params.attributeName, value);
+        if (value) {
+            this.$target[0].setAttribute(params.attributeName, value);
+        } else {
+            this.$target[0].removeAttribute(params.attributeName);
+        }
+    },
+    /**
+     * Default option method which allows to select a value and set it on the
+     * associated snippet as a property. The name of the property is
+     * given by the propertyName parameter.
+     *
+     * @param {boolean} previewMode - @see this.selectClass
+     * @param {string} widgetValue
+     * @param {Object} params
+     */
+    selectProperty: function (previewMode, widgetValue, params) {
+        if (!params.propertyName) {
+            throw new Error('Property name missing');
+        }
+        const value = this._selectValueHelper(widgetValue, params);
+        this.$target[0][params.propertyName] = value;
     },
     /**
      * Default option method which allows to select a value and set it on the
@@ -2938,14 +3291,22 @@ const SnippetOptionWidget = Widget.extend({
     /**
      * Used to handle attribute or data attribute value change
      *
-     * @param {string} value
-     * @param {Object} params
-     * @returns {string|undefined}
+     * @see this._selectValueHelper for parameters
      */
     _selectAttributeHelper(value, params) {
         if (!params.attributeName) {
             throw new Error('Attribute name missing');
         }
+        return this._selectValueHelper(value, params);
+    },
+    /**
+     * Used to handle value of a select
+     *
+     * @param {string} value
+     * @param {Object} params
+     * @returns {string|undefined}
+     */
+    _selectValueHelper(value, params) {
         if (params.saveUnit && !params.withUnit) {
             // Values that come with an unit are saved without unit as
             // data-attribute unless told otherwise.
@@ -3161,6 +3522,8 @@ const registry = {};
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 registry.sizing = SnippetOptionWidget.extend({
+    displayHandles: true,
+
     /**
      * @override
      */
@@ -3514,11 +3877,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     _computeVisibility() {
-        const img = this._getImg();
-        if (!['image/jpeg', 'image/png'].includes(img.dataset.mimetype)) {
-            return false;
-        }
-        const src = img.getAttribute('src');
+        const src = this._getImg().getAttribute('src');
         return src && src !== '/';
     },
     /**
@@ -3563,23 +3922,35 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        if (!this.originalSrc) {
+        const isLocalURL = href => new URL(href, window.location.origin).origin === window.location.origin;
+
+        const img = this._getImg();
+        if (!this.originalSrc || !['image/png', 'image/jpeg'].includes(img.dataset.mimetype)) {
             return [...uiFragment.childNodes].forEach(node => {
                 if (node.matches('.o_we_external_warning')) {
                     node.classList.remove('d-none');
+                    if (isLocalURL(img.getAttribute('src'))) {
+                        const title = node.querySelector('we-title');
+                        title.textContent = ` ${_t("Quality options unavailable")}`;
+                        $(title).prepend('<i class="fa fa-warning" />');
+                        if (img.dataset.mimetype) {
+                            title.setAttribute('title', _t("Only PNG and JPEG images support quality options and image filtering"));
+                        } else {
+                            title.setAttribute('title', _t("Due to technical limitations, you can only change optimization settings on this image by choosing it again in the media-dialog or reuploading it (double click on the image)"));
+                        }
+                    }
                 } else {
                     node.remove();
                 }
             });
         }
-        const img = this._getImg();
         const $select = $(uiFragment).find('we-select[data-name=width_select_opt]');
         (await this._computeAvailableWidths()).forEach(([value, label]) => {
             $select.append(`<we-button data-select-width="${value}">${label}</we-button>`);
         });
-        const qualityRange = uiFragment.querySelector('we-range');
+
         if (img.dataset.mimetype !== 'image/jpeg') {
-            qualityRange.remove();
+            uiFragment.querySelector('we-range[data-set-quality]').remove();
         }
     },
     /**

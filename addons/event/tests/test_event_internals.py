@@ -4,10 +4,11 @@
 from datetime import date, datetime, timedelta
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
-from odoo.tests.common import users
+from odoo.tests.common import users, Form
 from odoo.tools import mute_logger
 
 
@@ -72,9 +73,7 @@ class TestEventData(TestEventCommon):
     @users('user_eventmanager')
     @mute_logger('odoo.models.unlink')
     def test_event_configuration_from_type(self):
-        """ Test data computation of event coming from its event.type template.
-        Some one2many notably are duplicated from type configuration and some
-        advanced testing is required, notably mail schedulers. """
+        """ Test data computation of event coming from its event.type template. """
         self.assertEqual(self.env.user.tz, 'Europe/Brussels')
 
         # ------------------------------------------------------------
@@ -145,46 +144,157 @@ class TestEventData(TestEventCommon):
         event_ticket1 = event.event_ticket_ids[0]
         self.assertEqual(event_ticket1.name, 'TestRegistration')
 
-        # ------------------------------------------------------------
-        # RESET TEST
-        # ------------------------------------------------------------
-
-        # link registration to ticket
-        registration.write({'event_ticket_id': event_ticket1.id})
-        self.assertEqual(registration.event_ticket_id, event_ticket1)
-
-        # change template to a void one for mails -> reset event lines that are void
-        # change template to a one with other tickets -> keep line linked to a registration
-        event_type.write({
+    @users('user_eventmanager')
+    def test_event_configuration_mails_from_type(self):
+        """ Test data computation (related to mails) of event coming from its event.type template.
+        This test uses pretty low level Form data checks, as manipulations in a non-saved Form are
+        required to highlight an undesired behavior when switching event_type templates :
+        event_mail_ids not linked to a registration were generated and kept when switching between
+        different templates in the Form, which could rapidly lead to a substantial amount of
+        undesired lines. """
+        # setup test records
+        event_type_default = self.env['event.type'].create({
+            'name': 'Type Default',
             'use_mail_schedule': False,
-            'event_type_mail_ids': [(5, 0)],
-            'event_type_ticket_ids': [(5, 0),
-                                      (0, 0, {'name': 'Registration1'}),
-                                      (0, 0, {'name': 'Registration2'})],
+            'auto_confirm': True
         })
-        event._compute_event_ticket_ids()
-        event._compute_event_mail_ids()
-        self.assertEqual(event.event_mail_ids, self.env['event.mail'])
-        self.assertEqual(len(event.event_ticket_ids), 3)
-        self.assertEqual(
-            set(event.mapped('event_ticket_ids.name')),
-            set(['TestRegistration', 'Registration1', 'Registration2'])
-        )
-        # registration loose its ticket
-        self.assertEqual(registration.event_ticket_id, event_ticket1)
-
-        # change template to a one with different mails -> reset event
-        event_type.write({
+        event_type_mails = self.env['event.type'].create({
+            'name': 'Type Mails',
+            'auto_confirm': False
+        })
+        event_type_mails.write({
             'use_mail_schedule': True,
-            'event_type_mail_ids': [(5, 0), (0, 0, {
-                'interval_nbr': 3, 'interval_unit': 'days', 'interval_type': 'after_event',
-                'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
+            'event_type_mail_ids': [
+                Command.clear(),
+                Command.create({
+                    'notification_type': 'mail',
+                    'interval_nbr': 77,
+                    'interval_unit': 'days',
+                    'interval_type': 'after_event',
+                    'template_id': self.env.ref('event.event_reminder').id,
+                })
+            ]
         })
-        event._compute_event_ticket_ids()
-        event._compute_event_mail_ids()
-        self.assertEqual(len(event.event_mail_ids), 1)
-        self.assertEqual(event.event_mail_ids.interval_nbr, 3)
-        self.assertEqual(event.event_mail_ids.interval_type, 'after_event')
+        event = self.env['event.event'].create({
+            'name': 'Event',
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+            'event_type_id': event_type_default.id
+        })
+        event.write({
+            'event_mail_ids': [
+                Command.clear(),
+                Command.create({
+                    'notification_type': 'mail',
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'template_id': self.env.ref('event.event_subscription').id,
+                })
+            ]
+        })
+        mail = event.event_mail_ids[0]
+        registration = self._create_registrations(event, 1)
+        self.assertEqual(registration.state, 'open')  # event auto confirms
+        # verify that mail is linked to the registration
+        self.assertEqual(
+            set(mail.mapped('mail_registration_ids.registration_id.id')),
+            set([registration.id])
+        )
+        # start test scenario
+        event_form = Form(event)
+        # verify that mail is linked to the event in the form
+        self.assertEqual(
+            set(map(lambda m: m.get('id', None), event_form.event_mail_ids._records)),
+            set([mail.id])
+        )
+        # switch to an event_type with a mail template which should be computed
+        event_form.event_type_id = event_type_mails
+        # verify that 2 mails were computed
+        self.assertEqual(len(event_form.event_mail_ids._records), 2)
+        # verify that the mail linked to the registration was kept
+        self.assertTrue(filter(lambda m: m.get('id', None) == mail.id, event_form.event_mail_ids._records))
+        # since the other computed event.mail is to be created from an event.type.mail template,
+        # verify that its attributes are the correct ones
+        computed_mail = next(filter(lambda m: m.get('id', None) != mail.id, event_form.event_mail_ids._records), {})
+        self.assertEqual(computed_mail.get('interval_nbr', None), 77)
+        self.assertEqual(computed_mail.get('interval_unit', None), 'days')
+        self.assertEqual(computed_mail.get('interval_type', None), 'after_event')
+        # switch back to an event type without a mail template
+        event_form.event_type_id = event_type_default
+        # verify that the mail linked to the registration was kept, and the other removed
+        self.assertEqual(
+            set(map(lambda m: m.get('id', None), event_form.event_mail_ids._records)),
+            set([mail.id])
+        )
+
+    @users('user_eventmanager')
+    def test_event_configuration_tickets_from_type(self):
+        """ Test data computation (related to tickets) of event coming from its event.type template.
+        This test uses pretty low level Form data checks, as manipulations in a non-saved Form are
+        required to highlight an undesired behavior when switching event_type templates :
+        event_ticket_ids not linked to a registration were generated and kept when switching between
+        different templates in the Form, which could rapidly lead to a substantial amount of
+        undesired lines. """
+        # setup test records
+        event_type_default = self.env['event.type'].create({
+            'name': 'Type Default',
+            'use_ticket': False,
+            'auto_confirm': True
+        })
+        event_type_tickets = self.env['event.type'].create({
+            'name': 'Type Tickets',
+            'auto_confirm': False
+        })
+        event_type_tickets.write({
+            'use_ticket': True,
+            'event_type_ticket_ids': [
+                Command.clear(),
+                Command.create({
+                    'name': 'Default Ticket',
+                    'seats_max': 10,
+                })
+            ]
+        })
+        event = self.env['event.event'].create({
+            'name': 'Event',
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+            'event_type_id': event_type_default.id
+        })
+        event.write({
+            'event_ticket_ids': [
+                Command.clear(),
+                Command.create({
+                    'name': 'Registration Ticket',
+                    'seats_max': 10,
+                })
+            ]
+        })
+        ticket = event.event_ticket_ids[0]
+        registration = self._create_registrations(event, 1)
+        # link the ticket to the registration
+        registration.write({'event_ticket_id': ticket.id})
+        # start test scenario
+        event_form = Form(event)
+        # verify that the ticket is linked to the event in the form
+        self.assertEqual(
+            set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
+            set(['Registration Ticket'])
+        )
+        # switch to an event_type with a ticket template which should be computed
+        event_form.event_type_id = event_type_tickets
+        # verify that both tickets are computed
+        self.assertEqual(
+            set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
+            set(['Registration Ticket', 'Default Ticket'])
+        )
+        # switch back to an event_type without default tickets
+        event_form.event_type_id = event_type_default
+        # verify that the ticket linked to the registration was kept, and the other removed
+        self.assertEqual(
+            set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
+            set(['Registration Ticket'])
+        )
 
     @users('user_eventmanager')
     def test_event_registrable(self):

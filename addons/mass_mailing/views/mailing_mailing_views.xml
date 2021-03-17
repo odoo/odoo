@@ -57,17 +57,17 @@
                 <form string="Mailing">
                     <header style="min-height:31px;">
                         <button name="action_launch" type="object" class="oe_highlight" string="Launch"
-                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled')]}"
+                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue',  'sending', 'done')), ('schedule_type', '=', 'scheduled')]}"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
                         <button name="action_schedule" type="object" class="oe_highlight" string="Schedule"
-                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'now')]}"/>
+                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue',  'sending', 'done')), ('schedule_type', '=', 'now')]}"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test"/>
                         <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
                         <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['|','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
                         <div attrs="{'invisible': [('ignored', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
@@ -263,7 +263,7 @@
                                     </group>
                                     <group string="Marketing" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
                                         <field name="campaign_id"
-                                            string="Mailing Campaign"
+                                            string="Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
                                                     'required': [('unique_ab_testing', '=', True)]}"/>

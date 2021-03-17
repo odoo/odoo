@@ -257,6 +257,73 @@ While formatting the template differently would prevent such vulnerabilities.
         font-weight: bold;
     }
 
+Escaping vs Sanitizing
+----------------------
+
+.. important::
+
+    Escaping is always 100% mandatory when you mix data and code, no matter how
+    safe the data
+
+**Escaping** converts *TEXT* to *CODE*. It is absolutely mandatory to do it
+every time you mix *DATA/TEXT* with *CODE* (e.g. generating HTML or python code
+to be evaluated inside a `safe_eval`), because *CODE* always requires *TEXT* to
+be encoded. It is critical for security, but it's also a question of
+correctness. Even when there is no security risk (because the text is 100%
+guarantee to be safe or trusted), it is still required (e.g. to avoid breaking
+the layout in generated HTML).
+
+Escaping will never break any feature, as long as the developer identifies which
+variable contains *TEXT* and which contains *CODE*.
+
+.. code-block:: python
+
+    >>> from odoo.tools import html_escape, html_sanitize
+    >>> data = "<R&D>" # `data` is some TEXT coming from somewhere
+
+    # Escaping turns it into CODE, good!
+    >>> code = html_escape(data)
+    >>> code
+    '&lt;R&amp;D&gt;'
+
+    # Now you can mix it with other code...
+    >>> self.message_post(body="<strong>%s</strong>" % code)
+
+**Sanitizing** converts *CODE* to *SAFER CODE* (but not necessary *safe* code).
+It does not work on *TEXT*. Sanitizing is only necessary when *CODE* is
+untrusted, because it comes in full or in part from some user-provided data. If
+the user-provided data is in the form of *TEXT* (e.g. the content from a form
+filled by a user), and if that data was correctly escaped before putting it in
+*CODE*, then sanitizing is useless (but can still be done). If however, the
+user-provided data was **not escaped**, then sanitizing will **not** work as
+expected.
+
+.. code-block:: python
+
+    # Sanitizing without escaping is BROKEN: data is corrupted!
+    >>> html_sanitize(data)
+    ''
+
+    # Sanitizing *after* escaping is OK!
+    >>> html_sanitize(code)
+    '<p>&lt;R&amp;D&gt;</p>'
+
+Sanitizing can break features, depending on whether the *CODE* is expected to
+contain patterns that are not safe. That's why `fields.Html` and
+`tools.html_sanitize()` have options to fine-tune the level of sanitization for
+styles, etc. Those options have to be carefully considered depending on where
+the data comes from, and the desired features. The sanitization safety is
+balanced against sanitization breakages: the safer the sanitisation the more
+likely it is to break things.
+
+.. code-block:: python
+
+    >>code = "<p class='text-warning'>Important Information</p>"
+    # this will remove the style, which may break features
+    # but is necessary if the source is untrusted
+    >> html_sanitize(code, strip_classes=True)
+    '<p>Important Information</p>'
+
 Evaluating content
 ------------------
 Some may want to ``eval`` to parse user provided content. Using ``eval`` should

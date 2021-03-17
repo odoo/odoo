@@ -41,6 +41,38 @@ body.o_connected_user {
     }
 }
 
+//FULLSCREEN INDICATION LAYOUT
+.o_fullscreen_indication {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    margin-top: $o-navbar-height!important;
+    opacity: 0;
+    pointer-events: none;
+
+    p {
+        padding: 15px 30px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        span {
+            border: 1px solid white;
+            border-color: white;
+            border-radius: 5px;
+            padding: 7px 5px;
+            margin: 5px;
+        }
+    }
+    &.o_transition {
+        transition: opacity 400ms;
+    }
+    &.o_visible {
+        opacity: 1;
+    }
+}
+
 // MAIN MENU STYLE (added above navbar.scss)
 #oe_main_menu_navbar {
     @include o-w-preserve-dropdown-menus;

@@ -82,7 +82,8 @@
             </xpath>
             <xpath expr="//ul[@id='o_utm_actions']">
                 <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
-                    t-attf-class="oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}">
+                    t-attf-class="oe_mailings #{record.mailing_mail_ids.raw_value.length === 0 ? 'text-muted' : ''}"
+                    groups="mass_mailing.group_mass_mailing_campaign">
                     <t t-raw="record.mailing_mail_ids.raw_value.length"/> Mailings
                 </a>
             </xpath>
@@ -100,7 +101,7 @@
             Campaigns are the perfect tool to track results across multiple mailings.
             </p>
         </field>
-        <field name="domain">[('is_website', '=', False)]</field>
+        <field name="domain">[('is_auto_campaign', '=', False)]</field>
     </record>
 
     <menuitem name="Campaigns" id="menu_email_campaigns"

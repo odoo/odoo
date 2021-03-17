@@ -8,7 +8,43 @@ class MailingTrace(models.Model):
     """ MailingTrace models the statistics collected about emails. Those statistics
     are stored in a separated model and table to avoid bloating the mail_mail table
     with statistics values. This also allows to delete emails send with mass mailing
-    without loosing the statistics about them. """
+    without loosing the statistics about them.
+
+    Note:: State management / Error codes / Failure types summary
+
+      * state
+        'outgoing', 'sent', 'opened', 'replied',
+        'exception', 'bounced', 'ignored'
+      * failure_type
+        # mass_mailing
+        "SMTP", "RECIPIENT", "BOUNCE", "UNKNOWN"
+        # mass_mailing_sms
+        'sms_number_missing', 'sms_number_format', 'sms_credit',
+        'sms_server', 'sms_acc'
+        # mass_mailing_sms mass mode specific codes
+        'sms_blacklist', 'sms_duplicate'
+      * ignored:
+        * mail: set in get_mail_values in composer, if email is blacklisted
+          (mail) or in opt_out / seen list (mass_mailing) or email_to is void
+          or incorrectly formatted (mass_mailing) - based on mail cancel state
+        * sms: set in _prepare_mass_sms_trace_values in composer if sms is
+          in cancel state; either blacklisted (sms) or in opt_out / seen list
+          (sms);
+        * difference: void mail -> cancel -> ignore, void sms -> error
+          sms_number_missing -> exception
+        * difference: invalid mail -> cancel -> ignore, invalid sms -> error
+          sms_number_format -> sent + bounce;
+      * exception: set in  _postprocess_sent_message (_postprocess_iap_sent_sms)
+        if mail (sms) not sent with failure type, reset if sent; also set for
+        sms in _prepare_mass_sms_trace_values if void number
+      * sent: set in _postprocess_sent_message (_postprocess_iap_sent_sms) if
+        mail (sms) sent
+      * clicked: triggered by add_click
+      * opened: triggered by add_click + blank gif (mail) + gateway reply (mail)
+      * replied: triggered by gateway reply (mail)
+      * bounced: triggered by gateway bounce (mail) or in _prepare_mass_sms_trace_values
+        if sms_number_format error when sending sms (sms)
+    """
     _name = 'mailing.trace'
     _description = 'Mailing Statistics'
     _rec_name = 'id'

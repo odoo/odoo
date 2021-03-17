@@ -60,7 +60,15 @@ class Http(models.AbstractModel):
             }
             session_info.update({
                 # current_company should be default_company
-                "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]},
+                "user_companies": {
+                    'current_company': user.company_id.id,
+                    'allowed_companies': {
+                        comp.id: {
+                            'id': comp.id,
+                            'name': comp.name,
+                        } for comp in user.company_ids
+                    },
+                },
                 "currencies": self.get_currencies(),
                 "show_effect": True,
                 "display_switch_company_menu": user.has_group('base.group_multi_company') and len(user.company_ids) > 1,

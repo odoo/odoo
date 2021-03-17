@@ -390,20 +390,20 @@
                         t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
                         t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
                         t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
-                        t-att-value="condition.value or (0 + DECIMAL_POINT + 0)"
+                        t-att-value="condition.displayedValue"
                         t-on-input="_onValueInput(condition)"
                     />
                     <input t-elif="['integer', 'id'].includes(fieldType)"
                         class="o_input"
                         step="1"
                         type="number"
-                        t-att-value="condition.value or 0"
+                        t-att-value="condition.displayedValue"
                         t-on-input="_onValueInput(condition)"
                     />
                     <input t-else=""
                         type="text"
                         class="o_input"
-                        t-att-value="condition.value or ''"
+                        t-att-value="condition.displayedValue"
                         t-on-input="_onValueInput(condition)"
                     />
                 </span>
@@ -1734,11 +1734,11 @@
             </span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu">
-            <t t-foreach="widget.user_companies" t-as="company">
-                <div class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company[0]">
-                    <t t-set="is_allowed" t-value="widget.allowed_company_ids.includes(company[0])"/>
-                    <t t-set="is_current" t-value="company[0] === widget.current_company"/>
-                    <div role="menuitemcheckbox" t-att-aria-checked="is_allowed" t-att-aria-label="company[1]" tabindex="0" class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
+            <t t-foreach="_.values(widget.user_companies)" t-as="company">
+                <div class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company.id">
+                    <t t-set="is_allowed" t-value="widget.allowed_company_ids.includes(company.id)"/>
+                    <t t-set="is_current" t-value="company.id === widget.current_company"/>
+                    <div role="menuitemcheckbox" t-att-aria-checked="is_allowed" t-att-aria-label="company.name" tabindex="0" class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
                         <span style="height: 2rem;">
                             <t t-if="is_allowed">
                                 <i class="fa fa-fw fa-check-square pt-2"></i>
@@ -1751,12 +1751,12 @@
                     <div role="button" t-att-aria-pressed="is_current" aria-label="Switch to this company" tabindex="0" class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-att-style="is_current ? 'background-color: lightgrey;' : ''">
                         <t t-if="is_allowed">
                             <span class='mr-3 company_label'>
-                                <t t-esc="company[1]"/>
+                                <t t-esc="company.name"/>
                             </span>
                         </t>
                         <t t-if="!is_allowed">
                             <span class='mr-3 company_label text-muted'>
-                                <t t-esc="company[1]"/>
+                                <t t-esc="company.name"/>
                             </span>
                         </t>
                     </div>

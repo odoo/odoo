@@ -52,5 +52,18 @@
             </div>
         </t>
     </template>
+
+    <!-- simple template with no assets, to show title on the certification preview -->
+    <template id="certification_preview">
+        <html>
+            <head>
+                <title t-esc="'%s Preview' % page_title"/>
+                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+            </head>
+            <body style="margin:0;">
+                <iframe type="application/pdf" t-att-src="preview_url" frameBorder="0" width="100%" height="100%"/>
+            </body>
+        </html>
+    </template>
 </data>
 </odoo>

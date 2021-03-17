@@ -10,6 +10,9 @@
                     <button name="action_submit" type="object" string="Retry" states="error" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,done" invisible="context.get('is_modal')"/>
                 </header>
+                <div class="alert alert-danger text-center" role="alert" invisible="not (context.get('show_warning') and context.get('is_modal'))">
+                    Your request did not return any result. No credits were used.
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_get_opportunity_action" class="oe_stat_button" type="object" icon="fa-handshake-o" attrs="{'invisible': ['|', ('lead_type', '!=', 'opportunity'), ('state', '!=' , 'done')]}">
@@ -53,7 +56,7 @@
                         <group name="companies">
                             <field name="country_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" options="{'no_create': True, 'no_open': True}"/>
                             <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])], 'readonly': [('state', '!=', 'draft')]}" domain="[('country_id', 'in', country_ids)]" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}" class="o_industry"/>
+                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}" class="o_industry" required="1"/>
                             <field name="filter_on_size" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
                             <div attrs="{'invisible': [('filter_on_size', '=', False)]}">

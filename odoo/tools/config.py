@@ -241,7 +241,7 @@ class configmanager(object):
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
-        group = optparse.OptionGroup(parser, "Internationalisation options. ",
+        group = optparse.OptionGroup(parser, "Internationalisation options",
             "Use these options to translate Odoo to another language. "
             "See i18n section of the user manual. Option '-d' is mandatory. "
             "Option '-l' is mandatory in case of importation"

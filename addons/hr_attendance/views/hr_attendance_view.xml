@@ -162,6 +162,20 @@
         </field>
     </record>
 
+    <record id="hr_attendance_action_overview" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records to display
+            </p><p>
+                Your attendance records will be displayed here.
+            </p>
+        </field>
+    </record>
+
     <record id="hr_attendance_action_graph" model="ir.actions.act_window">
         <field name="name">Attendance Analysis</field>
         <field name="res_model">hr.attendance</field>
@@ -213,13 +227,11 @@
 
     <menuitem id="menu_hr_attendance_my_attendances" name="Check In / Check Out" parent="menu_hr_attendance_root" sequence="1" groups="hr_attendance.group_hr_attendance" action="hr_attendance_action_my_attendances"/>
 
+    <menuitem id="menu_hr_attendance_attendances_overview" name="Attendances" parent="menu_hr_attendance_root" sequence="1" groups="hr_attendance.group_hr_attendance" action="hr_attendance_action_overview"/>
+
     <menuitem id="menu_hr_attendance_kiosk_no_user_mode" name="Kiosk Mode" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_kiosk" action="hr_attendance_action_kiosk_mode"/>
 
-    <menuitem id="menu_hr_attendance_manage_attendances" name="Manager" parent="menu_hr_attendance_root" sequence="20" groups="hr_attendance.group_hr_attendance_user"/>
-
-    <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_manage_attendances" sequence="10" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action"/>
-
-    <menuitem id="menu_hr_attendance_view_employees_kanban" name="Employees" parent="menu_hr_attendance_manage_attendances" sequence="15" groups="hr_attendance.group_hr_attendance_user" action="hr.open_view_employee_list_my"/>
+    <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action"/>
 
     <menuitem id="menu_hr_attendance_report" name="Reporting" parent="menu_hr_attendance_root" sequence="30" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_graph"/>
 </odoo>

@@ -631,6 +631,33 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             foo.with_user(user).display_name = 'Forbidden'
 
+    def test_13_inverse_with_unlink(self):
+        """ test x2many delete command combined with an inverse field """
+        country1 = self.env['res.country'].create({'name': 'test country'})
+        country2 = self.env['res.country'].create({'name': 'other country'})
+        company = self.env['res.company'].create({
+            'name': 'test company',
+            'child_ids': [
+                (0, 0, {'name': 'Child Company 1'}),
+                (0, 0, {'name': 'Child Company 2'}),
+            ]
+        })
+        child_company = company.child_ids[0]
+
+        # check first that the field has an inverse and is not stored
+        field = type(company).country_id
+        self.assertFalse(field.store)
+        self.assertTrue(field.inverse)
+
+        company.write({'country_id': country1.id})
+        self.assertEqual(company.country_id, country1)
+
+        company.write({
+            'country_id': country2.id,
+            'child_ids': [(2, child_company.id)],
+        })
+        self.assertEqual(company.country_id, country2)
+
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -2901,6 +2928,7 @@ class TestSelectionOndelete(common.TransactionCase):
     MODEL_BASE = 'test_new_api.model_selection_base'
     MODEL_REQUIRED = 'test_new_api.model_selection_required'
     MODEL_NONSTORED = 'test_new_api.model_selection_non_stored'
+    MODEL_WRITE_OVERRIDE = 'test_new_api.model_selection_required_for_write_override'
 
     def setUp(self):
         super().setUp()
@@ -3028,6 +3056,26 @@ class TestSelectionOndelete(common.TransactionCase):
         self._unlink_option(self.MODEL_NONSTORED, 'foo')
 
         self.assertFalse(rec.my_selection)
+
+    def test_required_base_selection_field(self):
+        # test that no ondelete action is executed on a required selection field that is not
+        # extended, only required fields that extend it with selection_add should
+        # have ondelete actions defined
+        rec = self.env[self.MODEL_REQUIRED].create({'my_selection': 'foo'})
+        self.assertEqual(rec.my_selection, 'foo')
+
+        self._unlink_option(self.MODEL_REQUIRED, 'foo')
+        self.assertEqual(rec.my_selection, 'foo')
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_write_override_selection(self):
+        # test that on override to write that raises an error does not prevent the ondelete
+        # policy from executing and cleaning up what needs to be cleaned up
+        rec = self.env[self.MODEL_WRITE_OVERRIDE].create({'my_selection': 'divinity'})
+        self.assertEqual(rec.my_selection, 'divinity')
+
+        self._unlink_option(self.MODEL_WRITE_OVERRIDE, 'divinity')
+        self.assertEqual(rec.my_selection, 'foo')
 
 
 @common.tagged('selection_ondelete_advanced')

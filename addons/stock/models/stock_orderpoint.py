@@ -200,6 +200,11 @@ class StockWarehouseOrderpoint(models.Model):
                 ('company_id', '=', self.company_id.id)
             ], limit=1)
 
+    @api.onchange('route_id')
+    def _onchange_route_id(self):
+        if self.route_id:
+            self.qty_multiple = self._get_qty_multiple_to_order()
+
     def write(self, vals):
         if 'company_id' in vals:
             for orderpoint in self:
@@ -259,6 +264,12 @@ class StockWarehouseOrderpoint(models.Model):
                     qty_to_order += orderpoint.qty_multiple - remainder
             orderpoint.qty_to_order = qty_to_order
 
+    def _get_qty_multiple_to_order(self):
+        """ Calculates the minimum quantity that can be ordered according to the PO UoM or BoM
+        """
+        self.ensure_one()
+        return 0
+
     def _set_default_route_id(self):
         """ Write the `route_id` field on `self`. This method is intendend to be called on the
         orderpoints generated when openning the replenish report.
@@ -295,7 +306,11 @@ class StockWarehouseOrderpoint(models.Model):
         """
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint_replenish")
         action['context'] = self.env.context
-        orderpoints = self.env['stock.warehouse.orderpoint'].search([])
+        # Search also with archived ones to avoid to trigger product_location_check SQL constraints later
+        # It means that when there will be a archived orderpoint on a location + product, the replenishment
+        # report won't take in account this location + product and it won't create any manual orderpoint
+        # In master: the active field should be remove
+        orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search([])
         # Remove previous automatically created orderpoint that has been refilled.
         to_remove = orderpoints.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual')
         to_remove.unlink()
@@ -318,13 +333,13 @@ class StockWarehouseOrderpoint(models.Model):
         dummy, qty_by_product_wh = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(warehouse_ids=warehouse_ids)
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-warehouse
-        grouped_orderpoint_data = self.env['stock.warehouse.orderpoint'].read_group(
+        orderpoint_by_product_warehouse = self.env['stock.warehouse.orderpoint'].read_group(
             [('id', 'in', orderpoints.ids)],
             ['product_id', 'warehouse_id', 'qty_to_order:sum'],
             ['product_id', 'warehouse_id'], lazy=False)
         orderpoint_by_product_warehouse = {
             (record.get('product_id')[0], record.get('warehouse_id')[0]): record.get('qty_to_order')
-            for record in grouped_orderpoint_data
+            for record in orderpoint_by_product_warehouse
         }
         for (product, warehouse), product_qty in to_refill.items():
             qty_in_progress = qty_by_product_wh.get((product, warehouse)) or 0.0
@@ -341,12 +356,22 @@ class StockWarehouseOrderpoint(models.Model):
         ], ['lot_stock_id'])
         lot_stock_id_by_warehouse = {w['id']: w['lot_stock_id'][0] for w in lot_stock_id_by_warehouse}
 
+        # With archived ones to avoid `product_location_check` SQL constraints
+        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).read_group(
+            [('id', 'in', orderpoints.ids)],
+            ['product_id', 'location_id', 'ids:array_agg(id)'],
+            ['product_id', 'location_id'], lazy=False)
+        orderpoint_by_product_location = {
+            (record.get('product_id')[0], record.get('location_id')[0]): record.get('ids')[0]
+            for record in orderpoint_by_product_location
+        }
+
         orderpoint_values_list = []
         for (product, warehouse), product_qty in to_refill.items():
             lot_stock_id = lot_stock_id_by_warehouse[warehouse]
-            orderpoint = orderpoints.filtered(lambda o: o.product_id.id == product and o.location_id.id == lot_stock_id)
-            if orderpoint:
-                orderpoint[0].qty_forecast += product_qty
+            orderpoint_id = orderpoint_by_product_location.get((product, lot_stock_id))
+            if orderpoint_id:
+                self.env['stock.warehouse.orderpoint'].browse(orderpoint_id).qty_forecast += product_qty
             else:
                 orderpoint_values = self.env['stock.warehouse.orderpoint']._get_orderpoint_values(product, lot_stock_id)
                 orderpoint_values.update({
@@ -358,8 +383,8 @@ class StockWarehouseOrderpoint(models.Model):
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
-            orderpoint.route_id = orderpoint.product_id.route_ids[:1]
-        orderpoints.filtered(lambda o: not o.route_id)._set_default_route_id()
+            orderpoint.route_id = orderpoint.product_id.route_ids[:1] or orderpoint._set_default_route_id()
+            orderpoint.qty_multiple = orderpoint._get_qty_multiple_to_order()
         return action
 
     @api.model

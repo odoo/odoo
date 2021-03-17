@@ -26,6 +26,7 @@ var LinkDialog = Dialog.extend({
 
     /**
      * @constructor
+     * @param {Boolean} linkInfo.isButton - whether if the target is a button element.
      */
     init: function (parent, options, editable, linkInfo) {
         this.options = options || {};
@@ -33,8 +34,11 @@ var LinkDialog = Dialog.extend({
             title: _t("Link to"),
         }, this.options));
 
+        this.data = linkInfo || {};
+        this.isButton = this.data.isButton;
+        // Using explicit type 'link' to preserve style when the target is <button class="...btn-link"/>.
         this.colorsData = [
-            {type: '', label: _t("Link"), btnPreview: 'link'},
+            {type: this.isButton ? 'link' : '', label: _t("Link"), btnPreview: 'link'},
             {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},
             {type: 'secondary', label: _t("Secondary"), btnPreview: 'secondary'},
             // Note: by compatibility the dialog should be able to remove old
@@ -44,8 +48,6 @@ var LinkDialog = Dialog.extend({
         ];
 
         this.editable = editable;
-        this.data = linkInfo || {};
-
         this.data.className = "";
         this.data.iniClassName = "";
 
@@ -53,10 +55,10 @@ var LinkDialog = Dialog.extend({
         this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
 
         if (this.data.range) {
-            const $link = $(this.data.range.sc).filter("a");
-            this.data.iniClassName = $link.attr("class") || "";
+            const $el = $(this.data.range.sc).filter(this.isButton ? "button" : "a");
+            this.data.iniClassName = $el.attr("class") || "";
             this.colorCombinationClass = false;
-            let $node = $link;
+            let $node = $el;
             while ($node.length && !$node.is('body')) {
                 const className = $node.attr('class') || '';
                 const m = className.match(/\b(o_cc\d+)\b/g);
@@ -149,6 +151,10 @@ var LinkDialog = Dialog.extend({
         this.data.className = this.data.iniClassName
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
+        // 'o_submit' class will force anchor to be handled as a button in linkdialog.
+        if (/(?:s_website_form_send|o_submit)/.test(this.data.className)) {
+            this.isButton = true;
+        }
     },
     /**
      * @override
@@ -233,7 +239,7 @@ var LinkDialog = Dialog.extend({
             return;
         }
         const attrs = {
-            target: data.isNewWindow ? '_blank' : '',
+            target: '_blank',
             href: data.url && data.url.length ? data.url : '#',
             class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
         };
@@ -256,7 +262,7 @@ var LinkDialog = Dialog.extend({
             }
         }
 
-        if ($url.prop('required') && (!url || !$url[0].checkValidity())) {
+        if (!this.isButton && $url.prop('required') && (!url || !$url[0].checkValidity())) {
             return null;
         }
 
@@ -270,7 +276,8 @@ var LinkDialog = Dialog.extend({
             (type ? (` btn btn-${style}${type}`) : '') +
             (shapeClasses ? (` ${shapeClasses}`) : '') +
             (size ? (' btn-' + size) : '');
-        var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
+        var isNewWindow = this.options.forceNewWindow ?
+            this._isFromAnotherHostName(url) : this.$('input[name="is_new_window"]').prop('checked');
         if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
             url = ('mailto:' + url);
         } else if (url.indexOf(location.origin) === 0 && this.$('#o_link_dialog_url_strip_domain').prop("checked")) {
@@ -291,6 +298,21 @@ var LinkDialog = Dialog.extend({
     _updateOptionsUI: function () {
         const el = this.el.querySelector('[name="link_style_color"]:checked');
         $(this.buttonOptsCollapseEl).collapse(el && el.value ? 'show' : 'hide');
+    },
+    /**
+     * @private
+     */
+    _isFromAnotherHostName: function (url) {
+        if (url.includes(window.location.hostname)) {
+            return false;
+        }
+        try {
+            const Url = URL || window.URL || window.webkitURL;
+            const urlObj = url.startsWith('/') ? new Url(url, window.location.origin) : new Url(url);
+            return (urlObj.origin !== window.location.origin);
+        } catch (ignored) {
+            return true;
+        }
     },
 
     //--------------------------------------------------------------------------

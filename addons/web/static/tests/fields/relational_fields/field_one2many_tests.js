@@ -409,8 +409,8 @@ QUnit.module('fields', {}, function () {
                 "embedded one2many should not have a selector");
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 "embedded one2many should be editable");
-            assert.ok(!form.$('td.o_list_record_remove').length,
-                "embedded one2many records should not have a remove icon");
+            assert.ok(form.$('td.o_list_record_remove').length,
+                "embedded one2many records should have a remove icon");
 
             await testUtils.form.clickEdit(form);
 
@@ -2702,8 +2702,8 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.ok(!form.$('.o_list_record_remove').length,
-                'remove icon should not be visible in readonly');
+            assert.ok(form.$('.o_list_record_remove').length,
+                'remove icon should be visible in readonly');
             assert.ok(form.$('.o_field_x2many_list_row_add').length,
                 '"Add an item" should be visible in readonly');
 
@@ -8665,7 +8665,7 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many");
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
@@ -8803,7 +8803,7 @@ QUnit.module('fields', {}, function () {
             });
 
             // bar is false so there should be 1 column
-            assert.containsOnce(form, 'th',
+            assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be only 1 column ('foo') in the one2many");
             assert.containsOnce(form, '.o_list_view .o_data_row', "should contain one row");
 
@@ -8849,7 +8849,7 @@ QUnit.module('fields', {}, function () {
                         '</tree>',
                 },
             });
-            assert.containsN(form, 'th', 2,
+            assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many");
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
@@ -9294,10 +9294,11 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.containsN(form, '.o_list_view thead th:visible', 2);
-            assert.containsN(form, '.o_list_view tbody .o_data_row td:visible', 2);
-            assert.containsN(form, '.o_list_view tfoot td:visible', 2);
-            assert.containsNone(form, '.o_list_record_remove_header');
+            // should have three visible columns in readonly: foo + readonly button + trash
+            assert.containsN(form, '.o_list_view thead th:visible', 3);
+            assert.containsN(form, '.o_list_view tbody .o_data_row td:visible', 3);
+            assert.containsN(form, '.o_list_view tfoot td:visible', 3);
+            assert.containsOnce(form, '.o_list_record_remove_header');
 
             await testUtils.form.clickEdit(form);
 
@@ -9686,6 +9687,82 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
             testUtils.unpatch(FieldOne2Many);
+        });
+
+        QUnit.test('nested one2many, onchange, no command value', async function (assert) {
+            // This test ensures that we always send all values to onchange rpcs for nested
+            // one2manys, even if some field hasn't changed. In this particular test case,
+            // a first onchange returns a value for the inner one2many, and a second onchange
+            // removes it, thus restoring the field to its initial empty value. From this point,
+            // the nested one2many value must still be sent to onchange rpcs (on the main record),
+            // as it might be used to compute other fields (so the fact that the nested o2m is empty
+            // must be explicit).
+            assert.expect(3);
+
+            this.data.turtle.fields.o2m = {
+                string: "o2m", type: "one2many", relation: 'partner', relation_field: 'trululu',
+            };
+            this.data.turtle.fields.turtle_bar.default = true;
+            this.data.partner.onchanges.turtles = function (obj) {};
+            this.data.turtle.onchanges.turtle_bar = function (obj) {
+                if (obj.turtle_bar) {
+                    obj.o2m = [[5], [0, false, { display_name: "default" }]];
+                } else {
+                    obj.o2m = [[5]];
+                }
+            };
+
+            let step = 1;
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="o2m"/>
+                                <field name="turtle_bar"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, args) {
+                    if (step === 3 && args.method === 'onchange' && args.model === 'partner') {
+                        assert.deepEqual(args.args[1].turtles[0][2], {
+                            turtle_bar: false,
+                            o2m: [], // we must send a value for this field
+                        });
+                    }
+                    const result = await this._super(...arguments);
+                    if (args.model === 'turtle') {
+                        // sanity checks; this is what the onchanges on turtle must return
+                        if (step === 2) {
+                            assert.deepEqual(result.value, {
+                                o2m: [[5], [0, false, { display_name: "default" }]],
+                                turtle_bar: true,
+                            });
+                        }
+                        if (step === 3) {
+                            assert.deepEqual(result.value, {
+                                o2m: [[5]],
+                            });
+                        }
+                    }
+                    return result;
+                },
+            });
+
+            step = 2;
+            await testUtils.dom.click(form.$('.o_field_x2many_list .o_field_x2many_list_row_add a'));
+            // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
+            // (written in owl), so when we add a line, we sequentially render the list itself
+            // (including the boolean field), so we have to wait for the next animation frame, and
+            // then we render the control panel (also in owl), so we have to wait again for the
+            // next animation frame
+            await testUtils.owlCompatibilityExtraNextTick();
+            step = 3;
+            await testUtils.dom.click(form.$('.o_data_row .o_field_boolean input'));
+
+            form.destroy();
         });
     });
 });

@@ -50,11 +50,14 @@ class MailChatController(BusController):
             email_from = mail_channel.anonymous_name or mail_channel.create_uid.company_id.catchall_formatted
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
         body = tools.plaintext2html(message_content)
-        message = mail_channel.with_context(mail_create_nosubscribe=True).message_post(author_id=author_id,
-                                                                                       email_from=email_from, body=body,
-                                                                                       message_type='comment',
-                                                                                       subtype_xmlid='mail.mt_comment')
-        return message and message.id or False
+        message = mail_channel.with_context(mail_create_nosubscribe=True).message_post(
+            author_id=author_id,
+            email_from=email_from,
+            body=body,
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment'
+        )
+        return message.id if message else False
 
     @route(['/mail/chat_history'], type="json", auth="public", cors="*")
     def mail_chat_history(self, uuid, last_id=False, limit=20):

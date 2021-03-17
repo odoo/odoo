@@ -108,12 +108,12 @@
             <field name="name">hr.expense.view.form</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <form string="Expenses" class="o_expense_form">
+                <form string="Expenses" class="o_expense_form" js_class="hr_expense_form_view">
                 <header>
-                  <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}"/>
+                  <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}"/>
                   <widget name="attach_document" string="Attach Receipt" action="message_post" attrs="{'invisible': ['|', ('attachment_number', '&lt;', 1), ('id','=',False)]}"/>
                   <widget name="attach_document" string="Attach Receipt" action="message_post" highlight="1" attrs="{'invisible': ['|',('attachment_number', '&gt;=', 1), ('id','=',False)]}"/>
-                  <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}"/>
+                  <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}"/>
                   <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}"/>
                 </header>
@@ -174,6 +174,7 @@
                             <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="analytic.group_analytic_accounting" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" attrs="{'readonly': [('is_editable', '=', False)]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="duplicate_expense_ids" invisible="1" />
                         </group><group attrs="{'invisible': [('product_has_cost', '=', True)]}">
                             <label for="payment_mode"/>
                             <div>
@@ -625,6 +626,7 @@
                     <field name="currency_id" optional="hide"/>
                     <field name="journal_id" optional="hide"/>
                     <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
+                    <field name="payment_state" optional="show" decoration-info="payment_state in ('partial','in_payment')" decoration-success="payment_state == 'paid'" decoration-danger="payment_state in ('reversed','not_paid')" widget="badge"/>
                     <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
@@ -698,7 +700,11 @@
                             <field name="attachment_number" widget="statinfo" string="Documents"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <field name="payment_state" invisible="True"/>
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('payment_state', '!=', 'paid')]}"/>
+                    <widget name="web_ribbon" title="Partial" bg_color="bg-info" attrs="{'invisible': [('payment_state', '!=', 'partial')]}"/>
+                    <widget name="web_ribbon" title="Reversed" bg_color="bg-danger" attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"/>
+                    <widget name="web_ribbon" title="In Payment" attrs="{'invisible': [('payment_state', '!=', 'in_payment')]}"/>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>

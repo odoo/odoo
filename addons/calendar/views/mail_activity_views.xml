@@ -16,7 +16,7 @@
                   <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('id', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_done']" position="attributes">
-                  <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('force_next', '=', True)]}</attribute>
+                  <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('chaining_type', '=', 'trigger')]}</attribute>
             </xpath>
             <xpath expr="//button[@special='cancel']" position="attributes">
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>

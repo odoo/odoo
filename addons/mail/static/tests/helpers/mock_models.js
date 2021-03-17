@@ -40,6 +40,7 @@ class MockModels {
                     activity_category: { string: "Category", type: 'selection', selection: [['default', 'Other'], ['upload_file', 'Upload File']] },
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
                     can_write: { string: "Can write", type: "boolean" },
+                    chaining_type: { string: 'Chaining Type', type: 'selection', selection: [['suggest', 'Suggest Next Activity'], ['trigger', 'Trigger Next Activity']], default: 'suggest' },
                     create_uid: { string: "Created By", type: "many2one", relation: 'res.users' },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date", default() { return moment().format('YYYY-MM-DD'); } },
@@ -54,6 +55,7 @@ class MockModels {
             },
             'mail.activity.type': {
                 fields: {
+                    chaining_type: { string: 'Chaining Type', type: 'selection', selection: [['suggest', 'Suggest Next Activity'], ['trigger', 'Trigger Next Activity']], default: 'suggest' },
                     category: { string: 'Category', type: 'selection', selection: [['default', 'Other'], ['upload_file', 'Upload File']] },
                     decoration_type: { string: "Decoration Type", type: "selection", selection: [['warning', 'Alert'], ['danger', 'Error']] },
                     icon: { string: 'icon', type: "char" },

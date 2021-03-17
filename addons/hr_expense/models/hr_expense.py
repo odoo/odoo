@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_is_zero, float_repr
+from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 
 class HrExpense(models.Model):
@@ -98,6 +98,8 @@ class HrExpense(models.Model):
         ('refused', 'Refused')
     ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft', help="Status of the expense.")
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
+    approved_by = fields.Many2one('res.users', string='Approved By', related='sheet_id.user_id')
+    approved_on = fields.Datetime(string='Approved On', related='sheet_id.approval_date')
     reference = fields.Char("Bill Reference")
     is_refused = fields.Boolean("Explicitly Refused by manager or accountant", readonly=True, copy=False)
 
@@ -105,6 +107,8 @@ class HrExpense(models.Model):
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
     product_has_cost =  fields.Boolean("Is product with non zero cost selected", compute='_compute_product_has_cost')
     same_currency = fields.Boolean("Is currency_id different from the company_currency_id", compute='_compute_same_currency')
+    duplicate_expense_ids = fields.Many2many('hr.expense', compute='_compute_duplicate_expense_ids')
+
     sample = fields.Boolean()
     label_total_amount_company = fields.Char(compute='_compute_label_total_amount_company')
     label_convert_rate = fields.Char(compute='_compute_label_convert_rate')
@@ -233,6 +237,35 @@ class HrExpense(models.Model):
         if not self.env.context.get('default_employee_id'):
             for expense in self:
                 expense.employee_id = self.env.user.with_company(expense.company_id).employee_id
+
+    @api.depends('employee_id', 'product_id', 'total_amount')
+    def _compute_duplicate_expense_ids(self):
+        self.duplicate_expense_ids = [(5, 0, 0)]
+
+        expenses = self.filtered(lambda e: e.employee_id and e.product_id and e.total_amount)
+        if expenses.ids:
+            duplicates_query = """
+              SELECT ARRAY_AGG(DISTINCT he.id)
+                FROM hr_expense AS he
+                JOIN hr_expense AS ex ON he.employee_id = ex.employee_id
+                                     AND he.product_id = ex.product_id
+                                     AND he.date = ex.date
+                                     AND he.total_amount = ex.total_amount
+                                     AND he.company_id = ex.company_id
+                                     AND he.currency_id = ex.currency_id
+               WHERE ex.id in %(expense_ids)s
+               GROUP BY he.employee_id, he.product_id, he.date, he.total_amount, he.company_id, he.currency_id
+              HAVING COUNT(he.id) > 1
+            """
+            self.env.cr.execute(duplicates_query, {
+                'expense_ids': tuple(expenses.ids),
+            })
+            duplicates = [x[0] for x in self.env.cr.fetchall()]
+
+            for ids in duplicates:
+                exp = expenses.filtered(lambda e: e.id in ids)
+                exp.duplicate_expense_ids = [(6, 0, ids)]
+                expenses = expenses - exp
 
     @api.onchange('product_id', 'date', 'account_id')
     def _onchange_product_id_date_account_id(self):
@@ -364,7 +397,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         sheet = self.env['hr.expense.sheet'].create({
             'company_id': self.company_id.id,
             'employee_id': self[0].employee_id.id,
-            'name': todo[0].name if len(todo) == 1 else '',
+            'name': todo[0].name if len(todo) == 1 else _('Expense Report'),
             'expense_line_ids': [(6, 0, todo.ids)]
         })
         return sheet
@@ -387,6 +420,14 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)]
         res['context'] = {'default_res_model': 'hr.expense', 'default_res_id': self.id}
         return res
+
+    def action_approve_duplicates(self):
+        root = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
+        for expense in self.duplicate_expense_ids:
+            expense.message_post(
+                body=_('%(user)s confirms this expense is not a duplicate with similar expense.', user=self.env.user.name),
+                author_id=root
+            )
 
     # ----------------------------------------
     # Business
@@ -538,6 +579,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 'currency_id': expense.currency_id.id,
                 'expense_id': expense.id,
                 'partner_id': partner_id,
+                'exclude_from_invoice_tab': True,
             }
             move_line_values.append(move_line_dst)
 
@@ -584,7 +626,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                     'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
                     'ref': expense.name,
                 })
-                move_line_dst['payment_id'] = payment.id
 
             # link move lines to move, and move to expense sheet
             move.write({'line_ids': [(0, 0, line) for line in move_line_values]})
@@ -828,9 +869,11 @@ class HrExpenseSheet(models.Model):
         ('submit', 'Submitted'),
         ('approve', 'Approved'),
         ('post', 'Posted'),
-        ('done', 'Paid'),
+        ('done', 'Done'),
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True, help='Expense Report State')
+    payment_state = fields.Selection(selection=PAYMENT_STATE_SELECTION, string="Payment Status",
+        store=True, readonly=True, copy=False, tracking=True, compute='_compute_payment_state')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())
     address_id = fields.Many2one('res.partner', compute='_compute_from_employee_id', store=True, readonly=False, copy=True, string="Employee Home Address", check_company=True)
     payment_mode = fields.Selection(related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Paid By", tracking=True)
@@ -839,7 +882,7 @@ class HrExpenseSheet(models.Model):
     amount_residual = fields.Monetary(
         string="Amount Due", store=True,
         currency_field='currency_id',
-        compute='_compute_amount_residual')
+        related='account_move_id.amount_residual')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
@@ -853,6 +896,7 @@ class HrExpenseSheet(models.Model):
     is_multiple_currency = fields.Boolean("Handle lines with different currencies", compute='_compute_is_multiple_currency')
     can_reset = fields.Boolean('Can Reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
+    approval_date = fields.Datetime('Approval Date', readonly=True)
 
     _sql_constraints = [
         ('journal_id_required_posted', "CHECK((state IN ('post', 'done') AND journal_id IS NOT NULL) OR (state NOT IN ('post', 'done')))", 'The journal must be set on posted expense'),
@@ -863,21 +907,10 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.total_amount = sum(sheet.expense_line_ids.mapped('total_amount_company'))
 
-    @api.depends(
-        'currency_id',
-        'account_move_id.line_ids.amount_residual',
-        'account_move_id.line_ids.amount_residual_currency',
-        'account_move_id.line_ids.account_internal_type',)
-    def _compute_amount_residual(self):
+    @api.depends('account_move_id.payment_state')
+    def _compute_payment_state(self):
         for sheet in self:
-            if sheet.currency_id == sheet.company_id.currency_id:
-                residual_field = 'amount_residual'
-            else:
-                residual_field = 'amount_residual_currency'
-
-            payment_term_lines = sheet.account_move_id.line_ids\
-                .filtered(lambda line: line.account_internal_type in ('receivable', 'payable'))
-            sheet.amount_residual = -sum(payment_term_lines.mapped(residual_field))
+            sheet.payment_state = sheet.account_move_id.payment_state or 'not_paid'
 
     def _compute_attachment_number(self):
         for sheet in self:
@@ -977,7 +1010,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
 
         if any(not sheet.journal_id for sheet in self):
-            raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
+            raise UserError(_("Specify expense journal in tab Other Info to generate accounting entries."))
 
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
@@ -1012,7 +1045,7 @@ class HrExpenseSheet(models.Model):
         self.write({'state': 'submit'})
         self.activity_update()
 
-    def approve_expense_sheets(self):
+    def _check_can_approve(self):
         if not self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
             raise UserError(_("Only Managers and HR Officers can approve expenses"))
         elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
@@ -1024,9 +1057,42 @@ class HrExpenseSheet(models.Model):
             if not self.env.user in current_managers and not self.user_has_groups('hr_expense.group_hr_expense_user') and self.employee_id.expense_manager_id != self.env.user:
                 raise UserError(_("You can only approve your department expenses"))
 
+    def approve_expense_sheets(self):
+        self._check_can_approve()
+
+        duplicates = self.expense_line_ids.duplicate_expense_ids.filtered(lambda exp: exp.state in ['approved', 'done'])
+        if duplicates:
+            action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
+            action['context'] = {'default_sheet_ids': self.ids, 'default_expense_ids': duplicates.ids}
+            return action
+        self._do_approve()
+
+    def _do_approve(self):
+        self._check_can_approve()
+
         responsible_id = self.user_id.id or self.env.user.id
-        self.write({'state': 'approve', 'user_id': responsible_id})
+        notification = {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('There are no expense reports to approve.'),
+                'type': 'warning',
+                'sticky': False,  #True/False will display for few seconds if false
+            },
+        }
+        sheet_to_approve = self.filtered(lambda s: s.state in ['submit', 'draft'])
+        if sheet_to_approve:
+            notification['params'].update({
+                'title': _('The expense reports were successfully approved.'),
+                'type': 'success',
+                'next': {'type': 'ir.actions.act_window_close'},
+            })
+            sheet_to_approve.write({
+                'state': 'approve',
+                'user_id': responsible_id,
+                'approval_date': fields.Datetime.now()})
         self.activity_update()
+        return notification
 
     def paid_expense_sheets(self):
         self.write({'state': 'done'})
@@ -1052,7 +1118,7 @@ class HrExpenseSheet(models.Model):
         if not self.can_reset:
             raise UserError(_("Only HR Officers or the concerned employee can reset to draft."))
         self.mapped('expense_line_ids').write({'is_refused': False})
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'approval_date': False})
         self.activity_update()
         return True
 

@@ -8,7 +8,7 @@ return AbstractWebClient.include({
 
     start: function () {
         if (session.iap_company_enrich) {
-            const current_company_id = session.user_companies.current_company[0];
+            const current_company_id = session.user_companies.current_company;
             this._rpc({
                 model: 'res.company',
                 method: 'iap_enrich_auto',

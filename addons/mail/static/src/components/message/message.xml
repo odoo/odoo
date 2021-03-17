@@ -83,10 +83,10 @@
                             <t t-if="threadView and message.originThread and message.originThread !== threadView.thread">
                                 <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': isSelected }">
                                     <t t-if="message.originThread.model === 'mail.channel'">
-                                        (from <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread">#<t t-esc="message.originThread.name"/></a>)
+                                        (from <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="message.originThread.name">#<t t-esc="message.originThread.name"/></t><t t-else="">channel</t></a>)
                                     </t>
                                     <t t-else="">
-                                        on <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread"><t t-esc="message.originThread.name"/></a>
+                                        on <a class="o_Message_originThreadLink" t-att-href="message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="message.originThread.name"><t t-esc="message.originThread.name"/></t><t t-else="">document</t></a>
                                     </t>
                                 </div>
                             </t>
@@ -167,9 +167,11 @@
                                     <li>
                                         <div class="o_Message_trackingValue">
                                             <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changed_field"/>
-                                            <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
-                                            <t t-if="value.old_value !== value.new_value">
-                                                <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                            <t t-if="value.old_value">
+                                                <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
+                                            </t>
+                                            <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
+                                            <t t-if="value.new_value">
                                                 <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
                                             </t>
                                         </div>

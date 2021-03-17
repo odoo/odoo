@@ -286,39 +286,76 @@ class Message extends Component {
         return this.message.tracking_value_ids.map(trackingValue => {
             const value = Object.assign({}, trackingValue);
             value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
-            if (value.field_type === 'datetime') {
-                if (value.old_value) {
-                    value.old_value =
-                        moment.utc(value.old_value).local().format('LLL');
-                }
-                if (value.new_value) {
-                    value.new_value =
-                        moment.utc(value.new_value).local().format('LLL');
-                }
-            } else if (value.field_type === 'date') {
-                if (value.old_value) {
-                    value.old_value =
-                        moment(value.old_value).local().format('LL');
-                }
-                if (value.new_value) {
-                    value.new_value =
-                        moment(value.new_value).local().format('LL');
-                }
-            } else if (value.field_type === 'boolean') {
-                if (value.old_value !== undefined){
-                    value.old_value = value.old_value ? this.env._t("True") : this.env._t("False");
-                }
-                if (value.new_value !== undefined){
-                    value.new_value = value.new_value ? this.env._t("True") : this.env._t("False");
-                }
-            } else if (value.field_type === 'monetary' && value.currency_id) {
-                const currency_id = this.env.session.currencies[value.currency_id]
-                if (value.old_value !== undefined) {
-                    value.old_value = format.monetary(value.old_value, null, { currency: currency_id, forceString: true });
-                }
-                if (value.new_value !== undefined) {
-                    value.new_value = format.monetary(value.new_value, null, { currency: currency_id, forceString: true });
-                }
+            /**
+             * Maps tracked field type to a JS formatter. Tracking values are
+             * not always stored in the same field type as their origin type.
+             * Field types that are not listed here are not supported by
+             * tracking in Python. Also see `create_tracking_values` in Python.
+             */
+            switch (value.field_type) {
+                case 'boolean':
+                    value.old_value = format.boolean(value.old_value, undefined, { forceString: true });
+                    value.new_value = format.boolean(value.new_value, undefined, { forceString: true });
+                    break;
+                /**
+                 * many2one formatter exists but is expecting id/name_get or data
+                 * object but only the target record name is known in this context.
+                 *
+                 * Selection formatter exists but requires knowing all
+                 * possibilities and they are not given in this context.
+                 */
+                case 'char':
+                case 'many2one':
+                case 'selection':
+                    value.old_value = format.char(value.old_value);
+                    value.new_value = format.char(value.new_value);
+                    break;
+                case 'date':
+                    if (value.old_value) {
+                        value.old_value = moment.utc(value.old_value);
+                    }
+                    if (value.new_value) {
+                        value.new_value = moment.utc(value.new_value);
+                    }
+                    value.old_value = format.date(value.old_value);
+                    value.new_value = format.date(value.new_value);
+                    break;
+                case 'datetime':
+                    if (value.old_value) {
+                        value.old_value = moment.utc(value.old_value);
+                    }
+                    if (value.new_value) {
+                        value.new_value = moment.utc(value.new_value);
+                    }
+                    value.old_value = format.datetime(value.old_value);
+                    value.new_value = format.datetime(value.new_value);
+                    break;
+                case 'float':
+                    value.old_value = format.float(value.old_value);
+                    value.new_value = format.float(value.new_value);
+                    break;
+                case 'integer':
+                    value.old_value = format.integer(value.old_value);
+                    value.new_value = format.integer(value.new_value);
+                    break;
+                case 'monetary':
+                    value.old_value = format.monetary(value.old_value, undefined, {
+                        currency: value.currency_id
+                            ? this.env.session.currencies[value.currency_id]
+                            : undefined,
+                        forceString: true,
+                    });
+                    value.new_value = format.monetary(value.new_value, undefined, {
+                        currency: value.currency_id
+                            ? this.env.session.currencies[value.currency_id]
+                            : undefined,
+                        forceString: true,
+                    });
+                    break;
+                case 'text':
+                    value.old_value = format.text(value.old_value);
+                    value.new_value = format.text(value.new_value);
+                    break;
             }
             return value;
         });

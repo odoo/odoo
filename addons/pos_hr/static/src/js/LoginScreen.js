@@ -30,9 +30,6 @@ odoo.define('pos_hr.LoginScreen', function (require) {
         get shopName() {
             return this.env.pos.config.name;
         }
-        closeSession() {
-            this.trigger('close-pos');
-        }
         async selectCashier() {
             const list = this.env.pos.employees.map((employee) => {
                 return {

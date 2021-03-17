@@ -5,7 +5,7 @@ import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 
 
 class Meeting(models.Model):
@@ -104,7 +104,7 @@ class Meeting(models.Model):
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
             existing_attendees = self.browse(google_event.odoo_id(self.env)).attendee_ids
-        attendees_by_emails = {a.email: a for a in existing_attendees}
+        attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
         for attendee in google_attendees:
             email = attendee.get('email')
 
@@ -120,7 +120,7 @@ class Meeting(models.Model):
                     partner.name = attendee.get('displayName')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
-            if odoo_attendee.email not in emails:
+            if tools.email_normalize(odoo_attendee.email) not in emails:
                 attendee_commands += [(2, odoo_attendee.id)]
                 partner_commands += [(3, odoo_attendee.partner_id.id)]
         return attendee_commands, partner_commands
@@ -202,7 +202,7 @@ class Meeting(models.Model):
         }
         if self.privacy:
             values['visibility'] = self.privacy
-        if self.user_id != self.env.user:
+        if self.user_id and self.user_id != self.env.user:
             values['extendedProperties']['shared']['%s_owner_id' % self.env.cr.dbname] = self.user_id.id
 
         if not self.active:

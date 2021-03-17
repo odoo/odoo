@@ -169,6 +169,10 @@ class StockRule(models.Model):
         if self.auto == 'transparent':
             old_dest_location = move.location_dest_id
             move.write({'date': new_date, 'location_dest_id': self.location_id.id})
+            # make sure the location_dest_id is consistent with the move line location dest
+            if move.move_line_ids:
+                move.move_line_ids.location_dest_id = move.location_dest_id._get_putaway_strategy(move.product_id) or move.location_dest_id
+
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
             if self.location_id != old_dest_location:
                 # TDE FIXME: should probably be done in the move model IMO
@@ -471,17 +475,6 @@ class ProcurementGroup(models.Model):
             domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', values['company_id'].ids)]
             domain = expression.AND([domain, domain_company])
         return domain
-
-    def _merge_domain(self, values, rule, group_id):
-        return [
-            ('group_id', '=', group_id), # extra logic?
-            ('location_id', '=', rule.location_src_id.id),
-            ('location_dest_id', '=', values['location_id'].id),
-            ('picking_type_id', '=', rule.picking_type_id.id),
-            ('picking_id.printed', '=', False),
-            ('picking_id.state', 'in', ['draft', 'confirmed', 'waiting', 'assigned']),
-            ('picking_id.backorder_id', '=', False),
-            ('product_id', '=', values['product_id'].id)]
 
     @api.model
     def _get_moves_to_assign_domain(self, company_id):

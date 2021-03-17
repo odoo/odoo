@@ -40,7 +40,7 @@ class MailActivityType(models.Model):
     active = fields.Boolean(default=True)
     create_uid = fields.Many2one('res.users', index=True)
     delay_count = fields.Integer(
-        'Scheduled Date', default=0,
+        'Schedule', default=0,
         help='Number of days/week/month before executing the action. It allows to plan the action deadline.')
     delay_unit = fields.Selection([
         ('days', 'days'),
@@ -48,7 +48,7 @@ class MailActivityType(models.Model):
         ('months', 'months')], string="Delay units", help="Unit of delay", required=True, default='days')
     delay_label = fields.Char(compute='_compute_delay_label')
     delay_from = fields.Selection([
-        ('current_date', 'after validation date'),
+        ('current_date', 'after completion date'),
         ('previous_activity', 'after previous activity deadline')], string="Delay Type", help="Type of delay", required=True, default='previous_activity')
     icon = fields.Char('Icon', help="Font awesome icon e.g. fa-tasks")
     decoration_type = fields.Selection([
@@ -60,24 +60,30 @@ class MailActivityType(models.Model):
         domain=['&', ('is_mail_thread', '=', True), ('transient', '=', False)],
         help='Specify a model if the activity should be specific to a model'
              ' and not available when managing activities for other models.')
-    default_next_type_id = fields.Many2one('mail.activity.type', 'Default Next Activity',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
-    force_next = fields.Boolean("Trigger Next Activity", default=False)
-    next_type_ids = fields.Many2many(
-        'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
+    triggered_next_type_id = fields.Many2one(
+        'mail.activity.type', string='Trigger', compute='_compute_triggered_next_type_id',
+        inverse='_inverse_triggered_next_type_id', store=True, readonly=False,
+        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict',
+        help="Automatically schedule this activity once the current one is marked as done.")
+    chaining_type = fields.Selection([
+        ('suggest', 'Suggest Next Activity'), ('trigger', 'Trigger Next Activity')
+    ], string="Chaining Type", required=True, default="suggest")
+    suggested_next_type_ids = fields.Many2many(
+        'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id', string='Suggest',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
-        string='Recommended Next Activities')
+        compute='_compute_suggested_next_type_ids', inverse='_inverse_suggested_next_type_ids', store=True, readonly=False,
+        help="Suggest these activities once the current one is marked as done.")
     previous_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
         string='Preceding Activities')
     category = fields.Selection([
         ('default', 'None'), ('upload_file', 'Upload Document')
-    ], default='default', string='Action to Perform',
+    ], default='default', string='Action',
         help='Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
     mail_template_ids = fields.Many2many('mail.template', string='Email templates')
     default_user_id = fields.Many2one("res.users", string="Default User")
-    default_description = fields.Html(string="Default Description", translate=True)
+    default_note = fields.Html(string="Default Note", translate=True)
 
     #Fields for display purpose only
     initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
@@ -100,6 +106,32 @@ class MailActivityType(models.Model):
         for activity_type in self:
             unit = selection_description_values[activity_type.delay_unit]
             activity_type.delay_label = '%s %s' % (activity_type.delay_count, unit)
+
+    @api.depends('chaining_type')
+    def _compute_suggested_next_type_ids(self):
+        """suggested_next_type_ids and triggered_next_type_id should be mutually exclusive"""
+        for activity_type in self:
+            if activity_type.chaining_type == 'trigger':
+                activity_type.suggested_next_type_ids = False
+
+    def _inverse_suggested_next_type_ids(self):
+        for activity_type in self:
+            if activity_type.suggested_next_type_ids:
+                activity_type.chaining_type = 'suggest'
+
+    @api.depends('chaining_type')
+    def _compute_triggered_next_type_id(self):
+        """suggested_next_type_ids and triggered_next_type_id should be mutually exclusive"""
+        for activity_type in self:
+            if activity_type.chaining_type == 'suggest':
+                activity_type.triggered_next_type_id = False
+
+    def _inverse_triggered_next_type_id(self):
+        for activity_type in self:
+            if activity_type.triggered_next_type_id:
+                activity_type.chaining_type = 'trigger'
+            else:
+                activity_type.chaining_type = 'suggest'
 
 
 class MailActivity(models.Model):
@@ -179,20 +211,20 @@ class MailActivity(models.Model):
         compute='_compute_has_recommended_activities',
         help='Technical field for UX purpose')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
-    force_next = fields.Boolean(related='activity_type_id.force_next', readonly=True)
+    chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
     # access
     can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
 
     @api.onchange('previous_activity_type_id')
     def _compute_has_recommended_activities(self):
         for record in self:
-            record.has_recommended_activities = bool(record.previous_activity_type_id.next_type_ids)
+            record.has_recommended_activities = bool(record.previous_activity_type_id.suggested_next_type_ids)
 
     @api.onchange('previous_activity_type_id')
     def _onchange_previous_activity_type_id(self):
         for record in self:
-            if record.previous_activity_type_id.default_next_type_id:
-                record.activity_type_id = record.previous_activity_type_id.default_next_type_id
+            if record.previous_activity_type_id.triggered_next_type_id:
+                record.activity_type_id = record.previous_activity_type_id.triggered_next_type_id
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
@@ -237,8 +269,8 @@ class MailActivity(models.Model):
                 self.summary = self.activity_type_id.summary
             self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
             self.user_id = self.activity_type_id.default_user_id or self.env.user
-            if self.activity_type_id.default_description:
-                self.note = self.activity_type_id.default_description
+            if self.activity_type_id.default_note:
+                self.note = self.activity_type_id.default_note
 
     def _calculate_date_deadline(self, activity_type):
         # Date.context_today is correct because date_deadline is a Date and is meant to be
@@ -521,7 +553,7 @@ class MailActivity(models.Model):
 
         for activity in self:
             # extract value to generate next activities
-            if activity.force_next:
+            if activity.chaining_type == 'trigger':
                 Activity = self.env['mail.activity'].with_context(activity_previous_deadline=activity.date_deadline)  # context key is required in the onchange to set deadline
                 vals = Activity.default_get(Activity.fields_get())
 
@@ -929,7 +961,7 @@ class MailActivityMixin(models.AbstractModel):
                 'activity_type_id': activity_type and activity_type.id,
                 'summary': summary or activity_type.summary,
                 'automated': True,
-                'note': note or activity_type.default_description,
+                'note': note or activity_type.default_note,
                 'date_deadline': date_deadline,
                 'res_model_id': model_id,
                 'res_id': record.id,

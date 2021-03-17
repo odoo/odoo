@@ -4,6 +4,7 @@ odoo.define('website_form_editor', function (require) {
 const core = require('web.core');
 const FormEditorRegistry = require('website_form.form_editor_registry');
 const options = require('web_editor.snippets.options');
+require('website.editor.snippets.options');
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -125,6 +126,9 @@ const FormEditor = options.Class.extend({
         field.id = Math.random().toString(36).substring(2, 15); // Big unique ID
         const template = document.createElement('template');
         template.innerHTML = qweb.render("website_form.field_" + field.type, {field: field}).trim();
+        if (field.description && field.description !== true) {
+            $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
+        }
         return template.content.firstElementChild;
     },
 });
@@ -146,9 +150,10 @@ const FieldEditor = FormEditor.extend({
      * Returns the target as a field Object
      *
      * @private
+     * @param {boolean} noRecords
      * @returns {Object}
      */
-    _getActiveField: function () {
+    _getActiveField: function (noRecords) {
         let field;
         const labelText = this.$target.find('.s_website_form_label_content').text();
         if (this._isFieldCustom()) {
@@ -157,7 +162,9 @@ const FieldEditor = FormEditor.extend({
             field = Object.assign({}, this.fields[this._getFieldName()]);
             field.string = labelText;
         }
-        field.records = this._getListItems();
+        if (!noRecords) {
+            field.records = this._getListItems();
+        }
         this._setActiveProperties(field);
         return field;
     },
@@ -228,23 +235,6 @@ const FieldEditor = FormEditor.extend({
         return this.$target[0].querySelector('.s_website_form_multiple');
     },
     /**
-     * @private
-     * @returns {string}
-     */
-    _getPlaceholder: function () {
-        const input = this._getPlaceholderInput();
-        return input ? input.placeholder : '';
-    },
-    /**
-     * Returns the field's input if it is placeholder compatible, else null
-     *
-     * @private
-     * @returns {HTMLElement}
-     */
-    _getPlaceholderInput: function () {
-        return this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
-    },
-    /**
      * Returns true if the field is a custom field, false if it is an existing field
      *
      * @private
@@ -271,24 +261,23 @@ const FieldEditor = FormEditor.extend({
     _setActiveProperties(field) {
         const classList = this.$target[0].classList;
         const textarea = this.$target[0].querySelector('textarea');
-        field.placeholder = this._getPlaceholder();
+        const input = this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
+        const description = this.$target[0].querySelector('.s_website_form_field_description');
+        field.placeholder = input && input.placeholder;
+        if (input) {
+            // textarea value has no attribute,  date/datetime timestamp property is formated
+            field.value = input.getAttribute('value') || input.value;
+        } else if (field.type === 'boolean') {
+            field.value = !!this.$target[0].querySelector('input[type="checkbox"][checked]');
+        }
+        // property value is needed for date/datetime (formated date).
+        field.propertyValue = input && input.value;
+        field.description = description && description.outerHTML;
         field.rows = textarea && textarea.rows;
         field.required = classList.contains('s_website_form_required');
         field.modelRequired = classList.contains('s_website_form_model_required');
         field.hidden = classList.contains('s_website_form_field_hidden');
         field.formatInfo = this._getFieldFormat();
-    },
-    /**
-     * Set the placeholder on the current field if the input allow it
-     *
-     * @private
-     * @param {string} value
-     */
-    _setPlaceholder: function (value) {
-        const input = this._getPlaceholderInput();
-        if (input) {
-            input.placeholder = value;
-        }
     },
 });
 
@@ -343,8 +332,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         const proms = [this._super(...arguments)];
         // Disable text edition
         this.$target.attr('contentEditable', false);
-        // Make button and recaptcha editable
-        this.$target.find('.s_website_form_send, .s_website_form_recaptcha').attr('contentEditable', true);
+        // Make button, description, and recaptcha editable
+        this.$target.find('.s_website_form_send, .s_website_form_field_description, .s_website_form_recaptcha').attr('contentEditable', true);
         // Get potential message
         this.$message = this.$target.parent().find('.s_website_form_end_message');
         this.showEndMessage = false;
@@ -717,14 +706,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
 const authorizedFieldsCache = {};
 
 options.registry.WebsiteFieldEditor = FieldEditor.extend({
-    events: _.extend({}, FieldEditor.prototype.events, {
-        'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
-        'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
-        'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
-        'click we-list we-select': '_onAddItemSelectClick',
-        'input we-list input': '_onListItemInput',
-    }),
-
     /**
      * @override
      */
@@ -770,19 +751,24 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     /**
      * @override
      */
+    start: async function () {
+        const _super = this._super.bind(this);
+        // Build the custom select
+        const select = this._getSelect();
+        if (select) {
+            const field = this._getActiveField();
+            await this._replaceField(field);
+        }
+        return _super(...arguments);
+    },
+    /**
+     * @override
+     */
     cleanForSave: function () {
         this.$target[0].querySelectorAll('#editable_select').forEach(el => el.remove());
         const select = this._getSelect();
-        if (select && this.listTable) {
+        if (select) {
             select.style.display = '';
-            $(select).empty();
-            // Rebuild the select from the we-list
-            this.listTable.querySelectorAll('input').forEach(el => {
-                const option = document.createElement('option');
-                option.textContent = el.value;
-                option.value = this._isFieldCustom() ? el.value : el.name;
-                select.appendChild(option);
-            });
         }
     },
     /**
@@ -791,16 +777,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     updateUI: async function () {
         // See Form updateUI
         if (this.rerender) {
-            const select = this._getSelect();
-            if (select && !this.$target[0].querySelector('#editable_select')) {
-                select.style.display = 'none';
-                const editableSelect = document.createElement('div');
-                editableSelect.id = 'editable_select';
-                editableSelect.classList = 'form-control s_website_form_input';
-                select.parentElement.appendChild(editableSelect);
-            }
             this.rerender = false;
-            await this._rerenderXML().then(() => this._renderList());
+            await this._rerenderXML();
             return;
         }
         await this._super.apply(this, arguments);
@@ -818,6 +796,14 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     // Options
     //----------------------------------------------------------------------
 
+    /**
+     * Add/remove a description to the field input
+     */
+    toggleDescription: async function (previewMode, value, params) {
+        const field = this._getActiveField();
+        field.description = !!value; // Will be changed to default description in qweb
+        await this._replaceField(field);
+    },
     /**
      * Replace the current field with the custom field selected.
      */
@@ -859,12 +845,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.$target[0].querySelectorAll('.s_website_form_input').forEach(el => el.name = value);
         }
     },
-    /*
-    * Set the placeholder of the input
-    */
-    setPlaceholder: function (previewMode, value, params) {
-        this._setPlaceholder(value);
-    },
     /**
      * Replace the field with the same field having the label in a different position.
      */
@@ -872,12 +852,24 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const field = this._getActiveField();
         field.formatInfo.labelPosition = value;
         await this._replaceField(field);
-        this.rerender = true;
     },
     selectType: async function (previewMode, value, params) {
         const field = this._getActiveField();
         field.type = value;
         await this._replaceField(field);
+    },
+    /**
+     * Select the textarea default value
+     */
+    selectTextareaValue: function (previewMode, value, params) {
+        this.$target[0].textContent = value;
+        this.$target[0].value = value;
+    },
+    /**
+     * Select the date as value property and convert it to the right format
+     */
+    selectValueProperty: function (previewMode, value, params) {
+        this.$target[0].value = value ? moment.unix(value).format(params.format) : '';
     },
     /**
      * Select the display of the multicheckbox field (vertical & horizontal)
@@ -905,6 +897,15 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             name: 'field_mark',
         });
     },
+    /**
+     * Apply the we-list on the target and rebuild the input(s)
+     */
+    renderListItems: async function (previewMode, value, params) {
+        const valueList = JSON.parse(value);
+        const field = this._getActiveField(true);
+        field.records = valueList.map(val => params.records.find(rec => rec.id === val));
+        await this._replaceField(field);
+    },
 
     //----------------------------------------------------------------------
     // Private
@@ -915,24 +916,34 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
+            case 'toggleDescription': {
+                const description = this.$target[0].querySelector('.s_website_form_field_description');
+                return !!description;
+            }
             case 'customField':
                 return this._isFieldCustom() ? this._getFieldType() : '';
             case 'existingField':
                 return this._isFieldCustom() ? '' : this._getFieldName();
             case 'setLabelText':
                 return this.$target.find('.s_website_form_label_content').text();
-            case 'setPlaceholder':
-                return this._getPlaceholder();
             case 'selectLabelPosition':
                 return this._getLabelPosition();
             case 'selectType':
                 return this._getFieldType();
+            case 'selectTextareaValue':
+                return this.$target[0].textContent;
+            case 'selectValueProperty':
+                return this.$target[0].getAttribute('value') || '';
             case 'multiCheckboxDisplay': {
                 const target = this._getMultipleInputs();
                 return target ? target.dataset.display : '';
             }
             case 'toggleRequired':
                 return this.$target[0].classList.contains(params.activeValue) ? params.activeValue : 'false';
+            case 'renderListItems': {
+                const values = this._getListItems().map(el => el.id);
+                return JSON.stringify(values);
+            }
         }
         return this._super(...arguments);
     },
@@ -945,8 +956,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return !this.$target[0].classList.contains('s_website_form_custom') && ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type);
             case 'multi_check_display_opt':
                 return !!this._getMultipleInputs();
-            case 'placeholder_opt':
-                return !!this._getPlaceholderInput();
             case 'required_opt':
             case 'hidden_opt':
             case 'type_opt':
@@ -957,7 +966,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     /**
      * @override
      */
-    _renderCustomXML: function (uiFragment) {
+    _renderCustomXML: async function (uiFragment) {
         const selectEl = uiFragment.querySelector('we-select[data-name="type_opt"]');
         const currentFieldName = this._getFieldName();
         const fieldsInForm = Array.from(this.formEl.querySelectorAll('.s_website_form_field:not(.s_website_form_custom) .s_website_form_input')).map(el => el.name).filter(el => el !== currentFieldName);
@@ -968,6 +977,34 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             availableFields.unshift(title);
             availableFields.forEach(option => selectEl.append(option.cloneNode(true)));
         }
+
+        const select = this._getSelect();
+        const multipleInputs = this._getMultipleInputs();
+        if (!select && !multipleInputs) {
+            return;
+        }
+
+        const field = Object.assign({}, this.fields[this._getFieldName()]);
+        const type = this._getFieldType();
+
+        const list = document.createElement('we-list');
+        const optionText = select ? 'Option' : type === 'selection' ? 'Radio' : 'Checkbox';
+        list.setAttribute('string', `${optionText} List`);
+        list.dataset.addItemTitle = _.str.sprintf(_t("Add new %s"), optionText);
+        list.dataset.renderListItems = '';
+
+        list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
+        const defaults = [...this.$target[0].querySelectorAll('[checked], [selected]')].map(el => {
+            const idInt = parseInt(el.value);
+            return isNaN(idInt) ? el.value : idInt;
+        });
+        list.dataset.defaults = JSON.stringify(defaults);
+
+        if (!this._isFieldCustom()) {
+            await this._fetchFieldRecords(field);
+            list.dataset.availableRecords = JSON.stringify(field.records);
+        }
+        uiFragment.appendChild(list);
     },
     /**
      * Replace the target content with the field provided
@@ -978,217 +1015,38 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _replaceField: async function (field) {
         await this._fetchFieldRecords(field);
+        const activeField = this._getActiveField();
+        if (activeField.type !== field.type) {
+            field.value = '';
+        }
         const htmlField = this._renderField(field);
         [...this.$target[0].childNodes].forEach(node => node.remove());
         [...htmlField.childNodes].forEach(node => this.$target[0].appendChild(node));
         [...htmlField.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
         [...htmlField.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
-    },
-
-    /**
-     * To do after rerenderXML to add the list to the options
-     *
-     * @private
-     */
-    _renderList: function () {
-        let addItemButton, addItemTitle, listTitle;
-        const select = this._getSelect();
-        const multipleInputs = this._getMultipleInputs();
-        this.listTable = document.createElement('table');
-        const isCustomField = this._isFieldCustom();
-
-        if (select) {
-            listTitle = 'Options List';
-            addItemTitle = 'Add new Option';
-            select.querySelectorAll('option').forEach(opt => {
-                this._addItemToTable(opt.value, opt.textContent.trim());
-            });
-            this._renderListItems();
-        } else if (multipleInputs) {
-            listTitle = multipleInputs.querySelector('.radio') ? 'Radio List' : 'Checkbox List';
-            addItemTitle = 'Add new Checkbox';
-            multipleInputs.querySelectorAll('.checkbox, .radio').forEach(opt => {
-                this._addItemToTable(opt.querySelector('input').value, opt.querySelector('.s_website_form_check_label').textContent.trim());
-            });
-        } else {
-            return;
-        }
-
-        if (isCustomField) {
-            addItemButton = document.createElement('we-button');
-            addItemButton.textContent = addItemTitle;
-            addItemButton.classList.add('o_we_list_add_optional');
-            addItemButton.dataset.noPreview = 'true';
-        } else {
-            addItemButton = document.createElement('we-select');
-            addItemButton.classList.add('o_we_user_value_widget'); // Todo dont use user value widget class
-            const togglerEl = document.createElement('we-toggler');
-            togglerEl.textContent = addItemTitle;
-            addItemButton.appendChild(togglerEl);
-            const selectMenuEl = document.createElement('we-selection-items');
-            addItemButton.appendChild(selectMenuEl);
-            this._loadListDropdown(selectMenuEl);
-        }
-        const selectInputEl = document.createElement('we-list');
-        const title = document.createElement('we-title');
-        title.textContent = listTitle;
-        selectInputEl.appendChild(title);
-        const tableWrapper = document.createElement('div');
-        tableWrapper.classList.add('oe_we_table_wraper');
-        tableWrapper.appendChild(this.listTable);
-        selectInputEl.appendChild(tableWrapper);
-        selectInputEl.appendChild(addItemButton);
-        this.el.insertBefore(selectInputEl, this.el.querySelector('[data-set-placeholder]'));
-        this._makeListItemsSortable();
-    },
-    /**
-     * Load the dropdown of the list with the records missing from the list.
-     *
-     * @private
-     * @param {HTMLElement} selectMenu
-     */
-    _loadListDropdown: function (selectMenu) {
-        selectMenu = selectMenu || this.el.querySelector('we-list we-selection-items');
-        if (selectMenu) {
-            $(selectMenu).empty();
-            const field = Object.assign({}, this.fields[this._getFieldName()]);
-            this._fetchFieldRecords(field).then(() => {
-                let buttonItems;
-                const optionIds = Array.from(this.listTable.querySelectorAll('input')).map(opt => {
-                    return field.type === 'selection' ? opt.name : parseInt(opt.name);
-                });
-                const availableRecords = (field.records || []).filter(el => !optionIds.includes(el.id));
-                if (availableRecords.length) {
-                    buttonItems = availableRecords.map(el => {
-                        const option = document.createElement('we-button');
-                        option.classList.add('o_we_list_add_existing');
-                        option.dataset.addOption = el.id;
-                        option.dataset.noPreview = 'true';
-                        option.textContent = el.display_name;
-                        return option;
-                    });
-                } else {
-                    const title = document.createElement('we-title');
-                    title.textContent = 'No more records';
-                    buttonItems = [title];
-                }
-                buttonItems.forEach(button => selectMenu.appendChild(button));
-            });
-        }
+        this.$target[0].querySelectorAll('input.datetimepicker-input').forEach(el => el.value = field.propertyValue);
     },
     /**
      * @private
-     */
-    _makeListItemsSortable: function () {
-        $(this.listTable).sortable({
-            axis: 'y',
-            handle: '.o_we_drag_handle',
-            items: 'tr',
-            cursor: 'move',
-            opacity: 0.6,
-            stop: (event, ui) => {
-                this._renderListItems();
-            },
-        });
-    },
-    /**
-     * @private
-     * @param {string} id
-     * @param {string} text
-     */
-    _addItemToTable: function (id, text) {
-        const isCustomField = this._isFieldCustom();
-        const draggableEl = document.createElement('we-button');
-        draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
-        draggableEl.dataset.noPreview = 'true';
-        const inputEl = document.createElement('input');
-        inputEl.type = 'text';
-        if (text) {
-            inputEl.value = text;
-        }
-        if (!isCustomField && id) {
-            inputEl.name = id;
-        }
-        inputEl.disabled = !isCustomField;
-        const trEl = document.createElement('tr');
-        const buttonEl = document.createElement('we-button');
-        buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
-        buttonEl.dataset.removeOption = id;
-        buttonEl.dataset.noPreview = 'true';
-        const draggableTdEl = document.createElement('td');
-        const inputTdEl = document.createElement('td');
-        const buttonTdEl = document.createElement('td');
-        draggableTdEl.appendChild(draggableEl);
-        trEl.appendChild(draggableTdEl);
-        inputTdEl.appendChild(inputEl);
-        trEl.appendChild(inputTdEl);
-        buttonTdEl.appendChild(buttonEl);
-        trEl.appendChild(buttonTdEl);
-        this.listTable.appendChild(trEl);
-        if (isCustomField) {
-            inputEl.focus();
-        }
-    },
-    /**
-     * Apply the we-list on the target and rebuild the input(s)
-     *
-     * @private
-     */
-    _renderListItems: function () {
-        const multiInputsWrap = this._getMultipleInputs();
-        const selectWrap = this.$target[0].querySelector('#editable_select');
-        const isRequiredField = this._isFieldRequired();
-        const name = this._getFieldName();
-        if (multiInputsWrap) {
-            const type = multiInputsWrap.querySelector('.radio') ? 'radio' : 'checkbox';
-            $(multiInputsWrap).empty();
-            const params = {
-                field: {
-                    name: name,
-                    id: Math.random().toString(36).substring(2, 15), // Big unique ID
-                    required: isRequiredField,
-                    formatInfo: {
-                        multiPosition: multiInputsWrap.dataset.display,
-                    }
-                }
-            };
-            this._getListItems().forEach((record, idx) => {
-                params.record_index = idx;
-                params.record = record;
-                const template = document.createElement('template');
-                $(template).html(qweb.render(`website_form.${type}`, params));
-                multiInputsWrap.appendChild(template.content.firstElementChild);
-            });
-        } else if (selectWrap) {
-            $(selectWrap).empty();
-            this.listTable.querySelectorAll('input').forEach(el => {
-                const option = document.createElement('div');
-                option.id = (el.name || el.value);
-                option.classList.add('s_website_form_select_item');
-                option.textContent = el.value;
-                selectWrap.appendChild(option);
-            });
-        }
-    },
-    /**
-     * Returns an array based on the we-list containing the field's records
-     *
-     * @returns {Array}
      */
     _getListItems: function () {
-        if (!this.listTable) {
-            return null;
+        const select = this._getSelect();
+        const multipleInputs = this._getMultipleInputs();
+        let options = [];
+        if (select) {
+            options = [...select.querySelectorAll('option')];
+        } else if (multipleInputs) {
+            options = [...multipleInputs.querySelectorAll('.checkbox input, .radio input')];
         }
-        const isCustomField = this._isFieldCustom();
-        const records = [];
-        this.listTable.querySelectorAll('input').forEach(el => {
-            const id = isCustomField ? el.value : el.name;
-            records.push({
-                id: id,
-                display_name: el.value,
-            });
+        return options.map(opt => {
+            const id = parseInt(opt.value);
+            const name = select ? opt : opt.nextElementSibling;
+            return {
+                id: isNaN(id) ? opt.value : id,
+                display_name: name.textContent.trim(),
+                selected: select ? opt.selected : opt.checked,
+            };
         });
-        return records;
     },
     /**
      * Returns the select element if it exist else null
@@ -1198,53 +1056,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _getSelect: function () {
         return this.$target[0].querySelector('select');
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onRemoveItemClick: function (ev) {
-        ev.target.closest('tr').remove();
-        this._loadListDropdown();
-        this._renderListItems();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAddCustomItemClick: function (ev) {
-        this._addItemToTable();
-        this._makeListItemsSortable();
-        this._renderListItems();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAddExistingItemClick: function (ev) {
-        const value = ev.currentTarget.dataset.addOption;
-        this._addItemToTable(value, ev.currentTarget.textContent);
-        this._makeListItemsSortable();
-        this._loadListDropdown();
-        this._renderListItems();
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAddItemSelectClick: function (ev) {
-        ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
-    },
-    /**
-     * @private
-     */
-    _onListItemInput: function () {
-        this._renderListItems();
     },
 });
 
@@ -1338,5 +1149,22 @@ options.registry.WebsiteFormSubmitRequired = DisableOverlayButtonOption.extend({
         this.disableButton('clone', _t('You can\'t duplicate the submit button of the form.'));
         return this._super.apply(this, arguments);
     }
+});
+
+// Disable "Shown on Mobile" option if for an hidden field
+options.registry.MobileVisibility.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeVisibility() {
+        // Same as default but overridden by other apps
+        return await this._super(...arguments)
+            && !this.$target.hasClass('s_website_form_field_hidden');
+    },
 });
 });

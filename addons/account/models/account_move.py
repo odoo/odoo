@@ -16,14 +16,6 @@ import json
 import re
 import warnings
 
-class ImbalanceJournalEntryError(UserError):
-    """Specialized UserError raised by `_check_balanced` method."""
-
-    def __init__(self, message, move_ids, imbalance_amounts):
-        super().__init__(message)
-        self.move_ids = move_ids
-        self.imbalance_amounts = imbalance_amounts
-
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
@@ -38,6 +30,14 @@ def calc_check_digits(number):
     checksum = int(number_base10) % 97
     return '%02d' % ((98 - 100 * checksum) % 97)
 
+PAYMENT_STATE_SELECTION = [
+        ('not_paid', 'Not Paid'),
+        ('in_payment', 'In Payment'),
+        ('paid', 'Paid'),
+        ('partial', 'Partially Paid'),
+        ('reversed', 'Reversed'),
+        ('invoicing_legacy', 'Invoicing App Legacy'),
+]
 
 class AccountMove(models.Model):
     _name = "account.move"
@@ -233,15 +233,8 @@ class AccountMove(models.Model):
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
         help='Edit Tax amounts if you encounter rounding issues.')
-    payment_state = fields.Selection(selection=[
-        ('not_paid', 'Not Paid'),
-        ('in_payment', 'In Payment'),
-        ('paid', 'Paid'),
-        ('partial', 'Partially Paid'),
-        ('reversed', 'Reversed'),
-        ('invoicing_legacy', 'Invoicing App Legacy')],
-        string="Payment Status", store=True, readonly=True, copy=False, tracking=True,
-        compute='_compute_amount')
+    payment_state = fields.Selection(PAYMENT_STATE_SELECTION, string="Payment Status", store=True,
+        readonly=True, copy=False, tracking=True, compute='_compute_amount')
 
     # ==== Cash basis feature fields ====
     tax_cash_basis_rec_id = fields.Many2one(
@@ -463,10 +456,10 @@ class AccountMove(models.Model):
 
         self._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
-    @api.onchange('payment_reference', 'ref')
+    @api.onchange('payment_reference')
     def _onchange_payment_reference(self):
         for line in self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-            line.name = self.payment_reference or self.ref or ''
+            line.name = self.payment_reference or ''
 
     @api.onchange('invoice_vendor_bill_id')
     def _onchange_invoice_vendor_bill(self):
@@ -970,7 +963,7 @@ class AccountMove(models.Model):
                     # Create new line.
                     create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
                     candidate = create_method({
-                        'name': self.payment_reference or self.ref or '',
+                        'name': self.payment_reference or '',
                         'debit': balance < 0.0 and -balance or 0.0,
                         'credit': balance > 0.0 and balance or 0.0,
                         'quantity': 1.0,
@@ -1118,7 +1111,7 @@ class AccountMove(models.Model):
                 if (
                     not final_batches
                     or final_batches[-1]['format'] != date_group['format']
-                    or final_batches[-1]['format_values'] != date_group['format_values']
+                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
                 ):
                     final_batches += [date_group]
                 elif date_group['reset'] == 'never':
@@ -1171,9 +1164,15 @@ class AccountMove(models.Model):
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
+                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
             elif sequence_number_reset == 'month':
                 where_string += " AND date_trunc('month', date::timestamp without time zone) = date_trunc('month', %(date)s) "
                 param['date'] = self.date
+            else:
+                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
+
+            if param.get('anti_regex') and not self.journal_id.sequence_override_regex:
+                where_string += " AND sequence_prefix !~ %(anti_regex)s "
 
         if self.journal_id.refund_sequence:
             if self.move_type in ('out_refund', 'in_refund'):
@@ -1271,7 +1270,7 @@ class AccountMove(models.Model):
                 if line.currency_id and line in move._get_lines_onchange_currency():
                     currencies.add(line.currency_id)
 
-                if move.is_invoice(include_receipts=True):
+                if move._payment_state_matters():
                     # === Invoices ===
 
                     if not line.exclude_from_invoice_tab:
@@ -1315,8 +1314,7 @@ class AccountMove(models.Model):
             # Compute 'payment_state'.
             new_pmt_state = 'not_paid' if move.move_type != 'entry' else False
 
-            if move.is_invoice(include_receipts=True) and move.state == 'posted':
-
+            if move._payment_state_matters() and move.state == 'posted':
                 if currency.is_zero(move.amount_residual):
                     reconciled_payments = move._get_reconciled_payments()
                     if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
@@ -1687,7 +1685,7 @@ class AccountMove(models.Model):
         if query_res:
             ids = [res[0] for res in query_res]
             sums = [res[1] for res in query_res]
-            raise ImbalanceJournalEntryError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums), ids, sums)
+            raise UserError(_("Cannot create unbalanced journal entry. Ids: %s\nDifferences debit - credit: %s") % (ids, sums))
 
     def _check_fiscalyear_lock_date(self):
         for move in self:
@@ -1699,6 +1697,14 @@ class AccountMove(models.Model):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s. Check the company settings or ask someone with the 'Adviser' role", format_date(self.env, lock_date))
                 raise UserError(message)
         return True
+
+    @api.constrains('move_type', 'journal_id')
+    def _check_journal_type(self):
+        for record in self:
+            journal_type = record.journal_id.type
+
+            if record.is_sale_document() and journal_type != 'sale' or record.is_purchase_document() and journal_type != 'purchase':
+                raise ValidationError(_("The chosen journal has a type that is not compatible with your invoice type. Sales operations should go to 'sale' journals, and purchase operations to 'purchase' ones."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -1756,30 +1762,15 @@ class AccountMove(models.Model):
         '''
         new_vals_list = []
         for vals in vals_list:
-            if not vals.get('invoice_line_ids'):
-                new_vals_list.append(vals)
-                continue
-            if vals.get('line_ids'):
-                vals.pop('invoice_line_ids', None)
-                new_vals_list.append(vals)
-                continue
-            if not vals.get('move_type') and not self._context.get('default_move_type'):
-                vals.pop('invoice_line_ids', None)
-                new_vals_list.append(vals)
-                continue
-            vals['move_type'] = vals.get('move_type', self._context.get('default_move_type', 'entry'))
-            if not vals['move_type'] in self.get_invoice_types(include_receipts=True):
-                new_vals_list.append(vals)
-                continue
-
-            vals['line_ids'] = vals.pop('invoice_line_ids')
+            vals = dict(vals)
 
             if vals.get('invoice_date') and not vals.get('date'):
                 vals['date'] = vals['invoice_date']
 
-            ctx_vals = {'default_move_type': vals.get('move_type') or self._context.get('default_move_type')}
-            if vals.get('currency_id'):
-                ctx_vals['default_currency_id'] = vals['currency_id']
+            default_move_type = vals.get('move_type') or self._context.get('default_move_type')
+            ctx_vals = {}
+            if default_move_type:
+                ctx_vals['default_move_type'] = default_move_type
             if vals.get('journal_id'):
                 ctx_vals['default_journal_id'] = vals['journal_id']
                 # reorder the companies in the context so that the company of the journal
@@ -1790,9 +1781,21 @@ class AccountMove(models.Model):
                 reordered_companies = sorted(allowed_companies, key=lambda cid: cid != journal_company.id)
                 ctx_vals['allowed_company_ids'] = reordered_companies
             self_ctx = self.with_context(**ctx_vals)
-            new_vals = self_ctx._add_missing_default_values(vals)
+            vals = self_ctx._add_missing_default_values(vals)
 
-            move = self_ctx.new(new_vals)
+            is_invoice = vals.get('move_type') in self.get_invoice_types(include_receipts=True)
+
+            if 'line_ids' in vals:
+                vals.pop('invoice_line_ids', None)
+                new_vals_list.append(vals)
+                continue
+
+            if is_invoice and 'invoice_line_ids' in vals:
+                vals['line_ids'] = vals['invoice_line_ids']
+
+            vals.pop('invoice_line_ids', None)
+
+            move = self_ctx.new(vals)
             new_vals_list.append(move._move_autocomplete_invoice_lines_values())
 
         return new_vals_list
@@ -2023,6 +2026,13 @@ class AccountMove(models.Model):
     @api.model
     def get_invoice_types(self, include_receipts=False):
         return ['out_invoice', 'out_refund', 'in_refund', 'in_invoice'] + (include_receipts and ['out_receipt', 'in_receipt'] or [])
+
+    def _payment_state_matters(self):
+        ''' Determines when new_pmt_state must be upated.
+        Method created to allow overrides.
+        :return: Boolean '''
+        self.ensure_one()
+        return self.is_invoice(include_receipts=True)
 
     def is_invoice(self, include_receipts=False):
         return self.move_type in self.get_invoice_types(include_receipts)
@@ -3050,7 +3060,12 @@ class AccountMoveLine(models.Model):
         help="The bank statement used for bank reconciliation")
 
     # ==== Tax fields ====
-    tax_ids = fields.Many2many('account.tax', string='Taxes', help="Taxes that apply on the base amount", check_company=True)
+    tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        string="Taxes",
+        context={'active_test': False},
+        check_company=True,
+        help="Taxes that apply on the base amount")
     tax_line_id = fields.Many2one('account.tax', string='Originator Tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id', help="Indicates that this journal item is a tax line")
     tax_group_id = fields.Many2one(related='tax_line_id.tax_group_id', string='Originator tax group',
@@ -4812,6 +4827,7 @@ class AccountMoveLine(models.Model):
             'name': default_name,
             'date': self.date,
             'account_id': distribution.account_id.id,
+            'group_id': distribution.account_id.group_id.id,
             'partner_id': self.partner_id.id,
             'tag_ids': [(6, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
             'unit_amount': self.quantity,

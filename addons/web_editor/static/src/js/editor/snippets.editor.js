@@ -61,6 +61,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
         this.$scrollingElement = $().getScrollingElement();
+        this.displayHandles = false;
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -316,7 +317,13 @@ var SnippetEditor = Widget.extend({
             });
         });
 
-        this.trigger_up('go_to_parent', {$snippet: this.$target});
+        const parent = this.$target[0].parentElement;
+        const nextSibling = this.$target[0].nextElementSibling;
+        const previousSibling = this.$target[0].previousElementSibling;
+        this.trigger_up('activate_snippet', {
+            $snippet: $(previousSibling || nextSibling || parent)
+        });
+
         var $parent = this.$target.parent();
         this.$target.find('*').addBack().tooltip('dispose');
         this.$target.remove();
@@ -384,11 +391,16 @@ var SnippetEditor = Widget.extend({
             // In preview mode, the sticky classes are left untouched, we only
             // add/remove the preview class when toggling/untoggling
             this.$el.toggleClass('o_we_overlay_preview', show);
+            this.$el.find('.o_handle').removeClass('d-none');
         } else {
             // In non preview mode, the preview class is always removed, and the
             // sticky class is added/removed when toggling/untoggling
             this.$el.removeClass('o_we_overlay_preview');
             this.$el.toggleClass('o_we_overlay_sticky', show);
+            if (!this.displayHandles) {
+                this.$el.find('.o_handle').addClass('d-none');
+                this.$el.find('.o_overlay_options_wrap').addClass('o_inside_parent');
+            }
         }
 
         // Show/hide overlay in preview mode or not
@@ -452,7 +464,6 @@ var SnippetEditor = Widget.extend({
     /**
      * Clones the current snippet.
      *
-     * @private
      * @param {boolean} recordUndo
      */
     clone: async function (recordUndo) {
@@ -567,6 +578,10 @@ var SnippetEditor = Widget.extend({
                 this.$el.add($optionsSection).find('.oe_snippet_remove').addClass('d-none');
             }
 
+            if (option.displayHandles) {
+                this.displayHandles = true;
+            }
+
             return option.appendTo(document.createDocumentFragment());
         });
 
@@ -658,7 +673,7 @@ var SnippetEditor = Widget.extend({
             }
         }
 
-        this.trigger_up('go_to_parent', {$snippet: this.$target});
+        this.trigger_up('activate_snippet', {$snippet: this.$target.parent()});
         this.trigger_up('activate_insertion_zones', {
             $selectorSiblings: $selectorSiblings,
             $selectorChildren: $selectorChildren,
@@ -921,7 +936,6 @@ var SnippetsMenu = Widget.extend({
         'deactivate_snippet': '_onDeactivateSnippet',
         'drag_and_drop_stop': '_onDragAndDropStop',
         'get_snippet_versions': '_onGetSnippetVersions',
-        'go_to_parent': '_onGoToParent',
         'remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
         'snippet_editor_destroyed': '_onSnippetEditorDestroyed',
@@ -1477,18 +1491,20 @@ var SnippetsMenu = Widget.extend({
         if ($snippet && !$snippet.is(':visible')) {
             return;
         }
+        // Take the first parent of the provided DOM (or itself) which
+        // should have an associated snippet editor.
+        // It is important to do that before the mutex exec call to compute it
+        // before potential ancestor removal.
+        if ($snippet && $snippet.length) {
+            $snippet = globalSelector.closest($snippet);
+        }
         const exec = previewMode
             ? action => this._mutex.exec(action)
             : action => this._execWithLoadingEffect(action, false);
         return exec(() => {
             return new Promise(resolve => {
-                // Take the first parent of the provided DOM (or itself) which
-                // should have an associated snippet editor and create + enable it.
                 if ($snippet && $snippet.length) {
-                    $snippet = globalSelector.closest($snippet);
-                    if ($snippet.length) {
-                        return this._createSnippetEditor($snippet).then(resolve);
-                    }
+                    return this._createSnippetEditor($snippet).then(resolve);
                 }
                 resolve(null);
             }).then(editorToEnable => {
@@ -1511,16 +1527,24 @@ var SnippetsMenu = Widget.extend({
                         editor.toggleOptions(false);
                     }
                 }
-                // ... if no editors are to be enabled, look if any have been
+                // ... then enable the right editor or look if some have been
                 // enabled previously by a click
-                if (!editorToEnable) {
-                     editorToEnable = this.snippetEditors.find(editor => editor.isSticky());
-                     previewMode = false;
-                }
-                // ... then enable the right editor
                 if (editorToEnable) {
                     editorToEnable.toggleOverlay(true, previewMode);
+                    if (!previewMode && !editorToEnable.displayHandles) {
+                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayHandles);
+                        if (parentEditor) {
+                            parentEditor.toggleOverlay(true, previewMode);
+                        }
+                    }
                     editorToEnable.toggleOptions(true);
+                } else {
+                    this.snippetEditors.forEach(editor => {
+                        if (editor.isSticky()) {
+                            editor.toggleOverlay(true, false);
+                            editor.toggleOptions(true);
+                        }
+                    });
                 }
 
                 this._enabledEditorHierarchy = editorToEnableHierarchy;
@@ -2332,17 +2356,6 @@ var SnippetsMenu = Widget.extend({
         // on each editors.
         await this._destroyEditors($modal.length ? $modal : null);
         await this._activateSnippet(ev.data.$snippet);
-    },
-    /**
-     * Called when a snippet editor asked to disable itself and to enable its
-     * parent instead.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onGoToParent: function (ev) {
-        ev.stopPropagation();
-        this._activateSnippet(ev.data.$snippet.parent());
     },
     /**
      * @private

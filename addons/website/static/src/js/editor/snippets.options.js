@@ -10,6 +10,7 @@ const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
 const wUtils = require('website.utils');
 require('website.s_popup_options');
+const weWidgets = require('wysiwyg.widgets');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -1671,6 +1672,7 @@ options.registry.collapse = options.Class.extend({
         var self = this;
         this.$target.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
             self.trigger_up('cover_update');
+            self.$target.trigger('content_changed');
         });
         return this._super.apply(this, arguments);
     },
@@ -2458,6 +2460,8 @@ options.registry.ContainerWidth = options.Class.extend({
  * Allows snippets to be moved before the preceding element or after the following.
  */
 options.registry.SnippetMove = options.Class.extend({
+    displayHandles: true,
+
     /**
      * @override
      */
@@ -2584,6 +2588,37 @@ options.registry.ScrollButton = options.Class.extend({
                 return !!this.$button.parent().length;
         }
         return this._super(...arguments);
+    },
+});
+
+/**
+ * Allows for images to be replaced.
+ */
+options.registry.ReplaceImage = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        const $button = this.$el.find('we-button');
+        const $overlayArea = this.$overlay.find('.oe_snippet_remove');
+        $button.insertBefore($overlayArea);
+
+        return this._super(...arguments);
+    },
+    
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replaces the image.
+     *
+     * @see this.selectClass for parameters
+     */
+    replaceImage: async function () {
+        // TODO: simulates a double click on an image from summernote,
+        // to be refactored when the new editor is merged
+        this.$target.dblclick();
     },
 });
 

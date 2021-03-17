@@ -201,7 +201,7 @@ class MailThread(models.AbstractModel):
         if self.ids:
             # search for unread messages, directly in SQL to improve performances
             self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
-                                 RIGHT JOIN mail_message_res_partner_needaction_rel rel
+                                 RIGHT JOIN mail_notification rel
                                  ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s AND (rel.is_read = false OR rel.is_read IS NULL)
                                  WHERE msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'""",
                              (self.env.user.partner_id.id, self._name, tuple(self.ids),))
@@ -220,7 +220,7 @@ class MailThread(models.AbstractModel):
         res = {}
         if self.ids:
             self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
-                                 RIGHT JOIN mail_message_res_partner_needaction_rel rel
+                                 RIGHT JOIN mail_notification rel
                                  ON rel.mail_message_id = msg.id AND rel.notification_status in ('exception','bounce')
                                  WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
                                  GROUP BY msg.res_id""",
@@ -1761,13 +1761,15 @@ class MailThread(models.AbstractModel):
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
             :param str subject: subject of the message
-            :param str message_type: see mail_message.message_type field. Can be anything but 
+            :param str message_type: see mail_message.message_type field. Can be anything but
                 user_notification, reserved for message_notify
             :param int parent_id: handle thread formation
-            :param int subtype_id: subtype_id of the message, mainly use fore
-                followers mechanism
-            :param list(int) partner_ids: partner_ids to notify
-            :param list(int) channel_ids: channel_ids to notify
+            :param int subtype_id: subtype_id of the message, used mainly use for
+                followers notification mechanism;
+            :param list(int) partner_ids: partner_ids to notify in addition to partners
+                computed based on subtype / followers matching;
+            :param list(int) channel_ids: channel_ids to notify in addition to partners
+                computed based on subtype / followers matching;
             :param list(tuple(str,str), tuple(str,str, dict) or int) attachments : list of attachment tuples in the form
                 ``(name,content)`` or ``(name,content, info)``, where content is NOT base64 encoded
             :param list id attachment_ids: list of existing attachement to link to this message
@@ -1783,13 +1785,17 @@ class MailThread(models.AbstractModel):
         msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
         notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
 
+        # preliminary value safety check
+        partner_ids = set(partner_ids or [])
+        channel_ids = set(channel_ids or [])
         if self._name == 'mail.thread' or not self.id or message_type == 'user_notification':
-            raise ValueError('message_post should only be call to post message on record. Use message_notify instead')
-
+            raise ValueError(_('Posting a message should be done on a business document. Use message_notify to send a notification to an user.'))
         if 'model' in msg_kwargs or 'res_id' in msg_kwargs:
-            raise ValueError("message_post doesn't support model and res_id parameters anymore. Please call message_post on record.")
+            raise ValueError(_("message_post does not support model and res_id parameters anymore. Please call message_post on record."))
         if 'subtype' in kwargs:
-            raise ValueError("message_post doesn't support subtype parameter anymore. Please give a valid subtype_id or subtype_xmlid value instead.")
+            raise ValueError(_("message_post does not support subtype parameter anymore. Please give a valid subtype_id or subtype_xmlid value instead."))
+        if any(not isinstance(pc_id, int) for pc_id in partner_ids | channel_ids):
+            raise ValueError(_('message_post partner_ids and channel_ids must be integer list, not commands.'))
 
         self = self._fallback_lang() # add lang to context imediatly since it will be usefull in various flows latter.
 
@@ -1797,12 +1803,6 @@ class MailThread(models.AbstractModel):
         self.check_access_rights('read')
         self.check_access_rule('read')
         record_name = record_name or self.display_name
-
-        partner_ids = set(partner_ids or [])
-        channel_ids = set(channel_ids or [])
-
-        if any(not isinstance(pc_id, int) for pc_id in partner_ids | channel_ids):
-            raise ValueError('message_post partner_ids and channel_ids must be integer list, not commands')
 
         # Find the message's author
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)

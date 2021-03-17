@@ -8,7 +8,7 @@
     'version': '1.0',
     'summary': 'Manage your online hiring process',
     'description': "This module allows to publish your available job positions on your website and keep track of application submissions easily. It comes as an add-on of *Recruitment* app.",
-    'depends': ['website_partner', 'hr_recruitment', 'website_mail', 'website_form'],
+    'depends': ['hr_recruitment', 'website_mail', 'website_form'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
@@ -22,4 +22,5 @@
     ],
     'installable': True,
     'application': True,
+    'auto_install': ['hr_recruitment', 'website_mail'],
 }

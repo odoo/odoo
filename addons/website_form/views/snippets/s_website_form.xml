@@ -92,16 +92,15 @@
                 <we-button data-select-type="tel">Telephone</we-button>
                 <we-button data-select-type="url">Url</we-button>
             </we-select>
-            <t t-set="unit_textarea_height">rows</t>
-            <we-input string="Height" data-step="1" t-attf-data-select-attribute="3#{unit_textarea_height}" t-att-data-unit="unit_textarea_height"
-                data-attribute-name="rows" data-apply-to="textarea"/>
-            <we-select string="Display" data-name="multi_check_display_opt" data-no-preview="true">
+            <we-select string="⌙ Display" data-name="multi_check_display_opt" data-no-preview="true">
                 <we-button data-multi-checkbox-display="horizontal">Horizontal</we-button>
                 <we-button data-multi-checkbox-display="vertical">Vertical</we-button>
             </we-select>
-            <we-input string="Input Placeholder" class="o_we_large_input" data-name="placeholder_opt" data-set-placeholder=""/>
-            <we-input string="Label Name" class="o_we_large_input" data-set-label-text=""/>
-            <we-button-group string="Label Position">
+            <t t-set="unit_textarea_height">rows</t>
+            <we-input string="⌙ Height" data-step="1" t-attf-data-select-attribute="3#{unit_textarea_height}" t-att-data-unit="unit_textarea_height"
+                data-attribute-name="rows" data-apply-to="textarea"/>
+            <we-input string="Label" class="o_we_large_input" data-set-label-text=""/>
+            <we-button-group string="⌙ Position">
                 <we-button title="Hide"
                            data-select-label-position="none">
                     <i class="fa fa-eye-slash"/>
@@ -116,6 +115,22 @@
                            data-select-label-position="right"
                            data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
             </we-button-group>
+            <we-checkbox string="Description" data-toggle-description="true" data-no-preview="true"/>
+            <we-input string="Placeholder" class="o_we_large_input"
+                data-select-attribute="" data-attribute-name="placeholder"
+                data-apply-to="input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea"/>
+            <t t-set="default_value_label">Default Value</t>
+            <we-input t-att-string="default_value_label" class="o_we_large_input" data-select-textarea-value="" data-apply-to="textarea"/>
+            <we-checkbox t-att-string="default_value_label" data-select-attribute="checked" data-attribute-name="checked"
+                      data-apply-to=".col-sm > * > input[type='checkbox']" data-no-preview="true"/>
+            <we-input t-att-string="default_value_label" class="o_we_large_input" data-select-attribute="" data-attribute-name="value" data-select-property=""
+                      data-property-name="value" data-apply-to="input[type='text']:not(.datetimepicker-input), input[type='email'], input[type='tel'], input[type='url']"/>
+            <we-input t-att-string="default_value_label" class="o_we_large_input" data-select-attribute="" data-attribute-name="value" data-select-property=""
+                      data-step="1" data-property-name="value" data-apply-to="input[type='number']"/>
+            <we-datetimepicker t-att-string="default_value_label" data-select-attribute="" data-attribute-name="value" data-select-value-property=""
+                               data-apply-to=".s_website_form_datetime input"/>
+            <we-datepicker t-att-string="default_value_label" data-select-attribute="" data-attribute-name="value" data-select-value-property=""
+                           data-apply-to=".s_website_form_date input"/>
             <we-checkbox string="Required" data-name="required_opt" data-no-preview="true"
                 data-toggle-required="s_website_form_required"/>
             <we-checkbox string="Hidden" data-name="hidden_opt" data-no-preview="true"

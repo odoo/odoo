@@ -51,7 +51,6 @@
                         <div class="o_row">
                             <field name="edi_error_message" />
                             <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
-                            <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
                         </div>
                     </div>
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
@@ -59,13 +58,12 @@
                         <div class="o_row">
                             <field name="edi_error_message" />
                             <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" attrs="{'invisible': [('edi_error_count', '=', 1)]}" /> 
-                            <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
                         </div>
                     </div>
                 </xpath>
                 <xpath expr="//div[@name='journal_div']" position="after">
                     <field name="edi_document_ids" invisible="1" />
-                    <field name="edi_state" attrs="{'invisible': ['|', '|', ('edi_state', '=', False), ('edi_document_ids', '=', []), ('state', '=', 'draft')]}"/>
+                    <field name="edi_state" attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//page[@id='other_tab']" position="after">
                     <page id="edi_documents" string="EDI Documents" groups="base.group_no_one" attrs="{'invisible': [('edi_document_ids', '=', [])]}">

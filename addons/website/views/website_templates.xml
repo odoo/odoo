@@ -1764,7 +1764,7 @@
 <!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
-        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
             <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete"
                  data-show-after="500"
                  data-display="afterDelay"
@@ -1969,57 +1969,6 @@
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/content/ripple_effect.js"/>
     </xpath>
-</template>
-
-<template id="kanban">
-    <t t-set="step"><t t-esc="step or 0"/></t>
-    <t t-set="scope"><t t-esc="scope or 0"/></t>
-    <t t-set="orderby"><t t-esc="orderby or 'name'"/></t>
-    <t t-raw="website.kanban(model, domain, column, template, step=step, scope=scope, orderby=orderby)"/>
-</template>
-
-<template id="kanban_contain">
-    <table class="table js_kanban">
-        <thead>
-            <tr>
-                <t t-set="width" t-valuef="{{ round(100.0 / (len(objects) if objects else 1), 2) }}%"/>
-                <t t-foreach="objects" t-as="obj">
-                    <th t-att-width="width">
-                        <div t-field="obj['column_id'].name" class="text-center"></div>
-                    </th>
-                </t>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <t t-foreach="objects" t-as="obj">
-                    <td class="js_kanban_col" t-att-data-template="template"
-                            t-att-data-domain="obj['domain']"
-                            t-att-data-page_count="obj['page_count']"
-                            t-att-data-model="obj['model']"
-                            t-att-data-step="obj['step']"
-                            t-att-data-orderby="obj['orderby']">
-                        <t t-foreach="obj['object_ids']" t-as="object_id">
-                            <t t-call="#{ template }"></t>
-                        </t>
-                        <!-- pager -->
-                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered"><!-- FIXME -->
-                            <ul>
-                                <li t-attf-class="prev #{'active' if obj['page'] == 1 else '' }">
-                                    <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &gt; 1 and obj['page']-1 or 1)) ">Prev</a></li>
-                                <t t-foreach="range(obj['page_start'], obj['page_end']+1)" t-as="p">
-                                    <li t-att-class=" 'active' if obj['page'] == p else None ">
-                                        <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, p)" t-esc="p"></a></li>
-                                </t>
-                                <li t-attf-class="next #{'active' if obj['page'] == obj['page_end'] else '' }">
-                                    <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &lt; obj['page_end'] and obj['page']+1 or obj['page_end']) )">Next</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </t>
-            </tr>
-        </tbody>
-    </table>
 </template>
 
 <!-- Error and special pages -->

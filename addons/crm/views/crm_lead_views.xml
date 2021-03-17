@@ -22,9 +22,6 @@
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': ['|', ('active', '=', False), ('type', '=', 'lead')]}"/>
                     </header>
-                    <div class="text-center alert alert-primary oe_edit_only" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
-                        <field name="ribbon_message"/>
-                    </div>
                     <sheet>
                         <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
@@ -36,6 +33,15 @@
                                     <field name="meeting_count" class="o_stat_value"/>
                                     <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&lt;', 2)]}"> Meetings</span>
                                     <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
+                                </div>
+                            </button>
+                            <button name="action_show_potential_duplicates" type="object"
+                                class="oe_stat_button" icon="fa-star"
+                                attrs="{'invisible': [('duplicate_lead_count', '&lt;', 1)]}">
+                                <div class="o_stat_info">
+                                    <field name="duplicate_lead_count" class="o_stat_value"/>
+                                    <span class="o_stat_text" attrs="{'invisible': [('duplicate_lead_count', '&lt;', 2)]}">Similar Leads</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('duplicate_lead_count', '&gt;', 1)]}">Similar Lead</span>
                                 </div>
                             </button>
                         </div>
@@ -153,6 +159,8 @@
                                 <field name="mobile_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
+                                <field name="partner_email_update" invisible="1"/>
+                                <field name="partner_phone_update" invisible="1"/>
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
@@ -160,6 +168,9 @@
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                     <field name="email_from" string="Email" widget="email"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer email will also be updated." 
+                                        attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
                                 </div>
                                 <label for="phone" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -168,6 +179,9 @@
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
                                     <field name="phone" widget="phone"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer phone number will also be updated." 
+                                        attrs="{'invisible': [('partner_phone_update', '=', False)]}"/>
                                 </div>
                             </group>
                             <group name="lead_info" attrs="{'invisible': [('type', '=', 'opportunity')]}">
@@ -180,6 +194,8 @@
                                 <field name="phone_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
+                                <field name="partner_email_update" invisible="1"/>
+                                <field name="partner_phone_update" invisible="1"/>
                                 <label for="email_from_group_lead_info" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
@@ -187,6 +203,9 @@
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
                                     <field name="email_from" id="email_from_group_lead_info" string="Email" widget="email"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer email will also be updated." 
+                                        attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
@@ -197,6 +216,9 @@
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
                                     <field name="phone" id="phone_group_lead_info" widget="phone"/>
+                                    <span class="fa fa-exclamation-triangle text-warning" 
+                                        title="By saving this change, the customer phone number will also be updated." 
+                                        attrs="{'invisible': [('partner_phone_update', '=', False)]}"/>
                                 </div>
                                 <label for="mobile" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -428,6 +450,8 @@
                             'default_company_name': type == 'opportunity' and partner_name,
                             'default_phone': phone,
                             'default_email': email_from,
+                            'default_user_id': user_id,
+                            'default_team_id': team_id,
                             'show_vat': True}"/>
                         <field name="name" placeholder="e.g. Product Pricing" />
                         <field name="email_from" string="Email" />
@@ -493,6 +517,7 @@
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
                     archivable="false" sample="1">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
+                    <field name="probability"/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="expected_revenue"/>
@@ -509,9 +534,14 @@
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
-                                <div class="o_dropdown_kanban dropdown">
+                            <t t-set="lost_ribbon" t-value="!record.active.raw_value and record.probability and record.probability.raw_value == 0"/>
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} #{lost_ribbon ? 'oe_kanban_card_lost_ribbon' : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
+                                <div class="ribbon ribbon-top-right"
+                                    attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">
+                                    <span class="bg-danger">Lost</span>
+                                </div>
 
+                                <div class="o_dropdown_kanban dropdown">
                                     <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
@@ -521,7 +551,7 @@
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
                                 </div>
-                                <div class="oe_kanban_content">
+                                <div class="oe_kanban_content flex-grow-1">
                                     <div class="o_kanban_record_title oe_kanban_details">
                                         <strong><field name="name"/></strong>
                                     </div>
@@ -541,6 +571,8 @@
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
+                                </div>
+                                <div class="oe_kanban_footer">
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
@@ -676,10 +708,11 @@
                     <field name="user_id" widget="many2one_avatar_user" optional="show"
                         domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="hide"/>
-                    <field name="priority" optional="hide"/>
+                    <field name="priority" optional="hide" widget="priority"/>
                     <field name="activity_ids" widget="list_activity"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
                     <field name="activity_date_deadline_my" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
+                    <field name="activity_calendar_event_id" invisible="1"/>
                     <field name="campaign_id" optional="hide"/>
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="hide"/>
@@ -694,9 +727,13 @@
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
-                    <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash"
-                        attrs="{'invisible': [('activity_date_deadline_my', '=', False)]}"/>
                     <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope"/>
+                    <button name="action_reschedule_meeting" class="text-warning" type="object" string="Reschedule"
+                        icon="fa-calendar" attrs="{'invisible': ['|', ('activity_date_deadline_my', '=', False),
+                        ('activity_calendar_event_id', '=', False)]}"/>
+                    <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d"
+                        icon="fa-bell-slash" attrs="{'invisible': ['|', ('activity_date_deadline_my', '=', False),
+                        ('activity_calendar_event_id', '!=', False)]}"/>
                 </tree>
             </field>
         </record>
@@ -880,6 +917,13 @@ if record:
                     'search_default_to_process':1,
                 }
             </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a Lead
+                </p><p>
+                    Leads are the qualification step before the creation of an opportunity.
+                </p>
+            </field>
         </record>
 
         <record id="crm_lead_all_leads_view_tree" model="ir.actions.act_window.view">
@@ -931,6 +975,13 @@ if record:
             <field name="search_view_id" ref="crm.view_crm_case_my_activities_filter"/>
             <field name="context">{'default_type': 'opportunity',
                     'search_default_assigned_to_me': 1}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Looks like nothing is planned.
+                </p><p>
+                    Schedule activities to keep track of everything you have to do.
+                </p>
             </field>
         </record>
 

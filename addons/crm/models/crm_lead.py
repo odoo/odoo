@@ -8,12 +8,13 @@ from datetime import date, datetime, timedelta
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_re, email_split
+from odoo.tools import date_utils, email_re, email_split, is_html_empty
 
 from . import crm_stage
 
@@ -224,8 +225,11 @@ class Lead(models.Model):
         index=True, ondelete='restrict', tracking=True)
     # Statistics
     meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
+    duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})
+    duplicate_lead_count = fields.Integer(compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead Count")
     # UX
-    ribbon_message = fields.Char('Ribbon message', compute='_compute_ribbon_message')
+    partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_partner_email_update')
+    partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_partner_phone_update')
 
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
@@ -502,10 +506,81 @@ class Lead(models.Model):
         for lead in self:
             lead.meeting_count = mapped_data.get(lead.id, 0)
 
-    @api.depends('email_from', 'phone', 'partner_id')
-    def _compute_ribbon_message(self):
+    @api.depends('email_from', 'partner_id', 'contact_name', 'partner_name')
+    def _compute_potential_lead_duplicates(self):
+        MIN_EMAIL_LENGTH = 7
+        MIN_NAME_LENGTH = 6
+        SEARCH_RESULT_LIMIT = 21
+
+        def return_if_relevant(model_name, domain):
+            """ Returns the recordset obtained by performing a search on the provided
+            model with the provided domain if the cardinality of that recordset is
+            below a given threshold (i.e: `SEARCH_RESULT_LIMIT`). Otherwise, returns
+            an empty recordset of the provided model as it indicates search term
+            was not relevant.
+
+            Note: The function will use the administrator privileges to guarantee
+            that a maximum amount of leads will be included in the search results
+            and transcend multi-company record rules. It also includes archived records.
+            Idea is that counter indicates duplicates are present and that lead
+            could be escalated to managers.
+            """
+            # Includes archived records and transcend multi-company record rules
+            model = self.env[model_name].sudo().with_context(active_test=False)
+            res = model.search(domain, limit=SEARCH_RESULT_LIMIT)
+            return res if len(res) < SEARCH_RESULT_LIMIT else model
+
+        def get_email_to_search(email):
+            """ Returns the full email address if the domain of the email address
+            is common (i.e: in the mail domain blacklist). Otherwise, returns
+            the domain of the email address. A minimal length is required to avoid
+            returning false positives records. """
+            if not email or len(email) < MIN_EMAIL_LENGTH:
+                return False
+            parts = email.rsplit('@', maxsplit=1)
+            if len(parts) > 1:
+                email_domain = parts[1]
+                if email_domain not in iap_tools._MAIL_DOMAIN_BLACKLIST:
+                    return '@' + email_domain
+            return email
+
         for lead in self:
-            will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
+            lead_id = lead._origin.id if isinstance(lead.id, models.NewId) else lead.id
+            common_lead_domain = [
+                ('id', '!=', lead_id)
+            ]
+
+            duplicate_lead_ids = self.env['crm.lead']
+            email_search = get_email_to_search(lead.email_from)
+
+            if email_search:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('email_from', 'ilike', email_search)
+                ])
+            if lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('partner_name', 'ilike', lead.partner_name)
+                ])
+            if lead.contact_name and len(lead.contact_name) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('contact_name', 'ilike', lead.contact_name)
+                ])
+            if lead.partner_id and lead.partner_id.commercial_partner_id:
+                duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
+                    ("partner_id", "child_of", lead.partner_id.commercial_partner_id.id)
+                ])
+
+            lead.duplicate_lead_ids = duplicate_lead_ids + lead
+            lead.duplicate_lead_count = len(duplicate_lead_ids)
+
+    @api.depends('email_from', 'partner_id')
+    def _compute_partner_email_update(self):
+        for lead in self:
+            lead.partner_email_update = lead.partner_id and lead.email_from != lead.partner_id.email
+
+    @api.depends('phone', 'partner_id')
+    def _compute_partner_phone_update(self):
+        for lead in self:
             will_write_phone = False
             if lead.partner_id and lead.phone != lead.partner_id.phone:
                 # if reset -> obviously new value will be propagated
@@ -517,15 +592,7 @@ class Lead(models.Model):
                     partner_phone_formatted = lead.partner_id.phone_get_sanitized_number(number_fname='phone')
                     if lead_phone_formatted != partner_phone_formatted:
                         will_write_phone = True
-
-            if will_write_email and will_write_phone:
-                lead.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
-            elif will_write_email:
-                lead.ribbon_message = _('By saving this change, the customer email will also be updated.')
-            elif will_write_phone:
-                lead.ribbon_message = _('By saving this change, the customer phone number will also be updated.')
-            else:
-                lead.ribbon_message = False
+            lead.partner_phone_update = will_write_phone
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
@@ -567,9 +634,13 @@ class Lead(models.Model):
         return {'contact_name': contact_name or self.contact_name}
 
     def _prepare_partner_name_from_partner(self, partner):
+        """ Company name: name of partner parent (if set) or name of partner
+        (if company) or company_name of partner (if not a company). """
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
+        elif not partner_name and partner.company_name:
+            partner_name = partner.company_name
         return {'partner_name': partner_name or self.partner_name}
 
     # ------------------------------------------------------------
@@ -781,10 +852,12 @@ class Lead(models.Model):
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
         return stages.browse(stage_ids)
 
-    def _stage_find(self, team_id=False, domain=None, order='sequence'):
+    def _stage_find(self, team_id=False, domain=None, order='sequence', limit=1):
         """ Determine the stage of the current lead with its teams, the given domain and the given team_id
             :param team_id
             :param domain : base search domain for stage
+            :param order : base search order for stage
+            :param limit : base search limit for stage
             :returns crm.stage recordset
         """
         # collect all team_ids by adding given one, and the ones related to the current leads
@@ -803,7 +876,7 @@ class Lead(models.Model):
         if domain:
             search_domain += list(domain)
         # perform search, return the first found
-        return self.env['crm.stage'].search(search_domain, order=order, limit=1)
+        return self.env['crm.stage'].search(search_domain, order=order, limit=limit)
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -835,7 +908,18 @@ class Lead(models.Model):
         # group the leads by team_id, in order to write once by values couple (each write leads to frequency increment)
         leads_by_won_stage = {}
         for lead in self:
-            stage_id = lead._stage_find(domain=[('is_won', '=', True)])
+            won_stages = self._stage_find(domain=[('is_won', '=', True)], limit=None)
+            # ABD : We could have a mixed pipeline, with "won" stages being separated by "standard"
+            # stages. In the future, we may want to prevent any "standard" stage to have a higher
+            # sequence than any "won" stage. But while this is not the case, searching
+            # for the "won" stage while alterning the sequence order (see below) will correctly
+            # handle such a case :
+            #       stage sequence : [x] [x (won)] [y] [y (won)] [z] [z (won)]
+            #       when in stage [y] and marked as "won", should go to the stage [y (won)],
+            #       not in [x (won)] nor [z (won)]
+            stage_id = next((stage for stage in won_stages if stage.sequence > lead.stage_id.sequence), None)
+            if not stage_id:
+                stage_id = next((stage for stage in reversed(won_stages) if stage.sequence <= lead.stage_id.sequence), won_stages)
             if stage_id in leads_by_won_stage:
                 leads_by_won_stage[stage_id] |= lead
             else:
@@ -942,6 +1026,27 @@ class Lead(models.Model):
         }
         return action
 
+    def action_reschedule_meeting(self):
+        self.ensure_one()
+        action = self.action_schedule_meeting()
+        next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        if next_activity.calendar_event_id:
+            action['context']['initial_date'] = next_activity.calendar_event_id.start
+        return action
+
+    def action_show_potential_duplicates(self):
+        """ Open kanban view to display duplicate leads or opportunity.
+            :return dict: dictionary value for created kanban view
+        """
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
+        action['domain'] = [('id', 'in', self.duplicate_lead_ids.ids)]
+        action['context'] = {
+            'active_test': False,
+            'create': False
+        }
+        return action
+
     def action_snooze(self):
         self.ensure_one()
         today = date.today()
@@ -975,6 +1080,13 @@ class Lead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
+        """ This method returns the action helpers for the leads. If help is already provided
+            on the action, the same is returned. Otherwise, we build the help message which
+            contains the alias responsible for creating the lead (if available) and return it.
+        """
+        if not is_html_empty(help):
+            return help
+
         help_title, sub_title = "", ""
         if self._context.get('default_type') == 'lead':
             help_title = _('Create a new lead')

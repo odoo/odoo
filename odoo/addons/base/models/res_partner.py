@@ -17,7 +17,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock
@@ -169,7 +169,7 @@ class Partner(models.Model):
 
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
-      help='The internal user in charge of this contact.')
+      help='The internal user in charge of this contact.', domain=lambda self: [('groups_id', 'in', self.env.ref('base.group_user').id)])
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
@@ -515,9 +515,18 @@ class Partner(models.Model):
             # This is wrong if the user is not active, as partner.user_ids only returns active users.
             # Hence this temporary hack until the ORM updates inverse fields correctly.
             self.invalidate_cache(['user_ids'], self._ids)
-            for partner in self:
-                if partner.active and partner.user_ids:
-                    raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
+            if users:
+                if self.env['res.users'].sudo(False).check_access_rights('write', raise_exception=False):
+                    error_msg = _('You cannot archive contacts linked to an active user.\n'
+                                  'You first need to archive their associated user.\n\n'
+                                  'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))
+                    action_error = users._action_show()
+                    raise RedirectWarning(error_msg, action_error, _('Go to users'))
+                else:
+                    raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
+                                            'Ask an administrator to archive their associated user first.\n\n'
+                                            'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
@@ -568,6 +577,22 @@ class Partner(models.Model):
             partner._fields_sync(vals)
             partner._handle_first_contact_creation()
         return partners
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_user(self):
+        users = self.env['res.users'].sudo().search([('partner_id', 'in', self.ids)])
+        if not users:
+            return  # no linked user, operation is allowed
+        if self.env['res.users'].sudo(False).check_access_rights('write', raise_exception=False):
+            error_msg = _('You cannot delete contacts linked to an active user.\n'
+                          'You should rather archive them after archiving their associated user.\n\n'
+                          'Linked active users : %(names)s', names=", ".join([u.display_name for u in users]))
+            action_error = users._action_show()
+            raise RedirectWarning(error_msg, action_error, _('Go to users'))
+        else:
+            raise ValidationError(_('You cannot delete contacts linked to an active user.\n'
+                                    'Ask an administrator to archive their associated user first.\n\n'
+                                    'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
 
     def _load_records_create(self, vals_list):
         partners = super(Partner, self.with_context(_partners_skip_fields_sync=True))._load_records_create(vals_list)
@@ -795,7 +820,7 @@ class Partner(models.Model):
                                vat=unaccent('res_partner.vat'),)
 
             where_clause_params += [search_name]*3  # for email / display_name, reference
-            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name) or None]  # for vat
+            where_clause_params += [re.sub(r'[^a-zA-Z0-9\-\.]+', '', search_name) or None]  # for vat
             where_clause_params += [search_name]  # for order by
             if limit:
                 query += ' limit %s'

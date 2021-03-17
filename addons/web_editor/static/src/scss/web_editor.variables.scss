@@ -414,6 +414,32 @@ $o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest 
     }
 }
 
+// ------------------------------------------------------------------
+// Selection wrapper
+// ------------------------------------------------------------------
+
+@mixin o-we-active-wrapper($icon: '\f00c', $top: auto, $right: auto, $bottom: auto, $left: auto) {
+    box-shadow: 0 0 0 3px $o-brand-primary;
+
+    &:not(.fa) {
+        border: 3px solid $o-brand-primary;
+        box-shadow: none;
+        &:before {
+            content: $icon;
+            @include o-position-absolute($top, $right, $bottom, $left);
+            width: 19px;
+            height: 19px;
+            background-color: $o-brand-primary;
+            font-family: 'FontAwesome';
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            z-index: 1;
+            box-shadow: $box-shadow;
+        }
+    }
+}
+
 //------------------------------------------------------------------------------
 // Edited content
 //------------------------------------------------------------------------------

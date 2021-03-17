@@ -81,11 +81,12 @@
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="e.g. John Doe" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
+                            <field name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
-                            placeholder="Company"
+                            placeholder="e.g. Lumber Inc"
                             domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
                             attrs="{'invisible': [('is_company','=', True)]}"/>
                     </div>
@@ -157,12 +158,13 @@
                         <field name="active" invisible="1"/>
                         <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
-                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Lumber Inc" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', False)]}"/>
+                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="e.g. Brandom Freeman" attrs="{'required' : [('type', '=', 'contact')], 'invisible': [('is_company','=', True)]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
                                 widget="res_partner_many2one"
-                                placeholder="Company"
+                                placeholder="e.g. Lumber Inc"
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>

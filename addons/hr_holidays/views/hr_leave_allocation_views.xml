@@ -19,7 +19,7 @@
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <filter string="People I Manage" name="managed_people" domain="[('employee_id.leave_manager_id', '=', uid)]" help="Time off of people you are manager of"/>
-                <filter string="My Team Time Off" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
+                <filter string="My Department Time Off" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
                 <filter name="year" string="Current Year"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Allocations"/>
@@ -450,6 +450,12 @@
             <div name="button_box" position="attributes">
                 <attribute name="invisible">1</attribute>
             </div>
+            <xpath expr="//sheet" position="after">
+                <footer>
+                    <button string="Save" special="save" class="oe_highlight" />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </xpath>
         </field>
     </record>
 

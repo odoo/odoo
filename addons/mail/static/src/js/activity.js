@@ -339,7 +339,7 @@ var BasicActivity = AbstractField.extend({
         var $markDoneBtn = $(ev.currentTarget);
         var activityID = $markDoneBtn.data('activity-id');
         var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id') || false;
-        var forceNextActivity = $markDoneBtn.data('force-next-activity');
+        var chainingTypeActivity = $markDoneBtn.data('chaining-type-activity');
 
         if ($markDoneBtn.data('toggle') === 'collapse') {
             var $actLi = $markDoneBtn.parents('.o_log_activity');
@@ -348,7 +348,7 @@ var BasicActivity = AbstractField.extend({
             if (!$panel.data('bs.collapse')) {
                 var $form = $(QWeb.render('mail.activity_feedback_form', {
                     previous_activity_type_id: previousActivityTypeID,
-                    force_next: forceNextActivity
+                    chaining_type: chainingTypeActivity
                 }));
                 $panel.append($form);
                 self._onMarkActivityDoneActions($markDoneBtn, $form, activityID);
@@ -388,7 +388,7 @@ var BasicActivity = AbstractField.extend({
                 content: function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', {
                         previous_activity_type_id: previousActivityTypeID,
-                        force_next: forceNextActivity
+                        chaining_type: chainingTypeActivity
                     }));
                     self._onMarkActivityDoneActions($markDoneBtn, $popover, activityID);
                     return $popover;

@@ -4,7 +4,7 @@
 import logging
 import pytz
 
-from odoo import _, api, fields, models
+from odoo import _, api, Command, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import format_datetime
 from odoo.exceptions import ValidationError
@@ -397,11 +397,13 @@ class EventEvent(models.Model):
                 continue
 
             # lines to keep: those with already sent emails or registrations
-            mails_toremove = event._origin.event_mail_ids.filtered(lambda mail: not mail.mail_sent and not(mail.mail_registration_ids))
-            command = [(3, mail.id) for mail in mails_toremove]
+            mails_to_remove = event.event_mail_ids.filtered(
+                lambda mail: not(mail._origin.mail_sent or mail._origin.mail_registration_ids)
+            )
+            command = [Command.unlink(mail.id) for mail in mails_to_remove]
             if event.event_type_id.use_mail_schedule:
                 command += [
-                    (0, 0, {
+                    Command.create({
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
                     }) for line in event.event_type_id.event_type_mail_ids
@@ -434,27 +436,17 @@ class EventEvent(models.Model):
         Note that updating event_ticket_ids triggers _compute_start_sale_date
         (start_sale_date computation) so ensure result to avoid cache miss.
         """
-        if self.ids or self._origin.ids:
-            # lines to keep: those with already sent emails or registrations
-            tickets_tokeep_ids = self.env['event.registration'].search(
-                [('event_id', 'in', self.ids or self._origin.ids)]
-            ).event_ticket_id.ids
-        else:
-            tickets_tokeep_ids = []
         for event in self:
             if not event.event_type_id and not event.event_ticket_ids:
                 event.event_ticket_ids = False
                 continue
 
             # lines to keep: those with existing registrations
-            if tickets_tokeep_ids:
-                tickets_toremove = event._origin.event_ticket_ids.filtered(lambda ticket: ticket.id not in tickets_tokeep_ids)
-                command = [(3, ticket.id) for ticket in tickets_toremove]
-            else:
-                command = [(5, 0)]
+            tickets_to_remove = event.event_ticket_ids.filtered(lambda ticket: not ticket._origin.registration_ids)
+            command = [Command.unlink(ticket.id) for ticket in tickets_to_remove]
             if event.event_type_id.use_ticket:
                 command += [
-                    (0, 0, {
+                    Command.create({
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
                     }) for line in event.event_type_id.event_type_ticket_ids
@@ -501,6 +493,9 @@ class EventEvent(models.Model):
         return events
 
     def write(self, vals):
+        if 'stage_id' in vals and 'kanban_state' not in vals:
+            # reset kanban state when changing stage
+            vals['kanban_state'] = 'normal'
         res = super(EventEvent, self).write(vals)
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
