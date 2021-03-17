@@ -91,7 +91,7 @@ class SMSResend(models.TransientModel):
                     rdata.append({'id': pid, 'share': pshare, 'active': active, 'notif': notif, 'groups': groups or [], 'type': 'customer' if pshare else 'user'})
             if rdata or numbers:
                 record._notify_record_by_sms(
-                    self.mail_message_id, {'partners': rdata}, check_existing=True,
+                    self.mail_message_id, rdata, check_existing=True,
                     sms_numbers=numbers, sms_pid_to_number=sms_pid_to_number,
                     put_in_queue=False
                 )
