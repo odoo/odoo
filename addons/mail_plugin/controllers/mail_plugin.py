@@ -44,12 +44,10 @@ class MailPluginController(http.Controller):
             response = {'error': _('Contact has no valid email')}
             return response
 
-        company_domain = tools.email_domain_extract(normalized_email)
-
-        company, enrichment_info = self._create_company_from_iap(company_domain)
+        company, enrichment_info = self._create_company_from_iap(normalized_email)
 
         response['enrichment_info'] = enrichment_info
-        response['company'] = self._prepare_company_values(company)
+        response['company'] = self._get_company_data(company)
         if company:
             partner.write({'parent_id': company})
 
@@ -73,7 +71,7 @@ class MailPluginController(http.Controller):
 
         if partner_id:
             partner = request.env['res.partner'].browse(partner_id)
-            return self._prepare_contact_values(partner)
+            return self._get_contact_data(partner)
 
         normalized_email = tools.email_normalize(email)
         if not normalized_email:
@@ -84,12 +82,11 @@ class MailPluginController(http.Controller):
         partner = request.env['res.partner'].search(['|', ('email', 'in', [normalized_email, email]),
                                                      ('email_normalized', '=', normalized_email)], limit=1)
 
-        response = self._prepare_contact_values(partner)
+        response = self._get_contact_data(partner)
 
         # if no partner is found in the database, we should also return an empty one having id = -1, otherwise older versions of
         # plugin won't work
         if not response['partner']:
-            sender_domain = tools.email_domain_extract(email)
             response['partner'] = {
                 'id': -1,
                 'email': email,
@@ -98,9 +95,9 @@ class MailPluginController(http.Controller):
             }
             company = self._find_existing_company(normalized_email)
             if not company:  # create and enrich company
-                company, enrichment_info = self._create_company_from_iap(sender_domain)
+                company, enrichment_info = self._create_company_from_iap(normalized_email)
                 response['partner']['enrichment_info'] = enrichment_info
-            response['partner']['company'] = self._prepare_company_values(company)
+            response['partner']['company'] = self._get_company_data(company)
 
         return response
 
@@ -132,7 +129,7 @@ class MailPluginController(http.Controller):
         partners = request.env['res.partner'].search(filter_domain, limit=limit)
 
         partners = [
-            self._prepare_partner_values(partner)
+            self._get_partner_data(partner)
             for partner in partners
         ]
         return {"partners": partners}
@@ -182,14 +179,22 @@ class MailPluginController(http.Controller):
                 enriched_data = {'enrichment_info': {'type': 'no_data', 'info': 'The enrichment API found no data for the email provided.'}}
         return enriched_data
 
-    def _find_existing_company(self, normalized_email):
-        sender_domain = tools.email_domain_extract(normalized_email)
-        search = sender_domain if sender_domain not in iap_tools._MAIL_DOMAIN_BLACKLIST else normalized_email
-        return request.env['res.partner'].search([('is_company', '=', True), ('email_normalized', '=ilike', '%' + search)],
-                                                 limit=1)
+    def _find_existing_company(self, email):
+        """Find the company corresponding to the given domain and its IAP cache.
 
-    def _prepare_company_values(self, company):
+        :param email: Email of the company we search
+        :return: The partner corresponding to the company
+        """
+        search = self._get_iap_search_term(email)
 
+        partner_iap = request.env["res.partner.iap"].sudo().search([("iap_search_domain", "=", search)], limit=1)
+
+        if partner_iap:
+            return partner_iap.partner_id
+
+        return request.env["res.partner"].search([("is_company", "=", True), ("email_normalized", "=ilike", "%" + search)], limit=1)
+
+    def _get_company_data(self, company):
         if not company:
             return {'id': -1}
 
@@ -205,8 +210,8 @@ class MailPluginController(http.Controller):
 
         return company_values
 
-
-    def _create_company_from_iap(self, domain):
+    def _create_company_from_iap(self, email):
+        domain = tools.email_domain_extract(email)
         iap_data = self._iap_enrich(domain)
         if 'enrichment_info' in iap_data:
             return None, iap_data['enrichment_info']
@@ -245,8 +250,13 @@ class MailPluginController(http.Controller):
                     if state:
                         new_company_info['state_id'] = state.id
 
-        new_company_info['iap_enrich_info'] = json.dumps(iap_data)
+        new_company_info.update({
+            'iap_search_domain': self._get_iap_search_term(email),
+            'iap_enrich_info': json.dumps(iap_data),
+        })
+
         new_company = request.env['res.partner'].create(new_company_info)
+
         new_company.message_post_with_view(
             'iap_mail.enrich_company',
             values=iap_data,
@@ -255,7 +265,7 @@ class MailPluginController(http.Controller):
 
         return new_company, {'type': 'company_created'}
 
-    def _prepare_partner_values(self, partner):
+    def _get_partner_data(self, partner):
 
         fields_list = ['id', 'name', 'email', 'phone', 'mobile']
 
@@ -267,19 +277,19 @@ class MailPluginController(http.Controller):
         return partner_values
 
 
-    def _prepare_contact_values(self, partner):
+    def _get_contact_data(self, partner):
         """
         method used to return partner related values, it can be overridden by other modules if extra information have to
         be returned with the partner (e.g., leads, ...)
         """
         if partner:
-            partner_response = self._prepare_partner_values(partner)
+            partner_response = self._get_partner_data(partner)
             if partner.company_type == 'company':
-                partner_response['company'] = self._prepare_company_values(partner)
+                partner_response['company'] = self._get_company_data(partner)
             elif partner.parent_id:
-                partner_response['company'] = self._prepare_company_values(partner.parent_id)
+                partner_response['company'] = self._get_company_data(partner.parent_id)
             else:
-                partner_response['company'] = self._prepare_company_values(None)
+                partner_response['company'] = self._get_company_data(None)
         else:  # no partner found
             partner_response = {}
 
@@ -291,3 +301,13 @@ class MailPluginController(http.Controller):
         it can be overridden by sub modules in order to whitelist more models
         """
         return ['res.partner']
+
+    def _get_iap_search_term(self, email):
+        """Return the domain or the email depending if the domain is blacklisted or not.
+
+        So if the domain is blacklisted, we search based on the entire email address
+        (e.g. asbl@gmail.com). But if the domain is not blacklisted, we search based on
+        the domain (e.g. bob@sncb.be -> sncb.be)
+        """
+        domain = tools.email_domain_extract(email)
+        return ("@" + domain) if domain not in iap_tools._MAIL_DOMAIN_BLACKLIST else email
