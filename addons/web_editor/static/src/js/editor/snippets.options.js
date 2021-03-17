@@ -4107,7 +4107,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     async start() {
         await this._super(...arguments);
         const weightEl = document.createElement('span');
-        weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'o_we_tag_small', 'd-none');
+        weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'd-none');
         weightEl.title = _t("Size");
         this.$weight = $(weightEl);
     },

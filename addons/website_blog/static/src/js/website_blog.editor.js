@@ -195,9 +195,6 @@ options.registry.CoverProperties.include({
 });
 
 options.registry.BlogPostTagSelection = options.Class.extend({
-    xmlDependencies: (options.Class.prototype.xmlDependencies || [])
-        .concat(['/website_blog/static/src/xml/website_blog_tag.xml']),
-
     /**
      * @override
      */
@@ -209,7 +206,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         const tags = await this._rpc({
             model: 'blog.tag',
             method: 'search_read',
-            args: [[], ['id', 'name', 'post_ids']],
+            args: [[], ['id', 'name', 'display_name', 'post_ids']],
         });
         this.allTagsByID = {};
         this.tagIDs = [];
@@ -226,9 +223,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
      * @override
      */
     cleanForSave() {
-        if (this.isEditingTags) {
-            this._notifyUpdatedTags();
-        }
+        this._notifyUpdatedTags();
     },
 
     //--------------------------------------------------------------------------
@@ -238,34 +233,17 @@ options.registry.BlogPostTagSelection = options.Class.extend({
     /**
      * @see this.selectClass for params
      */
-    editTagList(previewMode, widgetValue, params) {
-        this.isEditingTags = true;
-        this.rerender = true;
-    },
-    /**
-     * Send changes that will be saved in the database.
-     *
-     * @see this.selectClass for params
-     */
-    saveTagList(previewMode, widgetValue, params) {
-        this.isEditingTags = false;
-        this.rerender = true;
-        this._notifyUpdatedTags();
+    setTags(previewMode, widgetValue, params) {
+        this.tagIDs = JSON.parse(widgetValue).map(tag => tag.id);
     },
     /**
      * @see this.selectClass for params
      */
-    setNewTagName(previewMode, widgetValue, params) {
-        this.newTagName = widgetValue;
-    },
-    /**
-     * @see this.selectClass for params
-     */
-    confirmNew(previewMode, widgetValue, params) {
-        if (!this.newTagName) {
+    createTag(previewMode, widgetValue, params) {
+        if (!widgetValue) {
             return;
         }
-        const existing = Object.values(this.allTagsByID).some(tag => tag.name.toLowerCase() === this.newTagName.toLowerCase());
+        const existing = Object.values(this.allTagsByID).some(tag => tag.name.toLowerCase() === widgetValue.toLowerCase());
         if (existing) {
             return this.displayNotification({
                 type: 'warning',
@@ -275,29 +253,10 @@ options.registry.BlogPostTagSelection = options.Class.extend({
         const newTagID = _.uniqueId(NEW_TAG_PREFIX);
         this.allTagsByID[newTagID] = {
             'id': newTagID,
-            'name': this.newTagName,
+            'name': widgetValue,
+            'display_name': widgetValue,
         };
         this.tagIDs.push(newTagID);
-        this.newTagName = '';
-        this.rerender = true;
-    },
-    /**
-     * @see this.selectClass for params
-     */
-    addTag(previewMode, widgetValue, params) {
-        const tagID = parseInt(widgetValue);
-        this.tagIDs.push(tagID);
-        this.rerender = true;
-    },
-    /**
-     * @see this.selectClass for params
-     */
-    removeTag(previewMode, widgetValue, params) {
-        this.tagIDs = this.tagIDs.filter(tagID => (`${tagID}` !== widgetValue));
-        if (widgetValue.startsWith(NEW_TAG_PREFIX)) {
-            delete this.allTagsByID[widgetValue];
-        }
-        this.rerender = true;
     },
 
     //--------------------------------------------------------------------------
@@ -323,25 +282,9 @@ options.registry.BlogPostTagSelection = options.Class.extend({
     /**
      * @override
      */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (['blog_existing_tag_opt', 'new_tag_input_opt', 'new_tag_button_opt', 'save_tags_opt'].includes(widgetName)) {
-            return this.isEditingTags;
-        }
-        if (widgetName === 'edit_tags_opt') {
-            return !this.isEditingTags;
-        }
-        if (params.optionsPossibleValues['removeTag']) {
-            return this.isEditingTags;
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'addTag') {
-            // The related widget allows to select a value but then resets its state to a non-selected value
-            return '';
+        if (methodName === 'setTags') {
+            return JSON.stringify(this.tagIDs.map(id => this.allTagsByID[id]));
         }
         return this._super(...arguments);
     },
@@ -358,23 +301,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        const $tagList = $(uiFragment.querySelector('.o_wblog_tag_list'));
-        for (const tagID of this.tagIDs) {
-            const tag = this.allTagsByID[tagID];
-            $tagList.append(qweb.render('website_blog.TagListItem', {
-                tag: tag,
-            }));
-        }
-        const $select = $(uiFragment.querySelector('we-select[data-name="blog_existing_tag_opt"]'));
-        for (const [key, tag] of Object.entries(this.allTagsByID)) {
-            if (this.tagIDs.includes(parseInt(key)) || this.tagIDs.includes(key)) {
-                // saved tag keys are numbers, new tag keys are strings
-                continue;
-            }
-            $select.prepend(qweb.render('website_blog.TagSelectItem', {
-                tag: tag,
-            }));
-        }
+        uiFragment.querySelector('we-many2many').dataset.recordId = this.blogPostID;
     },
 });
 });
