@@ -296,8 +296,10 @@ class ProductTemplate(models.Model):
 
             # The list_price is always the price of one.
             quantity_1 = 1
+            combination_info['price'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price'], product.sudo().taxes_id, taxes, company_id)
             price = taxes.compute_all(combination_info['price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             if pricelist.discount_policy == 'without_discount':
+                combination_info['list_price'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['list_price'], product.sudo().taxes_id, taxes, company_id)
                 list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price

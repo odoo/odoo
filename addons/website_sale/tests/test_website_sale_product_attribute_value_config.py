@@ -115,3 +115,18 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         combination_info = test_product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0% for BE)")
         self.assertEqual(combination_info['list_price'], 500, "500% + 0% tax (mapped from fp 15% -> 0% for BE) (2)")
+
+        # Try same flow with tax included
+        tax15.write({'price_include': True})
+
+        # Reset / Safety check
+        self.env.user.partner_id.country_id = None
+        combination_info = test_product._get_combination_info()
+        self.assertEqual(combination_info['price'], 500, "434.78$ + 15% tax")
+        self.assertEqual(combination_info['list_price'], 500, "434.78$ + 15% tax (2)")
+
+        # Now with fiscal position, taxes should be mapped
+        self.env.user.partner_id.country_id = self.env.ref('base.be').id
+        combination_info = test_product._get_combination_info()
+        self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
+        self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
