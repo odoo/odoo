@@ -37,7 +37,7 @@ class ResPartner(models.Model):
     def _validate_eori(self, country_code, eori_number):
         #TODO: Make a format validation of eori_number.
         try:
-            if country_code.upper() == 'GB' or country_code.upper() == 'XI' or country_code.upper() == 'XU':
+            if country_code.upper() == 'GB' or country_code.upper() == 'XI':
                 return self._validate_eori_gb(country_code.upper() + eori_number)
             else: #TODO: Check if country in EU.
                 return self._validate_eori_eu(country_code.upper() + eori_number)
