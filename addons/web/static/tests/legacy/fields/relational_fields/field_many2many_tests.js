@@ -1538,6 +1538,50 @@ QUnit.module('fields', {}, function () {
           form.destroy();
         });
 
+        QUnit.test("many2many tags widget: make tag name input field blank on Save&New", async function (assert) {
+            assert.expect(4);
+
+            let onchangeCalls = 0;
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+                archs: {
+                    'partner_type,false,form': '<form><field name="name"/></form>'
+                },
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === 'onchange') {
+                        if (onchangeCalls === 0) {
+                            assert.deepEqual(args.kwargs.context, { default_name: 'hello' },
+                                "context should have default_name with 'hello' as value");
+                        }
+                        if (onchangeCalls === 1) {
+                            assert.deepEqual(args.kwargs.context, {},
+                                "context should have default_name with false as value");
+                        }
+                        onchangeCalls++;
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.fields.editInput($('.o_field_widget input'), 'hello');
+            await testUtils.fields.many2one.clickItem('timmy', 'Create and Edit');
+            assert.strictEqual(document.querySelector('.modal .o_form_view input').value, "hello",
+                "should contain the 'hello' in the tag name input field");
+
+            // Create record with save & new
+            await testUtils.dom.click(document.querySelector('.modal .btn-primary:nth-child(2)'));
+            assert.strictEqual(document.querySelector('.modal .o_form_view input').value, "",
+                "should display the blank value in the tag name input field");
+
+            form.destroy();
+        });
+
         QUnit.test('many2many list add *many* records, remove, re-add', async function (assert) {
             assert.expect(5);
 

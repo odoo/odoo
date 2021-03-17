@@ -409,6 +409,7 @@ var FieldMany2One = AbstractField.extend({
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
+            _createContext: this._createContext.bind(this),
             dynamicFilters: dynamicFilters || [],
             title: _.str.sprintf((view === 'search' ? _t("Search: %s") : _t("Create: %s")), this.string),
             initial_ids: ids,
