@@ -278,7 +278,11 @@ class IrHttp(models.AbstractModel):
                 kw = {k: routing[k] for k in xtra_keys if k in routing}
                 rule = werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw)
                 rule.merge_slashes = False
-                routing_map.add(rule)
+                try:
+                    routing_map.add(rule)
+                except ValueError as e:
+                    error = "Failed generating route for URL '%s': %s" % (url, e)
+                    _logger.error(error)
             cls._routing_map[key] = routing_map
         return cls._routing_map[key]
 
