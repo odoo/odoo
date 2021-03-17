@@ -2082,7 +2082,7 @@ class MailThread(models.AbstractModel):
         msg_vals = msg_vals if msg_vals else {}
         rdata = self._notify_compute_recipients(message, msg_vals)
         if not rdata:
-            return False
+            return rdata
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
         if notify_by_email:
@@ -2100,7 +2100,7 @@ class MailThread(models.AbstractModel):
         and correctly override notify_recipients
         """
         bus_notifications = []
-        inbox_pids = [r['id'] for r in recipients_data['partners'] if r['notif'] == 'inbox']
+        inbox_pids = [r['id'] for r in recipients_data if r['notif'] == 'inbox']
         if inbox_pids:
             notif_create_values = [{
                 'mail_message_id': message.id,
@@ -2137,7 +2137,7 @@ class MailThread(models.AbstractModel):
         :param send_after_commit: if force_send, tells whether to send emails after
           the transaction has been committed using a post-commit hook;
         """
-        partners_data = [r for r in recipients_data['partners'] if r['notif'] == 'email']
+        partners_data = [r for r in recipients_data if r['notif'] == 'email']
         if not partners_data:
             return True
 
@@ -2352,13 +2352,11 @@ class MailThread(models.AbstractModel):
         message_type = msg_vals.get('message_type') if msg_vals else msg_sudo.message_type
         subtype_id = msg_vals.get('subtype_id') if msg_vals else msg_sudo.subtype_id.id
         # is it possible to have record but no subtype_id ?
-        recipient_data = {
-            'partners': [],
-            'channels': [],
-        }
+        recipients_data = []
+
         res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)
         if not res:
-            return recipient_data
+            return recipients_data
 
         author_id = msg_vals.get('author_id') or message.author_id.id
         for pid, active, pshare, notif, groups in res:
@@ -2369,15 +2367,15 @@ class MailThread(models.AbstractModel):
                     continue
                 pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups or []}
                 if notif == 'inbox':
-                    recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
+                    recipients_data.append(dict(pdata, notif=notif, type='user'))
                 elif not pshare and notif:  # has an user and is not shared, is therefore user
-                    recipient_data['partners'].append(dict(pdata, notif=notif, type='user'))
+                    recipients_data.append(dict(pdata, notif=notif, type='user'))
                 elif pshare and notif:  # has an user but is shared, is therefore portal
-                    recipient_data['partners'].append(dict(pdata, notif=notif, type='portal'))
+                    recipients_data.append(dict(pdata, notif=notif, type='portal'))
                 else:  # has no user, is therefore customer
-                    recipient_data['partners'].append(dict(pdata, notif=notif if notif else 'email', type='customer'))
+                    recipients_data.append(dict(pdata, notif=notif if notif else 'email', type='customer'))
 
-        return recipient_data
+        return recipients_data
 
     @api.model
     def _notify_encode_link(self, base_link, params):

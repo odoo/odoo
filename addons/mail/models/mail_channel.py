@@ -465,10 +465,10 @@ class Channel(models.Model):
 
         # notify only user input (comment or incoming emails)
         if message_type not in ('comment', 'email'):
-            return {'partners': [], 'channels': []}
+            return []
         # notify only mailing lists or if mentioning recipients
         if not mailing_channels and not pids:
-            return {'partners': [], 'channels': []}
+            return []
 
         email_from = tools.email_normalize(msg_vals.get('email_from') or msg_sudo.email_from)
         author_id = msg_vals.get('author_id') or msg_sudo.author_id.id
@@ -525,7 +525,7 @@ class Channel(models.Model):
                     'groups': [],
                 })
 
-        return {'partners': recipients_data, 'channels': []}
+        return recipients_data
 
     def _notify_get_groups(self, msg_vals=None):
         """ All recipients of a message on a channel are considered as partners.

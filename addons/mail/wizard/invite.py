@@ -80,7 +80,7 @@ class Invite(models.TransientModel):
                     else:  # has no user, is therefore customer
                         partners_data.append(dict(pdata, type='customer'))
 
-                document._notify_record_by_email(message, {'partners': partners_data, 'channels': []}, send_after_commit=False)
+                document._notify_record_by_email(message, partners_data, send_after_commit=False)
                 # in case of failure, the web client must know the message was
                 # deleted to discard the related failure notification
                 self.env['bus.bus'].sendone(
