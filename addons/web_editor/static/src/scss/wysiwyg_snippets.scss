@@ -824,7 +824,7 @@ body.editor_enable.editor_has_snippets {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
                 }
 
-                we-button {
+                > we-button {
                     @include we-icon-button('', $align: left); // Always a padding on the left
                     border: none;
                     background: none;
@@ -1205,7 +1205,7 @@ body.editor_enable.editor_has_snippets {
                     td {
                         padding-bottom: $o-we-sidebar-content-field-spacing / 2;
 
-                        &:first-child, &:last-child {
+                        &:not(.o_we_list_record_name) {
                             width: 1px;
                         }
 
@@ -1276,6 +1276,18 @@ body.editor_enable.editor_has_snippets {
             cursor: pointer;
             padding-left: 2em;
             line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
+        }
+        
+        // Many2one create
+        .o_we_m2o_create {
+            margin-top: 1px;
+        }
+
+        // Many2many
+        .o_we_m2m {
+            we-list, we-list > div, we-list we-select {
+                margin-top: 0;
+            }
         }
 
         //----------------------------------------------------------------------
