@@ -4,27 +4,23 @@
 
     <t t-name="website_sale_stock.product_availability">
         <t t-if="product_type == 'product'">
-            <div id="stock_information">
-                <div t-if="qty_available gt available_threshold" t-attf-class="availability_message_#{product_template} text-success mt16">
-                    <t t-esc="in_stock"/>
-                </div>
-                <div t-elif="qty_available lte 0" t-attf-class="availability_messsage_#{product_template} text-danger mt16">
-                    <t t-esc="no_stock"/>
-                </div>
-                <div t-else="">
-                    <t t-esc="below_threshold" t-attf-class="availability_messsage_#{product_template} text-warning mt16"/>
-                </div>
+        
+            <div id="product_availability_info"  class="mt16">
+                <t t-if="qty_available gt available_threshold" t-raw="in_stock" />
+                <t t-elif="qty_available lte 0" t-raw="no_stock"/>
+                <t t-else="" t-raw="below_threshold"/>
             </div>
 
-            <div t-if="cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
-                You already added <t t-if="!qty_available">all</t> <t t-esc="cart_qty" /> <t t-esc="uom_name" /> in your cart.
-            </div>
-            <t t-if="allow_order == 'always'">
-                <div t-if="qty_forecasted" t-attf-class="availability_message_#{product_template} text-success mt16">Item will ship by {scheduled_date}.</div>
-                <div t-else="" t-attf-class="availability_message_#{product_template} text-success mt16">Orders awaiting replenishment are accepted.</div>
+            <t t-if="qty_available lte 0">
+                <div t-if="cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
+                    You already added <t t-if="!qty_available">all</t> <t t-esc="cart_qty" /> <t t-esc="uom_name" /> in your cart.
+                </div>
+                <t t-if="allow_order == 'always'">
+                    <div t-if="qty_forecasted" t-attf-class="availability_message_#{product_template} text-success mt16">Item will ship by {scheduled_date}.</div>
+                    <div t-else="" t-attf-class="availability_message_#{product_template} text-success mt16">Orders awaiting replenishment are accepted.</div>
+                </t>
+                <div id="allow_to_order_enough_qty" t-if="allow_order == 'enough'" t-attf-class="availability_message_#{product_template} text-warning mt8">Orders awaiting replenishment aren't accepted.</div>
             </t>
-            <div id="allow_to_order_enough_qty" t-if="allow_order == 'enough'" t-attf-class="availability_message_#{product_template} text-warning mt8">Orders awaiting replenishment aren't accepted.</div>
-
         </t>    
     </t>
 

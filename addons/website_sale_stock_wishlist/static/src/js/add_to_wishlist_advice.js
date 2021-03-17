@@ -3,4 +3,5 @@ odoo.define('website_sale_stock_wishlist.VariantMixin', function (require) {
 
     let xmlFiles = require('website_sale_stock.VariantMixin').xmlFiles;
     xmlFiles.push('/website_sale_stock_wishlist/static/src/xml/add_to_wishlist_advice.xml');
+    //xmlFiles.push('/website_sale_stock_wishlist/static/src/xml/cart_to_wishlist_button.xml');
 });

@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         ('always', 'Always'),
         ('enough', 'Only if enough inventory'),
     ], string='Allow Orders', default='enough')
-    in_stock = fields.Html(string="In Stock", translate=True, default="""<i class="text-success fa fa-check"/> <span style="color:green">In stock</span>""", sanitize_tags=False)
+    in_stock = fields.Html(string="In Stock", translate=True, default="""<i class="text-success fa fa-check"/> <span style="color:green">In stock</span>""")
     below_threshold = fields.Html(string="Below Threshold", translate=True, default="""<i class="text-warning fa fa-exclamation-triangle"/> <span style="color:orange">Only {qty_available} {uom_name} left</span>""")
     no_stock = fields.Html(string="No Stock", translate=True, default="""<i class="text-danger fa fa-remove"/> <span style="color:red">Out Of Stock</span>""")
 
