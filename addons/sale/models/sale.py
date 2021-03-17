@@ -1577,7 +1577,8 @@ class SaleOrderLine(models.Model):
                 uom=self.product_uom.id,
                 fiscal_position=self.env.context.get('fiscal_position')
             )
-            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+            price_unit = self.price_unit if product.price!=self.price_unit else self._get_display_price(product)
+            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price_unit, product.taxes_id, self.tax_id, self.company_id)
 
     @api.multi
     def name_get(self):
