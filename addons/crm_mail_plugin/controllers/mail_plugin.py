@@ -51,8 +51,8 @@ class MailPluginController(mail_plugin.MailPluginController):
 
         return leads
 
-    def _prepare_contact_values(self, partner):
-        contact_values = super(MailPluginController, self)._prepare_contact_values(partner)
+    def _get_contact_data(self, partner):
+        contact_values = super(MailPluginController, self)._get_contact_data(partner)
         if not partner:
             contact_values['leads'] = []
         else:
