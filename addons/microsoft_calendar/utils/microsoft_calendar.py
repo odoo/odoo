@@ -35,7 +35,7 @@ class MicrosoftCalendarService():
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
         params = {}
         try:
-            status, data, time = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
+            _, data, _ = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
         except requests.HTTPError as e:
             if e.response.status_code == 410 and 'fullSyncRequired' in str(e.response.content):
                 raise InvalidSyncToken("Invalid sync token. Full sync required")

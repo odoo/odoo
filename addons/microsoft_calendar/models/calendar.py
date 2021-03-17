@@ -140,7 +140,7 @@ class Meeting(models.Model):
                 ('email', 'in', emails)])
         # [TBD] The following code is commented, which is generated from PR odoo#66103
         # [TDB] It will add the odoo user to the attendee, although the user's outlook email has already beeb in the attendee list.
-        # [TDB] It is not necessary for the current task. Maybe we can create a new task for it.
+        # [TDB] It is not necessary for the current task. Maybe we can create a new task for it.Fdo
         # [TBD] The sync user's outlook email is added to the env.user.microsoft_email.
         # [TBD] There will be no error described in the PR
         # elif self.env.user.partner_id.email not in emails:
