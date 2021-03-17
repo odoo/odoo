@@ -12,11 +12,11 @@ class RecruitmentSource(models.Model):
 
     url = fields.Char(compute='_compute_url', string='Url Parameters')
 
-    @api.depends('source_id', 'source_id.name', 'job_id')
+    @api.depends('source_id', 'source_id.name', 'job_id', 'job_id.company_id')
     def _compute_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for source in self:
-            source.url = urls.url_join(base_url, "%s?%s" % (source.job_id.website_url,
+            source.url = urls.url_join(source.job_id.get_base_url(), "%s?%s" % (
+                source.job_id.website_url,
                 urls.url_encode({
                     'utm_campaign': self.env.ref('hr_recruitment.utm_campaign_job').name,
                     'utm_medium': self.env.ref('utm.utm_medium_website').name,

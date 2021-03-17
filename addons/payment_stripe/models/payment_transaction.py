@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
             # enter his email on the checkout page.
             'customer': customer['id'],
         }
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         if self.operation == 'online_redirect':
             return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
                          f'?reference={urls.url_quote_plus(self.reference)}'

@@ -53,7 +53,7 @@ class PaymentTransaction(models.Model):
         if self.acquirer_id.provider != 'ogone':
             return res
 
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         return_url = urls.url_join(base_url, OgoneController._flexcheckout_return_url)
         rendering_values = {
             'ACCOUNT_PSPID': self.acquirer_id.ogone_pspid,

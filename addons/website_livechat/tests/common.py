@@ -36,7 +36,7 @@ class TestLivechatCommon(tests.TransactionCase):
         }] + [visitor_vals]*self.max_sessions_per_operator)
         self.visitor_demo, self.visitor = self.visitors[0], self.visitors[1]
 
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.livechat_channel.get_base_url()
 
         self.open_chat_url = base_url + "/im_livechat/get_session"
         self.open_chat_params = {'params': {

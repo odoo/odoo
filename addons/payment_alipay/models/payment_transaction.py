@@ -29,7 +29,7 @@ class PaymentTransaction(models.Model):
         if self.provider != 'alipay':
             return res
 
-        base_url = self.acquirer_id._get_base_url()
+        base_url = self.acquirer_id.get_base_url()
         if self.fees:
             # Similarly to what is done in `payment::payment.transaction.create`, we need to round
             # the sum of the amount and of the fees to avoid inconsistent string representations.

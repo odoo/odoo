@@ -115,8 +115,6 @@ class Digest(models.Model):
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
-        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
         rendered_body = self.env['mail.render.mixin']._render_template(
             'digest.digest_mail_main',
             'digest.digest',
@@ -125,7 +123,7 @@ class Digest(models.Model):
             add_context={
                 'title': self.name,
                 'top_button_label': _('Connect'),
-                'top_button_url': web_base_url,
+                'top_button_url': self.get_base_url(),
                 'company': user.company_id,
                 'user': user,
                 'tips_count': tips_count,
