@@ -6,6 +6,7 @@ const { attr, many2many, many2one, one2many, one2one } = require('mail/static/sr
 const { clear } = require('mail/static/src/model/model_field_command.js');
 const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const Timer = require('mail/static/src/utils/timer/timer.js');
+const { cleanSearchTerm } = require('mail/static/src/utils/utils.js');
 const mailUtils = require('mail.utils');
 
 function factory(dependencies) {
@@ -271,6 +272,82 @@ function factory(dependencies) {
             }
 
             return data2;
+        }
+
+        /**
+         * Fetches threads matching the given composer search state to extend
+         * the JS knowledge and to update the suggestion list accordingly.
+         * More specifically only thread of model 'mail.channel' are fetched.
+         *
+         * @static
+         * @param {string} searchTerm
+         * @param {Object} [options={}]
+         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         *  result in the context of given thread
+         */
+        static async fetchSuggestions(searchTerm, { thread } = {}) {
+            const channelsData = await this.env.services.rpc(
+                {
+                    model: 'mail.channel',
+                    method: 'get_mention_suggestions',
+                    kwargs: { search: searchTerm },
+                },
+                { shadow: true },
+            );
+            this.env.models['mail.thread'].insert(channelsData.map(channelData =>
+                Object.assign(
+                    { model: 'mail.channel' },
+                    this.env.models['mail.thread'].convertData(channelData),
+                )
+            ));
+        }
+
+        /**
+         * Returns a sort function to determine the order of display of threads
+         * in the suggestion list.
+         *
+         * @static
+         * @param {string} searchTerm
+         * @param {Object} [options={}]
+         * @param {mail.thread} [options.thread] prioritize result in the
+         *  context of given thread
+         * @returns {function}
+         */
+        static getSuggestionSortFunction(searchTerm, { thread } = {}) {
+            const cleanedSearchTerm = cleanSearchTerm(searchTerm);
+            return (a, b) => {
+                const isAPublic = a.model === 'mail.channel' && a.public === 'public';
+                const isBPublic = b.model === 'mail.channel' && b.public === 'public';
+                if (isAPublic && !isBPublic) {
+                    return -1;
+                }
+                if (!isAPublic && isBPublic) {
+                    return 1;
+                }
+                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.env.messaging.currentPartner);
+                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.env.messaging.currentPartner);
+                if (isMemberOfA && !isMemberOfB) {
+                    return -1;
+                }
+                if (!isMemberOfA && isMemberOfB) {
+                    return 1;
+                }
+                const cleanedAName = cleanSearchTerm(a.name || '');
+                const cleanedBName = cleanSearchTerm(b.name || '');
+                if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
+                    return -1;
+                }
+                if (!cleanedAName.startsWith(cleanedSearchTerm) && cleanedBName.startsWith(cleanedSearchTerm)) {
+                    return 1;
+                }
+                if (cleanedAName < cleanedBName) {
+                    return -1;
+                }
+                if (cleanedAName > cleanedBName) {
+                    return 1;
+                }
+                return a.id - b.id;
+            };
         }
 
         /**
@@ -542,6 +619,41 @@ function factory(dependencies) {
             }
         }
 
+        /*
+         * Returns threads that match the given search term. More specially only
+         * threads of model 'mail.channel' are suggested, and if the context
+         * thread is a private channel, only itself is returned if it matches
+         * the search term.
+         *
+         * @static
+         * @param {string} searchTerm
+         * @param {Object} [options={}]
+         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         *  result in the context of given thread
+         * @returns {[mail.threads[], mail.threads[]]}
+         */
+        static searchSuggestions(searchTerm, { thread } = {}) {
+            let threads;
+            if (thread && thread.model === 'mail.channel' && thread.public !== 'public') {
+                // Only return the current channel when in the context of a
+                // non-public channel. Indeed, the message with the mention
+                // would appear in the target channel, so this prevents from
+                // inadvertently leaking the private message into the mentioned
+                // channel.
+                threads = [thread];
+            } else {
+                threads = this.env.models['mail.thread'].all();
+            }
+            const cleanedSearchTerm = cleanSearchTerm(searchTerm);
+            return [threads.filter(thread =>
+                !thread.isTemporary &&
+                thread.model === 'mail.channel' &&
+                thread.channel_type === 'channel' &&
+                thread.name &&
+                cleanSearchTerm(thread.name).includes(cleanedSearchTerm)
+            )];
+        }
+
         /**
          * @param {string} [stringifiedDomain='[]']
          * @returns {mail.thread_cache}
@@ -605,6 +717,15 @@ function factory(dependencies) {
             }));
             this.refreshFollowers();
             this.fetchAndUpdateSuggestedRecipients();
+        }
+
+        /**
+         * Returns the text that identifies this thread in a mention.
+         *
+         * @returns {string}
+         */
+        getMentionText() {
+            return this.name;
         }
 
         /**
