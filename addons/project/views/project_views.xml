@@ -628,10 +628,10 @@
                                         <t t-set="date_format" t-value="'MM/DD/YY'" />
                                         <t t-set="date" t-value=""/>
                                         <!-- color of the span -->
-                                        <t t-if="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().startOf('day')">
+                                        <t t-if="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).utc().startOf('day') lt moment().utc().startOf('day')">
                                             <t t-set="deadline_class" t-value="'oe_kanban_text_red'" />
                                         </t>
-                                        <t t-elif="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).startOf('day') lt moment().endOf('day')">
+                                        <t t-elif="record.date_deadline.raw_value and moment(record.date_deadline.raw_value.toISOString()).utc().startOf('day') lt moment().utc().endOf('day')">
                                             <t t-set="deadline_class" t-value="'text-warning font-weight-bold'" />
                                         </t>
                                         <!-- Date value -->
