@@ -2468,7 +2468,7 @@ var SnippetsMenu = Widget.extend({
         new Dialog(this, {
             size: 'medium',
             title: _t('Confirmation'),
-            $content: $('<div><p>' + _t(`Are you sure you want to delete the snippet: ${$snippet.attr('name')} ?`) + '</p></div>'),
+            $content: $('<div><p>' + _.str.sprintf(_t("Are you sure you want to delete the snippet: %s ?"), $snippet.attr('name')) + '</p></div>'),
             buttons: [{
                 text: _t("Yes"),
                 close: true,
