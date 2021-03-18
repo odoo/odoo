@@ -897,6 +897,7 @@ var utils = {
      *
      * @param {Object} obj
      * @param {string} patchName
+     * @returns {Object} the removed patch
      */
     unpatch: function (obj, patchName) {
         const objDesc = patchMap.get(obj);
@@ -915,11 +916,16 @@ var utils = {
         }
 
         // Re-apply the patches except the one to remove.
+        let removedPatch;
         for (const patchDesc of objDesc.patches) {
             if (patchDesc.name !== patchName) {
                 utils.patch(obj, patchDesc.name, patchDesc.patch);
+            } else {
+                removedPatch = patchDesc.patch;
             }
         }
+
+        return removedPatch;
     },
     /**
      * @param {any} node
