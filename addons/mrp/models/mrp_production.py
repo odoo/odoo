@@ -597,19 +597,21 @@ class MrpProduction(models.Model):
         self.product_qty = self.bom_id.product_qty or 1.0
         self.product_uom_id = self.bom_id and self.bom_id.product_uom_id.id or self.product_id.uom_id.id
         self.move_raw_ids = [(2, move.id) for move in self.move_raw_ids.filtered(lambda m: m.bom_line_id)]
-        self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids]
+        list_move_finished = [(2, move.id) for move in self.move_finished_ids]
+        self._update_move_finished_ids_in_onchange(list_move_finished, lambda m: not m.byproduct_id)
         self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
     @api.onchange('date_planned_start', 'product_id')
     def _onchange_date_planned_start(self):
-        if self.date_planned_start and not self.is_planned:
+        if self.product_id and self.date_planned_start and not self.is_planned:
             date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
             date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
             if date_planned_finished == self.date_planned_start:
                 date_planned_finished = date_planned_finished + relativedelta(hours=1)
             self.date_planned_finished = date_planned_finished
             self.move_raw_ids = [(1, m.id, {'date': self.date_planned_start}) for m in self.move_raw_ids]
-            self.move_finished_ids = [(1, m.id, {'date': date_planned_finished}) for m in self.move_finished_ids]
+            list_move_finished = [(1, m.id, {'date': date_planned_finished}) for m in self.move_finished_ids]
+            self._update_move_finished_ids_in_onchange(list_move_finished)
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
@@ -639,8 +641,10 @@ class MrpProduction(models.Model):
     def _onchange_move_finished(self):
         if self.product_id and self.product_qty > 0:
             # keep manual entries
-            list_move_finished = [(4, move.id) for move in self.move_finished_ids.filtered(
-                lambda m: not m.byproduct_id and m.product_id != self.product_id)]
+            list_move_finished = [(4, move.id) for move in self.move_byproduct_ids.filtered(
+                lambda m: not m.byproduct_id)]
+            if self.product_id != self._origin.product_id:
+                list_move_finished += [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m not in self.move_byproduct_ids)]
             moves_finished_values = self._get_moves_finished_values()
             moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
             move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
@@ -655,7 +659,7 @@ class MrpProduction(models.Model):
                     list_move_finished += [(0, 0, move_finished_values)]
             self.move_finished_ids = list_move_finished
         else:
-            self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids.filtered(lambda m: m.bom_line_id)]
+            self._update_move_finished_ids_in_onchange([(5,)], lambda m: not m.byproduct_id)
 
     @api.onchange('location_src_id', 'move_raw_ids', 'bom_id')
     def _onchange_location(self):
@@ -674,7 +678,7 @@ class MrpProduction(models.Model):
                 'warehouse_id': destination_location.get_warehouse().id,
                 'location_dest_id': destination_location.id,
             }))]
-        self.move_finished_ids = update_value_list
+        self._update_move_finished_ids_in_onchange(update_value_list)
 
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
@@ -712,6 +716,16 @@ class MrpProduction(models.Model):
     def _onchange_workorder_ids(self):
         if self.bom_id:
             self._create_workorder()
+
+    def _update_move_finished_ids_in_onchange(self, update_value_list, conditions=lambda m: True):
+        ''' Unsaved move_byproduct_ids will be removed after we update the value
+        of move_finished_ids. In this method, we keep those move_byproduct_ids by
+        relinking them. Use `conditions` if you don't want to keep all the
+        move_byproduct_ids.
+        '''
+        list_move_byproduct = [(4, m.id) for m in self.move_byproduct_ids if conditions(m)]
+        self.move_finished_ids = update_value_list
+        self.move_byproduct_ids = list_move_byproduct
 
     def write(self, vals):
         if 'workorder_ids' in self:
@@ -767,7 +781,7 @@ class MrpProduction(models.Model):
         # Remove from `move_finished_ids` the by-product moves and then move `move_byproduct_ids`
         # into `move_finished_ids` to avoid duplicate and inconsistency.
         if values.get('move_finished_ids', False):
-            values['move_finished_ids'] = list(filter(lambda move: move[2]['byproduct_id'] is False, values['move_finished_ids']))
+            values['move_finished_ids'] = list(filter(lambda move: move[2]['product_id'] == values['product_id'], values['move_finished_ids']))
         if values.get('move_byproduct_ids', False):
             values['move_finished_ids'] = values.get('move_finished_ids', []) + values['move_byproduct_ids']
             del values['move_byproduct_ids']
