@@ -187,6 +187,12 @@ QUnit.module('Views', {
                     '<field name="partner_id" filters="1" invisible="1"/>'+
             '</calendar>',
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -277,6 +283,12 @@ QUnit.module('Views', {
                 'delete="0" ' +
                 'mode="month"/>',
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -359,6 +371,9 @@ QUnit.module('Views', {
                 'mode="month"/>',
             archs: archs,
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1], {name: 'event 4 modified'}, "should update the record");
                 }
@@ -680,6 +695,7 @@ QUnit.module('Views', {
         testUtils.mock.unpatch(ViewDialogs.FormViewDialog);
     });
 
+    //unchecked
     QUnit.test('create event with timezone in week mode European locale', async function (assert) {
         assert.expect(5);
 
@@ -713,6 +729,9 @@ QUnit.module('Views', {
                 time_format: "%H:%M:%S",
             },
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === "create") {
                     assert.deepEqual(args.kwargs.context, {
                         "default_start": "2016-12-13 06:00:00",
@@ -886,7 +905,7 @@ QUnit.module('Views', {
         });
     });
 
-    QUnit.test('render popover', async function (assert) {
+        QUnit.test('render popover', async function (assert) {
         assert.expect(14);
 
         var calendar = await createCalendarView({
@@ -903,6 +922,12 @@ QUnit.module('Views', {
                     '<field name="partner_id"/>'+
             '</calendar>',
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -951,6 +976,12 @@ QUnit.module('Views', {
                 '<field name="priority" widget="priority" readonly="1"/>'+
             '</calendar>',
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -996,6 +1027,12 @@ QUnit.module('Views', {
                         <field name="partner_id"/>
                 </calendar>`,
             archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate,
             },
@@ -1026,6 +1063,12 @@ QUnit.module('Views', {
                 'mode="month">'+
             '</calendar>',
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -1219,6 +1262,9 @@ QUnit.module('Views', {
                 time_format: "%I:%M:%S",
             },
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === "create") {
                     assert.deepEqual(args.kwargs.context, {
                         "default_start": "2016-12-13 06:00:00",
@@ -1808,6 +1854,12 @@ QUnit.module('Views', {
                     '<field name="partner_ids" widget="many2many_tags_avatar" avatar_field="image" write_model="filter_partner" write_field="partner_id"/>'+
             '</calendar>',
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },
@@ -1850,6 +1902,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === "get_formview_id") {
                     return Promise.resolve('A view');
                 }
@@ -2082,6 +2137,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === "get_formview_id") {
                     return Promise.resolve(false);
                 }
@@ -2450,6 +2508,12 @@ QUnit.module('Views', {
                             '<field name="partner_ids" widget="many2many_tags"/>'+
                         '</group>'+
                     '</form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
             },
             viewOptions: {
                 initialDate: initialDate,
@@ -2909,6 +2973,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === "write") {
                     assert.deepEqual(args.args[0], [6], "event 6 is moved")
                     assert.deepEqual(args.args[1].start, "2016-11-29 08:00:00",
@@ -2966,6 +3033,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === "create") {
                     assert.strictEqual(args.args[0].start_date, "2016-12-20 00:00:00");
                 }
@@ -3029,6 +3099,12 @@ QUnit.module('Views', {
                     <field name="partner_id"/>
                 </calendar>`,
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             data: this.data,
             model: 'event',
             View: CalendarView,
@@ -3073,6 +3149,12 @@ QUnit.module('Views', {
                     <field name="partner_id"/>
                 </calendar>`,
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             data: this.data,
             model: 'event',
             View: CalendarView,
@@ -3587,6 +3669,9 @@ QUnit.module('Views', {
                 'mode="month"/>',
             archs: archs,
             mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1], {name: 'event 4 modified'}, "should update the record");
                 }
@@ -3979,6 +4064,12 @@ QUnit.module('Views', {
                     all_day="allday"
                     mode="month"/>`,
             archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
             viewOptions: {
                 initialDate: initialDate,
             },

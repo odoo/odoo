@@ -1920,10 +1920,6 @@ var MockServer = Class.extend({
 
             case 'write':
                 return Promise.resolve(this._mockWrite(args.model, args.args));
-
-                //  a temporary bug fix method. I will insert the mock rpc in calendar test later
-            case 'get_access_rule':
-                return Promise.resolve(true);
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {
