@@ -986,7 +986,7 @@ const RemainingDays = AbstractField.extend({
         // timezone), to get a meaningful delta for the user
         const nowUTC = moment().utc();
         const nowUserTZ = nowUTC.clone().add(session.getTZOffset(nowUTC), 'minutes');
-        const valueUserTZ = this.value.clone().add(session.getTZOffset(this.value), 'minutes');
+        const valueUserTZ = this.value.clone();
         const diffDays = valueUserTZ.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
         let text;
         if (Math.abs(diffDays) > 99) {
