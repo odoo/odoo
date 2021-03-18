@@ -361,14 +361,20 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
         this.$("widget").each(function () {
             var $field = $(this);
 
+            const attrs = {};
+            for (const attr of $field[0].attributes) {
+                attrs[attr.name] = attr.value;
+            }
+            const options = Object.assign({}, self.options, { attrs });
+
             const name = $field.attr('name');
             const Widget = widgetRegistryOwl.get(name) || widgetRegistry.get(name);
             const legacy = !(Widget.prototype instanceof owl.Component);
             let widget;
             if (legacy) {
-                widget = new Widget(self, self.state);
+                widget = new Widget(self, self.state, options);
             } else {
-                widget = new WidgetWrapper(this, Widget, { record: self.state });
+                widget = new WidgetWrapper(this, Widget, { record: self.state, options });
             }
             // Prepare widget rendering and save the related promise
             let def;
