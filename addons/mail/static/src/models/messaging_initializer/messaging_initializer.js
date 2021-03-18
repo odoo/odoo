@@ -231,11 +231,8 @@ function factory(dependencies) {
          * @param {Object[]} mentionPartnerSuggestionsData
          */
         async _initMentionPartnerSuggestions(mentionPartnerSuggestionsData) {
-            return executeGracefully(mentionPartnerSuggestionsData.map(suggestions => () => {
-                return executeGracefully(suggestions.map(suggestion => () => {
-                    const { email, id, name } = suggestion;
-                    this.env.models['mail.partner'].insert({ email, id, name });
-                }));
+            return executeGracefully(mentionPartnerSuggestionsData.map(partnerData => () => {
+                this.env.models['mail.partner'].insert(this.env.models['mail.partner'].convertData(partnerData));
             }));
         }
 

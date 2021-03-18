@@ -402,8 +402,6 @@ QUnit.test('use a canned response', async function (assert) {
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, ":");
-    });
-    await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -462,10 +460,8 @@ QUnit.test('use a canned response some text', async function (assert) {
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, ":")
-    );
     await afterNextRender(() => {
+        document.execCommand('insertText', false, ":");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -518,8 +514,6 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, ":");
-    });
-    await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -619,8 +613,6 @@ QUnit.test('mention a channel', async function (assert) {
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "#");
-    });
-    await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -675,10 +667,8 @@ QUnit.test('mention a channel after some text', async function (assert) {
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "#")
-    );
     await afterNextRender(() => {
+        document.execCommand('insertText', false, "#");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -727,8 +717,6 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "#");
-    });
-    await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -833,8 +821,6 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "/");
-    });
-    await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -922,10 +908,8 @@ QUnit.test('use a command after some text', async function (assert) {
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "/")
-    );
     await afterNextRender(() => {
+        document.execCommand('insertText', false, "/");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -977,8 +961,6 @@ QUnit.test('add an emoji after a command', async function (assert) {
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "/");
-    });
-    await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
         document.querySelector(`.o_ComposerTextInput_textarea`)
@@ -2218,61 +2200,6 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
         ['message_post'],
         "The message has been posted only once"
     );
-});
-
-QUnit.test("mentioned partners should not be notified if they are not member of current channel", async function (assert) {
-    assert.expect(4);
-
-    this.data['res.partner'].records.push({
-        email: "testpartner@example.com",
-        name: "TestPartner",
-    });
-    this.data['mail.channel'].records.push({
-        id: 10,
-        members: [this.data.currentPartnerId],
-    });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.model === 'mail.channel' && args.method === 'message_post') {
-                assert.step('message_post');
-                assert.strictEqual(
-                    args.kwargs.partner_ids.length,
-                    0,
-                    "message_post should not contain mentioned partners that are not members of channel"
-                );
-            }
-            return this._super(...arguments);
-        },
-    });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 10,
-        model: 'mail.channel',
-    });
-    await this.createComposerComponent(thread.composer);
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
-    await afterNextRender(() => document.querySelector('.o_ComposerSuggestion').click());
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
-        "@TestPartner ",
-        "text content of composer should have mentioned partner + additional whitespace afterwards"
-    );
-    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
-    assert.verifySteps(['message_post'], "the message should be posted");
 });
 
 QUnit.test('[technical] does not crash when an attachment is removed before its upload starts', async function (assert) {

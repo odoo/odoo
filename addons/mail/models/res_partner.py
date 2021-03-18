@@ -6,6 +6,7 @@ import logging
 from odoo import _, api, fields, models, tools
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER
 from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
+from odoo.exceptions import AccessError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -71,13 +72,20 @@ class Partner(models.Model):
 
     def mail_partner_format(self):
         self.ensure_one()
-        return {
-            "id": self.name_get()[0][0],
-            "display_name": self.name_get()[0][1],
+        internal_users = self.user_ids - self.user_ids.filtered('share')
+        main_user = internal_users[0] if len(internal_users) > 0 else self.user_ids[0] if len(self.user_ids) > 0 else self.env['res.users']
+        res = {
+            "id": self.id,
+            "display_name": self.display_name,
             "name": self.name,
+            "email": self.email,
             "active": self.active,
             "im_status": self.im_status,
+            "user_id": main_user.id,
         }
+        if main_user:
+            res["is_internal_user"] = not main_user.share
+        return res
 
     @api.model
     def get_needaction_count(self):
@@ -106,36 +114,39 @@ class Partner(models.Model):
 
     @api.model
     def get_static_mention_suggestions(self):
-        """ To be overwritten to return the id, name and email of partners used as static mention
-            suggestions loaded once at webclient initialization and stored client side. """
-        return []
+        """ Returns static mention suggestions of partners, loaded once at webclient initialization
+            and stored client side. All the internal users are returned.
+            The return format is a list of partner data (as per returned by `mail_partner_format()`).
+        """
+        partners = self.env['res.partner']
+        try:
+            partners = self.env.ref('base.group_user').users.partner_id
+        except AccessError:
+            pass
+        return [partner.mail_partner_format() for partner in partners]
 
     @api.model
-    def get_mention_suggestions(self, search, limit=8):
-        """ Return 'limit'-first partners' id, name and email such that the name or email matches a
-            'search' string. Prioritize users, and then extend the research to all partners. """
+    def get_mention_suggestions(self, search, limit=8, channel_id=None):
+        """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
+            Prioritize partners that are also users, and then extend the research to all partners.
+            If channel_id is given, only members of this channel are returned.
+            The return format is a list of partner data (as per returned by `mail_partner_format()`).
+        """
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
         search_dom = expression.AND([[('active', '=', True)], search_dom])
-        fields = ['id', 'name', 'email']
+        if channel_id:
+            search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
 
-        # Search users
+        # Search partners that are also users
         domain = expression.AND([[('user_ids.id', '!=', False), ('user_ids.active', '=', True)], search_dom])
-        users = self.search_read(domain, fields, limit=limit)
+        partners = self.search(domain, limit=limit)
 
-        # Search partners if less than 'limit' users found
-        partners = []
-        if len(users) < limit:
-            partners = self.search_read(search_dom, fields, limit=limit)
-            # Remove duplicates
-            partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])] 
+        # Search partners that are not users if less than 'limit' partner that are users found
+        remaining_limit = limit - len(partners)
+        if remaining_limit > 0:
+            partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], search_dom]), limit=remaining_limit)
 
-        # add OdooBot even if its partner is archived
-        if len(partners) + len(users) < limit and "odoobot".startswith(search.lower()):
-            odoobot = self.env.ref("base.partner_root")
-            if not any(elem['id'] == odoobot.id for elem in partners):
-                partners.append(odoobot.read(fields)[0])
-
-        return [users, partners]
+        return [partner.mail_partner_format() for partner in partners]
 
     @api.model
     def im_search(self, name, limit=20):
