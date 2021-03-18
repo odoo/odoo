@@ -6501,7 +6501,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('state_selection widget in editable list view', async function (assert) {
-        assert.expect(32);
+        assert.expect(33);
 
         var list = await createView({
             View: ListView,
@@ -6542,6 +6542,7 @@ QUnit.module('basic_fields', {
             "should still have one green status");
         assert.containsNone(list, '.dropdown-menu.state:visible',
             "there should not be a dropdown");
+        assert.containsNone(list, 'tr.o_selected_row', 'should not be in edit mode');
 
         // switch to edit mode and check the result
         $cell = list.$('tbody td.o_state_selection_cell').first();
