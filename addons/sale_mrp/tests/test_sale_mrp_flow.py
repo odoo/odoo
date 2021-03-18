@@ -556,6 +556,9 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
 
     def test_02_sale_mrp_anglo_saxon(self):
+        self._test_sale_mrp_anglo_saxon('product')
+
+    def _test_sale_mrp_anglo_saxon(self, finished_product_type):
         """Test the price unit of a kit"""
         # This test will check that the correct journal entries are created when a stockable product in real time valuation
         # and in fifo cost method is sold in a company using anglo-saxon.
@@ -591,7 +594,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         Product = self.env['product.product']
         self.finished_product = Product.create({
                 'name': 'Finished product',
-                'type': 'product',
+                'type': finished_product_type,
                 'uom_id': self.uom_unit.id,
                 'invoice_policy': 'delivery',
                 'categ_id': self.category.id})
@@ -1458,6 +1461,9 @@ class TestSaleMrpFlow(common.SavepointCase):
         move_component_kg = order.picking_ids[0].move_lines - move_component_unit
         self.assertEquals(move_component_unit.product_uom_qty, 0.5)
         self.assertEquals(move_component_kg.product_uom_qty, 0.583)
+
+    def test_12_sale_mrp_anglo_saxon_consu_kit(self):
+        self._test_sale_mrp_anglo_saxon('consu')
 
     def test_product_type_service_1(self):
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
