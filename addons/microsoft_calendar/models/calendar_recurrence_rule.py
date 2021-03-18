@@ -70,6 +70,12 @@ class RecurrenceRule(models.Model):
     def _get_microsoft_synced_fields(self):
         return {'rrule'} | self.env['calendar.event']._get_microsoft_synced_fields()
 
+    @api.model
+    def _restart_microsoft_sync(self):
+        self.env['calendar.recurrence'].search(self._get_microsoft_sync_domain()).write({
+            'need_sync_m': True,
+        })
+
     def _get_microsoft_sync_domain(self):
         return [('calendar_event_ids.user_id', '=', self.env.user.id)]
 

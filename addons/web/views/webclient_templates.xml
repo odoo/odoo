@@ -464,14 +464,22 @@
 
     <template id="web.frontend_layout" name="Frontend Layout" inherit_id="web.layout" primary="True">
         <xpath expr="//head/meta[last()]" position="after">
+<<<<<<< HEAD
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+=======
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         </xpath>
         <xpath expr="//head/link[last()]" position="after">
             <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
             <t t-call-assets="web.assets_common" t-js="false"/>
             <t t-call-assets="web.assets_frontend" t-js="false"/>
         </xpath>
+<<<<<<< HEAD
         <xpath expr="//head/script[@id='web.layout.odooscript'] | //head/script[last()]" position="after">
+=======
+        <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             <script type="text/javascript">
                 odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
                 if (!/(^|;\s)tz=/.test(document.cookie)) {
@@ -635,6 +643,7 @@
         <script type="text/javascript" src="/web/static/lib/Chart/Chart.js"></script>
         <script type="text/javascript" src="/web/static/lib/nearest/jquery.nearest.js"/>
         <script type="text/javascript" src="/web/static/lib/daterangepicker/daterangepicker.js"></script>
+        <script type="text/javascript" src="/web/static/lib/stacktracejs/stacktrace.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/daterangepicker.js"></script>
 
         <script type="text/javascript" src="/web/static/tests/main_tests.js"></script>
@@ -812,6 +821,7 @@
         <script type="text/javascript" src="/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js"></script>
         <script type="text/javascript" src="/web/static/tests/fields/basic_fields_mobile_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/fields/relational_fields_mobile_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/components/dropdown_menu_mobile_tests.js"></script>
     </template>
 
     <template id="web.benchmark_suite">

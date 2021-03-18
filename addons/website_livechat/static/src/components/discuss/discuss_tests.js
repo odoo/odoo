@@ -42,8 +42,13 @@ QUnit.test('rendering of visitor banner', async function (assert) {
         display_name: 'Visitor #11',
         history: 'Home → Contact',
         is_connected: true,
+<<<<<<< HEAD
         lang: "English",
         website: "General website",
+=======
+        lang_name: "English",
+        website_name: "General website",
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
     this.data['mail.channel'].records.push({
         channel_type: 'livechat',
@@ -139,8 +144,13 @@ QUnit.test('livechat with non-logged visitor should show visitor banner', async 
         display_name: 'Visitor #11',
         history: 'Home → Contact',
         is_connected: true,
+<<<<<<< HEAD
         lang: "English",
         website: "General website",
+=======
+        lang_name: "English",
+        website_name: "General website",
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
     this.data['mail.channel'].records.push({
         channel_type: 'livechat',
@@ -180,9 +190,15 @@ QUnit.test('livechat with logged visitor should show visitor banner', async func
         display_name: 'Visitor #11',
         history: 'Home → Contact',
         is_connected: true,
+<<<<<<< HEAD
         lang: "English",
         partner_id: 12,
         website: "General website",
+=======
+        lang_name: "English",
+        partner_id: 12,
+        website_name: "General website",
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
     this.data['mail.channel'].records.push({
         channel_type: 'livechat',

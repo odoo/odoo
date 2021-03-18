@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
 def _create_accounting_data(env):
@@ -46,7 +46,7 @@ def _create_accounting_data(env):
     return stock_input_account, stock_output_account, stock_valuation_account, expense_account, stock_journal
 
 
-class TestStockValuation(SavepointCase):
+class TestStockValuation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuation, cls).setUpClass()
@@ -3715,3 +3715,86 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).value_svl, 100)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).quantity_svl, 5)
         self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).value_svl, 50)
+
+    def test_forecast_report_value(self):
+        """ Create a SVL for two companies using different currency, and open
+        the forecast report. Checks the forecast report use the good currency to
+        display the product's valuation.
+        """
+        # Settings
+        self.product1.categ_id.property_valuation = 'manual_periodic'
+        # Creates two new currencies.
+        currency_1 = self.env['res.currency'].create({
+            'name': 'UNF',
+            'symbol': 'U',
+            'rounding': 0.01,
+            'currency_unit_label': 'Unifranc',
+            'rate': 1,
+            'position': 'before',
+        })
+        currency_2 = self.env['res.currency'].create({
+            'name': 'DBL',
+            'symbol': 'DD',
+            'rounding': 0.01,
+            'currency_unit_label': 'Doublard',
+            'rate': 2,
+        })
+        # Create a new company using the "Unifranc" as currency.
+        company_form = Form(self.env['res.company'])
+        company_form.name = "BB Inc."
+        company_form.currency_id = currency_1
+        company_1 = company_form.save()
+        # Create a new company using the "Doublard" as currency.
+        company_form = Form(self.env['res.company'])
+        company_form.name = "BB Corp"
+        company_form.currency_id = currency_2
+        company_2 = company_form.save()
+        # Gets warehouses and locations.
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', company_1.id)], limit=1)
+        warehouse_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
+        stock_1 = warehouse_1.lot_stock_id
+        stock_2 = warehouse_2.lot_stock_id
+        self.env.user.company_ids += company_1
+        self.env.user.company_ids += company_2
+        # Updates the product's value.
+        self.product1.with_company(company_1).standard_price = 10
+        self.product1.with_company(company_2).standard_price = 12
+
+        # ---------------------------------------------------------------------
+        # Receive 5 units @ 10.00 per unit (company_1)
+        # ---------------------------------------------------------------------
+        move_1 = self.env['stock.move'].with_company(company_1).create({
+            'name': 'IN 5 units @ 10.00 U per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': stock_1.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        move_1._action_confirm()
+        move_1.move_line_ids.qty_done = 5.0
+        move_1._action_done()
+
+        # ---------------------------------------------------------------------
+        # Receive 4 units @ 12.00 per unit (company_2)
+        # ---------------------------------------------------------------------
+        move_2 = self.env['stock.move'].with_company(company_2).create({
+            'name': 'IN 4 units @ 12.00 DD per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': stock_2.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 4.0,
+        })
+        move_2._action_confirm()
+        move_2.move_line_ids.qty_done = 4.0
+        move_2._action_done()
+
+        # Opens the report for each company and compares the values.
+        report = self.env['report.stock.report_product_product_replenishment']
+        report_for_company_1 = report.with_context(warehouse=warehouse_1.id)
+        report_for_company_2 = report.with_context(warehouse=warehouse_2.id)
+        report_value_1 = report_for_company_1._get_report_values(docids=self.product1.ids)
+        report_value_2 = report_for_company_2._get_report_values(docids=self.product1.ids)
+        self.assertEqual(report_value_1['docs']['value'], "U 50.00")
+        self.assertEqual(report_value_2['docs']['value'], "48.00 DD")

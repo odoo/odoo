@@ -46,7 +46,7 @@ class ProjectTaskRecurrence(models.Model):
 
     task_ids = fields.One2many('project.task', 'recurrence_id')
     next_recurrence_date = fields.Date()
-    recurrence_left = fields.Integer(string="Number of tasks left to create")
+    recurrence_left = fields.Integer(string="Number of Tasks Left to Create")
 
     repeat_interval = fields.Integer(string='Repeat Every', default=1)
     repeat_unit = fields.Selection([
@@ -214,7 +214,7 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_task(self):
         for recurrence in self:
-            task = self.sudo().task_ids[-1]
+            task = recurrence.sudo().task_ids[-1]
             create_values = recurrence._new_task_values(task)
             new_task = self.env['project.task'].sudo().create(create_values)
             if not new_task.parent_id and task.child_ids:

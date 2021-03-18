@@ -104,7 +104,11 @@
                                     widget="many2many"
                                     attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
                                     groups="mrp.group_mrp_routings"
+<<<<<<< HEAD
                                     context="{'default_company_id': company_id, 'default_product_tmpl_ids': [product_tmpl_id]}"/>
+=======
+                                    context="{'bom_id_invisible': True, 'default_company_id': company_id, 'default_bom_id': id}"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                         </page>
                         <page string="By-products"
                             name="by_products"

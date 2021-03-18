@@ -5,6 +5,7 @@
 
 {
     'name': 'Maroc - Accounting',
+    'icon': '/base/static/img/country_flags/ma.png',
     'author': 'kazacube',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

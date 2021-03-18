@@ -2,10 +2,12 @@ odoo.define('web.base_import_tests', function (require) {
 "use strict";
 
 const KanbanView = require('web.KanbanView');
+const FormView = require('web.FormView');
 const ListView = require('web.ListView');
 const PivotView = require('web.PivotView');
 const testUtils = require('web.test_utils');
 
+const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
 
 QUnit.module('Base Import Tests', {
@@ -165,6 +167,42 @@ QUnit.test('import should not available in favorite dropdown in pivot (other tha
     assert.containsNone(pivot, '.o_import_menu');
 
     pivot.destroy();
+});
+
+QUnit.test('import should not be available in favorite dropdown in dialog view', async function (assert) {
+    assert.expect(1);
+
+    this.data.bar = {
+        fields: {
+            display_name: { string: "Bar", type: "char" },
+        },
+        records: []
+    };
+    for (let i = 0; i < 10; i++) {
+        this.data.bar.records.push({ id: i + 1, display_name: "Bar " + (i + 1) });
+    }
+    this.data.foo.fields.m2o = { string: "M2O", type: "many2one", relation: "bar" };
+
+    const form = await createView({
+        View: FormView,
+        model: 'foo',
+        data: this.data,
+        arch: '<form><field name="m2o"/></form>',
+        archs: {
+            'bar,false,list': '<tree><field name="display_name"/></tree>',
+            'bar,false,search': '<search></search>',
+        },
+    });
+
+    await testUtils.fields.many2one.searchAndClickItem('m2o', {
+        item: 'Search More',
+        search: '',
+    });
+    await cpHelpers.toggleFavoriteMenu('.modal');
+    assert.containsNone(document.querySelector('.modal'), '.o_import_menu',
+        "Import menu should not be available");
+
+    form.destroy();
 });
 
 });

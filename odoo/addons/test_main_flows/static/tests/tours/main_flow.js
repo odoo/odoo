@@ -202,12 +202,12 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: '.o_field_widget[name=code]',
-    extra_trigger: ".o_field_widget[name=product_id] > .o_external_button", // Wait name_create
+    extra_trigger: ".o_field_widget[name=product_id] .o_external_button", // Wait name_create
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
     trigger: 'label:contains("Vendor Taxes")',
-    extra_trigger: ".o_field_widget[name=name] > .o_external_button", // Wait name_create
+    extra_trigger: ".o_field_widget[name=name] .o_external_button", // Wait name_create
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
@@ -315,7 +315,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: '.o_field_widget[name=code]',
-    extra_trigger: ".o_field_widget[name=product_id] > .o_external_button", // Wait name_create
+    extra_trigger: ".o_field_widget[name=product_id] .o_external_button", // Wait name_create
     // click somewhere else to exit cell focus
 }, {
     mobile: false,
@@ -422,7 +422,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'right',
 }, {
     trigger: '.o_form_button_save',
-    extra_trigger: '.o_field_widget[name=project_id] > .o_external_button', // Wait name_create
+    extra_trigger: '.o_field_widget[name=project_id] .o_external_button', // Wait name_create
     content: _t("Save this product and the modifications you've made to it."),
     position: 'bottom',
 }, {
@@ -479,7 +479,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'right',
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
-    extra_trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] > .o_external_button", // Wait name_create
+    extra_trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] .o_external_button", // Wait name_create
     content: _t("Click here to <b>add your opportunity</b>."),
     position: "right",
 }, {

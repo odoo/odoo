@@ -16,10 +16,16 @@ from functools import partial
 import odoo
 from odoo import api, models
 from odoo import registry, SUPERUSER_ID
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
+<<<<<<< HEAD
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
+=======
+from odoo.addons.http_routing.models import ir_http
+from odoo.addons.http_routing.models.ir_http import _guess_mimetype
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
@@ -158,6 +164,22 @@ class Http(models.AbstractModel):
             request.env['website.visitor']._handle_webpage_dispatch(response, website_page)
 
         return False
+
+    @classmethod
+    def _postprocess_args(cls, arguments, rule):
+        processing = super()._postprocess_args(arguments, rule)
+        if processing:
+            return processing
+
+        for record in arguments.values():
+            if isinstance(record, models.BaseModel) and hasattr(record, 'can_access_from_current_website'):
+                try:
+                    if not record.can_access_from_current_website():
+                        return request.env['ir.http']._handle_exception(werkzeug.exceptions.NotFound())
+                except AccessError:
+                    # record.website_id might not be readable as unpublished `event.event` due to ir.rule,
+                    # return 403 instead of using `sudo()` for perfs as this is low level
+                    return request.env['ir.http']._handle_exception(werkzeug.exceptions.Forbidden())
 
     @classmethod
     def _dispatch(cls):
@@ -420,7 +442,12 @@ class Http(models.AbstractModel):
         return session_info
 
 
-class ModelConverter(ModelConverter):
+class ModelConverter(ir_http.ModelConverter):
+
+    def to_url(self, value):
+        if value.env.context.get('slug_matching'):
+            return value.env.context.get('_converter_value', str(value.id))
+        return super().to_url(value)
 
     def to_url(self, value):
         if value.env.context.get('slug_matching'):

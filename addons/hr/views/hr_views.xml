@@ -31,7 +31,7 @@
 
         <menuitem
             id="menu_hr_employee"
-            name="Employee Directory"
+            name="Directory"
             action="hr_employee_public_action"
             parent="menu_hr_root"
             sequence="4"/>
@@ -88,6 +88,13 @@
                 id="menu_hr_department_kanban"
                 action="hr_department_kanban_action"
                 parent="menu_hr_root"
+                groups="group_hr_user"/>
+
+            <menuitem
+                id="menu_hr_work_location_tree"
+                action="hr_work_location_action"
+                parent="menu_human_resources_configuration"
+                sequence="5"
                 groups="group_hr_user"/>
 
             <menuitem

@@ -10,7 +10,7 @@ class ProjectProductEmployeeMap(models.Model):
 
     project_id = fields.Many2one('project.project', "Project", required=True)
     employee_id = fields.Many2one('hr.employee', "Employee", required=True)
-    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", domain=[('is_service', '=', True)])
+    sale_line_id = fields.Many2one('sale.order.line', "Sale Order Item", compute="_compute_sale_line_id", store=True, readonly=False, required=True, domain=[('is_service', '=', True)])
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
     timesheet_product_id = fields.Many2one(
         'product.product', string='Service',
@@ -25,6 +25,10 @@ class ProjectProductEmployeeMap(models.Model):
     _sql_constraints = [
         ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),
     ]
+
+    @api.depends('project_id.sale_order_id')
+    def _compute_sale_line_id(self):
+        self.filtered(lambda map_entry: not map_entry.project_id.sale_order_id and map_entry.sale_line_id).update({'sale_line_id': None})
 
     @api.depends('sale_line_id', 'sale_line_id.price_unit', 'timesheet_product_id')
     def _compute_price_unit(self):
@@ -50,6 +54,7 @@ class ProjectProductEmployeeMap(models.Model):
     def create(self, values):
         res = super(ProjectProductEmployeeMap, self).create(values)
         res._update_project_timesheet()
+<<<<<<< HEAD
         return res
 
     def write(self, values):
@@ -57,5 +62,14 @@ class ProjectProductEmployeeMap(models.Model):
         self._update_project_timesheet()
         return res
 
+=======
+        return res
+
+    def write(self, values):
+        res = super(ProjectProductEmployeeMap, self).write(values)
+        self._update_project_timesheet()
+        return res
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _update_project_timesheet(self):
         self.filtered(lambda l: l.sale_line_id).project_id._update_timesheets_sale_line_id()

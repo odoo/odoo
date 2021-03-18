@@ -601,7 +601,6 @@ function factory(dependencies) {
                 args: [[this.id]],
                 kwargs: {
                     partner_ids: [this.env.messaging.currentPartner.id],
-                    context: {}, // FIXME empty context to be overridden in session.js with 'allowed_company_ids' task-2243187
                 },
             }));
             this.refreshFollowers();
@@ -649,6 +648,7 @@ function factory(dependencies) {
                 ids: [this.id],
                 lastMessageId: message.id,
             });
+<<<<<<< HEAD
         }
 
         /**
@@ -662,10 +662,16 @@ function factory(dependencies) {
 
         /**
          * Mark as read all needaction messages of this thread.
+=======
+        }
+
+        /**
+         * Marks as read all needaction messages with this thread as origin.
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
          */
-        async markNeedactionMessagesAsRead() {
+        async markNeedactionMessagesAsOriginThreadAsRead() {
             await this.async(() =>
-                this.env.models['mail.message'].markAsRead(this.needactionMessages)
+                this.env.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
             );
         }
 
@@ -1018,10 +1024,17 @@ function factory(dependencies) {
             const allAttachments = [...new Set(this.originThreadAttachments.concat(this.attachments))]
                 .sort((a1, a2) => {
                     // "uploading" before "uploaded" attachments.
+<<<<<<< HEAD
                     if (!a1.isTemporary && a2.isTemporary) {
                         return 1;
                     }
                     if (a1.isTemporary && !a2.isTemporary) {
+=======
+                    if (!a1.isUploading && a2.isUploading) {
+                        return 1;
+                    }
+                    if (a1.isUploading && !a2.isUploading) {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                         return -1;
                     }
                     // "most-recent" before "oldest" attachments.
@@ -1230,16 +1243,21 @@ function factory(dependencies) {
          * @private
          * @returns {mail.message|undefined}
          */
+<<<<<<< HEAD
         _computeLastNeedactionMessage() {
             const orderedNeedactionMessages = this.needactionMessages.sort(
+=======
+        _computeLastNeedactionMessageAsOriginThread() {
+            const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 (m1, m2) => m1.id < m2.id ? -1 : 1
             );
             const {
                 length: l,
-                [l - 1]: lastNeedactionMessage,
-            } = orderedNeedactionMessages;
-            if (lastNeedactionMessage) {
-                return [['link', lastNeedactionMessage]];
+                [l - 1]: lastNeedactionMessageAsOriginThread,
+            } = orderedNeedactionMessagesAsOriginThread;
+            if (lastNeedactionMessageAsOriginThread) {
+                return [['link', lastNeedactionMessageAsOriginThread]];
             }
             return [['unlink']];
         }
@@ -1318,8 +1336,32 @@ function factory(dependencies) {
          * @private
          * @returns {mail.message[]}
          */
-        _computeNeedactionMessages() {
-            return [['replace', this.messages.filter(message => message.isNeedaction)]];
+        _computeNeedactionMessagesAsOriginThread() {
+            return [['replace', this.messagesAsOriginThread.filter(message => message.isNeedaction)]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeMessageAfterNewMessageSeparator() {
+            if (this.model !== 'mail.channel') {
+                return [['unlink']];
+            }
+            if (this.localMessageUnreadCounter === 0) {
+                return [['unlink']];
+            }
+            const index = this.orderedMessages.findIndex(message =>
+                message.id === this.lastSeenByCurrentPartnerMessageId
+            );
+            if (index === -1) {
+                return [['unlink']];
+            }
+            const message = this.orderedMessages[index + 1];
+            if (!message) {
+                return [['unlink']];
+            }
+            return [['link', message]];
         }
 
         /**
@@ -1570,7 +1612,6 @@ function factory(dependencies) {
          * @param {boolean} [param0.mail_invite_follower_channel_only=false]
          */
         _promptAddFollower({ mail_invite_follower_channel_only = false } = {}) {
-            const self = this;
             const action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.wizard.invite',
@@ -1691,6 +1732,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'thread',
             isCausal: true,
+            readonly: true,
         }),
         correspondent: many2one('mail.partner', {
             compute: '_computeCorrespondent',
@@ -1755,7 +1797,13 @@ function factory(dependencies) {
                 'model',
             ],
         }),
+<<<<<<< HEAD
         id: attr(),
+=======
+        id: attr({
+            required: true,
+        }),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
          *
@@ -1843,9 +1891,53 @@ function factory(dependencies) {
             compute: '_computeLastMessage',
             dependencies: ['orderedMessages'],
         }),
-        lastNeedactionMessage: many2one('mail.message', {
-            compute: '_computeLastNeedactionMessage',
-            dependencies: ['needactionMessages'],
+        /**
+         * States the last known needaction message having this thread as origin.
+         */
+        lastNeedactionMessageAsOriginThread: many2one('mail.message', {
+            compute: '_computeLastNeedactionMessageAsOriginThread',
+            dependencies: [
+                'needactionMessagesAsOriginThread',
+            ],
+        }),
+        /**
+         * Last non-transient message.
+         */
+        lastNonTransientMessage: many2one('mail.message', {
+            compute: '_computeLastNonTransientMessage',
+            dependencies: ['orderedNonTransientMessages'],
+        }),
+        /**
+         * Last seen message id of the channel by current partner.
+         *
+         * Also, it needs to be kept as an id because it's considered like a "date" and could stay
+         * even if corresponding message is deleted. It is basically used to know which
+         * messages are before or after it.
+         */
+        lastSeenByCurrentPartnerMessageId: attr({
+            compute: '_computeLastSeenByCurrentPartnerMessageId',
+            default: 0,
+            dependencies: [
+                'lastSeenByCurrentPartnerMessageId',
+                'messagingCurrentPartner',
+                'orderedMessages',
+                'orderedMessagesIsTransient',
+                // FIXME missing dependency 'orderedMessages.author', (task-2261221)
+            ],
+        }),
+        /**
+         * Local value of message unread counter, that means it is based on initial server value and
+         * updated with interface updates.
+         */
+        localMessageUnreadCounter: attr({
+            compute: '_computeLocalMessageUnreadCounter',
+            dependencies: [
+                'lastSeenByCurrentPartnerMessageId',
+                'messagingCurrentPartner',
+                'orderedMessages',
+                'serverLastMessageId',
+                'serverMessageUnreadCounter',
+            ],
         }),
         /**
          * States the last known needaction message having this thread as origin.
@@ -1923,12 +2015,33 @@ function factory(dependencies) {
         /**
          * All messages that this thread is linked to.
          * Note that this field is automatically computed by inverse
-         * computed field. This field is readonly.
+         * computed field.
          */
         messages: many2many('mail.message', {
             inverse: 'threads',
+            readonly: true,
         }),
         /**
+         * All messages that have been originally posted in this thread.
+         */
+        messagesAsOriginThread: one2many('mail.message', {
+            inverse: 'originThread',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        messagesAsOriginThreadIsNeedaction: attr({
+            related: 'messagesAsOriginThread.isNeedaction',
+        }),
+        /**
+         * All messages that are contained on this channel on the server.
+         * Equivalent to the inverse of python field `channel_ids`.
+         */
+        messagesAsServerChannel: many2many('mail.message', {
+            inverse: 'serverChannels',
+        }),
+        /**
+<<<<<<< HEAD
          * All messages that have been originally posted in this thread.
          */
         messagesAsOriginThread: one2many('mail.message', {
@@ -1953,6 +2066,11 @@ function factory(dependencies) {
         messagesIsNeedaction: attr({
             related: 'messages.isNeedaction',
         }),
+=======
+         * Contains the message fetched/seen indicators for all messages of this thread.
+         * FIXME This field should be readonly once task-2336946 is done.
+         */
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
             isCausal: true,
@@ -1963,7 +2081,9 @@ function factory(dependencies) {
         messagingCurrentPartner: many2one('mail.partner', {
             related: 'messaging.currentPartner',
         }),
-        model: attr(),
+        model: attr({
+            required: true,
+        }),
         model_name: attr(),
         moderation: attr({
             default: false,
@@ -1976,6 +2096,7 @@ function factory(dependencies) {
         }),
         moduleIcon: attr(),
         name: attr(),
+<<<<<<< HEAD
         needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
             dependencies: [
@@ -1983,6 +2104,8 @@ function factory(dependencies) {
                 'messagesIsNeedaction',
             ],
         }),
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         /**
          * States all known needaction messages having this thread as origin.
          */
@@ -2002,6 +2125,7 @@ function factory(dependencies) {
             dependencies: [
                 'followersPartner',
             ],
+<<<<<<< HEAD
         }),
         /**
          * Not a real field, used to trigger `_onChangeLastSeenByCurrentPartnerMessageId` when one of
@@ -2044,6 +2168,50 @@ function factory(dependencies) {
             ],
         }),
         /**
+=======
+        }),
+        /**
+         * Not a real field, used to trigger `_onChangeLastSeenByCurrentPartnerMessageId` when one of
+         * the dependencies changes.
+         */
+        onChangeLastSeenByCurrentPartnerMessageId: attr({
+            compute: '_onChangeLastSeenByCurrentPartnerMessageId',
+            dependencies: [
+                'lastSeenByCurrentPartnerMessageId',
+            ],
+        }),
+        /**
+         * Not a real field, used to trigger `_onChangeThreadViews` when one of
+         * the dependencies changes.
+         */
+        onChangeThreadView: attr({
+            compute: '_onChangeThreadViews',
+            dependencies: [
+                'threadViews',
+            ],
+        }),
+        /**
+         * Not a real field, used to trigger `_onIsServerPinnedChanged` when one of
+         * the dependencies changes.
+         */
+        onIsServerPinnedChanged: attr({
+            compute: '_onIsServerPinnedChanged',
+            dependencies: [
+                'isServerPinned',
+            ],
+        }),
+        /**
+         * Not a real field, used to trigger `_onServerFoldStateChanged` when one of
+         * the dependencies changes.
+         */
+        onServerFoldStateChanged: attr({
+            compute: '_onServerFoldStateChanged',
+            dependencies: [
+                'serverFoldState',
+            ],
+        }),
+        /**
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
          * All messages ordered like they are displayed.
          */
         orderedMessages: many2many('mail.message', {
@@ -2103,6 +2271,13 @@ function factory(dependencies) {
             compute: '_computeOverdueActivities',
             dependencies: ['activitiesState'],
         }),
+<<<<<<< HEAD
+=======
+        /**
+         * Contains the seen information for all members of the thread.
+         * FIXME This field should be readonly once task-2336946 is done.
+         */
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
             inverse: 'thread',
             isCausal: true,

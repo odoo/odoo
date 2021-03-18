@@ -23,7 +23,11 @@
         <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
             <div t-if="address and 'address' in fields" class="d-flex align-items-baseline">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
+<<<<<<< HEAD
                 <span class="w-100 o_force_ltr d-block" itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '')))"/>
+=======
+                <span class="w-100 o_force_ltr d-block" itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or '&lt;br/&gt;')"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             </div>
             <div t-if="city and 'city' in fields" class="d-flex align-items-baseline">
                 <i t-if="not options.get('no_marker')" class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
@@ -36,7 +40,6 @@
             </div>
             <div t-if="phone and 'phone' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-phone fa-fw' role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" itemprop="telephone" t-esc="phone"/></div>
             <div t-if="mobile and 'mobile' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-mobile fa-fw' role="img" aria-label="Mobile" title="Mobile"/> <span class="o_force_ltr" itemprop="telephone" t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields"><i t-if="not options.get('no_marker') or options.get('phone_icons')" class='fa fa-fax fa-fw' role="img" aria-label="Fax" title="Fax"/> <span class="o_force_ltr" itemprop="faxNumber" t-esc="fax"/></div>
             <div t-if="website and 'website' in fields">
                 <i t-if="not options.get('no_marker')" class='fa fa-globe' role="img" aria-label="Website" title="Website"/>
                 <a t-att-href="website and '%s%s' % ('http://' if '://' not in website else '',website)"><span itemprop="website" t-esc="website"/></a>

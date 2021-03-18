@@ -1,15 +1,15 @@
+/** @odoo-module alias=web.qweb **/
+
 /**
  * Client-side implementation of a qweb view.
  */
-odoo.define('web.qweb', function (require) {
-"use strict";
 
-var core = require('web.core');
-var AbstractView = require('web.AbstractView');
-var AbstractModel = require('web.AbstractModel');
-var AbstractRenderer = require('web.AbstractRenderer');
-var AbstractController = require('web.AbstractController');
-var registry = require('web.view_registry');
+import core from 'web.core';
+import AbstractView from '../abstract_view';
+import AbstractModel from '../abstract_model';
+import AbstractRenderer from '../abstract_renderer';
+import AbstractController from '../abstract_controller';
+import registry from 'web.view_registry';
 
 var _lt = core._lt;
 
@@ -199,10 +199,9 @@ var QWebView = AbstractView.extend({
 });
 
 registry.add('qweb', QWebView);
-return {
+export default {
     View: QWebView,
     Controller: Controller,
     Renderer: Renderer,
     Model: Model
 };
-});

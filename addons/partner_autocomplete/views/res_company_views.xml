@@ -11,8 +11,9 @@
             <xpath expr="//field[@name='vat']" position="attributes">
                 <attribute name="widget">field_partner_autocomplete</attribute>
             </xpath>
-            <xpath expr="//field[last()]" position="after">
-                <field name="partner_gid" invisible="True"/>
+            <xpath expr="//field[@name='company_registry']" position="after">
+                <field name="partner_gid" invisible="1"/>
+                <field name="iap_enrich_auto_done" invisible="1"/>
             </xpath>
         </field>
     </record>

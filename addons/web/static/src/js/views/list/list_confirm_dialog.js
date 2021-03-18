@@ -1,11 +1,10 @@
-odoo.define('web.ListConfirmDialog', function (require) {
-"use strict";
+/** @odoo-module alias=web.ListConfirmDialog **/
 
-const core = require('web.core');
-const Dialog = require('web.Dialog');
-const FieldWrapper = require('web.FieldWrapper');
-const { WidgetAdapterMixin } = require('web.OwlCompatibility');
-const utils = require('web.utils');
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import FieldWrapper from 'web.FieldWrapper';
+import { WidgetAdapterMixin } from 'web.OwlCompatibility';
+import utils from 'web.utils';
 
 const _t = core._t;
 const qweb = core.qweb;
@@ -99,6 +98,4 @@ const ListConfirmDialog = Dialog.extend(WidgetAdapterMixin, {
     },
 });
 
-return ListConfirmDialog;
-
-});
+export default ListConfirmDialog;

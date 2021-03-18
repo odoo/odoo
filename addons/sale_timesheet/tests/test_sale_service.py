@@ -89,6 +89,9 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         self.assertEqual(self.sale_order.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
 
+        # delete timesheets before deleting the task, so as to trigger the error
+        # about linked sales order lines and not the one about linked timesheets
+        task.timesheet_ids.unlink()
         # not possible to delete a task linked to a SOL
         with self.assertRaises(ValidationError):
             task.unlink()
@@ -597,3 +600,59 @@ class TestSaleService(TestCommonSaleTimesheet):
         # copy the task
         task_copy = task.copy()
         self.assertEqual(task_copy.sale_line_id, task.sale_line_id, "Duplicating task should keep its Sale line")
+
+    def test_remaining_hours_prepaid_services(self):
+        """ Test if the remaining hours is correctly computed
+
+            Test Case:
+            =========
+            1) Check the remaining hours in the SOL containing a prepaid service product,
+            2) Create task in project with pricing type is equal to "task rate" and has the customer in the SO
+                and check if the remaining hours is equal to the remaining hours in the SOL,
+            3) Create timesheet in the task for this SOL and check if the remaining hours correctly decrease,
+            4) Change the SOL in the task and see if the remaining hours is correctly recomputed.
+            5) Create without storing the timesheet to check if remaining hours in SOL does not change.
+        """
+        # 1) Check the remaining hours in the SOL containing a prepaid service product
+        prepaid_service_sol = self.so.order_line.filtered(lambda sol: sol.product_id.service_policy == 'ordered_timesheet')
+        self.assertEqual(len(prepaid_service_sol), 1, "It should only have one SOL with prepaid service product in this SO.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, prepaid_service_sol.product_uom_qty - prepaid_service_sol.qty_delivered, "The remaining hours of this SOL should be equal to the ordered quantity minus the delivered quantity.")
+
+        # 2) Create task in project with pricing type is equal to "task rate" and has the customer in the SO
+        # and check if the remaining hours is equal to the remaining hours in the SOL,
+        task = self.env['project.task'].create({
+            'name': 'Test task',
+            'project_id': self.project_task_rate.id,
+        })
+        self.assertEqual(task.partner_id, self.project_task_rate.partner_id)
+        self.assertEqual(task.partner_id, self.so.partner_id)
+        self.assertEqual(task.remaining_hours_so, prepaid_service_sol.remaining_hours)
+
+        # 3) Create timesheet in the task for this SOL and check if the remaining hours correctly decrease
+        self.env['account.analytic.line'].create({
+            'name': 'Test Timesheet',
+            'project_id': self.project_task_rate.id,
+            'task_id': task.id,
+            'unit_amount': 1,
+        })
+        self.assertEqual(task.remaining_hours_so, 1, "Before the creation of a timesheet, the remaining hours was 2 hours, when we timesheet 1 hour, the remaining hours should be equal to 1 hour.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, task.remaining_hours_so, "The remaining hours on the SOL should also be equal to 1 hour.")
+
+        # 4) Change the SOL in the task and see if the remaining hours is correctly recomputed.
+        task.update({
+            'sale_line_id': self.so.order_line[0].id,
+        })
+        self.assertEqual(task.remaining_hours_so, False, "Since the SOL doesn't contain a prepaid service product, the remaining_hours_so should be equal to False.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, 2, "Since the timesheet on task has the same SOL than the one in the task, the remaining_hours should increase of 1 hour to be equal to 2 hours.")
+
+        # 5) Create without storing the timesheet to check if remaining hours in SOL does not change
+        timesheet = self.env['account.analytic.line'].new({
+            'name': 'Test Timesheet',
+            'project_id': self.project_task_rate.id,
+            'task_id': task.id,
+            'unit_amount': 1,
+            'so_line': prepaid_service_sol.id,
+            'is_so_line_edited': True,
+        })
+        self.assertEqual(timesheet.so_line, prepaid_service_sol, "The SOL should be the same than one containing the prepaid service product.")
+        self.assertEqual(prepaid_service_sol.remaining_hours, 2, "The remaining hours should not change.")

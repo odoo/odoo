@@ -19,4 +19,8 @@ class AccountMove(models.Model):
     def _get_efff_name(self):
         self.ensure_one()
         vat = self.company_id.partner_id.commercial_partner_id.vat
+<<<<<<< HEAD
         return 'efff_%s%s%s' % (vat or '', '_' if vat else '', re.sub('[\W_]', '', self.name))  # official naming convention
+=======
+        return 'efff_%s%s%s' % (vat or '', '_' if vat else '', re.sub(r'[\W_]', '', self.name))  # official naming convention
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

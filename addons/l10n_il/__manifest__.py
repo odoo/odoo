@@ -3,6 +3,7 @@
 
 {
     'name': 'Israel - Accounting',
+    'icon': '/base/static/img/country_flags/il.png',
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
@@ -15,7 +16,7 @@ This module consists of:
  - Fiscal position for Palestina
  """,
     'website': 'http://www.odoo.com/accounting',
-    'depends': ['account'],
+    'depends': ['l10n_multilang'],
     'data': [
         'data/account_chart_template_data.xml',
         'data/account_account_tag.xml',

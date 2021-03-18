@@ -21,7 +21,7 @@ class Digest(models.Model):
                 FROM account_move_line line
                 JOIN account_move move ON move.id = line.move_id
                 JOIN account_journal journal ON journal.id = move.journal_id
-                WHERE line.company_id = %s AND line.date >= %s AND line.date < %s
+                WHERE line.company_id = %s AND line.date > %s::DATE AND line.date <= %s::DATE
                 AND journal.type = 'sale'
             ''', [company.id, start, end])
             query_res = self._cr.fetchone()

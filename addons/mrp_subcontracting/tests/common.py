@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
-class TestMrpSubcontractingCommon(SavepointCase):
+class TestMrpSubcontractingCommon(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

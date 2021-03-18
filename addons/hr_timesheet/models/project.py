@@ -80,7 +80,8 @@ class Project(models.Model):
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_entries(self):
         """
         If some projects to unlink have some timesheets entries, these
         timesheets entries must be unlinked first.
@@ -96,7 +97,6 @@ class Project(models.Model):
             raise RedirectWarning(
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
                 _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
-        return super(Project, self).unlink()
 
 
 class Task(models.Model):
@@ -228,7 +228,8 @@ class Task(models.Model):
 
         return etree.tostring(doc, encoding='unicode')
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_entries(self):
         """
         If some tasks to unlink have some timesheets entries, these
         timesheets entries must be unlinked first.
@@ -244,7 +245,6 @@ class Task(models.Model):
             raise RedirectWarning(
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
                 _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
-        return super(Task, self).unlink()
 
     def _convert_hours_to_days(self, time):
         uom_hour = self.env.ref('uom.product_uom_hour')

@@ -4,21 +4,13 @@
 import logging
 
 from odoo.tools.translate import _
-from odoo.tools import email_split
+from odoo.tools import email_normalize
 from odoo.exceptions import UserError
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 
 
 _logger = logging.getLogger(__name__)
-
-# welcome email sent to portal users
-# (note that calling '_' has no effect except exporting those strings for translation)
-
-def extract_email(email):
-    """ extract the email address from a user-friendly email address """
-    addresses = email_split(email)
-    return addresses[0] if addresses else ''
 
 
 class PortalWizard(models.TransientModel):
@@ -29,34 +21,56 @@ class PortalWizard(models.TransientModel):
     _name = 'portal.wizard'
     _description = 'Grant Portal Access'
 
-    def _default_user_ids(self):
-        # for each partner, determine corresponding portal.wizard.user records
-        partner_ids = self.env.context.get('active_ids', [])
+    def _default_partner_ids(self):
+        partner_ids = self.env.context.get('default_partner_ids', []) or self.env.context.get('active_ids', [])
         contact_ids = set()
-        user_changes = []
         for partner in self.env['res.partner'].sudo().browse(partner_ids):
             contact_partners = partner.child_ids.filtered(lambda p: p.type in ('contact', 'other')) | partner
-            for contact in contact_partners:
-                # make sure that each contact appears at most once in the list
-                if contact.id not in contact_ids:
-                    contact_ids.add(contact.id)
-                    in_portal = False
-                    if contact.user_ids:
-                        in_portal = self.env.ref('base.group_portal') in contact.user_ids[0].groups_id
-                    user_changes.append((0, 0, {
-                        'partner_id': contact.id,
-                        'email': contact.email,
-                        'in_portal': in_portal,
-                    }))
-        return user_changes
+            contact_ids |= set(contact_partners.ids)
 
-    user_ids = fields.One2many('portal.wizard.user', 'wizard_id', string='Users',default=_default_user_ids)
+        return [Command.link(contact_id) for contact_id in contact_ids]
+
+    partner_ids = fields.Many2many('res.partner', string='Partners', default=_default_partner_ids)
+    user_ids = fields.One2many('portal.wizard.user', 'wizard_id', string='Users', compute='_compute_user_ids', store=True, readonly=False)
     welcome_message = fields.Text('Invitation Message', help="This text is included in the email sent to new users of the portal.")
 
-    def action_apply(self):
-        self.ensure_one()
-        self.user_ids.action_apply()
-        return {'type': 'ir.actions.act_window_close'}
+    @api.depends('partner_ids')
+    def _compute_user_ids(self):
+        for portal_wizard in self:
+            portal_wizard.user_ids = [
+                Command.create({
+                    'partner_id': partner.id,
+                    'email': partner.email,
+                })
+                for partner in portal_wizard.partner_ids
+            ]
+
+    @api.model
+    def action_open_wizard(self):
+        """Create a "portal.wizard" and open the form view.
+
+        We need a server action for that because the one2many "user_ids" records need to
+        exist to be able to execute an a button action on it. If they have no ID, the
+        buttons will be disabled and we won't be able to click on them.
+
+        That's why we need a server action, to create the records and then open the form
+        view on them.
+        """
+        portal_wizard = self.create({})
+        return portal_wizard._action_open_modal()
+
+    def _action_open_modal(self):
+        """Allow to keep the wizard modal open after executing the action."""
+        self.refresh()
+        return {
+            'name': _('Portal Access Management'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'portal.wizard',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'new',
+        }
 
 
 class PortalWizardUser(models.TransientModel):
@@ -70,6 +84,7 @@ class PortalWizardUser(models.TransientModel):
     wizard_id = fields.Many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Contact', required=True, readonly=True, ondelete='cascade')
     email = fields.Char('Email')
+<<<<<<< HEAD
     in_portal = fields.Boolean('In Portal')
     user_id = fields.Many2one('res.users', string='Login User')
 
@@ -119,54 +134,127 @@ class PortalWizardUser(models.TransientModel):
         self.env['res.partner'].check_access_rights('write')
         """ From selected partners, add corresponding users to chosen portal group. It either granted
             existing user, or create new one (and add it to the group).
-        """
-        error_msg = self.get_error_messages()
-        if error_msg:
-            raise UserError("\n\n".join(error_msg))
+=======
 
-        for wizard_user in self.sudo().with_context(active_test=False):
+    user_id = fields.Many2one('res.users', string='User', compute='_compute_user_id', compute_sudo=True)
+    login_date = fields.Datetime(related='user_id.login_date', string='Latest Authentication')
+    is_portal = fields.Boolean('Is Portal', compute='_compute_group_details')
+    is_internal = fields.Boolean('Is Internal', compute='_compute_group_details')
 
-            group_portal = self.env.ref('base.group_portal')
-            #Checking if the partner has a linked user
-            user = wizard_user.partner_id.user_ids[0] if wizard_user.partner_id.user_ids else None
-            # update partner email, if a new one was introduced
-            if wizard_user.partner_id.email != wizard_user.email:
-                wizard_user.partner_id.write({'email': wizard_user.email})
-            # add portal group to relative user of selected partners
-            if wizard_user.in_portal:
-                user_portal = None
-                # create a user if necessary, and make sure it is in the portal group
-                if not user:
-                    if wizard_user.partner_id.company_id:
-                        company_id = wizard_user.partner_id.company_id.id
-                    else:
-                        company_id = self.env.company.id
-                    user_portal = wizard_user.sudo().with_company(company_id)._create_user()
-                else:
-                    user_portal = user
-                wizard_user.write({'user_id': user_portal.id})
-                if not wizard_user.user_id.active or group_portal not in wizard_user.user_id.groups_id:
-                    wizard_user.user_id.write({'active': True, 'groups_id': [(4, group_portal.id)]})
-                    # prepare for the signup process
-                    wizard_user.user_id.partner_id.signup_prepare()
-                wizard_user.with_context(active_test=True)._send_email()
-                wizard_user.refresh()
+    @api.depends('partner_id')
+    def _compute_user_id(self):
+        for portal_wizard_user in self:
+            user = portal_wizard_user.partner_id.with_context(active_test=False).user_ids
+            portal_wizard_user.user_id = user[0] if user else False
+
+    @api.depends('user_id', 'user_id.groups_id')
+    def _compute_group_details(self):
+        for portal_wizard_user in self:
+            user = portal_wizard_user.user_id
+
+            if user and user.has_group('base.group_user'):
+                portal_wizard_user.is_internal = True
+                portal_wizard_user.is_portal = False
+            elif user and user.has_group('base.group_portal'):
+                portal_wizard_user.is_internal = False
+                portal_wizard_user.is_portal = True
             else:
-                # remove the user (if it exists) from the portal group
-                if user and group_portal in user.groups_id:
-                    # if user belongs to portal only, deactivate it
-                    if len(user.groups_id) <= 1:
-                        user.write({'groups_id': [(3, group_portal.id)], 'active': False})
-                    else:
-                        user.write({'groups_id': [(3, group_portal.id)]})
+                portal_wizard_user.is_internal = False
+                portal_wizard_user.is_portal = False
+
+    def action_grant_access(self):
+        """Grant the portal access to the partner.
+
+        If the partner has no linked user, we will create a new one in the same company
+        as the partner (or in the current company if not set).
+
+        An invitation email will be sent to the partner.
+        """
+        self.ensure_one()
+        self._assert_user_email_uniqueness()
+
+        if self.is_portal or self.is_internal:
+            raise UserError(_('The partner "%s" already has the portal access.', self.partner_id.name))
+
+        group_portal = self.env.ref('base.group_portal')
+        group_public = self.env.ref('base.group_public')
+
+        # update partner email, if a new one was introduced
+        if self.partner_id.email != self.email:
+            self.partner_id.write({'email': self.email})
+
+        user_sudo = self.user_id.sudo()
+
+        if not user_sudo:
+            # create a user if necessary and make sure it is in the portal group
+            company = self.partner_id.company_id or self.env.company
+            user_sudo = self.sudo().with_company(company.id)._create_user()
+
+        if not user_sudo.active or not self.is_portal:
+            user_sudo.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
+            # prepare for the signup process
+            user_sudo.partner_id.signup_prepare()
+
+        self.with_context(active_test=True)._send_email()
+
+        return self.wizard_id._action_open_modal()
+
+    def action_revoke_access(self):
+        """Remove the user of the partner from the portal group.
+
+        If the user was only in the portal group, we archive it.
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+        """
+        self.ensure_one()
+        self._assert_user_email_uniqueness()
+
+        if not self.is_portal:
+            raise UserError(_('The partner "%s" has no portal access.', self.partner_id.name))
+
+        group_portal = self.env.ref('base.group_portal')
+        group_public = self.env.ref('base.group_public')
+
+        # update partner email, if a new one was introduced
+        if self.partner_id.email != self.email:
+            self.partner_id.write({'email': self.email})
+
+        # Remove the sign up token, so it can not be used
+        self.partner_id.signup_token = False
+
+        user_sudo = self.user_id.sudo()
+
+        # remove the user from the portal group
+        if user_sudo and user_sudo.has_group('base.group_portal'):
+            # if user belongs to portal only, deactivate it
+            if len(user_sudo.groups_id) <= 1:
+                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
+            else:
+                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)]})
+
+        return self.wizard_id._action_open_modal()
+
+    def action_invite_again(self):
+        """Re-send the invitation email to the partner."""
+        self.ensure_one()
+
+        if not self.is_portal:
+            raise UserError(_('You should first grant the portal access to the partner "%s".', self.partner_id.name))
+
+        # update partner email, if a new one was introduced
+        if self.partner_id.email != self.email:
+            self.partner_id.write({'email': self.email})
+
+        self.with_context(active_test=True)._send_email()
+
+        return self.wizard_id._action_open_modal()
 
     def _create_user(self):
         """ create a new user for wizard_user.partner_id
             :returns record of res.users
         """
         return self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template({
-            'email': extract_email(self.email),
-            'login': extract_email(self.email),
+            'email': email_normalize(self.email),
+            'login': email_normalize(self.email),
             'partner_id': self.partner_id.id,
             'company_id': self.env.company.id,
             'company_ids': [(6, 0, self.env.company.ids)],
@@ -174,21 +262,36 @@ class PortalWizardUser(models.TransientModel):
 
     def _send_email(self):
         """ send notification email to a new portal user """
-        if not self.env.user.email:
-            raise UserError(_('You must have an email address in your User Preferences to send emails.'))
+        self.ensure_one()
 
         # determine subject and body in the portal user's language
         template = self.env.ref('portal.mail_template_data_portal_welcome')
-        for wizard_line in self:
-            lang = wizard_line.user_id.lang
-            partner = wizard_line.user_id.partner_id
+        if not template:
+            raise UserError(_('The template "Portal: new user" not found for sending email to the portal user.'))
 
-            portal_url = partner.with_context(signup_force_type_in_url='', lang=lang)._get_signup_url_for_action()[partner.id]
-            partner.signup_prepare()
+        lang = self.user_id.sudo().lang
+        partner = self.user_id.sudo().partner_id
 
-            if template:
-                template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(wizard_line.id, force_send=True)
-            else:
-                _logger.warning("No email template found for sending email to the portal user")
+        portal_url = partner.with_context(signup_force_type_in_url='', lang=lang)._get_signup_url_for_action()[partner.id]
+        partner.signup_prepare()
+
+        template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(self.id, force_send=True)
 
         return True
+
+    def _assert_user_email_uniqueness(self):
+        """Check that the email can be used to create a new user."""
+        self.ensure_one()
+
+        email = email_normalize(self.email)
+
+        if not email:
+            raise UserError(_('The contact "%s" does not have a valid email.', self.partner_id.name))
+
+        user = self.env['res.users'].sudo().with_context(active_test=False).search([
+            ('id', '!=', self.user_id.id),
+            ('login', '=ilike', email),
+        ])
+
+        if user:
+            raise UserError(_('The contact "%s" has the same email has an existing user (%s).', self.partner_id.name, user.name))

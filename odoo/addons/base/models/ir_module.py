@@ -177,8 +177,10 @@ class Module(models.Model):
             if not module.name:
                 module.description_html = False
                 continue
-            path = modules.get_module_resource(module.name, 'static/description/index.html')
-            if path:
+            module_path = modules.get_module_path(module.name, display_warning=False)  # avoid to log warning for fake community module
+            if module_path:
+                path = modules.check_resource_path(module_path, 'static/description/index.html')
+            if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
                     html = lxml.html.document_fromstring(doc)
@@ -310,12 +312,13 @@ class Module(models.Model):
         for module in self:
             module.has_iap = bool(module.id) and 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
 
-    def unlink(self):
-        if not self:
-            return True
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_installed(self):
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
+
+    def unlink(self):
         self.clear_caches()
         return super(Module, self).unlink()
 

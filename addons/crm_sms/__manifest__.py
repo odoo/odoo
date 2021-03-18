@@ -3,7 +3,7 @@
 
 {
     'name': 'SMS in CRM',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Sales/CRM',
     'summary': 'Add SMS capabilities to CRM',
     'description': "",

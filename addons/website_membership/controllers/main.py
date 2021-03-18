@@ -104,7 +104,7 @@ class WebsiteMembership(http.Controller):
         # get google maps localization of partners
         google_map_partner_ids = []
         if request.website.is_view_active('website_membership.opt_index_google_map'):
-            google_map_partner_ids = MembershipLine.search(line_domain).get_published_companies(limit=2000)
+            google_map_partner_ids = MembershipLine.search(line_domain)._get_published_companies(limit=2000)
 
         search_domain = [('membership_state', '=', 'free'), ('website_published', '=', True)]
         if post_name:

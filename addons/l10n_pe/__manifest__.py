@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Peru - Accounting',
+    'icon': '/base/static/img/country_flags/pe.png',
     "version": "2.0",
     'summary': "PCGE Simplified",
     'category': 'Accounting/Localizations/Account Charts',
@@ -11,6 +12,8 @@
         'base_address_extended',
         'base_address_city',
         'l10n_latam_base',
+        'l10n_latam_invoice_document',
+        'account_debit_note',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -21,6 +24,10 @@
         'data/l10n_pe_chart_post_data.xml',
         'data/account_tax_data.xml',
         'data/fiscal_position_data.xml',
+<<<<<<< HEAD
+=======
+        'data/l10n_latam_document_type_data.xml',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         'data/account_chart_template_data.xml',
         'data/res.city.csv',
         'data/l10n_pe.res.city.district.csv',

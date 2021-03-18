@@ -41,6 +41,10 @@
                                     <group string="Taxes" attrs="{'invisible': [('tax_line_id','=',False), ('tax_ids','=',[])]}">
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
+<<<<<<< HEAD
+=======
+                                        <field name="tax_tag_invert" readonly="1" groups="base.group_no_one"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                         <field name="tax_exigible" attrs="{'readonly':[('parent_state','=','posted')]}"/>
                                         <field name="tax_audit"/>
                                     </group>
@@ -92,25 +96,38 @@
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="date_maturity"/>
-                    <field name="move_id"/>
-                    <field name="name"/>
+                    <field name="company_currency_id"/>
                     <field name="partner_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <strong class="col-6">
-                                        <span t-esc="record.move_id.value"/>
-                                    </strong>
-                                    <strong class="col-6 text-right">
-                                        <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
-                                    </strong>
-                                    <div class="col-10">
-                                        <span t-esc="record.name.value"/>
+                                    <div class="col-8">
+                                        <field name="account_id"/>
                                     </div>
+                                    <strong t-if="record.date_maturity.raw_value" class="col-4 pl-0 text-right">
+                                        <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <field name="date_maturity"/>
+                                    </strong>
+                                </div>
+                                <div class="row mb4" style="min-height: 60px;">
+                                    <em class="col-10">
+                                        <field name="name"/>
+                                    </em>
                                     <div class="col-2 text-right">
                                         <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" class="oe_kanban_avatar o_image_24_cover"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <field name="tax_ids" widget="many2many_tags"/>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <t t-if="record.debit.raw_value > 0">
+                                            <field name="debit"/><span> (DR)</span>
+                                        </t>
+                                        <t t-if="record.credit.raw_value > 0">
+                                            <field name="credit"/><span> (CR)</span>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
@@ -200,7 +217,12 @@
                            domain="[('applicability', '=', 'taxes')]"/>
                     <groupby name="move_id">
                         <field name="state" invisible="1"/>
-                        <button name="edit" type="edit" icon="fa-edit" title="Edit"/>
+                        <field name="move_type" invisible="1"/>
+                        <field name="statement_id" invisible="1"/>
+                        <field name="payment_id" invisible="1"/>
+                        <button name="edit" type="edit" icon="fa-edit" title="Edit" attrs="{'invisible': ['&amp;', ('move_type', '=', 'entry'), '|', ('statement_id', '!=', False), ('payment_id', '!=', False)]}"/>
+                        <button name="open_bank_statement_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('statement_id', '=', False)]}"/>
+                        <button name="open_payment_view" type="object" icon="fa-edit" title="Edit" attrs="{'invisible': ['|', ('move_type', '!=', 'entry'), ('payment_id', '=', False)]}"/>
                         <button name="action_post" states="draft" icon="fa-check" title="Post" type="object" groups="account.group_account_invoice"/>
                         <button name="%(action_view_account_move_reversal)d" states="posted" title="Reverse" icon="fa-refresh" type="action" groups="account.group_account_invoice"/>
                         <button name="action_duplicate" icon="fa-files-o" title="Duplicate" type="object" groups="account.group_account_invoice"/>
@@ -391,6 +413,7 @@
                     <field name="amount_total_signed" sum="Total Amount" string="Total" decoration-bf="1"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                     <field name="currency_id" invisible="1"/>
+                    <field name="to_check" optional="hide" widget="boolean_toggle"/>
                 </tree>
             </field>
         </record>
@@ -430,6 +453,7 @@
                     <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
                     <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')" attrs="{'invisible': [('payment_state', 'in', ('invoicing_legacy'))]}"/>
                     <field name="move_type" invisible="context.get('default_move_type', True)"/>
+                    <field name="to_check" optional="hide" widget="boolean_toggle"/>
                   </tree>
             </field>
         </record>
@@ -466,7 +490,7 @@
             <field name="name">account.move.kanban</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1">
+                <kanban class="o_kanban_mobile" sample="1" js_class="account_bills_kanban">
                     <field name="journal_id"/>
                     <field name="partner_id"/>
                     <field name="ref"/>
@@ -523,7 +547,7 @@
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '!=', 'entry')]}"/>
                         <button name="action_post" string="Confirm" class="oe_highlight"
                                 type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry')]}"/>
+                                attrs="{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry'), ('display_inactive_currency_warning','=',True)]}"/>
                         <!-- Send (only invoices) -->
                         <button name="action_invoice_sent"
                                 type="object"
@@ -553,33 +577,61 @@
                                 attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice')), ('state', '!=', 'posted')]}"/>
                         <!-- Cancel -->
                         <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>
+                                attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '!=', 'entry')]}"/>
+                        <button name="button_cancel" string="Cancel" type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible' : ['|', '|', ('id', '=', False), ('state', '!=', 'draft'),('move_type', '==', 'entry')]}"/>
                         <button name="button_draft" string="Reset to Draft" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible' : [('show_reset_to_draft_button', '=', False)]}"/>
+                        <!-- Set as Checked -->
+                        <button name="button_set_checked" string="Set as Checked" type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible' : [('to_check', '=', False)]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         class="alert alert-warning mb-0" role="alert"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('tax_lock_date_message', '=', False)]}">
                         <field name="tax_lock_date_message" nolabel="1"/>
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this vendor. You can allocate them to mark this bill as paid.
                     </div>
-                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                    <div class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('auto_post', '=', False)]}">
                         This move is configured to be posted automatically at the accounting date: <field name="date" readonly="1"/>.
                     </div>
+                    <!-- Currency consistency -->
+                    <div class="alert alert-warning mb-0" role="alert"
+                         attrs="{'invisible': ['|', ('display_inactive_currency_warning', '=', False), ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}">
+                        In order to validate this bill, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the bill</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
+                    </div>
+                    <div class="alert alert-warning mb-0" role="alert"
+                         attrs="{'invisible': ['|', ('display_inactive_currency_warning', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}">
+                        In order to validate this invoice, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the invoice</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
+                    </div>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
+                            <button name="open_bank_statement_view"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('statement_id', '=', False)]}"
+                                    string="1 Statement">
+                            </button>
+                            <button name="open_payment_view"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('payment_id', '=', False)]}"
+                                    string="1 Payment">
+                            </button>
                             <button name="open_reconcile_view"
                                     class="oe_stat_button"
                                     icon="fa-bars"
@@ -624,12 +676,15 @@
                         <field name="has_reconciled_entries" invisible="1"/>
                         <field name="restrict_mode_hash_table" invisible="1"/>
                         <field name="country_code" invisible="1"/>
+                        <field name="display_inactive_currency_warning" invisible="1"/>
+                        <field name="statement_id" invisible="1"/>
+                        <field name="payment_id" invisible="1"/>
 
                         <div class="oe_title">
                             <!-- Invoice draft header -->
                             <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>
-                            <h1>
-                                <span attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', '/')]}">Draft</span>
+                            <h1 attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', '/')]}">
+                                <span>Draft</span>
                             </h1>
 
                             <!-- Number -->
@@ -931,6 +986,7 @@
                                     <span>This entry has been generated through the Invoicing app, before installing Accounting. Its balance has been imported separately.</span>
                                 </div>
                                 <field name="line_ids"
+                                       mode="tree,kanban"
                                        context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}"
                                        attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
@@ -987,6 +1043,7 @@
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
                                         <field name="tax_fiscal_country_id" invisible="1"/>
                                         <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', tax_fiscal_country_id), ('applicability', '=', 'taxes')]"/>
+                                        <field name="tax_tag_invert" readonly="1" optional="hide" groups="base.group_no_one"/>
 
                                         <!-- Buttons -->
                                         <button name="action_automatic_entry"
@@ -1237,7 +1294,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_purchase" model="ir.actions.act_window">
@@ -1246,7 +1303,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
@@ -1255,7 +1312,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_bank_cash"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
@@ -1264,7 +1321,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_misc"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_ledger_general" model="ir.actions.act_window">

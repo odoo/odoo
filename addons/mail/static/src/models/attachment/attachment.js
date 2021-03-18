@@ -7,10 +7,10 @@ const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
-    let nextTemporaryId = -1;
-    function getAttachmentNextTemporaryId() {
-        const id = nextTemporaryId;
-        nextTemporaryId -= 1;
+    let nextUploadingId = -1;
+    function getAttachmentNextUploadingId() {
+        const id = nextUploadingId;
+        nextUploadingId -= 1;
         return id;
     }
     class Attachment extends dependencies['mail.model'] {
@@ -58,7 +58,7 @@ function factory(dependencies) {
             const dataList = isMulti ? data : [data];
             for (const data of dataList) {
                 if (!data.id) {
-                    data.id = getAttachmentNextTemporaryId();
+                    data.id = getAttachmentNextUploadingId();
                 }
             }
             return super.create(...arguments);
@@ -100,7 +100,11 @@ function factory(dependencies) {
             if (this.isUnlinkPending) {
                 return;
             }
+<<<<<<< HEAD
             if (!this.isTemporary) {
+=======
+            if (!this.isUploading) {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 this.update({ isUnlinkPending: true });
                 try {
                     await this.async(() => this.env.services.rpc({
@@ -133,17 +137,17 @@ function factory(dependencies) {
          * @returns {mail.composer[]}
          */
         _computeComposers() {
-            if (this.isTemporary) {
+            if (this.isUploading) {
                 return [];
             }
-            const relatedTemporaryAttachment = this.env.models['mail.attachment']
+            const relatedUploadingAttachment = this.env.models['mail.attachment']
                 .find(attachment =>
                     attachment.filename === this.filename &&
-                    attachment.isTemporary
+                    attachment.isUploading
                 );
-            if (relatedTemporaryAttachment) {
-                const composers = relatedTemporaryAttachment.composers;
-                relatedTemporaryAttachment.delete();
+            if (relatedUploadingAttachment) {
+                const composers = relatedUploadingAttachment.composers;
+                relatedUploadingAttachment.delete();
                 return [['replace', composers]];
             }
             return [];
@@ -272,7 +276,11 @@ function factory(dependencies) {
          * @returns {AbortController|undefined}
          */
         _computeUploadingAbortController() {
+<<<<<<< HEAD
             if (this.isTemporary) {
+=======
+            if (this.isUploading) {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 if (!this.uploadingAbortController) {
                     const abortController = new AbortController();
                     abortController.signal.onabort = () => {
@@ -329,13 +337,12 @@ function factory(dependencies) {
                 'url',
             ],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',
             dependencies: ['composers'],
-        }),
-        isTemporary: attr({
-            default: false,
         }),
         isTextFile: attr({
             compute: '_computeIsTextFile',
@@ -347,6 +354,12 @@ function factory(dependencies) {
         isUnlinkPending: attr({
             default: false,
         }),
+<<<<<<< HEAD
+=======
+        isUploading: attr({
+            default: false,
+        }),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         isViewable: attr({
             compute: '_computeIsViewable',
             dependencies: [
@@ -381,7 +394,11 @@ function factory(dependencies) {
         uploadingAbortController: attr({
             compute: '_computeUploadingAbortController',
             dependencies: [
+<<<<<<< HEAD
                 'isTemporary',
+=======
+                'isUploading',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 'uploadingAbortController',
             ],
         }),

@@ -32,11 +32,19 @@ function factory(dependencies) {
             if ('is_connected' in data) {
                 data2.is_connected = data.is_connected;
             }
+<<<<<<< HEAD
             if ('lang' in data) {
                 data2.lang = data.lang;
             }
             if ('name' in data) {
                 data2.name = data.name;
+=======
+            if ('lang_name' in data) {
+                data2.lang_name = data.lang_name;
+            }
+            if ('display_name' in data) {
+                data2.display_name = data.display_name;
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             }
             if ('partner_id' in data) {
                 if (data.partner_id) {
@@ -45,8 +53,13 @@ function factory(dependencies) {
                     data2.partner = [['unlink']];
                 }
             }
+<<<<<<< HEAD
             if ('website' in data) {
                 data2.website = data.website;
+=======
+            if ('website_name' in data) {
+                data2.website_name = data.website_name;
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             }
             return data2;
         }
@@ -88,7 +101,11 @@ function factory(dependencies) {
             if (this.partner) {
                 return this.partner.nameOrDisplayName;
             }
+<<<<<<< HEAD
             return this.name;
+=======
+            return this.display_name;
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }
     }
 
@@ -114,6 +131,13 @@ function factory(dependencies) {
             ],
         }),
         /**
+<<<<<<< HEAD
+=======
+         * Display name of the visitor.
+         */
+        display_name: attr(),
+        /**
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
          * Browsing history of the visitor as a string.
          */
         history: attr(),
@@ -124,6 +148,7 @@ function factory(dependencies) {
         /**
          * Name of the language of the visitor. (Ex: "English")
          */
+<<<<<<< HEAD
         lang: attr(),
         /**
          * Name of the visitor.
@@ -133,6 +158,13 @@ function factory(dependencies) {
             compute: '_computeNameOrDisplayName',
             dependencies: [
                 'name',
+=======
+        lang_name: attr(),
+        nameOrDisplayName: attr({
+            compute: '_computeNameOrDisplayName',
+            dependencies: [
+                'display_name',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 'partnerNameOrDisplayName',
             ],
         }),
@@ -156,7 +188,11 @@ function factory(dependencies) {
         /**
          * Name of the website on which the visitor is connected. (Ex: "Website 1")
          */
+<<<<<<< HEAD
         website: attr(),
+=======
+        website_name: attr(),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     };
 
     Visitor.modelName = 'website_livechat.visitor';

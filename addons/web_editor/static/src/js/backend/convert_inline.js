@@ -284,7 +284,7 @@ function classToStyle($editable) {
         }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
-            node.innerHTML = '&nbsp;';
+            $(node).html('&nbsp;');
         }
 
         // Outlook

@@ -418,7 +418,11 @@ MockServer.include({
             moderation_counter,
             needaction_inbox_counter,
             partner_root: partnerRootFormat,
+<<<<<<< HEAD
             public_partner: publicPartnerFormat,
+=======
+            public_partners: [publicPartnerFormat],
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             shortcodes,
             starred_counter: starredCounter,
         };
@@ -750,6 +754,15 @@ MockServer.include({
             });
             if (channel.channel_type === 'channel') {
                 delete res.members;
+<<<<<<< HEAD
+=======
+            } else {
+                res['seen_partners_info'] = [{
+                    partner_id: this.currentPartnerId,
+                    seen_message_id: channel.seen_message_id,
+                    fetched_message_id: channel.fetched_message_id,
+                }];
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             }
             return res;
         });
@@ -1020,7 +1033,11 @@ MockServer.include({
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
     /**
+<<<<<<< HEAD
      * Simulates `partner_info` on `mail.channel`.
+=======
+     * Simulates `_get_channel_partner_info` on `mail.channel`.
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
      *
      * @private
      * @param {integer[]} all_partners

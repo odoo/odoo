@@ -122,7 +122,7 @@ class PurchaseOrder(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
-    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
+    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one(
         'res.users', string='Purchase Representative', index=True, tracking=True,
         default=lambda self: self.env.user, check_company=True)
@@ -210,11 +210,11 @@ class PurchaseOrder(models.Model):
             vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
         return super(PurchaseOrder, self_comp).create(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_cancelled(self):
         for order in self:
             if not order.state == 'cancel':
                 raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
-        return super(PurchaseOrder, self).unlink()
 
     def copy(self, default=None):
         ctx = dict(self.env.context)
@@ -413,6 +413,17 @@ class PurchaseOrder(models.Model):
     def button_done(self):
         self.write({'state': 'done', 'priority': '0'})
 
+    def _prepare_supplier_info(self, partner, line, price, currency):
+        # Prepare supplierinfo data when adding a product
+        return {
+            'name': partner.id,
+            'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
+            'min_qty': 0.0,
+            'price': price,
+            'currency_id': currency.id,
+            'delay': 0,
+        }
+
     def _add_supplier_to_product(self):
         # Add the partner in the supplier list of the product if the supplier is not registered for
         # this product. We limit to 10 the number of suppliers for a product to avoid the mess that
@@ -429,14 +440,7 @@ class PurchaseOrder(models.Model):
                     default_uom = line.product_id.product_tmpl_id.uom_po_id
                     price = line.product_uom._compute_price(price, default_uom)
 
-                supplierinfo = {
-                    'name': partner.id,
-                    'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
-                    'min_qty': 0.0,
-                    'price': price,
-                    'currency_id': currency.id,
-                    'delay': 0,
-                }
+                supplierinfo = self._prepare_supplier_info(partner, line, price, currency)
                 # In case the order partner is a contact address, a new supplierinfo is created on
                 # the parent company. In this case, we keep the product name and code.
                 seller = line.product_id._select_seller(
@@ -658,7 +662,10 @@ class PurchaseOrder(models.Model):
             for order in orders:
                 date = order.date_planned
                 if date and (send_single or (date - relativedelta(days=order.reminder_date_before_receipt)).date() == datetime.today().date()):
-                    order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
+                    if send_single:
+                        return order._send_reminder_open_composer(template.id)
+                    else:
+                        order.with_context(is_reminder=True).message_post_with_template(template.id, email_layout_xmlid="mail.mail_notification_paynow", composition_mode='comment')
 
     def send_reminder_preview(self):
         self.ensure_one()
@@ -674,6 +681,43 @@ class PurchaseOrder(models.Model):
                 email_values={'email_to': self.env.user.email, 'recipient_ids': []},
                 notif_layout="mail.mail_notification_paynow")
             return {'toast_message': _("A sample email has been sent to %s.") % self.env.user.email}
+
+    def _send_reminder_open_composer(self,template_id):
+        self.ensure_one()
+        try:
+            compose_form_id = self.env['ir.model.data'].get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict(self.env.context or {})
+        ctx.update({
+            'default_model': 'purchase.order',
+            'active_model': 'purchase.order',
+            'active_id': self.ids[0],
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'custom_layout': "mail.mail_notification_paynow",
+            'force_email': True,
+            'mark_rfq_as_sent': True,
+        })
+        lang = self.env.context.get('lang')
+        if {'default_template_id', 'default_model', 'default_res_id'} <= ctx.keys():
+            template = self.env['mail.template'].browse(ctx['default_template_id'])
+            if template and template.lang:
+                lang = template._render_lang([ctx['default_res_id']])[ctx['default_res_id']]
+        self = self.with_context(lang=lang)
+        ctx['model_description'] = _('Purchase Order')
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
 
     @api.model
     def _get_orders_to_remind(self):
@@ -777,7 +821,7 @@ class PurchaseOrderLine(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', store=True, string='Analytic Account', compute='_compute_analytic_id_and_tag_ids', readonly=False)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', store=True, string='Analytic Tags', compute='_compute_analytic_id_and_tag_ids', readonly=False)
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
-    state = fields.Selection(related='order_id.state', store=True, readonly=False)
+    state = fields.Selection(related='order_id.state', store=True)
 
     invoice_lines = fields.One2many('account.move.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
 
@@ -929,11 +973,11 @@ class PurchaseOrderLine(models.Model):
                 line._track_qty_received(values['qty_received'])
         return super(PurchaseOrderLine, self).write(values)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_purchase_or_done(self):
         for line in self:
             if line.order_id.state in ['purchase', 'done']:
                 raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') % (line.state,))
-        return super(PurchaseOrderLine, self).unlink()
 
     @api.model
     def _get_date_planned(self, seller, po=False):

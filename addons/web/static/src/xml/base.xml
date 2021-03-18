@@ -162,9 +162,9 @@
             <i t-if="icon" t-att-class="icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
-            <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
+            <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
         </button>
-        <ul t-if="state.open" class="o_dropdown_menu dropdown-menu show" role="menu"
+        <ul t-if="state.open" t-attf-class="o_dropdown_menu dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
             t-on-item-selected="_onItemSelected"
             >
             <t t-set="currentGroup" t-value="null"/>
@@ -421,7 +421,7 @@
                 </button>
                 <button type="button"
                     class="btn btn-secondary o_add_condition"
-                    t-on-click="_addDefaultCondition"
+                    t-on-click="_addNewCondition"
                     >
                     <i class="fa fa-plus-circle"/>
                     <t>Add a condition</t>
@@ -987,27 +987,6 @@
     </div>
 </t>
 
-<div t-name="GraphView.CustomTooltip" class="o_graph_custom_tooltip">
-    <table>
-        <thead>
-            <tr>
-                <th class="o_measure"><t t-esc="measure"/></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr t-foreach="tooltipItems" t-as="tooltipItem">
-                <td>
-                    <span class="o_square" t-att-style="'background-color: ' + tooltipItem.boxColor"/>
-                    <span class="o_label" t-att-style="'max-width: ' + maxWidth"> <t t-esc="tooltipItem.label" /> </span>
-                </td>
-                <td class="o_value">
-                    <t t-esc="tooltipItem.value"/>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
 <t t-name="PivotView.buttons">
     <div class="btn-group" role="toolbar" aria-label="Main actions">
         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -1256,7 +1235,11 @@
 </t>
 <t t-name="FieldRadio.button">
     <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
+<<<<<<< HEAD
         <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined"
+=======
+        <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
         <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
@@ -1274,16 +1257,19 @@
         <span t-if="widget.noOpen"/>
     </t>
     <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
-        <div class="o_input_dropdown">
-            <input type="text" class="o_input"
-                t-att-barcode_events="widget.nodeOptions.barcode_events"
-                t-att-tabindex="widget.attrs.tabindex"
-                t-att-autofocus="widget.attrs.autofocus"
-                t-att-placeholder="widget.attrs.placeholder"
-                t-att-id="widget.idForLabel"/>
-            <a role="button" class="o_dropdown_button" draggable="false"/>
+        <div class="o_field_many2one_selection">
+            <div class="o_input_dropdown">
+                <input type="text" class="o_input"
+                    t-att-barcode_events="widget.nodeOptions.barcode_events"
+                    t-att-tabindex="widget.attrs.tabindex"
+                    t-att-autofocus="widget.attrs.autofocus"
+                    t-att-placeholder="widget.attrs.placeholder"
+                    t-att-id="widget.idForLabel"/>
+                <a role="button" class="o_dropdown_button" draggable="false"/>
+            </div>
+            <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
         </div>
-        <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
+        <div class="o_field_many2one_extra"/>
     </div>
 </t>
 
@@ -1294,10 +1280,12 @@
 
 <t t-name="FieldReference" t-extend="FieldMany2One">
     <t t-jquery=".o_input_dropdown" t-operation="before">
-        <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
-            <option/>
-            <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
-        </select>
+        <t t-if="!widget.nodeOptions.model_field">
+            <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
+                <option/>
+                <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
+            </select>
+        </t>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag">
@@ -1426,12 +1414,12 @@
 </t>
 <t t-name="CopyClipboardText">
     <button class="btn btn-sm btn-primary o_clipboard_button o_btn_text_copy">
-        <span class="fa fa-clipboard"></span><span> Copy Text</span>
+        <span class="fa fa-clipboard"></span><span> Copy</span>
     </button>
 </t>
 <t t-name="CopyClipboardChar">
     <button class="btn btn-sm btn-primary o_clipboard_button o_btn_char_copy">
-        <span class="fa fa-clipboard"></span><span> Copy Text</span>
+        <span class="fa fa-clipboard"></span><span> Copy</span>
     </button>
 </t>
 <t t-name="FieldBinaryFile">
@@ -1587,8 +1575,8 @@
 </div>
 
 <div t-name="ExportDialog" class="o_export">
-    <div class="row o-export-panel no-gutters">
-        <div class="col-6 d-flex o_left_panel">
+    <div class="row o-export-panel">
+        <div class="col-12 col-md-6 d-flex o_left_panel">
             <div class="form-check o_import_compat">
                 <input class="form-check-input" id="o-update-data" type="checkbox"/>
                 <label class="form-check-label" for="o-update-data">
@@ -1603,7 +1591,7 @@
             </div>
             <div class="border o_left_field_panel"/>
         </div>
-        <div class="col-6 d-flex o_right_panel">
+        <div class="col-12 col-md-6 d-flex o_right_panel mt-3 mt-md-0">
             <div class="o_export_format">
                 <strong>Export Format:</strong>
             </div>
@@ -1673,7 +1661,7 @@
 </t>
 <t t-name="M2ODialog">
     <div>
-        Do you want to create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
+        Create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
     </div>
 </t>
 <t t-name="FieldMany2ManyCheckBoxes">

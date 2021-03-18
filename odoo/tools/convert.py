@@ -10,6 +10,7 @@ import base64
 import io
 import logging
 import os.path
+import pprint
 import re
 import subprocess
 import warnings
@@ -30,6 +31,7 @@ from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
 from odoo import SUPERUSER_ID, api
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -53,6 +55,7 @@ class RecordDictWrapper(dict):
 
 def _get_idref(self, env, model_str, idref):
     idref2 = dict(idref,
+                  Command=odoo.fields.Command,
                   time=time,
                   DateTime=datetime,
                   datetime=datetime,
@@ -301,10 +304,10 @@ form: module.record_id""" % (xml_id,)
             for group in g_names:
                 if group.startswith('-'):
                     group_id = self.id_get(group[1:])
-                    groups_value.append((3, group_id))
+                    groups_value.append(odoo.Command.unlink(group_id))
                 else:
                     group_id = self.id_get(group)
-                    groups_value.append((4, group_id))
+                    groups_value.append(odoo.Command.link(group_id))
             res['groups_id'] = groups_value
         if rec.get('paperformat'):
             pf_name = rec.get('paperformat')
@@ -405,10 +408,10 @@ form: module.record_id""" % (xml_id,)
             for group in g_names:
                 if group.startswith('-'):
                     group_id = self.id_get(group[1:])
-                    groups_value.append((3, group_id))
+                    groups_value.append(odoo.Command.unlink(group_id))
                 else:
                     group_id = self.id_get(group)
-                    groups_value.append((4, group_id))
+                    groups_value.append(odoo.Command.link(group_id))
             res['groups_id'] = groups_value
 
         if rec.get('target'):
@@ -467,10 +470,10 @@ form: module.record_id""" % (xml_id,)
         for group in rec.get('groups', '').split(','):
             if group.startswith('-'):
                 group_id = self.id_get(group[1:])
-                groups.append((3, group_id))
+                groups.append(odoo.Command.unlink(group_id))
             elif group:
                 group_id = self.id_get(group)
-                groups.append((4, group_id))
+                groups.append(odoo.Command.link(group_id))
         if groups:
             values['groups_id'] = groups
 
@@ -551,7 +554,7 @@ form: module.record_id""" % (xml_id,)
                 _fields = env[rec_model]._fields
                 # if the current field is many2many
                 if (f_name in _fields) and _fields[f_name].type == 'many2many':
-                    f_val = [(6, 0, [x[f_use] for x in s])]
+                    f_val = [odoo.Command.set([x[f_use] for x in s])]
                 elif len(s):
                     # otherwise (we are probably in a many2one field),
                     # take the first element of the search
@@ -637,7 +640,7 @@ form: module.record_id""" % (xml_id,)
         groups = el.attrib.pop('groups', None)
         if groups:
             grp_lst = [("ref('%s')" % x) for x in groups.split(',')]
-            record.append(Field(name="groups_id", eval="[(6, 0, ["+', '.join(grp_lst)+"])]"))
+            record.append(Field(name="groups_id", eval="[Command.set(["+', '.join(grp_lst)+"])]"))
         if el.get('primary') == 'True':
             # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
             el.append(
@@ -677,8 +680,17 @@ form: module.record_id""" % (xml_id,)
                 f(rec)
             except ParseError:
                 raise
+            except ValidationError as err:
+                msg = "while parsing {file}:{viewline}\n{err}\n\nView error context:\n{context}\n".format(
+                    file=rec.getroottree().docinfo.URL,
+                    viewline=rec.sourceline,
+                    context=pprint.pformat(err.context),
+                    err=err.args[0],
+                )
+                _logger.debug(msg, exc_info=True)
+                raise ParseError(msg) from None  # Restart with "--log_handler odoo.tools.convert:DEBUG" for complete traceback
             except Exception as e:
-                raise ParseError('while parsing %s:%s, near\n%s' % (
+                raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
                     rec.getroottree().docinfo.URL,
                     rec.sourceline,
                     etree.tostring(rec, encoding='unicode').rstrip()

@@ -1,5 +1,4 @@
-odoo.define('web.AbstractRenderer', function (require) {
-"use strict";
+/** @odoo-module alias=web.AbstractRenderer **/
 
 /**
  * The renderer should not handle pagination, data loading, or coordination
@@ -23,7 +22,7 @@ const FOCUSABLE_ELEMENTS = [
 /**
  * @class AbstractRenderer
  */
-return mvc.Renderer.extend({
+export default mvc.Renderer.extend({
     // Defines the elements suppressed when in demo data. This must be a list
     // of DOM selectors matching view elements that will:
     // 1. receive the 'o_sample_data_disabled' class (greyd out & no user events)
@@ -134,7 +133,7 @@ return mvc.Renderer.extend({
     },
     /**
      * @private
-     * @param {Object} context
+     * @param {Object} [context]
      */
     _renderNoContentHelper: function (context) {
         let templateName;
@@ -203,6 +202,4 @@ return mvc.Renderer.extend({
             }
         }
     },
-});
-
 });

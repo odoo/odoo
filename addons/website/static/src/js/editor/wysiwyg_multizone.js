@@ -81,7 +81,7 @@ var WysiwygMultizone = Wysiwyg.extend({
         // does not really work with all browsers.
         for (const el of this.$('.oe_structure')) {
             if (!el.innerHTML.trim()) {
-                el.innerHTML = '';
+                $(el).empty();
             }
         }
 
@@ -196,7 +196,7 @@ var WysiwygMultizone = Wysiwyg.extend({
                 args: [
                     viewID,
                     outerHTML,
-                    $el.data('oe-xpath') || null,
+                    !$el.data('oe-expression') && $el.data('oe-xpath') || null, // Note: hacky way to get the oe-xpath only if not a t-field
                 ],
                 context: recordInfo.context,
             }));

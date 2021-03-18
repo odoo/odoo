@@ -1,16 +1,15 @@
-odoo.define("web.env", function (require) {
-    "use strict";
+/** @odoo-module alias=web.env **/
 
-    /**
-     * This file defines the env to use in the webclient.
-     */
+/**
+ * This file defines the env to use in the webclient.
+ */
 
-    const commonEnv = require('web.commonEnv');
-    const dataManager = require('web.data_manager');
-    const { blockUI, unblockUI } = require("web.framework");
+import commonEnv from 'web.commonEnv';
+import dataManager from 'web.data_manager';
+import { blockUI, unblockUI } from "web.framework";
 
-    const env = Object.assign(commonEnv, { dataManager });
-    env.services = Object.assign(env.services, { blockUI, unblockUI });
+const env = Object.assign(commonEnv, { dataManager });
+env.services = Object.assign(env.services, { blockUI, unblockUI });
 
-    return env;
-});
+export default env;
+

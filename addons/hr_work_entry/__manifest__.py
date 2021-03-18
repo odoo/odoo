@@ -16,7 +16,12 @@
         'security/ir.model.access.csv',
         'data/hr_work_entry_data.xml',
         'views/hr_work_entry_views.xml',
+<<<<<<< HEAD
         'views/resource_views.xml',
+=======
+        'views/hr_employee_views.xml',
+        'views/resource_calendar_views.xml',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     ],
     'qweb': [
         "static/src/xml/work_entry_templates.xml",

@@ -98,6 +98,7 @@ odoo.define('web.test_utils', async function (require) {
     }
 
     /**
+<<<<<<< HEAD
      * Calls nextTick. While we have a hybrid implemetation (Owl + legacy), we may
      * have situations where waiting for a single nextTick isn't enough. For instance,
      * having a layer of Owl components, above a layer of legacy widgets, above a
@@ -109,6 +110,24 @@ odoo.define('web.test_utils', async function (require) {
      */
     async function owlCompatibilityNextTick() {
         return nextTick();
+=======
+     * Awaits for an additionnal rendering frame initiated by the Owl
+     * compatibility layer processing.
+     *
+     * By default a simple "nextTick" will handle the rendering of any widget/
+     * component stuctures having at most 1 switch between the type of
+     * entities (Component > Widget or Widget > Component). However more time
+     * must be spent rendering in case we have additionnal switches. In such
+     * cases this function must be used (1 call for each additionnal switch)
+     * since it will be removed along with the compatiblity layer once the
+     * framework has been entirely converted, and using this helper will make
+     * it easier to wipe it from the code base.
+     *
+     * @returns {Promise}
+     */
+    async function owlCompatibilityExtraNextTick() {
+        return testUtilsDom.returnAfterNextAnimationFrame();
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     }
 
     // Loading static files cannot be properly simulated when their real content is
@@ -158,6 +177,7 @@ odoo.define('web.test_utils', async function (require) {
             toggleFilterMenu: testUtilsControlPanel.toggleFilterMenu,
             toggleAddCustomFilter: testUtilsControlPanel.toggleAddCustomFilter,
             applyFilter: testUtilsControlPanel.applyFilter,
+            addCondition: testUtilsControlPanel.addCondition,
             // GroupByMenu interactions
             toggleGroupByMenu: testUtilsControlPanel.toggleGroupByMenu,
             toggleAddCustomGroup: testUtilsControlPanel.toggleAddCustomGroup,
@@ -191,6 +211,7 @@ odoo.define('web.test_utils', async function (require) {
             triggerKeypressEvent: testUtilsDom.triggerKeypressEvent,
             triggerMouseEvent: testUtilsDom.triggerMouseEvent,
             triggerPositionalMouseEvent: testUtilsDom.triggerPositionalMouseEvent,
+            triggerPositionalTapEvents: testUtilsDom.triggerPositionalTapEvents,
             dragAndDrop: testUtilsDom.dragAndDrop,
             find: testUtilsDom.findItem,
             getNode: testUtilsDom.getNode,
@@ -262,7 +283,11 @@ odoo.define('web.test_utils', async function (require) {
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,
         nextMicrotaskTick: nextMicrotaskTick,
         nextTick: nextTick,
+<<<<<<< HEAD
         owlCompatibilityNextTick: owlCompatibilityNextTick,
+=======
+        owlCompatibilityExtraNextTick,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         prepareTarget: testUtilsCreate.prepareTarget,
         returnAfterNextAnimationFrame: testUtilsDom.returnAfterNextAnimationFrame,
 

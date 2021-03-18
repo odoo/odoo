@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import common
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
 CH_ISR_ISSUER = '01-162-8'
@@ -11,7 +11,7 @@ CH_POST_IBAN = 'CH09 0900 0000 1000 8060 7'
 CH_POSTAL_ACC = '10-8060-7'
 
 
-class TestOnchangePostal(SavepointCase):
+class TestOnchangePostal(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

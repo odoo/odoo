@@ -33,13 +33,6 @@ var LinkDialog = Dialog.extend({
             title: _t("Link to"),
         }, this.options));
 
-        this.trigger_up('getRecordInfo', {
-            recordInfo: this.options,
-            callback: recordInfo => {
-                _.defaults(this.options, recordInfo);
-            },
-        });
-
         this.colorsData = [
             {type: '', label: _t("Link"), btnPreview: 'link'},
             {type: 'primary', label: _t("Primary"), btnPreview: 'primary'},

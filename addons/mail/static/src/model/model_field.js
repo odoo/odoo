@@ -25,8 +25,10 @@ class ModelField {
         hashes: extraHashes = [],
         inverse,
         isCausal = false,
+        readonly = false,
         related,
         relationType,
+        required = false,
         to,
     } = {}) {
         const id = _.uniqueId('field_');
@@ -130,6 +132,14 @@ class ModelField {
          */
         this.isCausal = isCausal;
         /**
+         * Determines whether the field is read only. Read only field
+         * can't be updated once the record is created.
+         * An exception is made for computed fields (updated when the
+         * dependencies are updated) and related fields (updated when the
+         * inverse relation changes).
+         */
+        this.readonly = readonly;
+        /**
          * If set, this field acts as a related field, and this prop contains
          * a string that references the related field. It should have the
          * following format: '<relationName>.<relatedFieldName>', where
@@ -151,6 +161,13 @@ class ModelField {
          * and 'many2many'.
          */
         this.relationType = relationType;
+        /**
+         * Determine whether the field is required or not.
+         *
+         * Empty value is systematically undefined.
+         * null or empty string are NOT considered empty value, meaning these values meet the requirement.
+        */
+        this.required = required;
         /**
          * This prop only makes sense in a relational field. Determine which
          * model name this relation refers to.
@@ -579,7 +596,7 @@ class ModelField {
                 this.env.modelManager._update(
                     recordToLink,
                     { [this.inverse]: [['link', record]] },
-                    { hasToUpdateInverse: false }
+                    { allowWriteReadonly: true, hasToUpdateInverse: false }
                 );
             }
         }
@@ -615,7 +632,7 @@ class ModelField {
             this.env.modelManager._update(
                 recordToLink,
                 { [this.inverse]: [['link', record]] },
-                { hasToUpdateInverse: false }
+                { allowWriteReadonly: true, hasToUpdateInverse: false }
             );
         }
         return true;
@@ -749,7 +766,11 @@ class ModelField {
                     this.env.modelManager._update(
                         recordToUnlink,
                         { [this.inverse]: [['unlink', record]] },
+<<<<<<< HEAD
                         { hasToUpdateInverse: false }
+=======
+                        { allowWriteReadonly: true, hasToUpdateInverse: false }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     );
                 }
             }
@@ -793,7 +814,11 @@ class ModelField {
                 this.env.modelManager._update(
                     otherRecord,
                     { [this.inverse]: [['unlink', record]] },
+<<<<<<< HEAD
                     { hasToUpdateInverse: false }
+=======
+                    { allowWriteReadonly: true, hasToUpdateInverse: false }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 );
             }
         }

@@ -115,7 +115,7 @@
                                  attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                  class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
                         </div>
-                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
+                        <field name="route_from_categ_ids" widget="many2many_tags" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
@@ -246,17 +246,25 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                       <button string="Product Moves"
-                            type="object"
+                        <button type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-exchange"
-                            groups="stock.group_stock_user"/>
+                            groups="stock.group_stock_user">
+                            <div class="o_field_widget o_stat_info mr4">
+                                <span class="o_stat_text">In:</span>
+                                <span class="o_stat_text">Out:</span>
+                            </div>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="nbr_moves_in"/></span>
+                                <span class="o_stat_value"><field name="nbr_moves_out"/></span>
+                            </div>
+                        </button>
                         <button name="action_view_orderpoints" type="object"
                             attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
                             <div class="o_field_widget o_stat_info mr4">
-                                <span class="o_stat_text">Min :</span>
+                                <span class="o_stat_text">Min:</span>
                                 <span class="o_stat_text">Max:</span>
                             </div>
                             <div class="o_field_widget o_stat_info">
@@ -334,11 +342,20 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                        <button string="Product Moves" type="object"
+                        <button type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-exchange"
-                            groups="stock.group_stock_user"/>
+                            groups="stock.group_stock_user">
+                            <div class="o_field_widget o_stat_info mr4">
+                                <span class="o_stat_text">In:</span>
+                                <span class="o_stat_text">Out:</span>
+                            </div>
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="nbr_moves_in"/></span>
+                                <span class="o_stat_value"><field name="nbr_moves_out"/></span>
+                            </div>
+                        </button>
                         <button type="object"
                             name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '!=', 1)]}"

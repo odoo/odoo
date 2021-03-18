@@ -105,24 +105,27 @@
             <div id="wrap">
                 <t t-raw="0"/>
                 <div class="oe_structure oe_empty">
-                    <section class="pt128 pb104">
+                    <section class="s_text_image pt104 pb104" data-snippet="s_image_text" data-name="Image - Text">
                         <div class="container">
-                            <div class="row">
-                                <div class="col-md-6 text-center text-md-right my-md-auto mb-5 mb-md-0">
-                                    <img class="img img-fluid" src="/http_routing/static/src/img/404.svg"/>
+                            <div class="row align-items-center">
+                                <div class="col-lg-4 pb32">
+                                    <img class="img img-fluid mx-auto" src="/http_routing/static/src/img/404.svg"/>
                                 </div>
-                                <div class="col-md-6 text-center text-md-left my-auto">
+                                <div class="col-lg-8 text-lg-left text-center my-auto">
                                     <h1 class="sr-only">Error 404</h1>
-                                    <h2 class="mb16">We couldn't find the page you're looking for!</h2>
+                                    <h2>We couldn't find the page you're looking for!</h2>
+                                    <p></p>
                                     <p><b>Don't panic.</b> If you think it's our mistake, please send us a message on <a href="/contactus">this page</a>.</p>
                                 </div>
-                                <div class="col-12 pt40 pb24">
-                                    <hr/>
+                                <div class="col-lg-12">
+                                    <div class="s_hr pt32 pb48" data-snippet="s_hr" data-name="Separator">
+                                        <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
+                                    </div>
                                 </div>
-                                <div class="col-12">
-                                    <p class="text-center pt24">Maybe you were looking for one of these <b>popular pages?</b></p>
+                                <div class="col-lg-12">
+                                    <p class="text-center">Maybe you were looking for one of these <b>popular pages?</b></p>
                                     <ul class="list-inline text-center">
-                                        <li class="list-inline-item mb-2"><a href="/" class="btn btn-secondary">Home</a></li>
+                                        <li class="list-inline-item mb-2"><a href="/" class="btn btn-primary">Home</a></li>
                                     </ul>
                                 </div>
                             </div>

@@ -51,7 +51,8 @@ class Populate(Command):
                 env.cr.commit()
                 model_time = time.time() - t0
                 if model_time > 1:
-                    _logger.info('Populated database for model %s in %ss', model._name, model_time)
+                    _logger.info('Populated database for model %s (total: %fs) (average: %fms per record)',
+                                 model._name, model_time, model_time / len(registry.populated_models[model._name]) * 1000)
         except:
             _logger.exception('Something went wrong populating database')
         finally:

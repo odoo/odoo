@@ -31,17 +31,10 @@ class PurchaseOrder(models.Model):
         help="Completion date of the first receipt order.")
     on_time_rate = fields.Float(related='partner_id.on_time_rate')
 
-    @api.depends('order_line.move_ids.returned_move_ids',
-                 'order_line.move_ids.state',
-                 'order_line.move_ids.picking_id')
+    @api.depends('order_line.move_ids.picking_id')
     def _compute_picking(self):
         for order in self:
-            pickings = self.env['stock.picking']
-            for line in order.order_line:
-                # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
-                # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                pickings |= moves.mapped('picking_id')
+            pickings = order.order_line.move_ids.picking_id
             order.picking_ids = pickings
             order.picking_count = len(pickings)
 
@@ -283,6 +276,7 @@ class PurchaseOrderLine(models.Model):
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
     product_description_variants = fields.Char('Custom Description')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
+    forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
 
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
@@ -322,6 +316,21 @@ class PurchaseOrderLine(models.Model):
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line._track_qty_received(total)
                 line.qty_received = total
+<<<<<<< HEAD
+=======
+
+    @api.depends('product_uom_qty', 'date_planned')
+    def _compute_forecasted_issue(self):
+        for line in self:
+            warehouse = line.order_id.picking_type_id.warehouse_id
+            line.forecasted_issue = False
+            if line.product_id:
+                virtual_available = line.product_id.with_context(warehouse=warehouse.id, to_date=line.date_planned).virtual_available
+                if line.state == 'draft':
+                    virtual_available += line.product_uom_qty
+                if virtual_available < 0:
+                    line.forecasted_issue = True
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -339,6 +348,20 @@ class PurchaseOrderLine(models.Model):
         if 'product_qty' in values:
             self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return result
+
+    def action_product_forecast_report(self):
+        self.ensure_one()
+        action = self.product_id.action_product_forecast_report()
+        action['context'] = {
+            'active_id': self.product_id.id,
+            'active_model': 'product.product',
+            'move_to_match_ids': self.move_ids.filtered(lambda m: m.product_id == self.product_id).ids,
+            'purchase_line_to_match_id': self.id,
+        }
+        warehouse = self.order_id.picking_type_id.warehouse_id
+        if warehouse:
+            action['context']['warehouse'] = warehouse.id
+        return action
 
     # --------------------------------------------------
     # Business methods
@@ -437,9 +460,12 @@ class PurchaseOrderLine(models.Model):
     def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
         self.ensure_one()
         product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
+<<<<<<< HEAD
         description_picking = product._get_description(self.order_id.picking_type_id)
         if self.product_description_variants:
             description_picking += "\n" + self.product_description_variants
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         date_planned = self.date_planned or self.order_id.date_planned
         return {
             # truncate to 2000 to avoid triggering index limit error
@@ -460,7 +486,7 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
-            'description_picking': description_picking,
+            'description_picking': product.description_pickingin or self.name,
             'propagate_cancel': self.propagate_cancel,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,

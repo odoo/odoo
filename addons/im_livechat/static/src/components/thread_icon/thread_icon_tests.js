@@ -71,8 +71,13 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         const typingData = {
             info: 'typing_status',
             is_typing: true,
+<<<<<<< HEAD
             partner_id: this.env.messaging.publicPartner.id,
             partner_name: this.env.messaging.publicPartner.name,
+=======
+            partner_id: this.env.messaging.publicPartners[0].id,
+            partner_name: this.env.messaging.publicPartners[0].name,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);

@@ -199,7 +199,11 @@ class StockPackageLevel(models.Model):
 
     def action_show_package_details(self):
         self.ensure_one()
+<<<<<<< HEAD
         view = self.env.ref('stock.package_level_form_edit_view', raise_if_not_found=False) or self.env.ref('stock.package_level_form_view')
+=======
+        view = self.env.ref('stock.package_level_form_edit_view')
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         return {
             'name': _('Package Content'),

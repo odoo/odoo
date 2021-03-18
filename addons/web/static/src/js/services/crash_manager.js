@@ -16,6 +16,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
 var Widget = require('web.Widget');
+var config = require('web.config');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -36,6 +37,7 @@ var CrashManagerDialog = Dialog.extend({
     xmlDependencies: (Dialog.prototype.xmlDependencies || []).concat(
         ['/web/static/src/xml/crash_manager.xml']
     ),
+    jsLibs: ['/web/static/lib/stacktracejs/stacktrace.js'],
 
     /**
      * @param {Object} error
@@ -46,9 +48,31 @@ var CrashManagerDialog = Dialog.extend({
      */
     init: function (parent, options, error) {
         this._super.apply(this, [parent, options]);
+        this.error = error;
         this.message = error.message;
         this.traceback = error.traceback;
         core.bus.off('close_dialogs', this);
+<<<<<<< HEAD
+=======
+    },
+    willStart: async function () {
+        await this._super(...arguments);
+        if (config.isDebug('assets') && this.error.data && this.error.data.jsError) {
+            // annotate the stacktrace with correct file/line number information
+            const frames = await StackTrace.fromError(this.error.data.jsError);
+            const lines = this.traceback.split('\n');
+            if (lines[lines.length-1].trim() === "") {
+                // firefox traceback have an empty line at the end
+                lines.splice(-1);
+            }
+            const offset = lines.length - frames.length;
+            for (let i = 0; i < frames.length; i++) {
+                const info = ` (${frames[i].fileName}:${frames[i].lineNumber})`;
+                lines[offset + i] = lines[offset + i] + info;
+            }
+            this.traceback = lines.join('\n');
+        }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     },
 });
 
@@ -137,7 +161,7 @@ var CrashManager = AbstractService.extend({
                 self.show_error({
                     type: _t("Odoo Client Error"),
                     message: message,
-                    data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback},
+                    data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback, jsError: error},
                 });
             }
         };

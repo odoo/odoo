@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import http
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers import main
 from odoo.http import request
 
 
-class WebsiteSale(WebsiteSale):
+class WebsiteSale(main.WebsiteSale):
 
     @http.route(['/shop/pricelist'])
     def pricelist(self, promo, **post):

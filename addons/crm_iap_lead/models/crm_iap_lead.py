@@ -6,7 +6,7 @@ class IndustryTag(models.Model):
     _name = 'crm.iap.lead.industry'
     _description = 'Industry Tag'
 
-    name = fields.Char(string='Tag Name', required=True, translate=True)
+    name = fields.Char(string='Industry', required=True, translate=True)
     reveal_id = fields.Char(required=True)
     color = fields.Integer(string='Color Index')
 

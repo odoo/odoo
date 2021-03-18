@@ -88,7 +88,7 @@
                             </button>
                         </div>
                         <div class="oe_title" name="title">
-                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <label for="name" string="Shipping Method"/>
                             <h1>
                                 <field name="name" placeholder="e.g. UPS Express"/>
                             </h1>
@@ -136,7 +136,7 @@
                                 </group>
                                 <group>
                                     <group name="country_details">
-                                        <field name="country_ids" widget="many2many_tags"/>
+                                        <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                                         <field name="state_ids" widget="many2many_tags"/>
                                     </group>
                                     <group></group>

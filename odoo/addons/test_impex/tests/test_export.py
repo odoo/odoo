@@ -5,7 +5,7 @@ import itertools
 import pstats
 from cProfile import Profile
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.tests import common
 
 
@@ -370,11 +370,11 @@ class test_m2o(CreatorCase):
 class test_o2m(CreatorCase):
     model_name = 'export.one2many'
     commands = [
-        (0, False, {'value': 4, 'str': 'record1'}),
-        (0, False, {'value': 42, 'str': 'record2'}),
-        (0, False, {'value': 36, 'str': 'record3'}),
-        (0, False, {'value': 4, 'str': 'record4'}),
-        (0, False, {'value': 13, 'str': 'record5'}),
+        Command.create({'value': 4, 'str': 'record1'}),
+        Command.create({'value': 42, 'str': 'record2'}),
+        Command.create({'value': 36, 'str': 'record3'}),
+        Command.create({'value': 4, 'str': 'record4'}),
+        Command.create({'value': 13, 'str': 'record5'}),
     ]
     names = [
         u'export.one2many.child:%d' % d['value']
@@ -388,19 +388,19 @@ class test_o2m(CreatorCase):
 
     def test_single(self):
         self.assertEqual(
-            self.export([(0, False, {'value': 42})]),
+            self.export([Command.create({'value': 42})]),
             # name_get result
             [[u'export.one2many.child:42']])
 
     def test_single_subfield(self):
         self.assertEqual(
-            self.export([(0, False, {'value': 42})],
+            self.export([Command.create({'value': 42})],
                         fields=['value', 'value/value']),
             [[u'export.one2many.child:42', 42]])
 
     def test_integrate_one_in_parent(self):
         self.assertEqual(
-            self.export([(0, False, {'value': 42})],
+            self.export([Command.create({'value': 42})],
                         fields=['const', 'value/value']),
             [[4, 42]])
 
@@ -503,33 +503,33 @@ class test_o2m_multiple(CreatorCase):
 
     def test_single_per_side(self):
         self.assertEqual(
-            self.export(child1=False, child2=[(0, False, {'value': 42})]),
+            self.export(child1=False, child2=[Command.create({'value': 42})]),
             [[False, u'export.one2many.child.2:42']])
 
         self.assertEqual(
-            self.export(child1=[(0, False, {'value': 43})], child2=False),
+            self.export(child1=[Command.create({'value': 43})], child2=False),
             [[u'export.one2many.child.1:43', False]])
 
         self.assertEqual(
-            self.export(child1=[(0, False, {'value': 43})],
-                        child2=[(0, False, {'value': 42})]),
+            self.export(child1=[Command.create({'value': 43})],
+                        child2=[Command.create({'value': 42})]),
             [[u'export.one2many.child.1:43', u'export.one2many.child.2:42']])
 
     def test_single_integrate_subfield(self):
         fields = ['const', 'child1/value', 'child2/value']
         self.assertEqual(
-            self.export(child1=False, child2=[(0, False, {'value': 42})],
+            self.export(child1=False, child2=[Command.create({'value': 42})],
                         fields=fields),
             [[36, False, 42]])
 
         self.assertEqual(
-            self.export(child1=[(0, False, {'value': 43})], child2=False,
+            self.export(child1=[Command.create({'value': 43})], child2=False,
                         fields=fields),
             [[36, 43, False]])
 
         self.assertEqual(
-            self.export(child1=[(0, False, {'value': 43})],
-                        child2=[(0, False, {'value': 42})],
+            self.export(child1=[Command.create({'value': 43})],
+                        child2=[Command.create({'value': 42})],
                         fields=fields),
             [[36, 43, 42]])
 
@@ -538,9 +538,9 @@ class test_o2m_multiple(CreatorCase):
         exports the rows for the first o2m, then the rows for the second o2m.
         """
         fields = ['const', 'child1/value', 'child2/value']
-        child1 = [(0, False, {'value': v, 'str': 'record%.02d' % index})
+        child1 = [Command.create({'value': v, 'str': 'record%.02d' % index})
                   for index, v in zip(itertools.count(), [4, 42, 36, 4, 13])]
-        child2 = [(0, False, {'value': v, 'str': 'record%.02d' % index})
+        child2 = [Command.create({'value': v, 'str': 'record%.02d' % index})
                   for index, v in zip(itertools.count(10), [8, 12, 8, 55, 33, 13])]
 
         self.assertEqual(
@@ -581,11 +581,11 @@ class test_o2m_multiple(CreatorCase):
 class test_m2m(CreatorCase):
     model_name = 'export.many2many'
     commands = [
-        (0, False, {'value': 4, 'str': 'record000'}),
-        (0, False, {'value': 42, 'str': 'record001'}),
-        (0, False, {'value': 36, 'str': 'record010'}),
-        (0, False, {'value': 4, 'str': 'record011'}),
-        (0, False, {'value': 13, 'str': 'record100'}),
+        Command.create({'value': 4, 'str': 'record000'}),
+        Command.create({'value': 42, 'str': 'record001'}),
+        Command.create({'value': 36, 'str': 'record010'}),
+        Command.create({'value': 4, 'str': 'record011'}),
+        Command.create({'value': 13, 'str': 'record100'}),
     ]
     names = [
         u'export.many2many.other:%d' % d['value']
@@ -599,20 +599,20 @@ class test_m2m(CreatorCase):
 
     def test_single(self):
         self.assertEqual(
-            self.export([(0, False, {'value': 42})]),
+            self.export([Command.create({'value': 42})]),
             # name_get result
             [[u'export.many2many.other:42']])
 
     def test_single_subfield(self):
         self.assertEqual(
-            self.export([(0, False, {'value': 42})],
+            self.export([Command.create({'value': 42})],
                         fields=['value', 'value/value'],
                         context={'import_compat': False}),
             [[u'export.many2many.other:42', 42]])
 
     def test_integrate_one_in_parent(self):
         self.assertEqual(
-            self.export([(0, False, {'value': 42})],
+            self.export([Command.create({'value': 42})],
                         fields=['const', 'value/value'],
                         context={'import_compat': False}),
             [[4, 42]])

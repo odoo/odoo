@@ -292,6 +292,10 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             inverse: 'threadViews',
+<<<<<<< HEAD
+=======
+            readonly: true,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             related: 'threadViewer.thread',
         }),
         /**
@@ -299,6 +303,10 @@ function factory(dependencies) {
          */
         threadCache: many2one('mail.thread_cache', {
             inverse: 'threadViews',
+<<<<<<< HEAD
+=======
+            readonly: true,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             related: 'threadViewer.threadCache',
         }),
         threadCacheInitialScrollHeight: attr({
@@ -354,6 +362,10 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'threadView',
+<<<<<<< HEAD
+=======
+            readonly: true,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }),
         uncheckedMessages: many2many('mail.message', {
             related: 'threadCache.uncheckedMessages',

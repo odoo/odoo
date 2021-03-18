@@ -108,24 +108,22 @@
             <div class="wrap o_survey_wrap pb16 d-flex">
                 <div class="container o_survey_quick_access d-flex flex-column">
                     <div class="d-flex flex-grow-1 align-items-center">
-                        <div class="col-lg-12">
+                        <div class="w-100 px-4 px-md-0">
                             <div class="text-center mb32">
-                                <h3>Please enter the code</h3>
+                                <h3>Enter Session Code</h3>
                             </div>
                             <div class="row">
-                            <div class="offset-md-4 col-md-4 text-center">
-                                <input id="session_code" type="text" placeholder="4812"
-                                       class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
-                            </div>
-                            <div class="col-3 text-center o_survey_error text-danger d-none pt-2" role="alert">
-                                <span>Code is incorrect. Please try again.</span>
-                            </div>
+                                <div class="col-12 col-md-4 offset-md-4 text-center">
+                                    <input id="session_code" type="text" placeholder="4812"
+                                           class="form-control o_survey_question_text_box font-weight-bold bg-transparent text-primary text-center rounded-0 p-2 w-100"/>
+                                </div>
+                                <div class="col-12 col-md-4 offset-md-4 text-center o_survey_error text-danger pt-2" role="alert">
+                                    <span class="o_survey_session_error_invalid_code d-none">Code is incorrect.</span>
+                                    <span class="o_survey_session_error_closed d-none">Session is finished.</span>
+                                </div>
                             </div>
                             <div class="text-center mt32 p-2">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                            <div class="text-center p-2">
-                                <span class="text-muted">The code is found on the screen in front of you</span>
+                                <button type="submit" class="btn btn-primary">Join Session</button>
                             </div>
                         </div>
                     </div>

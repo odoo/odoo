@@ -78,12 +78,12 @@ class HolidaysType(models.Model):
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
-        ('manager', "By Employee's Manager"),
-        ('both', "By Employee's Manager and Time Off Officer")], default='hr', string='Leave Validation')
+        ('manager', "By Employee's Approver"),
+        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Leave Validation')
     allocation_validation_type = fields.Selection([
         ('hr', 'By Time Off Officer'),
-        ('manager', "By Employee's Manager"),
-        ('both', "By Employee's Manager and Time Off Officer")], default='manager', string='Allocation Validation')
+        ('manager', "By Employee's Approver"),
+        ('both', "By Employee's Approver and Time Off Officer")], default='manager', string='Allocation Validation')
     allocation_type = fields.Selection([
         ('no', 'No Limit'),
         ('fixed_allocation', 'Allow Employees Requests'),
@@ -188,10 +188,13 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave_types.ids)]
 
+<<<<<<< HEAD
     # YTI TODO: Remove me in master
     def get_days(self, employee_id):
         return self.get_employees_days([employee_id])[employee_id]
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def get_employees_days(self, employee_ids):
         result = {
             employee_id: {
@@ -260,7 +263,7 @@ class HolidaysType(models.Model):
                     'leaves_taken': ('%.2f' % lt.leaves_taken).rstrip('0').rstrip('.'),
                     'virtual_leaves_taken': ('%.2f' % lt.virtual_leaves_taken).rstrip('0').rstrip('.'),
                     'request_unit': lt.request_unit,
-                }, lt.allocation_type, lt.validity_stop)
+                }, lt.allocation_type, lt.validity_stop, lt.id)
             for lt in leave_types]
 
     def _get_contextual_employee_id(self):

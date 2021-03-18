@@ -140,8 +140,11 @@ Available manifest fields are:
 
     These hooks should only be used when setup/cleanup required for this module
     is either extremely difficult or impossible through the api.
+<<<<<<< HEAD
 ``active`` (``bool``)
     This indicates whether this module must install automatically or not.
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 .. _semantic versioning: https://semver.org
 .. _existing categories:

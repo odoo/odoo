@@ -55,5 +55,34 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="mail_template_data_payment_receipt" model="mail.template">
+            <field name="name">Payment Receipt: Send by email</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="subject">${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="xml">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name}<br/><br/>
+        Thank you for your payment.
+        Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting
+        to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        <br/><br/>
+        Best regards,
+        % if user.signature:
+            <br/>
+            ${user.signature | safe}
+        % endif
+    </p>
+</div>
+</field>
+            <field name="report_template" ref="account.action_report_payment_receipt"/>
+            <field name="report_name">${(object.name or '').replace('/','-')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
     </data>
 </odoo>

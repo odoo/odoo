@@ -54,9 +54,15 @@ copyright = u'Odoo S.A.'
 # built documents.
 #
 # The short X.Y version.
+<<<<<<< HEAD
 version = '14.0'
 # The full version, including alpha/beta/rc tags.
 release = '14.0'
+=======
+version = 'master'
+# The full version, including alpha/beta/rc tags.
+release = 'master'
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

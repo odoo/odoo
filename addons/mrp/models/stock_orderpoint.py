@@ -52,7 +52,11 @@ class StockWarehouseOrderpoint(models.Model):
         }
         res = super(StockWarehouseOrderpoint, self.filtered(lambda p: p not in bom_kit_orderpoints))._quantity_in_progress()
         for orderpoint in bom_kit_orderpoints:
+<<<<<<< HEAD
             boms, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
+=======
+            dummy, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             ratios_qty_available = []
             # total = qty_available + in_progress
             ratios_total = []

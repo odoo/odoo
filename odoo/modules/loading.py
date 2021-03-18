@@ -246,6 +246,22 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # update made to the schema or data so the tests can run
             # (separately in their own transaction)
             cr.commit()
+            concrete_models = [model for model in model_names if not registry[model]._abstract]
+            if concrete_models:
+                cr.execute("""
+                    SELECT model FROM ir_model 
+                    WHERE id NOT IN (SELECT DISTINCT model_id FROM ir_model_access) AND model IN %s
+                """, [tuple(concrete_models)])
+                models = [model for [model] in cr.fetchall()]
+                if models:
+                    lines = [
+                        f"The models {models} have no access rules in module {module_name}, consider adding some, like:",
+                        "id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink"
+                    ]
+                    for model in models:
+                        xmlid = model.replace('.', '_')
+                        lines.append(f"{module_name}.access_{xmlid},access_{xmlid},{module_name}.model_{xmlid},base.group_user,1,0,0,0")
+                    _logger.warning('\n'.join(lines))
 
         updating = tools.config.options['init'] or tools.config.options['update']
         test_time = test_queries = 0
@@ -480,11 +496,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # STEP 4: Finish and cleanup installations
         if processed_modules:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
-            for (model, name) in cr.fetchall():
-                if model in registry and not registry[model]._abstract:
-                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,base.group_user,1,0,0,0',
-                        model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():

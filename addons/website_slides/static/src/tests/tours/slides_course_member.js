@@ -119,12 +119,12 @@ tour.register('course_member', {
 }, {
     trigger: 'button[data-target="#ratingpopupcomposer"]'
 }, {
-    trigger: 'form.o_portal_chatter_composer_form i.fa:eq(4)',
+    trigger: 'div.o_portal_chatter_composer_input i.fa:eq(2)',
     extra_trigger: 'div.modal_shown',
     run: 'click',
     in_modal: false,
 }, {
-    trigger: 'form.o_portal_chatter_composer_form textarea',
+    trigger: 'div.o_portal_chatter_composer_input textarea',
     run: 'text This is a great course. Top !',
     in_modal: false,
 }, {

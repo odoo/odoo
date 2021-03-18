@@ -107,6 +107,10 @@ class ResPartnerBank(models.Model):
         """ To be overridden by subclasses in order to support other account_types.
         """
         return 'bank'
+    
+    def name_get(self):
+        return [(acc.id, '{} - {}'.format(acc.acc_number, acc.bank_id.name) if acc.bank_id else acc.acc_number)
+                for acc in self]
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

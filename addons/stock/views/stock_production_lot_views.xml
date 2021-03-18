@@ -14,7 +14,7 @@
                         <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action"/>
                 </div>
                 <div class="oe_title">
-                    <label for="name" class="oe_edit_only"/>
+                    <label for="name"/>
                     <h1>
                         <field name="name" placeholder="e.g. LOT/0001/20121"/>
                     </h1>
@@ -25,7 +25,7 @@
                         <label for="product_qty" attrs="{'invisible': [('display_complete', '=', False)]}"/>
                         <div class="o_row" attrs="{'invisible': [('display_complete', '=', False)]}">
                             <field name="product_qty"/>
-                            <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </div>
                         <field name="ref"/>
                         <field name="company_id" groups="base.group_multi_company"/>

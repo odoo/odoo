@@ -68,6 +68,7 @@ ActivityMenu.include({
     _onActivityFilterClick: function (ev) {
         var $el = $(ev.currentTarget);
         if (!$el.hasClass("o_note")) {
+<<<<<<< HEAD
             var data = _.extend({}, $el.data(), $(ev.target).data());
             if (data.res_model === "note.note" && data.filter === "my") {
                 this.do_action({
@@ -81,6 +82,9 @@ ActivityMenu.include({
             } else {
                 this._super.apply(this, arguments);
             }
+=======
+            this._super.apply(this, arguments);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }
     },
     /**

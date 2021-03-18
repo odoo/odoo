@@ -3,7 +3,7 @@
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import Form
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
 class TestMrpProductionBackorder(TestMrpCommon):
@@ -281,7 +281,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(len(production.procurement_group_id.mrp_production_ids), nb_product_todo)
 
 
-class TestMrpWorkorderBackorder(SavepointCase):
+class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestMrpWorkorderBackorder, cls).setUpClass()

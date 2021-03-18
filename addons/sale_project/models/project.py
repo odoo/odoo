@@ -12,12 +12,23 @@ class Project(models.Model):
 
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
+<<<<<<< HEAD
+=======
+        compute="_compute_sale_line_id", store=True, readonly=False,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         domain="[('is_service', '=', True), ('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     sale_order_id = fields.Many2one('sale.order', 'Sales Order',
+<<<<<<< HEAD
         domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id)]",
         copy=False, help="Sales order to which the project is linked.")
+=======
+        compute="_compute_sale_order_id", store=True, readonly=False,
+        domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id)]",
+        copy=False, help="Sales order to which the project is linked.")
+    project_overview = fields.Boolean('Show Project Overview', compute='_compute_project_overview')
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     _sql_constraints = [
         ('sale_order_required_if_sale_line', "CHECK((sale_line_id IS NOT NULL AND sale_order_id IS NOT NULL) OR (sale_line_id IS NULL))", 'The project should be linked to a sale order to select a sale order item.'),
@@ -29,6 +40,21 @@ class Project(models.Model):
         defaults['sale_line_id'] = False
         return defaults
 
+    @api.depends('sale_order_id')
+    def _compute_sale_line_id(self):
+        self.filtered(lambda p: p.sale_line_id and (not p.sale_order_id or p.sale_order_id != p.sale_line_id.order_id)).update({'sale_line_id': False})
+
+    @api.depends('partner_id')
+    def _compute_sale_order_id(self):
+        self.filtered(lambda p: p.sale_order_id and (not p.partner_id or p.sale_order_id.partner_id != p.partner_id)).update({'sale_order_id': False})
+
+    @api.depends('analytic_account_id')
+    def _compute_project_overview(self):
+        overview = self.env['project.project']
+        if self.user_has_groups('analytic.group_analytic_accounting'):
+            overview = self.filtered(lambda p: p.analytic_account_id)
+            overview.project_overview = True
+        (self - overview).project_overview = False
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
@@ -70,10 +96,10 @@ class ProjectTask(models.Model):
                         product_id=task.sale_line_id.product_id.name,
                     ))
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_linked_so(self):
         if any(task.sale_line_id for task in self):
             raise ValidationError(_('You have to unlink the task from the sale order item in order to delete it.'))
-        return super().unlink()
 
     # ---------------------------------------------------
     # Actions
@@ -126,23 +152,6 @@ class ProjectTask(models.Model):
             operator_new = 'not inselect'
         return [('sale_order_id', operator_new, (query, ()))]
 
-    def action_create_invoice(self):
-        # ensure the SO exists before invoicing, then confirm it
-        so_to_confirm = self.filtered(
-            lambda task: task.sale_order_id and task.sale_order_id.state in ['draft', 'sent']
-        ).mapped('sale_order_id')
-        so_to_confirm.action_confirm()
-
-        # redirect create invoice wizard (of the Sales Order)
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_view_sale_advance_payment_inv")
-        context = literal_eval(action.get('context', "{}"))
-        context.update({
-            'active_id': self.sale_order_id.id if len(self) == 1 else False,
-            'active_ids': self.mapped('sale_order_id').ids,
-            'default_company_id': self.company_id.id,
-        })
-        action['context'] = context
-        return action
 
 class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'

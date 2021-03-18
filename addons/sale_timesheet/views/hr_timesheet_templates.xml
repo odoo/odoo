@@ -5,7 +5,13 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet.scss"/>
                 <script type="text/javascript" src="/sale_timesheet/static/src/js/project_overview.js"></script>
-                <script type="text/javascript" src="/sale_timesheet/static/src/js/sale_project_kanban_controller.js"/>
+            <script type="text/javascript" src="/sale_timesheet/static/src/js/so_line_one2many.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Sales Timesheet Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_timesheet/static/tests/tours/sale_timesheet_tour.js"></script>
         </xpath>
     </template>
 
@@ -64,7 +70,7 @@
                                 </t>
                             </div>
 
-                            <div class="o_title">
+                            <div class="o_title" name="profitability_title_block">
                                 <h2 t-if="is_uom_day">Recorded Days and Profitability</h2>
                                 <h2 t-else="">Recorded Hours and Profitability</h2>
                             </div>
@@ -73,7 +79,7 @@
                             <div class="o_profitability_wrapper">
                                 <div class="o_profitability_section">
                                     <div>
-                                        <table class="table">
+                                        <table class="table" name="table_hours_recorded">
                                             <tbody>
                                                 <th>
                                                     <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain)"
@@ -83,7 +89,7 @@
                                                         <span t-else="">Hours recorded</span>
                                                     </a>
                                                 </th>
-                                                <tr>
+                                                <tr name="row_billed_on_timesheets">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-if="is_uom_day" t-esc="dashboard['time']['billable_time']" t-options="{'widget': 'timesheet_uom'}"/>
                                                         <t t-else="" t-esc="dashboard['time']['billable_time']" t-options="{'widget': 'float_time'}"/>
@@ -95,7 +101,7 @@
                                                         Billed on Timesheets
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr name="row_billed_fix_price">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-if="is_uom_day" t-esc="dashboard['time']['billable_fixed']" t-options="{'widget': 'timesheet_uom'}"/>
                                                         <t t-else="" t-esc="dashboard['time']['billable_fixed']" t-options="{'widget': 'float_time'}"/>
@@ -107,7 +113,7 @@
                                                         Billed at a Fixed price
                                                     </td>
                                                 </tr>
-                                                <tr t-if="dashboard['time']['non_billable_project'] != 0">
+                                                <tr t-if="dashboard['time']['non_billable_project'] != 0" name="row_non_billable_tasks_timesheets">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-if="is_uom_day" t-esc="dashboard['time']['non_billable_project']" t-options="{'widget': 'timesheet_uom'}"/>
                                                         <t t-else="" t-esc="dashboard['time']['non_billable_project']" t-options="{'widget': 'float_time'}"/>
@@ -119,7 +125,7 @@
                                                         No task found
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr name="row_non_billable_tasks">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-if="is_uom_day" t-esc="dashboard['time']['non_billable']" t-options="{'widget': 'timesheet_uom'}"/>
                                                         <t t-else="" t-esc="dashboard['time']['non_billable']" t-options="{'widget': 'float_time'}"/>
@@ -141,7 +147,7 @@
                                                         </a>
                                                     </td>
                                                 </tr>
-                                                <tr t-if="dashboard['time']['non_billable_timesheet'] > 0">
+                                                <tr t-if="dashboard['time']['non_billable_timesheet'] > 0" name="row_non_billable_timesheets">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-if="is_uom_day" t-esc="dashboard['time']['non_billable_timesheet']" t-options="{'widget': 'timesheet_uom'}"/>
                                                         <t t-else="" t-esc="dashboard['time']['non_billable_timesheet']" t-options="{'widget': 'float_time'}"/>
@@ -162,7 +168,7 @@
                                                         </a>
                                                     </td>
                                                 </tr>
-                                                <tr t-if="dashboard['time']['canceled'] > 0">
+                                                <tr t-if="dashboard['time']['canceled'] > 0" name="row_cancelled_timesheets">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-if="is_uom_day" t-esc="dashboard['time']['canceled']" t-options="{'widget': 'timesheet_uom'}"/>
                                                         <t t-else="" t-esc="dashboard['time']['canceled']" t-options="{'widget': 'float_time'}"/>
@@ -190,12 +196,12 @@
                                 </div>
                                 <div class="o_profitability_section">
                                     <div>
-                                        <table class="table">
+                                        <table class="table" name="table_profitability">
                                             <tbody>
                                                 <th>
                                                     <a type="action" data-model="project.profitability.report" t-att-data-domain="json.dumps(profitability_domain)" data-context="{'group_by_no_leaf':1, 'group_by':[], 'sale_show_order_product_name': 1}" data-views='[[0, "pivot"], [0, "graph"]]' tabindex="-1">Profitability</a>
                                                 </th>
-                                                <tr>
+                                                <tr name="row_invoiced">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
@@ -203,7 +209,7 @@
                                                         Invoiced
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr name="row_to_invoice">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['to_invoice']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
@@ -211,13 +217,13 @@
                                                         To invoice
                                                     </td>
                                                 </tr>
-                                                <tr t-if="dashboard['profit']['other_revenues'] > 0">
+                                                <tr t-if="dashboard['profit']['other_revenues'] > 0" name="row_other_revenue">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['other_revenues']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
                                                     <td title="All revenues that are not from timesheets and that are linked to the analytic account of the project.">Other Revenues</td>
                                                 </tr>
-                                                <tr>
+                                                <tr name="row_timesheet_costs">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
@@ -225,7 +231,7 @@
                                                         Timesheet costs
                                                     </td>
                                                 </tr>
-                                                <tr t-if="display_cost">
+                                                <tr t-if="display_cost" name="row_other_costs">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['expense_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
@@ -233,7 +239,7 @@
                                                         Other costs
                                                     </td>
                                                 </tr>
-                                                <tr t-if="display_cost &amp; (dashboard['profit']['expense_amount_untaxed_invoiced'] != 0)">
+                                                <tr t-if="display_cost &amp; (dashboard['profit']['expense_amount_untaxed_invoiced'] != 0)" name="row_reinvoiced_costs">
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         <t t-esc="dashboard['profit']['expense_amount_untaxed_invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                                     </td>
@@ -241,7 +247,7 @@
                                                         Re-invoiced costs
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr name="row_profitability_total">
                                                     <td class="o_timesheet_plan_dashboard_total">
                                                         <b>
                                                             <t t-esc="dashboard['profit']['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
@@ -256,7 +262,7 @@
                             </div>
                         </div>
 
-                        <div class="o_title">
+                        <div class="o_title" name="time_by_people_title_block">
                             <h2>Time by people</h2>
                         </div>
 
@@ -266,7 +272,7 @@
                             </t>
                             <t t-if="repartition_employee">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table" name="table_time_overview">
                                         <thead>
                                             <tr>
                                                 <th></th>
@@ -303,7 +309,7 @@
                                         <tbody>
                                             <t t-foreach="repartition_employee" t-as="employee_id">
                                                 <t t-set="employee" t-value="repartition_employee[employee_id]"/>
-                                                <tr>
+                                                <tr name="row_time_by_people">
                                                     <td style="width: 3%; vertical-align: middle;">
                                                         <img class="img rounded-circle mr-2 mb-2" t-attf-src="/web/image?model=hr.employee&amp;field=image_128&amp;id=#{employee['employee_id']}" t-att-title="employee['employee_name']" t-att-alt="employee['employee_name']" width="25" height="25"/>
                                                     </td>
@@ -356,7 +362,7 @@
                             </t>
                         </div>
 
-                        <div class="o_title">
+                        <div class="o_title" name="timesheets_title_block">
                             <h2>Timesheets</h2>
                         </div>
 
@@ -364,7 +370,7 @@
                         <div class="o_project_plan_project_timesheet_forecast">
                             <t t-if="timesheet_forecast_table and timesheet_forecast_table['rows']">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table" name="table_timesheets">
                                         <thead>
                                             <tr>
                                                 <th></th>

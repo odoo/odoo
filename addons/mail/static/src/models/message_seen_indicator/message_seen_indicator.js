@@ -262,7 +262,13 @@ function factory(dependencies) {
          * (required fields) should improve and let us just use the relational
          * fields.
          */
+<<<<<<< HEAD
         channelId: attr(),
+=======
+        channelId: attr({
+            required: true,
+        }),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         hasEveryoneFetched: attr({
             compute: '_computeHasEveryoneFetched',
             default: false,
@@ -321,7 +327,13 @@ function factory(dependencies) {
          * (required fields) should improve and let us just use the relational
          * fields.
          */
+<<<<<<< HEAD
         messageId: attr(),
+=======
+        messageId: attr({
+            required: true,
+        }),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         partnersThatHaveFetched: many2many('mail.partner', {
             compute: '_computePartnersThatHaveFetched',
             dependencies: ['messageAuthor', 'messageId', 'threadPartnerSeenInfos'],

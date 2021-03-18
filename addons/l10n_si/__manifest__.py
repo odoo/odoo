@@ -5,6 +5,7 @@
 
 {
     "name": "Slovenian - Accounting",
+    'icon': '/base/static/img/country_flags/si.png',
     "version": "1.1",
     "author": "Mentis d.o.o.",
     "website": "http://www.mentis.si",

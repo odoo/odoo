@@ -98,12 +98,19 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return False
 
+<<<<<<< HEAD
     def _support_batching(self, move=None, state=None, company=None):
+=======
+    def _support_batching(self, move, state, company):
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         """ Indicate if we can send multiple documents in the same time to the web services.
         If True, the _post_%s_edi methods will get multiple documents in the same time.
         Otherwise, these methods will be called with only one record at a time.
 
-        :returns: True if batching is supported, False otherwise.
+        :param move:    The move that we are trying to batch.
+        :param state:   The EDI state of the move.
+        :param company: The company with which we are sending the EDI.
+        :returns:       True if batching is supported, False otherwise.
         """
         # TO OVERRIDE
         return False
@@ -112,8 +119,16 @@ class AccountEdiFormat(models.Model):
         """ Returns a tuple that will be used as key to partitionnate the invoices/payments when creating batches
         with multiple invoices/payments.
         The type of move (invoice or payment), its company_id, its edi state and the edi_format are used by default, if
+<<<<<<< HEAD
         no further partition is needed for this format, this method should return ().
 
+=======
+        no further partition is needed for this format, this method should return (). It's not necessary to repeat those
+        fields in the custom key.
+
+        :param move:    The move to batch.
+        :param state:   The EDI state of the move.
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         :returns: The key to be used when partitionning the batches.
         """
         move.ensure_one()
@@ -122,7 +137,11 @@ class AccountEdiFormat(models.Model):
     def _check_move_configuration(self, move):
         """ Checks the move and relevant records for potential error (missing data, etc).
 
+<<<<<<< HEAD
         :param invoice: The move to check.
+=======
+        :param move:    The move to check.
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         :returns:       A list of error messages.
         """
         # TO OVERRIDE
@@ -136,7 +155,11 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * attachment:       The attachment representing the invoice in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
+<<<<<<< HEAD
         * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+=======
+        * blocking_level:   (optional) How bad is the error (how should the edi flow be blocked ?)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -150,7 +173,11 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * success:          True if the invoice was successfully cancelled.
         * error:            An error if the edi was not successfully cancelled.
+<<<<<<< HEAD
         * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+=======
+        * blocking_level:   (optional) How bad is the error (how should the edi flow be blocked ?)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -164,7 +191,11 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the payment as key and as value, another dictionary:
         * attachment:       The attachment representing the payment in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
+<<<<<<< HEAD
         * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+=======
+        * blocking_level:   (optional) How bad is the error (how should the edi flow be blocked ?)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -178,7 +209,11 @@ class AccountEdiFormat(models.Model):
         :returns:         A dictionary with the payment as key and as value, another dictionary:
         * success:        True if the payment was successfully cancelled.
         * error:          An error if the edi was not successfully cancelled.
+<<<<<<< HEAD
         * blocking_level:  (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
+=======
+        * blocking_level: (optional) How bad is the error (how should the edi flow be blocked ?)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -369,17 +404,13 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
                     elif file_data['type'] == 'pdf':
-                        res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
                         file_data['pdf_reader'].stream.close()
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
-                    if 'extract_state' in res:
-                        # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
-                        # TODO : remove when we integrate the OCR to the EDI flow.
-                        res.write({'extract_state': 'done'})
                     return res
         return self.env['account.move']
 
@@ -394,17 +425,13 @@ class AccountEdiFormat(models.Model):
                 res = False
                 try:
                     if file_data['type'] == 'xml':
-                        res = edi_format._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
+                        res = edi_format.with_company(self.env.company)._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
                     elif file_data['type'] == 'pdf':
-                        res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
+                        res = edi_format.with_company(self.env.company)._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
                         file_data['pdf_reader'].stream.close()
                 except Exception as e:
                     _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
-                    if 'extract_state' in res:
-                        # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
-                        # TODO : remove when we integrate the OCR to the EDI flow.
-                        res.write({'extract_state': 'done'})
                     return res
         return self.env['account.move']
 

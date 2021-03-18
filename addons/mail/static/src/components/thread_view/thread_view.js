@@ -84,6 +84,7 @@ class ThreadView extends Component {
     /**
      * @private
      * @param {MouseEvent} ev
+<<<<<<< HEAD:addons/mail/static/src/components/thread_view/thread_view.js
      */
     onScroll(ev) {
         if (!this._messageListRef.comp) {
@@ -95,6 +96,19 @@ class ThreadView extends Component {
     /**
      * @returns {mail.thread_view}
      */
+=======
+     */
+    onScroll(ev) {
+        if (!this._messageListRef.comp) {
+            return;
+        }
+        this._messageListRef.comp.onScroll(ev);
+    }
+
+    /**
+     * @returns {mail.thread_view}
+     */
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729:addons/mail/static/src/components/thread_view/thread_view.js
     get threadView() {
         return this.env.models['mail.thread_view'].get(this.props.threadViewLocalId);
     }
@@ -130,12 +144,33 @@ class ThreadView extends Component {
             isDeviceMobile: this.env.messaging.device.isMobile,
             thread,
             threadCacheIsLoaded: threadCache && threadCache.isLoaded,
+<<<<<<< HEAD:addons/mail/static/src/components/thread_view/thread_view.js
+=======
+            threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729:addons/mail/static/src/components/thread_view/thread_view.js
             threadIsTemporary: thread && thread.isTemporary,
             threadMassMailing: thread && thread.mass_mailing,
             threadModel: thread && thread.model,
             threadView,
             threadViewIsLoading: threadView && threadView.isLoading,
         };
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onClickRetryLoadMessages() {
+        if (!this.threadView) {
+            return;
+        }
+        if (!this.threadView.threadCache) {
+            return;
+        }
+        this.threadView.threadCache.update({ hasLoadingFailed: false });
     }
 
 }
@@ -192,10 +227,6 @@ Object.assign(ThreadView, {
         order: {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
-        },
-        selectedMessageLocalId: {
-            type: String,
-            optional: true,
         },
         showComposerAttachmentsExtensions: Boolean,
         showComposerAttachmentsFilenames: Boolean,

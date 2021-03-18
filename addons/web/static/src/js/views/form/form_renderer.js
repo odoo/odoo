@@ -19,14 +19,21 @@ var FormRenderer = BasicRenderer.extend({
         'click .o_notification_box .oe_field_translate': '_onTranslate',
         'click .o_notification_box .close': '_onTranslateNotificationClose',
         'shown.bs.tab a[data-toggle="tab"]': '_onNotebookTabChanged',
+        'click .o_form_label': '_onFieldLabelClicked',
     }),
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events, {
         'navigation_move':'_onNavigationMove',
         'activate_next_widget' : '_onActivateNextWidget',
+        'quick_edit': '_onQuickEdit',
     }),
     // default col attributes for the rendering of groups
     INNER_GROUP_COL: 2,
     OUTER_GROUP_COL: 2,
+    quickEditExclusion: [
+        '.o_list_view tbody',
+        '.oe_button_box',
+        '.oe_subtotal_footer',
+    ],
 
     /**
      * @override
@@ -205,6 +212,10 @@ var FormRenderer = BasicRenderer.extend({
      */
     getLocalState: function () {
         const state = {};
+        const sheetBg = this.el.querySelector('.o_form_sheet_bg');
+        if (sheetBg) {
+            state.scrollValue = sheetBg.scrollTop;
+        }
         for (const notebook of this.el.querySelectorAll(':scope div.o_notebook')) {
             const name = notebook.dataset.name;
             const navs = notebook.querySelectorAll(':scope .o_notebook_headers .nav-item > .nav-link');
@@ -213,6 +224,24 @@ var FormRenderer = BasicRenderer.extend({
             ), 0);
         }
         return state;
+    },
+    /**
+     * Quick edits the field we clicked on before the mode switch.
+     *
+     * @param {Object} quickEditInfo
+     * @param {string} quickEditInfo.fieldName
+     * @param {any} quickEditInfo.extraInfo
+     */
+    quickEdit: function (quickEditInfo) {
+        const { fieldName, extraInfo } = quickEditInfo;
+        // We cannot use the field's id because a same field could be defined
+        // twice, one in edit only and the other in read only. Because of this
+        // case, we have to search the field by its name and check if it is focusable.
+        const fieldWidget = this.allFieldWidgets[this.state.id]
+            .find(field => field.name === fieldName && field.isFocusable());
+        if (fieldWidget) {
+            fieldWidget.quickEdit(extraInfo);
+        }
     },
     /**
      * Reset the tracking of the last activated field. The fast entry with
@@ -260,6 +289,10 @@ var FormRenderer = BasicRenderer.extend({
                 }
                 core.bus.trigger('DOM_updated');
             }
+        }
+        const sheetBg = this.el.querySelector('.o_form_sheet_bg');
+        if (sheetBg) {
+            sheetBg.scrollTop = state.scrollValue;
         }
     },
     /**
@@ -1121,6 +1154,22 @@ var FormRenderer = BasicRenderer.extend({
         this._activateNextFieldWidget(this.state, index);
     },
     /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onFieldLabelClicked: function (ev) {
+        const idForLabel = ev.currentTarget.getAttribute('for');
+        const entry = Object.entries(this.idsForLabels)
+            .find(x => x[1] === idForLabel);
+        if (entry) {
+            this.trigger_up('quick_edit', {
+                fieldName: this.fieldIdsToNames[entry[0]],
+                target: ev.currentTarget,
+                extraInfo: {},
+            });
+        }
+    },
+    /**
      * @override
      * @private
      * @param {OdooEvent} ev
@@ -1156,6 +1205,17 @@ var FormRenderer = BasicRenderer.extend({
      */
     _onNotebookTabChanged: function () {
         core.bus.trigger('DOM_updated');
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onQuickEdit: function (ev) {
+        if (this.mode !== 'readonly' ||
+            this.quickEditExclusion.some(x => ev.data.target.closest(x))
+        ) {
+            ev.stopPropagation();
+        }
     },
     /**
      * open the translation view for the current field

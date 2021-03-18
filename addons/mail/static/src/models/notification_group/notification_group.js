@@ -98,7 +98,9 @@ function factory(dependencies) {
 
     NotificationGroup.fields = {
         date: attr(),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         notification_type: attr(),
         notifications: one2many('mail.notification'),
         res_id: attr(),

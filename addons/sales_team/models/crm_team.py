@@ -20,20 +20,63 @@ class CrmTeam(models.Model):
     _check_company_auto = True
 
     def _get_default_team_id(self, user_id=None, domain=None):
-        user_id = user_id or self.env.uid
-        user_salesteam_id = self.env['res.users'].browse(user_id).sale_team_id.id
-        # Avoid searching on member_ids (+1 query) when we may have the user salesteam already in cache.
-        team = self.env['crm.team'].search([
-            ('company_id', 'in', [False, self.env.company.id]),
-            '|', ('user_id', '=', user_id), ('id', '=', user_salesteam_id),
-        ], limit=1)
+        """ Compute default team id for sales related documents. Note that this
+        method is not called by default_get as it takes some additional
+        parameters and is meant to be called by other default methods.
+
+        Heuristic (when multiple match: take first sequence ordered)
+
+          1- any of my teams (member OR responsible) matching domain
+          2- any of my teams (member OR responsible)
+          3- default from context
+          4- any team matching my company and domain
+          5- any team matching my company
+
+        Note: ResPartner.team_id field is explicitly not taken into account. We
+        think this field causes a lot of noises compared to its added value.
+        Think notably: team not in responsible teams, team company not matching
+        responsible or lead company, asked domain not matching, ...
+
+        :param user_id: salesperson to target, fallback on env.uid;
+        :domain: optional domain to filter teams (like use_lead = True);
+        """
+        if user_id is None:
+            user = self.env.user
+        else:
+            user = self.env['res.users'].sudo().browse(user_id)
+        valid_cids = [False] + user.company_ids.ids
+
+        # 1- find in user memberships - note that if current user in C1 searches
+        # for team belonging to a user in C1/C2 -> only results for C1 will be returned
+        team = self.env['crm.team']
+        teams = self.env['crm.team'].search([
+            ('company_id', 'in', valid_cids),
+            '|', ('user_id', '=', user.id), ('member_ids', 'in', [user.id]),
+        ])
+        if teams and domain:
+            team = teams.filtered_domain(domain)[:1]
+        # 2- any of my teams
+        if not team:
+            team = teams[:1]
+
+        # 3- default: context
         if not team and 'default_team_id' in self.env.context:
             team = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
-        return team or self.env['crm.team'].search(domain or [], limit=1)
+
+        # 4- default: first one matching domain, then first one
+        if not team:
+            teams = self.env['crm.team'].search([('company_id', 'in', valid_cids)])
+            if teams and domain:
+                team = teams.filtered_domain(domain)[:1]
+            if not team:
+                team = teams[:1]
+
+        return team
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
+    # description
     name = fields.Char('Sales Team', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.")
@@ -45,10 +88,24 @@ class CrmTeam(models.Model):
         related='company_id.currency_id', readonly=True)
     user_id = fields.Many2one('res.users', string='Team Leader', check_company=True)
     # memberships
-    member_ids = fields.One2many(
-        'res.users', 'sale_team_id', string='Channel Members',
-        check_company=True, domain=[('share', '=', False)],
-        help="Add members to automatically assign their documents to this sales team. You can only be member of one team.")
+    is_membership_multi = fields.Boolean(
+        'Multiple Memberships Allowed', compute='_compute_is_membership_multi',
+        help='If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team.')
+    member_ids = fields.Many2many(
+        'res.users', string='Salespersons',
+        domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
+        compute='_compute_member_ids', inverse='_inverse_member_ids', search='_search_member_ids',
+        help="Users assigned to this team.")
+    member_company_ids = fields.Many2many(
+        'res.company', compute='_compute_member_company_ids',
+        help='UX: Limit to team company or all if no company')
+    member_warning = fields.Text('Membership Issue Warning', compute='_compute_member_warning')
+    crm_team_member_ids = fields.One2many(
+        'crm.team.member', 'crm_team_id', string='Sales Team Members',
+        help="Add members to automatically assign their documents to this sales team.")
+    crm_team_member_all_ids = fields.One2many(
+        'crm.team.member', 'crm_team_id', string='Sales Team Members (incl. inactive)',
+        context={'active_test': False})
     # UX options
     color = fields.Integer(string='Color Index', help="The color of the channel")
     favorite_user_ids = fields.Many2many(
@@ -59,6 +116,71 @@ class CrmTeam(models.Model):
         help="Favorite teams to display them in the dashboard and access them easily.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
+
+    @api.depends('sequence')  # TDE FIXME: force compute in new mode
+    def _compute_is_membership_multi(self):
+        multi_enabled = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
+        self.is_membership_multi = multi_enabled
+
+    @api.depends('crm_team_member_ids.active')
+    def _compute_member_ids(self):
+        for team in self:
+            team.member_ids = team.crm_team_member_ids.user_id
+
+    def _inverse_member_ids(self):
+        for team in self:
+            # pre-save value to avoid having _compute_member_ids interfering
+            # while building membership status
+            memberships = team.crm_team_member_ids
+            users_current = team.member_ids
+            users_new = users_current - memberships.user_id
+
+            # add missing memberships
+            self.env['crm.team.member'].create([{'crm_team_id': team.id, 'user_id': user.id} for user in users_new])
+
+            # activate or deactivate other memberships depending on members
+            for membership in memberships:
+                membership.active = membership.user_id in users_current
+
+    @api.depends('is_membership_multi', 'member_ids')
+    def _compute_member_warning(self):
+        """ Display a warning message to warn user they are about to archive
+        other memberships. Only valid in mono-membership mode and take into
+        account only active memberships as we may keep several archived
+        memberships. """
+        self.member_warning = False
+        if all(team.is_membership_multi for team in self):
+            return
+        # done in a loop, but to be used in form view only -> not optimized
+        for team in self:
+            member_warning = False
+            other_memberships = self.env['crm.team.member'].search([
+                ('crm_team_id', '!=', team.id if team.ids else False),  # handle NewID
+                ('user_id', 'in', team.member_ids.ids)
+            ])
+            if other_memberships and len(other_memberships) == 1:
+                member_warning = _("Adding %(user_name)s in this team would remove him/her from its current team %(team_name)s.",
+                                   user_name=other_memberships.user_id.name,
+                                   team_name=other_memberships.crm_team_id.name
+                                  )
+            elif other_memberships:
+                member_warning = _("Adding %(user_names)s in this team would remove them from their current teams (%(team_names)s).",
+                                   user_names=", ".join(other_memberships.mapped('user_id.name')),
+                                   team_names=", ".join(other_memberships.mapped('crm_team_id.name'))
+                                  )
+            if member_warning:
+                team.member_warning = member_warning + " " + _("To add a Salesperson into multiple Teams, activate the Multi-Team option in settings.")
+
+    def _search_member_ids(self, operator, value):
+        return [('crm_team_member_ids.user_id', operator, value)]
+
+    @api.depends('company_id')
+    def _compute_member_company_ids(self):
+        """ Available companies for members. Either team company if set, either
+        any company if not set on team. """
+        all_companies = self.env['res.company'].search([])
+        for team in self:
+            team.member_company_ids = team.company_id or all_companies
 
     def _compute_is_favorite(self):
         for team in self:
@@ -85,20 +207,24 @@ class CrmTeam(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        team = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
-        if values.get('member_ids'):
-            team._add_members_to_favorites()
-        return team
+    @api.model_create_multi
+    def create(self, vals_list):
+        teams = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        teams.filtered(lambda t: t.member_ids)._add_members_to_favorites()
+        return teams
 
     def write(self, values):
         res = super(CrmTeam, self).write(values)
+        # manually launch company sanity check
+        if values.get('company_id'):
+            self.crm_team_member_ids._check_company(fnames=['crm_team_id'])
+
         if values.get('member_ids'):
             self._add_members_to_favorites()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_default(self):
         default_teams = [
             self.env.ref('sales_team.salesteam_website_sales'),
             self.env.ref('sales_team.pos_sales_team'),
@@ -107,7 +233,6 @@ class CrmTeam(models.Model):
         for team in self:
             if team in default_teams:
                 raise UserError(_('Cannot delete default team "%s"', team.name))
-        return super(CrmTeam,self).unlink()
 
     # ------------------------------------------------------------
     # ACTIONS

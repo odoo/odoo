@@ -15,6 +15,7 @@ const useStore = require('mail/static/src/component_hooks/use_store/use_store.js
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { _lt } = require('web.core');
+const { format } = require('web.field_utils');
 const { getLangDatetimeFormat } = require('web.time');
 
 const { Component, useState } = owl;
@@ -65,6 +66,12 @@ class Message extends Component {
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 isMessageChecked: message && threadView
                     ? message.isChecked(thread, threadView.stringifiedDomain)
+<<<<<<< HEAD
+=======
+                    : false,
+                isMessageSelected: message && threadView && threadView.threadViewer
+                    ? threadView.threadViewer.selectedMessage === message
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     : false,
                 message: message ? message.__state : undefined,
                 notifications: message ? message.notifications.map(notif => notif.__state) : [],
@@ -131,12 +138,7 @@ class Message extends Component {
      * @returns {string}
      */
     get avatar() {
-        if (
-            this.message.author &&
-            this.message.author === this.env.messaging.partnerRoot
-        ) {
-            return '/mail/static/src/img/odoobot.png';
-        } else if (this.message.author) {
+        if (this.message.author) {
             // TODO FIXME for public user this might not be accessible. task-2223236
             // we should probably use the correspondig attachment id + access token
             // or create a dedicated route to get message image, checking the access right of the message
@@ -217,6 +219,19 @@ class Message extends Component {
     }
 
     /**
+     * Tell whether the message is selected in the current thread viewer.
+     *
+     * @returns {boolean}
+     */
+    get isSelected() {
+        return (
+            this.threadView &&
+            this.threadView.threadViewer &&
+            this.threadView.threadViewer.selectedMessage === this.message
+        );
+    }
+
+    /**
      * @returns {mail.message}
      */
     get message() {
@@ -291,6 +306,21 @@ class Message extends Component {
                 if (value.new_value) {
                     value.new_value =
                         moment(value.new_value).local().format('LL');
+                }
+            } else if (value.field_type === 'boolean') {
+                if (value.old_value !== undefined){
+                    value.old_value = value.old_value ? this.env._t("True") : this.env._t("False");
+                }
+                if (value.new_value !== undefined){
+                    value.new_value = value.new_value ? this.env._t("True") : this.env._t("False");
+                }
+            } else if (value.field_type === 'monetary' && value.currency_id) {
+                const currency_id = this.env.session.currencies[value.currency_id]
+                if (value.old_value !== undefined) {
+                    value.old_value = format.monetary(value.old_value, null, { currency: currency_id, forceString: true });
+                }
+                if (value.new_value !== undefined) {
+                    value.new_value = format.monetary(value.new_value, null, { currency: currency_id, forceString: true });
                 }
             }
             return value;
@@ -405,7 +435,11 @@ class Message extends Component {
                 message: this.message,
             });
         }
+<<<<<<< HEAD
         this._wasSelected = this.props.isSelected;
+=======
+        this._wasSelected = this.isSelected;
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         this.message.refreshDateFromNow();
         clearInterval(this._intervalId);
         this._intervalId = setInterval(() => {
@@ -609,7 +643,6 @@ Object.assign(Message, {
         hasCheckbox: false,
         hasMarkAsReadIcon: false,
         hasReplyIcon: false,
-        isSelected: false,
         isSquashed: false,
     },
     props: {
@@ -621,7 +654,6 @@ Object.assign(Message, {
         hasCheckbox: Boolean,
         hasMarkAsReadIcon: Boolean,
         hasReplyIcon: Boolean,
-        isSelected: Boolean,
         isSquashed: Boolean,
         messageLocalId: String,
         threadViewLocalId: {

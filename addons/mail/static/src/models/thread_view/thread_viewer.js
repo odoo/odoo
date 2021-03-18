@@ -224,6 +224,15 @@ function factory(dependencies) {
             ],
         }),
         /**
+<<<<<<< HEAD
+=======
+         * Determines the selected `mail.message`.
+         */
+        selectedMessage: many2one('mail.message', {
+            related: 'discuss.replyingToMessage',
+        }),
+        /**
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
          * Determines the domain to apply when fetching messages for `this.thread`.
          */
         stringifiedDomain: attr({

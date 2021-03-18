@@ -18,6 +18,7 @@ var FormController = BasicController.extend({
         toggle_column_order: '_onToggleColumnOrder',
         focus_control_button: '_onFocusControlButton',
         form_dialog_discarded: '_onFormDialogDiscarded',
+        quick_edit: '_onQuickEdit',
     }),
     /**
      * @override
@@ -54,9 +55,13 @@ var FormController = BasicController.extend({
      * leaving).
      *
      * @override
+     * @param {boolean} [shouldReload]
      */
-    willRestore: function () {
+    willRestore: function (shouldReload) {
         this.mode = this.model.isNew(this.handle) ? 'edit' : 'readonly';
+        if (shouldReload) {
+            return this._setMode(this.mode);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -76,6 +81,25 @@ var FormController = BasicController.extend({
                     return this.$buttons.find('.o_form_button_edit').focus();
                 }
             }
+        }
+    },
+    /**
+     * @override
+     * @param {string} [recordID] - default to main recordID
+     * @returns {Promise<boolean>}
+     *          resolved if can be discarded, a boolean value is given to tells
+     *          if there is something to discard or not
+     *          rejected otherwise
+     */
+    canBeDiscarded: function (recordId) {
+        if (recordId !== this.handle && this.isDirty(recordId)) {
+            // Embedded list views can ask to discard their changes when we
+            // click in the webclient. If a field in the list is invalid, it
+            // stay dirty.
+            // When these conditions are met we don't want to discard.
+            return Promise.reject();
+        } else {
+            return Promise.resolve(true);
         }
     },
     /**
@@ -181,7 +205,7 @@ var FormController = BasicController.extend({
             return null;
         }
         return Object.assign(this._super(...arguments), {
-            validate: this.canBeDiscarded.bind(this),
+            validate: this.saveChanges.bind(this),
         });
     },
     /**
@@ -414,6 +438,19 @@ var FormController = BasicController.extend({
         return this._super.apply(this, arguments);
     },
     /**
+     * @private
+     * @returns {Promise}
+     */
+    _setEditMode: function () {
+        this._disableButtons();
+        // wait for potential pending changes to be saved (done with widgets
+        // allowing to edit in readonly)
+        return this.mutex.getUnlockedDef()
+            .then(this._setMode.bind(this, 'edit'))
+            .then(this._enableButtons.bind(this))
+            .guardedCatch(this._enableButtons.bind(this));
+    },
+    /**
      * Calls unfreezeOrder when changing the mode.
      * Also, when there is a change of mode, the tracking of last activated
      * field is reset, so that the following field activation process starts
@@ -441,6 +478,14 @@ var FormController = BasicController.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Save the record when we are about to leave Odoo.
+     *
+     * @override
+     */
+    _onBeforeUnload: function () {
+        this._urgentSave(this.handle);
+    },
     /**
      * @private
      * @param {OdooEvent} ev
@@ -533,9 +578,9 @@ var FormController = BasicController.extend({
     /**
      * Called when the user wants to edit the current record -> @see _setMode
      *
-     * @private
      */
     _onEdit: function () {
+<<<<<<< HEAD
         this._disableButtons();
         // wait for potential pending changes to be saved (done with widgets
         // allowing to edit in readonly)
@@ -543,6 +588,9 @@ var FormController = BasicController.extend({
             .then(this._setMode.bind(this, 'edit'))
             .then(this._enableButtons.bind(this))
             .guardedCatch(this._enableButtons.bind(this));
+=======
+        this._setEditMode();
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     },
     /**
      * This method is called when someone tries to freeze the order, most likely
@@ -617,6 +665,7 @@ var FormController = BasicController.extend({
             parentID: data.parentID,
             readonly: data.readonly,
             deletable: record ? data.deletable : false,
+            disable_multiple_selection: data.disable_multiple_selection,
             recordID: record && record.id,
             res_id: record && record.res_id,
             res_model: data.field.relation,
@@ -645,6 +694,17 @@ var FormController = BasicController.extend({
             res_model: record.model,
             title: _t("Open: ") + ev.data.string,
         }).open();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onQuickEdit: async function (ev) {
+        ev.stopPropagation();
+        if (this.activeActions.edit) {
+            await this._setEditMode();
+            this.renderer.quickEdit(ev.data);
+        }
     },
     /**
      * Called when the user wants to save the current record -> @see saveRecord

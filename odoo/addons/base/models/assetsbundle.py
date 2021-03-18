@@ -1,30 +1,32 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
+from datetime import datetime
+from subprocess import Popen, PIPE
 import base64
-import os
-import re
 import hashlib
 import itertools
 import json
+import logging
+import os
+import re
 import textwrap
 import uuid
+
+import psycopg2
 try:
     import sass as libsass
 except ImportError:
     # If the `sass` python library isn't found, we fallback on the
     # `sassc` executable in the path.
     libsass = None
-from datetime import datetime
-from subprocess import Popen, PIPE
-from collections import OrderedDict
-from odoo import fields, tools, SUPERUSER_ID
-from odoo.tools.pycompat import to_text
+
+from .qweb import escape
+from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from .qweb import escape
-import psycopg2
-from odoo.tools import func, misc
+from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator
+from odoo.tools.pycompat import to_text
 
-import logging
 _logger = logging.getLogger(__name__)
 
 
@@ -104,27 +106,33 @@ class AssetsBundle(object):
 
     TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
 
-    def __init__(self, name, files, env=None):
+    def __init__(self, name, files, env=None, css=True, js=True):
+        """
+        :param name: bundle name
+        :param files: files to be added to the bundle
+        :param css: if css is True, the stylesheets files are added to the bundle
+        :param js: if js is True, the javascript files are added to the bundle
+        """
         self.name = name
         self.env = request.env if env is None else env
         self.javascripts = []
         self.stylesheets = []
         self.css_errors = []
-        self._checksum = None
         self.files = files
         self.user_direction = self.env['res.lang']._lang_get(
             self.env.context.get('lang') or self.env.user.lang
         ).direction
         for f in files:
-            if f['atype'] == 'text/sass':
-                self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
-            elif f['atype'] == 'text/scss':
-                self.stylesheets.append(ScssStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
-            elif f['atype'] == 'text/less':
-                self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
-            elif f['atype'] == 'text/css':
-                self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
-            elif f['atype'] == 'text/javascript':
+            if css:
+                if f['atype'] == 'text/sass':
+                    self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                elif f['atype'] == 'text/scss':
+                    self.stylesheets.append(ScssStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                elif f['atype'] == 'text/less':
+                    self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                elif f['atype'] == 'text/css':
+                    self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+            if js and f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
     def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
@@ -145,9 +153,17 @@ class AssetsBundle(object):
                     for style in self.stylesheets:
                         response.append(style.to_node())
 
-            if js:
-                for jscript in self.javascripts:
-                    response.append(jscript.to_node())
+            if js and self.javascripts:
+                self.js(is_minified=False)
+                attr = OrderedDict([
+                    ["async", "async" if async_load else None],
+                    ["defer", "defer" if defer_load or lazy_load else None],
+                    ["type", "text/javascript"],
+                    ["data-src" if lazy_load else "src", self.get_debug_asset_url(name=self.name, extension=".js")],
+                    ['data-asset-xmlid', self.name],
+                    ['data-asset-version', self.version],
+                ])
+                response.append(("script", attr, None))
         else:
             if css and self.stylesheets:
                 css_attachments = self.css() or []
@@ -163,12 +179,13 @@ class AssetsBundle(object):
                 if self.css_errors:
                     msg = '\n'.join(self.css_errors)
                     response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
+
             if js and self.javascripts:
                 attr = OrderedDict([
                     ["async", "async" if async_load else None],
                     ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
-                    ["data-src" if lazy_load else "src", self.js().url],
+                    ["data-src" if lazy_load else "src", self.js(is_minified=True)[0].url],
                     ['data-asset-xmlid', self.name],
                     ['data-asset-version', self.version],
                 ])
@@ -198,28 +215,34 @@ class AssetsBundle(object):
         return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
 
     def _get_asset_template_url(self):
-        return "/web/content/{id}-{unique}/{extra}{name}{sep}{type}"
+        return "/web/assets/{id}-{unique}/{extra}{name}{sep}{extension}"
 
-    def _get_asset_url_values(self, id, unique, extra, name, sep, type):  # extra can contain direction or/and website
+    def _get_asset_url_values(self, id, unique, extra, name, sep, extension):  # extra can contain direction or/and website
         return {
             'id': id,
             'unique': unique,
             'extra': extra,
             'name': name,
             'sep': sep,
-            'type': type,
+            'extension': extension,
         }
 
-    def get_asset_url(self, id='%', unique='%', extra='', name='%', sep="%", type='%'):
+    def get_asset_url(self, id='%', unique='%', extra='', name='%', sep="%", extension='%'):
         return self._get_asset_template_url().format(
-            **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, type=type)
+            **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, extension=extension)
         )
 
-    def clean_attachments(self, type):
+    def _get_debug_asset_template_url(self):
+        return "/web/assets/{id}-{unique}/{extra}{name}{sep}{extension}"
+
+    def get_debug_asset_url(self, extra='', name='%', extension='%'):
+        return f"/web/assets/debug/{extra}{name}{extension}"
+
+    def clean_attachments(self, extension):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
 
-        When `type` is js we need to check that we are deleting a different version (and not *any*
+        When `extension` is js we need to check that we are deleting a different version (and not *any*
         version) because, as one of the creates in `save_attachment` can trigger a rollback, the
         call to `clean_attachments ` is made at the end of the method in order to avoid the rollback
         of an ir.attachment unlink (because we cannot rollback a removal on the filestore), thus we
@@ -227,11 +250,12 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         url = self.get_asset_url(
-            extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
+            extra='%s' % ('rtl/' if extension == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
             sep='',
-            type='.%s' % type
+            extension='.%s' % extension
         )
+
         domain = [
             ('url', '=like', url),
             '!', ('url', '=like', self.get_asset_url(unique=self.version))
@@ -246,21 +270,28 @@ class AssetsBundle(object):
 
         return True
 
-    def get_attachments(self, type, ignore_version=False):
+    def get_attachments(self, extension, ignore_version=False):
         """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
         an issue happening when parallel transactions generate the same bundle: while the file is not
         duplicated on the filestore (as it is stored according to its hash), there are multiple
         ir.attachment records referencing the same version of a bundle. As we don't want to source
         multiple time the same bundle in our `to_html` function, we group our ir.attachment records
         by file name and only return the one with the max id for each group.
+
+        :param extension: file extension (js, min.js, css)
+        :param ignore_version: if ignore_version, the url contains a version => web/assets/%-%/name.extension
+                                (the second '%' corresponds to the version),
+                               else: the url contains a version equal to that of the self.version
+                                => web/assets/%-self.version/name.extension.
         """
         unique = "%" if ignore_version else self.version
+
         url_pattern = self.get_asset_url(
             unique=unique,
-            extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
+            extra='%s' % ('rtl/' if extension == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
             sep='',
-            type='.%s' % type
+            extension='.%s' % extension
         )
         self.env.cr.execute("""
              SELECT max(id)
@@ -270,19 +301,32 @@ class AssetsBundle(object):
            GROUP BY name
            ORDER BY name
          """, [SUPERUSER_ID, url_pattern])
+
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
-    def save_attachment(self, type, content):
-        assert type in ('js', 'css')
+    def save_attachment(self, extension, content):
+        """Record the given bundle in an ir.attachment and delete
+        all other ir.attachments referring to this bundle (with the same name and extension).
+
+        :param extension: extension of the bundle to be recorded
+        :param content: bundle content to be recorded
+
+        :return the ir.attachment records for a given bundle.
+        """
+        assert extension in ('js', 'min.js', 'js.map', 'css')
         ira = self.env['ir.attachment']
 
         # Set user direction in name to store two bundles
         # 1 for ltr and 1 for rtl, this will help during cleaning of assets bundle
         # and allow to only clear the current direction bundle
         # (this applies to css bundles only)
-        fname = '%s.%s' % (self.name, type)
-        mimetype = 'application/javascript' if type == 'js' else 'text/css'
+        fname = '%s.%s' % (self.name, extension)
+        mimetype = (
+            'text/css' if extension == 'css' else
+            'application/json' if extension == 'js.map' else
+            'application/javascript'
+        )
         values = {
             'name': fname,
             'mimetype': mimetype,
@@ -293,14 +337,13 @@ class AssetsBundle(object):
             'raw': content.encode('utf8'),
         }
         attachment = ira.with_user(SUPERUSER_ID).create(values)
-
         url = self.get_asset_url(
             id=attachment.id,
             unique=self.version,
-            extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
+            extra='%s' % ('rtl/' if extension == 'css' and self.user_direction == 'rtl' else ''),
             name=fname,
             sep='',  # included in fname
-            type=''
+            extension=''
         )
         values = {
             'url': url,
@@ -310,7 +353,7 @@ class AssetsBundle(object):
         if self.env.context.get('commit_assetsbundle') is True:
             self.env.cr.commit()
 
-        self.clean_attachments(type)
+        self.clean_attachments(extension)
 
         # For end-user assets (common and backend), send a message on the bus
         # to invite the user to refresh their browser
@@ -322,12 +365,71 @@ class AssetsBundle(object):
 
         return attachment
 
-    def js(self):
-        attachments = self.get_attachments('js')
+    def js(self, is_minified=True):
+        extension = 'min.js' if is_minified else 'js'
+        attachments = self.get_attachments(extension)
+
         if not attachments:
-            content = ';\n'.join(asset.minify() for asset in self.javascripts)
-            return self.save_attachment('js', content)
+            if is_minified:
+                content = ';\n'.join(asset.minify() for asset in self.javascripts)
+                return self.save_attachment(extension, content)
+            else:
+                return self.js_with_sourcemap()
+
         return attachments[0]
+
+    def js_with_sourcemap(self):
+        """Create/modify the ir.attachment representing the not-minified content of the bundleJS
+        and the ir.attachment representing the linked sourcemap.
+        To avoid the loss of break points in the development tool when the bundleJS
+        has to be rebuilt, the bundleJS url must not change so we will not include
+        'self.version' in the ir.attachment url.
+        If any ir.attachment exists for the bundleJS, we create a new one (bundleJS and sourcemap),
+        else, we modify the 'raw' in the existing ir.attachments.
+
+        :return ir.attachment representing the un-minified content of the bundleJS
+        """
+        sourcemap_attachment = self.get_attachments('js.map') \
+                                or self.save_attachment('js.map', '')
+
+        generator = SourceMapGenerator(
+            source_root="/".join(
+                [".." for i in range(0, len(self.get_debug_asset_url(name=self.name).split("/")) - 2)]
+                ) + "/",
+        )
+
+        content_bundle_list = []
+        content_line_count = 0
+        line_header = 6  # number of lines added by with_header()
+        for asset in self.javascripts:
+            if asset.is_transpiled:
+                # '+ 3' corresponds to the 3 lines added at the beginning of the file during transpilation.
+                generator.add_source(
+                    asset.url, asset._content, content_line_count, start_offset=line_header + 3)
+            else:
+                generator.add_source(
+                    asset.url, asset.content, content_line_count, start_offset=line_header)
+
+            content_bundle_list.append(asset.with_header(asset.content, minimal=False))
+            content_line_count += len(asset.content.split("\n")) + line_header
+
+        content_bundle = ';\n'.join(content_bundle_list) + "\n//# sourceMappingURL=" + sourcemap_attachment.url
+
+        js_attachment = self.get_attachments('js')
+        if js_attachment:
+            js_attachment.write({
+                "raw": content_bundle.encode('utf8'),
+            })
+        else:
+            js_attachment = self.save_attachment('js', content_bundle)
+
+        generator._file = js_attachment.url
+        sourcemap_attachment.write({
+            # Store with XSSI-prevention prefix
+            "raw": b")]}'\n" + json.dumps(generator.to_json()).encode('utf8'),
+        })
+
+        return js_attachment
 
     def css(self):
         attachments = self.get_attachments('css')
@@ -693,10 +795,25 @@ class WebAsset(object):
     def with_header(self, content=None):
         if content is None:
             content = self.content
-        return '\n/* %s */\n%s' % (self.name, content)
+        return f'\n/* {self.name} */\n{content}'
 
 
 class JavascriptAsset(WebAsset):
+
+    def __init__(self, bundle, inline=None, url=None, filename=None):
+        super().__init__(bundle, inline, url, filename)
+        self.is_transpiled = is_odoo_module(super().content)
+        self._converted_content = None
+
+    @property
+    def content(self):
+        content = super().content
+        if self.is_transpiled:
+            if not self._converted_content:
+                self._converted_content = transpile_javascript(self.url, content)
+            return self._converted_content
+        return content
+
     def minify(self):
         return self.with_header(rjsmin(self.content))
 
@@ -721,6 +838,30 @@ class JavascriptAsset(WebAsset):
                 ['data-asset-xmlid', self.bundle.name],
                 ['data-asset-version', self.bundle.version],
             ]), self.with_header())
+
+    def with_header(self, content=None, minimal=True):
+        if minimal:
+            return super().with_header(content)
+
+        # format the header like
+        #   /**************************
+        #   *  Filepath: <asset_url>  *
+        #   *  Bundle: <name>         *
+        #   *  Lines: 42              *
+        #   **************************/
+        lines = [
+            f"Filepath: {self.url}",
+            f"Bundle: {self.bundle.name}",
+            f"Lines: {len(content.splitlines())}",
+        ]
+        length = max(map(len, lines))
+        return "\n".join([
+            "",
+            "/" + "*" * (length + 5),
+            *(f"*  {line:<{length}}  *" for line in lines),
+            "*" * (length + 5) + "/",
+            content,
+        ])
 
 
 class StylesheetAsset(WebAsset):

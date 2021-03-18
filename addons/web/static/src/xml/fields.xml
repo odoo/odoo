@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FieldBoolean" owl="1">
-        <CustomCheckbox disabled="mode === 'readonly'" value="value"
-            class="o_field_boolean" t-on-change="_onChange"/>
+        <CustomCheckbox disabled="hasReadonlyModifier"
+            value="value" class="o_field_boolean" t-on-change="_onChange"/>
     </t>
 
     <t t-name="web.FieldBadge" owl="1">

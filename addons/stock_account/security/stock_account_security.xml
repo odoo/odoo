@@ -7,5 +7,9 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
-</odoo>
+    <record id="group_lot_on_invoice" model="res.groups">
+        <field name="name">Display Serial &amp; Lot Number on Invoices</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 
+</odoo>

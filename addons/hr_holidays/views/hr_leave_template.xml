@@ -6,21 +6,40 @@
       <script type="text/javascript" src="/hr_holidays/static/src/js/leave_stats_widget.js"></script>
       <script type="text/javascript" src="/hr_holidays/static/src/bugfix/bugfix.js"/>
       <script type="text/javascript" src="/hr_holidays/static/src/components/thread_view/thread_view.js"/>
+<<<<<<< HEAD
+=======
+      <script type="text/javascript" src="/hr_holidays/static/src/models/partner/partner.js"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     </xpath>
     <xpath expr="link[last()]" position="after">
-      <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/scss/hr_leave_mobile.scss"/>
       <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/src/scss/time_off.scss"/>
       <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/src/bugfix/bugfix.scss"/>
+<<<<<<< HEAD
       <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon.scss"/>
       <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/src/components/thread_icon/thread_icon.scss"/>
       <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/src/components/thread_view/thread_view.scss"/>
+=======
+      <link rel="stylesheet" type="text/scss" href="/hr_holidays/static/src/components/thread_view/thread_view.scss"/>
+    </xpath>
+  </template>
+  <template id="tests_assets" name="hr_holidays_tests_assets" inherit_id="web.tests_assets">
+    <xpath expr="." position="inside">
+      <script type="text/javascript" src="/hr_holidays/static/tests/helpers/mock_models.js"/>
+      <script type="text/javascript" src="/hr_holidays/static/tests/helpers/mock_server.js"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     </xpath>
   </template>
   <template id="qunit_suite" name="hr_holidays_qunit_suite" inherit_id="web.qunit_suite_tests">
       <xpath expr="." position="inside">
           <script type="text/javascript" src="/hr_holidays/static/src/bugfix/bugfix_tests.js"></script>
+<<<<<<< HEAD
           <script type="text/javascript" src="/hr_holidays/static/tests/helpers/mock_models.js"/>
           <script type="text/javascript" src="/hr_holidays/static/tests/helpers/mock_server.js"/>
+=======
+          <script type="text/javascript" src="/hr_holidays/static/src/components/partner_im_status_icon/partner_im_status_icon_tests.js"/>
+          <script type="text/javascript" src="/hr_holidays/static/src/components/thread_icon/thread_icon_tests.js"/>
+          <script type="text/javascript" src="/hr_holidays/static/src/components/thread_view/thread_view_tests.js"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
           <script type="text/javascript" src="/hr_holidays/static/tests/test_leave_stats_widget.js"></script>
       </xpath>
   </template>

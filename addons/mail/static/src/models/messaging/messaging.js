@@ -163,6 +163,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'messaging',
             isCausal: true,
+            readonly: true,
         }),
         commands: one2many('mail.channel_command'),
         currentPartner: one2one('mail.partner'),
@@ -170,15 +171,18 @@ function factory(dependencies) {
         device: one2one('mail.device', {
             default: [['create']],
             isCausal: true,
+            readonly: true,
         }),
         dialogManager: one2one('mail.dialog_manager', {
             default: [['create']],
             isCausal: true,
+            readonly: true,
         }),
         discuss: one2one('mail.discuss', {
             default: [['create']],
             inverse: 'messaging',
             isCausal: true,
+            readonly: true,
         }),
         /**
          * Mailbox History.
@@ -192,6 +196,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'messaging',
             isCausal: true,
+            readonly: true,
         }),
         isInitialized: attr({
             default: false,
@@ -199,11 +204,13 @@ function factory(dependencies) {
         locale: one2one('mail.locale', {
             default: [['create']],
             isCausal: true,
+            readonly: true,
         }),
         messagingMenu: one2one('mail.messaging_menu', {
             default: [['create']],
             inverse: 'messaging',
             isCausal: true,
+            readonly: true,
         }),
         /**
          * Mailbox Moderation.
@@ -212,17 +219,20 @@ function factory(dependencies) {
         notificationGroupManager: one2one('mail.notification_group_manager', {
             default: [['create']],
             isCausal: true,
+            readonly: true,
         }),
         notificationHandler: one2one('mail.messaging_notification_handler', {
             default: [['create']],
             inverse: 'messaging',
             isCausal: true,
+            readonly: true,
         }),
         outOfFocusUnreadMessageCounter: attr({
             default: 0,
         }),
         partnerRoot: many2one('mail.partner'),
         /**
+<<<<<<< HEAD
          * Determines which partner should be considered the public partner,
          * which is a special partner notably used in livechat.
          *
@@ -230,6 +240,12 @@ function factory(dependencies) {
          * setup there might be a different public partner per website.
          */
         publicPartner: many2one('mail.partner'),
+=======
+         * Determines which partners should be considered the public partners,
+         * which are special partners notably used in livechat.
+         */
+        publicPartners: many2many('mail.partner'),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         /**
          * Determines which partners should be considered the public partners,
          * which are special partners notably used in livechat.

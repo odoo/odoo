@@ -3,10 +3,10 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
-class TestReportsCommon(SavepointCase):
+class TestReportsCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1041,3 +1041,56 @@ class TestReports(TestReportsCommon):
         delivery2_line = [l for l in lines if l['document_out'].id == delivery2.id][0]
         self.assertTrue(delivery2_line, 'No line for delivery 2')
         self.assertTrue(delivery2_line['replenishment_filled'])
+<<<<<<< HEAD
+=======
+
+    def test_report_forecast_10_report_line_corresponding_to_picking_highlighted(self):
+        """ When accessing the report from a stock move, checks if the correct picking is highlighted in the report
+            and if the forecasted availability for incoming moves is correct
+        """
+        # Creation of one delivery with date 'today'
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.picking_type_out
+        delivery_form.scheduled_date = date.today()
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 200
+        delivery1 = delivery_form.save()
+        delivery1.action_confirm()
+
+        # Creation of one receipt with date 'today + 1' and smaller qty than the delivery
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        receipt_form.scheduled_date = date.today() + timedelta(days=1)
+        with receipt_form.move_ids_without_package.new() as move:
+            move.product_id = self.product
+            move.product_uom_qty = 150
+        receipt1 = receipt_form.save()
+        receipt1.action_confirm()
+        self.assertEqual(receipt1.move_lines.forecast_availability, -50.0)
+
+        # Creation of an identical receipt which should lead to a positive forecast availability
+        receipt2 = receipt1.copy()
+        receipt2.action_confirm()
+        for move in receipt2.move_lines:
+            move.quantity_done = 150
+        receipt2.button_validate()
+        self.assertEqual(receipt1.move_lines.forecast_availability, 100.0)
+
+        delivery2 = delivery1.copy()
+        delivery2.action_confirm()
+        receipt1.move_lines._compute_forecast_information()
+        self.assertEqual(receipt1.move_lines.forecast_availability, -100.0)
+
+        # Check for both deliveries and receipts if the highlight (is_matched) corresponds to the correct picking
+        for picking in [delivery1, delivery2, receipt1, receipt2]:
+            context = picking.move_lines[0].action_product_forecast_report()['context']
+            _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
+            for line in lines:
+                if picking in [line['document_in'], line['document_out']]:
+                    self.assertTrue(line['is_matched'], "The corresponding picking should be matched in the forecast report.")
+                else:
+                    self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the picking shoud not be matched.")
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

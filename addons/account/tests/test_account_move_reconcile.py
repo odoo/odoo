@@ -212,8 +212,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             FROM account_account_tag_account_move_line_rel rel
             JOIN account_move_line line ON line.id = rel.account_move_line_id
             WHERE line.tax_exigible IS TRUE
+<<<<<<< HEAD
+=======
+              AND line.company_id = ANY(%(company_ids)s)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             GROUP BY rel.account_account_tag_id
-        ''')
+        ''', {
+            'company_ids': self.env.companies.ids,
+        })
 
         for tag_id, total_balance in self.cr.fetchall():
             tag, expected_balance = expected_values[tag_id]
@@ -1367,6 +1373,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 }),
 
                 # Tax line
+<<<<<<< HEAD
                 (0, 0, {
                     'debit': 0.0,
                     'credit': 20.0,
@@ -1379,6 +1386,20 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
                 # Receivable lines
                 (0, 0, {
+=======
+                (0, 0, {
+                    'debit': 0.0,
+                    'credit': 20.0,
+                    'amount_currency': -10.0,
+                    'currency_id': currency_id,
+                    'account_id': self.cash_basis_transfer_account.id,
+                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
+                    'tax_exigible': False,
+                }),
+
+                # Receivable lines
+                (0, 0, {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     'debit': 220.0,
                     'credit': 0.0,
                     'amount_currency': 110.0,

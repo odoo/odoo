@@ -52,7 +52,8 @@ odoo.define('web.test_env', async function (require) {
                 ajax: {
                     rpc() {
                       return env.session.rpc(...arguments); // Compatibility Legacy Widgets
-                    }
+                    },
+                    loadLibs() {}
                 },
                 getCookie() {},
                 httpRequest(/* route, params = {}, readMethod = 'json' */) {

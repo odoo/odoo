@@ -237,7 +237,11 @@ class CurrencyRate(models.Model):
 
     name = fields.Date(string='Date', required=True, index=True,
                            default=lambda self: fields.Date.today())
+<<<<<<< HEAD
     rate = fields.Float(digits=0, default=1.0, help='The rate of the currency to the currency of rate 1')
+=======
+    rate = fields.Float(digits=0, default=1.0, group_operator="avg", help='The rate of the currency to the currency of rate 1')
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.company)
@@ -246,6 +250,29 @@ class CurrencyRate(models.Model):
         ('unique_name_per_day', 'unique (name,currency_id,company_id)', 'Only one currency rate per day allowed!'),
         ('currency_rate_check', 'CHECK (rate>0)', 'The currency rate must be strictly positive.'),
     ]
+
+    @api.onchange('rate')
+    def _onchange_rate_warning(self):
+        if not self.currency_id.id:
+            return
+
+        latest_rate = self.search([
+            ('currency_id', '=', self.currency_id.id),
+            ('company_id', '=', self.company_id.id or self.env.company.id),
+            ('name', '<=', self.name or fields.Date.today()),
+        ], order="name desc", limit=1)
+        if latest_rate and latest_rate.rate:
+            diff = (latest_rate.rate - self.rate) / latest_rate.rate
+            if abs(diff) > 0.2:
+                return {
+                    'warning': {
+                        'title': _("Warning for %s", self.currency_id.name),
+                        'message': _(
+                            "The new rate is quite far from the previous rate.\n"
+                            "Incorrect currency rates may cause critical problems, make sure the rate is correct !"
+                        )
+                    }
+                }
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):

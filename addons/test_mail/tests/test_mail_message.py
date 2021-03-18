@@ -378,6 +378,7 @@ class TestMessageAccess(TestMailCommon):
         self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
         with self.assertRaises(AccessError):
             self.message.with_user(self.user_employee).write({'moderation_status': 'accepted'})
+<<<<<<< HEAD
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mark_all_as_read(self):
@@ -555,3 +556,5 @@ class TestMessageModeration(TestMailCommon):
                 'type': 'inbox'}]
         }]):
             self.env['mail.message']._notify_moderators()
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

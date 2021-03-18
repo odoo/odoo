@@ -13,6 +13,7 @@ import time
 
 from email.utils import getaddresses
 from lxml import etree
+from urllib.parse import urlparse
 from werkzeug import urls
 import idna
 
@@ -549,6 +550,28 @@ def email_normalize(text):
     if not emails or len(emails) != 1:
         return False
     return emails[0].lower()
+
+
+def email_domain_extract(email):
+    """ Extract the company domain to be used by IAP services notably. Domain
+    is extracted from email information e.g:
+        - info@proximus.be -> proximus.be
+    """
+    normalized_email = email_normalize(email)
+    if normalized_email:
+        return normalized_email.split('@')[1]
+    return False
+
+def url_domain_extract(url):
+    """ Extract the company domain to be used by IAP services notably. Domain
+    is extracted from an URL e.g:
+        - www.info.proximus.be -> proximus.be
+    """
+    parser_results = urlparse(url)
+    company_hostname = parser_results.hostname
+    if company_hostname and '.' in company_hostname:
+        return '.'.join(company_hostname.split('.')[-2:])  # remove subdomains
+    return False
 
 def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""

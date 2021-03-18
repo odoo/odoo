@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
-    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTag">
+    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTagAvatar">
         <t t-jquery="span:first" t-operation="prepend">
-            <span t-if="attendeesData[el_index]" t-attf-class="o_calendar_invitation #{attendeesData[el_index].status}"/>
+            <span t-if="attendeesData[el_index] and attendeesData[el_index].status and attendeesData[el_index].status !== 'needsAction'"
+                t-attf-class="o_calendar_invitation #{attendeesData[el_index].status}"/>
         </t>
     </t>
 

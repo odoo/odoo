@@ -21,10 +21,11 @@ Allows to contact directly the employee in case of unjustified absence.
         'security/sms_security.xml',
         'data/ir_actions_server.xml',
         'views/hr_employee_views.xml',
+        'data/mail_template_data.xml',
         'data/sms_data.xml',
-        'data/mail_data.xml',
     ],
     'demo': [],
     'installable': True,
     'auto_install': False,
+    'post_init_hook': 'post_init_hook'
 }

@@ -61,16 +61,16 @@ website = request.website.get_current_website()
 dynamic_filter = model.env.context.get('dynamic_filter')
 limit = model.env.context.get('limit')
 search_domain = model.env.context.get('search_domain')
+<<<<<<< HEAD
 get_rendering_data_structure = model.env.context.get('get_rendering_data_structure')
 escape = dynamic_filter.escape_falsy_as_empty
+=======
+meta_data = dynamic_filter._get_filter_meta_data()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 domain = [('website_published', '=', True)] + website.website_domain() + (search_domain or [])
 products = ProductProduct.search(domain, limit=limit)
 _ = products.mapped('name')
-
-monetary_options = {
-    'display_currency': request.website.get_current_pricelist().currency_id,
-}
 
 max_nb_chars = 100
 res_products = []
@@ -80,6 +80,7 @@ for product in products:
 
     if res_product['description_sale'] and len(res_product['description_sale']) > max_nb_chars:
         res_product['description_sale'] = "%s ..." % res_product['description_sale'][:max_nb_chars]
+<<<<<<< HEAD
     res_product['list_price'] = FieldMonetary.value_to_html(res_product['price'], monetary_options)
     data = get_rendering_data_structure()
     for field_name in dynamic_filter.field_names.split(","):
@@ -91,6 +92,16 @@ for product in products:
         else:
             data['fields'][field_name] = escape(res_product[field_name])
     data['fields']['call_to_action_url'] = escape(product['website_url'])
+=======
+    data = {}
+    for field_name in meta_data.keys():
+        field = ProductProduct._fields.get(field_name)
+        if field and field.type == 'binary':
+            data[field_name] = website.image_url(product, field_name)
+        else:
+            data[field_name] = res_product[field_name]
+    data['call_to_action_url'] = product['website_url']
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     res_products.append(data)
 
 response = res_products
@@ -99,10 +110,9 @@ response = res_products
         <!-- Dynamic Filter -->
         <record id="dynamic_filter_demo_products" model="website.snippet.filter">
             <field name="action_server_id" ref="website_sale.dynamic_snippet_products_action"/>
-            <field name="field_names">display_name,description_sale,image_512,list_price</field>
+            <field name="field_names">display_name,description_sale,image_512,price:monetary</field>
             <field name="limit" eval="16"/>
             <field name="name">Products</field>
-            <field name="website_id" ref="website.default_website"/>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>sale.order</value>

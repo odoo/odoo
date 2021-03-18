@@ -39,9 +39,18 @@ var QtyAtDateWidget = Widget.extend({
     _updateData: function() {
         // add some data to simplify the template
         if (this.data.scheduled_date) {
+<<<<<<< HEAD
             // The digit info need to get from free_qty_today in master (instead of virtual_available_at_date)
             var qty_considered = this.data.state === 'sale' ? this.data.free_qty_today : this.data.virtual_available_at_date;
             this.data.will_be_fulfilled = utils.round_decimals(qty_considered, this.fields.virtual_available_at_date.digits[1]) >= utils.round_decimals(this.data.qty_to_deliver, this.fields.qty_to_deliver.digits[1]);
+=======
+            var qty_to_deliver = utils.round_decimals(this.data.qty_to_deliver, this.fields.qty_to_deliver.digits[1]);
+            if (this.data.state === 'sale') {
+                this.data.will_be_fulfilled = utils.round_decimals(this.data.free_qty_today, this.fields.free_qty_today.digits[1]) >= qty_to_deliver
+            } else {
+                this.data.will_be_fulfilled = utils.round_decimals(this.data.virtual_available_at_date, this.fields.virtual_available_at_date.digits[1]) >= qty_to_deliver
+            }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             this.data.will_be_late = this.data.forecast_expected_date && this.data.forecast_expected_date > this.data.scheduled_date;
             if (['draft', 'sent'].includes(this.data.state)){
                 // Moves aren't created yet, then the forecasted is only based on virtual_available of quant
@@ -82,7 +91,13 @@ var QtyAtDateWidget = Widget.extend({
         action.context = {
             active_model: 'product.product',
             active_id: this.data.product_id.data.id,
+<<<<<<< HEAD
             warehouse: this.data.warehouse_id && this.data.warehouse_id.res_id
+=======
+            warehouse: this.data.warehouse_id && this.data.warehouse_id.res_id,
+            move_to_match_ids: this.data.move_ids.res_ids,
+            sale_line_to_match_id: this.data.id,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         };
         return this.do_action(action);
     },

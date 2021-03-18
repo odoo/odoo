@@ -28,15 +28,30 @@ class ComposerTextInput extends Component {
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
             const thread = composer && composer.thread;
+<<<<<<< HEAD
             return {
                 composerHasFocus: composer && composer.hasFocus,
                 composerHasSuggestions: composer && composer.hasSuggestions,
+=======
+            const correspondent = thread ? thread.correspondent : undefined;
+            return {
+                composerHasFocus: composer && composer.hasFocus,
+                composerHasSuggestions: composer && composer.hasSuggestions,
+                composerIsLastStateChangeProgrammatic: composer && composer.isLastStateChangeProgrammatic,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 composerIsLog: composer && composer.isLog,
                 composerTextInputContent: composer && composer.textInputContent,
                 composerTextInputCursorEnd: composer && composer.textInputCursorEnd,
                 composerTextInputCursorStart: composer && composer.textInputCursorStart,
                 composerTextInputSelectionDirection: composer && composer.textInputSelectionDirection,
+<<<<<<< HEAD
                 isDeviceMobile: this.env.messaging.device.isMobile,
+=======
+                correspondent,
+                correspondentNameOrDisplayName: correspondent && correspondent.nameOrDisplayName,
+                isDeviceMobile: this.env.messaging.device.isMobile,
+                threadDisplayName: thread && thread.displayName,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 threadModel: thread && thread.model,
             };
         });
@@ -80,13 +95,23 @@ class ComposerTextInput extends Component {
         if (!this.composer) {
             return "";
         }
-        if (this.composer.thread && this.composer.thread.model !== 'mail.channel') {
-            if (this.composer.isLog) {
-                return this.env._t("Log an internal note...");
-            }
-            return this.env._t("Send a message to followers...");
+        if (!this.composer.thread) {
+            return "";
         }
-        return this.env._t("Write something...");
+        if (this.composer.thread.model === 'mail.channel') {
+            if (this.composer.thread.correspondent) {
+                return _.str.sprintf("Message %s...", this.composer.thread.correspondent.nameOrDisplayName);
+            }
+            return _.str.sprintf("Message #%s...", this.composer.thread.displayName);
+        }
+        if (this.composer.isLog) {
+            return this.env._t("Log an internal note...");
+        }
+        return this.env._t("Send a message to followers...");
+    }
+
+    focus() {
+        this._textareaRef.el.focus();
     }
 
     focus() {
@@ -163,6 +188,7 @@ class ComposerTextInput extends Component {
     _update() {
         if (!this.composer) {
             return;
+<<<<<<< HEAD
         }
         if (this.composer.isLastStateChangeProgrammatic) {
             this._textareaRef.el.value = this.composer.textInputContent;
@@ -175,6 +201,20 @@ class ComposerTextInput extends Component {
             }
             this.composer.update({ isLastStateChangeProgrammatic: false });
         }
+=======
+        }
+        if (this.composer.isLastStateChangeProgrammatic) {
+            this._textareaRef.el.value = this.composer.textInputContent;
+            if (this.composer.hasFocus) {
+                this._textareaRef.el.setSelectionRange(
+                    this.composer.textInputCursorStart,
+                    this.composer.textInputCursorEnd,
+                    this.composer.textInputSelectionDirection,
+                );
+            }
+            this.composer.update({ isLastStateChangeProgrammatic: false });
+        }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         this._updateHeight();
     }
 
@@ -282,6 +322,7 @@ class ComposerTextInput extends Component {
             !this.env.messaging.device.isMobile
         ) {
             this.trigger('o-composer-text-input-send-shortcut');
+<<<<<<< HEAD
             ev.preventDefault();
             return;
         }
@@ -295,6 +336,21 @@ class ComposerTextInput extends Component {
             this.trigger('o-composer-text-input-send-shortcut');
             ev.preventDefault();
             return;
+=======
+            ev.preventDefault();
+            return;
+        }
+        if (
+            this.props.sendShortcuts.includes('meta-enter') &&
+            !ev.altKey &&
+            !ev.ctrlKey &&
+            ev.metaKey &&
+            !ev.shiftKey
+        ) {
+            this.trigger('o-composer-text-input-send-shortcut');
+            ev.preventDefault();
+            return;
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }
     }
 

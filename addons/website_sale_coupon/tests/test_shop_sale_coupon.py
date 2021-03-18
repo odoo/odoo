@@ -60,6 +60,8 @@ class TestUi(TestSaleProductAttributeValueCommon, HttpCase):
             'taxes_id': False,
         })
 
+        self.env['coupon.program'].search([]).write({'active': False})
+
         self.env['coupon.program'].create({
             'name': "Buy 3 Small Cabinets, get one for free",
             'promo_code_usage': 'no_code_needed',

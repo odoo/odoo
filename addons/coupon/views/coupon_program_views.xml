@@ -10,7 +10,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box" />
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div name="title" class="oe_left">
+                    <div name="title" class="oe_left mw-100">
                     </div>
                     <group>
                         <group name="conditions" string="Conditions">
@@ -59,7 +59,7 @@
                             <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}"/>
                             <div attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}">
                                 <field name="discount_max_amount" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <span class="oe_grey">if 0, no limit</span>
+                                <span class="oe_grey"> if 0, no limit</span>
                             </div>
                         </group>
                     </group>
@@ -90,8 +90,8 @@
                 </button>
             </xpath>
             <xpath expr="//div[@name='title']" position="inside">
-                <label class="oe_edit_only" for="name" string="Coupon Program Name"/>
-                <h1><field name="name" class="oe_title" placeholder="Coupon Program Name..." height="20px"/></h1>
+                <label for="name" string="Program Name"/>
+                <h1><field name="name" class="oe_title" height="20px"/></h1>
             </xpath>
             <xpath expr="//group[@name='validity']" position="inside">
                 <label for="validity_duration" string="Validity Duration"/>
@@ -139,7 +139,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="text-center">
+                            <div class="text-center oe_kanban_details">
                                <strong><span><field name="name"/></span></strong>
                             </div>
                             <hr class="mt4 mb4"/>
@@ -191,8 +191,8 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='title']" position="inside">
-                <label class="oe_edit_only" for="name" string="Promotion Program Name"/>
-                <h1><field name="name" class="oe_title" placeholder="Promotion Program Name..." height="20px"/></h1>
+                <label for="name" string="Program Name"/>
+                <h1><field name="name" class="oe_title o_text_overflow" placeholder="e.g. 10% Discount" height="20px"/></h1>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(coupon.coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
@@ -218,6 +218,12 @@
                 </div>
                 <field name="rule_date_from" class="oe_inline"/>
                 <field name="rule_date_to" class="oe_inline"/>
+                <label string="Coupon Validity" for="validity_duration" class="oe_inline" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}"/>
+                <div attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
+                    <field name="validity_duration" class="oe_inline"/>
+                    <span> Days</span>
+                    <span class="oe_grey"> if 0, coupon doesn't expire</span>
+                </div>
             </xpath>
             <xpath expr="//group[@name='reward']" position="before">
                 <group>

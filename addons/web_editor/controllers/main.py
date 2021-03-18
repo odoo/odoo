@@ -5,6 +5,10 @@ import logging
 import re
 import time
 import requests
+<<<<<<< HEAD
+=======
+import werkzeug.urls
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
@@ -12,7 +16,11 @@ from base64 import b64decode, b64encode
 
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
+<<<<<<< HEAD
 from odoo.addons.http_routing.models.ir_http import slug
+=======
+from odoo.addons.http_routing.models.ir_http import slug, unslug
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 from odoo.exceptions import UserError
 from odoo.modules.module import get_module_path, get_resource_path
 from odoo.tools.misc import file_open
@@ -471,6 +479,7 @@ class Web_Editor(http.Controller):
         values = len_args > 1 and args[1] or {}
 
         View = request.env['ir.ui.view']
+<<<<<<< HEAD
         if xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
             # For white listed assets, bypass access verification
             # TODO in master this part should be removed and simply use the
@@ -478,6 +487,8 @@ class Web_Editor(http.Controller):
             # flow handle the rendering.
             return View.sudo()._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
         # Otherwise use normal flow
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         return View.render_public_asset(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
@@ -523,8 +534,16 @@ class Web_Editor(http.Controller):
         """
         svg = None
         if module == 'illustration':
+<<<<<<< HEAD
             attachment = request.env['ir.attachment'].sudo().search([('url', '=like', request.httprequest.path), ('public', '=', True)], limit=1)
             if not attachment:
+=======
+            attachment = request.env['ir.attachment'].sudo().browse(unslug(filename)[1])
+            if (not attachment.exists()
+                    or attachment.type != 'binary'
+                    or not attachment.public
+                    or not attachment.url.startswith(request.httprequest.path)):
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
         else:
@@ -591,6 +610,10 @@ class Web_Editor(http.Controller):
                 <media_id>: {
                     'query': 'space separated search terms',
                     'is_dynamic_svg': True/False,
+<<<<<<< HEAD
+=======
+                    'dynamic_colors': maps color names to their color,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 }, ...
             }
         """
@@ -622,7 +645,12 @@ class Web_Editor(http.Controller):
                 'res_id': 0,
             })
             if media[id]['is_dynamic_svg']:
+<<<<<<< HEAD
                 attachment['url'] = '/web_editor/shape/illustration/%s' % slug(attachment)
+=======
+                colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
+                attachment['url'] = '/web_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             attachments.append(attachment._get_media_info())
 
         return attachments

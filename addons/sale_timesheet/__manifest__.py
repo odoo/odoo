@@ -32,7 +32,6 @@ have real delivered quantities in sales orders.
         'wizard/project_create_sale_order_views.xml',
         'wizard/project_create_invoice_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
-        'wizard/project_task_create_sale_order_views.xml'
     ],
     'qweb': [
         'static/src/xml/sale_project_templates.xml',

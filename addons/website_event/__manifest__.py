@@ -3,7 +3,7 @@
 
 {
     'name': 'Events',
-    'version': '1.1',
+    'version': '1.3',
     'category': 'Marketing/Events',
     'sequence': 140,
     'summary': 'Publish events, sell tickets',
@@ -28,6 +28,7 @@
         'views/website_templates.xml',
         'views/event_event_views.xml',
         'views/event_registration_views.xml',
+        'views/event_tag_category_views.xml',
         'views/event_type_views.xml',
         'views/website_event_menu_views.xml',
         'views/website_visitor_views.xml',

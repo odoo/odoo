@@ -98,13 +98,12 @@
                     <field name="attendee_status" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <div class="oe_title">
-                        <div class="oe_edit_only">
+                        <div>
                             <label for="name"/>
                         </div>
                         <h1>
                             <field name="name" placeholder="e.g. Business Lunch"/>
                         </h1>
-                        <label for="partner_ids" string="Attendees" class="oe_edit_only"/>
                         <h2>
                             <field name="partner_ids" widget="many2manyattendee"
                                 placeholder="Select attendees..."
@@ -112,6 +111,11 @@
                                 class="oe_inline"/>
                         </h2>
                     </div>
+                    <group>
+                        <group>
+                            <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" attrs="{'invisible': [('videocall_location', '=', False)]}" />
+                        </group>
+                    </group>
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group>
@@ -255,9 +259,10 @@
                 event_open_popup="true"
                 event_limit="5"
                 color="user_id">
+                <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" />
                 <field name="attendee_status"/>
                 <field name="user_id" string="Responsible" filters="1" widget="many2one_avatar_user"/>
-                <field name="partner_ids" widget="many2many_tags_avatar" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
+                <field name="partner_ids" widget="many2manyattendee" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
                 <field name="is_highlighted" invisible="1"/>
                 <field name="description"/>
                 <field name="privacy"/>
@@ -306,6 +311,20 @@
             opportunities.
           </p>
         </field>
+    </record>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.view.form.inherit.calendar</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <notebook colspan="4" position="inside">
+                    <!-- Placeholder container to hold information about external accounts (Google calendar, Microsoft calendar, ...) -->
+                    <page string="Calendar" name="calendar" invisible="1" groups="base.group_system">
+                        <group name="calendar_accounts"/>
+                    </page>
+                </notebook>
+            </field>
     </record>
 
     <record id="action_view_calendar_event_calendar" model="ir.actions.act_window.view">

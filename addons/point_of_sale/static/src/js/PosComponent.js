@@ -53,6 +53,12 @@ odoo.define('point_of_sale.PosComponent', function (require) {
         setSyncStatus(status, pending) {
             this.trigger('set-sync-status', { status, pending });
         }
+        showNotification(message, duration = 2000) {
+            this.trigger('show-notification', { message, duration });
+        }
+        closeNotification() {
+            this.trigger('close-notification');
+        }
     }
 
     return PosComponent;

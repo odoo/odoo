@@ -4,6 +4,7 @@
  * versions of Odoo. Any module that is defined in this file should be isolated
  * in its own file in master.
  */
+<<<<<<< HEAD
 odoo.define('mail/static/src/bugfix/bugfix.js', function (require) {
 'use strict';
 
@@ -189,3 +190,5 @@ function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
 return useShouldUpdateBasedOnProps;
 
 });
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

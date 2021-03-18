@@ -62,7 +62,6 @@ class AccountMove(models.Model):
         product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
         consumable = set(['consu', 'product'])
         service = set(['service'])
-        mixed = set(['consu', 'service', 'product'])
         # on expo invoice you can mix services and products
         expo_invoice = self.l10n_latam_document_type_id.code in ['19', '20', '21']
 
@@ -87,7 +86,7 @@ class AccountMove(models.Model):
                 domain = ['|', ('code', 'in', ['99'])] + domain
         return domain
 
-    def _check_argentinian_invoice_taxes(self):
+    def _check_argentinean_invoice_taxes(self):
 
         # check vat on companies thats has it (Responsable inscripto)
         for inv in self.filtered(lambda x: x.company_id.l10n_ar_company_requires_vat):
@@ -158,7 +157,7 @@ class AccountMove(models.Model):
 
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
-        ar_invoices._check_argentinian_invoice_taxes()
+        ar_invoices._check_argentinean_invoice_taxes()
         posted = super()._post(soft)
         posted._set_afip_service_dates()
         return posted
@@ -220,7 +219,7 @@ class AccountMove(models.Model):
 
     def _l10n_ar_get_amounts(self, company_currency=False):
         """ Method used to prepare data to present amounts and taxes related amounts when creating an
-        electronic invoice for argentinian and the txt files for digital VAT books. Only take into account the argentinian taxes """
+        electronic invoice for argentinean and the txt files for digital VAT books. Only take into account the argentinean taxes """
         self.ensure_one()
         amount_field = company_currency and 'balance' or 'price_subtotal'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)

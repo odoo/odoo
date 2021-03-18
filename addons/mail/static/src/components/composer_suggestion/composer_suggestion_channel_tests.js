@@ -47,16 +47,23 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
+<<<<<<< HEAD
     const channel = this.env.models['mail.thread'].create({
         id: 7,
         name: "General",
         model: 'mail.channel',
     });
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
         isActive: true,
         modelName: 'mail.thread',
+<<<<<<< HEAD
         recordLocalId: channel.localId,
+=======
+        recordLocalId: thread.localId,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
 
     assert.containsOnce(
@@ -69,22 +76,36 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
 QUnit.test('channel mention suggestion correct data', async function (assert) {
     assert.expect(3);
 
+<<<<<<< HEAD
     this.data['mail.channel'].records.push({ id: 20 });
+=======
+    this.data['mail.channel'].records.push({
+        id: 20,
+        name: "General",
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
+<<<<<<< HEAD
     const channel = this.env.models['mail.thread'].create({
         id: 7,
         name: "General",
         model: 'mail.channel',
     });
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
         isActive: true,
         modelName: 'mail.thread',
+<<<<<<< HEAD
         recordLocalId: channel.localId,
+=======
+        recordLocalId: thread.localId,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
 
     assert.containsOnce(
@@ -113,16 +134,23 @@ QUnit.test('channel mention suggestion active', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
+<<<<<<< HEAD
     const channel = this.env.models['mail.thread'].create({
         id: 7,
         name: "General",
         model: 'mail.channel',
     });
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
         isActive: true,
         modelName: 'mail.thread',
+<<<<<<< HEAD
         recordLocalId: channel.localId,
+=======
+        recordLocalId: thread.localId,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
 
     assert.containsOnce(

@@ -12,8 +12,8 @@ from odoo.tools import html_escape
 class CrmLead(models.Model):
     _inherit = "crm.lead"
 
-    partner_latitude = fields.Float('Geo Latitude', digits=(16, 5))
-    partner_longitude = fields.Float('Geo Longitude', digits=(16, 5))
+    partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
+    partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))
     partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Partner this case has been forwarded/assigned to.", index=True)
     partner_declined_ids = fields.Many2many(
         'res.partner',
@@ -26,10 +26,6 @@ class CrmLead(models.Model):
         copy=True, readonly=False, store=True,
         help="Last date this case was forwarded/assigned to a partner")
 
-    def _merge_data(self, fields):
-        fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
-        return super(CrmLead, self)._merge_data(fields)
-
     @api.depends("partner_assigned_id")
     def _compute_date_partner_assign(self):
         for lead in self:
@@ -37,6 +33,11 @@ class CrmLead(models.Model):
                 lead.date_partner_assign = False
             else:
                 lead.date_partner_assign = fields.Date.context_today(lead)
+
+    def _merge_get_fields(self):
+        fields_list = super(CrmLead, self)._merge_get_fields()
+        fields_list += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
+        return fields_list
 
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
@@ -68,7 +69,7 @@ class CrmLead(models.Model):
             lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude)
             partner = self.env['res.partner'].browse(partner_id)
             if partner.user_id:
-                lead.handle_salesmen_assignment(partner.user_id.ids, team_id=partner.team_id.id)
+                lead._handle_salesmen_assignment(user_ids=partner.user_id.ids, team_id=partner.team_id.id)
             lead.write({'partner_assigned_id': partner_id})
         return res
 

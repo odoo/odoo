@@ -105,7 +105,7 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
-                                            <field name="work_location"/>
+                                            <field name="work_location_id" context="{'default_address_id': address_id}" />
                                         </group>
                                         <group name="managers" string="Approvers" class="hide-group-if-empty">
                                             <!-- is overridden in other hr related modules -->
@@ -133,6 +133,10 @@
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="private_email" string="Email"/>
                                         <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone" readonly="True"/>
+<<<<<<< HEAD
+=======
+                                        <field name="lang" string="Language"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                         <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                         <label for="km_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
@@ -177,8 +181,8 @@
                             <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
                                 <group>
                                     <group string='Status' name="active_group">
+                                        <field name="employee_type"/>
                                         <field name="user_id" string="Related User" domain="[('share', '=', False)]"/>
-                                        <field name="job_id"/>
                                     </group>
                                     <group string="Attendance" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
@@ -189,6 +193,10 @@
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
                                         </div>
                                     </group>
+                                    <group string='Payroll' name="payroll_group">
+                                        <field name="job_id"/>
+                                    </group>
+                                    <group name="application_group"/>
                                 </group>
                             </page>
                         </notebook>
@@ -215,7 +223,7 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
-                    <field name="work_location" optional="hide"/>
+                    <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
@@ -288,7 +296,7 @@
                                    <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                </ul>
-                                <div class="oe_kanban_content">
+                                <div class="oe_kanban_content position-absolute fixed-bottom mr-2">
                                     <div class="o_kanban_record_bottom">
                                         <div class="oe_kanban_bottom_left"/>
                                         <div class="oe_kanban_bottom_right">

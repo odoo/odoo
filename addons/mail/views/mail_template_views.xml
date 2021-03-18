@@ -33,10 +33,10 @@
                                     type="action" target="new"/>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" required="1"/></h1>
+                            <label for="name"/>
+                            <h1><field name="name" required="1" placeholder="e.g. Calendar: Reminder"/></h1>
                             <group>
-                                <field name="model_id" required="1" options="{'no_create': True}"/>
+                                <field name="model_id" placeholder="e.g. Users" required="1" options="{'no_create': True}"/>
                                 <field name="model" invisible="1"/>
                             </group>
                         </div>
@@ -130,9 +130,6 @@
             <field name="view_id" ref="email_template_tree" />
             <field name="search_view_id" ref="view_email_template_search"/>
         </record>
-
-        <menuitem id="menu_email_templates" parent="base.menu_email" action="action_email_template_tree_all"
-                  sequence="10"/>
 
     </data>
 </odoo>

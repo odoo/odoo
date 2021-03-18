@@ -60,7 +60,7 @@ class PurchaseRequisition(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
-    product_id = fields.Many2one('product.product', related='line_ids.product_id', string='Product', readonly=False)
+    product_id = fields.Many2one('product.product', related='line_ids.product_id', string='Product')
     state = fields.Selection(PURCHASE_REQUISITION_STATES,
                               'Status', tracking=True, required=True,
                               copy=False, default='draft')
@@ -152,9 +152,12 @@ class PurchaseRequisition(models.Model):
                 requisition_line.supplier_info_ids.unlink()
         self.write({'state': 'done'})
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft_or_cancel(self):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
             raise UserError(_('You can only delete draft requisitions.'))
+
+    def unlink(self):
         # Draft requisitions could have some requisition lines.
         self.mapped('line_ids').unlink()
         return super(PurchaseRequisition, self).unlink()

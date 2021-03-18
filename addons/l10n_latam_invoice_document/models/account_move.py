@@ -214,10 +214,18 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_latam_available_document_type_ids', 'debit_origin_id')
     def _compute_l10n_latam_document_type(self):
+<<<<<<< HEAD
         debit_note = self.debit_origin_id
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         for rec in self.filtered(lambda x: x.state == 'draft'):
+            debit_note = rec.debit_origin_id
             document_types = rec.l10n_latam_available_document_type_ids._origin
+<<<<<<< HEAD
             document_types = debit_note and document_types.filtered(lambda x: x.internal_type == 'debit_note') or document_types
+=======
+            document_types = document_types.filtered(lambda x: x.internal_type == 'debit_note') if debit_note else document_types
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 
     def _compute_invoice_taxes_by_group(self):

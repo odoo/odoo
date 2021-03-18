@@ -5,6 +5,12 @@ from datetime import timedelta
 
 from odoo import fields, tools
 from odoo.tests.common import TransactionCase
+<<<<<<< HEAD
+=======
+from odoo.tests import Form
+from odoo import tools
+from odoo.fields import Date
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 
 class TestCRMPLS(TransactionCase):
@@ -53,6 +59,43 @@ class TestCRMPLS(TransactionCase):
 
         return leads_with_tags
 
+<<<<<<< HEAD
+=======
+    def test_crm_lead_pls_update(self):
+        """ We test here that the wizard for updating probabilities from settings
+            is getting correct value from config params and after updating values
+            from the wizard, the config params are correctly updated
+        """
+        # Set the PLS config
+        frequency_fields = self.env['crm.lead.scoring.frequency.field'].search([])
+        pls_fields_str = ','.join(frequency_fields.mapped('field_id.name'))
+        pls_start_date_str = "2021-01-01"
+        IrConfigSudo = self.env['ir.config_parameter'].sudo()
+        IrConfigSudo.set_param("crm.pls_start_date", pls_start_date_str)
+        IrConfigSudo.set_param("crm.pls_fields", pls_fields_str)
+
+        date_to_update = "2021-02-02"
+        fields_to_remove = frequency_fields.filtered(lambda f: f.field_id.name in ['source_id', 'lang_id'])
+        fields_after_updation_str = ','.join((frequency_fields - fields_to_remove).mapped('field_id.name'))
+
+        # Check that wizard to update lead probabilities has correct value set by default
+        pls_update_wizard = Form(self.env['crm.lead.pls.update'])
+        with pls_update_wizard:
+            self.assertEqual(Date.to_string(pls_update_wizard.pls_start_date), pls_start_date_str, 'Correct date is taken from config')
+            self.assertEqual(','.join([f.field_id.name for f in pls_update_wizard.pls_fields]), pls_fields_str, 'Correct fields are taken from config')
+            # Update the wizard values and check that config values and probabilities are updated accordingly
+            pls_update_wizard.pls_start_date =  date_to_update
+            for field in fields_to_remove:
+                pls_update_wizard.pls_fields.remove(field.id)
+
+        pls_update_wizard0 = pls_update_wizard.save()
+        pls_update_wizard0.action_update_crm_lead_probabilities()
+
+        # Config params should have been updated
+        self.assertEqual(IrConfigSudo.get_param("crm.pls_start_date"), date_to_update, 'Correct date is updated in config')
+        self.assertEqual(IrConfigSudo.get_param("crm.pls_fields"), fields_after_updation_str, 'Correct fields are updated in config')
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def test_predictive_lead_scoring(self):
         """ We test here computation of lead probability based on PLS Bayes.
                 We will use 3 different values for each possible variables:
@@ -87,6 +130,7 @@ class TestCRMPLS(TransactionCase):
         #   for team 2
         leads_to_create.append(
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(5), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
+<<<<<<< HEAD
         leads_to_create.append(
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(6), country_ids[0], state_ids[1], state_values[0], state_values[1], source_ids[2], stage_ids[1]))
         leads_to_create.append(
@@ -94,13 +138,22 @@ class TestCRMPLS(TransactionCase):
         leads_to_create.append(
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(8), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
         leads_to_create.append(
+=======
+        leads_to_create.append(
+            self._get_lead_values(team_ids[1], 'team_2_%s' % str(6), country_ids[0], state_ids[1], state_values[0], state_values[1], source_ids[2], stage_ids[1]))
+        leads_to_create.append(
+            self._get_lead_values(team_ids[1], 'team_2_%s' % str(7), country_ids[0], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
+        leads_to_create.append(
+            self._get_lead_values(team_ids[1], 'team_2_%s' % str(8), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+        leads_to_create.append(
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(9), country_ids[1], state_ids[0], state_values[1], state_values[0], source_ids[1], stage_ids[1]))
 
         leads = Lead.create(leads_to_create)
 
         # Set the PLS config
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
-        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id")
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id,state_id,email_state,phone_state,source_id,tag_ids")
 
         # set leads as won and lost
         # for Team 1
@@ -379,6 +432,7 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
 
+<<<<<<< HEAD
     def test_settings_pls_start_date(self):
         # We test here that settings never crash due to ill-configured config param 'crm.pls_start_date'
         set_param = self.env['ir.config_parameter'].sudo().set_param
@@ -399,3 +453,17 @@ class TestCRMPLS(TransactionCase):
         res_config_new = resConfig.new()
         self.assertEqual(fields.Date.to_string(res_config_new.predictive_lead_scoring_start_date),
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
+=======
+        # remove tag_ids from the calculation
+        self.assertEqual(tools.float_compare(lead_tag_1.automated_probability, 28.6, 2), 0)
+        self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 28.6, 2), 0)
+        self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 28.6, 2), 0)
+
+        lead_tag_1.tag_ids = [(5, 0, 0)]  # remove all tags
+        lead_tag_2.tag_ids = [(4, tag_ids[0])]  # add tag 1
+        lead_tag_1_2.tag_ids = [(3, tag_ids[1], 0)]  # remove tag 2
+
+        self.assertEqual(tools.float_compare(lead_tag_1.automated_probability, 28.6, 2), 0)
+        self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 28.6, 2), 0)
+        self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 28.6, 2), 0)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

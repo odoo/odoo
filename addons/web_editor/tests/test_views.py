@@ -62,3 +62,19 @@ class TestViews(TransactionCase):
             '<p>Hello World!</p>',
             base.inherit_children_ids.read_combined(['arch'])['arch'],
         )
+<<<<<<< HEAD
+=======
+
+    def test_find_available_name(self):
+        View = self.env['ir.ui.view']
+        used_names = ['Unrelated name']
+        initial_name = "Test name"
+        name = View._find_available_name(initial_name, used_names)
+        self.assertEqual(initial_name, name)
+        used_names.append(name)
+        name = View._find_available_name(initial_name, used_names)
+        self.assertEqual('Test name (2)', name)
+        used_names.append(name)
+        name = View._find_available_name(initial_name, used_names)
+        self.assertEqual('Test name (3)', name)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

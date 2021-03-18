@@ -14,7 +14,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
-from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.controllers import main
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
 _logger = logging.getLogger(__name__)
@@ -118,7 +118,7 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({'id': order.id})
 
 
-class Website(Website):
+class Website(main.Website):
     @http.route()
     def get_switchable_related_views(self, key):
         views = super(Website, self).get_switchable_related_views(key)
@@ -305,9 +305,6 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
-        if not product.can_access_from_current_website():
-            raise NotFound()
-
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
@@ -1009,10 +1006,6 @@ class WebsiteSale(http.Controller):
 
         PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect('/shop/confirmation')
-
-    @http.route(['/shop/terms'], type='http', auth="public", website=True, sitemap=True)
-    def terms(self, **kw):
-        return request.render("website_sale.terms")
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):

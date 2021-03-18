@@ -7,8 +7,8 @@ from odoo import fields, models
 class Channel(models.Model):
     _inherit = 'mail.channel'
 
-    def partner_info(self, all_partners, direct_partners):
-        partner_infos = super(Channel, self).partner_info(all_partners, direct_partners)
+    def _get_channel_partner_info(self, all_partners, direct_partners):
+        partner_infos = super(Channel, self)._get_channel_partner_info(all_partners, direct_partners)
         # only search for leave out_of_office_date_end if im_status is on leave
         partners_on_leave = [partner_id for partner_id in direct_partners.ids if 'leave' in partner_infos[partner_id]['im_status']]
         if partners_on_leave:

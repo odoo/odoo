@@ -3,6 +3,7 @@
 
 {
     'name': 'Canada - Accounting',
+    'icon': '/base/static/img/country_flags/ca.png',
     'author': 'Savoir-faire Linux',
     'website': 'https://www.savoirfairelinux.com',
     'category': 'Accounting/Localizations/Account Charts',

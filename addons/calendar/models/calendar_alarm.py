@@ -49,26 +49,3 @@ class Alarm(models.Model):
             key: value for key, value in self._fields['alarm_type']._description_selection(self.env)
         }[self.alarm_type]
         self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
-
-    def _update_cron(self):
-        try:
-            cron = self.env['ir.model.data'].sudo().get_object('calendar', 'ir_cron_scheduler_alarm')
-        except ValueError:
-            return False
-        return cron.toggle(model=self._name, domain=[('alarm_type', '=', 'email')])
-
-    @api.model
-    def create(self, values):
-        result = super(Alarm, self).create(values)
-        self._update_cron()
-        return result
-
-    def write(self, values):
-        result = super(Alarm, self).write(values)
-        self._update_cron()
-        return result
-
-    def unlink(self):
-        result = super(Alarm, self).unlink()
-        self._update_cron()
-        return result

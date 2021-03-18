@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 import logging
 import pytz
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, _, Command
 from odoo.osv import expression
 
 from odoo.tools.misc import clean_context
@@ -326,8 +326,8 @@ class MailActivity(models.Model):
                 model.check_access_rights('read')
             except exceptions.AccessError:
                 raise exceptions.UserError(
-                    _('Assigned user %s has no access to the document and is not able to handle this activity.') %
-                    activity.user_id.display_name)
+                    _('Assigned user %s has no access to the document and is not able to handle this activity.',
+                      activity.user_id.display_name))
             else:
                 try:
                     target_user = activity.user_id
@@ -339,41 +339,42 @@ class MailActivity(models.Model):
                     model.browse(activity.res_id).check_access_rule('read')
                 except exceptions.AccessError:
                     raise exceptions.UserError(
-                        _('Assigned user %s has no access to the document and is not able to handle this activity.') %
-                        activity.user_id.display_name)
+                        _('Assigned user %s has no access to the document and is not able to handle this activity.',
+                          activity.user_id.display_name))
 
     # ------------------------------------------------------
     # ORM overrides
     # ------------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        activity = super(MailActivity, self).create(values)
-        need_sudo = False
-        try:  # in multicompany, reading the partner might break
-            partner_id = activity.user_id.partner_id.id
-        except exceptions.AccessError:
-            need_sudo = True
-            partner_id = activity.user_id.sudo().partner_id.id
+    @api.model_create_multi
+    def create(self, vals_list):
+        activities = super(MailActivity, self).create(vals_list)
+        for activity in activities:
+            need_sudo = False
+            try:  # in multicompany, reading the partner might break
+                partner_id = activity.user_id.partner_id.id
+            except exceptions.AccessError:
+                need_sudo = True
+                partner_id = activity.user_id.sudo().partner_id.id
 
-        # send a notification to assigned user; in case of manually done activity also check
-        # target has rights on document otherwise we prevent its creation. Automated activities
-        # are checked since they are integrated into business flows that should not crash.
-        if activity.user_id != self.env.user:
-            if not activity.automated:
-                activity._check_access_assignation()
-            if not self.env.context.get('mail_activity_quick_update', False):
-                if need_sudo:
-                    activity.sudo().action_notify()
-                else:
-                    activity.action_notify()
+            # send a notification to assigned user; in case of manually done activity also check
+            # target has rights on document otherwise we prevent its creation. Automated activities
+            # are checked since they are integrated into business flows that should not crash.
+            if activity.user_id != self.env.user:
+                if not activity.automated:
+                    activity._check_access_assignation()
+                if not self.env.context.get('mail_activity_quick_update', False):
+                    if need_sudo:
+                        activity.sudo().action_notify()
+                    else:
+                        activity.action_notify()
 
-        self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[partner_id])
-        if activity.date_deadline <= fields.Date.today():
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                {'type': 'activity_updated', 'activity_created': True})
-        return activity
+            self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[partner_id])
+            if activity.date_deadline <= fields.Date.today():
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                    {'type': 'activity_updated', 'activity_created': True})
+        return activities
 
     def write(self, values):
         if values.get('user_id'):
@@ -546,7 +547,7 @@ class MailActivity(models.Model):
                 },
                 subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_activities'),
                 mail_activity_type_id=activity.activity_type_id.id,
-                attachment_ids=[(4, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
+                attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
 
             # Moving the attachments in the message
@@ -669,6 +670,7 @@ class MailActivityMixin(models.AbstractModel):
         ('today', 'Today'),
         ('planned', 'Planned')], string='Activity State',
         compute='_compute_activity_state',
+        search='_search_activity_state',
         groups="base.group_user",
         help='Status based on activities\nOverdue: Due date is already passed\n'
              'Today: Activity date is today\nPlanned: Future activities.')
@@ -734,6 +736,71 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = 'planned'
             else:
                 record.activity_state = False
+
+    def _search_activity_state(self, operator, value):
+        all_states = {'overdue', 'today', 'planned', False}
+        if operator == '=':
+            search_states = {value}
+        elif operator == '!=':
+            search_states = all_states - {value}
+        elif operator == 'in':
+            search_states = set(value)
+        elif operator == 'not in':
+            search_states = all_states - set(value)
+
+        reverse_search = False
+        if False in search_states:
+            # If we search "activity_state = False", they might be a lot of records
+            # (million for some models), so instead of returning the list of IDs
+            # [(id, 'in', ids)] we will reverse the domain and return something like
+            # [(id, 'not in', ids)], so the list of ids is as small as possible
+            reverse_search = True
+            search_states = all_states - search_states
+
+        # Use number in the SQL query for performance purpose
+        integer_state_value = {
+            'overdue': -1,
+            'today': 0,
+            'planned': 1,
+            False: None,
+        }
+
+        search_states_int = {integer_state_value.get(s or False) for s in search_states}
+
+        query = """
+          SELECT res_id
+            FROM (
+                SELECT res_id,
+                       -- Global activity state
+                       MIN(
+                            -- Compute the state of each individual activities
+                            -- -1: overdue
+                            --  0: today
+                            --  1: planned
+                           SIGN(EXTRACT(day from (
+                                mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE res_partner.tz)
+                           )))
+                        )::INT AS activity_state
+                  FROM mail_activity
+             LEFT JOIN res_users
+                    ON res_users.id = mail_activity.user_id
+             LEFT JOIN res_partner
+                    ON res_partner.id = res_users.partner_id
+                 WHERE mail_activity.res_model = %(res_model_table)s
+              GROUP BY res_id
+            ) AS res_record
+          WHERE %(search_states_int)s @> ARRAY[activity_state]
+        """
+
+        self._cr.execute(
+            query,
+            {
+                'today_utc': pytz.UTC.localize(datetime.utcnow()),
+                'res_model_table': self._name,
+                'search_states_int': list(search_states_int)
+            },
+        )
+        return [('id', 'not in' if reverse_search else 'in', [r[0] for r in self._cr.fetchall()])]
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):

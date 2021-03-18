@@ -3,6 +3,7 @@
 
 {
     "name" : "Norway - Accounting",
+    'icon': '/base/static/img/country_flags/no.png',
     "version" : "2.0",
     "author" : "Rolv Råen",
     'category': 'Accounting/Localizations/Account Charts',
@@ -25,6 +26,5 @@ Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
      'demo': [
          'demo/demo_company.xml',
      ],
-    "active": False,
     'post_init_hook': '_preserve_tag_on_taxes',
 }

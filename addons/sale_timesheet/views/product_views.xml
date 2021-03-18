@@ -11,6 +11,11 @@
             </xpath>
             <xpath expr="//field[@name='service_type']" position="after">
                 <field name="service_policy" widget="radio" attrs="{'invisible': [('type','!=','service')]}"/>
+<<<<<<< HEAD
+=======
+                <field name="service_upsell_warning" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}" />
+                <field name="service_upsell_threshold" attrs="{'invisible': ['|', '|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet'), ('service_upsell_warning', '=', False)]}" widget="percentage"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             </xpath>
         </field>
     </record>

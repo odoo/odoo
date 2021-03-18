@@ -1590,7 +1590,7 @@
 
         <record id="europe" model="res.country.group">
             <field name="name">Europe</field>
-            <field name="country_ids" eval="[(6,0,[
+            <field name="country_ids" eval="[Command.set([
                 ref('at'),ref('be'),ref('bg'),ref('hr'),ref('cy'),
                 ref('cz'),ref('dk'),ref('ee'),ref('fi'),ref('fr'),
                 ref('de'),ref('gr'),ref('hu'),ref('ie'),ref('it'),
@@ -1601,7 +1601,7 @@
 
         <record id="south_america" model="res.country.group">
             <field name="name">South America</field>
-            <field name="country_ids" eval="[(6,0,[
+            <field name="country_ids" eval="[Command.set([
                 ref('ar'),ref('bo'),ref('br'),ref('cl'),ref('co'),
                 ref('ec'),ref('fk'),ref('gs'),ref('gf'),ref('gy'),
                 ref('py'),ref('pe'),ref('sr'),ref('uy'),ref('ve')])]"/>
@@ -1609,7 +1609,7 @@
 
         <record id="sepa_zone" model="res.country.group">
             <field name="name">SEPA Countries</field>
-            <field name="country_ids" eval="[(6,0,[
+            <field name="country_ids" eval="[Command.set([
                 ref('ad'),ref('at'),ref('ax'),ref('be'),ref('bg'),
                 ref('bl'),ref('ch'),ref('cy'),ref('cz'),ref('de'),
                 ref('dk'),ref('ee'),ref('es'),ref('fi'),ref('fr'),

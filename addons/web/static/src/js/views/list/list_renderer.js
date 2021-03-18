@@ -1,15 +1,14 @@
-odoo.define('web.ListRenderer', function (require) {
-"use strict";
+/** @odoo-module alias=web.ListRenderer **/
 
-var BasicRenderer = require('web.BasicRenderer');
-const { ComponentWrapper } = require('web.OwlCompatibility');
-var config = require('web.config');
-var core = require('web.core');
-var dom = require('web.dom');
-var field_utils = require('web.field_utils');
-var Pager = require('web.Pager');
-var utils = require('web.utils');
-var viewUtils = require('web.viewUtils');
+import BasicRenderer from 'web.BasicRenderer';
+import { ComponentWrapper } from 'web.OwlCompatibility';
+import config from 'web.config';
+import core from 'web.core';
+import dom from 'web.dom';
+import field_utils from 'web.field_utils';
+import Pager from 'web.Pager';
+import utils from 'web.utils';
+import viewUtils from 'web.viewUtils';
 
 var _t = core._t;
 
@@ -78,6 +77,7 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+        this.no_open = params.no_open;
     },
     /**
      * Compute columns visilibity. This can't be done earlier as we need the
@@ -291,6 +291,15 @@ var ListRenderer = BasicRenderer.extend({
                 return {name: fieldName, type: self.state.fields[fieldName].type};
             }),
         };
+    },
+    /**
+     * Returns the jQuery node used to update the selection
+     *
+     * @private
+     * @return {jQuery}
+     */
+    _getSelectableRecordCheckboxes: function () {
+        return this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
     },
     /**
      * Adjacent buttons (in the arch) are displayed in a single column. This
@@ -558,7 +567,7 @@ var ListRenderer = BasicRenderer.extend({
         if (field.type !== 'boolean') {
             title = formatter(value, field, _.extend(formatOptions, {escape: false}));
         }
-        return $td.html(formattedValue).attr('title', title);
+        return $td.html(formattedValue).attr('title', title).attr('name', name);
     },
     /**
      * Renders the button element associated to the given node and record.
@@ -590,12 +599,15 @@ var ListRenderer = BasicRenderer.extend({
 
         if (record.res_id) {
             // TODO this should be moved to a handler
-            $button.on("click", function (e) {
-                e.stopPropagation();
+            const debouncedClick = _.debounce(() => {
                 self.trigger_up('button_clicked', {
                     attrs: node.attrs,
                     record: record,
                 });
+            }, 500, true);
+            $button.on("click", (e) => {
+                e.stopPropagation();
+                debouncedClick();
             });
         } else {
             if (node.attrs.options.warn) {
@@ -952,6 +964,9 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
+        if (this.no_open && this.mode === "readonly") {
+            $tr.addClass('o_list_no_open');
+        }
         this._setDecorationClasses($tr, this.rowDecorations, record);
         return $tr;
     },
@@ -1171,7 +1186,7 @@ var ListRenderer = BasicRenderer.extend({
         const previousSelection = JSON.stringify(this.selection);
         this.selection = [];
         var self = this;
-        var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+        var $inputs = this._getSelectableRecordCheckboxes();
         var allChecked = $inputs.length > 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
@@ -1387,7 +1402,7 @@ var ListRenderer = BasicRenderer.extend({
     _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click')) {
+        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click') && !this.no_open) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
                 this.trigger_up('open_record', { id: id, target: ev.target });
@@ -1461,5 +1476,4 @@ var ListRenderer = BasicRenderer.extend({
     },
 });
 
-return ListRenderer;
-});
+export default ListRenderer;

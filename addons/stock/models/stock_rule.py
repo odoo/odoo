@@ -64,7 +64,7 @@ class StockRule(models.Model):
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
              "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
              "If there is no stock available, the system will try to find a  rule to bring the products in the source location.")
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False, compute_sudo=True)
+    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, check_company=True,
@@ -85,7 +85,7 @@ class StockRule(models.Model):
     auto = fields.Selection([
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',
-        default='manual', index=True, required=True,
+        default='manual', required=True,
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
@@ -164,6 +164,7 @@ class StockRule(models.Model):
         Care this function is not call by method run. It is called explicitely
         in stock_move.py inside the method _push_apply
         """
+        self.ensure_one()
         new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
         if self.auto == 'transparent':
             old_dest_location = move.location_dest_id
@@ -171,7 +172,7 @@ class StockRule(models.Model):
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
             if self.location_id != old_dest_location:
                 # TDE FIXME: should probably be done in the move model IMO
-                move._push_apply()
+                return move._push_apply()[:1]
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
             new_move = move.sudo().copy(new_move_vals)
@@ -179,7 +180,7 @@ class StockRule(models.Model):
                 new_move.write({'procure_method': 'make_to_stock'})
             if not new_move.location_id.should_bypass_reservation():
                 move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move._action_confirm()
+            return new_move
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         company_id = self.company_id.id
@@ -488,6 +489,11 @@ class ProcurementGroup(models.Model):
             ('state', 'in', ['confirmed', 'partially_available']),
             ('product_uom_qty', '!=', 0.0)
         ]
+<<<<<<< HEAD
+=======
+        moves_domain = expression.AND([moves_domain, ['|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
+                                                           ('reservation_date', '<=', fields.Date.today())]])
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         if company_id:
             moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
         return moves_domain
@@ -515,6 +521,15 @@ class ProcurementGroup(models.Model):
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
+<<<<<<< HEAD
+=======
+
+        if use_new_cursor:
+            self._cr.commit()
+
+        # Run cyclic inventories
+        self.env['stock.inventory']._run_inventory_tasks(company_id)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         if use_new_cursor:
             self._cr.commit()

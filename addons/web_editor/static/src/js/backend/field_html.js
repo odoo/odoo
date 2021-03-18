@@ -34,6 +34,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     description: _lt("Html"),
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
+    isQuickEditable: true,
 
     custom_events: {
         wysiwyg_focus: '_onWysiwygFocus',
@@ -225,7 +226,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
+<<<<<<< HEAD
                 if (self.model === "mail.compose.message" || self.model === "mailing.mailing") {
+=======
+                if (self.field.sanitize && self.field.sanitize_tags) {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     options.noVideos = true;
                 }
                 options.prettifyHtml = false;
@@ -352,6 +357,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
                     var height = cwindow.document.body.scrollHeight;
                     self.$iframe.css('height', Math.max(30, Math.min(height, 500)) + 'px');
+
+                    $(cwindow).on('click', function (ev) {
+                        if (!ev.target.closest("[href]")) {
+                            self._onClick(ev);
+                        }
+                    });
                 });
             });
         } else {

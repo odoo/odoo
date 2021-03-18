@@ -62,11 +62,13 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         constructor() {
             super(...arguments);
 
+            this._canQuickEdit = this.constructor.isQuickEditable;
             this._isValid = true;
             // this is the last value that was set by the user, unparsed. This is
             // used to avoid setting the value twice in a row with the exact value.
             this._lastSetValue = undefined;
 
+            useListener('click', this._onClick);
             useListener('keydown', this._onKeydown);
             useListener('navigation-move', this._onNavigationMove);
             onMounted(() => this._applyDecorations());
@@ -87,6 +89,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             const res = super.__patch(...arguments);
             this.el.setAttribute('name', this.name);
             this.el.classList.add('o_field_widget');
+            this.el.classList.toggle('o_quick_editable', this._canQuickEdit);
             return res;
         }
         /**
@@ -170,6 +173,14 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         get formatType() {
             return this.attrs.widget in field_utils.format ?
                 this.attrs.widget : this.field.type;
+        }
+        /**
+         * Returns true if the component is readonly from a modifier
+         *
+         * @returns {boolean}
+         */
+        get hasReadonlyModifier() {
+            return this.options.hasReadonlyModifier || false;
         }
         /**
          * Returns whether or not the field is empty and can thus be hidden. This
@@ -377,6 +388,19 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          */
         commitChanges() {}
         /**
+         * This function is called when the form view auto focus a field for
+         * quick editing. Some fields have a special behaviour for the quick edit
+         * like the checkbox: when we click on checkbox to quick-edit it,
+         * it toggles its value as we've already been in edit mode.
+         *
+         * @param {any} extraInfo info to change the behaviour
+         */
+        quickEdit(extraInfo) {
+            if (this._canQuickEdit && this.mode !== 'readonly') {
+                this._quickEdit(extraInfo);
+            }
+        }
+        /**
          * Remove the invalid class on a field
          *
          * This function should be removed when BasicRenderer will be rewritten in owl
@@ -430,6 +454,14 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             }
         }
         /**
+         * @private
+         * @see quickEdit
+         * @param {any} extraInfo info to change the behaviour
+         */
+        _quickEdit(extraInfo) {
+            this.activate({noAutomaticCreate: true});
+        }
+        /**
          * Converts the value from the field to a string representation.
          *
          * @private
@@ -452,6 +484,14 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          */
         _getClassFromDecoration(decoration) {
             return `text-${decoration.split('-')[1]}`;
+        }
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         * @returns {Object}
+         */
+        _getQuickEditExtraInfo(ev) {
+            return {};
         }
         /**
          * Compares the given value with the last value that has been set.
@@ -546,6 +586,23 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         // Handlers
         //----------------------------------------------------------------------
 
+        /**
+         * Triggers quick edit only if the field is authorized to do it.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClick(ev) {
+            if (this._canQuickEdit &&
+                !this.constructor.quickEditExclusion.some(x => ev.target.closest(x))
+            ) {
+                this.trigger('quick-edit', {
+                    fieldName: this.name,
+                    target: this.el,
+                    extraInfo: this._getQuickEditExtraInfo(ev),
+                });
+            }
+        }
         /**
          * Intercepts navigation keyboard events to prevent their default behavior
          * and notifies the view so that it can handle it its own way.
@@ -643,6 +700,18 @@ odoo.define('web.AbstractFieldOwl', function (require) {
      * If set, this value will be displayed as column name.
      */
     AbstractField.label = "";
+    /**
+     * Determines if the field can be quick editable which means that when
+     * the field is clicked and if it's quick editable, it will trigger an event
+     * to the form view to switch into edit mode and then it'll perform
+     * some action (@see quickEdit)
+     */
+    AbstractField.isQuickEditable = false;
+    /**
+     * List of selectors matching elements that must never trigger the 'quick_edit'
+     * event when being clicked on.
+     */
+    AbstractField.quickEditExclusion = [];
 
     return AbstractField;
 });

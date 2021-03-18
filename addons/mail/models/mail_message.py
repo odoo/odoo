@@ -8,7 +8,11 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
 
+<<<<<<< HEAD
 from odoo import _, api, fields, models, modules, tools
+=======
+from odoo import _, api, Command, fields, models, modules, tools
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
@@ -762,7 +766,7 @@ class Message(models.Model):
         partner_id = self.env.user.partner_id.id
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
-        starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
+        starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
         ids = [m.id for m in starred_messages]
         notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
@@ -776,9 +780,9 @@ class Message(models.Model):
         self.check_access_rule('read')
         starred = not self.starred
         if starred:
-            self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [Command.link(self.env.user.partner_id.id)]})
         else:
-            self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
 
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
@@ -986,6 +990,7 @@ class Message(models.Model):
                         'old_value': tracking.get_old_display_value()[0],
                         'new_value': tracking.get_new_display_value()[0],
                         'field_type': tracking.field_type,
+                        'currency_id': tracking.currency_id.id,
                     })
 
             vals.update({

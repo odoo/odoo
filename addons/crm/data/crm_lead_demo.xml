@@ -86,7 +86,7 @@
             <field name="phone">+1 555 754 3010</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'), ref('sales_team.categ_oppor5')])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
@@ -108,7 +108,7 @@
             <field name="street">United Street 68</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor5')])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
@@ -132,7 +132,7 @@
             <field name="phone">+1 813 494 5005</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description"></field>
@@ -171,7 +171,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="zip">00118</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3'), ref('sales_team.categ_oppor4')])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
@@ -249,7 +249,7 @@ ESM Expert<br />]]></field>
             <field name="zip">OX1 1RQ</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor4'), ref('sales_team.categ_oppor7')])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -305,7 +305,7 @@ Andrew</p>]]></field>
             <field name="zip">1300</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor7')])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -604,7 +604,7 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=3)).strftime('%Y-%m-%d %H:%M')"/>
@@ -667,7 +667,7 @@ Andrew</p>]]></field>
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')])]"/>
             <field name="priority">1</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -703,7 +703,7 @@ Andrew</p>]]></field>
             <field name="city">Lima</field>
             <field name="priority">0</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor7')])]"/>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -775,7 +775,7 @@ Andrew</p>]]></field>
             <field name="priority">2</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor2')])]"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=6)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -799,7 +799,7 @@ Andrew</p>]]></field>
             <field name="priority">0</field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1'), ref('sales_team.categ_oppor5')])]"/>
             <field name="date_deadline" eval="DateTime.today() + relativedelta(days=12)"/>
-            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
         </record>
@@ -820,6 +820,8 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor6')])]"/>
             <field name="priority">1</field>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
             <field name="stage_id" ref="stage_lead2"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
@@ -842,6 +844,8 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor6')])]"/>
             <field name="priority">1</field>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
@@ -892,246 +896,267 @@ Andrew</p>]]></field>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
         </record>
 
-<record id="crm_case_graph_1" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
-<field name="type">lead</field>
-<field name="name">Recurring delivery contract</field>
-<field name="expected_revenue">36221</field>
-<field name="probability">20</field>
-<field name="contact_name">Max Johnson</field>
-<field name="email_from">max123@itconsult.com</field>
-<field name="country_id" ref="base.it"/>
-<field name="city">Milan</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead2"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_1" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
+            <field name="type">lead</field>
+            <field name="name">Recurring delivery contract</field>
+            <field name="expected_revenue">36221</field>
+            <field name="probability">20</field>
+            <field name="contact_name">Max Johnson</field>
+            <field name="email_from">max123@itconsult.com</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="city">Milan</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_2" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
-<field name="type">lead</field>
-<field name="name">Need info about pricing</field>
-<field name="expected_revenue">28443</field>
-<field name="probability">80</field>
-<field name="contact_name">Aloysius Akred</field>
-<field name="email_from">aakreda@theglobeandmail.com</field>
-<field name="country_id" ref="base.gr"/>
-<field name="city">London</field>
-<field name="street">1 Russel square</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead3"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_2" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
+            <field name="type">lead</field>
+            <field name="name">Need info about pricing</field>
+            <field name="expected_revenue">28443</field>
+            <field name="probability">80</field>
+            <field name="contact_name">Aloysius Akred</field>
+            <field name="email_from">aakreda@theglobeandmail.com</field>
+            <field name="country_id" ref="base.gr"/>
+            <field name="city">London</field>
+            <field name="street">1 Russel square</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_3" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=24)"/>
-<field name="type">lead</field>
-<field name="name">Trelian New Offices</field>
-<field name="expected_revenue">88715</field>
-<field name="probability">12</field>
-<field name="contact_name">Rosalynd Oxshott</field>
-<field name="partner_name">Photobug</field>
-<field name="email_from">roxshott9@trellian.com</field>
-<field name="country_id" ref="base.br"/>
-<field name="city">Canguaretama</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead2"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_3" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=24)"/>
+            <field name="type">lead</field>
+            <field name="name">Trelian New Offices</field>
+            <field name="expected_revenue">88715</field>
+            <field name="probability">12</field>
+            <field name="contact_name">Rosalynd Oxshott</field>
+            <field name="partner_name">Photobug</field>
+            <field name="email_from">roxshott9@trellian.com</field>
+            <field name="country_id" ref="base.br"/>
+            <field name="city">Canguaretama</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_4" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=40)"/>
-<field name="type">lead</field>
-<field name="name">Branded Furniture</field>
-<field name="expected_revenue">7784</field>
-<field name="probability">20</field>
-<field name="contact_name">Myrna Limprecht</field>
-<field name="email_from">mlimprecht8@fastcompany.com</field>
-<field name="country_id" ref="base.pt"/>
-<field name="city">Valejas</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead2"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_4" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=40)"/>
+            <field name="type">lead</field>
+            <field name="name">Branded Furniture</field>
+            <field name="expected_revenue">7784</field>
+            <field name="probability">20</field>
+            <field name="contact_name">Myrna Limprecht</field>
+            <field name="email_from">mlimprecht8@fastcompany.com</field>
+            <field name="country_id" ref="base.pt"/>
+            <field name="city">Valejas</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_5" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=45)"/>
-<field name="type">lead</field>
-<field name="name">Design New Shelves</field>
-<field name="expected_revenue">54587</field>
-<field name="probability">81</field>
-<field name="contact_name">Alys Kalinovich</field>
-<field name="partner_name">Jaloo</field>
-<field name="email_from">akalinovich7@tinypic.com</field>
-<field name="country_id" ref="base.id"/>
-<field name="city">Boafeo</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead2"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_5" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=45)"/>
+            <field name="type">lead</field>
+            <field name="name">Design New Shelves</field>
+            <field name="expected_revenue">54587</field>
+            <field name="probability">81</field>
+            <field name="contact_name">Alys Kalinovich</field>
+            <field name="partner_name">Jaloo</field>
+            <field name="email_from">akalinovich7@tinypic.com</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="city">Boafeo</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_6" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=48)"/>
-<field name="type">lead</field>
-<field name="name">Office chairs</field>
-<field name="expected_revenue">5474</field>
-<field name="probability">20</field>
-<field name="contact_name">Jennine Jobbins</field>
-<field name="partner_name">Shufflebeat</field>
-<field name="email_from">jjobbins6@simplemachines.org</field>
-<field name="country_id" ref="base.ru"/>
-<field name="city">Gvardeysk</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead2"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_6" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=48)"/>
+            <field name="type">lead</field>
+            <field name="name">Office chairs</field>
+            <field name="expected_revenue">5474</field>
+            <field name="probability">20</field>
+            <field name="contact_name">Jennine Jobbins</field>
+            <field name="partner_name">Shufflebeat</field>
+            <field name="email_from">jjobbins6@simplemachines.org</field>
+            <field name="country_id" ref="base.ru"/>
+            <field name="city">Gvardeysk</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_7" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=80)"/>
-<field name="type">lead</field>
-<field name="name">Cleaning subscription</field>
-<field name="expected_revenue">11475</field>
-<field name="probability">25</field>
-<field name="contact_name">Elmo Espinazo</field>
-<field name="partner_name">Realblab</field>
-<field name="email_from">eespinazo5@reuters.com</field>
-<field name="country_id" ref="base.nl"/>
-<field name="city">Amsterdam</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead1"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_7" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=80)"/>
+            <field name="type">lead</field>
+            <field name="name">Cleaning subscription</field>
+            <field name="expected_revenue">11475</field>
+            <field name="probability">25</field>
+            <field name="contact_name">Elmo Espinazo</field>
+            <field name="partner_name">Realblab</field>
+            <field name="email_from">eespinazo5@reuters.com</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="city">Amsterdam</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_8" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=37)"/>
-<field name="type">lead</field>
-<field name="name">Custom Desks (100 pieces)</field>
-<field name="expected_revenue">9987</field>
-<field name="probability">20</field>
-<field name="contact_name">Chalmers Redford</field>
-<field name="partner_name">Muxo</field>
-<field name="email_from">credford4@salon.com</field>
-<field name="country_id" ref="base.ru"/>
-<field name="city">Odoyev</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="team_id" ref="sales_team.crm_team_1"/>
-<field name="user_id" ref="base.user_admin"/>
-<field name="stage_id" ref="crm.stage_lead2"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_8" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=37)"/>
+            <field name="type">lead</field>
+            <field name="name">Custom Desks (100 pieces)</field>
+            <field name="expected_revenue">9987</field>
+            <field name="probability">20</field>
+            <field name="contact_name">Chalmers Redford</field>
+            <field name="partner_name">Muxo</field>
+            <field name="email_from">credford4@salon.com</field>
+            <field name="country_id" ref="base.ru"/>
+            <field name="city">Odoyev</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_9" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=32)"/>
-<field name="type">lead</field>
-<field name="name">Need a price: urgent</field>
-<field name="expected_revenue">4482</field>
-<field name="probability">90</field>
-<field name="contact_name">Itch Kirvell</field>
-<field name="partner_name">Skibox</field>
-<field name="email_from">ikirvell3@gnu.org</field>
-<field name="country_id" ref="base.id"/>
-<field name="city">Dahu Satu</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead3"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_9" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=32)"/>
+            <field name="type">lead</field>
+            <field name="name">Need a price: urgent</field>
+            <field name="expected_revenue">4482</field>
+            <field name="probability">90</field>
+            <field name="contact_name">Itch Kirvell</field>
+            <field name="partner_name">Skibox</field>
+            <field name="email_from">ikirvell3@gnu.org</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="city">Dahu Satu</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_10" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
-<field name="type">lead</field>
-<field name="name">Furnitures for new location</field>
-<field name="expected_revenue">22500</field>
-<field name="probability">20</field>
-<field name="contact_name">Napoleon Grabert</field>
-<field name="partner_name">Twinte</field>
-<field name="email_from">ngrabert2@dailymail.co.uk</field>
-<field name="country_id" ref="base.jp"/>
-<field name="city">Tokyo</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead2"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_10" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
+            <field name="type">lead</field>
+            <field name="name">Furnitures for new location</field>
+            <field name="expected_revenue">22500</field>
+            <field name="probability">20</field>
+            <field name="contact_name">Napoleon Grabert</field>
+            <field name="partner_name">Twinte</field>
+            <field name="email_from">ngrabert2@dailymail.co.uk</field>
+            <field name="country_id" ref="base.jp"/>
+            <field name="city">Tokyo</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-<record id="crm_case_graph_11" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
-<field name="type">lead</field>
-<field name="name">Modernize old offices</field>
-<field name="expected_revenue">99755</field>
-<field name="probability">20</field>
-<field name="contact_name">Franny Seiller</field>
-<field name="partner_name">Yozio</field>
-<field name="email_from">fseiller1@theglobeandmail.com</field>
-<field name="country_id" ref="base.id"/>
-<field name="city">Wurigelebur</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead3"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_11" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
+            <field name="type">lead</field>
+            <field name="name">Modernize old offices</field>
+            <field name="expected_revenue">99755</field>
+            <field name="probability">20</field>
+            <field name="contact_name">Franny Seiller</field>
+            <field name="partner_name">Yozio</field>
+            <field name="email_from">fseiller1@theglobeandmail.com</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="city">Wurigelebur</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
-
-<record id="crm_case_graph_12" model="crm.lead">
-<field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
-<field name="type">lead</field>
-<field name="name">Quote for 35 windows</field>
-<field name="expected_revenue">41421</field>
-<field name="probability">20</field>
-<field name="contact_name">Tommi Brockhouse</field>
-<field name="partner_name">Gabcube</field>
-<field name="email_from">tbrockhouse0@google.pl</field>
-<field name="country_id" ref="base.be"/>
-<field name="city">Brussels</field>
-<field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
-<field name="priority">1</field>
-<field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
-<field name="stage_id" ref="crm.stage_lead3"/>
-<field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
-<field name="medium_id" ref="utm.utm_medium_email"/>
-<field name="source_id" ref="utm.utm_source_search_engine"/>
-</record>
+        <record id="crm_case_graph_12" model="crm.lead">
+            <field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
+            <field name="type">lead</field>
+            <field name="name">Quote for 35 windows</field>
+            <field name="expected_revenue">41421</field>
+            <field name="probability">20</field>
+            <field name="contact_name">Tommi Brockhouse</field>
+            <field name="partner_name">Gabcube</field>
+            <field name="email_from">tbrockhouse0@google.pl</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Brussels</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor1')])]"/>
+            <field name="priority">1</field>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" eval="False"/>
+            <field name="user_id" eval="False"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
+            <field name="medium_id" ref="utm.utm_medium_email"/>
+            <field name="source_id" ref="utm.utm_source_search_engine"/>
+        </record>
 
 
         <!-- Call Function to set dome opportunities as Lost -->

@@ -250,7 +250,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test('sortBy', function (assert) {
-        assert.expect(27);
+        assert.expect(29);
         const { sortBy } = utils;
         const bools = [true, false, true];
         const ints = [2, 1, 5];
@@ -310,6 +310,9 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(sortBy(objbools, getter), [{ x: false }, { x: true }, { x: true }]);
         assert.deepEqual(sortBy(objints, getter), [{ x: 1 }, { x: 2 }, { x: 5 }]);
         assert.deepEqual(sortBy(objstrss, getter), [{ x: 'a' }, { x: 'b' }, { x: 'z' }]);
+        // Descending order
+        assert.deepEqual(sortBy(ints, null, 'desc'), [5, 2, 1]);
+        assert.deepEqual(sortBy(objstrss, prop, 'desc'), [{ x: 'z' }, { x: 'b' }, { x: 'a' }]);
     });
 });
 

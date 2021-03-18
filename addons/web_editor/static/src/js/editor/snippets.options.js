@@ -813,7 +813,7 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
             if (widget.isActive()) {
                 // Only one select item can be true at a time, we consider the
                 // last one if multiple would be active.
-                return;
+                break;
             }
         }
         await _super(...arguments);
@@ -932,6 +932,14 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         this.menuTogglerEl.textContent = textContent;
         if (this.menuTogglerItemEl) {
             this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
+        }
+    },
+    /**
+     * @override
+     */
+    enable() {
+        if (!this.menuTogglerEl.classList.contains('active')) {
+            this.menuTogglerEl.click();
         }
     },
 
@@ -1467,7 +1475,7 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
         } else {
             iconEl.classList.add('fa', 'fa-fw', 'fa-refresh', 'mr-1');
             this.el.classList.add('o_we_no_toggle');
-            this.containerEl.textContent = _t("Replace media");
+            this.containerEl.textContent = _t("Replace");
         }
         $(this.containerEl).prepend(iconEl);
     },
@@ -1495,6 +1503,8 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             noIcons: true,
             noDocuments: true,
             isForBgVideo: true,
+            vimeoPreviewIds: ['299225971', '414790269', '420192073', '368484050', '334729960', '417478345',
+                '312451183', '415226028', '367762632', '340475898', '374265101', '370467553'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
         }, el).open();
@@ -1819,9 +1829,243 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
             if (currentPage !== -1) {
                 this.currentPage = currentPage;
                 this._updatePage();
+<<<<<<< HEAD
+=======
             }
         }
         return this._super(...arguments);
+    },
+});
+
+const Many2oneUserValueWidget = SelectUserValueWidget.extend({
+    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
+    events: Object.assign({}, SelectUserValueWidget.prototype.events, {
+        'input .o_we_m2o_search input': '_onSearchInput',
+        'keydown .o_we_m2o_search input': '_onSearchKeydown',
+        'click .o_we_m2o_search_more': '_onSearchMoreClick',
+    }),
+    // Data-attributes that will be read into `this.options` on init and not
+    // transfered to inner buttons.
+    configAttributes: ['model', 'fields', 'limit', 'domain', 'callWith'],
+
+    /**
+     * @override
+     */
+    init(parent, title, options, $target) {
+        this.afterSearch = [];
+        this.displayNameCache = {};
+        const {dataAttributes} = options;
+        Object.assign(options, {
+            limit: '5',
+            fields: '[]',
+            domain: '[]',
+            callWith: 'id',
+        });
+        this.configAttributes.forEach(attr => {
+            if (dataAttributes.hasOwnProperty(attr)) {
+                options[attr] = dataAttributes[attr];
+                delete dataAttributes[attr];
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+            }
+        });
+        options.limit = parseInt(options.limit);
+        options.fields = JSON.parse(options.fields);
+        if (!options.fields.includes('display_name')) {
+            options.fields.push('display_name');
+        }
+        options.domain = JSON.parse(options.domain);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+
+        this.inputEl = document.createElement('input');
+        this.inputEl.setAttribute('placeholder', _t("Search for records..."));
+        const searchEl = document.createElement('div');
+        searchEl.classList.add('o_we_m2o_search');
+        searchEl.appendChild(this.inputEl);
+        this.menuEl.appendChild(searchEl);
+
+        this.searchMore = document.createElement('div');
+        this.searchMore.classList.add('o_we_m2o_search_more');
+        this.searchMore.textContent = _t("Search more...");
+        this.searchMore.title = _t("Search to show more records");
+        return this._search('');
+    },
+    /**
+     * @override
+     */
+    async setValue(value, methodName) {
+        await this._super(...arguments);
+        // The currently selected value is not present in the search, need to read
+        // its display name.
+        if (this.menuTogglerEl.textContent === '/' && value !== '') {
+            this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
+        }
+    },
+    /**
+     * Prevents double widget instanciation for we-buttons that have been
+     * created manually by _search (container widgets will have their innner
+     * html searched for userValueWidgets to instanciate during option startup)
+     *
+     * @override
+     */
+    isContainer() {
+        return false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Searches the database for corresponding records and updates the dropdown
+     *
+     * @private
+     */
+    async _search(needle) {
+        const recTuples = await this._rpc({
+            model: this.options.model,
+            method: 'name_search',
+            kwargs: {
+                name: needle,
+                args: this.options.domain,
+                operator: "ilike",
+                limit: this.options.limit + 1,
+            },
+        });
+        const records = await this._rpc({
+            model: this.options.model,
+            method: 'read',
+            args: [recTuples.map(([id, _name]) => id), this.options.fields],
+        });
+        records.forEach(record => {
+            this.displayNameCache[record.id] = record.display_name;
+        });
+
+        await Promise.all(records.slice(0, this.options.limit).map(async record => {
+            // Copy over the data-attributes from the main element, and default the value
+            // to the callWith field of the record so that if it's a method, it will
+            // be called with that value
+            const buttonDataAttributes = Object.assign({}, this.options.dataAttributes);
+            Object.keys(buttonDataAttributes).forEach(key => {
+                buttonDataAttributes[key] = buttonDataAttributes[key] || record[this.options.callWith];
+            });
+            const buttonWidget = new ButtonUserValueWidget(this, undefined, {
+                dataAttributes: Object.assign({recordData: JSON.stringify(record)}, buttonDataAttributes),
+                childNodes: [document.createTextNode(record.display_name)],
+            }, this.$target);
+            this.registerSubWidget(buttonWidget);
+            await buttonWidget.appendTo(this.menuEl);
+            if (this._methodsNames) {
+                buttonWidget.loadMethodsData(this._methodsNames);
+            }
+        }));
+        // Load methodsData for new buttons if possible. It will not be possible
+        // when the widget is first created (as this._methodsNames will be undefined)
+        // but the snippetOption lifecycle will load the methods data explicitely
+        // just after creating the widget
+        if (this._methodsNames) {
+            this._methodsNames.forEach(methodName => {
+                this.setValue(this._value, methodName);
+            });
+        }
+
+        const hasMore = records.length > this.options.limit;
+        if (hasMore) {
+            this.menuEl.appendChild(this.searchMore);
+            this.searchMore.classList.remove('d-none');
+        } else {
+            this.searchMore.classList.add('d-none');
+        }
+
+        this.waitingForSearch = false;
+        this.afterSearch.forEach(cb => cb());
+        this.afterSearch = [];
+    },
+    /**
+     * Returns the display name for a given record.
+     *
+     * @private
+     */
+    async _getDisplayName(recordId) {
+        if (!this.displayNameCache.hasOwnProperty(recordId)) {
+            this.displayNameCache[recordId] = (await this._rpc({
+                model: this.options.model,
+                method: 'read',
+                args: [[recordId], ['display_name']],
+            }))[0].display_name;
+        }
+        return this.displayNameCache[recordId];
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onClick(ev) {
+        // Prevent dropdown from closing if you click on the search or has_more
+        if (ev.target.closest('.o_we_m2o_search_more, .o_we_m2o_search')) {
+            ev.stopPropagation();
+            return;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Handles changes to the search bar.
+     *
+     * @private
+     */
+    _onSearchInput(ev) {
+        // maybe there is a concurrency primitive we can use instead of manual record-keeping?
+        // Basically we want to queue the enter action to go after the current search if there
+        // is one that is ongoing (ie currently waiting for the debounce or RPC)
+        clearTimeout(this.searchIntent);
+        this.waitingForSearch = true;
+        this.searchIntent = setTimeout(() => {
+            this._userValueWidgets.forEach(widget => {
+                if (widget.isPreviewed()) {
+                    widget.notifyValueChange('reset');
+                }
+                widget.destroy();
+            });
+            this._search(ev.target.value);
+        }, 500);
+    },
+    /**
+     * Selects the first option when pressing enter in the search input.
+     *
+     * @private
+     */
+    _onSearchKeydown(ev) {
+        if (ev.which !== $.ui.keyCode.ENTER) {
+            return;
+        }
+        const action = () => {
+            const firstButton = this.menuEl.querySelector('we-button');
+            if (firstButton) {
+                firstButton.click();
+            }
+        };
+        if (this.waitingForSearch) {
+            this.afterSearch.push(action);
+        } else {
+            action();
+        }
+    },
+    /**
+     * Focuses the search input when clicking on the "Search more..." button.
+     *
+     * @private
+     */
+    _onSearchMoreClick(ev) {
+        this.inputEl.focus();
     },
 });
 
@@ -1838,6 +2082,7 @@ const userValueWidgetsRegistry = {
     'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
     'we-select-pager': SelectPagerUserValueWidget,
+    'we-many2one': Many2oneUserValueWidget,
 };
 
 /**
@@ -1861,6 +2106,13 @@ const SnippetOptionWidget = Widget.extend({
      * @type {boolean}
      */
     isTopOption: false,
+    /**
+     * Indicates if the option should be the first one displayed in the button
+     * group at the top of the options panel, next to the clone/remove button.
+     *
+     * @type {boolean}
+     */
+    isTopFirstOption: false,
     /**
      * Forces the target to not be possible to remove.
      *
@@ -2048,7 +2300,11 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
+<<<<<<< HEAD
     selectStyle: function (previewMode, widgetValue, params) {
+=======
+    selectStyle: async function (previewMode, widgetValue, params) {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         // Disable all transitions for the duration of the method as many
         // comparisons will be done on the element to know if applying a
         // property has an effect or not. Also, changing a css property via the
@@ -2769,10 +3025,18 @@ const SnippetOptionWidget = Widget.extend({
             requiresReload = !!reloadMessage;
             if (requiresReload) {
                 const save = await new Promise(resolve => {
-                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") + ' '
+                    Dialog.confirm(this, _t("To apply this change, we need to save all your previous modifications and reload the page.") + ' '
                             + (typeof reloadMessage === 'string' ? reloadMessage : ''), {
-                        confirm_callback: () => resolve(true),
-                        cancel_callback: () => resolve(false),
+                        buttons: [{
+                            text: _t('Save and Reload'),
+                            classes: 'btn-primary',
+                            close: true,
+                            click: () => resolve(true),
+                        }, {
+                            text: _t("Cancel"),
+                            close: true,
+                            click: () => resolve(false)
+                        }],
                     });
                 });
                 if (!save) {
@@ -3165,7 +3429,6 @@ registry['sizing_y'] = registry.sizing.extend({
  * options that handles all the common parts.
  */
 const ImageHandlerOption = SnippetOptionWidget.extend({
-
     /**
      * @override
      */
@@ -3173,6 +3436,36 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const _super = this._super.bind(this);
         await this._loadImageInfo();
         return _super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        const weightEl = document.createElement('span');
+        weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'o_we_tag_small', 'd-none');
+        weightEl.title = _t("Size");
+        this.$weight = $(weightEl);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUI() {
+        await this._super(...arguments);
+
+        if (this._filesize === undefined) {
+            await this._applyOptions(false);
+        }
+        if (this._filesize !== undefined) {
+            this.$weight.text(`${this._filesize.toFixed(1)} kb`);
+            this.$weight.removeClass('d-none');
+            this._relocateWeightEl();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -3270,6 +3563,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return this._super(...arguments);
     },
     /**
+     * @abstract
+     */
+    _relocateWeightEl() {},
+    /**
      * @override
      */
     async _renderCustomXML(uiFragment) {
@@ -3321,14 +3618,21 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * Applies all selected options on the original image.
      *
      * @private
+     * @param {boolean} [update=true] If this is false, this does not actually
+     *     modifies the image but only simulates the modifications on it to
+     *     be able to update the filesize UI.
      */
-    async _applyOptions() {
+    async _applyOptions(update = true) {
         const img = this._getImg();
+        if (!update && !(img && img.complete)) {
+            return;
+        }
         if (!['image/jpeg', 'image/png'].includes(img.dataset.mimetype)) {
             this.originalId = null;
             return;
         }
         const dataURL = await applyModifications(img);
+<<<<<<< HEAD
         const weight = dataURL.split(',')[1].length / 4 * 3;
         const $weight = this.$el.find('.o_we_image_weight');
         $weight.find('> small').text(_t("New size"));
@@ -3338,6 +3642,17 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const loadedImg = await loadImage(dataURL, img);
         this._applyImage(loadedImg);
         return loadedImg;
+=======
+        this._filesize = dataURL.split(',')[1].length / 4 * 3 / 1024;
+
+        if (update) {
+            img.classList.add('o_modified_image_to_save');
+            const loadedImg = await loadImage(dataURL, img);
+            this._applyImage(loadedImg);
+            return loadedImg;
+        }
+        return img;
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     },
     /**
      * Loads the image's attachment info.
@@ -3442,6 +3757,14 @@ registry.ImageOptimize = ImageHandlerOption.extend({
     _getImg() {
         return this.$target[0];
     },
+    /**
+     * @override
+     */
+    _relocateWeightEl() {
+        const leftPanelEl = this.$overlay.data('$optionsSection')[0];
+        const titleTextEl = leftPanelEl.querySelector('we-title > span');
+        this.$weight.appendTo(titleTextEl);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -3539,6 +3862,25 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     /**
      * @override
      */
+<<<<<<< HEAD
+=======
+    _relocateWeightEl() {
+        this.trigger_up('option_update', {
+            optionNames: ['BackgroundImage'],
+            name: 'add_size_indicator',
+            data: this.$weight,
+        });
+        // Hack to align on the right
+        this.$weight.css({
+            'width': '200px', // Make parent row grow by faking a width
+            'flex': '0 0 0', // But force no forced width
+            'margin-left': 'auto',
+        });
+    },
+    /**
+     * @override
+     */
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     _applyImage(img) {
         this.$target.css('background-image', `url('${img.getAttribute('src')}')`);
     },
@@ -3741,7 +4083,11 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
                 return;
         }
         const newURL = new URL(currentSrc, window.location.origin);
+<<<<<<< HEAD
         newURL.searchParams.set('c1', normalizeColor(widgetValue));
+=======
+        newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
         this.$target.css('background-image', `url('${src}')`);
@@ -3754,6 +4100,16 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    notify(name, data) {
+        if (name === 'add_size_indicator') {
+            this._requestUserValueWidgets('bg_image_opt')[0].$el.after(data);
+        } else {
+            this._super(...arguments);
+        }
+    },
     /**
      * @override
      */
@@ -3778,12 +4134,20 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     /**
      * @override
      */
+<<<<<<< HEAD
     _computeWidgetState: function (methodName) {
+=======
+    _computeWidgetState: function (methodName, params) {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         switch (methodName) {
             case 'background':
                 return getBgImageURL(this.$target[0]);
             case 'dynamicColor':
+<<<<<<< HEAD
                 return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get('c1');
+=======
+                return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get(params.colorName);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }
         return this._super(...arguments);
     },
@@ -3791,7 +4155,14 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
+<<<<<<< HEAD
         if (widgetName === 'dynamic_color_opt') {
+=======
+        if ('colorName' in params) {
+            const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
+            return src.searchParams.has(params.colorName);
+        } else if (widgetName === 'dynamic_color_opt') {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
@@ -3804,10 +4175,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     _setBackground(backgroundURL) {
         if (backgroundURL) {
             this.$target.css('background-image', `url('${backgroundURL}')`);
-            this.$target.addClass('oe_img_bg');
+            this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
             this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg');
+            this.$target.removeClass('oe_img_bg o_bg_img_center');
         }
     },
 });
@@ -3838,7 +4209,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     shape(previewMode, widgetValue, params) {
         this._handlePreviewState(previewMode, () => {
-            return {shape: widgetValue, colors: this._getDefaultColors(), flip: []};
+            return {shape: widgetValue, colors: this._getImplicitColors(widgetValue, this._getShapeData().colors), flip: []};
         });
     },
     /**
@@ -3909,7 +4280,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     _renderCustomXML(uiFragment) {
         Object.keys(this._getDefaultColors()).map(colorName => {
             uiFragment.querySelector('[data-name="colors"]')
-                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}">`)[0]);
+                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
         });
 
         uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
@@ -4057,7 +4428,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const defaultColors = this._getDefaultColors();
         const shapeData = Object.assign(this._getShapeData(), newData);
         const areColorsDefault = Object.entries(shapeData.colors).every(([colorName, colorValue]) => {
+<<<<<<< HEAD
             return colorValue.toLowerCase() === defaultColors[colorName].toLowerCase();
+=======
+            return defaultColors[colorName] && colorValue.toLowerCase() === defaultColors[colorName].toLowerCase();
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         });
         if (areColorsDefault) {
             delete shapeData.colors;
@@ -4108,7 +4483,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     _getShapeData(target = this.$target[0]) {
         const defaultData = {
             shape: '',
-            colors: this._getDefaultColors(),
+            colors: this._getDefaultColors($(target)),
             flip: [],
         };
         const json = target.dataset.oeShapeData;
@@ -4118,9 +4493,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * Returns the default colors for the currently selected shape.
      *
      * @private
+     * @param {jQueryElement} [$target=this.$target] the target on which to read
+     *   the shape data.
      */
-    _getDefaultColors() {
-        const $shapeContainer = this.$target.find('> .o_we_shape')
+    _getDefaultColors($target = this.$target) {
+        const $shapeContainer = $target.find('> .o_we_shape')
             .clone()
             .addClass('d-none')
             // Needs to be in document for bg-image class to take effect
@@ -4134,6 +4511,44 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const url = new URL(shapeSrc, window.location.origin);
         return Object.fromEntries(url.searchParams.entries());
+    },
+    /**
+     * Returns the default colors for the a shape in the selector.
+     *
+     * @private
+     * @param {String} shapeId identifier of the shape
+     */
+    _getShapeDefaultColors(shapeId) {
+        const $shapeContainer = this.$el.find(".o_we_shape_menu we-button[data-shape='" + shapeId + "'] div.o_we_shape");
+        const shapeContainer = $shapeContainer[0];
+        const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
+        const url = new URL(shapeSrc, window.location.origin);
+        return Object.fromEntries(url.searchParams.entries());
+    },
+    /**
+     * Returns the implicit colors for the currently selected shape.
+     *
+     * The implicit colors are use upon shape selection. They are computed as:
+     * - the default colors
+     * - patched with each set of colors of previous siblings shape
+     * - patched with the colors of the previously selected shape
+     * - filtered to only keep the colors involved in the current shape
+     *
+     * @private
+     * @param {String} shape identifier of the selected shape
+     * @param {Object} previousColors colors of the shape before its replacement
+     */
+    _getImplicitColors(shape, previousColors) {
+        const defaultColors = this._getShapeDefaultColors(shape);
+        let colors = previousColors || {};
+        let sibling = this.$target[0].previousElementSibling;
+        while (sibling) {
+            colors = Object.assign(this._getShapeData(sibling).colors || {}, colors);
+            sibling = sibling.previousElementSibling;
+        }
+        const defaultKeys = Object.keys(defaultColors);
+        colors = Object.assign(defaultColors, colors);
+        return _.pick(colors, defaultKeys);
     },
     /**
      * Toggles whether there is a shape or not, to be called from bg toggler.
@@ -4157,7 +4572,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             } else {
                 shapeToSelect = possibleShapes[1];
             }
-            return this._handlePreviewState(false, () => ({shape: shapeToSelect}));
+            this.trigger_up('snippet_edition_request', {exec: () => {
+                // options for shape will only be available after _toggleShape() returned
+                this._requestUserValueWidgets('bg_shape_opt')[0].enable();
+            }});
+            return this._handlePreviewState(false, () => ({shape: shapeToSelect, colors: this._getImplicitColors(shapeToSelect)}));
         }
     },
 });
@@ -4504,59 +4923,62 @@ registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
  * @todo replace this mechanism with real backend m2o field ?
  */
 registry.many2one = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/snippets.xml'],
     /**
      * @override
      */
-    start: function () {
-        var self = this;
-        this.trigger_up('getRecordInfo', _.extend(this.options, {
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
-            },
-        }));
-
-        this.Model = this.$target.data('oe-many2one-model');
-        this.ID = +this.$target.data('oe-many2one-id');
-
-        // create search button and bind search bar
-        this.$btn = $(qweb.render('web_editor.many2one.button'))
-            .prependTo(this.$el);
-
-        this.$ul = this.$btn.find('ul');
-        this.$search = this.$ul.find('li:first');
-        this.$search.find('input').on('mousedown click mouseup keyup keydown', function (e) {
-            e.stopPropagation();
-        });
-
-        // move menu item
-        setTimeout(function () {
-            self.$btn.find('a').on('click', function (e) {
-                self._clear();
-            });
-        }, 0);
-
-        // bind search input
-        this.$search.find('input')
-            .focus()
-            .on('keyup', function (e) {
-                self.$overlay.removeClass('o_overlay_hidden');
-                self._findExisting($(this).val());
-            });
-
-        // bind result
-        this.$ul.on('click', 'li:not(:first) a', function (e) {
-            self._selectRecord($(e.currentTarget));
-        });
-
-        return this._super.apply(this, arguments);
+    async willStart() {
+        const {oeMany2oneModel, oeMany2oneId} = this.$target[0].dataset;
+        this.fields = ['name', 'display_name'];
+        return Promise.all([
+            this._super(...arguments),
+            this._rpc({
+                model: oeMany2oneModel,
+                method: 'read',
+                args: [[parseInt(oeMany2oneId)], this.fields],
+            }).then(([initialRecord]) => {
+                this.initialRecord = initialRecord;
+            }),
+        ]);
     },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
     /**
-     * @override
+     * @see this.selectClass for params
      */
-    onFocus: function () {
-        this.$target.attr('contentEditable', 'false');
-        this._clear();
+    async changeRecord(previewMode, widgetValue, params) {
+        const target = this.$target[0];
+        if (previewMode === 'reset') {
+            // Have to set the jQ data because it's used to update the record in other
+            // parts of the page, but have to set the dataset because used for saving.
+            this.$target.data('oeMany2oneId', this.prevId);
+            target.dataset.oeMany2oneId = this.prevId;
+            this.$target.empty().append(this.$prevContents);
+            return this._rerenderContacts(this.prevId, this.prevRecordName);
+        }
+
+        const record = JSON.parse(params.recordData);
+        if (previewMode === true) {
+            this.prevId = parseInt(target.dataset.oeMany2oneId);
+            this.$prevContents = this.$target.contents();
+            this.prevRecordName = this.prevRecordName || this.initialRecord.name;
+        }
+
+        this.$target.data('oeMany2oneId', record.id);
+        target.dataset.oeMany2oneId = record.id;
+
+        if (target.dataset.oeType !== 'contact') {
+            target.textContent = record.name;
+        }
+        await this._rerenderContacts(record.id, record.name);
+
+        if (previewMode === false) {
+            this.prevId = record.id;
+            this.$prevContents = this.$target.contents();
+            this.prevRecordName = record.name;
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -4564,93 +4986,62 @@ registry.many2one = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Removes the input value and suggestions.
-     *
-     * @private
+     * @override
      */
-    _clear: function () {
-        var self = this;
-        this.$search.siblings().remove();
-        self.$search.find('input').val('');
-        setTimeout(function () {
-            self.$search.find('input').focus();
-        }, 0);
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'changeRecord') {
+            return this.$target[0].dataset.oeMany2oneId;
+        }
+        return this._super(...arguments);
     },
     /**
-     * Find existing record with the given name and suggest them.
-     *
-     * @private
-     * @param {string} name
-     * @returns {Promise}
+     * @override
      */
-    _findExisting: function (name) {
-        var self = this;
-        var domain = [];
-        if (!name || !name.length) {
-            self.$search.siblings().remove();
-            return;
-        }
-        if (isNaN(+name)) {
-            if (this.Model !== 'res.partner') {
-                domain.push(['name', 'ilike', name]);
-            } else {
-                domain.push('|', ['name', 'ilike', name], ['email', 'ilike', name]);
-            }
-        } else {
-            domain.push(['id', '=', name]);
-        }
+    async _renderCustomXML(uiFragment) {
+        const many2oneWidget = document.createElement('we-many2one');
+        many2oneWidget.dataset.changeRecord = '';
 
-        return this._rpc({
-            model: this.Model,
+        const model = this.$target[0].dataset.oeMany2oneModel;
+        const [{name: modelName}] = await this._rpc({
+            model: 'ir.model',
             method: 'search_read',
-            args: [domain, this.Model === 'res.partner' ? ['name', 'display_name', 'city', 'country_id'] : ['name', 'display_name']],
-            kwargs: {
-                order: [{name: 'name', asc: false}],
-                limit: 5,
-                context: this.options.context,
-            },
-        }).then(function (result) {
-            self.$search.siblings().remove();
-            self.$search.after(qweb.render('web_editor.many2one.search', {contacts: result}));
+            args: [[['model', '=', model]], ['name']],
         });
+        many2oneWidget.setAttribute('String', modelName);
+        many2oneWidget.dataset.model = model;
+        many2oneWidget.dataset.fields = JSON.stringify(this.fields);
+        uiFragment.appendChild(many2oneWidget);
     },
     /**
-     * Selects the given suggestion and displays it the proper way.
-     *
      * @private
-     * @param {jQuery} $li
      */
-    _selectRecord: function ($li) {
-        var self = this;
-
-        this.ID = +$li.data('id');
-        this.$target.attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID);
-
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
-        this.$target.trigger('content_changed');
-
-        if (self.$target.data('oe-type') === 'contact') {
-            $('[data-oe-contact-options]')
-                .filter('[data-oe-model="' + self.$target.data('oe-model') + '"]')
-                .filter('[data-oe-id="' + self.$target.data('oe-id') + '"]')
-                .filter('[data-oe-field="' + self.$target.data('oe-field') + '"]')
-                .filter('[data-oe-contact-options!="' + self.$target.data('oe-contact-options') + '"]')
-                .add(self.$target)
-                .attr('data-oe-many2one-id', self.ID).data('oe-many2one-id', self.ID)
-                .each(function () {
-                    var $node = $(this);
-                    var options = $node.data('oe-contact-options');
-                    self._rpc({
+    async _rerenderContacts(contactId, defaultText) {
+        // Rerender this same field in other places in the page (with different
+        // contact-options). Many2ones with the same contact options will just
+        // copy the HTML of the current m2o on content_changed. Not sure why we
+        // only do this for contacts, or why we do this here instead of in
+        // rte.summernote.js like we do for replacing text on content_changed
+        const selector = [
+            `[data-oe-model="${this.$target.data('oe-model')}"]`,
+            `[data-oe-id="${this.$target.data('oe-id')}"]`,
+            `[data-oe-field="${this.$target.data('oe-field')}"]`,
+            `[data-oe-contact-options!='${this.$target[0].dataset.oeContactOptions}']`,
+        ].join('');
+        let $toRerender = $(selector);
+        if (this.$target[0].dataset.oeType === 'contact') {
+            $toRerender = $toRerender.add(this.$target);
+        }
+        await Promise.all($toRerender
+            .attr('data-oe-many2one-id', contactId).data('oe-many2one-id', contactId)
+            .map(async (i, node) => {
+                if (node.dataset.oeType === 'contact') {
+                    const html = await this._rpc({
                         model: 'ir.qweb.field.contact',
                         method: 'get_record_to_html',
-                        args: [[self.ID]],
-                        kwargs: {
-                            options: options,
-                            context: self.options.context,
-                        },
-                    }).then(function (html) {
-                        $node.html(html);
+                        args: [[contactId]],
+                        kwargs: {options: JSON.parse(node.dataset.oeContactOptions)},
                     });
+<<<<<<< HEAD
                 });
         } else {
             self.$target.text($li.data('name'));
@@ -4658,8 +5049,15 @@ registry.many2one = SnippetOptionWidget.extend({
 
         this._clear();
     }
+=======
+                    $(node).html(html);
+                } else {
+                    node.textContent = defaultText;
+                }
+            }));
+    },
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 });
-
 /**
  * Allows to display a warning message on outdated snippets.
  */
@@ -4699,6 +5097,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
      */
     saveSnippet: function (previewMode, widgetValue, params) {
         return new Promise(resolve => {
+<<<<<<< HEAD
             const dialog = new Dialog(this, {
                 title: _t("Save Your Block"),
                 size: 'small',
@@ -4770,6 +5169,59 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                 }],
             }).open();
             dialog.on('closed', this, () => resolve());
+=======
+            Dialog.confirm(this, _t("To save a snippet, we need to save all your previous modifications and reload the page."), {
+                cancel_callback: () => resolve(false),
+                buttons: [
+                    {
+                        text: _t("Save and Reload"),
+                        classes: 'btn-primary',
+                        close: true,
+                        click: () => {
+                            const snippetKey = this.$target[0].dataset.snippet;
+                            let thumbnailURL;
+                            this.trigger_up('snippet_thumbnail_url_request', {
+                                key: snippetKey,
+                                onSuccess: url => thumbnailURL = url,
+                            });
+                            let context;
+                            this.trigger_up('context_get', {
+                                callback: ctx => context = ctx,
+                            });
+                            this.trigger_up('request_save', {
+                                reloadEditor: true,
+                                onSuccess: async () => {
+                                    const defaultSnippetName = _.str.sprintf(_t("Custom %s"), this.data.snippetName);
+                                    const targetCopyEl = this.$target[0].cloneNode(true);
+                                    delete targetCopyEl.dataset.name;
+                                    // By the time onSuccess is called after request_save, the
+                                    // current widget has been destroyed and is orphaned, so this._rpc
+                                    // will not work as it can't trigger_up. For this reason, we need
+                                    // to bypass the service provider and use the global RPC directly
+                                    await rpc.query({
+                                        model: 'ir.ui.view',
+                                        method: 'save_snippet',
+                                        kwargs: {
+                                            'name': defaultSnippetName,
+                                            'arch': targetCopyEl.outerHTML,
+                                            'template_key': this.options.snippets,
+                                            'snippet_key': snippetKey,
+                                            'thumbnail_url': thumbnailURL,
+                                            'context': context,
+                                        },
+                                    });
+                                },
+                            });
+                            resolve(true);
+                        }
+                    }, {
+                        text: _t("Cancel"),
+                        close: true,
+                        click: () => resolve(false),
+                    }
+                ]
+            });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         });
     },
 });
@@ -4813,7 +5265,11 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
                 return;
         }
         const newURL = new URL(target.src, window.location.origin);
+<<<<<<< HEAD
         newURL.searchParams.set('c1', normalizeColor(widgetValue));
+=======
+        newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
         target.src = src;
@@ -4832,7 +5288,20 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
     _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'color':
+<<<<<<< HEAD
                 return new URL(this.$target[0].src, window.location.origin).searchParams.get('c1');
+=======
+                return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if ('colorName' in params) {
+            return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }
         return this._super(...arguments);
     },

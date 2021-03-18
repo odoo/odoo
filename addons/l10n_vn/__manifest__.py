@@ -4,6 +4,7 @@
 
 {
     "name": "Vietnam - Accounting",
+    'icon': '/base/static/img/country_flags/vn.png',
     "version": "2.0",
     "author": "General Solutions",
     'website': 'http://gscom.vn',

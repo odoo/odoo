@@ -1086,7 +1086,7 @@ options.registry.menu_data = options.Class.extend({
                         },
                     });
                 }},
-                {text: _t("Edit the menu"), classes: 'btn-primary', click: function () {
+                {text: _t("Edit the menu"), classes: 'btn-primary', close: true, click: function () {
                     this.trigger_up('action_demand', {
                         actionName: 'edit_menu',
                         params: [
@@ -1752,8 +1752,12 @@ options.registry.HeaderNavbar = options.Class.extend({
      */
     init() {
         this._super(...arguments);
+<<<<<<< HEAD
         // Don't use setTarget, we want it to be set directly at initialization.
         this.$target = this.$target.closest('#wrapwrap > header');
+=======
+        this.setTarget(this.$target.closest('#wrapwrap > header'));
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     },
 
     //--------------------------------------------------------------------------

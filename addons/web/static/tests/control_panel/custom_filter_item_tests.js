@@ -3,7 +3,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
     const Domain = require('web.Domain');
     const CustomFilterItem = require('web.CustomFilterItem');
-    const ActionModel = require('web/static/src/js/views/action_model.js');
+    const ActionModel = require('web.ActionModel');
     const pyUtils = require('web.py_utils');
     const testUtils = require('web.test_utils');
 
@@ -66,6 +66,48 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.containsN(cfi, 'div.o_filter_condition', 2);
             assert.containsOnce(cfi, 'div.o_filter_condition .o_or_filter');
             assert.containsN(cfi, 'div.o_filter_condition .o_generator_menu_delete', 2);
+
+            cfi.destroy();
+        });
+
+        QUnit.test('custom OR filter presets new condition from preceding', async function (assert) {
+            assert.expect(4);
+
+            const searchModel = new ActionModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            // Open custom filter form
+            await cpHelpers.toggleAddCustomFilter(cfi);
+
+            // Retrieve second selectable values for field and operator dropdowns
+            const fieldSecondValue = cfi.el.querySelector('.o_generator_menu_field option:nth-of-type(2)').value;
+            const operatorSecondValue = cfi.el.querySelector('.o_generator_menu_operator option:nth-of-type(2)').value;
+
+            // Check if they really exist…
+            assert.ok(!!fieldSecondValue);
+            assert.ok(!!operatorSecondValue);
+
+            // Add first filter condition
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), fieldSecondValue);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), operatorSecondValue);
+
+            // Add a second conditon on the filter being created
+            await cpHelpers.addCondition(cfi);
+
+            // Check the defaults for field and operator dropdowns
+            assert.strictEqual(
+                cfi.el.querySelector('.o_filter_condition:nth-of-type(2) .o_generator_menu_field').value,
+                fieldSecondValue
+            );
+            assert.strictEqual(
+                cfi.el.querySelector('.o_filter_condition:nth-of-type(2) .o_generator_menu_operator').value,
+                operatorSecondValue
+            );
 
             cfi.destroy();
         });

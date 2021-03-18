@@ -71,10 +71,13 @@ class AccountMoveReversal(models.TransientModel):
             'auto_post': True if reverse_date > fields.Date.context_today(self) else False,
         }
 
+<<<<<<< HEAD
     def _reverse_moves_post_hook(self, moves):
         # DEPRECATED: TO REMOVE IN MASTER
         return
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def reverse_moves(self):
         self.ensure_one()
         moves = self.move_ids

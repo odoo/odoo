@@ -126,10 +126,11 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
 });
 
 QUnit.test('composer text input: basic rendering when linked thread is a mail.channel', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -153,10 +154,48 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
         1,
         "should have editable part inside composer text input"
     );
+});
+
+QUnit.test('composer text input placeholder should contain channel name when thread does not have specific correspondent', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        name: 'General',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
-        "Write something...",
-        "should have 'Write something...' as placeholder in composer text input if composer is for a 'mail.channel'"
+        "Message #General...",
+        "should have 'Message #General...' as placeholder for composer text input when thread does not have specific correspondent"
+    );
+});
+
+QUnit.test('composer text input placeholder should contain correspondent name when thread has exactly one correspondent', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 7, name: 'Marc Demo' });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 20,
+        members: [this.data.currentPartnerId, 7],
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        "Message Marc Demo...",
+        "should have 'Message Marc Demo...' as placeholder for composer text input when thread has exactly one correspondent"
     );
 });
 
@@ -187,9 +226,15 @@ QUnit.test('mailing channel composer: basic rendering', async function (assert) 
 QUnit.test('add an emoji', async function (assert) {
     assert.expect(1);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonEmojis').click()
     );
@@ -210,9 +255,15 @@ QUnit.test('add an emoji', async function (assert) {
 QUnit.test('add an emoji after some text', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     await afterNextRender(() => {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "Blabla");
@@ -241,9 +292,15 @@ QUnit.test('add an emoji after some text', async function (assert) {
 QUnit.test('add emoji replaces (keyboard) text selection', async function (assert) {
     assert.expect(2);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
     await afterNextRender(() => {
         composerTextInputTextArea.focus();
@@ -281,11 +338,22 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
         id: 11,
         source: "hello",
         substitution: "Hello! How are you?",
+<<<<<<< HEAD
     });
 
+=======
+    });
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -314,11 +382,22 @@ QUnit.test('use a canned response', async function (assert) {
         id: 11,
         source: "hello",
         substitution: "Hello! How are you?",
+<<<<<<< HEAD
     });
 
+=======
+    });
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -362,11 +441,22 @@ QUnit.test('use a canned response some text', async function (assert) {
         id: 11,
         source: "hello",
         substitution: "Hello! How are you?",
+<<<<<<< HEAD
     });
 
+=======
+    });
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -418,11 +508,22 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         id: 11,
         source: "hello",
         substitution: "Hello! How are you?",
+<<<<<<< HEAD
     });
 
+=======
+    });
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
 
     assert.containsNone(
         document.body,
@@ -482,9 +583,19 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
         name: "General",
         public: "groups",
     });
+<<<<<<< HEAD
     await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
+=======
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     assert.containsNone(
         document.body,
@@ -515,8 +626,16 @@ QUnit.test('mention a channel', async function (assert) {
         public: "groups",
     });
     await this.start();
+<<<<<<< HEAD
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
+=======
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     assert.containsNone(
         document.body,
@@ -562,13 +681,26 @@ QUnit.test('mention a channel after some text', async function (assert) {
         public: "groups",
     });
     await this.start();
+<<<<<<< HEAD
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
+=======
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     assert.containsNone(
         document.body,
         '.o_ComposerSuggestion',
         "channel mention suggestions list should not be present"
+<<<<<<< HEAD
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+=======
     );
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
@@ -617,6 +749,885 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         public: "groups",
     });
     await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 7,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "#");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a channel mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "#General ",
+        "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
+    );
+
+    // select emoji
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').click()
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "#General 😊",
+        "text content of composer should have previous channel mention and selected emoji just after"
+    );
+    // ensure popover is closed
+    await nextAnimationFrame();
+});
+
+QUnit.test('display command suggestions on typing "/"', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "command suggestions list should not be present"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.hasClass(
+        document.querySelector('.o_ComposerSuggestionList_list'),
+        'show',
+        "should display command suggestions on typing '/'"
+    );
+});
+
+QUnit.test('use a command for a specific channel type', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "command suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a command suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "/who ",
+        "text content of composer should have used command + additional whitespace afterwards"
+    );
+});
+
+QUnit.test("channel with no commands should not prompt any command suggestions on typing /", async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ channel_type: 'chat', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "bla bla bla",
+            name: "who",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector('.o_ComposerTextInput_textarea').focus();
+        document.execCommand('insertText', false, "/");
+        const composer_text_input = document.querySelector('.o_ComposerTextInput_textarea');
+        composer_text_input.dispatchEvent(new window.KeyboardEvent('keydown'));
+        composer_text_input.dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should not prompt (command) suggestion after typing / (reason: no channel commands in chat channels)"
+    );
+});
+
+QUnit.test('use a command after some text', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "command suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "bluhbluh ")
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "bluhbluh ",
+        "text content of composer should have content"
+    );
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "/")
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a command suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "bluhbluh /who ",
+        "text content of composer should have previous content + used command + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('add an emoji after a command', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
+    this.data['mail.channel_command'].records.push(
+        {
+            channel_types: ['channel'],
+            help: "List users in the current channel",
+            name: "who",
+        },
+    );
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "command suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/");
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a command suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "/who ",
+        "text content of composer should have previous content + used command + additional whitespace afterwards"
+    );
+
+    // select emoji
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').click()
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "/who 😊",
+        "text content of composer should have previous command and selected emoji just after"
+    );
+    // ensure popover is closed
+    await nextAnimationFrame();
+});
+
+QUnit.test('display partner mention suggestions on typing "@"', async function (assert) {
+    assert.expect(3);
+
+    this.data['res.partner'].records.push({
+        id: 11,
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    this.data['res.partner'].records.push({
+        id: 12,
+        email: "testpartner2@odoo.com",
+        name: "TestPartner2",
+    });
+    this.data['res.users'].records.push({
+        partner_id: 11,
+    });
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "mention suggestions list should not be present"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.hasClass(
+        document.querySelector('.o_ComposerSuggestionList_list'),
+        'show',
+        "should display mention suggestions on typing '@'"
+    );
+    assert.containsOnce(
+        document.body,
+        '.dropdown-divider',
+        "should have a separator"
+    );
+});
+
+QUnit.test('mention a partner', async function (assert) {
+    assert.expect(4);
+
+    this.data['res.partner'].records.push({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestionList_list',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "T");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "e");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "@TestPartner ",
+        "text content of composer should have mentioned partner + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('mention a partner after some text', async function (assert) {
+    assert.expect(5);
+
+    this.data['res.partner'].records.push({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+        "",
+        "text content of composer should be empty initially"
+    );
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    await afterNextRender(() =>
+        document.execCommand('insertText', false, "bluhbluh ")
+    );
+<<<<<<< HEAD
+=======
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "bluhbluh ",
+        "text content of composer should have content"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "T");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "e");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "bluhbluh @TestPartner ",
+        "text content of composer should have previous content + mentioned partner + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('add an emoji after a partner mention', async function (assert) {
+    assert.expect(5);
+
+    this.data['res.partner'].records.push({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+
+    assert.containsNone(
+        document.body,
+        '.o_ComposerSuggestion',
+        "mention suggestions list should not be present"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "text content of composer should be empty initially"
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "T");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+        document.execCommand('insertText', false, "e");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "@TestPartner ",
+        "text content of composer should have previous content + mentioned partner + additional whitespace afterwards"
+    );
+
+    // select emoji
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').click()
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "@TestPartner 😊",
+        "text content of composer should have previous mention and selected emoji just after"
+    );
+    // ensure popover is closed
+    await nextAnimationFrame();
+});
+
+QUnit.test('composer: add an attachment', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, { attachmentsDetailsMode: 'card' });
+
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.ok(
+        document.querySelector('.o_Composer_attachmentList'),
+        "should have an attachment list"
+    );
+    assert.ok(
+        document.querySelector(`.o_Composer .o_Attachment`),
+        "should have an attachment"
+    );
+});
+
+QUnit.test('composer: drop attachments', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    const files = [
+        await createFile({
+            content: 'hello, world',
+            contentType: 'text/plain',
+            name: 'text.txt',
+        }),
+        await createFile({
+            content: 'hello, worlduh',
+            contentType: 'text/plain',
+            name: 'text2.txt',
+        }),
+    ];
+    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Composer')));
+    assert.ok(
+        document.querySelector('.o_Composer_dropZone'),
+        "should have a drop zone"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
+        0,
+        "should have no attachment before files are dropped"
+    );
+
+    await afterNextRender(() =>
+        dropFiles(
+            document.querySelector('.o_Composer_dropZone'),
+            files
+        )
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
+        2,
+        "should have 2 attachments in the composer after files dropped"
+    );
+
+    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Composer')));
+    await afterNextRender(async () =>
+        dropFiles(
+            document.querySelector('.o_Composer_dropZone'),
+            [
+                await createFile({
+                    content: 'hello, world',
+                    contentType: 'text/plain',
+                    name: 'text3.txt',
+                })
+            ]
+        )
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
+        3,
+        "should have 3 attachments in the box after files dropped"
+    );
+});
+
+QUnit.test('composer: paste attachments', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    const files = [
+        await createFile({
+            content: 'hello, world',
+            contentType: 'text/plain',
+            name: 'text.txt',
+        })
+    ];
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
+        0,
+        "should not have any attachment in the composer before paste"
+    );
+
+    await afterNextRender(() =>
+        pasteFiles(document.querySelector('.o_ComposerTextInput'), files)
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
+        1,
+        "should have 1 attachment in the composer after paste"
+    );
+});
+
+QUnit.test('send message when enter is pressed while holding ctrl key (this shortcut is available)', async function (assert) {
+    // Note that test doesn't assert ENTER makes no newline, because this
+    // default browser cannot be simulated with just dispatching
+    // programmatically crafted events...
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['ctrl-enter'],
+    });
+    // Type message
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    document.execCommand('insertText', false, "test message");
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable"
+    );
+
+    await afterNextRender(() => {
+        const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable as message has not been posted"
+    );
+
+    // Send message with ctrl+enter
+    await afterNextRender(() =>
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown', { ctrlKey: true, key: 'Enter' }))
+    );
+    assert.verifySteps(['message_post']);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "should have no content in composer input as message has been posted"
+    );
+});
+
+QUnit.test('send message when enter is pressed while holding meta key (this shortcut is available)', async function (assert) {
+    // Note that test doesn't assert ENTER makes no newline, because this
+    // default browser cannot be simulated with just dispatching
+    // programmatically crafted events...
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['meta-enter'],
+    });
+    // Type message
+    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    document.execCommand('insertText', false, "test message");
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable"
+    );
+
+    await afterNextRender(() => {
+        const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "test message",
+        "should have inserted text content in editable as message has not been posted"
+    );
+
+    // Send message with meta+enter
+    await afterNextRender(() =>
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', metaKey: true }))
+    );
+    assert.verifySteps(['message_post']);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "",
+        "should have no content in composer input as message has been posted"
+    );
+});
+
+QUnit.test('composer text input cleared on message post', async function (assert) {
+    assert.expect(4);
+
+    // channel that is expected to be rendered
+    // with a random unique id that will be referenced in the test
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "bluhbluh ",
+        "text content of composer should have content"
+    );
+    await afterNextRender(() =>
+<<<<<<< HEAD
+        document.execCommand('insertText', false, "#")
+    );
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerSuggestion',
+        "should have a channel mention suggestion"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+=======
+        document.querySelector('.o_Composer_buttonSend').click()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "bluhbluh #General ",
+        "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
+    );
+});
+
+QUnit.test('add an emoji after a channel mention', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({
+        id: 7,
+        name: "General",
+        public: "groups",
+    });
+<<<<<<< HEAD
+    await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
@@ -625,6 +1636,18 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         '.o_ComposerSuggestion',
         "mention suggestions list should not be present"
     );
+=======
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "",
@@ -1680,6 +2703,9 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     assert.expect(8);
 
     const attachmentUploadedPromise = makeTestPromise();
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
     await this.start({
         async mockFetch(resource, init) {
             const res = this._super(...arguments);
@@ -1689,8 +2715,11 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
             return res;
         }
     });
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1709,7 +2738,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(
@@ -1731,7 +2760,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsNone(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed should be uploaded"
     );
     assert.containsOnce(
@@ -1801,7 +2830,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(
@@ -1817,6 +2846,383 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     assert.verifySteps(
         ['notification'],
         "should have triggered a notification for inability to post message at the moment (some attachments are still being uploaded)"
+    );
+});
+
+QUnit.test('remove an attachment from composer does not need any confirmation', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_attachmentList',
+        "should have an attachment list"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should have only one attachment"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Attachment_asideItemUnlink').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should not have any attachment left after unlinking the only one"
+    );
+});
+
+QUnit.test('remove an uploading attachment', async function (assert) {
+    assert.expect(4);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                // simulates uploading indefinitely
+                await new Promise(() => {});
+            }
+            return res;
+        }
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_attachmentList',
+        "should have an attachment list"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should have only one attachment"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment.o-isUploading',
+        "should have an uploading attachment"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Attachment_asideItemUnlink').click());
+    assert.containsNone(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "should not have any attachment left after unlinking uploading one"
+    );
+});
+
+<<<<<<< HEAD
+QUnit.test('warning on send with shortcut when attempting to post message with still-uploading attachments', async function (assert) {
+    assert.expect(7);
+=======
+QUnit.test('remove an uploading attachment aborts upload', async function (assert) {
+    assert.expect(1);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start({
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                // simulates uploading indefinitely
+                await new Promise(() => {});
+            }
+            return res;
+        }
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['enter'],
+    });
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should contain an attachment"
+    );
+    const attachmentLocalId = document.querySelector('.o_Attachment').dataset.attachmentLocalId;
+
+    await this.afterEvent({
+        eventName: 'o-attachment-upload-abort',
+        func: () => {
+            document.querySelector('.o_Attachment_asideItemUnlink').click();
+        },
+        message: "attachment upload request should have been aborted",
+        predicate: ({ attachment }) => {
+            return attachment.localId === attachmentLocalId;
+        },
+    });
+});
+
+QUnit.test("Show a default status in the recipient status text when the thread doesn't have a name.", async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        composer: [['create', { isLog: false }]],
+        id: 20,
+        model: 'res.partner',
+    });
+    await this.createComposerComponent(thread.composer, { hasFollowers: true });
+    assert.strictEqual(
+        document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
+        "To:Followersofthisdocument",
+        "Composer should display \"To: Followers of this document\" if the thread as no name."
+    );
+});
+
+QUnit.test("Show a thread name in the recipient status text.", async function (assert) {
+    assert.expect(1);
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        name: "test name",
+        composer: [['create', { isLog: false }]],
+        id: 20,
+        model: 'res.partner',
+    });
+    await this.createComposerComponent(thread.composer, { hasFollowers: true });
+    assert.strictEqual(
+        document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
+        "To:Followersof\"testname\"",
+        "basic rendering when sending a message to the followers and thread does have a name"
+    );
+});
+
+QUnit.test('send message only once when button send is clicked twice quickly', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_Composer_buttonSend`).click();
+        document.querySelector(`.o_Composer_buttonSend`).click();
+    });
+    assert.verifySteps(
+        ['message_post'],
+        "The message has been posted only once"
+    );
+});
+
+QUnit.test('send message only once when enter is pressed twice quickly', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['enter'],
+    });
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
+    await afterNextRender(() => {
+        const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+    });
+    assert.verifySteps(
+        ['message_post'],
+        "The message has been posted only once"
+    );
+});
+
+QUnit.test("mentioned partners should not be notified if they are not member of current channel", async function (assert) {
+    assert.expect(4);
+
+    this.data['res.partner'].records.push({
+        email: "testpartner@example.com",
+        name: "TestPartner",
+    });
+    this.data['mail.channel'].records.push({
+        id: 10,
+        members: [this.data.currentPartnerId],
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.model === 'mail.channel' && args.method === 'message_post') {
+                assert.step('message_post');
+                assert.strictEqual(
+                    args.kwargs.partner_ids.length,
+                    0,
+                    "message_post should not contain mentioned partners that are not members of channel"
+                );
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 10,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() => document.querySelector('.o_ComposerSuggestion').click());
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "@TestPartner ",
+        "text content of composer should have mentioned partner + additional whitespace afterwards"
+    );
+    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    assert.verifySteps(['message_post'], "the message should be posted");
+});
+
+QUnit.test('[technical] does not crash when an attachment is removed before its upload starts', async function (assert) {
+    // Uploading multiple files uploads attachments one at a time, this test
+    // ensures that there is no crash when an attachment is destroyed before its
+    // upload started.
+    assert.expect(1);
+
+    // Promise to block attachment uploading
+    const uploadPromise = makeTestPromise();
+    this.data['mail.channel'].records.push({
+        id: 20,
+    });
+    await this.start({
+        async mockFetch(resource) {
+            const _super = this._super.bind(this, ...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                await uploadPromise;
+            }
+            return _super();
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    const file1 = await createFile({
+        name: 'text1.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    const file2 = await createFile({
+        name: 'text2.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file1, file2]
+        )
+    );
+    await afterNextRender(() => {
+            Array.from(document.querySelectorAll('div'))
+            .find(el => el.textContent === 'text2.txt')
+            .closest('.o_Attachment')
+            .querySelector('.o_Attachment_asideItemUnlink')
+            .click();
+        }
+    );
+    // Simulates the completion of the upload of the first attachment
+    uploadPromise.resolve();
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment:contains("text1.txt")',
+        "should only have the first attachment after cancelling the second attachment"
     );
 });
 

@@ -5,6 +5,7 @@
 
 {
     'name': 'Singapore - Accounting',
+    'icon': '/base/static/img/country_flags/sg.png',
     'author': 'Tech Receptives',
     'version': '2.0',
     'category': 'Accounting/Localizations/Account Charts',

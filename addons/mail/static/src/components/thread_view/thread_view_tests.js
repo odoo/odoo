@@ -62,6 +62,7 @@ QUnit.module('thread_view_tests.js', {
 QUnit.test('dragover files on thread with composer', async function (assert) {
     assert.expect(1);
 
+<<<<<<< HEAD
     await this.start();
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'channel',
@@ -82,6 +83,32 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
         name: "General",
         public: 'public',
     });
+=======
+    this.data['res.partner'].records.push(
+        {
+            email: "john@example.com",
+            id: 9,
+            name: "John",
+        },
+        {
+            email: "fred@example.com",
+            id: 10,
+            name: "Fred",
+        },
+    );
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 100,
+        members: [this.data.currentPartnerId, 9, 10],
+        name: "General",
+        public: 'public',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['link', thread]],
@@ -107,6 +134,7 @@ QUnit.test('message list desc order', async function (assert) {
             res_id: 100,
         });
     }
+<<<<<<< HEAD
     await this.start();
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'channel',
@@ -127,6 +155,32 @@ QUnit.test('message list desc order', async function (assert) {
         name: "General",
         public: 'public',
     });
+=======
+    this.data['res.partner'].records.push(
+        {
+            email: "john@example.com",
+            id: 9,
+            name: "John",
+        },
+        {
+            email: "fred@example.com",
+            id: 10,
+            name: "Fred",
+        },
+    );
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 100,
+        members: [this.data.currentPartnerId,9,10],
+        name: "General",
+        public: 'public',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['link', thread]],
@@ -201,6 +255,7 @@ QUnit.test('message list asc order', async function (assert) {
             res_id: 100,
         });
     }
+<<<<<<< HEAD
     await this.start();
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'channel',
@@ -221,6 +276,32 @@ QUnit.test('message list asc order', async function (assert) {
         name: "General",
         public: 'public',
     });
+=======
+    this.data['res.partner'].records.push(
+        {
+            email: "john@example.com",
+            id: 9,
+            name: "John",
+        },
+        {
+            email: "fred@example.com",
+            id: 10,
+            name: "Fred",
+        },
+    );
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 100,
+        members: [this.data.currentPartnerId,9,10],
+        name: "General",
+        public: 'public',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
         thread: [['link', thread]],
@@ -445,6 +526,16 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
 QUnit.test('show message subject if thread is mailing channel', async function (assert) {
     assert.expect(3);
 
+<<<<<<< HEAD
+=======
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 100,
+        mass_mailing: true,
+        name: "General",
+        public: 'public',
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     this.data['mail.message'].records.push({
         body: "not empty",
         channel_ids: [100],
@@ -453,6 +544,7 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         subject: "Salutations, voyageur",
     });
     await this.start();
+<<<<<<< HEAD
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'channel',
         id: 100,
@@ -460,6 +552,11 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         model: 'mail.channel',
         name: "General",
         public: 'public',
+=======
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
@@ -1801,6 +1898,243 @@ QUnit.test('composer should be focused automatically after clicking on the send 
     );
 });
 
+<<<<<<< HEAD
+=======
+QUnit.test('failure on loading messages should display error', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                throw new Error();
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_loadingFailed',
+        "should show loading error message"
+    );
+});
+
+QUnit.test('failure on loading messages should prompt retry button', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                throw new Error();
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView);
+
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_loadingFailedRetryButton',
+        "should show a button to allow user to retry loading"
+    );
+});
+
+QUnit.test('failure on loading more messages should not alter message list display', async function (assert) {
+    assert.expect(1);
+
+    // first call needs to be successful as it is the initial loading of messages
+    // second call comes from load more and needs to fail in order to show the error alert
+    // any later call should work so that retry button and load more clicks would now work
+    let messageFetchShouldFail = false;
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
+        return {
+            body: 'coucou',
+            channel_ids: [20],
+            id,
+        };
+    }));
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                if (messageFetchShouldFail) {
+                    throw new Error();
+                }
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    messageFetchShouldFail = true;
+    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        30,
+        "should still show 30 messages as load more has failed"
+    );
+});
+
+QUnit.test('failure on loading more messages should display error and prompt retry button', async function (assert) {
+    assert.expect(3);
+
+    // first call needs to be successful as it is the initial loading of messages
+    // second call comes from load more and needs to fail in order to show the error alert
+    // any later call should work so that retry button and load more clicks would now work
+    let messageFetchShouldFail = false;
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records.push(...[...Array(60).keys()].map(id => {
+        return {
+            body: 'coucou',
+            channel_ids: [20],
+            id,
+        };
+    }));
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                if (messageFetchShouldFail) {
+                    throw new Error();
+                }
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    messageFetchShouldFail = true;
+    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_alertLoadingFailed',
+        "should show loading error message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadView_alertLoadingFailedRetryButton',
+        "should show loading error message button"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_loadMore',
+        "should not show load more buttton"
+    );
+});
+
+QUnit.test('Retry loading more messages on failed load more messages should load more messages', async function (assert) {
+    assert.expect(0);
+
+    // first call needs to be successful as it is the initial loading of messages
+    // second call comes from load more and needs to fail in order to show the error alert
+    // any later call should work so that retry button and load more clicks would now work
+    let messageFetchShouldFail = false;
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        name: "General",
+    });
+    this.data['mail.message'].records = [...Array(90).keys()].map(id => {
+        return {
+            body: 'coucou',
+            channel_ids: [20],
+            id,
+        };
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                if (messageFetchShouldFail) {
+                    throw new Error();
+                }
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    messageFetchShouldFail = true;
+    await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
+
+    messageFetchShouldFail = false;
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_ThreadView_alertLoadingFailedRetryButton').click(),
+        message: "should wait until channel 20 loaded more messages after clicked on load more",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'more-messages-loaded' &&
+                threadViewer.thread.model === 'mail.channel' &&
+                threadViewer.thread.id === 20
+            );
+        },
+    });
+});
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 });
 });
 });

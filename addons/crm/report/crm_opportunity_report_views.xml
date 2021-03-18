@@ -110,7 +110,7 @@
         <record id="crm_opportunity_report_action" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">pivot,graph,tree,form</field>
+            <field name="view_mode">graph,pivot,tree,form</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
             <field name="context">{'search_default_opportunity': True, 'search_default_current': True}</field>
             <field name="view_ids"
@@ -132,9 +132,13 @@
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
             <field name="name">Leads Analysis</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">pivot,graph,tree,form</field>
+            <field name="view_mode">graph,pivot,tree</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
-            <field name="context">{'search_default_current': True, 'search_default_archived': True}</field>
+            <field name="context">{
+                'default_type': 'lead',
+                'search_default_lead': True,
+                'search_default_filter_create_date': 1,
+            }</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),

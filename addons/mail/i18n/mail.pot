@@ -4,10 +4,17 @@
 #
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-11-27 11:23+0000\n"
+=======
+"Project-Id-Version: Odoo Server saas~14.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
+"PO-Revision-Date: 2021-01-12 07:31+0000\n"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -178,8 +185,12 @@ msgid ""
 "<br><br>\n"
 "            Type <b>@username</b> to mention someone, and grab his attention.<br>\n"
 "            Type <b>#channel</b> to mention a channel.<br>\n"
+<<<<<<< HEAD
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
+=======
+"            Type <b>/command</b> to execute a command.<br>"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mail
@@ -316,6 +327,11 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "<span class=\"oe_read_only\">&amp;nbsp;</span>"
 msgstr ""
 
 #. module: mail
@@ -1044,6 +1060,15 @@ msgid "Can Write"
 msgstr ""
 
 #. module: mail
+<<<<<<< HEAD
+=======
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.xml:0
@@ -1849,6 +1874,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.xml:0
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.xml:0
+<<<<<<< HEAD
 #, python-format
 msgid "Do you confirm the action?"
 msgstr ""
@@ -1857,6 +1883,16 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.js:0
 #, python-format
+=======
+#, python-format
+msgid "Do you confirm the action?"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.js:0
+#, python-format
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgid "Do you really want to delete \"%s\"?"
 msgstr ""
 
@@ -2124,6 +2160,14 @@ msgstr ""
 msgid ""
 "Email addresses that are blacklisted means that the recipient won't receive "
 "mass mailing anymore."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Email alias %(alias_name)s cannot be used on %(count)d records at the same "
+"time. Please update records one by one."
 msgstr ""
 
 #. module: mail
@@ -2462,7 +2506,11 @@ msgid "Following"
 msgstr ""
 
 #. module: mail
+<<<<<<< HEAD
 #: code:addons/mail/models/mail_channel.py:778
+=======
+#: code:addons/mail/models/mail_channel.py:0
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
@@ -2927,6 +2975,7 @@ msgid "Invalid primary email field on model %s"
 msgstr ""
 
 #. module: mail
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
@@ -2934,6 +2983,8 @@ msgid "Invitation"
 msgstr ""
 
 #. module: mail
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
@@ -3959,6 +4010,7 @@ msgid "New messages appear here."
 msgstr ""
 
 #. module: mail
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
 #, python-format
@@ -3966,6 +4018,8 @@ msgid "New people"
 msgstr ""
 
 #. module: mail
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "New values"
 msgstr ""
@@ -5283,6 +5337,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
+<<<<<<< HEAD
 #, python-format
 msgid "Seen by %s and %s"
 msgstr ""
@@ -5299,10 +5354,31 @@ msgstr ""
 #: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
 #, python-format
 msgid "Seen by Everyone"
+=======
+#, python-format
+msgid "Seen by %s and %s"
 msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
+#, python-format
+msgid "Seen by %s, %s and more"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+msgstr ""
+
+#. module: mail
+#. openerp-web
+<<<<<<< HEAD
+=======
+#: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
+#, python-format
+msgid "Seen by Everyone"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Select All"
@@ -5453,14 +5529,24 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+<<<<<<< HEAD
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
+=======
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #, python-format
 msgid "Shift left"
 msgstr ""
 
 #. module: mail
 #. openerp-web
+<<<<<<< HEAD
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
+=======
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #, python-format
 msgid "Shift right"
 msgstr ""
@@ -5504,6 +5590,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/composer_suggested_recipient_list/composer_suggested_recipient_list.xml:0
+<<<<<<< HEAD
 #, python-format
 msgid "Show less"
 msgstr ""
@@ -5512,6 +5599,16 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/composer_suggested_recipient_list/composer_suggested_recipient_list.xml:0
 #, python-format
+=======
+#, python-format
+msgid "Show less"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/composer_suggested_recipient_list/composer_suggested_recipient_list.xml:0
+#, python-format
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgid "Show more"
 msgstr ""
 
@@ -5906,6 +6003,12 @@ msgid "This record has an exception activity."
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr ""
@@ -6191,6 +6294,7 @@ msgid "Unstar all messages"
 msgstr ""
 
 #. module: mail
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
@@ -6198,6 +6302,8 @@ msgid "Unsubscribed"
 msgstr ""
 
 #. module: mail
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Unsupported report type %s found."
@@ -6456,21 +6562,31 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+<<<<<<< HEAD
 #: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
-#, python-format
-msgid "Write something..."
-msgstr ""
-
-#. module: mail
-#. openerp-web
+=======
 #: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #, python-format
 msgid "Yesterday"
 msgstr ""
 
 #. module: mail
 #. openerp-web
+<<<<<<< HEAD
+#: code:addons/mail/static/src/components/message_list/message_list.js:0
+#: code:addons/mail/static/src/js/activity.js:0
+=======
+#: code:addons/mail/static/src/components/activity/activity.js:0
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+#, python-format
+msgid "Yesterday:"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+<<<<<<< HEAD
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "Yesterday:"
@@ -6478,6 +6594,8 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
 #, python-format
 msgid "You added <b>%s</b> to the conversation."
@@ -6492,6 +6610,10 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.xml:0
+<<<<<<< HEAD
+#, python-format
+msgid "You are going to ban the following user:"
+=======
 #, python-format
 msgid "You are going to ban the following user:"
 msgstr ""
@@ -6501,12 +6623,27 @@ msgstr ""
 #: code:addons/mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.xml:0
 #, python-format
 msgid "You are going to ban the following users:"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+msgstr ""
+
+#. module: mail
+#. openerp-web
+<<<<<<< HEAD
+#: code:addons/mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.xml:0
+#, python-format
+msgid "You are going to ban the following users:"
+=======
+#: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
+#, python-format
+msgid "You are going to discard %s messages."
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "You are going to discard %s messages."
 msgstr ""
 
@@ -6514,6 +6651,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
 #, python-format
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgid "You are going to discard 1 message."
 msgstr ""
 
@@ -6550,6 +6689,15 @@ msgstr ""
 #, python-format
 msgid ""
 "You can mark any message as 'starred', and it shows up in this mailbox."
+<<<<<<< HEAD
+=======
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mail
@@ -6601,7 +6749,11 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
+<<<<<<< HEAD
 "address."
+=======
+"address (%s)."
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mail

@@ -4,10 +4,17 @@
 #
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-10-29 15:48+0000\n"
+=======
+"Project-Id-Version: Odoo Server saas~14.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2020-12-11 07:28+0000\n"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,11 +64,6 @@ msgid "# BoM Where Used"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_done_count
-msgid "# Done Work Orders"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Read Work Orders"
 msgstr ""
@@ -75,6 +77,18 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid "%s %s unbuilt in"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "%s Child MO's"
 msgstr ""
 
 #. module: mrp
@@ -366,12 +380,15 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
 msgstr ""
 
 #. module: mrp
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
 msgstr ""
@@ -469,7 +486,10 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
+<<<<<<< HEAD
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__use_create_components_lots
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
 msgstr ""
@@ -1145,7 +1165,10 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__use_create_components_lots
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
 msgstr ""
@@ -1187,6 +1210,14 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
+<<<<<<< HEAD
+=======
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid "Create customizable worksheets for your quality checks"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mrp
@@ -1506,7 +1537,12 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
+#: model_terms:ir.ui.view,arch_db:mrp.oee_graph_view
+#: model_terms:ir.ui.view,arch_db:mrp.oee_pie_view
+#: model_terms:ir.ui.view,arch_db:mrp.oee_pivot_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_graph
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
 msgid "Duration (minutes)"
 msgstr ""
 
@@ -1592,6 +1628,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
 msgid "Expected Duration"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
+#: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
+msgid "Expected Duration (minutes)"
 msgstr ""
 
 #. module: mrp
@@ -1773,6 +1815,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Group By..."
 msgstr ""
@@ -1929,6 +1972,35 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_immediate_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production_line__immediate_production_id
 msgid "Immediate Production"
+<<<<<<< HEAD
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_immediate_production_line
+msgid "Immediate Production Line"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_immediate_production__immediate_production_line_ids
+msgid "Immediate Production Lines"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Immediate Production?"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
+msgid "Immediate production?"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
+msgid "Impacted Transfer(s):"
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mrp
@@ -2013,12 +2085,15 @@ msgid "Inventory Moves"
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
 
 #. module: mrp
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_is_follower
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_is_follower
@@ -2193,12 +2268,15 @@ msgid "Late MO or Late delivery of components"
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:product.product,description:mrp.product_product_wood_ply
 #: model:product.template,description:mrp.product_product_wood_ply_product_template
 msgid "Layers that are stick together to assemble wood panels."
 msgstr ""
 
 #. module: mrp
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
 msgid "Leave"
 msgstr ""
@@ -2251,6 +2329,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_locked_by_default
 msgid "Lock Quantities To Consume"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: mrp
@@ -2266,6 +2345,23 @@ msgid "Locked by default"
 msgstr ""
 
 #. module: mrp
+=======
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid ""
+"Lock the manufacturing order to prevent changes to what has been consumed or"
+" produced."
+msgstr ""
+
+#. module: mrp
+#: model:res.groups,name:mrp.group_locked_by_default
+msgid "Locked by default"
+msgstr ""
+
+#. module: mrp
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_id
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
@@ -3041,6 +3137,7 @@ msgid "Planning Issues"
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:product.product,name:mrp.product_product_plastic_laminate
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
 msgid "Plastic Laminate"
@@ -3059,6 +3156,8 @@ msgid "Ply Veneer"
 msgstr ""
 
 #. module: mrp
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
 msgid "Popover Data JSON"
 msgstr ""
@@ -3165,6 +3264,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "Product"
 msgstr ""
 
@@ -3341,6 +3441,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Quality Losses"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control_worksheet
+msgid "Quality Worksheet"
 msgstr ""
 
 #. module: mrp
@@ -3606,12 +3711,15 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
 msgid "Scraps"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_screw
 #: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
 msgid "Screw"
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mrp
@@ -3723,6 +3831,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: mrp
@@ -3740,6 +3849,13 @@ msgstr ""
 #: model:product.product,description:mrp.product_product_computer_desk
 #: model:product.template,description:mrp.product_product_computer_desk_product_template
 msgid "Solid wood table."
+=======
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
+msgid "Slot into workcenter calendar once planned"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: mrp
@@ -3797,6 +3913,7 @@ msgid "Specify cost of work center per hour."
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:product.product,description:mrp.product_product_computer_desk_screw
 #: model:product.template,description:mrp.product_product_computer_desk_screw_product_template
 msgid "Stainless steel screw"
@@ -3819,6 +3936,18 @@ msgid "Start"
 msgstr ""
 
 #. module: mrp
+=======
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Starred"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start"
+msgstr ""
+
+#. module: mrp
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__date_start
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_start
@@ -4519,6 +4648,10 @@ msgstr ""
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+<<<<<<< HEAD
+=======
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgid "Unreserve"
 msgstr ""
 
@@ -4647,12 +4780,15 @@ msgid "Warnings"
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:product.product,name:mrp.product_product_wood_wear
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
 msgid "Wear Layer"
 msgstr ""
 
 #. module: mrp
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
 msgid "Website"
 msgstr ""
@@ -4726,12 +4862,15 @@ msgid "Wizard to mark as done or create back order"
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:product.product,name:mrp.product_product_wood_panel
 #: model:product.template,name:mrp.product_product_wood_panel_product_template
 msgid "Wood Panel"
 msgstr ""
 
 #. module: mrp
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__name
@@ -4847,6 +4986,7 @@ msgid "Work Sheet"
 msgstr ""
 
 #. module: mrp
+<<<<<<< HEAD
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
@@ -4854,6 +4994,20 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+=======
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
+msgid "Work center"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.action_work_orders
+msgid ""
+"Work orders are operations to do as part of a manufacturing order.\n"
+"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+msgstr ""
+
+#. module: mrp
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
@@ -4871,6 +5025,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Workcenter"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workcenter.py:0
+#, python-format
+msgid "Workcenter %s cannot be an alternative of itself."
 msgstr ""
 
 #. module: mrp
@@ -4994,6 +5154,17 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
+<<<<<<< HEAD
+=======
+msgid ""
+"You cannot move a manufacturing order once it has a planned workorder, move "
+"related workorder(s) instead."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgid "You cannot move a manufacturing order once it is cancelled or done."
 msgstr ""
 

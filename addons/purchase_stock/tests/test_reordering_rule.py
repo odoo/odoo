@@ -6,10 +6,10 @@ from datetime import timedelta as td
 
 from odoo import SUPERUSER_ID
 from odoo.tests import Form
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestReorderingRule(SavepointCase):
+class TestReorderingRule(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestReorderingRule, cls).setUpClass()

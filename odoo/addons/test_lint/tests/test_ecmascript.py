@@ -11,7 +11,7 @@ from odoo.modules import get_modules, get_module_path
 
 from . import lint_case
 
-MAX_ES_VERSION = 'es8'
+MAX_ES_VERSION = 'es10'
 
 _logger = logging.getLogger(__name__)
 
@@ -33,13 +33,16 @@ class TestECMAScriptVersion(lint_case.LintCase):
 
         files_to_check = [
             p for p in self.iter_module_files('*.js')
-            if not 'static/test' in p
-            if not 'static/src/tests' in p
+            if 'static/test' not in p
+            if 'static/src/tests' not in p
+            if 'static/lib/qweb/qweb.js' not in p   # because this file is not bundled at all
+            if 'py.js/lib/py.js' not in p           # because it is not "strict" compliant
+            if 'static/lib/epos-2.12.0.js' not in p # same
             if not black_re.search(p)
         ]
 
         _logger.info('Testing %s js files', len(files_to_check))
-        cmd = [es_check, MAX_ES_VERSION] + files_to_check
+        cmd = [es_check, MAX_ES_VERSION, '--module'] + files_to_check
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = process.communicate()
         self.assertEqual(process.returncode, 0, msg=out.decode())

@@ -150,7 +150,7 @@ QUnit.module('fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yopSMS',
             "value should be displayed properly with a link to send SMS");
 
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 2,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 2,
             "should have the correct classnames");
 
         // Edit a line and check the result
@@ -167,7 +167,7 @@ QUnit.module('fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'newSMS',
             "value should be properly updated");
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 2,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 2,
             "should still have links with correct classes");
 
         await testUtils.dom.click(list.$('tbody td:not(.o_list_record_selector) .o_field_phone_sms').first());
@@ -210,18 +210,30 @@ QUnit.module('fields', {
         });
         // check initial rendering
         assert.strictEqual(form.$('.o_field_phone').text(), "+32494444444",
+<<<<<<< HEAD
                            'Initial Phone text should be set');
         assert.strictEqual(form.$('.o_field_phone_sms').text(), 'SMS',
                            'SMS button label should be rendered');
+=======
+            'Initial Phone text should be set');
+        assert.strictEqual(form.$('.o_field_phone_sms').text(), 'SMS',
+            'SMS button label should be rendered');
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         // trigger the onchange to update phone field, but still in readonly mode
         await testUtils.fields.editInput($('input[name="foo"]'), 'someOtherFoo');
 
         // check rendering after changes
         assert.strictEqual(form.$('.o_field_phone').text(), NEW_PHONE,
+<<<<<<< HEAD
                            'Phone text should be updated');
         assert.strictEqual(form.$('.o_field_phone_sms').text(), 'SMS',
                            'SMS button label should not be changed');
+=======
+            'Phone text should be updated');
+        assert.strictEqual(form.$('.o_field_phone_sms').text(), 'SMS',
+            'SMS button label should not be changed');
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         form.destroy();
     });

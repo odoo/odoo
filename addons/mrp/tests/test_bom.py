@@ -358,9 +358,27 @@ class TestBoM(TestMrpCommon):
                 line.product_id = biscuit
                 line.product_uom_id = uom_kg
                 line.product_qty = 6
+<<<<<<< HEAD
             bom.operation_ids.add(operation_1)
             bom.operation_ids.add(operation_2)
             bom.operation_ids.add(operation_3)
+=======
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter
+                operation.name = 'Prepare biscuits'
+                operation.time_cycle_manual = 5
+                operation.bom_id = bom_crumble  # Can't handle by the testing env
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter
+                operation.name = 'Prepare butter'
+                operation.time_cycle_manual = 3
+                operation.bom_id = bom_crumble
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter
+                operation.name = 'Mix manually'
+                operation.time_cycle_manual = 5
+                operation.bom_id = bom_crumble
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         # TEST BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_crumble.id, searchQty=11, searchVariant=False)
@@ -458,8 +476,21 @@ class TestBoM(TestMrpCommon):
                 line.product_id = crumble
                 line.product_uom_id = uom_kg
                 line.product_qty = 5.4
+<<<<<<< HEAD
             bom.operation_ids.add(operation_4)
             bom.operation_ids.add(operation_5)
+=======
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter
+                operation.name = 'Mix cheese and crumble'
+                operation.time_cycle_manual = 10
+                operation.bom_id = bom_cheese_cake
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter_2
+                operation.name = 'Cake mounting'
+                operation.time_cycle_manual = 5
+                operation.bom_id = bom_cheese_cake
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY

@@ -4,7 +4,7 @@
 from collections import defaultdict
 import itertools
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 
 
 class Followers(models.Model):
@@ -361,7 +361,7 @@ GROUP BY fol.id%s%s""" % (
                     new.setdefault(res_id, list()).append({
                         'res_model': res_model,
                         'partner_id': partner_id,
-                        'subtype_ids': [(6, 0, partner_subtypes[partner_id])],
+                        'subtype_ids': [Command.set(partner_subtypes[partner_id])],
                     })
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
@@ -369,9 +369,15 @@ GROUP BY fol.id%s%s""" % (
                     old_sids = set(sids) - set(partner_subtypes[partner_id])
                     update_cmd = []
                     if fol_id and new_sids:
+<<<<<<< HEAD
                         update_cmd += [(4, sid) for sid in new_sids]
                     if fol_id and old_sids and existing_policy == 'replace':
                         update_cmd += [(3, sid) for sid in old_sids]
+=======
+                        update_cmd += [Command.link(sid) for sid in new_sids]
+                    if fol_id and old_sids and existing_policy == 'replace':
+                        update_cmd += [Command.unlink(sid) for sid in old_sids]
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     if update_cmd:
                         update[fol_id] = {'subtype_ids': update_cmd}
 
@@ -380,7 +386,7 @@ GROUP BY fol.id%s%s""" % (
                     new.setdefault(res_id, list()).append({
                         'res_model': res_model,
                         'channel_id': channel_id,
-                        'subtype_ids': [(6, 0, channel_subtypes[channel_id])],
+                        'subtype_ids': [Command.set(channel_subtypes[channel_id])],
                     })
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[2] == channel_id), (False, []))
@@ -388,9 +394,15 @@ GROUP BY fol.id%s%s""" % (
                     old_sids = set(sids) - set(channel_subtypes[channel_id])
                     update_cmd = []
                     if fol_id and new_sids:
+<<<<<<< HEAD
                         update_cmd += [(4, sid) for sid in new_sids]
                     if fol_id and old_sids and existing_policy == 'replace':
                         update_cmd += [(3, sid) for sid in old_sids]
+=======
+                        update_cmd += [Command.link(sid) for sid in new_sids]
+                    if fol_id and old_sids and existing_policy == 'replace':
+                        update_cmd += [Command.unlink(sid) for sid in old_sids]
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     if update_cmd:
                         update[fol_id] = {'subtype_ids': update_cmd}
 

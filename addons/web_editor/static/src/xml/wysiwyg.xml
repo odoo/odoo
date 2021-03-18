@@ -410,10 +410,10 @@
                     <label class="col-form-label" for="o_video_text">
                         Video code <small>(URL or Embed)</small>
                     </label>
+                    <div class="text-left">
+                        <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                    </div>
                     <textarea class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
-                </div>
-                <div class="text-right">
-                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
                 </div>
                 <div class="o_video_dialog_options d-none mt-4">
                     <div class="o_youtube_option o_vimeo_option o_dailymotion_option">
@@ -442,6 +442,14 @@
                         <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
                     </div>
                 </div>
+                <t t-if="widget._vimeoPreviewIds || widget._youtubePreviewIds">
+                    <span class="font-weight-bold">Suggestions</span>
+                    <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
+                        <t t-foreach="widget._vimeoPreviewIds" t-as="vimeoId">
+                            <div class="o_sample_video w-25 mh-100" t-att-data-vimeo="vimeoId"/>
+                        </t>
+                    </div>
+                </t>
             </div>
             <div class="col-md-6">
                 <div id="video-preview" class="p-3">

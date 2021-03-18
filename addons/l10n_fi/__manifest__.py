@@ -3,6 +3,7 @@
 
 {
     "name": "Finnish Localization",
+    'icon': '/base/static/img/country_flags/fi.png',
     "version": "13.0.1",
     "author": "Avoin.Systems, "
               "Tawasta, "
@@ -36,6 +37,8 @@ Set the payment reference type from the Sales Journal.
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_configuration_data.xml'
     ],
-    "active": True,
+    "demo": [
+        'demo/demo_company.xml',
+    ],
     "installable": True,
 }

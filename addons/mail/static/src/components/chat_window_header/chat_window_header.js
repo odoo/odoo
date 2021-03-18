@@ -6,6 +6,10 @@ const components = {
 };
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const {
+    isEventHandled,
+    markEventHandled,
+} = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
 
@@ -22,8 +26,13 @@ class ChatWindowHeader extends Component {
             const thread = chatWindow && chatWindow.thread;
             return {
                 chatWindow,
+<<<<<<< HEAD
                 chatWindowHasShiftLeft: chatWindow && chatWindow.hasShiftLeft,
                 chatWindowHasShiftRight: chatWindow && chatWindow.hasShiftRight,
+=======
+                chatWindowHasShiftNext: chatWindow && chatWindow.hasShiftNext,
+                chatWindowHasShiftPrev: chatWindow && chatWindow.hasShiftPrev,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 chatWindowName: chatWindow && chatWindow.name,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
@@ -44,6 +53,26 @@ class ChatWindowHeader extends Component {
         return this.env.models['mail.chat_window'].get(this.props.chatWindowLocalId);
     }
 
+    /**
+     * @returns {string}
+     */
+    get shiftNextText() {
+        if (this.env.messaging.locale.textDirection === 'rtl') {
+            return this.env._t("Shift left");
+        }
+        return this.env._t("Shift right");
+    }
+
+    /**
+     * @returns {string}
+     */
+    get shiftPrevText() {
+        if (this.env.messaging.locale.textDirection === 'rtl') {
+            return this.env._t("Shift right");
+        }
+        return this.env._t("Shift left");
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -53,6 +82,12 @@ class ChatWindowHeader extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
+        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext')) {
+            return;
+        }
+        if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev')) {
+            return;
+        }
         const chatWindow = this.chatWindow;
         this.trigger('o-clicked', { chatWindow });
     }
@@ -82,18 +117,18 @@ class ChatWindowHeader extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickShiftLeft(ev) {
-        ev.stopPropagation();
-        this.chatWindow.shiftLeft();
+    _onClickShiftPrev(ev) {
+        markEventHandled(ev, 'ChatWindowHeader.ClickShiftPrev');
+        this.chatWindow.shiftPrev();
     }
 
     /**
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickShiftRight(ev) {
-        ev.stopPropagation();
-        this.chatWindow.shiftRight();
+    _onClickShiftNext(ev) {
+        markEventHandled(ev, 'ChatWindowHeader.ClickShiftNext');
+        this.chatWindow.shiftNext();
     }
 
 }

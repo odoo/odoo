@@ -19,8 +19,9 @@ class TimesheetCustomerPortal(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if 'timesheet_count' in counters:
-            domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
-            values['timesheet_count'] = request.env['account.analytic.line'].sudo().search_count(domain)
+            Timesheet = request.env['account.analytic.line']
+            domain = Timesheet._timesheet_get_portal_domain()
+            values['timesheet_count'] = Timesheet.sudo().search_count(domain)
         return values
 
     def _get_searchbar_inputs(self):
@@ -31,6 +32,7 @@ class TimesheetCustomerPortal(CustomerPortal):
             'employee': {'input': 'employee', 'label': _('Search in Employee')},
             'task': {'input': 'task', 'label': _('Search in Task')}
         }
+<<<<<<< HEAD
 
     def _get_searchbar_groupby(self):
         return {
@@ -66,6 +68,55 @@ class TimesheetCustomerPortal(CustomerPortal):
         Timesheet_sudo = request.env['account.analytic.line'].sudo()
         values = self._prepare_portal_layout_values()
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
+        _items_per_page = 100
+
+        searchbar_sortings = {
+            'date': {'label': _('Newest'), 'order': 'date desc'},
+            'name': {'label': _('Description'), 'order': 'name'},
+        }
+
+        searchbar_inputs = self._get_searchbar_inputs()
+
+        searchbar_groupby = self._get_searchbar_groupby()
+=======
+
+    def _get_searchbar_groupby(self):
+        return {
+            'none': {'input': 'none', 'label': _('None')},
+            'project': {'input': 'project', 'label': _('Project')},
+            'task': {'input': 'task', 'label': _('Task')},
+            'date': {'input': 'date', 'label': _('Date')},
+            'employee': {'input': 'employee', 'label': _('Employee')}
+        }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+
+    def _get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('project', 'all'):
+            search_domain = OR([search_domain, [('project_id', 'ilike', search)]])
+        if search_in in ('name', 'all'):
+            search_domain = OR([search_domain, [('name', 'ilike', search)]])
+        if search_in in ('employee', 'all'):
+            search_domain = OR([search_domain, [('employee_id', 'ilike', search)]])
+        if search_in in ('task', 'all'):
+            search_domain = OR([search_domain, [('task_id', 'ilike', search)]])
+        return search_domain
+
+    def _get_groupby_mapping(self):
+        return {
+            'project': 'project_id',
+            'task': 'task_id',
+            'employee': 'employee_id',
+            'date': 'date'
+        }
+
+    @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
+        Timesheet = request.env['account.analytic.line']
+        domain = Timesheet._timesheet_get_portal_domain()
+        Timesheet_sudo = Timesheet.sudo()
+
+        values = self._prepare_portal_layout_values()
         _items_per_page = 100
 
         searchbar_sortings = {

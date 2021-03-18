@@ -73,7 +73,9 @@ ActionManager.include({
                 this._closeDialog(true); // there may be a currently opened dialog, close it
                 var viewOptions = {currentId: state.id};
                 var viewType = state.view_type || currentController.viewType;
-                return this._switchController(currentAction, viewType, viewOptions);
+                return this.clearUncommittedChanges().then(() => {
+                    return this._switchController(currentAction, viewType, viewOptions);
+                });
             } else if (!core.action_registry.contains(state.action)) {
                 // the action to load isn't the current one, so execute it
                 var context = {};
@@ -724,7 +726,9 @@ ActionManager.include({
             if (ev.data.mode) {
                 options.mode = ev.data.mode;
             }
-            this._switchController(action, viewType, options);
+            this.clearUncommittedChanges().then(() => {
+                return this._switchController(action, viewType, options);
+            });
         }
     },
 });

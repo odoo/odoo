@@ -13,24 +13,26 @@
                     <field name="module_ids" mode="kanban">
                         <kanban create="false">
                             <field name="icon"/>
-                            <field name="name"/>
-                            <field name="shortdesc"/>
+                            <field name="state"/>
                             <field name="summary"/>
-                            <templates>
-                                <t t-name="kanban-box">
-                                    <div class="oe_module_vignette">
-                                        <img t-attf-src="#{record.icon.value}" alt="Icon"
-                                             class="oe_module_icon" style="width: 60px; height: 60px"/>
-                                        <div class="oe_module_desc" style="padding-left: 70px">
-                                            <h4><field name="shortdesc"/></h4>
-                                            <p class="oe_module_name">
-                                                <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
-                                                <i><field name="name" groups="base.group_no_one"/></i>
-                                            </p>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_module_vignette">
+                                            <t t-set="installed" t-value="record.state.raw_value == 'installed'" />
+                                            <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon" />
+                                            <div class="oe_module_desc" t-att-title="record.shortdesc.value">
+                                                <h4 class="o_kanban_record_title">
+                                                    <field name="shortdesc" />&amp;nbsp;
+                                                </h4>
+                                                <p class="oe_module_name">
+                                                    <field groups="!base.group_no_one" name="summary" />
+                                                    <code groups="base.group_no_one">
+                                                        <field name="name" /></code>
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </t>
-                            </templates>
+                                    </t>
+                                </templates>
                         </kanban>
                     </field>
                     <h3>The following documents will be permanently lost</h3>

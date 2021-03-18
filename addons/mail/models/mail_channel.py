@@ -6,17 +6,21 @@ import logging
 import re
 from uuid import uuid4
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import ormcache, formataddr
+<<<<<<< HEAD
 from odoo.exceptions import AccessError
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 MODERATION_FIELDS = ['moderation', 'moderator_ids', 'moderation_ids', 'moderation_notify', 'moderation_notify_msg', 'moderation_guidelines', 'moderation_guidelines_msg']
 _logger = logging.getLogger(__name__)
 
 
+<<<<<<< HEAD
 class ChannelPartner(models.Model):
     _name = 'mail.channel.partner'
     _description = 'Listeners of a Channel'
@@ -70,6 +74,8 @@ class Moderation(models.Model):
     ]
 
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 class Channel(models.Model):
     """ A mail.channel is a discussion group that may behave like a listener
     on documents. """
@@ -92,39 +98,44 @@ class Channel(models.Model):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
         return base64.b64encode(open(image_path, 'rb').read())
 
+    # description
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
     channel_type = fields.Selection([
         ('chat', 'Chat Discussion'),
         ('channel', 'Channel')],
-        'Channel Type', default='channel')
-    is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat', default=False)
+        string='Channel Type', default='channel')
+    is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     description = fields.Text('Description')
-    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
     email_send = fields.Boolean('Send messages by email', default=False)
+<<<<<<< HEAD
     # multi users channel
     # depends=['...'] is for `test_mail/tests/common.py`, class Moderation, `setUpClass`
+=======
+    image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
+    # members (depends=['...'] is for `test_mail/tests/common.py`, class Moderation, `setUpClass`)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen', depends=['channel_partner_ids'])
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners', depends=['channel_last_seen_partner_ids'])
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
-    # access
-    public = fields.Selection([
-        ('public', 'Everyone'),
-        ('private', 'Invited people only'),
-        ('groups', 'Selected group of users')],
-        'Privacy', required=True, default='groups',
-        help='This group is visible by non members. Invisible groups can add members through the invite button.')
-    group_public_id = fields.Many2one('res.groups', string='Authorized Group',
-                                      default=lambda self: self.env.ref('base.group_user'))
+    is_subscribed = fields.Boolean(
+        'Is Subscribed', compute='_compute_is_subscribed')
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
-    image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
-    is_subscribed = fields.Boolean(
-        'Is Subscribed', compute='_compute_is_subscribed')
+    # access
+    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
+    public = fields.Selection([
+        ('public', 'Everyone'),
+        ('private', 'Invited people only'),
+        ('groups', 'Selected group of users')], string='Privacy',
+        required=True, default='groups',
+        help='This group is visible by non members. Invisible groups can add members through the invite button.')
+    group_public_id = fields.Many2one('res.groups', string='Authorized Group',
+                                      default=lambda self: self.env.ref('base.group_user'))
     # moderation
     moderation = fields.Boolean(string='Moderate this channel')
     moderator_ids = fields.Many2many('res.users', 'mail_channel_moderator_rel', string='Moderators')
@@ -139,6 +150,22 @@ class Channel(models.Model):
     moderation_notify_msg = fields.Text(string="Notification message")
     moderation_guidelines = fields.Boolean(string="Send guidelines to new subscribers", help="Newcomers on this moderated channel will automatically receive the guidelines.")
     moderation_guidelines_msg = fields.Text(string="Guidelines")
+
+    # COMPUTE / INVERSE
+
+    @api.depends('channel_type')
+    def _compute_is_chat(self):
+        for record in self:
+            record.is_chat = record.channel_type == 'chat'
+
+    def _compute_is_member(self):
+        memberships = self.env['mail.channel.partner'].sudo().search([
+            ('channel_id', 'in', self.ids),
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ])
+        membership_ids = memberships.mapped('channel_id')
+        for record in self:
+            record.is_member = record in membership_ids
 
     @api.depends('channel_partner_ids')
     def _compute_is_subscribed(self):
@@ -157,6 +184,8 @@ class Channel(models.Model):
         for channel in self:
             channel.moderation_count = data.get(channel.id, 0)
 
+    # CONSTRAINTS
+
     @api.constrains('moderator_ids')
     def _check_moderator_email(self):
         if any(not moderator.email for channel in self for moderator in channel.moderator_ids):
@@ -166,7 +195,11 @@ class Channel(models.Model):
     def _check_moderator_is_member(self):
         for channel in self:
             if not (channel.mapped('moderator_ids.partner_id') <= channel.sudo().channel_partner_ids):
-                raise ValidationError(_("Moderators should be members of the channel they moderate."))
+                missing = channel.mapped('moderator_ids.partner_id') - channel.sudo().channel_partner_ids
+                raise ValidationError(
+                    _("Moderators should be members of the channel they moderate (missing %(user_names)s).",
+                      user_names = ', '.join(missing.mapped('name')))
+                )
 
     @api.constrains('moderation', 'email_send')
     def _check_moderation_parameters(self):
@@ -178,21 +211,7 @@ class Channel(models.Model):
         if any(not channel.moderator_ids for channel in self if channel.moderation):
             raise ValidationError(_('Moderated channels must have moderators.'))
 
-    def _compute_is_member(self):
-        memberships = self.env['mail.channel.partner'].sudo().search([
-            ('channel_id', 'in', self.ids),
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ])
-        membership_ids = memberships.mapped('channel_id')
-        for record in self:
-            record.is_member = record in membership_ids
-
-    def _compute_is_chat(self):
-        for record in self:
-            if record.channel_type == 'chat':
-                record.is_chat = True
-            else:
-                record.is_chat = False
+    # ONCHANGE
 
     @api.onchange('public')
     def _onchange_public(self):
@@ -204,7 +223,7 @@ class Channel(models.Model):
         missing_partner_ids = set(self.mapped('moderator_ids.partner_id').ids) - set(self.mapped('channel_last_seen_partner_ids.partner_id').ids)
         if missing_partner_ids:
             self.channel_last_seen_partner_ids = [
-                (0, 0, {'partner_id': partner_id})
+                Command.create({'partner_id': partner_id})
                 for partner_id in missing_partner_ids
             ]
 
@@ -222,6 +241,7 @@ class Channel(models.Model):
         else:
             self.moderator_ids |= self.env.user
 
+<<<<<<< HEAD
     @api.model
     def create(self, vals):
         # ensure image at quick create
@@ -246,37 +266,81 @@ class Channel(models.Model):
         visibility_default = self._fields['public'].default(self)
         visibility = vals.pop('public', visibility_default)
         vals['public'] = 'public'
+=======
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        defaults = self.default_get(['image_128'])
+        current_partner = self.env.user.partner_id.id
+
+        visibilities = []
+        for vals in vals_list:
+            # ensure image at quick create
+            if not vals.get('image_128'):
+                vals['image_128'] = defaults['image_128']
+
+            # always add current user to new channel, go through
+            # channel_last_seen_partner_ids otherwise in v14 the channel is not
+            # visible for the user (because is_pinned is false and taken in account)
+            if 'channel_partner_ids' in vals:
+                vals['channel_partner_ids'] = [
+                    entry
+                    for entry in vals['channel_partner_ids']
+                    if entry[0] != 4 or entry[1] != current_partner
+                ]
+            membership = vals.setdefault('channel_last_seen_partner_ids', [])
+            if all(entry[0] != 0 or entry[2].get('partner_id') != current_partner for entry in membership):
+                membership.append((0, False, {'partner_id': current_partner}))
+
+            visibility_default = self._fields['public'].default(self)
+            visibilities.append(vals.pop('public', visibility_default))
+            vals['public'] = 'public'
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         # Create channel and alias
-        channel = super(Channel, self.with_context(
+        channels = super(Channel, self.with_context(
             mail_create_nolog=True, mail_create_nosubscribe=True)
+<<<<<<< HEAD
         ).create(vals)
         if visibility != 'public':
             channel.sudo().public = visibility
+=======
+        ).create(vals_list)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
-        if vals.get('group_ids'):
-            channel._subscribe_users()
+        for visibility, channel in zip(visibilities, channels):
+            if visibility != 'public':
+                channel.sudo().public = visibility
+
+        channels._subscribe_users()
 
         # make channel listen itself: posting on a channel notifies the channel
         if not self._context.get('mail_channel_noautofollow'):
-            channel.message_subscribe(channel_ids=[channel.id])
+            for channel in channels:
+                channel.message_subscribe(channel_ids=[channel.id])
 
-        return channel
+        return channels
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_all_employee_channel(self):
         # Delete mail.channel
         try:
             all_emp_group = self.env.ref('mail.channel_all_employees')
         except ValueError:
             all_emp_group = None
-        if all_emp_group and all_emp_group in self and not self._context.get(MODULE_UNINSTALL_FLAG):
+        if all_emp_group and all_emp_group in self:
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
-        return super(Channel, self).unlink()
 
     def write(self, vals):
         # First checks if user tries to modify moderation fields and has not the right to do it.
-        if any(key for key in MODERATION_FIELDS if vals.get(key)) and any(self.env.user not in channel.moderator_ids for channel in self if channel.moderation):
-            if not self.env.user.has_group('base.group_system'):
-                raise UserError(_("You do not have the rights to modify fields related to moderation on one of the channels you are modifying."))
+        if any(key for key in MODERATION_FIELDS if vals.get(key)) and not self.env.user.has_group('base.group_system'):
+            not_moderator = self.filtered(lambda channel: channel.moderation and self.env.user not in channel.moderator_ids)
+            if not_moderator:
+                raise UserError(_("You do not have rights to modify moderation configuration on %(channel_names)s",
+                                   channel_names=', '.join(not_moderator.mapped('name'))
+                               ))
 
         result = super(Channel, self).write(vals)
 
@@ -293,16 +357,19 @@ class Channel(models.Model):
 
         return result
 
-    def _alias_get_creation_values(self):
-        values = super(Channel, self)._alias_get_creation_values()
-        values['alias_model_id'] = self.env['ir.model']._get('mail.channel').id
-        if self.id:
-            values['alias_force_thread_id'] = self.id
-        return values
+    def init(self):
+        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_channel_partner_seen_message_id_idx',))
+        if not self._cr.fetchone():
+            self._cr.execute('CREATE INDEX mail_channel_partner_seen_message_id_idx ON mail_channel_partner (channel_id,partner_id,seen_message_id)')
+
+    # ------------------------------------------------------------
+    # MEMBERS MANAGEMENT
+    # ------------------------------------------------------------
 
     def _subscribe_users(self):
         to_create = []
         for mail_channel in self:
+<<<<<<< HEAD
             partners_to_add = mail_channel.group_ids.users.partner_id - mail_channel.channel_partner_ids
             to_create += [{
                 'channel_id': mail_channel.id,
@@ -310,12 +377,23 @@ class Channel(models.Model):
             } for partner in partners_to_add]
 
         self.env['mail.channel.partner'].create(to_create)
+=======
+            if mail_channel.group_ids:
+                partners_to_add = mail_channel.group_ids.users.partner_id - mail_channel.channel_partner_ids
+                to_create += [{
+                    'channel_id': mail_channel.id,
+                    'partner_id': partner.id,
+                } for partner in partners_to_add]
+
+        if to_create:
+            self.env['mail.channel.partner'].create(to_create)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     def action_follow(self):
         self.ensure_one()
         channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
         if not channel_partner:
-            return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
+            return self.write({'channel_last_seen_partner_ids': [Command.create({'partner_id': self.env.user.partner_id.id})]})
         return False
 
     def action_unfollow(self):
@@ -323,7 +401,7 @@ class Channel(models.Model):
 
     def _action_unfollow(self, partner):
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
-        result = self.write({'channel_partner_ids': [(3, partner.id)]})
+        result = self.write({'channel_partner_ids': [Command.unlink(partner.id)]})
         # side effect of unsubscribe that wasn't taken into account because
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
@@ -334,6 +412,111 @@ class Channel(models.Model):
             self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         return result
 
+<<<<<<< HEAD
+=======
+    def _action_add_members(self, partners):
+        """ Private implementation to add members to channels. Done as sudo to
+        avoid ACLs issues with channel partners. """
+        to_create = []
+        for channel in self:
+            channel_new = partners - channel.channel_partner_ids
+            to_create += [
+                {'partner_id': partner.id,
+                 'channel_id': channel.id,
+                } for partner in channel_new]
+        if to_create:
+            self.env['mail.channel.partner'].sudo().create(to_create)
+            self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
+
+    def _action_remove_members(self, partners):
+        """ Private implementation to remove members from channels. Done as sudo
+        to avoid ACLs issues with channel partners. """
+        self.env['mail.channel.partner'].sudo().search([
+            ('partner_id', 'in', partners.ids),
+            ('channel_id', 'in', self.ids)
+        ]).unlink()
+        self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
+
+    def channel_invite(self, partner_ids):
+        """ Add the given partner_ids to the current channels and broadcast the channel header to them.
+            :param partner_ids : list of partner id to add
+        """
+        partners = self.env['res.partner'].browse(partner_ids)
+        self._invite_check_access(partners)
+
+        # add the partner
+        for channel in self:
+            partners_to_add = partners - channel.channel_partner_ids
+            channel.write({'channel_last_seen_partner_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
+            for partner in partners_to_add:
+                if partner.id != self.env.user.partner_id.id:
+                    notification = _('<div class="o_mail_notification">%(author)s invited %(new_partner)s to <a href="#" class="o_channel_redirect" data-oe-id="%(channel_id)s">#%(channel_name)s</a></div>',
+                        author=self.env.user.display_name,
+                        new_partner=partner.display_name,
+                        channel_id=channel.id,
+                        channel_name=channel.name,
+                    )
+                else:
+                    notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', channel.id, channel.name)
+                self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment", author_id=partner.id, notify_by_email=False)
+
+        # broadcast the channel header to the added partner
+        self._broadcast(partner_ids)
+
+    def _invite_check_access(self, partners):
+        """ Check invited partners could match channel access """
+        failed = []
+        if any(channel.public == 'groups' for channel in self):
+            for channel in self.filtered(lambda c: c.public == 'groups'):
+                invalid_partners = [partner for partner in partners if channel.group_public_id not in partner.mapped('user_ids.groups_id')]
+                failed += [(channel, partner) for partner in invalid_partners]
+
+        if failed:
+            raise UserError(
+                _('Following invites are invalid as user groups do not match: %s',
+                  ', '.join('%s (channel %s)' % (partner.name, channel.name) for channel, partner in failed))
+            )
+
+    def _can_invite(self, partner_id):
+        """Return True if the current user can invite the partner to the channel.
+
+          * public: ok;
+          * private: must be member;
+          * group: both current user and target must have group;
+
+        :return boolean: whether inviting is ok"""
+        partner = self.env['res.partner'].browse(partner_id)
+
+        for channel in self.sudo():
+            if channel.public == 'private' and not channel.is_member:
+                return False
+            if channel.public == 'groups':
+                if not partner.user_ids or channel.group_public_id not in partner.user_ids.groups_id:
+                    return False
+                if channel.group_public_id not in self.env.user.groups_id:
+                    return False
+        return True
+
+    # ------------------------------------------------------------
+    # MAILING
+    # ------------------------------------------------------------
+
+    def _alias_get_creation_values(self):
+        values = super(Channel, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('mail.channel').id
+        if self.id:
+            values['alias_force_thread_id'] = self.id
+        return values
+
+    def _alias_get_error_message(self, message, message_dict, alias):
+        if alias.alias_contact == 'followers' and self.ids:
+            author = self.env['res.partner'].browse(message_dict.get('author_id', False))
+            if not author or author not in self.channel_partner_ids:
+                return _('restricted to channel members')
+            return False
+        return super(Channel, self)._alias_get_error_message(message, message_dict, alias)
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _notify_get_groups(self, msg_vals=None):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
@@ -360,13 +543,6 @@ class Channel(models.Model):
             headers['X-Forge-To'] = list_to
         return headers
 
-    def _message_receive_bounce(self, email, partner):
-        """ Override bounce management to unsubscribe bouncing addresses """
-        for p in partner:
-            if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
-                self._action_unfollow(p)
-        return super(Channel, self)._message_receive_bounce(email, partner)
-
     def _notify_email_recipient_values(self, recipient_ids):
         # Excluded Blacklisted
         whitelist = self.env['res.partner'].sudo().browse(recipient_ids).filtered(lambda p: not p.is_blacklisted)
@@ -377,6 +553,51 @@ class Channel(models.Model):
                 'recipient_ids': [],
             }
         return super(Channel, self)._notify_email_recipient_values(whitelist.ids)
+
+    def _notify_thread(self, message, msg_vals=False, **kwargs):
+        # When posting a message on a mail channel, manage moderation and postpone notify users
+        if not msg_vals or msg_vals.get('moderation_status') != 'pending_moderation':
+            super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        else:
+            message._notify_pending_by_chat()
+
+    def _message_receive_bounce(self, email, partner):
+        """ Override bounce management to unsubscribe bouncing addresses """
+        for p in partner:
+            if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
+                self._action_unfollow(p)
+        return super(Channel, self)._message_receive_bounce(email, partner)
+
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, *, message_type='notification', **kwargs):
+        moderation_status, email = self._extract_moderation_values(message_type, **kwargs)
+        if moderation_status == 'rejected':
+            return self.env['mail.message']
+
+        self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({'is_pinned': True})
+
+        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(message_type=message_type, moderation_status=moderation_status, **kwargs)
+
+        # Notifies the message author when his message is pending moderation if required on channel.
+        # The fields "email_from" and "reply_to" are filled in automatically by method create in model mail.message.
+        if self.moderation_notify and self.moderation_notify_msg and message_type in ['email','comment'] and moderation_status == 'pending_moderation':
+            self.env['mail.mail'].sudo().create({
+                'author_id': self.env.user.partner_id.id,
+                'email_from': self.env.user.company_id.catchall_formatted or self.env.user.company_id.email_formatted,
+                'body_html': self.moderation_notify_msg,
+                'subject': 'Re: %s' % (kwargs.get('subject', '')),
+                'email_to': email,
+                'auto_delete': True,
+                'state': 'outgoing'
+            })
+        return message
+
+    def _message_post_after_hook(self, message, msg_vals):
+        """
+        Automatically set the message posted by the current user as seen for himself.
+        """
+        self._set_last_seen_message(message)
+        return super()._message_post_after_hook(message=message, msg_vals=msg_vals)
 
     def _extract_moderation_values(self, message_type, **kwargs):
         """ This method is used to compute moderation status before the creation
@@ -405,6 +626,7 @@ class Channel(models.Model):
                 moderation_status = 'pending_moderation'
         return moderation_status, email
 
+<<<<<<< HEAD
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
         moderation_status, email = self._extract_moderation_values(message_type, **kwargs)
@@ -452,6 +674,11 @@ class Channel(models.Model):
     # --------------------------------------------------
     # Moderation
     # --------------------------------------------------
+=======
+    # ------------------------------------------------------------
+    # MODERATION
+    # ------------------------------------------------------------
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     def send_guidelines(self):
         """ Send guidelines to all channel members. """
@@ -481,7 +708,7 @@ class Channel(models.Model):
                 'author_id': self.env.user.partner_id.id,
                 'body_html': view._render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s", self.name),
-                'recipient_ids': [(4, partner.id)]
+                'recipient_ids': [Command.link(partner.id)]
             }
             mail = self.env['mail.mail'].sudo().create(create_values)
         return True
@@ -498,19 +725,14 @@ class Channel(models.Model):
             ('email', 'in', splitted_emails),
             ('channel_id', 'in', self.ids)
         ])
-        cmds = [(1, record.id, {'status': status}) for record in moderated]
+        cmds = [Command.update(record.id, {'status': status}) for record in moderated]
         not_moderated = [email for email in splitted_emails if email not in moderated.mapped('email')]
-        cmds += [(0, 0, {'email': email, 'status': status}) for email in not_moderated]
+        cmds += [Command.create({'email': email, 'status': status}) for email in not_moderated]
         return self.write({'moderation_ids': cmds})
 
-    #------------------------------------------------------
-    # Instant Messaging API
-    #------------------------------------------------------
-    # A channel header should be broadcasted:
-    #   - when adding user to channel (only to the new added partners)
-    #   - when folding/minimizing a channel (only to the user making the action)
-    # A message should be broadcasted:
-    #   - when a message is posted on a channel (to the channel, using _notify() method)
+    # ------------------------------------------------------------
+    # BROADCAST
+    # ------------------------------------------------------------
 
     # Anonymous method
     def _broadcast(self, partner_ids):
@@ -536,13 +758,6 @@ class Channel(models.Model):
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
         return notifications
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
-        # When posting a message on a mail channel, manage moderation and postpone notify users
-        if not msg_vals or msg_vals.get('moderation_status') != 'pending_moderation':
-            super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        else:
-            message._notify_pending_by_chat()
-
     def _channel_message_notifications(self, message, message_format=False):
         """ Generate the bus notifications for the given message
             :param message : the mail.message to sent
@@ -557,8 +772,18 @@ class Channel(models.Model):
                 notifications.append([channel.uuid, dict(message_format)])
         return notifications
 
+    # ------------------------------------------------------------
+    # INSTANT MESSAGING API
+    # ------------------------------------------------------------
+    # A channel header should be broadcasted:
+    #   - when adding user to channel (only to the new added partners)
+    #   - when folding/minimizing a channel (only to the user making the action)
+    # A message should be broadcasted:
+    #   - when a message is posted on a channel (to the channel, using _notify() method)
+    # ------------------------------------------------------------
+
     @api.model
-    def partner_info(self, all_partners, direct_partners):
+    def _get_channel_partner_info(self, all_partners, direct_partners):
         """
         Return the information needed by channel to display channel members
             :param all_partners: list of res.parner():
@@ -591,7 +816,11 @@ class Channel(models.Model):
         all_partners = all_partner_channel.mapped('partner_id')
         direct_channel_partners = all_partner_channel.filtered(lambda pc: channel_dict[pc.channel_id.id].channel_type == 'chat')
         direct_partners = direct_channel_partners.mapped('partner_id')
+<<<<<<< HEAD
         partner_infos = self.partner_info(all_partners, direct_partners)
+=======
+        partner_infos = self._get_channel_partner_info(all_partners, direct_partners)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
 
         for channel in self:
@@ -707,7 +936,11 @@ class Channel(models.Model):
         else:
             # create a new one
             channel = self.create({
+<<<<<<< HEAD
                 'channel_partner_ids': [(4, partner_id) for partner_id in partners_to],
+=======
+                'channel_partner_ids': [Command.link(partner_id) for partner_id in partners_to],
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 'public': 'private',
                 'channel_type': 'chat',
                 'email_send': False,
@@ -843,6 +1076,7 @@ class Channel(models.Model):
             }
             self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', channel.id), data]])
 
+<<<<<<< HEAD
     def channel_invite(self, partner_ids):
         """ Add the given partner_ids to the current channels and broadcast the channel header to them.
             :param partner_ids : list of partner id to add
@@ -899,6 +1133,8 @@ class Channel(models.Model):
             return (self.env.user | invited_user_id) <= sudo_self.group_public_id.users
         return False
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     @api.model
     def channel_set_custom_name(self, channel_id, name=False):
         domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.id', '=', channel_id)]
@@ -923,9 +1159,10 @@ class Channel(models.Model):
             notifications.append([channel.uuid, data]) # notify frontend users
         self.env['bus.bus'].sendmany(notifications)
 
-    #------------------------------------------------------
-    # Instant Messaging View Specific (Slack Client Action)
-    #------------------------------------------------------
+    # ------------------------------------------------------------
+    # IM VIEW SPECIFIC (Slack Client Action)
+    # ------------------------------------------------------------
+
     @api.model
     def channel_fetch_slot(self):
         """ Return the channels of the user grouped by 'slot' (channel, direct_message or private_group), and
@@ -1052,9 +1289,16 @@ class Channel(models.Model):
             """, (tuple(self.ids),))
         return self.env.cr.dictfetchall()
 
+<<<<<<< HEAD
     #------------------------------------------------------
     # Commands
     #------------------------------------------------------
+=======
+    # ------------------------------------------------------------
+    # COMMANDS
+    # ------------------------------------------------------------
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     @api.model
     @ormcache()
     def get_mention_commands(self):
@@ -1097,16 +1341,27 @@ class Channel(models.Model):
             all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
             channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
             msg = _("You are in a private conversation with <b>@%s</b>.", channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
+<<<<<<< HEAD
         msg += _("""<br><br>
             Type <b>@username</b> to mention someone, and grab his attention.<br>
             Type <b>#channel</b> to mention a channel.<br>
             Type <b>/command</b> to execute a command.<br>
             Type <b>:shortcut</b> to insert a canned response in your message.<br>""")
+=======
+        msg += self._execute_command_help_message_extra()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         self._send_transient_message(partner, msg)
 
     def _define_command_leave(self):
         return {'help': _("Leave this channel")}
+
+    def _execute_command_help_message_extra(self):
+        msg = _("""<br><br>
+            Type <b>@username</b> to mention someone, and grab his attention.<br>
+            Type <b>#channel</b> to mention a channel.<br>
+            Type <b>/command</b> to execute a command.<br>""")
+        return msg
 
     def _execute_command_leave(self, **kwargs):
         if self.channel_type == 'channel':

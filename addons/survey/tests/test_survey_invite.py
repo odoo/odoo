@@ -34,7 +34,7 @@ class TestSurveyInvite(common.TestSurveyCommon):
             # closed
             self.env['survey.survey'].with_user(self.survey_manager).create({
                 'title': 'S0',
-                'state': 'closed',
+                'active': False,
                 'question_and_page_ids': [
                     (0, 0, {'is_page': True, 'title': 'P0', 'sequence': 1}),
                     (0, 0, {'title': 'Q0', 'sequence': 2, 'question_type': 'text_box'})

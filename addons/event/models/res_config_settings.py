@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+
+<<<<<<< HEAD
+from odoo import api, fields, models
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
@@ -10,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
     module_website_event_track = fields.Boolean("Tracks and Agenda")
     module_website_event_track_live = fields.Boolean("Live Mode")
     module_website_event_track_quiz = fields.Boolean("Quiz on Tracks")
-    module_website_event_track_exhibitor = fields.Boolean("Advanced Sponsors")
+    module_website_event_exhibitor = fields.Boolean("Advanced Sponsors")
     module_website_event_questions = fields.Boolean("Registration Survey")
     module_event_barcode = fields.Boolean("Barcode")
     module_website_event_sale = fields.Boolean("Online Ticketing")
@@ -24,4 +30,7 @@ class ResConfigSettings(models.TransientModel):
             if not config.module_website_event_track:
                 config.module_website_event_track_live = False
                 config.module_website_event_track_quiz = False
+<<<<<<< HEAD
                 config.module_website_event_track_exhibitor = False
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

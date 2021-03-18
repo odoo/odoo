@@ -54,6 +54,7 @@ class ResourceMixin(models.AbstractModel):
         default['resource_calendar_id'] = resource.calendar_id.id
         return super(ResourceMixin, self).copy_data(default)
 
+<<<<<<< HEAD
     # YTI TODO: Remove me in master
     def _get_work_days_data(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         self.ensure_one()
@@ -65,6 +66,8 @@ class ResourceMixin(models.AbstractModel):
             domain=domain
         )[self.id]
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be
@@ -107,6 +110,7 @@ class ResourceMixin(models.AbstractModel):
         # convert "resource: result" into "employee: result"
         return {mapped_employees[r.id]: result[r.id] for r in resources} 
 
+<<<<<<< HEAD
     # YTI TODO: Remove me in master
     def _get_leave_days_data(self, from_datetime, to_datetime, calendar=None, domain=None):
         self.ensure_one()
@@ -117,6 +121,8 @@ class ResourceMixin(models.AbstractModel):
             domain=domain
         )[self.id]
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _get_leave_days_data_batch(self, from_datetime, to_datetime, calendar=None, domain=None):
         """
             By default the resource calendar is used, but it can be

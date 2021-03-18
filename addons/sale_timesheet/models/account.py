@@ -18,9 +18,9 @@ class AccountAnalyticLine(models.Model):
         ('billable_time', 'Billed on Timesheets'),
         ('billable_fixed', 'Billed at a Fixed price'),
         ('non_billable', 'Non Billable Tasks'),
-        ('non_billable_timesheet', 'Non Billable Timesheet'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
+<<<<<<< HEAD
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheet will not be billed.")
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
 
@@ -33,6 +33,15 @@ class AccountAnalyticLine(models.Model):
         non_allowed_billable_task.timesheet_invoice_type = 'non_billable'
 
         for timesheet in self - non_allowed_billable - non_allowed_billable_task:
+=======
+    so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
+    is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
+
+    # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to pricing_type of project (See in master)
+    @api.depends('so_line.product_id', 'project_id', 'task_id', 'task_id.pricing_type')
+    def _compute_timesheet_invoice_type(self):
+        for timesheet in self:
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             if timesheet.project_id:  # AAL will be set to False
                 invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
                 if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
@@ -47,16 +56,12 @@ class AccountAnalyticLine(models.Model):
             else:
                 timesheet.timesheet_invoice_type = False
 
-    @api.onchange('employee_id')
-    def _onchange_task_id_employee_id(self):
-        if self.project_id and self.task_id.allow_billable:  # timesheet only
-            if self.task_id.bill_type == 'customer_task' or self.task_id.pricing_type == 'fixed_rate':
-                self.so_line = self.task_id.sale_line_id
-            elif self.task_id.pricing_type == 'employee_rate':
-                self.so_line = self._timesheet_determine_sale_line(self.task_id, self.employee_id, self.project_id)
-            else:
-                self.so_line = False
+    @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
+    def _compute_so_line(self):
+        for timesheet in self.filtered(lambda t: not t.is_so_line_edited and t._is_not_billed()):  # Get only the timesheets are not yet invoiced
+            timesheet.so_line = timesheet.project_id.allow_billable and timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
 
+<<<<<<< HEAD
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
         for timesheet in self._get_not_billed():  # Get only the timesheets are not yet invoiced
@@ -72,6 +77,14 @@ class AccountAnalyticLine(models.Model):
     def _check_sale_line_in_project_map(self):
         if not all(t._check_timesheet_can_be_billed() for t in self._get_not_billed().filtered(lambda t: t.project_id and t.so_line)):
             raise ValidationError(_("This timesheet line cannot be billed: there is no Sale Order Item defined on the task, nor on the project. Please define one to save your timesheet line."))
+=======
+    def _is_not_billed(self):
+        self.ensure_one()
+        return not self.timesheet_invoice_id or self.timesheet_invoice_id.state == 'cancel'
+
+    def _check_timesheet_can_be_billed(self):
+        return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
@@ -102,24 +115,34 @@ class AccountAnalyticLine(models.Model):
                 on the one on the project
         """
         if not task:
+<<<<<<< HEAD
             if project.bill_type == 'customer_project' and project.pricing_type == 'employee_rate':
+=======
+            if project.pricing_type == 'employee_rate':
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', project.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id
             if project.sale_line_id:
                 return project.sale_line_id
         if task.allow_billable:
-            if task.bill_type == 'customer_task':
+            if task.pricing_type in ('task_rate', 'fixed_rate'):
                 return task.sale_line_id
-            if task.pricing_type == 'fixed_rate':
-                return task.sale_line_id
+<<<<<<< HEAD
             elif task.pricing_type == 'employee_rate' and not task.non_allow_billable:
+=======
+            else:  # then pricing_type = 'employee_rate'
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 map_entry = project.sale_line_employee_ids.filtered(lambda map_entry: map_entry.employee_id == employee)
                 if map_entry:
                     return map_entry.sale_line_id
                 if task.sale_line_id or project.sale_line_id:
                     return task.sale_line_id or project.sale_line_id
+<<<<<<< HEAD
         return self.env['sale.order.line']
+=======
+        return False
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     def _timesheet_get_portal_domain(self):
         """ Only the timesheets with a product invoiced on delivered quantity are concerned.
@@ -149,7 +172,7 @@ class AccountAnalyticLine(models.Model):
         res = super(AccountAnalyticLine, self)._get_timesheets_to_merge()
         return res.filtered(lambda l: not l.timesheet_invoice_id or l.timesheet_invoice_id.state != 'posted')
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_invoiced(self):
         if any(line.timesheet_invoice_id and line.timesheet_invoice_id.state == 'posted' for line in self):
             raise UserError(_('You cannot remove a timesheet that has already been invoiced.'))
-        return super(AccountAnalyticLine, self).unlink()

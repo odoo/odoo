@@ -13,6 +13,7 @@
 
 {
     'name': 'Dominican Republic - Accounting',
+    'icon': '/base/static/img/country_flags/do.png',
     'version': '2.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

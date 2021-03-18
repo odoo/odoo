@@ -13,7 +13,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     }, [tour.stepUtils.showAppsMenuItem(), {
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
-        width: 210,
+        width: 225,
         position: 'bottom',
         edition: 'enterprise',
     }, {
@@ -70,7 +70,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         content: _t("Check the email address and click send."),
         position: 'bottom',
     }, {
-        trigger: 'button[name="action_put_in_queue"]',
+        trigger: 'button[name="action_launch"]',
         content: _t("Ready for take-off!"),
         position: 'bottom',
     }, {

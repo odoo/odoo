@@ -131,17 +131,17 @@ function factory(dependencies) {
         }
 
         /**
-         * Shift this chat window to the left on screen.
+         * Swap this chat window with the previous one.
          */
-        shiftLeft() {
-            this.manager.shiftLeft(this);
+        shiftPrev() {
+            this.manager.shiftPrev(this);
         }
 
         /**
-         * Shift this chat window to the right on screen.
+         * Swap this chat window with the next one.
          */
-        shiftRight() {
-            this.manager.shiftRight(this);
+        shiftNext() {
+            this.manager.shiftNext(this);
         }
 
         /**
@@ -176,7 +176,11 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+<<<<<<< HEAD
         _computeHasShiftLeft() {
+=======
+        _computeHasShiftPrev() {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             if (!this.manager) {
                 return false;
             }
@@ -192,7 +196,7 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeHasShiftRight() {
+        _computeHasShiftNext() {
             if (!this.manager) {
                 return false;
             }
@@ -358,13 +362,13 @@ function factory(dependencies) {
                 'thread',
             ],
         }),
-        hasShiftLeft: attr({
-            compute: '_computeHasShiftLeft',
+        hasShiftPrev: attr({
+            compute: '_computeHasShiftPrev',
             dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
-        hasShiftRight: attr({
-            compute: '_computeHasShiftRight',
+        hasShiftNext: attr({
+            compute: '_computeHasShiftNext',
             dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
@@ -450,6 +454,10 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'chatWindow',
             isCausal: true,
+<<<<<<< HEAD
+=======
+            readonly: true,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.

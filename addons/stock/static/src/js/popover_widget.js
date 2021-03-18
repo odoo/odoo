@@ -61,6 +61,10 @@ var PopoverWidgetField = AbstractField.extend({
         const reportContext = {
             active_model: 'product.product',
             active_id: this.recordData.product_id.data.id,
+<<<<<<< HEAD
+=======
+            warehouse: this.recordData.warehouse_id.data.id,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         };
         const action = await this._rpc({
             model: reportContext.active_model,

@@ -7,6 +7,10 @@ from . import crm_lead
 from . import crm_lost_reason
 from . import crm_stage
 from . import crm_team
+<<<<<<< HEAD
+=======
+from . import crm_team_member
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 from . import ir_config_parameter
 from . import res_config_settings
 from . import res_partner

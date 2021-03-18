@@ -164,7 +164,6 @@
                     <field name="fold" optional="show"/>
                     <field name="mail_template_id" optional="show"/>
                     <field name="rating_template_id" optional="show"/>
-                    <field name="auto_validation_kanban_state" optional="hide" />
                     <field name="description" optional="hide"/>
                     <field name="project_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}" />
                 </tree>
@@ -249,7 +248,7 @@
             <field name="arch" type="xml">
                 <form string="Project" delete="0">
                     <header>
-                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
+                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only" groups="project.group_project_manager"/>
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
@@ -270,20 +269,20 @@
                                     Customer Satisfaction
                                 </span>
                             </div>
-                        </button>                            
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Project Name"/>
+                            <field name="name" class="o_text_overflow" placeholder="Project Name"/>
                         </h1>
-                        <div name="options_active">
-                            <div>
-                                <label for="label_tasks" class="oe_inline" string="Name of the tasks:"/>
-                                <field name="label_tasks" class="oe_inline oe_input_align"/>
-                            </div>
-                        </div>
                     </div>
+                    <group>
+                        <group>
+                            <field name="label_tasks" string="Name of the tasks"/>
+                            <field name="partner_id" widget="res_partner_many2one"/>
+                        </group>
+                    </group>
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" nolabel="1" placeholder="Describe your project..." type="html"/>
@@ -294,11 +293,14 @@
                                 <group>
                                     <field name="active" invisible="1"/>
                                     <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
+<<<<<<< HEAD
                                     <field name="partner_id" string="Customer" widget="res_partner_many2one"/>
                                     <field name="partner_phone" widget="phone"
                                            attrs="{'invisible': [('partner_id', '=', False)]}"/>
                                     <field name="partner_email" widget="email"
                                            attrs="{'invisible': [('partner_id', '=', False)]}"/>
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
                                         <label for="alias_enabled" class="font-weight-bold" string="Create tasks by sending an email"/>
@@ -328,7 +330,15 @@
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
                                     <field name="allowed_portal_user_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
-
+                                    <span colspan="2" class="oe_edit_only text-muted"
+                                          attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}">
+                                        <dl class="o_project_portal_warning_dl">
+                                            <dt class="o_project_portal_warning_dt" aria-hidden="True">
+                                                <i class="fa fa-exclamation-triangle fa-sm"/>&amp;nbsp;</dt>
+                                            <dd class="o_project_portal_warning_dd">Allowed Portal Users will see all the tasks of this project without distinction.<br/>
+                                                Leave empty to restrict the access to the portal users' own tasks.</dd>
+                                        </dl>
+                                    </span>
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
@@ -438,6 +448,37 @@
             </field>
         </record>
 
+        <record id="project_view_kanban" model="ir.ui.view">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="user_id" string="Project Manager"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click o_kanban_get_form">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong><field name="name" string="Project Name"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <field name="partner_id" string="Contact"/>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="oe_kanban_bottom_right float-right">
+                                            <field name="user_id" widget="many2one_avatar_user"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="project_project_view_form_simplified" model="ir.ui.view">
             <field name="name">project.project.view.form.simplified</field>
             <field name="model">project.project</field>
@@ -505,11 +546,11 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
                                 <div class="o_project_kanban_main">
-                                    <div class="o_kanban_card_content">
+                                    <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
-                                                <span><t t-esc="record.name.value"/></span>
-                                                <span t-if="record.partner_id.value">
+                                                <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
+                                                <span class="o_text_overflow" t-if="record.partner_id.value">
                                                     <strong><t t-esc="record.partner_id.value"/></strong>
                                                 </span>
                                             </div>
@@ -606,7 +647,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Task" class="o_form_project_tasks">
+                <form string="Task" class="o_form_project_tasks" js_class="project_form">
                     <field name="allow_subtasks" invisible="1" />
                     <field name="is_closed" invisible="1" />
                     <field name="allow_recurring_tasks" invisible="1" />
@@ -659,6 +700,11 @@
                             <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
+<<<<<<< HEAD
+=======
+                                options="{'no_open': True}"
+                                widget="many2one_avatar_user"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                 domain="[('share', '=', False)]"/>
                             <field
                                 name="parent_id"
@@ -672,7 +718,10 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="partner_id" widget="res_partner_many2one" class="o_task_customer_field"/>
+<<<<<<< HEAD
                             <field name="partner_email" widget="email" invisible="1"/>
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                             <field name="partner_phone" widget="phone" attrs="{'invisible': True}"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
@@ -724,7 +773,6 @@
                             </group>
                             <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
                                 <div class="alert alert-success o_form_project_recurrence_message" role="status">
-                                    <p><span class="fa fa-check-circle"></span> Next Occurrences:</p>
                                     <field name="recurrence_message" widget="html" class="mb-0" />
                                 </div>
                             </group>
@@ -901,7 +949,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Tasks" multi_edit="1" sample="1">
+                <tree string="Tasks" multi_edit="1" sample="1" js_class="project_list">
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
@@ -916,6 +964,7 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                     <field name="kanban_state" widget="state_selection" optional="hide" readonly="1"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
+                    <field name="recurrence_id" invisible="1" />
                 </tree>
             </field>
         </record>

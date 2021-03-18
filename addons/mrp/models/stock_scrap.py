@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class StockScrap(models.Model):
@@ -34,3 +34,19 @@ class StockScrap(models.Model):
             else:
                 vals.update({'raw_material_production_id': self.production_id.id})
         return vals
+
+    @api.onchange('lot_id')
+    def _onchange_serial_number(self):
+        if self.product_id.tracking == 'serial' and self.lot_id:
+            if self.production_id:
+                message, recommended_location = self.env['stock.quant']._check_serial_number(self.product_id,
+                                                                                             self.lot_id,
+                                                                                             self.company_id,
+                                                                                             self.location_id,
+                                                                                             self.production_id.location_dest_id)
+                if message:
+                    if recommended_location:
+                        self.location_id = recommended_location
+                    return {'warning': {'title': _('Warning'), 'message': message}}
+            else:
+                return super()._onchange_serial_number()

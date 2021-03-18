@@ -335,10 +335,14 @@ class AccountBankStatement(models.Model):
                     ))
         return True
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_only_if_open(self):
         for statement in self:
             if statement.state != 'open':
                 raise UserError(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
+
+    def unlink(self):
+        for statement in self:
             # Explicitly unlink bank statement lines so it will check that the related journal entries have been deleted first
             statement.line_ids.unlink()
             # Some other bank statements might be link to this one, so in that case we have to switch the previous_statement_id
@@ -1146,9 +1150,15 @@ class AccountBankStatementLine(models.Model):
                 'credit': -new_balance if new_balance < 0.0 else 0.0,
             })
             total_balance = 0.0
+<<<<<<< HEAD
 
         # Step 4: If the journal entry is not yet balanced, create an open balance.
 
+=======
+
+        # Step 4: If the journal entry is not yet balanced, create an open balance.
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         if self.company_currency_id.round(total_balance):
             counterpart_vals = {
                 'name': '%s: %s' % (self.payment_ref, _('Open Balance')),

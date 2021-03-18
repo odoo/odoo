@@ -25,6 +25,5 @@ and print the report from Print button in header area.
         'data/accounting_assert_test_data.xml',
         'report/report_account_test_templates.xml',
     ],
-    'active': False,
     'installable': True
 }

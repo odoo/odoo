@@ -1,9 +1,8 @@
-odoo.define('web.SampleServer', function (require) {
-    "use strict";
+/** @odoo-module alias=web.SampleServer **/
 
-    const session = require('web.session');
-    const utils = require('web.utils');
-    const Registry = require('web.Registry');
+    import session from 'web.session';
+    import utils from 'web.utils';
+    import Registry from 'web.Registry';
 
     class UnimplementedRouteError extends Error {}
 
@@ -688,5 +687,4 @@ odoo.define('web.SampleServer', function (require) {
     //   SampleServer.mockRegistry.add('res.partner/some_method', () => 23);
     SampleServer.mockRegistry = new Registry();
 
-    return SampleServer;
-});
+    export default SampleServer;

@@ -163,6 +163,7 @@ function factory(dependencies) {
                 lastFetchedMessage: [['insert', { id: last_message_id }]],
                 partnerId: partner_id,
             });
+<<<<<<< HEAD
             channel.update({
                 messageSeenIndicators: [['insert',
                     {
@@ -170,6 +171,11 @@ function factory(dependencies) {
                         messageId: last_message_id,
                     }
                 ]],
+=======
+            this.env.models['mail.message_seen_indicator'].insert({
+                channelId: channel.id,
+                messageId: last_message_id,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             });
             // FIXME force the computing of message values (cf task-2261221)
             this.env.models['mail.message_seen_indicator'].recomputeFetchedValues(channel);
@@ -308,13 +314,17 @@ function factory(dependencies) {
             // restrict computation of seen indicator for "non-channel" channels
             // for performance reasons
             const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
+<<<<<<< HEAD
             const updateData = {};
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             if (shouldComputeSeenIndicators) {
                 this.env.models['mail.thread_partner_seen_info'].insert({
                     channelId: channel.id,
                     lastSeenMessage: [['link', lastMessage]],
                     partnerId: partner_id,
                 });
+<<<<<<< HEAD
                 Object.assign(updateData, {
                     // FIXME should no longer use computeId (task-2335647)
                     messageSeenIndicators: [['insert',
@@ -327,11 +337,23 @@ function factory(dependencies) {
             }
             if (this.env.messaging.currentPartner.id === partner_id) {
                 Object.assign(updateData, {
+=======
+                this.env.models['mail.message_seen_indicator'].insert({
+                    channelId: channel.id,
+                    messageId: lastMessage.id,
+                });
+            }
+            if (this.env.messaging.currentPartner.id === partner_id) {
+                channel.update({
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
                 });
             }
+<<<<<<< HEAD
             channel.update(updateData);
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             if (shouldComputeSeenIndicators) {
                 // FIXME force the computing of thread values (cf task-2261221)
                 this.env.models['mail.thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
@@ -496,7 +518,11 @@ function factory(dependencies) {
                         this.env._t("You have been invited to: %s"),
                         owl.utils.escape(channel.name)
                     ),
+<<<<<<< HEAD
                     type: 'warning',
+=======
+                    type: 'info',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 });
             }
             // a new thread with unread messages could have been added
@@ -689,7 +715,11 @@ function factory(dependencies) {
             channel.update({ isServerPinned: false });
             this.env.services['notification'].notify({
                 message,
+<<<<<<< HEAD
                 type: 'warning',
+=======
+                type: 'info',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             });
         }
 
@@ -704,7 +734,11 @@ function factory(dependencies) {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present
             // then open a chat for the current user with the new user.
+<<<<<<< HEAD
             this.env.services['bus_service'].sendNotification(title, message);
+=======
+            this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             const chat = await this.async(() =>
                 this.env.messaging.getChat({ partnerId: partner_id }
             ));
@@ -727,7 +761,7 @@ function factory(dependencies) {
             if (!author) {
                 notificationTitle = this.env._t("New message");
             } else {
-                const authorName = author.nameOrDisplayName;
+                const escapedAuthorName = owl.utils.escape(author.nameOrDisplayName);
                 if (channel.channel_type === 'channel') {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
@@ -740,15 +774,23 @@ function factory(dependencies) {
                     const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
-                        owl.utils.escape(authorName),
+                        escapedAuthorName,
                         channelNameWithIcon
                     );
                 } else {
-                    notificationTitle = owl.utils.escape(authorName);
+                    notificationTitle = escapedAuthorName;
                 }
             }
             const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
+<<<<<<< HEAD
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
+=======
+            this.env.services['bus_service'].sendNotification({
+                message: notificationContent,
+                title: notificationTitle,
+                type: 'info',
+            });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             messaging.update({ outOfFocusUnreadMessageCounter: increment() });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
                 ? this.env._t("%d Message")

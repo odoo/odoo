@@ -189,6 +189,7 @@ class AccountMove(models.Model):
                 - in case of ISR-B contains the Customer ID number
                 - it can also contains a partner reference (of the debitor)
            - creditor: Subscription number of the creditor
+<<<<<<< HEAD
 
         An optical line can have the 2 following formats:
 
@@ -211,6 +212,30 @@ class AccountMove(models.Model):
             |/\________/| \____/\__________________/|  \_______/
             1     2     3    4           5          6      7
 
+=======
+
+        An optical line can have the 2 following formats:
+
+        * ISR (Postfinance)
+
+            0100003949753>120000000000234478943216899+ 010001628>
+            |/\________/| \________________________/|  \_______/
+            1     2     3          4                5      6
+
+            (1) 01 | currency
+            (2) 0000394975 | amount 3949.75
+            (3) 4 | control digit for amount
+            (5) 12000000000023447894321689 | reference
+            (6) 9: control digit for identification number and reference
+            (7) 010001628: subscription number (01-162-8)
+
+        * ISR-B (Indirect through a bank, requires a customer ID)
+
+            0100000494004>150001123456789012345678901+ 010234567>
+            |/\________/| \____/\__________________/|  \_______/
+            1     2     3    4           5          6      7
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             (1) 01 | currency
             (2) 0000049400 | amount 494.00
             (3) 4 | control digit for amount
@@ -246,10 +271,14 @@ class AccountMove(models.Model):
         for inv in self:
             if inv.move_type == 'in_invoice' and inv.company_id.country_id.code == "CH":
                 partner_bank = inv.partner_bank_id
+<<<<<<< HEAD
                 if partner_bank:
                     needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
                 else:
                     needs_isr_ref = False
+=======
+                needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 if needs_isr_ref and not inv._has_isr_ref():
                     inv.l10n_ch_isr_needs_fixing = True
                     continue

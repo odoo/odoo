@@ -48,22 +48,18 @@ class ResCompany(models.Model):
 
     def _create_internal_project_task(self):
         results = []
+        type_ids = [(4, self.env.ref('hr_timesheet.internal_project_default_stage').id)]
         for company in self:
             company = company.with_company(company)
-            internal_project = company.env['project.project'].sudo().create({
+            results += [{
                 'name': _('Internal'),
                 'allow_timesheets': True,
                 'company_id': company.id,
-            })
-
-            company.env['project.task'].sudo().create([{
-                'name': _('Training'),
-                'project_id': internal_project.id,
-                'company_id': company.id,
-            }, {
-                'name': _('Meeting'),
-                'project_id': internal_project.id,
-                'company_id': company.id,
-            }])
-            results.append(internal_project)
-        return results
+                'type_ids': type_ids,
+                'task_ids': [(0, 0, {
+                    'name': name,
+                    'company_id': company.id,
+                }) for name in [_('Training'), _('Meeting')]]
+            }]
+        project_ids = self.env['project.project'].create(results)
+        return project_ids

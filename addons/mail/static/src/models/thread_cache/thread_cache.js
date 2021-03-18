@@ -12,9 +12,12 @@ function factory(dependencies) {
         // Public
         //----------------------------------------------------------------------
 
+<<<<<<< HEAD
         /**
          * @returns {mail.message[]|undefined}
          */
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         async loadMoreMessages() {
             if (this.isAllHistoryLoaded || this.isLoading) {
                 return;
@@ -26,6 +29,7 @@ function factory(dependencies) {
             this.update({ isLoadingMore: true });
             const messageIds = this.fetchedMessages.map(message => message.id);
             const limit = 30;
+<<<<<<< HEAD
             const fetchedMessages = await this.async(() => this._loadMessages({
                 extraDomain: [['id', '<', Math.min(...messageIds)]],
                 limit,
@@ -38,6 +42,28 @@ function factory(dependencies) {
                 threadView.addComponentHint('more-messages-loaded', { fetchedMessages });
             }
             return fetchedMessages;
+=======
+            let fetchedMessages;
+            let success;
+            try {
+                fetchedMessages = await this.async(() => this._loadMessages({
+                    extraDomain: [['id', '<', Math.min(...messageIds)]],
+                    limit,
+                }));
+                success = true;
+            }  catch (e) {
+                success = false;
+            }
+            if (success) {
+                if (fetchedMessages.length < limit) {
+                    this.update({ isAllHistoryLoaded: true });
+                }
+                for (const threadView of this.threadViews) {
+                    threadView.addComponentHint('more-messages-loaded', { fetchedMessages });
+                }
+            }
+            this.update({ isLoadingMore: false });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }
 
         /**
@@ -56,9 +82,18 @@ function factory(dependencies) {
                 extraDomain: [['id', '>', Math.max(...messageIds)]],
                 limit: false,
             });
+<<<<<<< HEAD
             for (const threadView of this.threadViews) {
                 threadView.addComponentHint('new-messages-loaded', { fetchedMessages });
             }
+=======
+            if (!fetchedMessages) {
+                return;
+            }
+            for (const threadView of this.threadViews) {
+                threadView.addComponentHint('new-messages-loaded', { fetchedMessages });
+            }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             return fetchedMessages;
         }
 
@@ -193,6 +228,12 @@ function factory(dependencies) {
                 // happens during destroy or compute executed in wrong order
                 return false;
             }
+<<<<<<< HEAD
+=======
+            if (this.hasLoadingFailed) {
+                return false;
+            }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             const wasCacheRefreshRequested = this.isCacheRefreshRequested;
             // mark hint as processed
             if (this.isCacheRefreshRequested) {
@@ -271,6 +312,10 @@ function factory(dependencies) {
          * @param {Array[]} [param0.extraDomain]
          * @param {integer} [param0.limit=30]
          * @returns {mail.message[]}
+<<<<<<< HEAD
+=======
+         * @throws {Error} when failed to load messages
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
          */
         async _loadMessages({ extraDomain, limit = 30 } = {}) {
             this.update({ isLoading: true });
@@ -284,6 +329,7 @@ function factory(dependencies) {
             const moderated_channel_ids = this.thread.moderation
                 ? [this.thread.id]
                 : undefined;
+<<<<<<< HEAD
             const messages = await this.async(() =>
                 this.env.models['mail.message'].performRpcMessageFetch(
                     domain,
@@ -294,6 +340,28 @@ function factory(dependencies) {
             );
             this.update({
                 fetchedMessages: [['link', messages]],
+=======
+            let messages;
+            try {
+                messages = await this.async(() =>
+                    this.env.models['mail.message'].performRpcMessageFetch(
+                        domain,
+                        limit,
+                        moderated_channel_ids,
+                        context,
+                    )
+                );
+            } catch(e) {
+                this.update({
+                    hasLoadingFailed: true,
+                    isLoading: false,
+                });
+                throw e;
+            }
+            this.update({
+                fetchedMessages: [['link', messages]],
+                hasLoadingFailed: false,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 isLoaded: true,
                 isLoading: false,
             });
@@ -351,6 +419,7 @@ function factory(dependencies) {
          *
          * @private
          */
+<<<<<<< HEAD
         _onHasToLoadMessagesChanged() {
             if (!this.hasToLoadMessages) {
                 return;
@@ -372,6 +441,28 @@ function factory(dependencies) {
             if (!this.thread) {
                 return;
             }
+=======
+        async _onHasToLoadMessagesChanged() {
+            if (!this.hasToLoadMessages) {
+                return;
+            }
+            const fetchedMessages = await this.async(() => this._loadMessages());
+            for (const threadView of this.threadViews) {
+                threadView.addComponentHint('messages-loaded', { fetchedMessages });
+            }
+        }
+
+        /**
+         * Handles change of messages on this thread cache. This is useful to
+         * refresh non-main caches that are currently displayed when the main
+         * cache receives updates. This is necessary because only the main cache
+         * is aware of changes in real time.
+         */
+        _onMessagesChanged() {
+            if (!this.thread) {
+                return;
+            }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             if (this.thread.mainCache !== this) {
                 return;
             }
@@ -415,6 +506,15 @@ function factory(dependencies) {
             dependencies: ['threadMessages'],
         }),
         /**
+<<<<<<< HEAD
+=======
+         * Determines whether the last message fetch failed.
+         */
+        hasLoadingFailed: attr({
+            default: false,
+        }),
+        /**
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
          * Determines whether `this` should load initial messages. This field is
          * computed and should be considered read-only.
          * @see `isCacheRefreshRequested` to request manual refresh of messages.
@@ -422,6 +522,10 @@ function factory(dependencies) {
         hasToLoadMessages: attr({
             compute: '_computeHasToLoadMessages',
             dependencies: [
+<<<<<<< HEAD
+=======
+                'hasLoadingFailed',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 'isCacheRefreshRequested',
                 'isLoaded',
                 'isLoading',

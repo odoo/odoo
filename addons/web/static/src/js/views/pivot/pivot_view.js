@@ -1,5 +1,4 @@
-odoo.define('web.PivotView', function (require) {
-    "use strict";
+/** @odoo-module alias=web.PivotView **/
 
     /**
      * The Pivot View is a view that represents data in a 'pivot grid' form. It
@@ -7,13 +6,13 @@ odoo.define('web.PivotView', function (require) {
      * 'zoom in' data.
      */
 
-    const AbstractView = require('web.AbstractView');
-    const config = require('web.config');
-    const core = require('web.core');
-    const PivotModel = require('web.PivotModel');
-    const PivotController = require('web.PivotController');
-    const PivotRenderer = require('web.PivotRenderer');
-    const RendererWrapper = require('web.RendererWrapper');
+    import AbstractView from '../abstract_view';
+    import config from 'web.config';
+    import core from 'web.core';
+    import PivotModel from 'web.PivotModel';
+    import PivotController from 'web.PivotController';
+    import PivotRenderer from './pivot_renderer';
+    import RendererWrapper from 'web.RendererWrapper';
 
     const _t = core._t;
     const _lt = core._lt;
@@ -153,6 +152,4 @@ odoo.define('web.PivotView', function (require) {
         },
     });
 
-    return PivotView;
-
-});
+    export default PivotView;

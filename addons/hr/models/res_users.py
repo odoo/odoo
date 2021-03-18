@@ -21,12 +21,25 @@ class User(models.Model):
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
+<<<<<<< HEAD
     work_location = fields.Char(related='employee_id.work_location', readonly=False, related_sudo=False)
+=======
+    work_location_id = fields.Many2one(related='employee_id.work_location_id', readonly=False, related_sudo=False)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     employee_parent_id = fields.Many2one(related='employee_id.parent_id', readonly=False, related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
+    private_street = fields.Char(related='address_home_id.street', string="Private Street", readonly=False, related_sudo=False)
+    private_street2 = fields.Char(related='address_home_id.street2', string="Private Street2", readonly=False, related_sudo=False)
+    private_city = fields.Char(related='address_home_id.city', string="Private City", readonly=False, related_sudo=False)
+    private_state_id = fields.Many2one(
+        related='address_home_id.state_id', string="Private State", readonly=False, related_sudo=False,
+        domain="[('country_id', '=?', private_country_id)]")
+    private_zip = fields.Char(related='address_home_id.zip', readonly=False, string="Private Zip", related_sudo=False)
+    private_country_id = fields.Many2one(related='address_home_id.country_id', string="Private Country", readonly=False, related_sudo=False)
     is_address_home_a_company = fields.Boolean(related='employee_id.is_address_home_a_company', readonly=False, related_sudo=False)
     private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False)
+    private_lang = fields.Selection(related='address_home_id.lang', string="Employee Lang", readonly=False)
     km_home_work = fields.Integer(related='employee_id.km_home_work', readonly=False, related_sudo=False)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
     employee_bank_account_id = fields.Many2one(related='employee_id.bank_account_id', string="Employee's Bank Account Number", related_sudo=False, readonly=False)
@@ -56,6 +69,7 @@ class User(models.Model):
     hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
+    employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
 
@@ -78,6 +92,7 @@ class User(models.Model):
             'active',
             'child_ids',
             'employee_id',
+            'address_home_id',
             'employee_ids',
             'employee_parent_id',
             'hr_presence_state',
@@ -88,7 +103,12 @@ class User(models.Model):
 
         hr_writable_fields = [
             'additional_note',
-            'address_home_id',
+            'private_street',
+            'private_street2',
+            'private_city',
+            'private_state_id',
+            'private_zip',
+            'private_country_id',
             'address_id',
             'barcode',
             'birthday',
@@ -122,11 +142,13 @@ class User(models.Model):
             'visa_expire',
             'visa_no',
             'work_email',
-            'work_location',
+            'work_location_id',
             'work_phone',
             'certificate',
             'study_field',
             'study_school',
+            'private_lang',
+            'employee_type',
         ]
 
         init_res = super(User, self).__init__(pool, cr)

@@ -9,6 +9,7 @@ from unittest.mock import DEFAULT
 import pytz
 
 from odoo import exceptions, tests
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
@@ -218,6 +219,24 @@ class TestActivityFlow(TestActivityCommon):
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestActivityMixin, cls).setUpClass()
+
+        cls.user_utc = mail_new_test_user(
+            cls.env,
+            name='User UTC',
+            login='User UTC',
+        )
+        cls.user_utc.tz = 'UTC'
+
+        cls.user_australia = mail_new_test_user(
+            cls.env,
+            name='user Australia',
+            login='user Australia',
+        )
+        cls.user_australia.tz = 'Australia/ACT'
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin(self):
         self.user_employee.tz = self.user_admin.tz
@@ -333,3 +352,177 @@ class TestActivityMixin(TestActivityCommon):
             user_id=self.user_admin.id,
             new_user_id=self.user_employee.id)
         self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
+
+    def test_mail_activity_state(self):
+        """Create 3 activity for 2 different users in 2 different timezones.
+
+        User UTC (+0h)
+        User Australia (+11h)
+        Today datetime: 1/1/2020 16h
+
+        Activity 1 & User UTC
+            1/1/2020 - 16h UTC       -> The state is today
+
+        Activity 2 & User Australia
+            1/1/2020 - 16h UTC
+            2/1/2020 -  1h Australia -> State is overdue
+
+        Activity 3 & User UTC
+            1/1/2020 - 23h UTC       -> The state is today
+        """
+        today_utc = datetime(2020, 1, 1, 16, 0, 0)
+
+        class MockedDatetime(datetime):
+            @classmethod
+            def utcnow(cls):
+                return today_utc
+
+        record = self.env['mail.test.activity'].create({'name': 'Record'})
+
+        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime):
+            activity_1 = self.env['mail.activity'].create({
+                'summary': 'Test',
+                'activity_type_id': 1,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': record.id,
+                'date_deadline': today_utc,
+                'user_id': self.user_utc.id,
+            })
+
+            activity_2 = activity_1.copy()
+            activity_2.user_id = self.user_australia
+            activity_3 = activity_1.copy()
+            activity_3.date_deadline += relativedelta(hours=7)
+
+            self.assertEqual(activity_1.state, 'today')
+            self.assertEqual(activity_2.state, 'overdue')
+            self.assertEqual(activity_3.state, 'today')
+
+    def test_mail_activity_mixin_search_state_basic(self):
+        """Test the search method on the "activity_state".
+
+        Test all the operators and also test the case where the "activity_state" is
+        different because of the timezone. There's also a tricky case for which we
+        "reverse" the domain for performance purpose.
+        """
+        today_utc = datetime(2020, 1, 1, 16, 0, 0)
+
+        class MockedDatetime(datetime):
+            @classmethod
+            def utcnow(cls):
+                return today_utc
+
+        # Create some records without activity schedule on it for testing
+        self.env['mail.test.activity'].create([
+            {'name': 'Record %i' % record_i}
+            for record_i in range(5)
+        ])
+
+        origin_1, origin_2 = self.env['mail.test.activity'].search([], limit=2)
+
+        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime):
+            origin_1_activity_1 = self.env['mail.activity'].create({
+                'summary': 'Test',
+                'activity_type_id': 1,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': origin_1.id,
+                'date_deadline': today_utc,
+                'user_id': self.user_utc.id,
+            })
+
+            origin_1_activity_2 = origin_1_activity_1.copy()
+            origin_1_activity_2.user_id = self.user_australia
+            origin_1_activity_3 = origin_1_activity_1.copy()
+            origin_1_activity_3.date_deadline += relativedelta(hours=8)
+
+            self.assertEqual(origin_1_activity_1.state, 'today')
+            self.assertEqual(origin_1_activity_2.state, 'overdue')
+            self.assertEqual(origin_1_activity_3.state, 'today')
+
+            origin_2_activity_1 = self.env['mail.activity'].create({
+                'summary': 'Test',
+                'activity_type_id': 1,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': origin_2.id,
+                'date_deadline': today_utc + relativedelta(hours=8),
+                'user_id': self.user_utc.id,
+            })
+
+            origin_2_activity_2 = origin_2_activity_1.copy()
+            origin_2_activity_2.user_id = self.user_australia
+            origin_2_activity_3 = origin_2_activity_1.copy()
+            origin_2_activity_3.date_deadline -= relativedelta(hours=8)
+            origin_2_activity_4 = origin_2_activity_1.copy()
+            origin_2_activity_4.date_deadline = datetime(2020, 1, 2, 0, 0, 0)
+
+            self.assertEqual(origin_2_activity_1.state, 'planned')
+            self.assertEqual(origin_2_activity_2.state, 'today')
+            self.assertEqual(origin_2_activity_3.state, 'today')
+            self.assertEqual(origin_2_activity_4.state, 'planned')
+
+            all_activity_mixin_record = self.env['mail.test.activity'].search([])
+
+            result = self.env['mail.test.activity'].search([('activity_state', '=', 'today')])
+            self.assertTrue(len(result) > 0)
+            self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state == 'today'))
+
+            result = self.env['mail.test.activity'].search([('activity_state', 'in', ('today', 'overdue'))])
+            self.assertTrue(len(result) > 0)
+            self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state in ('today', 'overdue')))
+
+            result = self.env['mail.test.activity'].search([('activity_state', 'not in', ('today',))])
+            self.assertTrue(len(result) > 0)
+            self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state not in ('today',)))
+
+            result = self.env['mail.test.activity'].search([('activity_state', '=', False)])
+            self.assertTrue(len(result) >= 3, "There is more than 3 records without an activity schedule on it")
+            self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: not p.activity_state))
+
+            result = self.env['mail.test.activity'].search([('activity_state', 'not in', ('planned', 'overdue', 'today'))])
+            self.assertTrue(len(result) >= 3, "There is more than 3 records without an activity schedule on it")
+            self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: not p.activity_state))
+
+            # test tricky case when the domain will be reversed in the search method
+            # because of falsy value
+            result = self.env['mail.test.activity'].search([('activity_state', 'not in', ('today', False))])
+            self.assertTrue(len(result) > 0)
+            self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state not in ('today', False)))
+
+            result = self.env['mail.test.activity'].search([('activity_state', 'in', ('today', False))])
+            self.assertTrue(len(result) > 0)
+            self.assertEqual(result, all_activity_mixin_record.filtered(lambda p: p.activity_state in ('today', False)))
+
+    def test_mail_activity_mixin_search_state_different_day_but_close_time(self):
+        """Test the case where there's less than 24 hours between the deadline and now_tz,
+        but one day of difference (e.g. 23h 01/01/2020 & 1h 02/02/2020). So the state
+        should be "planned" and not "today". This case was tricky to implement in SQL
+        that's why it has its own test.
+        """
+        today_utc = datetime(2020, 1, 1, 23, 0, 0)
+
+        class MockedDatetime(datetime):
+            @classmethod
+            def utcnow(cls):
+                return today_utc
+
+        # Create some records without activity schedule on it for testing
+        self.env['mail.test.activity'].create([
+            {'name': 'Record %i' % record_i}
+            for record_i in range(5)
+        ])
+
+        origin_1 = self.env['mail.test.activity'].search([], limit=1)
+
+        with patch('odoo.addons.mail.models.mail_activity.datetime', MockedDatetime):
+            origin_1_activity_1 = self.env['mail.activity'].create({
+                'summary': 'Test',
+                'activity_type_id': 1,
+                'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+                'res_id': origin_1.id,
+                'date_deadline': today_utc + relativedelta(hours=2),
+                'user_id': self.user_utc.id,
+            })
+
+            self.assertEqual(origin_1_activity_1.state, 'planned')
+            result = self.env['mail.test.activity'].search([('activity_state', '=', 'today')])
+            self.assertNotIn(origin_1, result, 'The activity state miss calculated during the search')

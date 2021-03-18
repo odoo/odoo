@@ -2,7 +2,7 @@
 
 {
     'name': 'Discuss',
-    'version': '1.0',
+    'version': '1.2',
     'category': 'Productivity/Discuss',
     'sequence': 145,
     'summary': 'Chat, mail gateway and private channels',
@@ -11,7 +11,6 @@
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
         'views/assets.xml',
-        'views/mail_menus.xml',
         'wizard/invite_view.xml',
         'wizard/mail_blacklist_remove_view.xml',
         'wizard/mail_compose_message_view.xml',
@@ -25,11 +24,15 @@
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_moderation_views.xml',
+        'views/mail_channel_partner_views.xml',
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
-        'data/mail_data.xml',
+        'data/ir_config_parameter_data.xml',
+        'data/res_partner_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'data/mail_templates.xml',
         'data/mail_channel_data.xml',
         'data/mail_activity_data.xml',
         'data/ir_cron_data.xml',
@@ -42,6 +45,7 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/mail_blacklist_views.xml',
+        'views/mail_menus.xml',
     ],
     'demo': [
         'data/mail_channel_demo.xml',

@@ -1,0 +1,15 @@
+.o_theme_install_loader_container {
+    background-color: rgba($o-shadow-color, .9);
+    pointer-events: all;
+    // above menu bar
+    z-index: $zindex-modal - 1;
+}
+.o_theme_install_loader {
+    position: relative;
+    display: inline-block;
+    width: 400px;
+    height: 220px;
+    background-image: url('/website/static/src/img/theme_loader.gif');
+    background-size: cover;
+    border-radius: 6px;
+}

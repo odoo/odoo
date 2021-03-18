@@ -124,7 +124,7 @@ class ResUsers(models.Model):
             if invite_partner:
                 # notify invite user that new user is connected
                 title = _("%s connected", user.name)
-                message = _("This is his first connection. Wish him welcome")
+                message = _("This is their first connection. Wish them luck.")
                 self.env['bus.bus'].sendone(
                     (self._cr.dbname, 'res.partner', invite_partner.id),
                     {'type': 'user_connection', 'title': title,

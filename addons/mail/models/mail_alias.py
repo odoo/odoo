@@ -87,8 +87,12 @@ class Alias(models.Model):
             local-part. Quoted-string and internationnal characters are
             to be rejected. See rfc5322 sections 3.4.1 and 3.2.3
         """
-        if self.alias_name and not dot_atom_text.match(self.alias_name):
-            raise ValidationError(_("You cannot use anything else than unaccented latin characters in the alias address."))
+        for alias in self:
+            if alias.alias_name and not dot_atom_text.match(alias.alias_name):
+                raise ValidationError(_(
+                    "You cannot use anything else than unaccented latin characters in the alias address (%s).",
+                    alias.alias_name,
+                ))
 
     def _compute_alias_domain(self):
         alias_domain = self._default_alias_domain()
@@ -103,22 +107,34 @@ class Alias(models.Model):
             except Exception:
                 raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
-    @api.model
-    def create(self, vals):
-        """ Creates an email.alias record according to the values provided in ``vals``,
-            with 2 alterations: the ``alias_name`` value may be cleaned  by replacing
-            certain unsafe characters, and the ``alias_model_id`` value will set to the
-            model ID of the ``model_name`` context value, if provided. Also, it raises
-            UserError if given alias name is already assigned.
+    @api.model_create_multi
+    def create(self, vals_list):
+        """ Creates email.alias records according to the values provided in
+        ``vals`` with 1 alteration:
+
+          * ``alias_name`` value may be cleaned by replacing certain unsafe
+            characters;
+
+        :raise UserError: if given alias_name is already assigned or there are
+        duplicates in given vals_list;
         """
-        if vals.get('alias_name'):
-            vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
-        return super(Alias, self).create(vals)
+        alias_names = [vals['alias_name'] for vals in vals_list if vals.get('alias_name')]
+        if alias_names:
+            sanitized_names = self._clean_and_check_unique(alias_names)
+            for vals in vals_list:
+                if vals.get('alias_name'):
+                    vals['alias_name'] = sanitized_names[alias_names.index(vals['alias_name'])]
+        return super(Alias, self).create(vals_list)
 
     def write(self, vals):
         """"Raises UserError if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
-            vals['alias_name'] = self._clean_and_check_unique(vals.get('alias_name'))
+            if len(self) > 1:
+                raise UserError(_(
+                    'Email alias %(alias_name)s cannot be used on %(count)d records at the same time. Please update records one by one.',
+                    alias_name=vals['alias_name'], count=len(self)
+                    ))
+            vals['alias_name'] = self._clean_and_check_unique([vals.get('alias_name')])[0]
         return super(Alias, self).write(vals)
 
     def name_get(self):
@@ -136,22 +152,64 @@ class Alias(models.Model):
                 res.append((record['id'], _("Inactive Alias")))
         return res
 
-    def _clean_and_check_unique(self, name):
+    def _clean_and_check_unique(self, names):
         """When an alias name appears to already be an email, we keep the local
         part only. A sanitizing / cleaning is also performed on the name. If
         name already exists an UserError is raised. """
+<<<<<<< HEAD
         sanitized_name = remove_accents(name).lower().split('@')[0]
         sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
         sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+=======
+
+        def _sanitize_alias_name(name):
+            """ Cleans and sanitizes the alias name """
+            sanitized_name = remove_accents(name).lower().split('@')[0]
+            sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+            sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
+            return sanitized_name
+
+        sanitized_names = [_sanitize_alias_name(name) for name in names]
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
-        domain = [('alias_name', '=', sanitized_name)]
+        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+
+        # matches catchall or bounce alias
+        for sanitized_name in sanitized_names:
+            if sanitized_name in [catchall_alias, bounce_alias]:
+                matching_alias_name = '%s@%s' % (sanitized_name, alias_domain) if alias_domain else sanitized_name
+                raise UserError(
+                    _('The e-mail alias %(matching_alias_name)s is already used as %(alias_duplicate)s alias. Please choose another alias.',
+                      matching_alias_name=matching_alias_name,
+                      alias_duplicate=_('catchall') if sanitized_name == catchall_alias else _('bounce'))
+                )
+
+        # matches existing alias
+        domain = [('alias_name', 'in', sanitized_names)]
         if self:
             domain += [('id', 'not in', self.ids)]
-        if sanitized_name in [catchall_alias, bounce_alias] or self.search_count(domain):
-            raise UserError(_('The e-mail alias is already used. Please enter another one.'))
-        return sanitized_name
+        matching_alias = self.search(domain, limit=1)
+        if not matching_alias:
+            return sanitized_names
+
+        sanitized_alias_name = _sanitize_alias_name(matching_alias.alias_name)
+        matching_alias_name = '%s@%s' % (sanitized_alias_name, alias_domain) if alias_domain else sanitized_alias_name
+        if matching_alias.alias_parent_model_id and matching_alias.alias_parent_thread_id:
+            # If parent model and parent thread ID both are set, display document name also in the warning
+            document_name = self.env[matching_alias.alias_parent_model_id.model].sudo().browse(matching_alias.alias_parent_thread_id).display_name
+            raise UserError(
+                _('The e-mail alias %(matching_alias_name)s is already used by the %(document_name)s %(model_name)s. Choose another alias or change it on the other document.',
+                  matching_alias_name=matching_alias_name,
+                  document_name=document_name,
+                  model_name=matching_alias.alias_parent_model_id.name)
+                )
+        raise UserError(
+            _('The e-mail alias %(matching_alias_name)s is already linked with %(alias_model_name)s. Choose another alias or change it on the linked model.',
+              matching_alias_name=matching_alias_name,
+              alias_model_name=matching_alias.alias_model_id.name)
+        )
 
     def open_document(self):
         if not self.alias_model_id or not self.alias_force_thread_id:

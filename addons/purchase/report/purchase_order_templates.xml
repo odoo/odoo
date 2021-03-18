@@ -21,8 +21,7 @@
         <div class="page">
             <div class="oe_structure"/>
 
-            <h2 t-if="o.state == 'draft'">Request for Quotation #<span t-field="o.name"/></h2>
-            <h2 t-if="o.state in ['sent', 'to approve']">Purchase Order #<span t-field="o.name"/></h2>
+            <h2 t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></h2>
             <h2 t-if="o.state in ['purchase', 'done']">Purchase Order #<span t-field="o.name"/></h2>
             <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
 

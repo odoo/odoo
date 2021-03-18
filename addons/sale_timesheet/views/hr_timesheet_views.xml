@@ -10,8 +10,13 @@
                     <field name="timesheet_invoice_type"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
+<<<<<<< HEAD
                     <filter name="billable_timesheet" string="Billable" domain="[('so_line', '!=', False), ('non_allow_billable', '=', False)]"/>
                     <filter name="non_billable_timesheet" string="Non Billable" domain="['|', ('so_line', '=', False), ('non_allow_billable', '=', True)]"/>
+=======
+                    <filter name="billable_timesheet" string="Billable" domain="[('so_line', '!=', False)]"/>
+                    <filter name="non_billable_timesheet" string="Non Billable" domain="[('so_line', '=', False)]"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     <separator/>
                     <filter name="billable_time" string="Billed on Timesheets" domain="[('timesheet_invoice_type', '=', 'billable_time')]"/>
                     <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"/>
@@ -36,6 +41,7 @@
         </field>
     </record>
 
+<<<<<<< HEAD
     <record id="timesheet_view_tree_sale" model="ir.ui.view">
         <field name="name">account.analytic.line.view.tree.with.allow.billable</field>
         <field name="model">account.analytic.line</field>
@@ -47,6 +53,8 @@
         </field>
     </record>
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     <!--
         Timesheet from Sales Order
     -->

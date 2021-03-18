@@ -242,10 +242,13 @@
             <field name="target">self</field>
         </record>
         <record id="action_website_edit" model="ir.actions.act_url">
+<<<<<<< HEAD
             <!--
                 be aware, this record has been added just after the 14.0
                 freeze and could be missing on first installed db.
             -->
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             <field name="name">Website Edit Mode</field>
             <field name="url">/?enable_editor=1</field>
             <field name="target">self</field>
@@ -727,24 +730,26 @@
         </record>
         <!-- Template for Dynamic Snippet -->
         <template id="dynamic_filter_template_image_title_footer" name="Image Title Footer Card">
-            <t t-foreach="records" t-as="record">
+            <t t-foreach="to_generic(records)" t-as="record">
                 <t t-set="fields" t-value="list(record['fields'].values())"/>
                 <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
-                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                <t t-set="call_to_action_url" t-value="record['call_to_action_url']"/>
+                <div class="card h-100" t-att-data-url="call_to_action_url">
+                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
                     <div class="card-body">
-                        <h5 t-if="len(fields) > 0" class="card-title">
+                        <div t-if="len(fields) > 0" class="card-title h5">
                             <t t-raw="fields[0]"/>
-                        </h5>
+                        </div>
                         <div t-if="len(fields) > 1" class="card-text">
                             <t t-raw="fields[1]"/>
                         </div>
                     </div>
                     <div class="card-footer d-flex align-items-center">
-                        <div t-if="len(fields) > 2" class="card-text">
+                        <div t-if="len(fields) > 2" class="card-text text-center">
                             <t t-raw="fields[2]"/>
                         </div>
-                        <a t-if="call_to_action" class="btn btn-primary ml-auto" t-att-href="record['fields']['call_to_action_url']">
+                        <a t-if="call_to_action" class="btn btn-primary ml-auto" t-att-href="call_to_action_url">
                             <i class="fa fa-fw fa-eye"/>
                         </a>
                     </div>
@@ -752,13 +757,14 @@
             </t>
         </template>
         <template id="dynamic_filter_template_header_image_footer_card" name="Header Image Footer Card">
-            <t t-foreach="records" t-as="record">
+            <t t-foreach="to_generic(records)" t-as="record">
                 <t t-set="fields" t-value="list(record['fields'].values())"/>
                 <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
-                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
-                    <h5 t-if="len(fields) > 0" class="card-header">
+                <div class="card h-100" t-att-data-url="record['call_to_action_url']">
+                    <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                    <div t-if="len(fields) > 0" class="card-header h5">
                         <t t-raw="fields[0]"/>
-                    </h5>
+                    </div>
                     <div class="card-body">
                         <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
                         <div t-if="len(fields) > 1" class="card-text">
@@ -766,7 +772,7 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex align-items-center">
-                        <div t-if="len(fields) > 2" class="card-text">
+                        <div t-if="len(fields) > 2" class="card-text w-100 text-center">
                             <t t-raw="fields[2]"/>
                         </div>
                     </div>
@@ -779,7 +785,6 @@
             <field name="filter_id" ref="website.dynamic_snippet_country_filter"/>
             <field name="limit" eval="16"/>
             <field name="name">Countries</field>
-            <field name="website_id" ref="website.default_website"/>
         </record>
         <record id="group_multi_website" model="res.groups">
             <field name="name">Multi-website</field>

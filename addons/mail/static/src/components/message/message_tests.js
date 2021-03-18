@@ -120,8 +120,9 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('moderation: as author, moderated channel with pending moderation message', async function (assert) {
     assert.expect(1);
 
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -144,11 +145,14 @@ QUnit.test('moderation: as author, moderated channel with pending moderation mes
 QUnit.test('moderation: as moderator, moderated channel with pending moderation message', async function (assert) {
     assert.expect(9);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_moderator: true,
+    });
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
-        moderators: [['link', this.env.messaging.currentPartner]],
     });
     const message = this.env.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
@@ -190,13 +194,22 @@ QUnit.test('moderation: as moderator, moderated channel with pending moderation 
 QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
+    this.data['mail.channel'].records.push({ id: 11 });
     await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
+<<<<<<< HEAD
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
         }]],
+=======
+        thread: [['link', thread]],
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
     const message = this.env.models['mail.message'].create({
         id: 10,
@@ -284,13 +297,22 @@ QUnit.test('Notification Error', async function (assert) {
         openResendActionDef.resolve();
     });
 
+    this.data['mail.channel'].records.push({ id: 11 });
     await this.start({ env: { bus } });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
+<<<<<<< HEAD
         thread: [['create', {
             id: 11,
             model: 'mail.channel',
         }]],
+=======
+        thread: [['link', thread]],
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
     const message = this.env.models['mail.message'].create({
         id: 10,
@@ -337,18 +359,27 @@ QUnit.test('Notification Error', async function (assert) {
 QUnit.test("'channel_fetch' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
+    this.data['res.partner'].records.push({
+        display_name: "Recipient",
+        id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        members: [this.data.currentPartnerId, 11],
+    });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
+<<<<<<< HEAD
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'chat',
+=======
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         id: 11,
-        members: [
-            [['link', currentPartner]],
-            [['insert', { id: 11, display_name: "Recipient" }]]
-        ],
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -399,18 +430,27 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 QUnit.test("'channel_seen' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
+    this.data['res.partner'].records.push({
+        display_name: "Recipient",
+        id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        members: [this.data.currentPartnerId, 11],
+    });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
+<<<<<<< HEAD
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'chat',
+=======
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         id: 11,
-        members: [
-            [['link', currentPartner]],
-            [['insert', { id: 11, display_name: "Recipient" }]]
-        ],
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -460,18 +500,27 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
 QUnit.test("'channel_fetch' notification then 'channel_seen' received  are correctly handled", async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({
+        display_name: "Recipient",
+        id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        members: [this.data.currentPartnerId, 11],
+    });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
+<<<<<<< HEAD
     const thread = this.env.models['mail.thread'].create({
         channel_type: 'chat',
+=======
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         id: 11,
-        members: [
-            [['link', currentPartner]],
-            [['insert', { id: 11, display_name: "Recipient" }]]
-        ],
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -617,6 +666,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: 99,
         originThread: [['link', thread]],
     });
+<<<<<<< HEAD
     thread.update({
        partnerSeenInfos: [['create', [
             {
@@ -634,6 +684,23 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
     });
+=======
+    this.env.models['mail.thread_partner_seen_info'].insert([
+        {
+            channelId: 11,
+            lastSeenMessage: [['link', lastSeenMessage]],
+            partnerId: this.env.messaging.currentPartner.id,
+        },
+        {
+            channelId: 11,
+            lastSeenMessage: [['link', lastSeenMessage]],
+            partnerId: 100,
+        },
+    ]);
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId,
+    });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     assert.containsOnce(
         document.body,
@@ -1123,7 +1190,11 @@ QUnit.test('rendering of tracked field with change of value from true to false',
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
+<<<<<<< HEAD
         "Is Ready:truefalse",
+=======
+        "Is Ready:TrueFalse",
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         "should display the correct content of tracked field with change of value from true to false (Is Ready: true -> false)"
     );
 });
@@ -1145,7 +1216,11 @@ QUnit.test('rendering of tracked field with change of value from false to true',
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
+<<<<<<< HEAD
         "Is Ready:falsetrue",
+=======
+        "Is Ready:FalseTrue",
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         "should display the correct content of tracked field with change of value from false to true (Is Ready: false -> true)"
     );
 });
@@ -1194,6 +1269,74 @@ QUnit.test('rendering of tracked field with change of value from empty to string
     );
 });
 
+<<<<<<< HEAD
+=======
+QUnit.test('basic rendering of tracking value (monetary type)', async function (assert) {
+    assert.expect(8);
+
+    await this.start({
+        env: {
+            session: {
+                currencies: { 1: { symbol: '$', position: 'before' } },
+            },
+        },
+    });
+    const message = this.env.models['mail.message'].create({
+        id: 11,
+        tracking_value_ids: [{
+            changed_field: "Revenue",
+            currency_id: 1,
+            field_type: "monetary",
+            id: 6,
+            new_value: 500,
+            old_value: 1000,
+        }],
+    });
+
+    await this.createMessageComponent(message);
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValue',
+        "should display a tracking value"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueFieldName',
+        "should display the name of the tracked field"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueFieldName').textContent,
+        "Revenue:",
+        "should display the correct tracked field name (Revenue)",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueOldValue',
+        "should display the old value"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueOldValue').innerHTML,
+        "$ 1000.00",
+        "should display the correct old value with the currency symbol ($ 1000.00)",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueSeparator',
+        "should display the separator"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_trackingValueNewValue',
+        "should display the new value"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_trackingValueNewValue').innerHTML,
+        "$ 500.00",
+        "should display the correct new value with the currency symbol ($ 500.00)",
+    );
+});
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 });
 });
 });

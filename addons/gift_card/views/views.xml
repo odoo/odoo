@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Actions -->
+    <record id="gift_card_sale_order_action" model="ir.actions.act_window">
+        <field name="name">Gift Cards</field>
+        <field name="res_model">gift.card</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('buy_line_id.order_id', '=', active_id)]</field>
+    </record>
+
+    <record id="gift_card_action" model="ir.actions.act_window">
+        <field name="name">Gift Cards</field>
+        <field name="res_model">gift.card</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_valid': True}</field>
+    </record>
+
+    <!-- view mode -->
+    <record id="gift_card_view_tree" model="ir.ui.view">
+        <field name="name">gift.card.tree</field>
+        <field name="model">gift.card</field>
+        <field name="arch" type="xml">
+            <tree string="Gift Card">
+                <field name="code"/>
+                <field name="balance"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="gift_card_view_form" model="ir.ui.view">
+        <field name="name">gift.card.form</field>
+        <field name="model">gift.card</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                     <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="buy_line_id" string="Sale Order"/>
+                            <field name="create_date"/>
+                            <field name="expired_date"/>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" attrs="{'invisible': True}"/>
+                            <field name="initial_amount"/>
+                            <field name="balance"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="redeem_line_ids" options="{'no_create': True}" readonly="1">
+                            <tree>
+                                <field name="order_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Searching -->
+    <record id="gift_card_view_search" model="ir.ui.view">
+        <field name="name">gift.card.search</field>
+        <field name="model">gift.card</field>
+        <field name="arch" type="xml">
+            <search string="Gift Card">
+                <field name="code"/>
+                <filter name="valid" string="Valid" domain="[('state', '=', 'valid')]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_order_view_extend_gift_card_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.gift.card</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='preview_sale_order']" position="before">
+                <button class="oe_stat_button"
+                        name="%(gift_card_sale_order_action)d"
+                        attrs="{'invisible': [('gift_card_count', '=', 0)]}"
+                        icon="fa-gift"
+                        type="action">
+                    <field name="gift_card_count" widget="statinfo" string="Gift Cards"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

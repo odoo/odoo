@@ -51,12 +51,6 @@
         <field name="model">mailing.trace</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//span[@name='trace_type_name_mail']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '!=', 'mail')]}</attribute>
-            </xpath>
-            <xpath expr="//span[@name='trace_type_name_mail']" position="after">
-                <span name="trace_type_name_sms" attrs="{'invisible': [('trace_type', '!=', 'sms')]}">This sms</span>
-            </xpath>
             <xpath expr="//field[@name='email']" position="attributes">
                 <attribute name="attrs">{'invisible': [('trace_type', '!=', 'mail')]}</attribute>
             </xpath>
@@ -67,14 +61,20 @@
                 <attribute name="attrs">{'invisible': [('trace_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='opened']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '=', 'sms')]}</attribute>
+                <attribute name="attrs">
+                    {'invisible': ['|', ('opened', '=', False), ('trace_type', '=', 'sms')]}
+                </attribute>
             </xpath>
             <xpath expr="//field[@name='replied']" position="attributes">
-                <attribute name="attrs">{'invisible': [('trace_type', '=', 'sms')]}</attribute>
+                <attribute name="attrs">
+                    {'invisible': ['|', ('replied', '=', False), ('trace_type', '=', 'sms')]}
+                </attribute>
             </xpath>
             <xpath expr="//field[@name='email']" position="after">
                 <field name="sms_number" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
-                <field name="sms_sms_id_int" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='mail_mail_id_int']" position="after">
+                <field name="sms_sms_id_int" string="SMS ID" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
                 <field name="sms_code" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"/>
             </xpath>
         </field>

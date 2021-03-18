@@ -8,6 +8,7 @@ from lxml import etree, html
 
 from odoo.exceptions import AccessError
 from odoo import api, models
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -323,6 +324,14 @@ class IrUiView(models.Model):
     def _snippet_save_view_values_hook(self):
         return {}
 
+    def _find_available_name(self, name, used_names):
+        attempt = 1
+        candidate_name = name
+        while candidate_name in used_names:
+            attempt += 1
+            candidate_name = f"{name} ({attempt})"
+        return candidate_name
+
     @api.model
     def save_snippet(self, name, arch, template_key, snippet_key, thumbnail_url):
         """
@@ -341,6 +350,14 @@ class IrUiView(models.Model):
         app_name = template_key.split('.')[0]
         snippet_key = '%s_%s' % (snippet_key, uuid.uuid4().hex)
         full_snippet_key = '%s.%s' % (app_name, snippet_key)
+
+        # find available name
+        current_website = self.env['website'].browse(self._context.get('website_id'))
+        website_domain = current_website.website_domain()
+        used_names = self.search(expression.AND([
+            [('name', '=like', '%s%%' % name)], website_domain
+        ])).mapped('name')
+        name = self._find_available_name(name, used_names)
 
         # html to xml to add '/' at the end of self closing tags like br, ...
         xml_arch = etree.tostring(html.fromstring(arch))
@@ -372,6 +389,16 @@ class IrUiView(models.Model):
         }
         snippet_addition_view_values.update(self._snippet_save_view_values_hook())
         self.create(snippet_addition_view_values)
+
+    @api.model
+    def rename_snippet(self, name, view_id, template_key):
+        snippet_view = self.browse(view_id)
+        key = snippet_view.key.split('.')[1]
+        custom_key = self._get_snippet_addition_view_key(template_key, key)
+        snippet_addition_view = self.search([('key', '=', custom_key)])
+        if snippet_addition_view:
+            snippet_addition_view.name = name + ' Block'
+        snippet_view.name = name
 
     @api.model
     def delete_snippet(self, view_id, template_key):

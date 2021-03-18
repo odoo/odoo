@@ -5,7 +5,7 @@ from odoo.tests import common
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
-class SlidesCase(common.SavepointCase):
+class SlidesCase(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):

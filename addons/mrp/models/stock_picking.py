@@ -31,7 +31,11 @@ class StockPickingType(models.Model):
             return
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
+<<<<<<< HEAD
             'count_mo_todo': [('state', 'in', ('confirmed', 'draft', 'progress'))],
+=======
+            'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'progress')), ('is_planned', '=', True)],
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
         for field in domains:

@@ -17,7 +17,8 @@ except ImportError:
 
 import odoo
 from odoo import api, models, registry, exceptions, tools
-from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
+from odoo.addons.base.models import ir_http
+from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.qweb import QWebException
 from odoo.http import request
 from odoo.osv import expression
@@ -225,7 +226,12 @@ def is_multilang_url(local_url, lang_url_codes=None):
 
     # Try to match an endpoint in werkzeug's routing table
     try:
+<<<<<<< HEAD
         func = request.env['ir.http']._get_endpoint_qargs(path, query_args=query_string)
+=======
+        _, func = request.env['ir.http'].url_rewrite(path, query_args=query_string)
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         # /page/xxx has no endpoint/func but is multilang
         return (not func or (
             func.routing.get('website', False)
@@ -236,7 +242,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
         return False
 
 
-class ModelConverter(ModelConverter):
+class ModelConverter(ir_http.ModelConverter):
 
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)
@@ -435,7 +441,7 @@ class IrHttp(models.AbstractModel):
             # most of the time the browser is loading and inexisting assets or image. A standard 404 is enough.
             # Earlier check would be difficult since we don't want to break data modules
             path_components = request.httprequest.path.split('/')
-            request.is_frontend = len(path_components) < 3 or path_components[2] != 'static' or not '.' in path_components[-1]
+            request.is_frontend = len(path_components) < 3 or path_components[2] != 'static' or '.' not in path_components[-1]
             routing_error = e
 
         request.is_frontend_multilang = not func or (func and request.is_frontend and func.routing.get('multilang', func.routing['type'] == 'http'))
@@ -650,12 +656,14 @@ class IrHttp(models.AbstractModel):
         return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
     @api.model
-    @tools.ormcache('path')
-    def url_rewrite(self, path):
+    @tools.ormcache('path', 'query_args')
+    def url_rewrite(self, path, query_args=None):
         new_url = False
         req = request.httprequest
         router = req.app.get_db_router(request.db).bind('')
+        endpoint = False
         try:
+<<<<<<< HEAD
             _ = router.match(path, method='POST')
         except werkzeug.exceptions.MethodNotAllowed:
             _ = router.match(path, method='GET')
@@ -686,3 +694,15 @@ class IrHttp(models.AbstractModel):
         except werkzeug.exceptions.NotFound:
             pass # endpoint = False
         return endpoint and endpoint[0]
+=======
+            endpoint = router.match(path, method='POST', query_args=query_args)
+        except werkzeug.exceptions.MethodNotAllowed:
+            endpoint = router.match(path, method='GET', query_args=query_args)
+        except werkzeug.routing.RequestRedirect as e:
+            new_url = e.new_url[7:]  # remove scheme
+            _, endpoint = self.url_rewrite(new_url, query_args)
+            endpoint = endpoint and [endpoint]
+        except werkzeug.exceptions.NotFound:
+            new_url = path
+        return new_url or path, endpoint and endpoint[0]
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

@@ -52,19 +52,17 @@
                             </div>
                         </button>
                     </div>
-
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
                             <field name="name" placeholder="e.g. Monthly Sales Objectives"/>
                         </h1>
-                        <label for="user_domain" class="oe_edit_only" string="Assign Challenge To"/>
+                        <label for="user_domain" string="Assign Challenge to"/>
                         <div>
                             <field name="user_domain" widget="domain" options="{'model': 'res.users'}" />
                             <field name="user_ids" widget="many2many_tags" />
                         </div>
                     </div>
-
                     <group>
                         <group>
                             <field name="period" attrs="{'readonly':[('state','!=','draft')]}"/>

@@ -31,6 +31,7 @@ var IAPBuyMoreCreditsWidget = Widget.extend({
         this.$buyLink = this.$widget.find('.buy_credits');
         this.$widget.appendTo(this.$el);
         this.$buyLink.click(this._getLink.bind(this));
+        this.el.querySelector('.o_iap_view_my_services').addEventListener('click', this._getMyServices.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -49,6 +50,18 @@ var IAPBuyMoreCreditsWidget = Widget.extend({
                 type: 'ir.actions.act_url',
                 url: url,
             });
+        });
+    },
+
+    /**
+     * @private
+     */
+    _getMyServices() {
+        return this._rpc({
+            model: 'iap.account',
+            method: 'get_account_url',
+        }).then(url => {
+            this.do_action({type: 'ir.actions.act_url', url: url});
         });
     },
 });

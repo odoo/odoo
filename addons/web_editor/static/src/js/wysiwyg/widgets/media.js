@@ -379,6 +379,10 @@ var FileWidget = SearchableMediaWidget.extend({
             media.id, {
                 query: media.query || '',
                 is_dynamic_svg: !!media.isDynamicSVG,
+<<<<<<< HEAD
+=======
+                dynamic_colors: media.dynamicColors,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             }
         ]));
         let mediaAttachments = [];
@@ -391,10 +395,22 @@ var FileWidget = SearchableMediaWidget.extend({
             });
         }
         const selected = this.selectedAttachments.concat(mediaAttachments).map(attachment => {
+<<<<<<< HEAD
             // Color-customize dynamic SVGs with the primary theme color
             if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
                 const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
                 colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
+=======
+            // Color-customize dynamic SVGs with the theme colors
+            if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
+                const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
+                colorCustomizedURL.searchParams.forEach((value, key) => {
+                    const match = key.match(/^c([1-5])$/);
+                    if (match) {
+                        colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`))
+                    }
+                })
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
             }
             return attachment;
@@ -740,6 +756,7 @@ var ImageWidget = FileWidget.extend({
         }
         const result = await this._super(number, offset);
         // Color-substitution for dynamic SVG attachment
+<<<<<<< HEAD
         const primaryColor = getCSSVariableValue('o-color-1');
         this.attachments.forEach(attachment => {
             if (attachment.image_src.startsWith('/')) {
@@ -747,6 +764,23 @@ var ImageWidget = FileWidget.extend({
                 // Set the main color of dynamic SVGs to o-color-1
                 if (attachment.image_src.startsWith('/web_editor/shape/')) {
                     newURL.searchParams.set('c1', primaryColor);
+=======
+        const primaryColors = {};
+        for (let color = 1; color <= 5; color++) {
+            primaryColors[color] = getCSSVariableValue('o-color-' + color);
+        }
+        this.attachments.forEach(attachment => {
+            if (attachment.image_src.startsWith('/')) {
+                const newURL = new URL(attachment.image_src, window.location.origin);
+                // Set the main colors of dynamic SVGs to o-color-1~5
+                if (attachment.image_src.startsWith('/web_editor/shape/')) {
+                    newURL.searchParams.forEach((value, key) => {
+                        const match = key.match(/^c([1-5])$/);
+                        if (match) {
+                            newURL.searchParams.set(key, primaryColors[match[1]]);
+                        }
+                    })
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 } else {
                     // Set height so that db images load faster
                     newURL.searchParams.set('height', 2 * this.MIN_ROW_HEIGHT);
@@ -880,17 +914,36 @@ var ImageWidget = FileWidget.extend({
             try {
                 const response = await fetch(mediaUrl);
                 if (response.headers.get('content-type') === 'image/svg+xml') {
+<<<<<<< HEAD
                     const svg = await response.text();
                     const colorRegex = new RegExp(DEFAULT_PALETTE['1'], 'gi');
                     if (colorRegex.test(svg)) {
                         const fileName = mediaUrl.split('/').pop();
                         const file = new File([svg.replace(colorRegex, getCSSVariableValue('o-color-1'))], fileName, {
+=======
+                    let svg = await response.text();
+                    const fileName = mediaUrl.split('/').pop();
+                    const dynamicColors = {};
+                    const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
+                    svg = svg.replace(combinedColorsRegex, match => {
+                        const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
+                        const colorKey = 'c' + colorId
+                        dynamicColors[colorKey] = getCSSVariableValue('o-color-' + colorId);
+                        return dynamicColors[colorKey];
+                    });
+                    if (Object.keys(dynamicColors).length) {
+                        const file = new File([svg], fileName, {
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                             type: "image/svg+xml",
                         });
                         img.src = URL.createObjectURL(file);
                         const media = this.libraryMedia.find(media => media.id === parseInt(cell.dataset.mediaId));
                         if (media) {
                             media.isDynamicSVG = true;
+<<<<<<< HEAD
+=======
+                            media.dynamicColors = dynamicColors;
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                         }
                         // We changed the src: wait for the next load event to do the styling
                         return;
@@ -1038,8 +1091,11 @@ var IconWidget = SearchableMediaWidget.extend({
                 this._highlightSelectedIcon();
             }
         }
+<<<<<<< HEAD
         // Kept for compat in stable, no longer in use: remove in master
         this.nonIconClasses = _.without(classes, 'media_iframe_video', this.selectedIcon);
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         return this._super.apply(this, arguments);
     },
@@ -1163,6 +1219,7 @@ var VideoWidget = MediaWidget.extend({
         'change .o_video_dialog_options input': '_onUpdateVideoOption',
         'input textarea#o_video_text': '_onVideoCodeInput',
         'change textarea#o_video_text': '_onVideoCodeChange',
+        'click .o_sample_video': '_onSampleVideoClick',
     }),
 
     /**
@@ -1172,6 +1229,8 @@ var VideoWidget = MediaWidget.extend({
         this._super.apply(this, arguments);
         this.isForBgVideo = !!options.isForBgVideo;
         this._onVideoCodeInput = _.debounce(this._onVideoCodeInput, 1000);
+        // list of videoIds from vimeo.
+        this._vimeoPreviewIds = options.vimeoPreviewIds;
     },
     /**
      * @override
@@ -1194,6 +1253,23 @@ var VideoWidget = MediaWidget.extend({
 
             this._updateVideo();
         }
+
+        // loads the thumbnail of vimeo video previews.
+        this.$('.o_sample_video').each((index, node) => {
+            const $node = $(node);
+            const videoId = $node.attr('data-vimeo');
+            if (!videoId) {
+                return;
+            }
+            fetch(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${videoId}`)
+                .then(response=>response.json())
+                .then((response) => {
+                    $node.append($('<img>', {
+                        src: response.thumbnail_url,
+                        class: 'mw-100 mh-100 p-1',
+                    }));
+                });
+        });
 
         return this._super.apply(this, arguments);
     },
@@ -1364,6 +1440,19 @@ var VideoWidget = MediaWidget.extend({
      */
     _onUpdateVideoOption: function () {
         this._updateVideo();
+    },
+    /**
+     * changes the video preview when clicking on the thumbnail of a suggested video
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSampleVideoClick(ev) {
+        const vimeoId = ev.currentTarget.getAttribute('data-vimeo');
+        if (vimeoId) {
+            this.$('#o_video_text').val(`https://player.vimeo.com/video/${vimeoId}`);
+            this._updateVideo();
+        }
     },
     /**
      * Called when the video code (URL / Iframe) change is confirmed -> Updates

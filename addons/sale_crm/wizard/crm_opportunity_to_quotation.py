@@ -46,5 +46,5 @@ class Opportunity2Quotation(models.TransientModel):
         """
         self.ensure_one()
         if self.action != 'nothing':
-            self.lead_id.handle_partner_assignment(force_partner_id=self.partner_id.id, create_missing=(self.action == 'create'))
+            self.lead_id._handle_partner_assignment(force_partner_id=self.partner_id.id, create_missing=(self.action == 'create'))
         return self.lead_id.action_new_quotation()

@@ -4,10 +4,17 @@
 #
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-11-16 13:33+0000\n"
+=======
+"Project-Id-Version: Odoo Server saas~14.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2020-12-11 07:28+0000\n"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,11 +73,14 @@ msgid ". This way, they will be secured."
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_5
 msgid "3 Main Methodologies"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "<b>%s</b> is requesting access to this course."
@@ -115,6 +125,31 @@ msgid ""
 "        You have been invited to join a new course: ${object.channel_id.name}.\n"
 "    </p>\n"
 "</div>\n"
+"            "
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.mail_template_channel_completed
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">Hello ${object.partner_id.name},</p><br/>\n"
+"                        <p><b>Congratulations!</b></p>\n"
+"                        <p>You've completed the course <b>${object.channel_id.name}</b></p>\n"
+"                        <p>Check out the other available courses.</p><br/>\n"
+"\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Explore courses\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Enjoy this exclusive content!\n"
+"                        % if object.channel_id.user_id.signature\n"
+"                            <br/>\n"
+"                            ${object.channel_id.user_id.signature | safe}\n"
+"                        % endif\n"
+"                    </div>\n"
+"                </div>\n"
 "            "
 msgstr ""
 
@@ -641,6 +676,14 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Parts of computer science</span>"
+<<<<<<< HEAD
+=======
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "<span name=\"done_members_count_label\" class=\"text-muted\">Finished</span>"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: website_slides
@@ -649,18 +692,53 @@ msgid "<span name=\"done_members_count_label\" class=\"text-muted\">Finished</sp
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "<span name=\"members_done_count_label\" class=\"o_stat_text\">Finished</span>"
-msgstr ""
-
-#. module: website_slides
+=======
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "<span> hours</span>"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
-msgid "<span>&amp;times;</span>"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<span>Add Tag</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Answering Questions</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Asking Question</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Asking the right question</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Logic</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Mathematics</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid "<span>Preview</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
+msgid "<span>Science</span>"
 msgstr ""
 
 #. module: website_slides
@@ -716,6 +794,7 @@ msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
 msgid "A Mighty Forest from Ages"
 msgstr ""
@@ -726,6 +805,8 @@ msgid "A fruit"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -735,6 +816,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_4
 msgid "A little chat with Harry Potted"
 msgstr ""
@@ -753,6 +835,8 @@ msgid "A shovel"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_exclusion_html_content_and_url
 msgid ""
 "A slide is either filled with a document url or HTML content. Not both."
@@ -1119,6 +1203,13 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "Are you sure you want to delete this category ?"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "Are you sure you want to delete this question :"
@@ -1189,6 +1280,7 @@ msgid "Basic"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.channel,name:website_slides.slide_channel_demo_5_furn2
 msgid "Basics of Furniture Creation"
 msgstr ""
@@ -1199,6 +1291,8 @@ msgid "Basics of Gardening"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
@@ -1234,6 +1328,10 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
+<<<<<<< HEAD
+=======
+#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
@@ -1387,11 +1485,14 @@ msgid "Choose a layout"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.channel,name:website_slides.slide_channel_demo_3_furn0
 msgid "Choose your wood !"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "Clear filters"
 msgstr ""
@@ -1536,6 +1637,14 @@ msgid "Completed"
 msgstr ""
 
 #. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Completed Course"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_completed_ids
+#: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_completed_ids
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "Completed Courses"
 msgstr ""
@@ -1543,6 +1652,11 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completion
 msgid "Completion"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed_template_id
+msgid "Completion Email"
 msgstr ""
 
 #. module: website_slides
@@ -1579,6 +1693,14 @@ msgid "Configuration"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
+=======
+#: model:mail.template,subject:website_slides.mail_template_channel_completed
+msgid "Congratulation! You completed ${object.channel_id.name}"
+msgstr ""
+
+#. module: website_slides
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -1619,6 +1741,7 @@ msgstr ""
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
+<<<<<<< HEAD
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_0_gard_0
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_1_gard1
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_2_gard2
@@ -1626,6 +1749,8 @@ msgstr ""
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_4_furn1
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_5_furn2
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_6_furn3
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #, python-format
 msgid "Contact Responsible"
 msgstr ""
@@ -1640,12 +1765,15 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Contact the responsible to enroll."
+<<<<<<< HEAD
 msgstr ""
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 msgid "Contact us"
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: website_slides
@@ -1922,8 +2050,19 @@ msgid "Define the visibility of the challenge through menus"
 msgstr ""
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+#, python-format
 msgid "Delete"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_delete.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+#, python-format
+msgid "Delete Category"
 msgstr ""
 
 #. module: website_slides
@@ -2054,11 +2193,14 @@ msgid "Do you want to install the \"%s\" app?"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.question,question:website_slides.slide_slide_demo_5_3_question_0
 msgid "Do you want to reply correctly ?"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
@@ -2171,7 +2313,12 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
-msgid "Email template to send slide publication through email"
+msgid "Email attendees once a new content is published"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__completed_template_id
+msgid "Email attendees once they've finished the course"
 msgstr ""
 
 #. module: website_slides
@@ -2207,11 +2354,14 @@ msgid "End course"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_2
 msgid "Energy Efficiency Facts"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Enjoy this exclusive content !"
 msgstr ""
@@ -2397,6 +2547,7 @@ msgid "Fourth and more attempt"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,description:website_slides.slide_slide_demo_5_2
 msgid "From a piece of wood to a fully functional furniture, step by step."
 msgstr ""
@@ -2414,6 +2565,10 @@ msgstr ""
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_4_furn1
 msgid "Furniture Technical Specifications"
+=======
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Fullscreen"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: website_slides
@@ -2524,6 +2679,7 @@ msgid "HTTP Routing"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_category_demo_5_1
 msgid "Hand on !"
 msgstr ""
@@ -2535,11 +2691,14 @@ msgid "Here is How to get the Sweetest Strawberries you ever tasted!"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Home"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_1
 msgid "Home Gardening"
 msgstr ""
@@ -2556,6 +2715,8 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
@@ -2563,6 +2724,7 @@ msgid "How to create a Lesson as a Web Page?"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
 msgid "How to create your own piece of furniture"
 msgstr ""
@@ -2578,6 +2740,8 @@ msgid "How to plant a potted tree"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
@@ -2592,6 +2756,7 @@ msgid "How to upload your videos ?"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,description:website_slides.slide_slide_demo_2_2
 msgid "How to wall decorating by tree planting in hanging plastic bottles."
 msgstr ""
@@ -2602,6 +2767,8 @@ msgid "HowTo"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
 #: model:ir.model.fields,field_description:website_slides.field_ir_http__id
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__id
@@ -2661,6 +2828,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.channel,description:website_slides.slide_channel_demo_4_furn1
 #: model:slide.channel,description_short:website_slides.slide_channel_demo_4_furn1
 msgid ""
@@ -2669,6 +2837,8 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -2708,6 +2878,7 @@ msgid "Image 512"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_0
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_0
@@ -2750,6 +2921,8 @@ msgid "Incorrect ! of course not ..."
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__infographic
 msgid "Infographic"
 msgstr ""
@@ -2774,6 +2947,7 @@ msgid "Installing \"%s\"."
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,name:website_slides.slide_category_demo_1_0
 msgid "Interesting Facts"
 msgstr ""
@@ -2789,6 +2963,8 @@ msgid "Interesting information about home gardening. Keep it close !"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_intermediate
 msgid "Intermediate"
 msgstr ""
@@ -2938,6 +3114,7 @@ msgid "Know yourself"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.channel,description:website_slides.slide_channel_demo_3_furn0
 #: model:slide.channel,description_short:website_slides.slide_channel_demo_3_furn0
 msgid ""
@@ -2953,6 +3130,8 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge____last_update
 #: model:ir.model.fields,field_description:website_slides.field_ir_http____last_update
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings____last_update
@@ -3503,12 +3682,15 @@ msgid "Odoo"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 msgid "Odoo • Image and Text"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #: model:res.groups,name:website_slides.group_website_slides_officer
 msgid "Officer"
 msgstr ""
@@ -3979,6 +4161,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Reviews"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "Reviews (%d)"
 msgstr ""
 
 #. module: website_slides
@@ -4486,6 +4675,7 @@ msgid "Tags..."
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.channel,name:website_slides.slide_channel_demo_1_gard1
 msgid "Taking care of Trees"
 msgstr ""
@@ -4507,6 +4697,8 @@ msgid "Test your knowledge !"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
@@ -4709,6 +4901,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Training Layout"
+<<<<<<< HEAD
 msgstr ""
 
 #. module: website_slides
@@ -4729,6 +4922,8 @@ msgstr ""
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_2_gard2
 msgid "Trees, Wood and Gardens"
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: website_slides
@@ -4955,6 +5150,7 @@ msgid "Waiting for validation"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.slide,description:website_slides.slide_slide_demo_3_1
 msgid "Watching the master(s) at work"
 msgstr ""
@@ -4967,6 +5163,8 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__webpage
@@ -5046,6 +5244,7 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+<<<<<<< HEAD
 #, python-format
 msgid "What does"
 msgstr ""
@@ -5109,6 +5308,19 @@ msgid ""
 "Write one or two paragraphs describing your product, services or a specific "
 "feature.<br> To be successful your content needs to be useful to your "
 "readers."
+=======
+#, python-format
+msgid "What does"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid ""
+"With Quizzes you can keep your students focused and motivated by answering "
+"some questions and gaining some karma points"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 msgstr ""
 
 #. module: website_slides
@@ -5276,11 +5488,14 @@ msgid "Your Level"
 msgstr ""
 
 #. module: website_slides
+<<<<<<< HEAD
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_role
 msgid "Your Role"
 msgstr ""
 
 #. module: website_slides
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 #. openerp-web
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -5312,6 +5527,16 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "Youtube or Google Document URL"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Zoom in"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Zoom out"
 msgstr ""
 
 #. module: website_slides

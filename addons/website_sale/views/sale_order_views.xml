@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
                 <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
-                <filter string="Unpaid" name="order_unpaid" domain="[('state', '=', 'sent'), ('website_id', '!=', False)]"/>
+                <filter string="Unpaid" name="order_unpaid" domain="[('state', '=', 'sent')]"/>
                 <filter string="Abandoned" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>

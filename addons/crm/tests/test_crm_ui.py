@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
+from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.tests import HttpCase
+from odoo.tests.common import tagged, users
 
 
-@odoo.tests.tagged('post_install','-at_install')
-class TestUi(odoo.tests.HttpCase):
+@tagged('post_install', '-at_install')
+class TestUi(HttpCase):
 
     def test_01_crm_tour(self):
         self.start_tour("/web", 'crm_tour', login="admin")
@@ -22,3 +24,13 @@ class TestUi(odoo.tests.HttpCase):
                 ])]
         })
         self.start_tour("/web", 'crm_rainbowman', login="temp_crm_user")
+<<<<<<< HEAD
+=======
+
+
+class TestCRMLeadMisc(TestCrmCommon):
+
+    @users('user_sales_leads')
+    def test_team_my_pipeline(self):
+        action = self.env['crm.team'].action_your_pipeline()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

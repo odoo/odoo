@@ -46,6 +46,11 @@ class BaseModel(models.AbstractModel):
                     tracking_sequence = 100
                 tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
                 if tracking:
+<<<<<<< HEAD
+=======
+                    if tracking['field_type'] == 'monetary':
+                        tracking['currency_id'] = getattr(self, col_info.get('currency_field', ''), self.company_id.currency_id).id
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
 
@@ -154,11 +159,14 @@ class BaseModel(models.AbstractModel):
     # ALIAS MANAGEMENT
     # ------------------------------------------------------------
 
+<<<<<<< HEAD
     def _alias_check_contact(self, message, message_dict, alias):
         """ Deprecated, remove in v14+ """
         error_msg = self._alias_get_error_message(message, message_dict, alias)
         return error_msg if error_msg else True
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _alias_get_error_message(self, message, message_dict, alias):
         """ Generic method that takes a record not necessarily inheriting from
         mail.alias.mixin. """

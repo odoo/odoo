@@ -11,5 +11,10 @@
                 <script type="text/javascript" src="/website_slides_survey/static/src/js/slides_certification_upload_toast.js"/>
             </xpath>
         </template>
+        <template id="survey_assets" inherit_id="survey.survey_assets" name="Survey Results assets">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/website_slides_survey/static/src/scss/website_slides_survey_result.scss"/>
+            </xpath>
+        </template>
     </data>
 </odoo>

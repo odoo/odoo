@@ -27,6 +27,11 @@
             <xpath expr="//field[@name='order_line']/tree//field[@name='date_planned']" position="after">
                 <field name="move_dest_ids" invisible="1"/>
             </xpath>
+            <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_qty']" position="after">
+                <field name="forecasted_issue" invisible="1"/>
+                <button type="object" name="action_product_forecast_report" icon="fa-area-chart" attrs="{'invisible': ['|', ('forecasted_issue', '=', False), ('product_type', '!=', 'product')]}" class="text-danger"/>
+                <button type="object" name="action_product_forecast_report" icon="fa-area-chart" attrs="{'invisible': ['|', ('forecasted_issue', '=', True), ('product_type', '!=', 'product')]}"/>
+            </xpath>
             <xpath expr="//div[@name='date_planned_div']" position="inside">
                 <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" attrs="{'invisible': ['|', ('state', 'in', ['purchase', 'done']), ('partner_id', '=', False)]}">
                     <span attrs="{'invisible': [('on_time_rate', '&lt;', 0)]}"><field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>

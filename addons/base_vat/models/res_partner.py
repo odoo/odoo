@@ -194,7 +194,11 @@ class ResPartner(models.Model):
         '''
         # A new VAT number format in Switzerland has been introduced between 2011 and 2013
         # https://www.estv.admin.ch/estv/fr/home/mehrwertsteuer/fachinformationen/steuerpflicht/unternehmens-identifikationsnummer--uid-.html
+<<<<<<< HEAD
         # The old format "TVA 123456" is not valid since 2014
+=======
+        # The old format "TVA 123456" is not valid since 2014 
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         # Accepted format are: (spaces are ignored)
         #     CHE#########MWST
         #     CHE#########TVA

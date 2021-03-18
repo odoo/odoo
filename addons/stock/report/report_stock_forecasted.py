@@ -67,25 +67,22 @@ class ReplenishmentReport(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': 'product.product',
             'docs': self._get_report_data(product_variant_ids=docids),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }
 
     def _get_report_data(self, product_template_ids=False, product_variant_ids=False):
         assert product_template_ids or product_variant_ids
         res = {}
 
-        # Get the warehouse we're working on as well as its locations.
         if self.env.context.get('warehouse'):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context['warehouse'])
+            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
         else:
-            warehouse = self.env['stock.warehouse'].search([
-                ('company_id', '=', self.env.company.id)
-            ], limit=1)
-            self.env.context = dict(self.env.context, warehouse=warehouse.id)
+            warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
+
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],
         )]
-        res['active_warehouse'] = warehouse.display_name
 
         # Get the products we're working, fill the rendering context with some of their attributes.
         if product_template_ids:
@@ -113,6 +110,11 @@ class ReplenishmentReport(models.AbstractModel):
         timezone = self._context.get('tz')
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
+
+        move_to_match_ids = self.env.context.get('move_to_match_ids') or []
+        move_in_id = move_in.id if move_in else None
+        move_out_id = move_out.id if move_out else None
+
         return {
             'document_in': move_in._get_source_document() if move_in else False,
             'document_out': move_out._get_source_document() if move_out else False,
@@ -122,13 +124,22 @@ class ReplenishmentReport(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'uom_id': product.uom_id,
+<<<<<<< HEAD
             'receipt_date': format_datetime(self.env, move_in.date, timezone, 'medium') if move_in else False,
             'delivery_date': format_datetime(self.env, move_out.date, timezone, 'medium') if move_out else False,
+=======
+            'receipt_date': format_date(self.env, move_in.date) if move_in else False,
+            'delivery_date': format_date(self.env, move_out.date) if move_out else False,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             'is_late': is_late,
             'quantity': quantity,
             'move_out': move_out,
             'move_in': move_in,
             'reservation': reservation,
+<<<<<<< HEAD
+=======
+            'is_matched': any(move_id in [move_in_id, move_out_id] for move_id in move_to_match_ids),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         }
 
     def _get_report_lines(self, product_template_ids, product_variant_ids, wh_location_ids):
@@ -222,6 +233,7 @@ class ReplenishmentReport(models.AbstractModel):
         return lines
 
     @api.model
+<<<<<<< HEAD
     def get_filter_state(self):
         res = {}
         res['warehouses'] = self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
@@ -230,6 +242,10 @@ class ReplenishmentReport(models.AbstractModel):
             company_id = self.env.context.get('allowed_company_ids')[0]
             res['active_warehouse'] = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).id
         return res
+=======
+    def get_warehouses(self):
+        return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
 
 class ReplenishmentTemplateReport(models.AbstractModel):
@@ -244,4 +260,5 @@ class ReplenishmentTemplateReport(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': 'product.product',
             'docs': self._get_report_data(product_template_ids=docids),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }

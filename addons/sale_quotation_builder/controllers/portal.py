@@ -4,10 +4,10 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import unslug
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.portal.controllers import portal
 
 
-class CustomerPortal(CustomerPortal):
+class CustomerPortal(portal.CustomerPortal):
 
     @http.route(["/sale_quotation_builder/template/<string:template_id>"], type='http', auth="user", website=True)
     def sale_quotation_builder_template_view(self, template_id, **post):

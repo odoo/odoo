@@ -18,7 +18,7 @@ KARMA = {
 }
 
 
-class TestForumCommon(common.SavepointCase):
+class TestForumCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):

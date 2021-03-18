@@ -142,7 +142,7 @@
                     <field name="kanban_state" widget="state_selection" class="ml-3 float-right"/>
                     <field name="website_image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
                             <field name="name" placeholder="e.g. Inspiring Business Talk"/>
                         </h1>
@@ -244,7 +244,7 @@
         <field name="name">event.track.graph</field>
         <field name="model">event.track</field>
         <field name="arch" type="xml">
-            <graph string="Tracks" type="bar" orientation="horizontal" sample="1">
+            <graph string="Tracks" type="bar" sample="1">
                 <field name="location_id"/>
                 <field name="duration" operator="+"/>
             </graph>

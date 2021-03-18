@@ -4,10 +4,10 @@
 from odoo import _
 from odoo.http import route, request
 from odoo.osv import expression
-from odoo.addons.mass_mailing.controllers.main import MassMailController
+from odoo.addons.mass_mailing.controllers import main
 
 
-class MassMailController(MassMailController):
+class MassMailController(main.MassMailController):
 
     @route('/website_mass_mailing/is_subscriber', type='json', website=True, auth="public")
     def is_subscriber(self, list_id, **post):

@@ -27,6 +27,9 @@ class CalendarEvent(models.Model):
                 put_in_queue=False
             )
 
+    def _get_trigger_alarm_types(self):
+        return super()._get_trigger_alarm_types() + ['sms']
+
 
 class CalendarAlarm(models.Model):
     _inherit = 'calendar.alarm'
@@ -40,9 +43,10 @@ class AlarmManager(models.AbstractModel):
     _inherit = 'calendar.alarm_manager'
 
     @api.model
-    def get_next_mail(self):
+    def _send_reminder(self):
         """ Cron method, overridden here to send SMS reminders as well
         """
+<<<<<<< HEAD
         result = super(AlarmManager, self).get_next_mail()
 
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm', raise_if_not_found=False)
@@ -70,3 +74,7 @@ class AlarmManager(models.AbstractModel):
             for alert in self.do_check_alarm_for_one_date(event_start, event, max_delta, 0, 'sms', after=last_sms_cron, missing=True):
                 event.browse(alert['event_id'])._do_sms_reminder()
         return result
+=======
+        super()._send_reminder()
+        self._get_events_to_notify(ttype='sms')._do_sms_reminder()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

@@ -159,6 +159,7 @@ var BasicModel = AbstractModel.extend({
         // sequentially, for example, an onchange needs to be completed before a
         // save is performed.
         this.mutex = new concurrency.Mutex();
+        this.bypassMutex = false; // never set this to true manually (see @executeDirectly)
 
         // this array is used to accumulate RPC requests done in the same call
         // stack, so that they can be batched in the minimum number of RPCs
@@ -457,6 +458,21 @@ var BasicModel = AbstractModel.extend({
                     context: context,
                 });
             });
+    },
+    /**
+     * This method allows to execute a callback for which '_notifyChanges' and
+     * 'save' will bypass the mutex. This is useful when we are leaving Odoo
+     * (closing tab/browser), and we want to quickly save pending changes (in
+     * an 'onbeforeunload' handler, which is mostly sync).
+     *
+     * This function should never be called except when we are leaving Odoo.
+     *
+     * @param {Function} callback
+     */
+    executeDirectly(callback) {
+        this.bypassMutex = true;
+        callback();
+        this.bypassMutex = false;
     },
     /**
      * For list resources, this freezes the current records order.
@@ -936,7 +952,11 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string[]>} list of changed fields
      */
     notifyChanges: function (record_id, changes, options) {
-        return this.mutex.exec(this._applyChange.bind(this, record_id, changes, options));
+        const notifyChanges = () => this._applyChange(record_id, changes, options);
+        if (this.bypassMutex) {
+            return notifyChanges();
+        }
+        return this.mutex.exec(notifyChanges);
     },
     /**
      * Reload all data for a given resource. At any time there is at most one
@@ -1087,7 +1107,7 @@ var BasicModel = AbstractModel.extend({
      */
     save: function (recordID, options) {
         var self = this;
-        return this.mutex.exec(function () {
+        function _save() {
             options = options || {};
             var record = self.localData[recordID];
             if (options.savePoint) {
@@ -1179,7 +1199,12 @@ var BasicModel = AbstractModel.extend({
                 record._isDirty = false;
             });
             return prom;
-        });
+        }
+        if (this.bypassMutex) {
+            return _save();
+        } else {
+            return this.mutex.exec(_save);
+        }
     },
     /**
      * Manually sets a resource as dirty. This is used to notify that a field
@@ -1618,16 +1643,20 @@ var BasicModel = AbstractModel.extend({
         }
         var rel_data = _.pick(data, 'id', 'display_name');
 
+        const viewType = options.viewType || record.viewType;
+        const fieldInfo = record.fieldsInfo[viewType][fieldName] || {};
+        const fieldOptions = fieldInfo.options || {};
+
         // the reference field doesn't store its co-model in its field metadata
         // but directly in the data (as the co-model isn't fixed)
         var def;
-        if (rel_data.display_name === undefined) {
+        if (rel_data.display_name === undefined || fieldOptions.always_reload) {
             // TODO: refactor this to use _fetchNameGet
             def = this._rpc({
                     model: coModel,
                     method: 'name_get',
                     args: [data.id],
-                    context: record.context,
+                    context: this._getContext(record, { fieldName, viewType }),
                 })
                 .then(function (result) {
                     rel_data.display_name = result[0][1];
@@ -2367,6 +2396,58 @@ var BasicModel = AbstractModel.extend({
         return evaluated;
     },
     /**
+     * Fetch the type of model (e.g. 'res.partner') contained in the model_field
+     * @private
+     * @param {Object} record - an element from the localData
+     * @param {Object} fieldName - the name of the field
+     * @param {Object} fieldInfo - the info of the field
+     * @returns {Promise}
+     */
+    _fetchModelFieldReference: async function (record, fieldName, fieldInfo) {
+        const modelField = fieldInfo.options.model_field;
+        const value = record._changes && record._changes[modelField] || record.data[modelField];
+        if (value) {
+            if (record.fields[modelField].type !== "many2one"
+                || record.fields[modelField].relation !== 'ir.model') {
+                throw new Error(`The model_field of the reference field
+                                 ${fieldName} must be a many2one('ir.model').`);
+            }
+            const modelId = this.localData[value].res_id;
+            const resourceRef = record.specialData[fieldName];
+            if (resourceRef && modelId === resourceRef.modelId) {
+                resourceRef.hasChanged = false;
+                return Promise.resolve(resourceRef);
+            } else {
+                const result = await this._rpc({
+                    model: 'ir.model',
+                    method: 'read',
+                    args: [modelId, ['id', 'model']],
+                });
+                // Checks the case where the data on the backend side are not synchronized
+                // (modelFieldName != referenceFieldName) when opening the edit view (!_changes).
+                // We want to avoid resynchronization in order not to modify the data 
+                // without being requested.
+                if (!record._changes && record.data[fieldName]
+                    && result[0].model !== this.localData[record.data[fieldName]].model) {
+                    const modelFieldName = record.fields[modelField].string;
+                    const referenceFieldName = record.fields[fieldName].string;
+
+                    this.do_warn(_t(`'${referenceFieldName}' is unsynchronized
+                                     with '${modelFieldName}'.`),
+                                 _t(`If you change ${modelFieldName} or
+                                     ${referenceFieldName}, the synchronization
+                                     will be reapplied and the data will be modified.`), true);
+                    return false;
+                }
+                return {
+                    modelName: result[0].model,
+                    modelId: result[0].id,
+                    hasChanged: true,
+                };
+            }
+        }
+    },
+    /**
      * Fetch name_get for a record datapoint.
      *
      * @param {Object} dataPoint
@@ -2847,17 +2928,19 @@ var BasicModel = AbstractModel.extend({
      * @private
      * @param {Object} record - an element from the localData
      * @param {Object} fieldName - the name of the field
+     * @param {Object} fieldInfo - the info of the field
      * @returns {Promise}
      */
-    _fetchSpecialReference: function (record, fieldName) {
-        var def;
+    _fetchSpecialReference: function (record, fieldName, fieldInfo) {
         var field = record.fields[fieldName];
         if (field.type === 'char') {
             // if the widget reference is set on a char field, the name_get
             // needs to be fetched a posteriori
-            def = this._fetchReference(record, fieldName);
+            return Promise.resolve(this._fetchReference(record, fieldName));
+        } else if (fieldInfo.options.model_field) {
+            return this._fetchModelFieldReference(record, fieldName, fieldInfo);
         }
-        return Promise.resolve(def);
+        return Promise.resolve();
     },
     /**
      * Fetches all the m2o records associated to the given fieldName. If the
@@ -3662,6 +3745,39 @@ var BasicModel = AbstractModel.extend({
         return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
     },
     /**
+     * Get a subset of a list resource keeping only the props to keep.
+     * This permits to a web_read_group to keep some of the properties
+     * of a previous list if it is still in its results.
+     *
+     * @private
+     * @param {Object} list
+     * @param {boolean} options.onlyGroup true when we only fetched the group's own data
+     * @param {boolean} options.hasSubgroups true when the fetched group has subgroups
+     * @returns {Object} subset of list
+     */
+    _getGroupedListPropsToKeep(list, options) {
+        const { isOpen, offset, id } = list;
+        let propsToKeep = { isOpen, offset, id };
+
+        if (options.onlyGroup || isOpen && options.hasSubgroups) {
+            // If the group is opened and contains subgroups,
+            // also keep its data to keep internal state of
+            // sub-groups
+            // Also keep data if we only reload groups' own data
+            propsToKeep.data = list.data;
+            if (options.onlyGroup) {
+                // keep count and res_ids as in this case the group
+                // won't be search_read again. This situation happens
+                // when using kanban quick_create where the record is manually
+                // added to the datapoint before getting here.
+                propsToKeep.res_ids = list.res_ids;
+                propsToKeep.count = list.count;
+            }
+        }
+
+        return propsToKeep;
+    },
+    /**
      * Get many2one fields names in a datapoint. This is useful in order to
      * fetch their names in the case of a default_get.
      *
@@ -3745,6 +3861,16 @@ var BasicModel = AbstractModel.extend({
 
         }
         return context;
+    },
+    /**
+     * Get the domain for a list resource.
+     *
+     * @private
+     * @param {Object} list
+     * @returns {Array[]} list domain
+     */
+    _getUngroupedListDomain(list) {
+        return list.domain || [];
     },
     /**
      * Invalidates the DataManager's cache if the main model (i.e. the model of
@@ -4604,6 +4730,7 @@ var BasicModel = AbstractModel.extend({
                     if (oldGroup) {
                         delete self.localData[newGroup.id];
                         // restore the internal state of the group
+<<<<<<< HEAD
                         var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
                         if (options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
                             // If the group is opened and contains subgroups,
@@ -4621,6 +4748,13 @@ var BasicModel = AbstractModel.extend({
                             }
                         }
                         _.extend(newGroup, updatedProps);
+=======
+                        const oldPropsToKeep = self._getGroupedListPropsToKeep(oldGroup, {
+                            onlyGroup: options.onlyGroups,
+                            hasSubgroups: newGroup.groupedBy.length
+                        });
+                        Object.assign(newGroup, oldPropsToKeep);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
@@ -4881,7 +5015,7 @@ var BasicModel = AbstractModel.extend({
                 model: list.model,
                 fields: fieldNames,
                 context: _.extend({}, list.getContext(), {bin_size: true}),
-                domain: list.domain || [],
+                domain: this._getUngroupedListDomain(list),
                 limit: list.limit,
                 offset: list.loadMoreOffset + list.offset,
                 orderBy: list.orderedBy,

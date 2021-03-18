@@ -701,6 +701,105 @@
                 </div>
             </section>
         </div>
+<<<<<<< HEAD
+    </xpath>
+</template>
+
+<template id="template_header_slogan_oe_structure_header_slogan_3" inherit_id="website.template_header_slogan" name="Template Header Slogan (oe_structure_header_slogan_3)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_slogan_3']" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_slogan_3">
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <div class="s_hr w-100 pt8 pb8" data-name="Separator">
+                        <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--200);"/>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_header_contact" inherit_id="website.layout" name="Template Header Contact" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_contact_1"/>
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
+            <div id="top_menu_container" class="container">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse ml-lg-3">
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'flex-grow-1'"/>
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-value="'nav-item ml-lg-auto'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="True"/>
+                            <t t-set="_user_name_class" t-value="'font-weight-bold'"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown ml-lg-auto'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
+<template id="template_header_contact_oe_structure_header_contact_1" inherit_id="website.template_header_contact" name="Template Header Contact (oe_structure_header_contact_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_contact_1']" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_contact_1">
+            <section class="s_text_block pt8 pb8 o_cc o_cc2" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <small>
+                                <span class="text-muted"><b>Contact us</b></span>
+                                <i class="fa fa-1x fa-fw fa-phone ml-3 mr-2"/><a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a>
+                                <i class="fa fa-1x fa-fw fa-envelope ml-3 mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
+                            </small>
+                        </div>
+                        <div class="col-lg-4 text-lg-right">
+                            <div class="s_share no_icon_color" data-name="Social Media">
+                                <small class="s_share_title text-muted"><b>Follow us</b></small>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-facebook m-1"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-twitter m-1"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin m-1"/>
+                                </a>
+                                <a href="/website/social/github" class="s_share_github" target="_blank">
+                                    <i class="fa fa-github m-1"/>
+                                </a>
+                                <a href="/website/social/youtube" class="s_share_youtube" target="_blank">
+                                    <i class="fa fa-youtube m-1"/>
+                                </a>
+                                <a href="/website/social/instagram" class="s_share_instagram" target="_blank">
+                                    <i class="fa fa-instagram m-1"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+=======
     </xpath>
 </template>
 
@@ -1028,6 +1127,322 @@
 <template id="template_header_image_oe_structure_header_image_1" inherit_id="website.template_header_image" name="Template Header image (oe_structure_header_image_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_image_1']" position="replace">
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_1">
+            <section class="s_cover oe_img_bg o_bg_img_center pt8 pb8" data-snippet="s_cover" data-name="Cover"
+                     style="background-image: url('/web/image/website.header_image_1_default_image');">
+                <div class="container s_allow_columns">
+                    <p class="mb-0"><br/></p>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_header_image_oe_structure_header_image_2" inherit_id="website.template_header_image" name="Template Header image (oe_structure_header_image_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_image_2']" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_2">
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <a href="/contactus" class="btn btn-primary mt-3 mt-lg-0 ml-lg-3">Contact Us</a>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<<<<<<< HEAD
+<template id="template_header_minimalist" inherit_id="website.layout" name="Template Header Minimalist" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-md o_colored_level o_cc">
+            <div id="top_menu_container" class="container flex-wrap">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse ml-lg-3">
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'flex-grow-1'"/>
+                        <!-- Menu -->
+=======
+<template id="template_header_hamburger_full" inherit_id="website.layout" name="Template Header Hambuger Full" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <nav data-name="Navbar" class="navbar navbar-light o_colored_level o_cc">
+            <div id="top_menu_container" class="container">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <div class="d-flex align-items-center ml-auto">
+                    <!-- Language Selector -->
+                    <t t-call="website.placeholder_header_language_selector"/>
+                    <!-- Navbar Toggler -->
+                    <t t-call="website.navbar_toggler">
+                        <t t-set="_toggler_class" t-value="'o_header_hamburger_full_toggler ml-2'"/>
+                    </t>
+                </div>
+            </div>
+            <!-- Navbar Collapse -->
+            <div id="top_menu_collapse" class="collapse navbar-collapse">
+                <div class="o_header_collapsed_content_wrapper container d-flex flex-column align-items-lg-center justify-content-lg-center">
+                    <!-- Menu -->
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'navbar-expand flex-column flex-lg-row text-center'"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+<<<<<<< HEAD
+                            <t t-set="_item_class" t-value="'nav-item ml-auto'"/>
+=======
+                            <t t-set="_item_class" t-value="'nav-item'"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+                            <t t-set="_link_class" t-value="'nav-link font-weight-bold'"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+<<<<<<< HEAD
+                            <t t-set="_avatar" t-value="True"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown ml-auto'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                    </t>
+=======
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+                            <t t-set="_link_class" t-value="'nav-link font-weight-bold ml-lg-3'"/>
+                        </t>
+                    </t>
+                    <!-- Social Icons -->
+                    <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_hamburger_full_1"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+                </div>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
+<<<<<<< HEAD
+<template id="template_header_boxed" inherit_id="website.layout" name="Template Header Boxed" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <div class="o_header_boxed_background o_colored_level o_cc pt8 pb8">
+            <div class="container d-flex align-items-center pb-4">
+                <!-- Social Icons -->
+                <div class="flex-grow-1">
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_1"/>
+                </div>
+                <ul class="nav ml-auto" contenteditable="false">
+                    <!-- Sign In -->
+                    <t t-call="portal.placeholder_user_sign_in">
+                        <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link font-weight-bold'"/>
+                    </t>
+                    <!-- User Dropdown -->
+                    <t t-call="portal.user_dropdown">
+                        <t t-set="_avatar" t-value="true"/>
+                        <t t-set="_item_class" t-value="'nav-item dropdown ml-lg-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link'"/>
+                        <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
+                    </t>
+                </ul>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
+            </div>
+        </div>
+        <div id="top_menu_container" class="container mt-n4">
+            <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm rounded pr-2">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse">
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'mx-auto'"/>
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                    </t>
+                    <!-- Button -->
+                    <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_2"/>
+                </div>
+            </nav>
+=======
+<template id="template_header_hamburger_full_oe_structure_header_hamburger_full_1" inherit_id="website.template_header_hamburger_full" name="Template Header Hamburger Full (oe_structure_header_hamburger_full_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_hamburger_full_1']" position="replace">
+        <div class="oe_structure oe_structure_solo w-100" id="oe_structure_header_hamburger_full_1">
+            <div class="s_hr pt32 pb32" data-name="Separator">
+                <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--400);"/>
+            </div>
+            <div class="s_share text-center" data-name="Social Media">
+                <h5 class="s_share_title d-none">Follow us</h5>
+                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                    <i class="fa fa-facebook rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                    <i class="fa fa-twitter rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                    <i class="fa fa-linkedin rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/github" class="s_share_github" target="_blank">
+                    <i class="fa fa-github rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/youtube" class="s_share_youtube" target="_blank">
+                    <i class="fa fa-youtube rounded-circle shadow-sm"/>
+                </a>
+                <a href="/website/social/instagram" class="s_share_instagram" target="_blank">
+                    <i class="fa fa-instagram rounded-circle shadow-sm"/>
+                </a>
+            </div>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
+        </div>
+    </xpath>
+</template>
+
+<<<<<<< HEAD
+<template id="template_header_boxed_oe_structure_header_boxed_1" inherit_id="website.template_header_boxed" name="Template Header Boxed (oe_structure_header_boxed_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_boxed_1']" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_1">
+            <section class="s_text_block" data-snippet="s_text_block" name="Text">
+                <div class="container">
+                    <div class="s_share text-left" data-name="Social Media">
+                        <h6 class="s_share_title d-none">Follow us</h6>
+                        <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                            <i class="fa fa-facebook m-1"/>
+                        </a>
+                        <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                            <i class="fa fa-twitter m-1"/>
+                        </a>
+                        <a href="/website/social/instagram" class="s_share_linkedin" target="_blank">
+                            <i class="fa fa-instagram m-1"/>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_header_boxed_oe_structure_header_boxed_2" inherit_id="website.template_header_boxed" name="Template Header Boxed (oe_structure_header_boxed_2)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_boxed_2']" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_boxed_2">
+            <section class="s_text_block" data-snippet="s_text_block" name="Text">
+                <div class="container">
+                     <a href="/contactus" class="btn btn-primary ml-lg-4">Contact Us</a>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_header_centered_logo" inherit_id="website.layout" name="Template Header Centered Logo" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc">
+            <div id="top_menu_container" class="container">
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse o_header_centered_logo order-last order-lg-first">
+                    <t t-call="website.navbar_nav">
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand">
+                    <t t-set="_link_class" t-value="'m-0'"/>
+                </t>
+                <!-- Right -->
+                <ul class="nav navbar-nav o_header_centered_logo justify-content-end">
+                    <!-- Sign In -->
+                    <t t-call="portal.placeholder_user_sign_in">
+                        <t t-set="_item_class" t-value="'nav-item ml-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link'"/>
+                    </t>
+                    <!-- User Dropdown -->
+                    <t t-call="portal.user_dropdown">
+                        <t t-set="_icon" t-value="true"/>
+                        <t t-set="_item_class" t-value="'nav-item dropdown ml-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link'"/>
+                    </t>
+                </ul>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
+<template id="template_header_image" inherit_id="website.layout" name="Template Header Image" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_1"/>
+        <nav data-name="Navbar" class="navbar navbar-light navbar-expand-lg o_colored_level o_cc shadow-sm">
+            <div id="top_menu_container" class="container">
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand"/>
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse">
+                    <t t-call="website.navbar_nav">
+                        <t t-set="_nav_class" t-value="'ml-3 flex-grow-1'"/>
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-value="'nav-item ml-lg-auto'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_icon" t-value="True"/>
+                            <t t-set="_user_name" t-value="True"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown ml-lg-auto'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                        <!-- Button -->
+                        <li class="nav-item">
+                            <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_2"/>
+                        </li>
+                    </t>
+                </div>
+                <!-- Language Selector -->
+                <t t-call="website.placeholder_header_language_selector">
+                    <t t-set="_div_classes" t-value="'ml-2'"/>
+                </t>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
+<template id="template_header_image_oe_structure_header_image_1" inherit_id="website.template_header_image" name="Template Header image (oe_structure_header_image_1)">
+    <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_image_1']" position="replace">
+        <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_1">
             <section class="s_cover oe_img_bg pt8 pb8" data-snippet="s_cover" data-name="Cover"
                      style="background-image: url('/web/image/website.header_image_1_default_image');">
                 <div class="container s_allow_columns">
@@ -1128,6 +1543,8 @@
     </xpath>
 </template>
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 <template id="template_header_magazine" inherit_id="website.layout" name="Template Header Magazine" active="False">
     <xpath expr="//header//nav" position="replace">
         <!-- Topbar -->
@@ -1862,7 +2279,8 @@
         </t>
     </xpath>
     <xpath expr="//t[@t-call='website.language_selector_add_language']" position="replace">
-        <span class="o_add_language list-inline-item">|</span>
+        <span class="o_add_language list-inline-item"
+            groups="website.group_website_publisher">|</span>
         <t t-call="website.language_selector_add_language">
             <t t-set="dropdown" t-value="False"/>
         </t>
@@ -2126,16 +2544,19 @@
     1,2,3
 </template>
 
+<!-- PAGE 404 -->
 <template id="page_404" name="Page Not Found">
     <t t-call="http_routing.404">
-        <div class="container o_not_editable">
-            <div class="alert alert-info mt32">
-                <p>This page does not exist, but you can create it as you are administrator of this site.</p>
-                <a role="button" class="btn btn-primary js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+        <div class="o_not_editable bg-100 pt40">
+            <div class="container">
+                <div class="alert alert-info text-center d-lg-flex justify-content-between align-items-center">
+                    <p class="m-lg-0 text-info">This page does not exist, but you can create it as you are editor of this site.</p>
+                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+                </div>
+                <div class="text-center text-muted p-3"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
             </div>
-            <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
+            <hr/>
         </div>
-        <hr/>
     </t>
 </template>
 
@@ -2313,7 +2734,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "email"]}'/>
         <t t-if="not res_company.google_map_img()">
-            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
+            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/>
+            <a t-att-href="res_company.google_map_link()" target="_BLANK">Google Maps</a>
+            <a t-if="editable"
+                class="fa fa-cog ml-1"
+                href="/web#action=website.action_website_configuration"
+                title="Add your key in the settings."/>
         </t>
     </address>
 </template>
@@ -2324,12 +2750,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <a t-att-href="res_company.google_map_link()" target="_BLANK">
                 <img class="img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
             </a>
-        </t>
-        <t t-elif="editable">
-            <div class="alert alert-warning">
-                <i class="fa fa-plus-circle"/>
-                The Google map option is enabled but <a href="/web#action=website.action_website_configuration">not properly configured</a>.
-            </div>
         </t>
     </xpath>
 </template>

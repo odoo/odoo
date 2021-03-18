@@ -67,13 +67,14 @@ class TestCommonSaleTimesheet(TestSaleCommon):
         })
 
         # Create projects
-        cls.project_global = cls.env['project.project'].create({
+        Project = cls.env['project.project'].with_context(tracking_disable=True)
+        cls.project_global = Project.create({
             'name': 'Project for selling timesheets',
             'allow_timesheets': True,
             'analytic_account_id': cls.analytic_account_sale.id,
             'allow_billable': True,
         })
-        cls.project_template = cls.env['project.project'].create({
+        cls.project_template = Project.create({
             'name': 'Project TEMPLATE for services',
             'allow_timesheets': True,
         })
@@ -81,6 +82,36 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'name': 'Only stage in project template',
             'sequence': 1,
             'project_ids': [(4, cls.project_template.id)]
+        })
+        # Projects: at least one per billable type
+        cls.project_task_rate = Project.create({
+            'name': 'Project with pricing_type="task_rate"',
+            'allow_timesheets': True,
+            'allow_billable': True,
+            'partner_id': cls.partner_b.id,
+            'analytic_account_id': cls.analytic_account_sale.id,
+        })
+        cls.project_project_rate = cls.project_task_rate.copy({
+            'name': 'Project with pricing_type="project_rate"',
+            'pricing_type': 'fixed_rate',
+        })
+        cls.project_employee_rate = cls.project_task_rate.copy({
+            'name': 'Project with pricing_type="employee_rate"',
+            'pricing_type': 'employee_rate',
+        })
+
+        cls.project_subtask = Project.create({
+            'name': "Sub Task Project (non billable)",
+            'allow_timesheets': True,
+            'allow_billable': False,
+            'partner_id': False,
+        })
+        cls.project_non_billable = Project.create({
+            'name': "Non Billable Project",
+            'allow_timesheets': True,
+            'allow_billable': False,
+            'partner_id': False,
+            'subtask_project_id': cls.project_subtask.id,
         })
 
         # Create service products
@@ -319,3 +350,31 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
         })
+
+    def setUp(self):
+        super().setUp()
+        self.so = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_b.id,
+            'partner_invoice_id': self.partner_b.id,
+            'partner_shipping_id': self.partner_b.id,
+        })
+        self.env['sale.order.line'].create([{
+            'order_id': self.so.id,
+            'name': self.product_delivery_timesheet1.name,
+            'product_id': self.product_delivery_timesheet1.id,
+            'product_uom_qty': 10,
+            'price_unit': self.product_delivery_timesheet1.list_price
+        }, {
+            'order_id': self.so.id,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 5,
+        }, {
+            'order_id': self.so.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 5,
+        }, {
+            'order_id': self.so.id,
+            'product_id': self.product_order_timesheet1.id,
+            'product_uom_qty': 2,
+        }])
+        self.so.action_confirm()

@@ -3,10 +3,10 @@
 
 from odoo.exceptions import UserError
 from odoo.tests import Form
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class StockMove(SavepointCase):
+class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockMove, cls).setUpClass()
@@ -3749,7 +3749,7 @@ class StockMove(SavepointCase):
         self.assertEqual(move1.product_uom_qty, 0)
         move1.product_uom_qty = 100
         move1.product_id = self.product_serial
-        move1.onchange_product_id()
+        move1._onchange_product_id()
         self.assertEqual(move1.product_uom_qty, 100)
 
     def test_scrap_1(self):
@@ -3841,7 +3841,7 @@ class StockMove(SavepointCase):
         })
         move1._action_confirm()
 
-        self.assertEqual(move1.state, 'confirmed')
+        self.assertEqual(move1.state, 'assigned')
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
             'product_uom_id': self.product.uom_id.id,
@@ -3919,6 +3919,41 @@ class StockMove(SavepointCase):
         })
         insufficient_qty_wizard.action_done()
         self.assertEqual(self.env['stock.quant']._gather(self.product, self.stock_location).quantity, -11)
+
+    def test_scrap_7_sn_warning(self):
+        """ Check serial numbers are correctly double checked """
+
+        child_loc1 = self.env['stock.location'].create({
+            'name': "child_location1",
+            'usage': 'internal',
+            'location_id': self.stock_location.id
+        })
+        child_loc2 = self.env['stock.location'].create({
+            'name': "child_location2",
+            'usage': 'internal',
+            'location_id': self.stock_location.id
+        })
+
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'serial1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_serial, child_loc1, 1, lot1)
+
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.product_serial.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': child_loc2.id,
+            'lot_id': lot1.id
+        })
+
+        warning = False
+        warning = scrap._onchange_serial_number()
+        self.assertTrue(warning, 'Use of wrong serial number location not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+        self.assertEqual(scrap.location_id, child_loc1, 'Location was not auto-corrected')
 
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
@@ -4489,3 +4524,60 @@ class StockMove(SavepointCase):
         line1_result_package = picking.move_line_ids[0].result_package_id
         line2_result_package = picking.move_line_ids[1].result_package_id
         self.assertNotEqual(line1_result_package, line2_result_package, "Product and Product1 should be in a different package.")
+
+    def test_move_sn_warning(self):
+        """ Check that warnings pop up when duplicate SNs added or when SN isn't in
+        expected location.
+        Two cases covered:
+        - Check for dupes when assigning serial number to a stock move
+        - Check for dupes when assigning serial number to a stock move line
+        """
+
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'serial1',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.pack_location, 1, lot1)
+
+        move = self.env['stock.move'].create({
+            'name': 'test sn',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+
+        move_line = self.env['stock.move.line'].create({
+            'move_id': move.id,
+            'product_id': move.product_id.id,
+            'qty_done': 1,
+            'product_uom_id': move.product_uom.id,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+            'lot_name': lot1.name,
+        })
+
+        warning = False
+        warning = move_line._onchange_serial_number()
+        self.assertTrue(warning, 'Reuse of existing serial number (name) not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+
+        move_line.write({
+            'lot_name': False,
+            'lot_id': lot1.id
+        })
+
+        warning = False
+        warning = move_line._onchange_serial_number()
+        self.assertTrue(warning, 'Reuse of existing serial number (record) not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+        self.assertEqual(move_line.location_id, self.pack_location, 'Location was not auto-corrected')
+
+        move.lot_ids = lot1
+        warning = False
+        warning = move._onchange_lot_ids()
+        self.assertTrue(warning, 'Reuse of existing serial number (record) not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')

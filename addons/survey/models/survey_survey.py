@@ -55,10 +55,7 @@ class Survey(models.Model):
         help="This message will be displayed when survey is completed")
     background_image = fields.Binary("Background Image")
     active = fields.Boolean("Active", default=True)
-    state = fields.Selection(selection=[
-        ('draft', 'Draft'), ('open', 'In Progress'), ('closed', 'Closed')
-    ], string="Survey Stage", default='draft', required=True,
-        group_expand='_read_group_states')
+    user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
@@ -128,8 +125,8 @@ class Survey(models.Model):
     #   - If the certification badge is set, show certification_badge_id_dummy in 'no create' mode.
     #       So it can be edited but not removed or replaced.
     certification_give_badge = fields.Boolean('Give Badge', compute='_compute_certification_give_badge',
-                                              readonly=False, store=True)
-    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
+                                              readonly=False, store=True, copy=False)
+    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False)
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
     session_state = fields.Selection([
@@ -166,8 +163,6 @@ class Survey(models.Model):
         ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )",
             'The attempts limit needs to be a positive number if the survey has a limited number of attempts.'),
         ('badge_uniq', 'unique (certification_badge_id)', "The badge for each survey should be unique!"),
-        ('give_badge_check', "CHECK(certification_give_badge=False OR (certification_give_badge=True AND certification_badge_id is not null))",
-            'Certification badge must be configured if Give Badge is set.'),
     ]
 
     def _compute_users_can_signup(self):
@@ -294,10 +289,6 @@ class Survey(models.Model):
                not survey.certification:
                 survey.certification_give_badge = False
 
-    def _read_group_states(self, values, domain, order):
-        selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
-        return [s[0] for s in selection]
-
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
@@ -316,8 +307,8 @@ class Survey(models.Model):
         return result
 
     def copy_data(self, default=None):
-        title = _("%s (copy)") % (self.title)
-        default = dict(default or {}, title=title)
+        new_defaults = {'title': _("%s (copy)") % (self.title)}
+        default = dict(new_defaults, **(default or {}))
         return super(Survey, self).copy_data(default)
 
     def toggle_active(self):
@@ -402,9 +393,7 @@ class Survey(models.Model):
                 raise exceptions.UserError(_('Creating test token is not allowed for you.'))
         else:
             if not self.active:
-                raise exceptions.UserError(_('Creating token for archived surveys is not allowed.'))
-            elif self.state == 'closed':
-                raise exceptions.UserError(_('Creating token for closed surveys is not allowed.'))
+                raise exceptions.UserError(_('Creating token for closed/archived surveys is not allowed.'))
             if self.access_mode == 'authentication':
                 # signup possible -> should have at least a partner to create an account
                 if self.users_can_signup and not user and not partner:
@@ -801,22 +790,13 @@ class Survey(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def action_draft(self):
-        self.write({'state': 'draft'})
-
-    def action_open(self):
-        self.write({'state': 'open'})
-
-    def action_close(self):
-        self.write({'state': 'closed'})
-
     def action_send_survey(self):
         """ Open a window to compose an email, pre-filled with the survey message """
         # Ensure that this survey has at least one page with at least one question.
         if (not self.page_ids and self.questions_layout == 'page_per_section') or not self.question_ids:
             raise exceptions.UserError(_('You cannot send an invitation for a survey that has no questions.'))
 
-        if self.state == 'closed':
+        if not self.active:
             raise exceptions.UserError(_("You cannot send invitations for closed surveys."))
 
         template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
@@ -1011,6 +991,9 @@ class Survey(models.Model):
 
     def _create_certification_badge_trigger(self):
         self.ensure_one()
+        if not self.certification_badge_id:
+            raise ValueError(_('Certification Badge is not configured for the survey %(survey_name)s', survey_name=self.title))
+
         goal = self.env['gamification.goal.definition'].create({
             'name': self.title,
             'description': _("%s certification passed", self.title),

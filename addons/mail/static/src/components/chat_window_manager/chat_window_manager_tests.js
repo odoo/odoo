@@ -335,7 +335,11 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     );
 
     await afterNextRender(() =>
+<<<<<<< HEAD
         document.querySelector('.o_ChatWindow[data-visible-index="2"] .o_ChatWindowHeader_commandShiftRight').click()
+=======
+        document.querySelector('.o_ChatWindow[data-visible-index="2"] .o_ChatWindowHeader_commandShiftNext').click()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     );
     assert.hasClass(
         document.querySelector('.o_ChatWindow[data-visible-index="1"]'),
@@ -1235,22 +1239,22 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
     );
     assert.containsOnce(
         document.querySelectorAll('.o_ChatWindow')[0],
-        '.o_ChatWindowHeader_commandShiftLeft',
+        '.o_ChatWindowHeader_commandShiftPrev',
         "first chat window should be allowed to shift left"
     );
     assert.containsNone(
         document.querySelectorAll('.o_ChatWindow')[0],
-        '.o_ChatWindowHeader_commandShiftRight',
+        '.o_ChatWindowHeader_commandShiftNext',
         "first chat window should not be allowed to shift right"
     );
     assert.containsNone(
         document.querySelectorAll('.o_ChatWindow')[1],
-        '.o_ChatWindowHeader_commandShiftLeft',
+        '.o_ChatWindowHeader_commandShiftPrev',
         "second chat window should not be allowed to shift left"
     );
     assert.containsOnce(
         document.querySelectorAll('.o_ChatWindow')[1],
-        '.o_ChatWindowHeader_commandShiftRight',
+        '.o_ChatWindowHeader_commandShiftNext',
         "second chat window should be allowed to shift right"
     );
 
@@ -1260,7 +1264,7 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
         document.querySelectorAll('.o_ChatWindow')[1].dataset.threadLocalId;
     await afterNextRender(() => {
         document.querySelectorAll('.o_ChatWindow')[0]
-            .querySelector(':scope .o_ChatWindowHeader_commandShiftLeft')
+            .querySelector(':scope .o_ChatWindowHeader_commandShiftPrev')
             .click();
     });
     assert.strictEqual(
@@ -1276,7 +1280,7 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
 
     await afterNextRender(() => {
         document.querySelectorAll('.o_ChatWindow')[1]
-            .querySelector(':scope .o_ChatWindowHeader_commandShiftRight')
+            .querySelector(':scope .o_ChatWindowHeader_commandShiftNext')
             .click();
     });
     assert.strictEqual(
@@ -1347,12 +1351,12 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
     );
     assert.containsOnce(
         document.body,
-        '.o_ChatWindow .o_ChatWindowHeader_commandShiftLeft',
+        '.o_ChatWindow .o_ChatWindowHeader_commandShiftPrev',
         "there should be only one chat window allowed to shift left even if folded"
     );
     assert.containsOnce(
         document.body,
-        '.o_ChatWindow .o_ChatWindowHeader_commandShiftRight',
+        '.o_ChatWindow .o_ChatWindowHeader_commandShiftNext',
         "there should be only one chat window allowed to shift right even if folded"
     );
 
@@ -1361,7 +1365,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
     const initialSecondChatWindowThreadLocalId =
         document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId;
     await afterNextRender(() =>
-        document.querySelector('.o_ChatWindowHeader_commandShiftLeft').click()
+        document.querySelector('.o_ChatWindowHeader_commandShiftPrev').click()
     );
     assert.strictEqual(
         document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
@@ -1375,7 +1379,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_ChatWindowHeader_commandShiftLeft').click()
+        document.querySelector('.o_ChatWindowHeader_commandShiftPrev').click()
     );
     assert.strictEqual(
         document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
@@ -1389,7 +1393,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_ChatWindowHeader_commandShiftRight').click()
+        document.querySelector('.o_ChatWindowHeader_commandShiftNext').click()
     );
     assert.strictEqual(
         document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
@@ -1403,7 +1407,7 @@ QUnit.test('open 2 folded chat windows: check shift operations are available', a
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_ChatWindowHeader_commandShiftRight').click()
+        document.querySelector('.o_ChatWindowHeader_commandShiftNext').click()
     );
     assert.strictEqual(
         document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
@@ -2353,6 +2357,104 @@ QUnit.test('focusing a chat window of a chat should make new message separator d
     );
 });
 
+<<<<<<< HEAD
+=======
+QUnit.test('Textual representations of shift previous/next operations are correctly mapped to left/right in LTR locale', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push(
+        { is_minimized: true },
+        { is_minimized: true },
+    );
+    await this.start();
+
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindowHeader_commandShiftPrev').title,
+        "Shift left",
+        "shift previous operation should be have 'Shift left' as title in LTR locale"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindowHeader_commandShiftNext').title,
+        "Shift right",
+        "shift next operation should have 'Shift right' as title in LTR locale"
+    );
+});
+
+QUnit.test('Textual representations of shift previous/next operations are correctly mapped to right/left in RTL locale', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push(
+        { is_minimized: true },
+        { is_minimized: true },
+    );
+    await this.start({
+        env: {
+            _t: Object.assign((s => s), {
+                database: {
+                    parameters: {
+                        code: "en_US",
+                        date_format: '%m/%d/%Y',
+                        decimal_point: ".",
+                        direction: 'rtl',
+                        grouping: [],
+                        thousands_sep: ",",
+                        time_format: '%H:%M:%S',
+                    },
+                },
+            }),
+        }
+    });
+
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindowHeader_commandShiftPrev').title,
+        "Shift right",
+        "shift previous operation should have 'Shift right' as title in RTL locale"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindowHeader_commandShiftNext').title,
+        "Shift left",
+        "shift next operation should have 'Shift left' as title in RTL locale"
+    );
+});
+
+QUnit.test('chat window should open when receiving a new DM', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        is_pinned: false,
+        members: [this.data.currentPartnerId, 11],
+        uuid: 'channel11uuid',
+    });
+    this.data['res.partner'].records.push({
+        id: 11,
+    });
+    this.data['res.users'].records.push({
+        id: 11,
+        partner_id: 11,
+    });
+    await this.start();
+
+    // simulate receiving the first message on channel 11
+    await afterNextRender(() => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 11,
+            },
+            message_content: "new message",
+            uuid: 'channel11uuid',
+        },
+    }));
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "a chat window should be open now that current user received a new message"
+    );
+});
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 });
 });
 });

@@ -8,8 +8,8 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Follow-up Call"/></h1>
                     </div>
                     <group>
                         <group name="activity_details">
@@ -38,6 +38,7 @@
                                     <field name="delay_count"/>
                                     <field name="delay_unit"/>
                                 </div>
+                                <span class="oe_read_only">&amp;nbsp;</span>
                                 <field name="delay_from"/>
                             </div>
                         </group>
@@ -84,25 +85,12 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem
-      id="menu_mail_activity_type"
-      action="mail_activity_type_action"
-      parent="mail.mail_menu_technical"
-      sequence="10"
-    />
 
     <record id="mail_activity_action" model="ir.actions.act_window">
         <field name="name">Activities</field>
         <field name="res_model">mail.activity</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <menuitem
-      id="menu_mail_activities"
-      action="mail_activity_action"
-      parent="mail.mail_menu_technical"
-      sequence="11"
-    />
 
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
         <field name="name">mail.activity.view.form.popup</field>
@@ -161,6 +149,20 @@
         </field>
     </record>
 
+    <record id="mail_activity_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.view.form</field>
+        <field name="model">mail.activity</field>
+        <field name="priority">21</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <field name="activity_type_id" position="before">
+                <field name="res_name" readonly="1" string="Document"/>
+            </field>
+            <footer position="replace"/>
+        </field>
+    </record>
+
     <record id="mail_activity_view_search" model="ir.ui.view">
         <field name="name">mail.activity.view.search</field>
         <field name="model">mail.activity</field>
@@ -200,6 +202,18 @@
                 <field name="date_deadline"/>
             </tree>
         </field>
+    </record>
+
+    <record id="mail_activity_action_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="mail.mail_activity_action"/>
+    </record>
+    <record id="mail_activity_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mail.mail_activity_view_form"/>
+        <field name="act_window_id" ref="mail.mail_activity_action"/>
     </record>
 
     <record id="mail_activity_view_calendar" model="ir.ui.view">

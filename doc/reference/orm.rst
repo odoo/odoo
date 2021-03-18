@@ -220,6 +220,102 @@ Relational Fields
 
 .. autoclass:: Many2many()
 
+.. autoclass:: Command()
+
+.. TODO: replace the bellow copy/pasta by :members: when sphinx is updated
+
+.. py:attribute:: Command.CREATE
+   :module: odoo.fields
+
+.. py:method:: Command.create(values)
+   :module: odoo.fields
+
+   Create new records in the comodel using ``values``, link the created
+   records to ``self``.
+
+   In case of a :class:`~odoo.fields.Many2many` relation, one unique
+   new record is created in the comodel such that all records in `self`
+   are linked to the new record.
+
+   In case of a :class:`~odoo.fields.One2many` relation, one new record
+   is created in the comodel for every record in ``self`` such that every
+   record in ``self`` is linked to exactly one of the new records.
+
+   Return the command triple :samp:`(CREATE, 0, {values})`
+
+.. py:attribute:: Command.UPDATE
+   :module: odoo.fields
+
+.. py:method:: Command.update(id, values)
+   :module: odoo.fields
+
+   Write ``values`` on the related record.
+
+   Return the command triple :samp:`(UPDATE, {id}, {values})`
+
+.. py:attribute:: Command.DELETE
+   :module: odoo.fields
+
+.. py:method:: Command.delete(id)
+   :module: odoo.fields
+
+   Remove the related record from the database and remove its relation
+   with ``self``.
+
+   In case of a :class:`~odoo.fields.Many2many` relation, removing the
+   record from the database may be prevented if it is still linked to
+   other records.
+
+   Return the command triple :samp:`(DELETE, {id}, 0)`
+
+.. py:attribute:: Command.UNLINK
+   :module: odoo.fields
+
+.. py:method:: Command.unlink(id)
+   :module: odoo.fields
+
+   Remove the relation between ``self`` and the related record.
+
+   In case of a :class:`~odoo.fields.One2many` relation, the given record
+   is deleted from the database if the inverse field is set as
+   ``ondelete='cascade'``. Otherwise, the value of the inverse field is
+   set to False and the record is kept.
+
+   Return the command triple :samp:`(UNLINK, {id}, 0)`
+
+.. py:attribute:: Command.LINK
+   :module: odoo.fields
+
+.. py:method:: Command.link(id)
+   :module: odoo.fields
+
+   Add a relation between ``self`` and the related record.
+
+   Return the command triple :samp:`(LINK, {id}, 0)`
+
+.. py:attribute:: Command.CLEAR
+   :module: odoo.fields
+
+.. py:method:: Command.clear()
+   :module: odoo.fields
+
+   Remove all records from the relation with ``self``. It behaves like
+   executing the `unlink` command on every record.
+
+   Return the command triple :samp:`(CLEAR, 0, 0)`
+
+.. py:attribute:: Command.SET
+   :module: odoo.fields
+
+.. py:method:: Command.set(ids)
+   :module: odoo.fields
+
+   Replace the current relations of ``self`` by the given ones. It behaves
+   like executing the ``unlink`` command on every removed relation then
+   executing the ``link`` command on every new relation.
+
+   Return the command triple :samp:`(SET, 0, {ids})`
+
 Pseudo-relational fields
 ''''''''''''''''''''''''
 

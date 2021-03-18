@@ -353,7 +353,12 @@ class TestProcurement(TestMrpCommon):
         2. There is not enough of a manufactured component to assign the created MO => auto-create 2nd MO
         3. Add an extra manufactured component (not in stock) to 1st MO => auto-create 3rd MO
         4. When 2nd MO is completed => auto-assign to 1st MO
+<<<<<<< HEAD
         5. When 1st MO is completed => auto-assign to picking """
+=======
+        5. When 1st MO is completed => auto-assign to picking
+        6. Additionally check that a MO that has component in stock auto-reserves when MO is confirmed (since default setting = 'at_confirm')"""
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         self.warehouse = self.env.ref('stock.warehouse0')
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
@@ -373,7 +378,11 @@ class TestProcurement(TestMrpCommon):
             'type': 'consu',
         })
 
+<<<<<<< HEAD
         self.env['mrp.bom'].create({
+=======
+        bom1 = self.env['mrp.bom'].create({
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             'product_id': product_1.id,
             'product_tmpl_id': product_1.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
@@ -452,6 +461,11 @@ class TestProcurement(TestMrpCommon):
                 'product_uom': product_1.uom_id.id,
                 'product_uom_qty': 10.00,
                 'procure_method': 'make_to_stock',
+<<<<<<< HEAD
+=======
+                'location_id': self.warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             })],
         })
         pick_output.action_confirm()  # should trigger orderpoint to create and confirm 1st MO
@@ -504,3 +518,18 @@ class TestProcurement(TestMrpCommon):
         mo.button_mark_done()
 
         self.assertEqual(pick_output.move_ids_without_package.reserved_availability, 10, "Completed products should have been auto-reserved in picking")
+<<<<<<< HEAD
+=======
+
+        # make sure next MO auto-reserves components now that they are in stock since
+        # default reservation_method = 'at_confirm'
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_1
+        mo_form.bom_id = bom1
+        mo_form.product_qty = 5
+        mo_form.product_uom_id = product_1.uom_id
+        mo_assign_at_confirm = mo_form.save()
+        mo_assign_at_confirm.action_confirm()
+
+        self.assertEqual(mo_assign_at_confirm.move_raw_ids.reserved_availability, 5, "Components should have been auto-reserved")
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

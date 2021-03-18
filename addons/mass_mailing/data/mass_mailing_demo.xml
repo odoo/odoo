@@ -7,30 +7,41 @@
             <field name="name">SampleDoc.doc</field>
         </record>
 
+        <!-- Create Extra Mailing List for Demo -->
+        <record id="mailing_list_1" model="mailing.list">
+            <field name="name">Imported Contacts</field>
+        </record>
+
         <!-- Create Contacts -->
         <record id="mass_mail_contact_1" model="mailing.contact">
             <field name="name">Aristide Antario</field>
-            <field name="email">aa@example.com</field>
+            <field name="email">alexandre.antario@example.com</field>
             <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_2" model="mailing.contact">
             <field name="name">Beverly Bridge</field>
-            <field name="email">bb@example.com</field>
+            <field name="email">beverly.bridge@example.com</field>
             <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
         </record>
         <record id="mass_mail_contact_3" model="mailing.contact">
             <field name="name">Carol Cartridge</field>
-            <field name="email">cc@example.com</field>
-            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
+            <field name="email">carol.cartridge@example.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data'),ref('mass_mailing.mailing_list_1')])]"/>
         </record>
         <record id="mass_mail_contact_4" model="mailing.contact">
             <field name="name">David Dawson</field>
-            <field name="email">dd@example.com</field>
+            <field name="email">david.dawson@example.com</field>
         </record>
         <record id="mass_mail_contact_5" model="mailing.contact">
             <field name="name">Elsa Ericson</field>
-            <field name="email">ee@example.com</field>
+            <field name="email">elsa.ericson@example.com</field>
+            <field name="message_bounce">5</field>
             <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
+        </record>
+        <record id="mass_mail_contact_6" model="mailing.contact">
+            <field name="name">Franz Faubourg</field>
+            <field name="email">franz.faubourg@example.com</field>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_1')])]"/>
         </record>
 
         <!-- Create Opt-out Records -->
@@ -39,10 +50,15 @@
             <field name="contact_id" ref="mass_mailing.mass_mail_contact_4"/>
             <field name="opt_out">True</field>
         </record>
+        <record id="mass_mail_contact_list_rel_2" model="mailing.contact.subscription">
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_6"/>
+            <field name="opt_out">True</field>
+        </record>
 
         <!-- Create Blacklist Records -->
         <record id="blacklist_1" model="mail.blacklist">
-            <field name="email">ee@example.com</field>
+            <field name="email">elsa.ericson@example.com</field>
         </record>
 
         <!-- Create campaign and mailings -->

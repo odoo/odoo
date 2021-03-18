@@ -114,7 +114,11 @@ const PartnerInviteDialog = Dialog.extend({
         );
         this.env.services['notification'].notify({
             message: notification,
+<<<<<<< HEAD
             type: 'warning',
+=======
+            type: 'info',
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         });
     },
 });

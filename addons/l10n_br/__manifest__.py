@@ -5,6 +5,7 @@
 
 {
     'name': 'Brazilian - Accounting',
+    'icon': '/base/static/img/country_flags/br.png',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Base module for the Brazilian localization

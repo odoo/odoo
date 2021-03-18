@@ -20,7 +20,7 @@ class Pricelist(models.Model):
     name = fields.Char('Pricelist Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
     item_ids = fields.One2many(
-        'product.pricelist.item', 'pricelist_id', 'Pricelist Items',
+        'product.pricelist.item', 'pricelist_id', 'Pricelist Rules',
         copy=True)
     currency_id = fields.Many2one('res.currency', 'Currency', default=_get_default_currency_id, required=True)
     company_id = fields.Many2one('res.company', 'Company')
@@ -403,7 +403,9 @@ class PricelistItem(models.Model):
     price_surcharge = fields.Float(
         'Price Surcharge', digits='Product Price',
         help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')
-    price_discount = fields.Float('Price Discount', default=0, digits=(16, 2))
+    price_discount = fields.Float(
+        'Price Discount', default=0, digits=(16, 2),
+        help="You can apply a mark-up by setting a negative discount.")
     price_round = fields.Float(
         'Price Rounding', digits='Product Price',
         help="Sets the price so that it is a multiple of this value.\n"
@@ -429,10 +431,12 @@ class PricelistItem(models.Model):
                                                 "The displayed value depends on the timezone set in your preferences.")
     compute_price = fields.Selection([
         ('fixed', 'Fixed Price'),
-        ('percentage', 'Percentage (discount)'),
+        ('percentage', 'Discount'),
         ('formula', 'Formula')], index=True, default='fixed', required=True)
     fixed_price = fields.Float('Fixed Price', digits='Product Price')
-    percent_price = fields.Float('Percentage Price')
+    percent_price = fields.Float(
+        'Percentage Price',
+        help="You can apply a mark-up by setting a negative discount.")
     # functional fields used for usability purposes
     name = fields.Char(
         'Name', compute='_get_pricelist_item_name_price',
@@ -440,18 +444,17 @@ class PricelistItem(models.Model):
     price = fields.Char(
         'Price', compute='_get_pricelist_item_name_price',
         help="Explicit rule name for this pricelist line.")
+    rule_tip = fields.Char(compute='_compute_rule_tip')
 
     @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
     def _check_recursion(self):
         if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
             raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
-        return True
 
     @api.constrains('price_min_margin', 'price_max_margin')
     def _check_margin(self):
         if any(item.price_min_margin > item.price_max_margin for item in self):
             raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
-        return True
 
     @api.constrains('product_id', 'product_tmpl_id', 'categ_id')
     def _check_product_consistency(self):
@@ -498,6 +501,33 @@ class PricelistItem(models.Model):
                 item.price = _("%s %% discount", item.percent_price)
             else:
                 item.price = _("%(percentage)s %% discount and %(price)s surcharge", percentage=item.price_discount, price=item.price_surcharge)
+
+    @api.depends_context('lang')
+    @api.depends('compute_price', 'price_discount', 'price_surcharge', 'base', 'price_round')
+    def _compute_rule_tip(self):
+        base_selection_vals = {elem[0]: elem[1] for elem in self._fields['base']._description_selection(self.env)}
+        self.rule_tip = False
+        for item in self:
+            if item.compute_price != 'formula':
+                continue
+            base_amount = 100
+            discount_factor = (100 - item.price_discount) / 100
+            discounted_price = base_amount * discount_factor
+            if item.price_round:
+                discounted_price = tools.float_round(discounted_price, precision_rounding=item.price_round)
+            surcharge = tools.format_amount(item.env, item.price_surcharge, item.currency_id)
+            item.rule_tip = _(
+                "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
+                "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s",
+                base=base_selection_vals[item.base],
+                discount=item.price_discount,
+                surcharge=surcharge,
+                amount=tools.format_amount(item.env, 100, item.currency_id),
+                discount_charge=discount_factor,
+                price_surcharge=surcharge,
+                total_amount=tools.format_amount(
+                    item.env, discounted_price + item.price_surcharge, item.currency_id),
+            )
 
     @api.onchange('compute_price')
     def _onchange_compute_price(self):

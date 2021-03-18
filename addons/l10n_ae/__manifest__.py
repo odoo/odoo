@@ -5,6 +5,7 @@
 
 {
     'name': 'U.A.E. - Accounting',
+    'icon': '/base/static/img/country_flags/ae.png',
     'author': 'Tech Receptives',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

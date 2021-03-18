@@ -487,6 +487,7 @@ class EventEvent(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['event.stage'].search([])
 
+<<<<<<< HEAD
     @api.model
     def create(self, vals):
         # Temporary fix for ``seats_limited`` and ``date_tz`` required fields
@@ -497,6 +498,20 @@ class EventEvent(models.Model):
             res.message_subscribe([res.organizer_id.id])
         res.flush()
         return res
+=======
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Temporary fix for ``seats_limited`` and ``date_tz`` required fields
+            vals.update(self._sync_required_computed(vals))
+
+        events = super(EventEvent, self).create(vals_list)
+        for res in events:
+            if res.organizer_id:
+                res.message_subscribe([res.organizer_id.id])
+        events.flush()
+        return events
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     def write(self, vals):
         res = super(EventEvent, self).write(vals)

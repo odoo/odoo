@@ -23,14 +23,15 @@ class ResCompany(models.Model):
             return False
         return self.country_id and self.country_id.code in self._get_unalterable_country()
 
-    @api.model
-    def create(self, vals):
-        company = super(ResCompany, self).create(vals)
-        #when creating a new french company, create the securisation sequence as well
-        if company._is_accounting_unalterable():
-            sequence_fields = ['l10n_fr_closing_sequence_id']
-            company._create_secure_sequence(sequence_fields)
-        return company
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        for company in companies:
+            #when creating a new french company, create the securisation sequence as well
+            if company._is_accounting_unalterable():
+                sequence_fields = ['l10n_fr_closing_sequence_id']
+                company._create_secure_sequence(sequence_fields)
+        return companies
 
     def write(self, vals):
         res = super(ResCompany, self).write(vals)

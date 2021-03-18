@@ -24,12 +24,13 @@ class HrEmployeePublic(models.Model):
     mobile_phone = fields.Char(readonly=True)
     work_phone = fields.Char(readonly=True)
     work_email = fields.Char(readonly=True)
-    work_location = fields.Char(readonly=True)
+    work_location_id = fields.Many2one(readonly=True)
     user_id = fields.Many2one(readonly=True)
     resource_id = fields.Many2one(readonly=True)
     resource_calendar_id = fields.Many2one(readonly=True)
     tz = fields.Selection(readonly=True)
     color = fields.Integer(readonly=True)
+    employee_type = fields.Selection(readonly=True)
 
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)

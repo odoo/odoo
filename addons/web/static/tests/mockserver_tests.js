@@ -139,6 +139,7 @@ QUnit.module("MockServer", {
         });
         assert.deepEqual(result, [[null, "False"], [1, "Jean-Michel"]]);
     });
+<<<<<<< HEAD
 
     QUnit.test("performRpc: search with active_test=false", async function (assert) {
         assert.expect(1);
@@ -197,5 +198,7 @@ QUnit.module("MockServer", {
         });
         assert.deepEqual(result, [{id: 1, name: "Jean-Michel"}]);
     });
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 });
 });

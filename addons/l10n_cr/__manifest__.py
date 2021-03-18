@@ -35,6 +35,7 @@
 
 {
     'name': 'Costa Rica - Accounting',
+    'icon': '/base/static/img/country_flags/cr.png',
     'url': 'https://github.com/CLEARCORP/odoo-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',

@@ -17,7 +17,7 @@
             name="Sales Teams"
             parent="sale_order_menu"
             groups="sales_team.group_sale_manager"
-            action="sales_team.crm_team_salesteams_act"
+            action="sales_team.crm_team_action_sales"
             sequence="3"/>
 
         <menuitem id="res_partner_menu"
@@ -46,7 +46,7 @@
         <menuitem id="sales_team_config"
             name="Sales Teams"
             parent="sale.menu_sale_config"
-            action="sales_team.sales_team_config_action"
+            action="sales_team.crm_team_action_config"
             sequence="2"/>
 
         <menuitem id="menu_sales_config"
@@ -195,7 +195,7 @@
             <field name="model">sale.order</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" multi_edit="1" sample="1">
+                <tree string="Sales Orders" sample="1">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                     <field name="date_order" string="Order Date" widget="date" optional="show"/>
@@ -222,7 +222,7 @@
             <field name="model">sale.order</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Quotation" class="o_sale_order" multi_edit="1" sample="1">
+                <tree string="Quotation" class="o_sale_order" sample="1">
                     <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                     <field name="create_date" string="Creation Date" widget="date" optional="show"/>
                     <field name="commitment_date" widget="date" optional="hide"/>
@@ -801,6 +801,21 @@
             <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new quotation, the first step of a new sale!
+                </p><p>
+                    Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_sale_order_form_view" model="ir.actions.act_window">
+            <field name="name">Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">form,tree,kanban,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new quotation, the first step of a new sale!

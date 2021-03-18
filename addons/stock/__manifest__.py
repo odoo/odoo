@@ -12,20 +12,20 @@
     'sequence': 25,
     'demo': [
         'data/stock_demo_pre.xml',
-        'data/procurement_demo.xml',
         'data/stock_demo.xml',
-        'data/stock_orderpoint_demo.xml',
         'data/stock_demo2.xml',
-        'data/stock_location_demo_cpu1.xml',
-        'data/stock_location_demo_cpu3.xml',
+        'data/stock_orderpoint_demo.xml',
     ],
     'data': [
         'security/stock_security.xml',
         'security/ir.model.access.csv',
+
         'data/digest_data.xml',
-        'views/stock_menu_views.xml',
+        'data/mail_templates.xml',
+        'data/default_barcode_patterns.xml',
+        'data/stock_data.xml',
+        'data/stock_sequence_data.xml',
         'data/stock_traceability_report_data.xml',
-        'data/procurement_data.xml',
 
         'report/report_stock_forecasted.xml',
         'report/report_stock_quantity.xml',
@@ -43,6 +43,7 @@
         'report/product_packaging.xml',
         'data/mail_template_data.xml',
 
+        'views/stock_menu_views.xml',
         'wizard/stock_assign_serial_views.xml',
         'wizard/stock_change_product_qty_views.xml',
         'wizard/stock_picking_return_views.xml',
@@ -75,10 +76,6 @@
         'views/stock_template.xml',
         'views/stock_rule_views.xml',
         'views/stock_package_level_views.xml',
-
-        'data/default_barcode_patterns.xml',
-        'data/stock_data.xml',
-        'data/stock_sequence_data.xml',
     ],
     'qweb': [
         'static/src/xml/inventory_report.xml',

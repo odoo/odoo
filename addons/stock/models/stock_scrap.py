@@ -96,10 +96,23 @@ class StockScrap(models.Model):
             self.location_id = False
             self.scrap_location_id = False
 
-    def unlink(self):
+    @api.onchange('lot_id')
+    def _onchange_serial_number(self):
+        if self.product_id.tracking == 'serial' and self.lot_id:
+            message, recommended_location = self.env['stock.quant']._check_serial_number(self.product_id,
+                                                                                         self.lot_id,
+                                                                                         self.company_id,
+                                                                                         self.location_id,
+                                                                                         self.picking_id.location_dest_id)
+            if message:
+                if recommended_location:
+                    self.location_id = recommended_location
+                return {'warning': {'title': _('Warning'), 'message': message}}
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
             raise UserError(_('You cannot delete a scrap which is done.'))
-        return super(StockScrap, self).unlink()
 
     def _prepare_move_values(self):
         self.ensure_one()

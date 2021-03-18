@@ -77,7 +77,9 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
     def request_leave(self, user_id, date_from, number_of_days, values=None):
         values = dict(values or {}, **{
             'date_from': date_from,
+            'request_date_from': date_from,
             'date_to': date_from + relativedelta(days=number_of_days),
+            'request_date_to': date_from + relativedelta(days=number_of_days),
             'number_of_days': number_of_days,
         })
         return self.env['hr.leave'].with_user(user_id).create(values)
@@ -715,6 +717,56 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
 
     # TODO Can always cancel with great powers comes great responbilities
 
+class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
+
+    # base.group_user
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leave_unlink_draft_by_user(self):
+        """ A simple user may delete its leave in draft state in the future"""
+        values = {
+            'name': 'Random Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'state': 'draft',
+        }
+        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=6), 1, values)
+        leave.with_user(self.user_employee.id).unlink()
+
+    def test_leave_unlink_confirm_by_user(self):
+        """ A simple user may delete its leave in confirm state in the future"""
+        values = {
+            'name': 'Random Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'state': 'confirm',
+        }
+        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=6), 1, values)
+        leave.with_user(self.user_employee.id).unlink()
+
+    def test_leave_unlink_confirm_in_past_by_user(self):
+        """ A simple user cannot delete its leave in the past"""
+        values = {
+            'name': 'Random Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'state': 'confirm',
+        }
+        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=-4), 1, values)
+        with self.assertRaises(UserError), self.cr.savepoint():
+            leave.with_user(self.user_employee.id).unlink()
+
+    def test_leave_unlink_validate_by_user(self):
+        """ A simple user cannot delete its leave in validate state"""
+        values = {
+            'name': 'Random Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+        }
+        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=6), 1, values)
+        leave.with_user(self.user_hrmanager_id).write({'state': 'validate'})
+        with self.assertRaises(UserError), self.cr.savepoint():
+            leave.with_user(self.user_employee.id).unlink()
 
 class TestMultiCompany(TestHrHolidaysCommon):
 

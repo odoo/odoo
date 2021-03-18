@@ -12,7 +12,11 @@ class ReplenishmentReport(models.AbstractModel):
         """ Overrides to computes the valuations of the stock. """
         res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
         domain = self._product_domain(product_template_ids, product_variant_ids)
+<<<<<<< HEAD
         company = self.env['stock.location'].browse(wh_location_ids).mapped('company_id')
+=======
+        company = self.env['stock.location'].browse(wh_location_ids[0]).company_id
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         svl = self.env['stock.valuation.layer'].search(domain + [('company_id', '=', company.id)])
         currency = svl.currency_id or self.env.company.currency_id
         total_quantity = sum(svl.mapped('quantity'))

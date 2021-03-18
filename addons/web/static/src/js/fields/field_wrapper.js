@@ -93,6 +93,9 @@ odoo.define('web.FieldWrapper', function (require) {
         get noLabel() {
             return this.Component.noLabel;
         }
+        get isQuickEditable() {
+            return this.Component.isQuickEditable;
+        }
 
         //----------------------------------------------------------------------
         // Public
@@ -103,6 +106,9 @@ odoo.define('web.FieldWrapper', function (require) {
         }
         commitChanges() {
             return this.componentRef.comp.commitChanges(...arguments);
+        }
+        quickEdit() {
+            return this.componentRef.comp.quickEdit(...arguments);
         }
         getFocusableElement() {
             return $(this.componentRef.comp.focusableElement);
@@ -127,7 +133,17 @@ odoo.define('web.FieldWrapper', function (require) {
             return isSet;
         }
         isValid() {
-            return this.componentRef.comp.isValid;
+            if (this.componentRef.comp) {
+                return this.componentRef.comp.isValid;
+            }
+            // because of the willStart, the real field component may not be
+            // instantiated yet when the renderer first asks if it is set
+            // (only the wrapper is instantiated), so we instantiate one
+            // with the same props, get its 'isValid' status, and destroy it.
+            const c = new this.Component(null, this.props);
+            const isValid = c.isValid;
+            c.destroy();
+            return isValid;
         }
         removeInvalidClass() {
             return this.componentRef.comp.removeInvalidClass(...arguments);

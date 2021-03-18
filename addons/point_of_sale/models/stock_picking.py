@@ -155,3 +155,21 @@ class StockPicking(models.Model):
         # Avoid sending Mail/SMS for POS deliveries
         pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
         return super(StockPicking, pickings)._send_confirmation_email()
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    pos_order_id = fields.Many2one('pos.order', 'POS Order')
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    def _get_new_picking_values(self):
+        vals = super(StockMove, self)._get_new_picking_values()
+        vals['pos_session_id'] = self.mapped('group_id.pos_order_id.session_id').id
+        vals['pos_order_id'] = self.mapped('group_id.pos_order_id').id
+        return vals
+
+    def _key_assign_picking(self):
+        keys = super(StockMove, self)._key_assign_picking()
+        return keys + (self.group_id.pos_order_id,)

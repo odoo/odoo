@@ -23,12 +23,19 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         this._rpc({
             route: '/website_sale/snippet/options_filters'
         }).then((data) => {
+<<<<<<< HEAD
             if (data.length) {
                 this.$target.get(0).dataset.filterId = data[0].id;
                 this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].id].limit;
                 this._refreshPublicWidgets();
                 // Refresh is needed because default values are obtained after start()
             }
+=======
+            this.$target.get(0).dataset.filterId = data[0].res_id;
+            this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            this._refreshPublicWidgets();
+            // Refresh is needed because default values are obtained after start()
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         });
     },
 

@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
+import base64
 import json
-from odoo import api, fields, models, exceptions, _
-from odoo.addons.iap.tools import iap_tools
-# TDE FIXME: check those errors at iap level ?
-from requests.exceptions import ConnectionError, HTTPError
+import logging
+import requests
+
+from odoo import api, fields, models, tools, _
 
 _logger = logging.getLogger(__name__)
 
-DEFAULT_ENDPOINT = 'https://partner-autocomplete.odoo.com'
+PARTNER_AC_TIMEOUT = 5
+
 
 class ResPartner(models.Model):
     _name = 'res.partner'
@@ -20,95 +21,74 @@ class ResPartner(models.Model):
     additional_info = fields.Char('Additional info')
 
     @api.model
-    def _replace_location_code_by_id(self, record):
-        record['country_id'], record['state_id'] = self._find_country_data(
-            state_code=record.pop('state_code', False),
-            state_name=record.pop('state_name', False),
-            country_code=record.pop('country_code', False),
-            country_name=record.pop('country_name', False)
-        )
-        return record
+    def _iap_replace_location_codes(self, iap_data):
+        country_code, country_name = iap_data.pop('country_code', False), iap_data.pop('country_name', False)
+        state_code, state_name = iap_data.pop('state_code', False), iap_data.pop('state_name', False)
 
-    @api.model
-    def _format_data_company(self, company):
-        self._replace_location_code_by_id(company)
-
-        if company.get('child_ids'):
-            child_ids = []
-            for child in company.get('child_ids'):
-                child_ids.append(self._replace_location_code_by_id(child))
-            company['child_ids'] = child_ids
-
-        if company.get('additional_info'):
-            company['additional_info'] = json.dumps(company['additional_info'])
-
-        return company
-
-    @api.model
-    def _find_country_data(self, state_code, state_name, country_code, country_name):
-        country = self.env['res.country'].search([['code', '=ilike', country_code]])
-        if not country:
+        country, state = None, None
+        if country_code:
+            country = self.env['res.country'].search([['code', '=ilike', country_code]])
+        if not country and country_name:
             country = self.env['res.country'].search([['name', '=ilike', country_name]])
 
-        state_id = False
-        country_id = False
         if country:
-            country_id = {
-                'id': country.id,
-                'display_name': country.display_name
-            }
-            if state_name or state_code:
+            if state_code:
                 state = self.env['res.country.state'].search([
-                    ('country_id', '=', country_id.get('id')),
-                    '|',
-                    ('name', '=ilike', state_name),
-                    ('code', '=ilike', state_code)
+                    ('country_id', '=', country.id), ('code', '=ilike', state_code)
                 ], limit=1)
-
-                if state:
-                    state_id = {
-                        'id': state.id,
-                        'display_name': state.display_name
-                    }
+            if not state and state_name:
+                state = self.env['res.country.state'].search([
+                    ('country_id', '=', country.id), ('name', '=ilike', state_name)
+                ], limit=1)
         else:
             _logger.info('Country code not found: %s', country_code)
 
-        return country_id, state_id
+        if country:
+            iap_data['country_id'] = {'id': country.id, 'display_name': country.display_name}
+        if state:
+            iap_data['state_id'] = {'id': state.id, 'display_name': state.display_name}
+
+        return iap_data
 
     @api.model
-    def get_endpoint(self):
-        url = self.env['ir.config_parameter'].sudo().get_param('iap.partner_autocomplete.endpoint', DEFAULT_ENDPOINT)
-        url += '/iap/partner_autocomplete'
-        return url
+    def _iap_replace_logo(self, iap_data):
+        if iap_data.get('logo'):
+            try:
+                iap_data['image_1920'] = base64.b64encode(
+                    requests.get(iap_data['logo'], timeout=PARTNER_AC_TIMEOUT).content
+                )
+            except Exception:
+                iap_data['image_1920'] = False
+            finally:
+                iap_data.pop('logo')
+            # avoid keeping falsy images (may happen that a blank page is returned that leads to an incorrect image)
+            if iap_data['image_1920']:
+                try:
+                    tools.base64_to_image(iap_data['image_1920'])
+                except Exception:
+                    iap_data.pop('image_1920')
+        return iap_data
 
     @api.model
-    def _rpc_remote_api(self, action, params, timeout=15):
-        if self.env.registry.in_test_mode() :
-            return False, 'Insufficient Credit'
-        url = '%s/%s' % (self.get_endpoint(), action)
-        account = self.env['iap.account'].get('partner_autocomplete')
-        if not account.account_token:
-            return False, 'No Account Token'
-        params.update({
-            'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
-            'account_token': account.account_token,
-            'country_code': self.env.company.country_id.code,
-            'zip': self.env.company.zip,
-        })
-        try:
-            return iap_tools.iap_jsonrpc(url=url, params=params, timeout=timeout), False
-        except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
-            _logger.error('Autocomplete API error: %s' % str(exception))
-            return False, str(exception)
-        except iap_tools.InsufficientCreditError as exception:
-            _logger.warning('Insufficient Credits for Autocomplete Service: %s' % str(exception))
-            return False, 'Insufficient Credit'
+    def _format_data_company(self, iap_data):
+        self._iap_replace_location_codes(iap_data)
+
+        if iap_data.get('child_ids'):
+            child_ids = []
+            for child in iap_data.get('child_ids'):
+                child_ids.append(self._iap_replace_location_codes(child))
+            iap_data['child_ids'] = child_ids
+
+        if iap_data.get('additional_info'):
+            iap_data['additional_info'] = json.dumps(iap_data['additional_info'])
+
+        return iap_data
 
     @api.model
-    def autocomplete(self, query):
-        suggestions, error = self._rpc_remote_api('search', {
+    def autocomplete(self, query, timeout=15):
+        suggestions, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search', {
             'query': query,
-        })
+        }, timeout=timeout)
         if suggestions:
             results = []
             for suggestion in suggestions:
@@ -118,12 +98,12 @@ class ResPartner(models.Model):
             return []
 
     @api.model
-    def enrich_company(self, company_domain, partner_gid, vat):
-        response, error = self._rpc_remote_api('enrich', {
+    def enrich_company(self, company_domain, partner_gid, vat, timeout=15):
+        response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich', {
             'domain': company_domain,
             'partner_gid': partner_gid,
             'vat': vat,
-        })
+        }, timeout=timeout)
         if response and response.get('company_data'):
             result = self._format_data_company(response.get('company_data'))
         else:
@@ -143,10 +123,10 @@ class ResPartner(models.Model):
         return result
 
     @api.model
-    def read_by_vat(self, vat):
-        vies_vat_data, error = self._rpc_remote_api('search_vat', {
+    def read_by_vat(self, vat, timeout=15):
+        vies_vat_data, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_vat', {
             'vat': vat,
-        })
+        }, timeout=timeout)
         if vies_vat_data:
             return [self._format_data_company(vies_vat_data)]
         else:

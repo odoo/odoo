@@ -30,6 +30,7 @@ DEFAULT_CDN_FILTERS = [
     "^/web/(css|js)/",
     "^/web/image",
     "^/web/content",
+    "^/web/assets",
     # retrocompatibility
     "^/website/image/",
 ]
@@ -232,6 +233,12 @@ class Website(models.Model):
     def _handle_favicon(self, vals):
         if 'favicon' in vals:
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_last_remaining_website(self):
+        website = self.search([('id', 'not in', self.ids)], limit=1)
+        if not website:
+            raise UserError(_('You must keep at least one website.'))
 
     def unlink(self):
         website = self.search([('id', 'not in', self.ids)], limit=1)

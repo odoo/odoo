@@ -81,7 +81,11 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.module("Basic behaviour");
 
         QUnit.test("Sample data: people type + all field names", async function (assert) {
+<<<<<<< HEAD
             assert.expect(26);
+=======
+            assert.expect(25);
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
             mock.patch(session, {
                 company_currency_id: 4,

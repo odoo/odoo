@@ -15,11 +15,11 @@ re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^
 
 
 class AssetsBundleMultiWebsite(AssetsBundle):
-    def _get_asset_url_values(self, id, unique, extra, name, sep, type):
+    def _get_asset_url_values(self, id, unique, extra, name, sep, extension):
         website_id = self.env.context.get('website_id')
         website_id_path = website_id and ('%s/' % website_id) or ''
         extra = website_id_path + extra
-        res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, sep, type)
+        res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, sep, extension)
         return res
 
     def _get_assets_domain_for_already_processed_css(self, assets):
@@ -27,6 +27,12 @@ class AssetsBundleMultiWebsite(AssetsBundle):
         current_website = self.env['website'].get_current_website(fallback=False)
         res = expression.AND([res, current_website.website_domain()])
         return res
+
+    def get_debug_asset_url(self, extra='', name='%', extension='%'):
+        website_id = self.env.context.get('website_id')
+        website_id_path = website_id and ('%s/' % website_id) or ''
+        extra = website_id_path + extra
+        return super(AssetsBundleMultiWebsite, self).get_debug_asset_url(extra, name, extension)
 
 class QWeb(models.AbstractModel):
     """ QWeb object for rendering stuff in the website context """
@@ -41,7 +47,7 @@ class QWeb(models.AbstractModel):
         'img':    'src',
     }
 
-    def get_asset_bundle(self, xmlid, files, env=None):
+    def get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
         return AssetsBundleMultiWebsite(xmlid, files, env=env)
 
     def _post_processing_att(self, tagName, atts, options):

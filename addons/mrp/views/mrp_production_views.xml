@@ -74,9 +74,14 @@
                         ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress', 'to_close')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight"/>
+<<<<<<< HEAD
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': [('is_planned', '=', False)]}"/>
                     <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object"/>
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
+=======
+                    <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('is_planned', '!=', 'True'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
+                    <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to adjust what has been consumed or produced."/>
@@ -143,6 +148,7 @@
                             <field name="product_tracking" invisible="1"/>
                             <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="product_tmpl_id" invisible="1"/>
+                            <field name="forecasted_issue" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row no-gutters d-flex">
@@ -157,8 +163,10 @@
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}" class="oe_inline"/>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <span class='text-bf'>To Produce</span>
+                                <button type="object" name="action_product_forecast_report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}"/>
+                                <button type="object" name="action_product_forecast_report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', False)]}" class="text-danger"/>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
                             <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
@@ -173,7 +181,11 @@
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
+<<<<<<< HEAD
                                     attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"
+=======
+                                    attrs="{'readonly': ['|', ('is_planned', '=', True), ('state', 'in', ['done', 'cancel'])]}"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                     decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
@@ -257,7 +269,11 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
+<<<<<<< HEAD
                                     <field name="product_uom_qty" widget="mrp_should_consume" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_locked', '=', True)]}" width="1"/>
+=======
+                                    <field name="product_uom_qty" widget="mrp_should_consume" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}" width="1"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_qty" invisible="1" readonly="1"/>
                                     <field name="reserved_availability" invisible="1"/>
@@ -282,7 +298,7 @@
                             </field>
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'form_view_ref': 'mrp.mrp_production_workorder_form_view_inherit', 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'form_view_ref': 'mrp.mrp_production_workorder_form_view_inherit', 'default_product_uom_id': product_uom_id}"/>
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
@@ -327,7 +343,11 @@
                                     <field name="has_move_lines" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
+<<<<<<< HEAD
                                     <field name="product_uom_qty" string="To Produce" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_locked', '=', True)]}"/>
+=======
+                                    <field name="product_uom_qty" string="To Produce" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                     <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="quantity_done" string="Produced" attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
@@ -425,15 +445,6 @@
             </field>
         </record>
 
-        <record id="view_production_gantt" model="ir.ui.view">
-            <field name="name">mrp.production.gantt</field>
-            <field name="model">mrp.production</field>
-            <field name="arch" type="xml">
-                <gantt date_stop="date_finished" date_start="date_start" string="Productions" create="0">
-                </gantt>
-            </field>
-        </record>
-
         <record id="view_production_pivot" model="ir.ui.view">
             <field name="name">mrp.production.pivot</field>
             <field name="model">mrp.production</field>
@@ -448,8 +459,9 @@
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <graph string="Manufacturing Orders" type="line" sample="1">
+                <graph string="Manufacturing Orders" type="bar" stacked="False" sample="1">
                     <field name="date_planned_finished"/>
+                    <field name="product_uom_qty" type="measure" />                    
                 </graph>
             </field>
         </record>
@@ -464,7 +476,11 @@
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="name" string="Work Center" filter_domain="[('bom_id.operation_ids.workcenter_id', 'ilike', self)]"/>
                     <field name="origin"/>
+<<<<<<< HEAD
                     <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
+=======
+                    <filter string="To Do" name="todo" domain="['|', ('state', 'in', ('draft', 'confirmed', 'progress', 'to_close')), ('is_planned', '=', True)]"
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                         help="Manufacturing Orders which are in confirmed state."/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
@@ -555,6 +571,7 @@
             <field name="res_model">mrp.production</field>
             <field name="view_mode">graph,pivot,form</field>
             <field name="target">current</field>
+            <field name="context">{'search_default_scheduled_date': 1, 'search_default_product': 2, 'default_company_id': allowed_company_ids[0]}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No data yet!

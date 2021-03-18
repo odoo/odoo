@@ -33,21 +33,15 @@ class TestExecute(BaseCase):
 
 
 class TestTestCursor(common.TransactionCase):
-    @classmethod
-    def setUpClass(cls):
-        super(TestTestCursor, cls).setUpClass()
-        r = registry()
-        r.enter_test_mode(r.cursor())
-
-    @classmethod
-    def tearDownClass(cls):
-        r = registry()
-        r.test_cr.close()
-        r.leave_test_mode()
-        super(TestTestCursor, cls).tearDownClass()
-
     def setUp(self):
-        super(TestTestCursor, self).setUp()
+        super().setUp()
+        # make the registry in test mode
+        self.registry.enter_test_mode(self.cr)
+        self.addCleanup(self.registry.leave_test_mode)
+        # now we make a test cursor for self.cr
+        self.cr = self.registry.cursor()
+        self.addCleanup(self.cr.close)
+        self.env = odoo.api.Environment(self.cr, odoo.SUPERUSER_ID, {})
         self.record = self.env['res.partner'].create({'name': 'Foo'})
 
     def write(self, record, value):

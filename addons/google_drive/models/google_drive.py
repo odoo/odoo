@@ -9,7 +9,7 @@ import requests
 import werkzeug.urls
 
 from odoo import api, fields, models
-from odoo.exceptions import RedirectWarning, UserError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.translate import _
 
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT, TIMEOUT
@@ -219,12 +219,24 @@ class GoogleDrive(models.Model):
 
     @api.constrains('model_id', 'filter_id')
     def _check_model_id(self):
+<<<<<<< HEAD
         if self.filter_id and self.model_id.model != self.filter_id.model_id:
             return False
         if self.model_id.model and self.filter_id:
             # force an execution of the filter to verify compatibility
             self.get_google_drive_config(self.model_id.model, 1)
         return True
+=======
+        for drive in self:
+            if drive.filter_id and drive.model_id.model != drive.filter_id.model_id:
+                raise ValidationError(_(
+                    "Incoherent Google Drive %(drive)s: the model of the selected filter %(filter)r is not matching the model of current template (%(filter_model)r, %(drive_model)r)",
+                    drive=drive.name, filter=drive.filter_id.name, filter_model=drive.filter_id.model_id.model, drive_model=drive.model_id.model,
+                ))
+        if self.model_id.model and self.filter_id:
+            # force an execution of the filter to verify compatibility
+            self.get_google_drive_config(self.model_id.model, 1)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     def get_google_scope(self):
         return 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file'

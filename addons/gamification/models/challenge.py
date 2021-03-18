@@ -154,18 +154,18 @@ class Challenge(models.Model):
 
         return template.id if template else False
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Overwrite the create method to add the user of groups"""
+        for vals in vals_list:
+            if vals.get('user_domain'):
+                users = self._get_challenger_users(ustr(vals.get('user_domain')))
 
-        if vals.get('user_domain'):
-            users = self._get_challenger_users(ustr(vals.get('user_domain')))
+                if not vals.get('user_ids'):
+                    vals['user_ids'] = []
+                vals['user_ids'].extend((4, user.id) for user in users)
 
-            if not vals.get('user_ids'):
-                vals['user_ids'] = []
-            vals['user_ids'].extend((4, user.id) for user in users)
-
-        return super(Challenge, self).create(vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         if vals.get('user_domain'):

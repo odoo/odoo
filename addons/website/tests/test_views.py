@@ -804,6 +804,8 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(w1_specific_child_view.website_id.id, 1, "website_id is a prohibited field when COWing views during _load_records")
         self.assertEqual(generic_child_view.inherit_id, random_views[0], "prohibited fields only concerned write on COW'd view. Generic should still considere these fields")
         self.assertEqual(w1_specific_child_view.inherit_id, random_views[0], "inherit_id update should be repliacated on cow views during _load_records")
+<<<<<<< HEAD
+=======
 
         # Set back the generic view as parent for the rest of the test
         generic_child_view.inherit_id = self.base_view
@@ -816,10 +818,26 @@ class TestCowViewSaving(TestViewSavingCommon):
         })])
         self.assertEqual(w1_specific_child_view.inherit_id, random_views[1],
                          "inherit_id update should not be repliacated on cow views during _load_records if it was manually updated before")
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         # Set back the generic view as parent for the rest of the test
         generic_child_view.inherit_id = self.base_view
         w1_specific_child_view.inherit_id = specific_view
+<<<<<<< HEAD
+
+        # Don't update inherit_id if it was anually updated
+        w1_specific_child_view.inherit_id = random_views[1].id
+        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+            'inherit_id': random_views[0].id,
+        })])
+        self.assertEqual(w1_specific_child_view.inherit_id, random_views[1],
+                         "inherit_id update should not be repliacated on cow views during _load_records if it was manually updated before")
+
+        # Set back the generic view as parent for the rest of the test
+        generic_child_view.inherit_id = self.base_view
+        w1_specific_child_view.inherit_id = specific_view
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         # Don't update fields from COW'd view if these fields have been modified from original view
         new_website = Website.create({'name': 'New Website'})
@@ -992,6 +1010,44 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hi</div>',
             "loading module translation copy translation from base to specific view")
 
+<<<<<<< HEAD
+=======
+    def test_soc_complete_flow(self):
+        """
+        Check the creation of views from specific-website environments.
+        """
+        View = self.env['ir.ui.view']
+
+        View.with_context(website_id=1).create({
+            'name': 'Name',
+            'key': 'website.no_website_id',
+            'type': 'qweb',
+            'arch': '<data></data>',
+        })
+        # Get created views by searching to consider potential unwanted COW
+        created_views = View.search([('key', '=', 'website.no_website_id')])
+        self.assertEqual(len(created_views), 1, "Should only have created one view")
+        self.assertEqual(created_views.website_id.id, 1, "The created view should be specific to website 1")
+
+        with self.assertRaises(ValueError, msg="Should not allow to create generic view explicitely from website 1 specific context"):
+            View.with_context(website_id=1).create({
+                'name': 'Name',
+                'key': 'website.explicit_no_website_id',
+                'type': 'qweb',
+                'arch': '<data></data>',
+                'website_id': False,
+            })
+
+        with self.assertRaises(ValueError, msg="Should not allow to create specific view for website 2 from website 1 specific context"):
+            View.with_context(website_id=1).create({
+                'name': 'Name',
+                'key': 'website.different_website_id',
+                'type': 'qweb',
+                'arch': '<data></data>',
+                'website_id': 2,
+            })
+
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def test_specific_view_module_update_inherit_change(self):
         """ During a module update, if inherit_id is changed, we need to
         replicate the change for cow views. """

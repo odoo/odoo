@@ -67,7 +67,7 @@ var TagCourseDialog = Dialog.extend({
                     route: '/slides/channel/tag/search_read',
                     params: {
                         fields: ['name'],
-                        domain: [['id','not in',self.tagIds]],
+                        domain: [['id', 'not in', self.tagIds], ['color', '!=', 0]],
                     }
                 });
             })

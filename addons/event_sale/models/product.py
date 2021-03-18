@@ -13,6 +13,7 @@ class ProductTemplate(models.Model):
     def _onchange_event_ok(self):
         if self.event_ok:
             self.type = 'service'
+            self.invoice_policy = 'order'
 
 
 class Product(models.Model):
@@ -25,3 +26,4 @@ class Product(models.Model):
         """ Redirection, inheritance mechanism hides the method on the model """
         if self.event_ok:
             self.type = 'service'
+            self.invoice_policy = 'order'

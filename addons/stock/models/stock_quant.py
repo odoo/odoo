@@ -56,7 +56,7 @@ class StockQuant(models.Model):
         ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
-        related='product_id.product_tmpl_id', readonly=False)
+        related='product_id.product_tmpl_id')
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
@@ -92,7 +92,7 @@ class StockQuant(models.Model):
         'Available Quantity',
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
         compute='_compute_available_quantity')
-    in_date = fields.Datetime('Incoming Date', readonly=True)
+    in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
 
@@ -240,7 +240,8 @@ class StockQuant(models.Model):
     @api.constrains('quantity')
     def check_quantity(self):
         for quant in self:
-            if float_compare(quant.quantity, 1, precision_rounding=quant.product_uom_id.rounding) > 0 and quant.lot_id and quant.product_id.tracking == 'serial':
+            if quant.location_id.usage != 'inventory' and quant.lot_id and quant.product_id.tracking == 'serial' \
+                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.product_uom_id.rounding) > 0:
                 raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (quant.product_id.display_name, quant.lot_id.name))
 
     @api.constrains('location_id')
@@ -263,19 +264,16 @@ class StockQuant(models.Model):
     @api.model
     def _get_removal_strategy_order(self, removal_strategy):
         if removal_strategy == 'fifo':
-            return 'in_date ASC NULLS FIRST, id'
+            return 'in_date ASC, id'
         elif removal_strategy == 'lifo':
-            return 'in_date DESC NULLS LAST, id desc'
+            return 'in_date DESC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        self.env['stock.quant'].flush(['location_id', 'owner_id', 'package_id', 'lot_id', 'product_id'])
-        self.env['product.product'].flush(['virtual_available'])
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
-        domain = [
-            ('product_id', '=', product_id.id),
-        ]
+
+        domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
                 domain = expression.AND([['|', ('lot_id', '=', lot_id.id), ('lot_id', '=', False)], domain])
@@ -290,6 +288,7 @@ class StockQuant(models.Model):
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
+<<<<<<< HEAD
         # Copy code of _search for special NULLS FIRST/LAST order
         self.check_access_rights('read')
         query = self._where_calc(domain)
@@ -303,6 +302,9 @@ class StockQuant(models.Model):
         quants = self.browse([x[0] for x in res])
         quants = quants.sorted(lambda q: not q.lot_id)
         return quants
+=======
+        return self.search(domain, order=removal_strategy_order)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -383,6 +385,15 @@ class StockQuant(models.Model):
             }
             return {'warning': warning}
 
+    @api.onchange('lot_id')
+    def _onchange_serial_number(self):
+        if self.lot_id and self.product_id.tracking == 'serial':
+            message, dummy = self.env['stock.quant']._check_serial_number(self.product_id,
+                                                                      self.lot_id,
+                                                                      self.company_id)
+            if message:
+                return {'warning': {'title': _('Warning'), 'message': message}}
+
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
         """ Increase or decrease `reserved_quantity` of a set of quants for a given set of
@@ -405,13 +416,12 @@ class StockQuant(models.Model):
             quants = quants.filtered(lambda q: q.lot_id)
 
         incoming_dates = [d for d in quants.mapped('in_date') if d]
-        incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
         # consider only the oldest one as being relevant.
         if incoming_dates:
-            in_date = fields.Datetime.to_string(min(incoming_dates))
+            in_date = min(incoming_dates)
         else:
             in_date = fields.Datetime.now()
 
@@ -442,7 +452,7 @@ class StockQuant(models.Model):
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
             })
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), fields.Datetime.from_string(in_date)
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), in_date
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
@@ -524,15 +534,17 @@ class StockQuant(models.Model):
                             SELECT min(id) as to_update_quant_id,
                                 (array_agg(id ORDER BY id))[2:array_length(array_agg(id), 1)] as to_delete_quant_ids,
                                 SUM(reserved_quantity) as reserved_quantity,
-                                SUM(quantity) as quantity
+                                SUM(quantity) as quantity,
+                                MIN(in_date) as in_date
                             FROM stock_quant
-                            GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id, in_date
+                            GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
                             HAVING count(id) > 1
                         ),
                         _up AS (
                             UPDATE stock_quant q
                                 SET quantity = d.quantity,
-                                    reserved_quantity = d.reserved_quantity
+                                    reserved_quantity = d.reserved_quantity,
+                                    in_date = d.in_date
                             FROM dupes d
                             WHERE d.to_update_quant_id = q.id
                         )
@@ -541,6 +553,7 @@ class StockQuant(models.Model):
         try:
             with self.env.cr.savepoint():
                 self.env.cr.execute(query)
+                self.invalidate_cache()
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
 
@@ -657,6 +670,68 @@ class StockQuant(models.Model):
             })
         return action
 
+    @api.model
+    def _check_serial_number(self, product_id, lot_id, company_id, source_location_id=None, ref_doc_location_id=None):
+        """ Checks for duplicate serial numbers (SN) when assigning a SN (i.e. no source_location_id)
+        and checks for potential incorrect location selection of a SN when using a SN (i.e.
+        source_location_id). Returns warning message of all locations the SN is located at and
+        (optionally) a recommended source location of the SN (when using SN from incorrect location).
+        This function is designed to be used by onchange functions across differing situations including,
+        but not limited to scrap, incoming picking SN encoding, and outgoing picking SN selection.
+
+        :param product_id: `product.product` product to check SN for
+        :param lot_id: `stock.production.lot` SN to check
+        :param company_id: `res.company` company to check against (i.e. we ignore duplicate SNs across
+            different companies)
+        :param source_location_id: `stock.location` optional source location if using the SN rather
+            than assigning it
+        :param ref_doc_location_id: `stock.location` optional reference document location for
+            determining recommended location. This is param expected to only be used when a
+            `source_location_id` is provided.
+        :return: tuple(message, recommended_location) If not None, message is a string expected to be
+            used in warning message dict and recommended_location is a `location_id`
+        """
+        message = None
+        recommended_location = None
+        if product_id.tracking == 'serial':
+            quants = self.env['stock.quant'].search([('product_id', '=', product_id.id),
+                                                         ('lot_id', '=', lot_id.id),
+                                                         ('quantity', '!=', 0),
+                                                         '|', ('location_id.usage', '=', 'customer'),
+                                                              '&', ('company_id', '=', company_id.id),
+                                                                   ('location_id.usage', 'in', ('internal', 'transit'))])
+            sn_locations = quants.mapped('location_id')
+            if quants:
+                if not source_location_id:
+                    # trying to assign an already existing SN
+                    message =  _('The Serial Number (%s) is already used in these location(s): %s.\n\n'
+                                 'Is this expected? For example this can occur if a delivery operation is validated '
+                                 'before its corresponding receipt operation is validated. In this case the issue will be solved '
+                                 'automatically once all steps are completed. Otherwise, the serial numbershould be corrected to '
+                                 'prevent inconsistent data.',
+                                 lot_id.name, ', '.join(sn_locations.mapped('display_name')))
+
+                elif source_location_id and source_location_id not in sn_locations:
+                    # using an existing SN in the wrong location
+                    recommended_location = self.env['stock.location']
+                    if ref_doc_location_id:
+                        for location in sn_locations:
+                            if ref_doc_location_id.parent_path in location.parent_path:
+                                recommended_location = location
+                                break
+                    else:
+                        for location in sn_locations:
+                            if location.usage != 'customer':
+                                recommended_location = location
+                                break
+                    if recommended_location:
+                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s. Source location for this move will be changed to %s',
+                        lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')), recommended_location.display_name)
+                    else:
+                        message = _('Serial number (%s) is not located in %s, but is located in location(s): %s. Please correct this to prevent inconsistent data.',
+                        lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
+        return message, recommended_location
+
 
 class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
@@ -680,6 +755,12 @@ class QuantPackage(models.Model):
     owner_id = fields.Many2one(
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True, compute_sudo=True)
+    package_use = fields.Selection([
+        ('disposable', 'Disposable Box'),
+        ('reusable', 'Reusable Box'),
+        ], string='Package Use', default='disposable', required=True,
+        help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
+        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""")
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
@@ -694,17 +775,6 @@ class QuantPackage(models.Model):
             package.location_id = values['location_id']
             package.company_id = values.get('company_id')
             package.owner_id = values['owner_id']
-
-    def name_get(self):
-        return list(self._compute_complete_name().items())
-
-    def _compute_complete_name(self):
-        """ Forms complete name of location from parent location to child location. """
-        res = {}
-        for package in self:
-            name = package.name
-            res[package.id] = name
-        return res
 
     def _search_owner(self, operator, value):
         if value:
@@ -728,8 +798,7 @@ class QuantPackage(models.Model):
 
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.env['stock.quant']._merge_quants()
-        self.env['stock.quant']._unlink_zero_quants()
+        self.env['stock.quant']._quant_tasks()
 
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")

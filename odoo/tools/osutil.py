@@ -4,15 +4,55 @@
 """
 Some functions related to the os and os.path module
 """
-from contextlib import contextmanager
 import logging
 import os
-from os.path import join as opj
+import re
 import tempfile
 import zipfile
 
+from contextlib import contextmanager
+from os.path import join as opj
+
 _logger = logging.getLogger(__name__)
 
+WINDOWS_RESERVED = re.compile(r'''
+    ^
+    # forbidden stems: reserved keywords
+    (:?CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])
+    # even with an extension this is recommended against
+    (:?\..*)?
+    $
+''', flags=re.IGNORECASE | re.VERBOSE)
+def clean_filename(name, replacement=''):
+    """ Strips or replaces possibly problematic or annoying characters our of
+    the input string, in order to make it a valid filename in most operating
+    systems (including dropping reserved Windows filenames).
+
+    If this results in an empty string, results in "Untitled" (localized).
+
+    Allows:
+
+    * any alphanumeric character (unicode)
+    * underscore (_) as that's innocuous
+    * dot (.) except in leading position to avoid creating dotfiles
+    * dash (-) except in leading position to avoid annoyance / confusion with
+      command options
+    * brackets ([ and ]), while they correspond to shell *character class*
+      they're a common way to mark / tag files especially on windows
+    * parenthesis ("(" and ")"), a more natural though less common version of
+      the former
+    * space (" ")
+
+    :param str name: file name to clean up
+    :param str replacement:
+        replacement string to use for sequences of problematic input, by default
+        an empty string to remove them entirely, each contiguous sequence of
+        problems is replaced by a single replacement
+    :rtype: str
+    """
+    if WINDOWS_RESERVED.match(name):
+        return "Untitled"
+    return re.sub(r'[^\w_.()\[\] -]+', replacement, name).lstrip('.-') or "Untitled"
 
 def listdir(dir, recursive=False):
     """Allow to recursively get the file listing following symlinks, returns

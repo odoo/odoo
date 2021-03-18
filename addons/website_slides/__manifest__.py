@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'eLearning',
-    'version': '2.2',
+    'version': '2.3',
     'sequence': 125,
     'summary': 'Manage and publish an eLearning platform',
     'website': 'https://www.odoo.com/page/slides',
@@ -48,7 +48,8 @@ Featuring
         'wizard/slide_channel_invite_views.xml',
         'data/gamification_data.xml',
         'data/mail_data.xml',
-        'data/mail_activity_data.xml',
+        'data/mail_template_data.xml',
+        'data/mail_templates.xml',
         'data/slide_data.xml',
         'data/website_data.xml',
     ],
@@ -60,7 +61,7 @@ Featuring
         'data/slide_user_demo.xml',
     ],
     'qweb': [
-        'static/src/xml/activity.xml',
+        'static/src/components/activity/activity.xml',
     ],
     'installable': True,
     'application': True,

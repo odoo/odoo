@@ -24,7 +24,7 @@ from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
 
-from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID
+from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
 from odoo.osv import expression
 
@@ -416,10 +416,13 @@ class MailThread(models.AbstractModel):
         """
         return self.env['mail.message.subtype']
 
+<<<<<<< HEAD
     def _get_creation_message(self):
         """ Deprecated, remove in 14+ """
         return self._creation_message()
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _creation_message(self):
         """ Get the creation message to log into the chatter at the record's creation.
         :returns: The message's body to log.
@@ -429,11 +432,14 @@ class MailThread(models.AbstractModel):
         return _('%s created', doc_name)
 
     @api.model
+<<<<<<< HEAD
     def get_mail_message_access(self, res_ids, operation, model_name=None):
         """ Deprecated, remove with v14+ """
         return self._get_mail_message_access(res_ids, operation, model_name=model_name)
 
     @api.model
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
         """ mail.message check permission rules for related document. This method is
             meant to be inherited in order to implement addons-specific behavior.
@@ -457,10 +463,13 @@ class MailThread(models.AbstractModel):
         # allow tracking on models inheriting from 'mail.thread'
         return name == 'tracking' or super()._valid_field_parameter(field, name)
 
+<<<<<<< HEAD
     def with_lang(self):
         """ Deprecated, remove in 14+ """
         return self._fallback_lang()
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _fallback_lang(self):
         if not self._context.get("lang"):
             return self.with_context(lang=self.env.user.lang)
@@ -470,7 +479,11 @@ class MailThread(models.AbstractModel):
     # WRAPPERS AND TOOLS
     # ------------------------------------------------------
 
+<<<<<<< HEAD
     def message_change_thread(self, new_thread):
+=======
+    def message_change_thread(self, new_thread, new_parent_message=False):
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         """
         Transfer the list of the mail thread messages from an model to another
 
@@ -500,8 +513,14 @@ class MailThread(models.AbstractModel):
             ('subtype_id', '!=', subtype_comment)])
 
         # update the messages
-        msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
-        msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
+        msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
+        if new_parent_message:
+            msg_vals["parent_id"] = new_parent_message.id
+        msg_comment.write(msg_vals)
+
+        # other than comment: reset subtype
+        msg_vals["subtype_id"] = None
+        msg_not_comment.write(msg_vals)
         return True
 
     # ------------------------------------------------------
@@ -608,7 +627,7 @@ class MailThread(models.AbstractModel):
         tracking = dict()
         for record in self:
             try:
-                tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+                tracking[record.id] = record._mail_track(tracked_fields, initial_values[record.id])
             except MissingError:
                 continue
 
@@ -632,6 +651,7 @@ class MailThread(models.AbstractModel):
 
         return tracking
 
+<<<<<<< HEAD
     def static_message_track(self, record, tracked_fields, initial):
         """ Deprecated, remove in v14+ """
         return record._mail_track(tracked_fields, initial)
@@ -640,6 +660,8 @@ class MailThread(models.AbstractModel):
         """ Moved to ``BaseModel._mail_track()`` """
         return self._mail_track(tracked_fields, initial)
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _track_subtype(self, init_values):
         """ Give the subtypes triggered by the changes on the record according
         to values that have been updated.
@@ -1470,11 +1492,14 @@ class MailThread(models.AbstractModel):
     # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
 
+<<<<<<< HEAD
     @api.model
     def _message_get_default_recipients_on_records(self, records):
         """ Moved to ``BaseModel._message_get_default_recipients()`` """
         return records._message_get_default_recipients()
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _message_add_suggested_recipient(self, result, partner=None, email=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
@@ -1689,7 +1714,7 @@ class MailThread(models.AbstractModel):
             if not self.env.user.has_group('base.group_user'):
                 attachment_ids = filtered_attachment_ids.ids
 
-            m2m_attachment_ids += [(4, id) for id in attachment_ids]
+            m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
 
         if attachments: # generate 
@@ -2090,8 +2115,8 @@ class MailThread(models.AbstractModel):
             # Avoid warnings about non-existing fields
             for x in ('from', 'to', 'cc', 'canned_response_ids'):
                 create_values.pop(x, None)
-            create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
-            create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
+            create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
+            create_values['channel_ids'] = [Command.link(cid) for cid in create_values.get('channel_ids', [])]
             create_values_list.append(create_values)
         if 'default_child_ids' in self._context:
             ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
@@ -2128,9 +2153,10 @@ class MailThread(models.AbstractModel):
         if not rdata:
             return False
 
-        message_values = {}
-        if rdata['channels']:
-            message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
+        cids = msg_vals.get('channel_ids', []) if msg_vals else message.channel_ids.ids
+        channel_ids = [r['id'] for r in rdata['channels'] if r['id'] not in cids]
+        if channel_ids:
+            message.write({'channel_ids': [Command.set(channel_ids)]})
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
         if notify_by_email:
@@ -2149,8 +2175,6 @@ class MailThread(models.AbstractModel):
         and correctly override notify_recipients
         """
         channel_ids = [r['id'] for r in recipients_data['channels']]
-        if channel_ids:
-            message.write({'channel_ids': [(6, 0, channel_ids)]})
 
         inbox_pids = [r['id'] for r in recipients_data['partners'] if r['notif'] == 'inbox']
         if inbox_pids:
@@ -2273,7 +2297,7 @@ class MailThread(models.AbstractModel):
                 create_values = {
                     'body_html': mail_body,
                     'subject': mail_subject,
-                    'recipient_ids': [(4, pid) for pid in recipient_ids],
+                    'recipient_ids': [Command.link(pid) for pid in recipient_ids],
                 }
                 if email_to:
                     create_values['email_to'] = email_to
@@ -2619,12 +2643,15 @@ class MailThread(models.AbstractModel):
 
         return result
 
+<<<<<<< HEAD
     @api.model
     def _notify_get_reply_to_on_records(self, default=None, records=None, company=None, doc_names=None):
         """ Moved to ``BaseModel._notify_get_reply_to()`` """
         records = records if records else self
         return records._notify_get_reply_to(default=default, company=company, doc_names=doc_names)
 
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     def _notify_email_recipient_values(self, recipient_ids):
         """ Format email notification recipient values to store on the notification
         mail.mail. Basic method just set the recipient partners as mail_mail

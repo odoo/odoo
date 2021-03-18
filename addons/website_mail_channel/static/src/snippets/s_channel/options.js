@@ -77,6 +77,7 @@ options.registry.Channel = options.Class.extend({
     /**
      * @override
      */
+<<<<<<< HEAD
     _renderCustomXML(uiFragment) {
         // TODO remove this part in master 
         const createChannelEl = uiFragment.querySelector('we-button[data-create-channel]');
@@ -90,6 +91,27 @@ options.registry.Channel = options.Class.extend({
                 el.textContent = channel[1];
                 menuEl.appendChild(el);
             }
+=======
+    async _renderCustomXML(uiFragment) {
+        const channels = await this._getPublicChannels();
+        const menuEl = uiFragment.querySelector('.select_discussion_list');
+        for (const channel of channels) {
+            const el = document.createElement('we-button');
+            el.dataset.selectDataAttribute = channel[0];
+            el.textContent = channel[1];
+            menuEl.appendChild(el);
+        }
+    },
+    /**
+     * @private
+     * @return {Promise}
+     */
+    _getPublicChannels() {
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'name_search',
+            args: ['', [['public', '=', 'public']]],
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         });
     },
     /**

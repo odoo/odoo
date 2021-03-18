@@ -5,7 +5,7 @@ from odoo import http
 from odoo.http import request
 
 from odoo.addons.sale_product_configurator.controllers.main import ProductConfiguratorController
-from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.controllers import main
 
 class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
     @http.route(['/sale_product_configurator/show_optional_products_website'], type='json', auth="public", methods=['POST'], website=True)
@@ -24,7 +24,7 @@ class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
         kw.pop('pricelist_id')
         return self.optional_product_items(product_id, request.website.get_current_pricelist(), **kw)
 
-class WebsiteSale(WebsiteSale):
+class WebsiteSale(main.WebsiteSale):
     def _prepare_product_values(self, product, category, search, **kwargs):
         values = super(WebsiteSale, self)._prepare_product_values(product, category, search, **kwargs)
 

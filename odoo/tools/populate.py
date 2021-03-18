@@ -1,5 +1,6 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from odoo.tools import pycompat
 
 
@@ -138,7 +139,7 @@ def compute(function, seed=None):
 
 def randint(a, b, seed=None):
     """ Return a factory for an iterator of values dicts that sets the field
-    to the random integer between a and b included in each input dict.
+    to a random integer between a and b included in each input dict.
 
     :param int a: minimal random value
     :param int b: maximal random value
@@ -148,3 +149,31 @@ def randint(a, b, seed=None):
     def get_rand_int(random=None, **kwargs):
         return random.randint(a, b)
     return compute(get_rand_int, seed=seed)
+
+def randfloat(a, b, seed=None):
+    """ Return a factory for an iterator of values dicts that sets the field
+    to a random float between a and b included in each input dict.
+    """
+    def get_rand_float(random=None, **kwargs):
+        return random.uniform(a, b)
+    return compute(get_rand_float, seed=seed)
+
+def randdatetime(*, base_date=None, relative_before=None, relative_after=None, seed=None):
+    """ Return a factory for an iterator of values dicts that sets the field
+    to a random datetime between relative_before and relative_after, relatively to
+    base_date
+
+    :param base_date (datetime): override the default base date if needed.
+    :param relative_after (relativedelta, timedelta): range up which we can go after the
+         base date. If not set, defaults to 0, i.e. only in the past of reference.
+    :param relative_before (relativedelta, timedelta): range up which we can go before the
+         base date. If not set, defaults to 0, i.e. only in the future of reference.
+    :return (generator): iterator for random dates inside the defined range
+    """
+    base_date = base_date or datetime(2020, 1, 1)
+    seconds_before = relative_before and ((base_date + relative_before) - base_date).total_seconds() or 0
+    seconds_after = relative_after and ((base_date + relative_after) - base_date).total_seconds() or 0
+
+    def get_rand_datetime(random=None, **kwargs):
+        return base_date + relativedelta(seconds=random.randint(seconds_before, seconds_after))
+    return compute(get_rand_datetime, seed=seed)

@@ -48,8 +48,13 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
         searchbar_inputs = super()._get_searchbar_inputs()
         searchbar_inputs.update(
             sol={'input': 'sol', 'label': _('Search in Sales Order Item')},
+<<<<<<< HEAD
             sol_id={'input': 'sol_id', 'label': _('Search in Sales Order Item ID')},
             invoice={'input': 'invoice_id', 'label': _('Search in Invoice ID')})
+=======
+            so={'input': 'so', 'label': _('Search in Sales Order')},
+            invoice={'input': 'invoice', 'label': _('Search in Invoice')})
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         return searchbar_inputs
 
     def _get_searchbar_groupby(self):
@@ -61,6 +66,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
         search_domain = super()._get_search_domain(search_in, search)
         if search_in in ('sol', 'all'):
             search_domain = expression.OR([search_domain, [('so_line', 'ilike', search)]])
+<<<<<<< HEAD
         if search_in in ('sol_id', 'invoice_id'):
             search = int(search) if search.isdigit() else 0
         if search_in == 'sol_id':
@@ -68,6 +74,13 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
         if search_in == 'invoice_id':
             invoice = request.env['account.move'].browse(search)
             domain = request.env['account.analytic.line']._timesheet_get_sale_domain(invoice.mapped('invoice_line_ids.sale_line_ids'), invoice)
+=======
+        if search_in in ('so', 'all'):
+            search_domain = expression.OR([search_domain, [('so_line.order_id.name', 'ilike', search)]])
+        if search_in in ('invoice', 'all'):
+            invoices = request.env['account.move'].sudo().search([('name', 'ilike', search)])
+            domain = request.env['account.analytic.line']._timesheet_get_sale_domain(invoices.mapped('invoice_line_ids.sale_line_ids'), invoices)
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             search_domain = expression.OR([search_domain, domain])
         return search_domain
 
@@ -78,6 +91,9 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='sol', **kw):
+<<<<<<< HEAD
         if search and search_in and search_in in ('sol_id', 'invoice_id') and not search.isdigit():
             search = '0'
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         return super().portal_my_timesheets(page, sortby, filterby, search, search_in, groupby, **kw)

@@ -584,6 +584,7 @@ function factory(dependencies) {
         }),
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
+            readonly: true,
         }),
         date: attr({
             default: moment(),
@@ -607,7 +608,9 @@ function factory(dependencies) {
             default: false,
             dependencies: ['isModeratedByCurrentPartner'],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isCurrentPartnerAuthor: attr({
             compute: '_computeIsCurrentPartnerAuthor',
             default: false,

@@ -13,7 +13,7 @@ class Partner(models.Model):
     _populate_dependencies = ["res.company", "res.partner.industry"]
 
     _populate_sizes = {
-        'small': 10,
+        'small': 100,
         'medium': 2000,
         'large': 100000,
     }
@@ -131,21 +131,23 @@ class Partner(models.Model):
 
     def _populate_set_companies(self, records):
         _logger.info('Setting companies')
-        r_company = populate.Random('res.partner+company_has_partners') # 50% change to have partners
-        companies = records.filtered(lambda p: p.is_company and r_company.getrandbits(1))
-        partners = records - companies
+        r_company = populate.Random('res.partner+company_has_partners')
         r_partner = populate.Random('res.partner+partner_has_company')
         r_company_pick = populate.Random('res.partner+partner_company_pick=')
+
+        companies = records.filtered(lambda p: p.is_company and r_company.getrandbits(1))  # 50% change to have partners
+        partners = records.filtered(lambda p: not p.is_company and r_partner.getrandbits(1))  # 50% change to have a company
+
         companies_partners = collections.defaultdict(lambda: self.env['res.partner'])
-        for count, partner in enumerate(partners):
-            if bool(r_partner.getrandbits(1)):  # 50% change to have a company
-                companies_partners[r_company_pick.choice(companies)] |= partner
+        for partner in partners:
+            companies_partners[r_company_pick.choice(companies)] |= partner
 
         # batching company write improves performances a lot (~40% faster for total partner creation).
-        for count, (company, partners) in enumerate(companies_partners.items()):
-            if (count + 1) % 100 == 0:
-                _logger.info('Setting company: %s/%s', count + 1, len(companies))
+        for count, (company, partners) in enumerate(companies_partners.items(), start=1):
+            if count % 100 == 0:
+                _logger.info('Setting company: %s/%s', count, len(companies))
             partners.write({'parent_id': company.id})
+            partners._onchange_company_id()
 
 class ResPartnerIndustry(models.Model):
     _inherit = "res.partner.industry"

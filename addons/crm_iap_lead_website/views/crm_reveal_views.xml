@@ -21,7 +21,7 @@
                         </button>
                     </div>
                     <div class="oe_title mb8">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1 class="o_row">
                             <field name="name" placeholder="e.g. US Visitors"/>
                         </h1>
@@ -33,7 +33,7 @@
                                 <field name="active" widget="boolean_toggle"/>
                             </group>
                             <group string="Website Traffic Conditions">
-                                <field name="country_ids" widget="many2many_tags"/>
+                                <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="website_id" options="{'no_open': True, 'no_create_edit': True}" groups="website.group_multi_website"/>
                                 <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])]}" domain="[('country_id', 'in', country_ids)]"/>
                                 <field name="regex_url" widget="website_urls" placeholder="e.g. /page"/>

@@ -7,6 +7,7 @@
 
 {
     'name': 'Luxembourg - Accounting',
+    'icon': '/base/static/img/country_flags/lu.png',
     'version': '2.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

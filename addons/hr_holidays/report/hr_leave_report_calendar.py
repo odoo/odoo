@@ -28,6 +28,8 @@ class LeaveReportCalendar(models.Model):
         ('validate', 'Approved')
     ], readonly=True)
 
+    is_hatched = fields.Boolean('Hatched', readonly=True)
+
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report_calendar')
         self._cr.execute("""CREATE OR REPLACE VIEW hr_leave_report_calendar AS
@@ -42,7 +44,12 @@ class LeaveReportCalendar(models.Model):
             CASE
                 WHEN hl.holiday_type = 'employee' THEN rr.tz
                 ELSE %s
+<<<<<<< HEAD
             END AS tz
+=======
+            END AS tz,
+            state != 'validate' as is_hatched
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         FROM hr_leave hl
             LEFT JOIN hr_employee em
                 ON em.id = hl.employee_id

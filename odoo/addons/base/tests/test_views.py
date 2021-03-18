@@ -838,16 +838,28 @@ class TestTemplating(ViewCase):
         # First t-field should have an indication of xpath
         [node] = arch.xpath('//*[@t-field="a"]')
         self.assertEqual(
+<<<<<<< HEAD
             node.get('data-oe-field-xpath'),
             '/hello[1]/world[2]',
             'First t-field has indication of xpath through dedicated attribute')
+=======
+            node.get('data-oe-xpath'),
+            '/hello[1]/world[2]',
+            'First t-field has indication of xpath')
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         # Second t-field, from inheritance, should also have an indication of xpath
         [node] = arch.xpath('//*[@t-field="b"]')
         self.assertEqual(
+<<<<<<< HEAD
             node.get('data-oe-field-xpath'),
             '/xpath/world',
             'Inherited t-field has indication of xpath through dedicated attribute')
+=======
+            node.get('data-oe-xpath'),
+            '/xpath/world',
+            'Inherited t-field has indication of xpath')
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
         # The most important assert
         # The last world xpath should not have been impacted by the t-field from inheritance
@@ -2353,7 +2365,7 @@ class TestViews(ViewCase):
                 'arch': arch,
             })
         message = str(catcher.exception.args[0])
-        self.assertIn('\nView name: %s\nError context:\n' % name, message)
+        self.assertEqual(catcher.exception.context['name'], name)
         if expected_message:
             self.assertIn(expected_message, message)
         else:
@@ -2368,12 +2380,13 @@ class TestViews(ViewCase):
             })
         self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
         message = log_catcher.output[0]
-        self.assertIn('\nView name: %s\nError context:\n' % name, message)
+        self.assertIn('View error context', message)
+        self.assertIn("'name': '%s'" % name, message)
         if expected_message:
             self.assertIn(expected_message, message)
 
 
-class TestViewTranslations(common.SavepointCase):
+class TestViewTranslations(common.TransactionCase):
     # these tests are essentially the same as in test_translate.py, but they use
     # the computed field 'arch' instead of the translated field 'arch_db'
 

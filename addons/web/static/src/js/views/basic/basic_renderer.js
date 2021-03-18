@@ -729,6 +729,10 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         var Widget = record.fieldsInfo[this.viewType][fieldName].Widget;
         const legacy = !(Widget.prototype instanceof owl.Component);
         const widgetOptions = {
+            // Distinct readonly from renderer and readonly from modifier,
+            // renderer can be readonly while modifier not.
+            // This is needed as modifiers are set after first render
+            hasReadonlyModifier: modifiers.readonly,
             mode: modifiers.readonly ? 'readonly' : mode,
             viewType: this.viewType,
         };

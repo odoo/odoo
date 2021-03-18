@@ -212,7 +212,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBoolean');
 
     QUnit.test('boolean field in form view', async function (assert) {
-        assert.expect(13);
+        assert.expect(15);
 
         var form = await createView({
             View: FormView,
@@ -224,11 +224,15 @@ QUnit.module('basic_fields', {
 
         assert.containsOnce(form, '.o_field_boolean input:checked',
             "checkbox should be checked");
+        assert.containsNone(form, '.o_field_boolean input:disabled',
+            'checkbox should not be disabled');
 
         // switch to edit mode and check the result
         await testUtils.form.clickEdit(form);
         assert.containsOnce(form, '.o_field_boolean input:checked',
             "checkbox should still be checked");
+        assert.containsNone(form, '.o_field_boolean input:disabled',
+            'checkbox should not be disabled');
 
         // uncheck the checkbox
         await testUtils.dom.click(form.$('.o_field_boolean input:checked'));
@@ -348,6 +352,41 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 4,
             "should now have 4 checked input back");
         list.destroy();
+    });
+
+    QUnit.test('readonly boolean field', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="bar" attrs="{'readonly': True}"/>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_field_boolean input:checked',
+            "checkbox should be checked");
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            'checkbox should be disabled');
+
+        await testUtils.form.clickEdit(form);
+        assert.containsOnce(form, '.o_field_boolean input:checked',
+            "checkbox should still be checked");
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            'checkbox should still be disabled');
+
+        await testUtils.dom.click(form.$('.o_field_boolean label'));
+
+        assert.containsOnce(form, '.o_field_boolean input:checked',
+            "checkbox should still be checked");
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            'checkbox should still be disabled');
+
+        form.destroy();
     });
 
     QUnit.module('FieldBooleanToggle');
@@ -475,6 +514,91 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_field_widget[name=bar] i.text-muted:not(.o_toggle_button_success)').length,
             1, "should be gray");
         assert.verifySteps(['write']);
+
+        form.destroy();
+    });
+
+    QUnit.module('FieldNumeric');
+
+    QUnit.test('numeric field: fields with keydown on numpad decimal key', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.float_factor_field = { string: "Float Factor", type: 'float_factor' };
+        this.data.partner.records[0].float_factor_field = 9.99;
+
+        this.data.partner.fields.float_time_field = { string: "Float Time", type: 'float_time' };
+        this.data.partner.records[0].float_time_field = 9.99;
+
+        this.data.partner.fields.monetary = { string: "Monetary", type: 'monetary' };
+        this.data.partner.records[0].monetary = 9.99;
+        this.data.partner.records[0].currency_id = 1;
+
+        this.data.partner.fields.percentage = { string: "Percentage", type: 'percentage' };
+        this.data.partner.records[0].percentage = .99;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <field name="float_factor_field" options="{'factor': 0.5}"/>
+                    <field name="qux"/>
+                    <field name="float_time_field"/>
+                    <field name="int_field"/>
+                    <field name="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="percentage"/>
+                </form>
+            `,
+            res_id: 1,
+            translateParameters: {
+                decimal_point: "🇧🇪",
+            },
+        });
+
+        // Record edit mode
+        await testUtilsDom.click(form.el.querySelector('.o_form_button_edit'));
+
+        // Get all inputs
+        const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
+        const floatInput = form.el.querySelector('.o_input[name="qux"]');
+        const floatTimeInput = form.el.querySelector('.o_input[name="float_time_field"]');
+        const integerInput = form.el.querySelector('.o_input[name="int_field"]');
+        const monetaryInput = form.el.querySelector('.o_input[name="monetary"]');
+        const percentageInput = form.el.querySelector('.o_input[name="percentage"]');
+
+        // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
+        // Numpad "comma" is specific to some countries (Brazil...)
+        floatFactorField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatFactorField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatFactorField.value.endsWith('🇧🇪🇧🇪'));
+
+        floatInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatInput.value.endsWith('🇧🇪🇧🇪'));
+
+        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatTimeInput.value.endsWith('🇧🇪🇧🇪'));
+
+        integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(integerInput.value.endsWith('🇧🇪🇧🇪'));
+
+        monetaryInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        monetaryInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(monetaryInput.querySelector('input.o_input') .value.endsWith('🇧🇪🇧🇪'));
+
+        percentageInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        percentageInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(percentageInput.querySelector('input.o_input').value.endsWith('🇧🇪🇧🇪'));
 
         form.destroy();
     });
@@ -977,7 +1101,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        var $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $mailtoLink = form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_email > a');
         assert.strictEqual($mailtoLink.length, 1,
             "should have a anchor with correct classes");
         assert.strictEqual($mailtoLink.text(), 'yop',
@@ -997,7 +1121,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        $mailtoLink = form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_email > a');
         assert.strictEqual($mailtoLink.text(), 'new',
             "new value should be displayed properly");
         assert.hasAttrValue($mailtoLink, 'href', 'mailto:new',
@@ -1021,7 +1145,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly as text");
 
-        var $mailtoLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $mailtoLink = list.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_email > a');
         assert.strictEqual($mailtoLink.length, 5,
             "should have anchors with correct classes");
         assert.hasAttrValue($mailtoLink.first(), 'href', 'mailto:yop',
@@ -1041,7 +1165,7 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
-        $mailtoLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        $mailtoLink = list.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_email > a');
         assert.strictEqual($mailtoLink.length, 5,
             "should still have anchors with correct classes");
         assert.hasAttrValue($mailtoLink.first(), 'href', 'mailto:new',
@@ -1067,7 +1191,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        var $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $mailtoLink = form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_email > a');
         assert.strictEqual($mailtoLink.text(), '',
             "the value should be displayed properly");
 
@@ -1097,6 +1221,48 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('readonly email field field is properly rerendered after been changed by onchange', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].foo = 'dolores.abernathy@delos';
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<sheet>' +
+                '<group>' +
+                '<field name="int_field" on_change="1"/>' + // onchange to update mobile in readonly mode directly
+                '<field name="foo" widget="email" readonly="1"/>' + // readonly only, we don't want to go through write mode
+                '</group>' +
+                '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        value: {
+                            foo: 'lara.espin@unknown', // onchange to update foo in readonly mode directly
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // check initial rendering
+        assert.strictEqual(form.$('.o_field_email').text(), 'dolores.abernathy@delos',
+            'Initial email text should be set');
+
+        // trigger the onchange to update phone field, but still in readonly mode
+        await testUtils.fields.editInput($('input[name="int_field"]'), '3');
+
+        // check rendering after changes
+        assert.strictEqual(form.$('.o_field_email').text(), 'lara.espin@unknown',
+            'email text should be updated');
+
+        form.destroy();
+    });
 
     QUnit.module('FieldChar');
 
@@ -1814,13 +1980,13 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
+        assert.containsOnce(form, 'div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a',
             "should have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://yop',
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a'), 'href', 'http://yop',
             "should have proper href link");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'target', '_blank',
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a'), 'target', '_blank',
             "should have target attribute set to _blank");
-        assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'yop',
+        assert.strictEqual(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a').text(), 'yop',
             "the value should be displayed properly");
 
         // switch to edit mode and check the result
@@ -1835,11 +2001,11 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
+        assert.containsOnce(form, 'div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a',
             "should still have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://limbo',
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a'), 'href', 'http://limbo',
             "should have proper new href link");
-        assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'limbo',
+        assert.strictEqual(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a').text(), 'limbo',
             'the new value should be displayed');
 
         form.destroy();
@@ -1858,7 +2024,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('a[name="foo"]').text(), 'kebeclibre',
+        assert.strictEqual(form.$('div[name="foo"].o_field_url > a').text(), 'kebeclibre',
             "url text should come from the text attribute");
         form.destroy();
     });
@@ -1885,10 +2051,10 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('a[name="url1"]').attr('href'), 'http://www.url1.com');
-        assert.strictEqual(form.$('a[name="url2"]').attr('href'), 'www.url2.com');
-        assert.strictEqual(form.$('a[name="url3"]').attr('href'), 'http://www.url3.com');
-        assert.strictEqual(form.$('a[name="url4"]').attr('href'), 'https://url4.com');
+        assert.strictEqual(form.$('div[name="url1"].o_field_url > a').attr('href'), 'http://www.url1.com');
+        assert.strictEqual(form.$('div[name="url2"].o_field_url > a').attr('href'), 'www.url2.com');
+        assert.strictEqual(form.$('div[name="url3"].o_field_url > a').attr('href'), 'http://www.url3.com');
+        assert.strictEqual(form.$('div[name="url4"].o_field_url > a').attr('href'), 'https://url4.com');
 
         form.destroy();
     });
@@ -1905,9 +2071,9 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
             "should have 5 cells");
-        assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
+        assert.containsN(list, 'div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a', 5,
             "should have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://yop',
+        assert.hasAttrValue(list.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a').first(), 'href', 'http://yop',
             "should have proper href link");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly as text");
@@ -1924,11 +2090,11 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
-        assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
+        assert.containsN(list, 'div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a', 5,
             "should still have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://brolo',
+        assert.hasAttrValue(list.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a').first(), 'href', 'http://brolo',
             "should have proper new href link");
-        assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().text(), 'brolo',
+        assert.strictEqual(list.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a').first().text(), 'brolo',
             "value should be properly updated");
 
         list.destroy();
@@ -2794,10 +2960,19 @@ QUnit.module('basic_fields', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="document" widget="image" options="{\'size\': [90, 90]}"/>' +
-                    '<field name="timmy" widget="many2many">' +
-                        '<tree>' +
+                    '<field name="timmy" widget="many2many" mode="kanban">' +
+                        // use kanban view as the tree will trigger edit mode
+                        // and thus won't display the field
+                        '<kanban>' +
                             '<field name="display_name"/>' +
-                        '</tree>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_global_click">' +
+                                        '<span><t t-esc="record.display_name.value"/></span>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
                         '<form>' +
                             '<field name="image" widget="image"/>' +
                         '</form>' +
@@ -2818,11 +2993,11 @@ QUnit.module('basic_fields', {
         });
         assert.verifySteps(["The view's image should have been fetched"]);
 
-        assert.containsOnce(form, 'tr.o_data_row',
+        assert.containsOnce(form, '.o_kanban_record.oe_kanban_global_click',
             'There should be one record in the many2many');
 
         // Actual flow: click on an element of the m2m to get its form view
-        await testUtils.dom.click(form.$('tbody td:contains(gold)'));
+        await testUtils.dom.click(form.$('.oe_kanban_global_click'));
         assert.strictEqual($('.modal').length, 1,
             'The modal should have opened');
         assert.verifySteps(["The dialog's image should have been fetched"]);
@@ -2947,10 +3122,26 @@ QUnit.module('basic_fields', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/>' +
+<<<<<<< HEAD
                     '<field name="timmy" widget="many2many">' +
                         '<tree>' +
                             '<field name="display_name"/>' +
                         '</tree>' +
+=======
+                    '<field name="timmy" widget="many2many" mode="kanban">' +
+                        // use kanban view as the tree will trigger edit mode
+                        // and thus won't display the field
+                        '<kanban>' +
+                            '<field name="display_name"/>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_global_click">' +
+                                        '<span><t t-esc="record.display_name.value"/></span>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                         '<form>' +
                             '<field name="image" widget="image_url"/>' +
                         '</form>' +
@@ -2971,11 +3162,19 @@ QUnit.module('basic_fields', {
         });
         assert.verifySteps(["The view's image should have been fetched"]);
 
+<<<<<<< HEAD
         assert.containsOnce(form, 'tr.o_data_row',
             'There should be one record in the many2many');
 
         // Actual flow: click on an element of the m2m to get its form view
         await testUtils.dom.click(form.$('tbody td:contains(gold)'));
+=======
+        assert.containsOnce(form, '.o_kanban_record.oe_kanban_global_click',
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        await testUtils.dom.click(form.$('.oe_kanban_global_click'));
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         assert.strictEqual($('.modal').length, 1,
             'The modal should have opened');
         assert.verifySteps(["The dialog's image should have been fetched"]);
@@ -4439,7 +4638,8 @@ QUnit.module('basic_fields', {
                             '<field name="datetime"/>' +
                         '</tree>' +
                         '<form>' +
-                            '<field name="datetime" widget="date"/>' +
+                            // display datetime in readonly as modal will open in edit
+                            '<field name="datetime" widget="date" attrs="{\'readonly\': 1}"/>' +
                         '</form>' +
                      '</field>' +
                  '</form>',
@@ -4483,7 +4683,8 @@ QUnit.module('basic_fields', {
                             '<field name="datetime"/>' +
                         '</tree>' +
                         '<form>' +
-                            '<field name="datetime" widget="date"/>' +
+                            // display datetime in readonly as modal will open in edit
+                            '<field name="datetime" widget="date" attrs="{\'readonly\': 1}"/>' +
                         '</form>' +
                      '</field>' +
                  '</form>',
@@ -5543,6 +5744,29 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float_toggle widget in kanban view(readonly) with option force_button', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="qux" widget="float_toggle" options="{\'force_button\': true}"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+        assert.containsOnce(kanban, 'button.o_field_float_toggle', "should have rendered toggle button");
+        const value = kanban.$('button.o_field_float_toggle').text();
+        await testUtils.dom.click(kanban.$('button.o_field_float_toggle'));
+        assert.notEqual(kanban.$('button.o_field_float_toggle').text(), value, "qux field value should be changed");
+        kanban.destroy();
+    });
+
 
     QUnit.module('PhoneWidget');
 
@@ -5568,7 +5792,7 @@ QUnit.module('basic_fields', {
             },
         });
 
-        var $phone = form.$('a.o_field_widget.o_form_uri');
+        var $phone = form.$('div.o_field_widget.o_form_uri.o_field_phone > a');
         assert.strictEqual($phone.length, 1,
             "should have rendered the phone number as a link with correct classes");
         assert.strictEqual($phone.text(), 'yop',
@@ -5586,7 +5810,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$('a.o_field_widget.o_form_uri').text(), 'new',
+        assert.strictEqual(form.$('div.o_field_widget.o_form_uri.o_field_phone > a').text(), 'new',
             "new value should be displayed properly");
 
         form.destroy();
@@ -5612,7 +5836,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'yop',
             "value should be displayed properly with a link to send SMS");
 
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 5,
             "should have the correct classnames");
 
         // Edit a line and check the result
@@ -5629,7 +5853,7 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'new',
             "value should be properly updated");
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
+        assert.containsN(list, 'div.o_field_widget.o_form_uri.o_field_phone > a', 5,
             "should still have links with correct classes");
 
         list.destroy();

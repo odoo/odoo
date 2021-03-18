@@ -29,6 +29,10 @@ class MessageList extends Component {
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
                 threadCache,
+<<<<<<< HEAD
+=======
+                threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 threadCacheIsAllHistoryLoaded: threadCache && threadCache.isAllHistoryLoaded,
                 threadCacheIsLoaded: threadCache && threadCache.isLoaded,
                 threadCacheIsLoadingMore: threadCache && threadCache.isLoadingMore,
@@ -492,6 +496,20 @@ class MessageList extends Component {
 
     /**
      * @private
+     */
+    _onClickRetryLoadMoreMessages() {
+        if (!this.threadView) {
+            return;
+        }
+        if (!this.threadView.threadCache) {
+            return;
+        }
+        this.threadView.threadCache.update({ hasLoadingFailed: false });
+        this._loadMore();
+    }
+
+    /**
+     * @private
      * @param {ScrollEvent} ev
      */
     onScroll(ev) {
@@ -502,6 +520,17 @@ class MessageList extends Component {
      * @private
      * @param {ScrollEvent} ev
      */
+<<<<<<< HEAD
+    onScroll(ev) {
+        this._onScrollThrottled(ev);
+    }
+
+    /**
+     * @private
+     * @param {ScrollEvent} ev
+     */
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     _onScrollThrottled(ev) {
         const {
             order,
@@ -532,11 +561,19 @@ class MessageList extends Component {
                 ? scrollTop >= this.el.scrollHeight - this.el.clientHeight - margin
                 : scrollTop <= margin;
             threadView.update({ hasAutoScrollOnMessageReceived });
+<<<<<<< HEAD
         }
         if (threadViewer && threadViewer.exists()) {
             threadViewer.saveThreadCacheScrollHeightAsInitial(this.el.scrollHeight, threadCache);
             threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);
         }
+=======
+        }
+        if (threadViewer && threadViewer.exists()) {
+            threadViewer.saveThreadCacheScrollHeightAsInitial(this.el.scrollHeight, threadCache);
+            threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);
+        }
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         if (!this._isLastScrollProgrammatic && this._isLoadMoreVisible()) {
             this._loadMore();
         }
@@ -566,10 +603,13 @@ Object.assign(MessageList, {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
         },
+<<<<<<< HEAD
         selectedMessageLocalId: {
             type: String,
             optional: true,
         },
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         threadViewLocalId: String,
     },
     template: 'mail.MessageList',

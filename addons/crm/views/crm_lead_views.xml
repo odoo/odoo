@@ -6,16 +6,16 @@
             <field name="arch" type="xml">
                 <form class="o_lead_opportunity_form" js_class="crm_form">
                     <header>
-                        <button name="action_set_won_rainbowman" string="Mark Won"
+                        <button name="action_set_won_rainbowman" string="Won"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': ['|','|', ('active','=',False), ('probability', '=', 100), ('type', '=', 'lead')]}"/>
-                        <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost"
-                            type="action" class="oe_highlight" context="{'default_lead_id': active_id}" attrs="{'invisible': ['|', ('type', '=', 'lead'),('active', '=', False),('probability', '&lt;', 100)]}"/>
+                        <button name="%(crm.crm_lead_lost_action)d" string="Lost"
+                            type="action" context="{'default_lead_id': active_id}" attrs="{'invisible': ['|', ('type', '=', 'lead'),('active', '=', False),('probability', '&lt;', 100)]}"/>
                         <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action" help="Convert to Opportunity"
                             class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'opportunity'), ('active', '=', False)]}"/>
                         <button name="toggle_active" string="Restore" type="object"
                             attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
-                        <button name="action_set_lost" string="Mark as Lost" type="object"
+                        <button name="action_set_lost" string="Lost" type="object"
                             attrs="{'invisible': ['|', ('type', '=', 'opportunity'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
                         <field name="stage_id" widget="statusbar"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
@@ -42,9 +42,9 @@
                         <widget name="web_ribbon" title="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
-                            <label for="name" class="oe_edit_only" attrs="{'invisible': [('type', '=', 'lead')]}"/>
-                            <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
+                            <label for="name" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
+                            <label for="name" attrs="{'invisible': [('type', '=', 'lead')]}"/>
+                            <h1><field class="o_text_overflow" name="name" placeholder="e.g. Product Pricing"/></h1>
                             <h2 class="o_row no-gutters align-items-end">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
                                     <label for="expected_revenue" class="oe_edit_only" />
@@ -213,10 +213,16 @@
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                             <group>
+<<<<<<< HEAD
                                 <field name="user_id" domain="[('share', '=', False)]"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
                                 <field name="team_id" widget="selection"
                                     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+=======
+                                <field name="user_id"
+                                    context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
+                                <field name="team_id" widget="selection"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                 <field name="type" invisible="1"/>
                             </group>
                             <group name="lead_priority" attrs="{'invisible': [('type', '=', 'opportunity')]}">
@@ -227,6 +233,7 @@
                                 <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
                                 <field name="date_conversion" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="user_company_ids" invisible="1"/>
                             </group>
                         </group>
 
@@ -336,9 +343,15 @@
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="show"/>
+                    <field name="country_id" optional="show" options="{'no_open': True, 'no_create': True}"/>
                     <field name="partner_id" invisible="1"/>
+<<<<<<< HEAD
                     <field name="user_id" optional="show"  widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+=======
+                    <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
+                    <field name="user_id" optional="show"  widget="many2one_avatar_user"
+                        domain="[('share', '=', False)]"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     <field name="team_id" optional="show"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
@@ -377,7 +390,7 @@
                                     <span class="o_kanban_record_subtitle"><field name="contact_name"/></span>
                                 </div>
                                 <div>
-                                  <field name="tag_ids"/>
+                                  <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
@@ -443,6 +456,10 @@
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="user_id" invisible="1"/>
+<<<<<<< HEAD
+=======
+                        <field name="user_company_ids" invisible="1"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                         <field name="team_id" invisible="1"/>
                         <field name="type" invisible="1"/>
                         <field name="partner_name" invisible="1"/>
@@ -519,7 +536,7 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <div class="o_kanban_record_title">
+                                    <div class="o_kanban_record_title oe_kanban_details">
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="o_kanban_record_subtitle">
@@ -533,7 +550,7 @@
                                         </t>
                                     </div>
                                     <div>
-                                        <span t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
+                                        <span class="o_text_overflow" t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
                                     </div>
                                     <div>
                                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -573,6 +590,7 @@
                     <field name="source_id"/>
                     <field name="medium_id"/>
                     <field name="campaign_id"/>
+                    <field name="activity_state"/>
                     <separator />
                     <filter string="My Leads"
                             name="assigned_to_me"
@@ -618,15 +636,23 @@
         <!--
             MASS MAILING
         -->
+<<<<<<< HEAD
         <record id="crm_lead_act_window_compose" model="ir.actions.act_window">
+=======
+        <record id="action_lead_mail_compose" model="ir.actions.act_window">
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             <field name="name">Send email</field>
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context" eval="{
     'default_composition_mode': 'comment',
+<<<<<<< HEAD
     'default_use_template': True,
     'default_template_id': ref('crm.email_template_opportunity_mail'),
+=======
+    'default_use_template': False,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 }"/>
             <field name="binding_model_id" ref="model_crm_lead"/>
             <field name="binding_view_types">form</field>
@@ -639,17 +665,15 @@
             <field name="target">new</field>
             <field name="context" eval="{
     'default_composition_mode': 'mass_mail',
+<<<<<<< HEAD
     'default_use_template': True,
     'default_template_id': ref('crm.email_template_opportunity_mail'),
+=======
+    'default_use_template': False,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 }"/>
             <field name="binding_model_id" ref="model_crm_lead"/>
             <field name="binding_view_types">list</field>
-        </record>
-
-        <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
-            allowing to have a well formed email template (context action considered as set). -->
-        <record id="email_template_opportunity_mail" model="mail.template">
-            <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
         </record>
 
         <!--
@@ -662,6 +686,12 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <tree string="Opportunities" sample="1" multi_edit="1">
+<<<<<<< HEAD
+=======
+                    <header>
+                        <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
+                    </header>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity" readonly="1"/>
@@ -672,9 +702,17 @@
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
+<<<<<<< HEAD
                     <field name="country_id" optional="hide"/>
                     <field name="user_id" widget="many2one_avatar_user" optional="show" domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="show"/>
+=======
+                    <field name="country_id" optional="hide" options="{'no_open': True, 'no_create': True}"/>
+                    <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
+                    <field name="user_id" widget="many2one_avatar_user" optional="show"
+                        domain="[('share', '=', False)]"/>
+                    <field name="team_id" optional="hide"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                     <field name="priority" optional="hide"/>
                     <field name="activity_ids" widget="list_activity"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
@@ -693,6 +731,9 @@
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
+                    <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash"
+                        attrs="{'invisible': [('activity_date_deadline_my', '=', False)]}"/>
+                    <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope"/>
                 </tree>
             </field>
         </record>
@@ -707,20 +748,11 @@
                 <xpath expr="//tree" position="attributes">
                     <attribute name="default_order">activity_date_deadline_my</attribute>
                 </xpath>
-                <xpath expr="//tree" position="inside">
-                    <header>
-                        <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
-                    </header>
-                </xpath>
                 <field name="user_id" position="attributes">
                     <attribute name="optional">hide</attribute>
                 </field>
                 <field name="team_id" position="attributes">
                     <attribute name="optional">hide</attribute>
-                </field>
-                <field name="message_needaction" position="after">
-                    <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash" />
-                    <button name="%(crm.crm_lead_act_window_compose)d" type="action" string="Email" icon="fa-envelope"/>
                 </field>
             </field>
         </record>
@@ -805,6 +837,7 @@
                     <field name="country_id"/>
                     <field name="city"/>
                     <field name="phone_mobile_search"/>
+                    <field name="activity_state"/>
                     <separator/>
                     <filter string="My Pipeline" name="assigned_to_me"
                         domain="[('user_id', '=', uid)]"

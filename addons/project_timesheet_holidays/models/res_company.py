@@ -23,6 +23,7 @@ class Company(models.Model):
                     raise ValidationError(_('The Internal Project of a company should be in that company.'))
 
     def init(self):
+        type_ids = [(4, self.env.ref('hr_timesheet.internal_project_default_stage').id)]
         for company in self.search([('leave_timesheet_project_id', '=', False)]):
             company = company.with_company(company)
             project = company.env['project.project'].search([
@@ -35,6 +36,7 @@ class Company(models.Model):
                     'name': _('Internal'),
                     'allow_timesheets': True,
                     'company_id': company.id,
+                    'type_ids': type_ids,
                 })
             company.write({
                 'leave_timesheet_project_id': project.id,
@@ -43,7 +45,7 @@ class Company(models.Model):
                 task = company.env['project.task'].create({
                     'name': _('Time Off'),
                     'project_id': company.leave_timesheet_project_id.id,
-                    'active': False,
+                    'active': True,
                     'company_id': company.id,
                 })
                 company.write({
@@ -63,7 +65,7 @@ class Company(models.Model):
                 task = company.env['project.task'].sudo().create({
                     'name': _('Time Off'),
                     'project_id': company.leave_timesheet_project_id.id,
-                    'active': False,
+                    'active': True,
                     'company_id': company.id,
                 })
                 company.write({

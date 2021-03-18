@@ -49,6 +49,7 @@ class PosOrder(models.Model):
             'amount_return':  ui_order['amount_return'],
             'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
+            'to_ship': ui_order['to_ship'] if "to_ship" in ui_order else False,
             'is_tipped': ui_order.get('is_tipped', False),
             'tip_amount': ui_order.get('tip_amount', 0),
         }
@@ -242,6 +243,7 @@ class PosOrder(models.Model):
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
+    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     note = fields.Text(string='Internal Notes')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
@@ -255,6 +257,7 @@ class PosOrder(models.Model):
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice')
+    to_ship = fields.Boolean('To ship')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
     tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
@@ -314,10 +317,10 @@ class PosOrder(models.Model):
         if self.partner_id:
             self.pricelist_id = self.partner_id.property_product_pricelist.id
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_draft_or_cancel(self):
         for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
-        return super(PosOrder, self).unlink()
 
     @api.model
     def create(self, values):
@@ -425,7 +428,7 @@ class PosOrder(models.Model):
                             .with_company(order.company_id)\
                             .with_context(default_move_type=move_vals['move_type'])\
                             .create(move_vals)
-            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
+            message = _("This invoice has been created from the POS Order: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_move.message_post(body=message)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id)._post()
@@ -476,17 +479,20 @@ class PosOrder(models.Model):
 
     def _create_order_picking(self):
         self.ensure_one()
-        if not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice):
-            picking_type = self.config_id.picking_type_id
-            if self.partner_id.property_stock_customer:
-                destination_id = self.partner_id.property_stock_customer.id
-            elif not picking_type or not picking_type.default_location_dest_id:
-                destination_id = self.env['stock.warehouse']._get_partner_locations()[0].id
-            else:
-                destination_id = picking_type.default_location_dest_id.id
+        if self.to_ship:
+            self.lines._launch_stock_rule_from_pos_order_lines()
+        else:
+            if not self.session_id.update_stock_at_closing or (self.company_id.anglo_saxon_accounting and self.to_invoice):
+                picking_type = self.config_id.picking_type_id
+                if self.partner_id.property_stock_customer:
+                    destination_id = self.partner_id.property_stock_customer.id
+                elif not picking_type or not picking_type.default_location_dest_id:
+                    destination_id = self.env['stock.warehouse']._get_partner_locations()[0].id
+                else:
+                    destination_id = picking_type.default_location_dest_id.id
 
-            pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
-            pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
+                pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(destination_id, self.lines, picking_type, self.partner_id)
+                pickings.write({'pos_session_id': self.session_id.id, 'pos_order_id': self.id, 'origin': self.name})
 
     def add_payment(self, data):
         """Create a new payment for the order"""
@@ -625,6 +631,7 @@ class PosOrder(models.Model):
             'creation_date': order.date_order.astimezone(timezone),
             'fiscal_position_id': order.fiscal_position_id.id,
             'to_invoice': order.to_invoice,
+            'to_ship': order.to_ship,
             'state': order.state,
             'account_move': order.account_move.id,
             'id': order.id,
@@ -790,6 +797,70 @@ class PosOrderLine(models.Model):
     def export_for_ui(self):
         return self.mapped(self._export_for_ui) if self else []
 
+    def _get_procurement_group(self):
+        return self.order_id.procurement_group_id
+
+    def _prepare_procurement_group_vals(self):
+        return {
+            'name': self.order_id.name,
+            'move_type': self.order_id.config_id.picking_policy,
+            'pos_order_id': self.order_id.id,
+            'partner_id': self.order_id.partner_id.id,
+        }
+
+    def _prepare_procurement_values(self, group_id=False):
+        """ Prepare specific key for moves or other components that will be created from a stock rule
+        comming from a sale order line. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
+        self.ensure_one()
+        # Use the delivery date if there is else use date_order and lead time
+        date_deadline = self.order_id.date_order
+        values = {
+            'group_id': group_id,
+            'date_planned': date_deadline,
+            'date_deadline': date_deadline,
+            'route_ids': self.order_id.config_id.route_id,
+            'warehouse_id': self.order_id.config_id.warehouse_id or False,
+            'partner_id': self.order_id.partner_id.id,
+            'product_description_variants': self.full_product_name,
+            'company_id': self.order_id.company_id,
+        }
+        return values
+
+    def _launch_stock_rule_from_pos_order_lines(self):
+
+        procurements = []
+        for line in self:
+            line = line.with_company(line.company_id)
+            if not line.product_id.type in ('consu','product'):
+                continue
+
+            group_id = line._get_procurement_group()
+            if not group_id:
+                group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
+                line.order_id.procurement_group_id = group_id
+
+            values = line._prepare_procurement_values(group_id=group_id)
+            product_qty = line.qty
+
+            procurement_uom = line.product_id.uom_id
+            procurements.append(self.env['procurement.group'].Procurement(
+                line.product_id, product_qty, procurement_uom,
+                line.order_id.partner_id.property_stock_customer,
+                line.name, line.order_id.name, line.order_id.company_id, values))
+        if procurements:
+            self.env['procurement.group'].run(procurements)
+
+        # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
+        orders = self.mapped('order_id')
+        for order in orders:
+            pickings_to_confirm = order.picking_ids
+            if pickings_to_confirm:
+                # Trigger the Scheduler for Pickings
+                pickings_to_confirm.action_confirm()
+        return True
+
 
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
@@ -933,7 +1004,7 @@ class AccountCashRounding(models.Model):
 
     @api.constrains('rounding', 'rounding_method', 'strategy')
     def _check_session_state(self):
-        open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+        open_session = self.env['pos.session'].search([('config_id.rounding_method', 'in', self.ids), ('state', '!=', 'closed')], limit=1)
         if open_session:
             raise ValidationError(
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))

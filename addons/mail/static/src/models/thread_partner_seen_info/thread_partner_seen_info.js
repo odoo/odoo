@@ -59,7 +59,13 @@ function factory(dependencies) {
          * (required fields) should improve and let us just use the relational
          * fields.
          */
+<<<<<<< HEAD
         channelId: attr(),
+=======
+        channelId: attr({
+            required: true,
+        }),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         lastFetchedMessage: many2one('mail.message'),
         lastSeenMessage: many2one('mail.message'),
         /**
@@ -87,7 +93,13 @@ function factory(dependencies) {
          * (required fields) should improve and let us just use the relational
          * fields.
          */
+<<<<<<< HEAD
         partnerId: attr(),
+=======
+        partnerId: attr({
+            required: true,
+        }),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         /**
          * Thread (channel) that this seen info is related to.
          *

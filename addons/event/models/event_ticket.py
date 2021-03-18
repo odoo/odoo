@@ -148,3 +148,10 @@ class EventTicket(models.Model):
             return ticket.start_sale_date <= current_date
         else:
             return True
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_if_registrations(self):
+        if self.registration_ids:
+            raise UserError(_(
+                "The following tickets cannot be deleted while they have one or more registrations linked to them:\n- %s",
+                '\n- '.join(self.mapped('name'))))

@@ -1523,3 +1523,48 @@ class TestMrpOrder(TestMrpCommon):
         # of a conversion 187.5ml = 0.188L
         # thus creating an extra line with 'product_uom_qty': 0.5
         self.assertEqual(len(mo_product_final_form.move_raw_ids.move_line_ids), 1, 'One move line should exist for the MO.')
+<<<<<<< HEAD
+=======
+
+    def test_mo_sn_warning(self):
+        """ Checks that when a MO where the final product is tracked by serial, a warning pops up if
+        the `lot_producting_id` has previously been used already (i.e. dupe SN). Also checks if a
+        scrap linked to a MO has its sn warning correctly pop up.
+        """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, _, p_final, _, _ = self.generate_mo(tracking_final='serial', qty_base_1=1, qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        sn1 = self.env['stock.production.lot'].create({
+            'name': 'serial1',
+            'product_id': p_final.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(p_final, self.stock_location, 1, lot_id=sn1)
+        mo.lot_producing_id = sn1
+
+        warning = False
+        warning = mo._onchange_lot_producing()
+        self.assertTrue(warning, 'Reuse of existing serial number not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+
+        mo.action_generate_serial()
+        sn2 = mo.lot_producing_id
+        mo.button_mark_done()
+
+        # scrap linked to MO but with wrong SN location
+        scrap = self.env['stock.scrap'].create({
+            'product_id': p_final.id,
+            'product_uom_id': self.uom_unit.id,
+            'production_id': mo.id,
+            'location_id': self.stock_location_14.id,
+            'lot_id': sn2.id
+        })
+
+        warning = False
+        warning = scrap._onchange_serial_number()
+        self.assertTrue(warning, 'Use of wrong serial number location not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+        self.assertEqual(scrap.location_id, mo.location_dest_id, 'Location was not auto-corrected')
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729

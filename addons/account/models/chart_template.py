@@ -170,9 +170,14 @@ class AccountChartTemplate(models.Model):
             'company_id': company.id,
         })
 
-    def try_loading(self, company=False):
+    def try_loading(self, company=False, install_demo=True):
         """ Installs this chart of accounts for the current company if not chart
         of accounts had been created for it yet.
+
+        :param company (Model<res.company>): the company we try to load the chart template on.
+            If not provided, it is retrieved from the context.
+        :param install_demo (bool): whether or not we should load demo data right after loading the
+            chart template.
         """
         # do not use `request.env` here, it can cause deadlocks
         if not company:
@@ -184,7 +189,26 @@ class AccountChartTemplate(models.Model):
         if not company.chart_template_id and not self.existing_accounting(company):
             for template in self:
                 template.with_context(default_company_id=company.id)._load(15.0, 15.0, company)
+            # Install the demo data when the first localization is instanciated on the company
+            if install_demo and self.env.ref('base.module_account').demo:
+                self.with_context(
+                    default_company_id=company.id,
+                    allowed_company_ids=[company.id],
+                )._create_demo_data()
 
+    def _create_demo_data(self):
+        try:
+            with self.env.cr.savepoint():
+                demo_data = self._get_demo_data()
+                for model, data in demo_data:
+                    created = self.env[model]._load_records([{
+                        'xml_id': "account.%s" % xml_id if '.' not in xml_id else xml_id,
+                        'values': record,
+                    } for xml_id, record in data.items()])
+                    self._post_create_demo_data(created)
+        except Exception:
+            # Do not rollback installation of CoA if demo data failed
+            _logger.exception('Error while loading accounting demo data')
 
     def _load(self, sale_tax_rate, purchase_tax_rate, company):
         """ Installs this chart of accounts on the current company, replacing

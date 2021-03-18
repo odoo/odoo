@@ -115,7 +115,10 @@ class Project(models.Model):
             profit['expense_cost'] += data.get('expense_cost', 0.0)
             profit['expense_amount_untaxed_invoiced'] += data.get('expense_amount_untaxed_invoiced', 0.0)
         profit['other_revenues'] = other_revenues - data.get('amount_untaxed_invoiced', 0.0) if other_revenues else 0.0
+<<<<<<< HEAD
         profit['other_revenues'] = profit['other_revenues'] - data.get('expense_amount_untaxed_invoiced', 0.0) if profit['other_revenues'] else 0.0
+=======
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
         profit['total'] = sum([profit[item] for item in profit.keys()])
         dashboard_values['profit'] = profit
 
@@ -395,7 +398,7 @@ class Project(models.Model):
                 task_order_line_ids = [ol['sale_line_id'][0] for ol in task_order_line_ids]
 
             if self.env.user.has_group('sales_team.group_sale_salesman'):
-                if self.bill_type == 'customer_project' and self.allow_billable and not self.sale_order_id:
+                if self.pricing_type != 'task_rate' and self.allow_billable and not self.sale_order_id:
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',
@@ -499,15 +502,32 @@ class Project(models.Model):
 
             sale_orders = self.mapped('sale_line_id.order_id') | self.env['sale.order'].browse(task_so_ids)
             if sale_orders:
+                so_action = dict(
+                    context={'create': False, 'edit': False, 'delete': False},
+                    domain=[('id', 'in', sale_orders.ids)],
+                )
+
+                if len(sale_orders) == 1:
+                    so_action.update({
+                        'action': self.env.ref('sale.action_sale_order_form_view').sudo(),
+                        'res_id': sale_orders.id,
+                    })
+                else:
+                    so_action['action'] = self.env.ref('sale.action_orders').sudo()
+
                 stat_buttons.append({
                     'name': _('Sales Orders'),
                     'count': len(sale_orders),
                     'icon': 'fa fa-dollar',
+<<<<<<< HEAD
                     'action': _to_action_data(
                         action=self.env.ref('sale.action_orders').sudo(),
                         domain=[('id', 'in', sale_orders.ids)],
                         context={'create': False, 'edit': False, 'delete': False}
                     )
+=======
+                    'action': _to_action_data(**so_action),
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 })
 
                 invoice_ids = self.env['sale.order'].search_read([('id', 'in', sale_orders.ids)], ['invoice_ids'])
@@ -534,6 +554,10 @@ class Project(models.Model):
         else:
             timesheet_label = [_('Hours'), _('Recorded')]
 
+        default_project_ctx = {}
+        if len(self) == 1:
+            default_project_ctx = {'default_project_id': self.id}
+
         stat_buttons.append({
             'name': timesheet_label,
             'count': sum(self.mapped('total_timesheet_time')),
@@ -542,6 +566,7 @@ class Project(models.Model):
                 'account.analytic.line',
                 domain=[('project_id', 'in', self.ids)],
                 views=[(ts_tree.id, 'list'), (ts_form.id, 'form')],
+                context=default_project_ctx,
             )
         })
 

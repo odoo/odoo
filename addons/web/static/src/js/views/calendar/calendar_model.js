@@ -35,7 +35,8 @@ return AbstractModel.extend({
      */
     calendarEventToRecord: function (event) {
         // Normalize event_end without changing fullcalendars event.
-        var data = {'name': event.title};
+        var data = {};
+        data[this.mapping.create_name_field || 'name'] = event.title;
         var start = event.start.clone();
         var end = event.end && event.end.clone();
 

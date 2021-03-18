@@ -8,9 +8,17 @@ import base64
 class AccountTourUploadBill(models.TransientModel):
     _name = 'account.tour.upload.bill'
     _description = 'Account tour upload bill'
+<<<<<<< HEAD
     _inherits = {'mail.compose.message': 'composer_id'}
 
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')
+=======
+
+    attachment_ids = fields.Many2many(
+        comodel_name='ir.attachment',
+        relation='account_tour_upload_bill_ir_attachments_rel',
+        string='Attachments')
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     selection = fields.Selection(
         selection=lambda self: self._selection_values(),

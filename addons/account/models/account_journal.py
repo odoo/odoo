@@ -44,6 +44,16 @@ class AccountJournal(models.Model):
     def _default_alias_domain(self):
         return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
 
+    def _default_invoice_reference_model(self):
+        """Get the invoice reference model according to the company's country."""
+        country_code = self.env.company.country_id.code
+        country_code = country_code and country_code.lower()
+        if country_code:
+            for model in self._fields['invoice_reference_model'].get_values(self.env):
+                if model.startswith(country_code):
+                    return model
+        return 'odoo'
+
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
@@ -100,7 +110,7 @@ class AccountJournal(models.Model):
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
     invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
-    invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default='odoo', help="You can choose different models for each type of reference. The default one is the Odoo reference.")
+    invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'), ('euro', 'European')], default=_default_invoice_reference_model, help="You can choose different models for each type of reference. The default one is the Odoo reference.")
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency")
@@ -123,6 +133,7 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'inbound')],
         string='Inbound Payment Methods',
         compute='_compute_inbound_payment_method_ids',
+        ondelete="restrict",
         store=True,
         readonly=False,
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"
@@ -140,6 +151,7 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'outbound')],
         string='Outbound Payment Methods',
         compute='_compute_outbound_payment_method_ids',
+        ondelete="restrict",
         store=True,
         readonly=False,
         help="Manual:Pay bill by cash or any other method outside of Odoo.\n"
@@ -199,7 +211,7 @@ class AccountJournal(models.Model):
         readonly=True, copy=False)
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
+        ('code_company_uniq', 'unique (code, company_id)', 'Journal codes must be unique per company.'),
     ]
 
     @api.depends('type')
@@ -353,9 +365,29 @@ class AccountJournal(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
+
+        # Find a unique code for the copied journal
+        read_codes = self.env['account.journal'].with_context(active_test=False).search_read([('company_id', '=', self.company_id.id)], ['code'])
+        all_journal_codes = {code_data['code'] for code_data in read_codes}
+
+        copy_code = self.code
+        code_prefix = re.sub(r'\d+', '', self.code).strip()
+        counter = 1
+        while counter <= len(all_journal_codes) and  copy_code in all_journal_codes:
+            counter_str = str(counter)
+            copy_prefix = code_prefix[:self._fields['code'].size - len(counter_str)]
+            copy_code = ("%s%s" % (copy_prefix, counter_str))
+
+            counter += 1
+
+        if counter > len(all_journal_codes):
+            # Should never happen, but put there just in case.
+            raise UserError(_("Could not compute any code for the copy automatically. Please create it manually."))
+
         default.update(
-            code=_("%s (copy)") % (self.code or ''),
+            code=copy_code,
             name=_("%s (copy)") % (self.name or ''))
+
         return super(AccountJournal, self).copy(default)
 
     def _update_mail_alias(self, vals):
@@ -597,14 +629,20 @@ class AccountJournal(models.Model):
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
             'res_model': 'account.move',
-            'views': [[False, "tree"], [False, "form"]],
             'type': 'ir.actions.act_window',
             'context': self._context
         }
         if len(invoices) == 1:
-            action_vals.update({'res_id': invoices[0].id, 'view_mode': 'form'})
+            action_vals.update({
+                'views': [[False, "form"]],
+                'view_mode': 'form',
+                'res_id': invoices[0].id,
+            })
         else:
-            action_vals['view_mode'] = 'tree,form'
+            action_vals.update({
+                'views': [[False, "tree"], [False, "kanban"], [False, "form"]],
+                'view_mode': 'tree, kanban, form',
+            })
         return action_vals
 
     def _create_invoice_from_single_attachment(self, attachment):

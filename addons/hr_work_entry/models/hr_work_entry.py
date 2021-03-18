@@ -13,7 +13,7 @@ class HrWorkEntry(models.Model):
     _description = 'HR Work Entry'
     _order = 'conflict desc,state,date_start'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, compute='_compute_name', store=True, readonly=False)
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     date_start = fields.Datetime(required=True, string='From')
@@ -30,11 +30,38 @@ class HrWorkEntry(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
         default=lambda self: self.env.company)
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
 
+    # There is no way for _error_checking() to detect conflicts in work
+    # entries that have been introduced in concurrent transactions, because of the transaction
+    # isolation.
+    # So if 2 transactions create work entries in parallel it is possible to create a conflict
+    # that will not be visible by either transaction. There is no way to detect conflicts
+    # between different records in a safe manner unless a SQL constraint is used, e.g. via
+    # an EXCLUSION constraint [1]. This (obscure) type of constraint allows comparing 2 rows
+    # using special operator classes and it also supports partial WHERE clauses. Similarly to
+    # CHECK constraints, it's backed by an index.
+    # 1: https://www.postgresql.org/docs/9.6/sql-createtable.html#SQL-CREATETABLE-EXCLUDE
     _sql_constraints = [
         ('_work_entry_has_end', 'check (date_stop IS NOT NULL)', 'Work entry must end. Please define an end date or a duration.'),
-        ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.')
+        ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.'),
+        (
+            '_work_entries_no_validated_conflict',
+            """
+                EXCLUDE USING GIST (
+                    tsrange(date_start, date_stop, '()') WITH &&,
+                    int4range(employee_id, employee_id, '[]') WITH =
+                )
+                WHERE (state = 'validated' AND active = TRUE)
+            """,
+            'Validated work entries cannot overlap'
+        ),
     ]
+
+    @api.depends('work_entry_type_id', 'employee_id')
+    def _compute_name(self):
+        for work_entry in self:
+            work_entry.name = "%s: %s" % (work_entry.work_entry_type_id.name, work_entry.employee_id.name)
 
     @api.depends('state')
     def _compute_conflict(self):

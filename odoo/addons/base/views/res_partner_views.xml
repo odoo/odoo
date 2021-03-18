@@ -79,9 +79,9 @@
                     <field name="type" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
                     <div class="oe_title">
-                        <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"  groups="base.group_no_one"/>
+                        <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field name="name" default_focus="1" placeholder="e.g. John Doe" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
@@ -155,11 +155,9 @@
                         <field name="is_company" invisible="1"/>
                         <field name="commercial_partner_id" invisible="1"/>
                         <field name="active" invisible="1"/>
-                        <field name="company_type" widget="radio"
-                            class="oe_edit_only"
-                            options="{'horizontal': true}"/>
+                        <field name="company_type" widget="radio" options="{'horizontal': true}"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -299,7 +297,7 @@
                                         <group col="12">
                                             <group colspan="5">
                                                 <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
-                                                <field name="title" placeholder="e.g. Mr."
+                                                <field name="title" options="{'no_open': True}" placeholder="e.g. Mr."
                                                     attrs="{'invisible': [('type','!=', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
                                                     attrs="{'invisible': [('type','!=', 'contact')]}"/>

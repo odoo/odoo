@@ -306,7 +306,9 @@ class ModelManager {
                             'default',
                             'dependencies',
                             'fieldType',
+                            'readonly',
                             'related',
+                            'required',
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
@@ -322,8 +324,10 @@ class ModelManager {
                             'fieldType',
                             'inverse',
                             'isCausal',
+                            'readonly',
                             'related',
                             'relationType',
+                            'required',
                             'to',
                         ].includes(key)
                     );
@@ -335,6 +339,9 @@ class ModelManager {
                     }
                     if (field.isCausal && !(['one2many', 'one2one'].includes(field.relationType))) {
                         throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
+                    }
+                    if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
+                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
                     }
                 }
                 // 3. Computed field.
@@ -605,7 +612,7 @@ class ModelManager {
                     this._registerToComputeField(record, field);
                 }
             }
-            this._update(record, data2);
+            this._update(record, data2, { allowWriteReadonly: true });
             /**
              * 5. Register post processing operation that are to be delayed at
              * the end of the update cycle.
@@ -631,7 +638,11 @@ class ModelManager {
         for (const field of Model.__fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
+<<<<<<< HEAD
                 field.parseAndExecuteCommands(record, [['unlink-all']]);
+=======
+                field.parseAndExecuteCommands(record, [['unlink-all']], { allowWriteReadonly: true });
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
             }
         }
         this._hasAnyChangeDuringCycle = true;
@@ -665,11 +676,11 @@ class ModelManager {
                         // delete at every step to avoid recursion
                         fields.delete(field);
                         if (field.compute) {
-                            this._update(record, { [field.fieldName]: record[field.compute]() });
+                            this._update(record, { [field.fieldName]: record[field.compute]() }, { allowWriteReadonly: true });
                             continue;
                         }
                         if (field.related) {
-                            this._update(record, { [field.fieldName]: field.computeRelated(record) });
+                            this._update(record, { [field.fieldName]: field.computeRelated(record) }, { allowWriteReadonly: true });
                             continue;
                         }
                         throw new Error("No compute method defined on this field definition");
@@ -708,6 +719,16 @@ class ModelManager {
         for (const record of this._updatedRecords) {
             record.__state++;
         }
+
+        // handle required field.
+        for (const record of this._updatedRecords) {
+            for (const required of record.constructor.__requiredFieldsList) {
+                if (record[required.fieldName] === undefined) {
+                    throw Error(`Field ${required.fieldName} of ${record.localId} is required.`);
+                }
+            }
+        }
+
         this._updatedRecords.clear();
 
         // Trigger at most one useStore call per update cycle
@@ -977,6 +998,9 @@ class ModelManager {
             Model.__fieldMap = Model.__combinedFields;
             // List of all fields, for iterating.
             Model.__fieldList = Object.values(Model.__fieldMap);
+            Model.__requiredFieldsList = Model.__fieldList.filter(
+                field => field.required
+            );
             // Add field accessors.
             for (const field of Model.__fieldList) {
                 Object.defineProperty(Model.prototype, field.fieldName, {
@@ -1053,12 +1077,14 @@ class ModelManager {
      * @param {mail.model} record
      * @param {Object} data
      * @param {Object} [options]
+     * @param [options.allowWriteReadonly=false]
      * @returns {boolean} whether any value changed for the current record
      */
-    _update(record, data, options) {
+    _update(record, data, options = {}) {
         if (!record.exists()) {
             throw Error(`Cannot update already deleted record ${record.localId}.`);
         }
+        const { allowWriteReadonly = false } = options;
         if (!this._toUpdateAfters.has(record)) {
             // queue updateAfter before calling field.set to ensure previous
             // contains the value at the start of update cycle
@@ -1073,7 +1099,10 @@ class ModelManager {
             }
             const field = Model.__fieldMap[fieldName];
             if (!field) {
-                throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
+                throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record.localId}", non-field attempted update: "${fieldName}")`);
+            }
+            if (field.readonly && !allowWriteReadonly) {
+                throw new Error(`Can't update "${field.fieldName}" (record: "${record.localId}") because it's readonly.`);
             }
             const newVal = data[fieldName];
             if (!field.parseAndExecuteCommands(record, newVal, options)) {

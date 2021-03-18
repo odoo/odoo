@@ -23,8 +23,8 @@
                     <field name="id" invisible="True"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
-                        <label class="oe_edit_only" for="name" string="Product Name"/>
-                        <h1><field name="name" placeholder="Product Name"/></h1>
+                        <label for="name" string="Product Name"/>
+                        <h1><field class="o_text_overflow" name="name" placeholder="e.g. Cheese Burger"/></h1>
                         <div name="options" groups="base.group_user">
                             <div>
                                 <field name="sale_ok"/>
@@ -45,12 +45,12 @@
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <label for="list_price"/>
+                                    <label for="list_price" class="mt-1"/>
                                     <div name="pricing">
                                       <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                       <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
-                                        groups="product.group_product_pricelist" class="oe_inline">
+                                        groups="product.group_product_pricelist" class="oe_inline btn-link pt-1">
                                         <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}"/>
                                         <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}">
                                           Extra Prices
@@ -221,7 +221,7 @@
                         <field name="id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
-                            <label class="oe_edit_only" for="name" string="Product Name"/>
+                            <label for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
                             <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
                             <p>
@@ -456,7 +456,7 @@
                             </button>
                         </div>
                         <div class="oe_title">
-                            <label for="name" string="Category name" class="oe_edit_only"/>
+                            <label for="name" string="Category"/>
                             <h1><field name="name" placeholder="e.g. Lamps"/></h1>
                         </div>
                         <group name="first" col="2">

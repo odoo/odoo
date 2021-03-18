@@ -1,50 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-
-        <!-- mail.channel.partner -->
-        <record id="mail_channel_partner_view_tree" model="ir.ui.view">
-            <field name="name">mail.channel.partner.tree</field>
-            <field name="model">mail.channel.partner</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-                <tree string="Channels">
-                    <field name="partner_id"/>
-                    <field name="channel_id"/>
-                    <field name="seen_message_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="mail_channel_partner_view_form" model="ir.ui.view">
-            <field name="name">mail.channel.partner.form</field>
-            <field name="model">mail.channel.partner</field>
-            <field name="arch" type="xml">
-                <form string="Channel">
-                    <sheet>
-                        <group>
-                            <field name="partner_id"/>
-                            <field name="channel_id"/>
-                            <field name="seen_message_id"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="mail_channel_partner_action" model="ir.actions.act_window">
-            <field name="name">Channels/Partner</field>
-            <field name="res_model">mail.channel.partner</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem name="Channels/Partner"
-            id="mail_channel_partner_menu"
-            parent="base.menu_email"
-            action="mail_channel_partner_action"
-            sequence="21"
-            groups="base.group_no_one"/>
-
         <!-- mail.channel -->
         <record id="mail_channel_view_kanban" model="ir.ui.view">
             <field name="name">mail.channel.kanban</field>
@@ -100,11 +56,9 @@
                         <div class="oe_button_box" name="button_box"/>
                         <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
                         <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name"/>
-                            </div>
+                            <label for="name" string="Group Name"/>
                             <h1>
-                                #<field name="name" default_focus="1" placeholder="Name" readonly="0"/>
+                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="0"/>
                             </h1>
                         </div>
                         <group class="o_label_nowrap">
@@ -192,35 +146,11 @@
             <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>
 
-        <!-- settings !-->
-        <menuitem id="mail_channel_menu_settings" parent="base.menu_email" sequence="20"
-            name="Channels" action="mail_channel_action_view"
-            groups="base.group_no_one"/>
-
     <record id="action_discuss" model="ir.actions.client">
         <field name="name">Discuss</field>
         <field name="tag">mail.widgets.discuss</field>
         <field name="res_model">mail.channel</field>
         <field name="params" eval="&quot;{ 'default_active_id': 'mail.box_inbox' }&quot;"/>
-    </record>
-
-    <menuitem
-        id="mail.menu_root_discuss"
-        name="Discuss"
-        action="action_discuss"
-        web_icon="mail,static/description/icon.png"
-        groups="base.group_user"
-        sequence="1"
-    />
-
-    <!--
-        This menuitem will be activated by integrations modules (like github, twitter, ...). It
-        is a hook to ease other modules to plug into mail.
-    -->
-    <record id="mail.mail_channel_integrations_menu" model="ir.ui.menu">
-        <field name="name">Integrations</field>
-        <field name="parent_id" ref="mail.menu_root_discuss"></field>
-        <field name="active" eval="False"></field>
     </record>
 
     </data>

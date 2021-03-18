@@ -30,6 +30,24 @@
         </div>
     </t>
 
+    <t t-name="hr_holidays.dashboard_calendar_header_mobile">
+        <t t-set="need_allocation" t-value="timeoff[2] !== 'no'"/>
+        <span class="pull-right">
+            <span>
+                <t t-if="need_allocation">
+                    <strong t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_green"/> / <span t-esc="timeoff[1]['max_leaves']"/>
+                    <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t><span class="o_timeoff_green ml-2">Available </span>
+                </t>
+                <t t-else="">
+                    <strong t-esc="timeoff[1]['virtual_leaves_taken']"/> <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t><span class="o_timeoff_purple ml-2">Taken</span>
+                </t>
+            </span>
+            <span t-if="need_allocation">
+                <t t-if="timeoff[3]"> (Expire on <span t-esc="moment(timeoff[3]).format('L')"/>)</t>
+            </span>
+        </span>
+    </t>
+
     <t t-name="hr_holidays.dashboard.calendar.button">
         <button class="btn btn-primary btn-time-off" type="button">
             <t t-esc="time_off"/>
@@ -72,6 +90,20 @@
             <div class="card-footer border-top" t-if="widget.canEdit or widget.canDelete">
                 <a t-if="widget.canEdit" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
                 <a t-if="widget.canDelete" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="hr_holidays.calendar.sidebar.nofilter">
+        <div class="o_calendar_filter" id="o_calendar_filter_no_data">
+            <h5 t-esc="title"/>
+            <div class="o_calendar_filter_items">
+                <div class="w-100 position-relative mb-2">
+                    <p class="d-flex align-items-center m-0">
+                        <t t-if="description" t-esc="description"/>
+                        <t t-else=""></t>
+                    </p>
+                </div>
             </div>
         </div>
     </t>

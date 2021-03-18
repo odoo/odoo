@@ -2,11 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user
+<<<<<<< HEAD
 from odoo.tests.common import SavepointCase
+=======
+from odoo.tests.common import TransactionCase
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 from odoo.exceptions import AccessError, UserError
 
 
-class TestEditableQuant(SavepointCase):
+class TestEditableQuant(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestEditableQuant, cls).setUpClass()
@@ -220,3 +224,33 @@ class TestEditableQuant(SavepointCase):
         # Try to write on quant with permission
         quant.with_user(user_admin).write({'inventory_quantity': 8})
         self.assertEqual(quant.quantity, 8)
+
+    def test_sn_warning(self):
+        """ Checks that a warning is given when reusing an existing SN
+        in inventory mode.
+        """
+
+        sn1 = self.env['stock.production.lot'].create({
+            'name': 'serial1',
+            'product_id': self.product_tracked_sn.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.Quant.create({
+            'product_id': self.product_tracked_sn.id,
+            'location_id': self.room1.id,
+            'inventory_quantity': 1,
+            'lot_id': sn1.id
+        })
+
+        dupe_sn = self.Quant.create({
+            'product_id': self.product_tracked_sn.id,
+            'location_id': self.room2.id,
+            'inventory_quantity': 1,
+            'lot_id': sn1.id
+        })
+
+        warning = False
+        warning = dupe_sn._onchange_serial_number()
+        self.assertTrue(warning, 'Reuse of existing serial number not detected')
+        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')

@@ -19,7 +19,7 @@ odoo.define('web.test_utils_create', function (require) {
     const DebugManager = require('web.DebugManager.Backend');
     const dom = require('web.dom');
     const makeTestEnvironment = require('web.test_env');
-    const ActionModel = require('web/static/src/js/views/action_model.js');
+    const ActionModel = require('web.ActionModel');
     const Registry = require('web.Registry');
     const testUtilsMock = require('web.test_utils_mock');
     const Widget = require('web.Widget');
@@ -374,6 +374,8 @@ odoo.define('web.test_utils_create', function (require) {
      *   after this method returns
      * @param {Boolean} [params.doNotDisableAHref=false] will not preventDefault on the A elements of the view if true.
      *    Default is false.
+     * @param {Boolean} [params.touchScreen=false] will add the o_touch_device to the webclient (flag used to define a
+     *   device with a touch screen. Default value is false
      * @returns {Promise<AbstractController>} the instance of the view
      */
     async function createView(params) {
@@ -381,7 +383,7 @@ odoo.define('web.test_utils_create', function (require) {
         const widget = new Widget();
         // reproduce the DOM environment of views
         const webClient = Object.assign(document.createElement('div'), {
-            className: 'o_web_client',
+            className: params.touchScreen ? 'o_web_client o_touch_device' : 'o_web_client',
         });
         const actionManager = Object.assign(document.createElement('div'), {
             className: 'o_action_manager',
@@ -401,6 +403,7 @@ odoo.define('web.test_utils_create', function (require) {
         const defaultAction = {
             res_model: modelName,
             context: {},
+            type: 'ir.actions.act_window',
         };
         const viewOptions = Object.assign({
             action: Object.assign(defaultAction, params.action),

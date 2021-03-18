@@ -114,7 +114,12 @@ class SaleOrder(models.Model):
         """ Returns the sale order lines that are not reward lines.
             It will also return reward lines being free product lines. """
         free_reward_product = self.env['coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
-        return self.order_line.filtered(lambda x: not x.is_reward_line or x.product_id in free_reward_product)
+        return self.order_line.filtered(lambda x: not x._is_not_sellable_line() or x.product_id in free_reward_product)
+
+    def _get_base_order_lines(self, program):
+        """ Returns the sale order lines not linked to the given program.
+        """
+        return self.order_line.filtered(lambda x: not x._is_not_sellable_line() or (x.is_reward_line and x.product_id != program.discount_line_product_id))
 
     def _get_base_order_lines(self, program):
         """ Returns the sale order lines not linked to the given program.
@@ -131,7 +136,7 @@ class SaleOrder(models.Model):
 
     def _get_cheapest_line(self):
         # Unit prices tax included
-        return min(self.order_line.filtered(lambda x: not x.is_reward_line and x.price_reduce > 0), key=lambda x: x['price_reduce'])
+        return min(self.order_line.filtered(lambda x: not x._is_not_sellable_line() and x.price_reduce > 0), key=lambda x: x['price_reduce'])
 
     def _get_reward_values_discount_percentage_per_line(self, program, line):
         discount_amount = line.product_uom_qty * line.price_reduce * (program.discount_percentage / 100)
@@ -250,7 +255,7 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
+        template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for order in self:
                 for coupon in order.generated_coupon_ids:
@@ -469,6 +474,9 @@ class SaleOrderLine(models.Model):
 
     is_reward_line = fields.Boolean('Is a program reward line')
 
+    def _is_not_sellable_line(self):
+        return self.is_reward_line or super()._is_not_sellable_line()
+
     def unlink(self):
         related_program_lines = self.env['sale.order.line']
         # Reactivate coupons related to unlinked reward line
@@ -512,9 +520,11 @@ class SaleOrderLine(models.Model):
         if 'product_id' in fnames:
             Program = self.env['coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
+            field_total_order_count = Program._fields['total_order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
+            programs |= self.env.cache.get_records(Program, field_total_order_count)
             if programs:
                 products = self.filtered('is_reward_line').mapped('product_id')
                 for program in programs:
                     if program.discount_line_product_id in products:
-                        self.env.cache.invalidate([(field_order_count, program.ids)])
+                        self.env.cache.invalidate([(field_order_count, program.ids), (field_total_order_count, program.ids)])

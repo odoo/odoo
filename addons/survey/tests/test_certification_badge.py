@@ -17,7 +17,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
             'certification': True,
-            'state': 'open',
         })
 
         self.certification_survey_2 = self.env['survey.survey'].with_user(self.survey_manager).create({
@@ -26,7 +25,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
             'certification': True,
-            'state': 'open',
         })
 
         self.certification_badge = self.env['gamification.badge'].with_user(self.survey_manager).create({
@@ -65,40 +63,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
         self.assertTrue(self.certification_survey.active)
         self.assertTrue(self.certification_badge.active)
 
-    def test_give_badge_without_badge(self):
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(IntegrityError):
-                self.certification_survey.write({'certification_give_badge': True})
-                self.certification_survey.flush(['certification_give_badge'])
-
-    def test_remove_badge_with_give_badge(self):
-        self.certification_survey.write({
-            'certification_give_badge': True,
-            'certification_badge_id': self.certification_badge.id
-        })
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(IntegrityError):
-                self.certification_survey.write({'certification_badge_id': None})
-                self.certification_survey.flush(['certification_badge_id'])
-
-    def test_remove_badge_with_give_badge_multi(self):
-        self.certification_survey.write({
-            'certification_give_badge': True,
-            'certification_badge_id': self.certification_badge.id
-        })
-        self.certification_survey_2.write({
-            'certification_give_badge': True,
-            'certification_badge_id': self.certification_badge_2.id
-        })
-        surveys = self.env['survey.survey'].browse([
-            self.certification_survey.id,
-            self.certification_survey_2.id
-        ])
-        with mute_logger('odoo.sql_db'):
-            with self.assertRaises(IntegrityError):
-                surveys.write({'certification_badge_id': None})
-                surveys.flush(['certification_badge_id'])
-
     def test_set_same_badge_on_multiple_survey(self):
         self.certification_survey.write({
             'certification_give_badge': True,
@@ -114,6 +78,7 @@ class TestCertificationBadge(common.TestSurveyCommon):
                 self.certification_survey.flush()
 
     def test_badge_configuration(self):
+        """ Test badge synchronization """
         # add a certification badge on a new survey
         challenge = self.env['gamification.challenge'].search([('reward_id', '=', self.certification_badge.id)])
         self.assertEqual(len(challenge), 0, """A challenge should not exist or be linked to the certification badge 
@@ -166,6 +131,13 @@ class TestCertificationBadge(common.TestSurveyCommon):
         self.assertEqual(len(goal), 1,
             "A goal should be created if the certification badge is activated on a certification survey")
 
+        # If 'certification_give_badge' is True but no certification badge is linked, ValueError should be raised
+        duplicate_survey = self.certification_survey.copy()
+        self.assertFalse(duplicate_survey.certification_give_badge, "Value for field 'certification_give_badge' should not be copied")
+        self.assertEqual(duplicate_survey.certification_badge_id, self.env['gamification.badge'], "Badge should be empty")
+        with self.assertRaises(ValueError):
+            duplicate_survey.write({'certification_give_badge': True})
+
     def test_certification_badge_access(self):
         self.certification_badge.with_user(self.survey_manager).write(
             {'description': "Spoiler alert: I'm Aegon Targaryen and I sleep with the Dragon Queen, who is my aunt by the way! So I can do whatever I want! Even if I know nothing!"})
@@ -186,7 +158,6 @@ class TestCertificationBadge(common.TestSurveyCommon):
             'certification': True,
             'certification_give_badge': True,
             'certification_badge_id': self.certification_badge.id,
-            'state': 'open'
         }
         survey_1 = self.env['survey.survey'].create(vals.copy())
         vals.update({'certification_badge_id': self.certification_badge_2.id})

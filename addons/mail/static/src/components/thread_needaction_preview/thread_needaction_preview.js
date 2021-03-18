@@ -79,11 +79,11 @@ class ThreadNeedactionPreview extends Component {
      *
      * @returns {string}
      */
-    get inlineLastNeedactionMessageBody() {
-        if (!this.thread.lastNeedactionMessage) {
+    get inlineLastNeedactionMessageAsOriginThreadBody() {
+        if (!this.thread.lastNeedactionMessageAsOriginThread) {
             return '';
         }
-        return mailUtils.htmlToTextContentInline(this.thread.lastNeedactionMessage.prettyBody);
+        return mailUtils.htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
     }
 
     /**

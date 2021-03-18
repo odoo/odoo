@@ -10,7 +10,7 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     """,
     'version': '1.0',
     'category': 'Website/Website',
-    'depends': ['website', 'mass_mailing'],
+    'depends': ['website', 'mass_mailing', 'google_recaptcha'],
     'data': [
         'security/ir.model.access.csv',
         'views/website_mass_mailing_templates.xml',

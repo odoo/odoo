@@ -39,8 +39,13 @@ QUnit.test('should open chat window on send chat request to website visitor', as
     assert.expect(3);
 
     this.data['website.visitor'].records.push({
+<<<<<<< HEAD
         id: 11,
         name: "Visitor #11",
+=======
+        display_name: "Visitor #11",
+        id: 11,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
     });
     await this.start({
         data: this.data,

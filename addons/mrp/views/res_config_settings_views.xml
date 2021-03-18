@@ -53,6 +53,15 @@
                                     <div class="text-muted">
                                         Add quality checks to your work orders
                                     </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
+                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
+                                        <div class="col pl-0">
+                                            <label for="module_quality_control_worksheet"/>
+                                            <div class="text-muted">
+                                                Create customizable worksheets for your quality checks
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-12 o_setting_box" id="mrp_lock" title="Makes confirmed manufacturing orders locked rather than unlocked by default. This only applies to new manufacturing orders, not previously created ones.">

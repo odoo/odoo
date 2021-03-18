@@ -180,11 +180,14 @@ class Forum(models.Model):
     def _set_default_faq(self):
         self.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": self}).decode('utf-8')
 
-    @api.model
-    def create(self, values):
-        res = super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
-        res._set_default_faq()  # will trigger a write and call update_website_count
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        forums = super(
+            Forum,
+            self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)
+        ).create(vals_list)
+        forums._set_default_faq()  # will trigger a write and call update_website_count
+        return forums
 
     def write(self, vals):
         if 'privacy' in vals:
@@ -724,10 +727,13 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_enough_karma(self):
         for post in self:
             if not post.can_unlink:
                 raise AccessError(_('%d karma required to unlink a post.', post.karma_unlink))
+
+    def unlink(self):
         # if unlinking an answer with accepted answer: remove provided karma
         for post in self:
             if post.is_correct:

@@ -338,6 +338,7 @@ return AbstractRenderer.extend({
                     r_end: fc4Event.extendedProps.r_end && moment(fc4Event.extendedProps.r_end).utcOffset(0, true),
                     record: fc4Event.extendedProps.record,
                     attendees: fc4Event.extendedProps.attendees,
+                    disableQuickCreate: fc4Event.extendedProps.disableQuickCreate,
                 });
             }
         }
@@ -375,6 +376,20 @@ return AbstractRenderer.extend({
             return field_utils.format[field.type](record[fieldName], field, {forceString: true});
         }
     },
+    _preOpenCreate: function (data) {
+        if (this.$('.o_cw_popover').length) {
+            this._unselectEvent();
+        }
+        if (this.state.context.default_name) {
+            data.title = this.state.context.default_name;
+        }
+        this.trigger_up('openCreate', this._convertEventToFC3Event(data));
+        if (this.state.scale === 'year') {
+            this.calendar.view.unselect();
+        } else {
+            this.calendar.unselect();
+        }
+    },
     /**
      * Return the Object options for FullCalendar
      *
@@ -405,7 +420,7 @@ return AbstractRenderer.extend({
                 eventClickInfo.jsEvent.stopPropagation();
                 var eventData = eventClickInfo.event;
                 self._unselectEvent();
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
+                $(self.calendarElement).find(`[data-event-id=${eventData.id}]`).addClass('o_cw_custom_highlight');
                 self._renderEventPopover(eventData, $(eventClickInfo.el));
             },
             yearDateClick: function (info) {
@@ -427,20 +442,8 @@ return AbstractRenderer.extend({
                 }
             },
             select: function (selectionInfo) {
-                // Clicking on the view, dispose any visible popover. Otherwise create a new event.
-                if (self.$('.o_cw_popover').length) {
-                    self._unselectEvent();
-                }
                 var data = {start: selectionInfo.start, end: selectionInfo.end, allDay: selectionInfo.allDay};
-                if (self.state.context.default_name) {
-                    data.title = self.state.context.default_name;
-                }
-                self.trigger_up('openCreate', self._convertEventToFC3Event(data));
-                if (self.state.scale === 'year') {
-                    self.calendar.view.unselect();
-                } else {
-                    self.calendar.unselect();
-                }
+                self._preOpenCreate(data);
             },
             eventRender: function (info) {
                 var event = info.event;
@@ -503,20 +506,20 @@ return AbstractRenderer.extend({
             // The css ":hover" selector can't be used because these events
             // are rendered using multiple elements.
             eventMouseEnter: function (mouseEnterInfo) {
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseEnterInfo.event.id)).addClass('o_cw_custom_hover');
+                $(self.calendarElement).find(`[data-event-id=${mouseEnterInfo.event.id}]`).addClass('o_cw_custom_hover');
             },
             eventMouseLeave: function (mouseLeaveInfo) {
                 if (!mouseLeaveInfo.event.id) {
                     return;
                 }
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseLeaveInfo.event.id)).removeClass('o_cw_custom_hover');
+                $(self.calendarElement).find(`[data-event-id=${mouseLeaveInfo.event.id}]`).removeClass('o_cw_custom_hover');
             },
             eventDragStart: function (mouseDragInfo) {
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseDragInfo.event.id)).addClass('o_cw_custom_hover');
+                $(self.calendarElement).find(`[data-event-id=${mouseDragInfo.event.id}]`).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
             eventResizeStart: function (mouseResizeInfo) {
-                $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseResizeInfo.event.id)).addClass('o_cw_custom_hover');
+                $(self.calendarElement).find(`[data-event-id=${mouseResizeInfo.event.id}]`).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
             eventLimitClick: function () {
@@ -709,7 +712,7 @@ return AbstractRenderer.extend({
                 if (options.avatar_field) {
                     _.each(options.filters, function (filter) {
                         if (!['all', false].includes(filter.value)) {
-                            var selector = _.str.sprintf('.o_calendar_filter_item[data-value=%s]', filter.value);
+                            var selector = `.o_calendar_filter_item[data-value=${filter.value}]`;
                             sidebarFilter.$el.find(selector).popover({
                                 animation: false,
                                 trigger: 'hover',
@@ -719,7 +722,7 @@ return AbstractRenderer.extend({
                                 delay: {show: 300, hide: 0},
                                 content: function () {
                                     return $('<img>', {
-                                        src: _.str.sprintf('/web/image/%s/%s/%s', options.avatar_model, filter.value, options.avatar_field),
+                                        src: `/web/image/${options.avatar_model}/${filter.value}/${options.avatar_field}}`,
                                         class: 'mx-auto',
                                     });
                                 },

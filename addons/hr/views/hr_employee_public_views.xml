@@ -42,9 +42,9 @@
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
                             <div class="oe_title">
-                                <label for="name" class="oe_edit_only"/>
+                                <label for="name" string="Employee Name"/>
                                 <h1>
-                                    <field name="name" placeholder="Employee's Name" required="True"/>
+                                    <field name="name" placeholder="e.g. John Doe" required="True"/>
                                     <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                                 </h1>
                                 <h2>
@@ -56,10 +56,10 @@
                                     <field name="mobile_phone" widget="phone" options="{'enable_sms': false}"/>
                                     <field name="work_phone" widget="phone" options="{'enable_sms': false}"/>
                                     <field name="work_email" widget="email"/>
-                                    <field name="work_location"/>
                                 </group>
                                 <group>
                                     <field name="department_id"/>
+                                    <field name="employee_type"/>
                                     <field name="company_id" groups="base.group_multi_company"/>
                                     <field name="parent_id"/>
                                     <field name="coach_id"/>
@@ -73,6 +73,7 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
+                                            <field name="work_location_id"/>
                                         </group>
                                         <group name="managers" string="Approvers" invisible="1">
                                             <!-- overridden in other modules -->

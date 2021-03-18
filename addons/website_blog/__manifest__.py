@@ -7,10 +7,12 @@
     'sequence': 200,
     'website': 'https://www.odoo.com/page/blog-engine',
     'summary': 'Publish blog posts, announces, news',
-    'version': '1.0',
+    'version': '1.1',
     'description': "",
     'depends': ['website_mail', 'website_partner'],
     'data': [
+        'data/mail_data.xml',
+        'data/mail_templates.xml',
         'data/website_blog_data.xml',
         'views/website_blog_views.xml',
         'views/website_blog_components.xml',

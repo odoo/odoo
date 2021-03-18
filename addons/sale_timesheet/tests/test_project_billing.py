@@ -11,7 +11,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
+
         # set up
         cls.employee_tde = cls.env['hr.employee'].create({
             'name': 'Employee TDE',
@@ -75,30 +75,14 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
         cls.sale_order_2.action_confirm()
 
-        # Projects: at least one per billable type
-        Project = cls.env['project.project'].with_context(tracking_disable=True)
-        cls.project_subtask = Project.create({
-            'name': "Sub Task Project (non billable)",
-            'allow_timesheets': True,
-            'allow_billable': False,
-            'partner_id': False,
-        })
-        cls.project_non_billable = Project.create({
-            'name': "Non Billable Project",
-            'allow_timesheets': True,
-            'allow_billable': False,
-            'partner_id': False,
-            'subtask_project_id': cls.project_subtask.id,
-        })
         cls.project_task_rate = cls.env['project.project'].search([('sale_line_id', '=', cls.so2_line_deliver_project_task.id)], limit=1)
         cls.project_task_rate2 = cls.env['project.project'].search([('sale_line_id', '=', cls.so2_line_deliver_project_template.id)], limit=1)
 
-        cls.project_employee_rate = Project.create({
-            'name': "Project billed at Employee Rate",
-            'allow_timesheets': True,
-            'allow_billable': True,
-            'bill_type': 'customer_project',
-            'pricing_type': 'employee_rate',
+        cls.project_project_rate.write({
+            'sale_order_id': cls.sale_order_1.id,
+            'sale_line_id': cls.so1_line_order_no_task.id,
+        })
+        cls.project_employee_rate.write({
             'sale_order_id': cls.sale_order_1.id,
             'partner_id': cls.sale_order_1.partner_id.id,
             'subtask_project_id': cls.project_subtask.id,
@@ -120,7 +104,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         Task = self.env['project.task']
         # set a customer on the project
         self.project_non_billable.write({
-            'partner_id': self.partner_2.id
+            'partner_id': self.partner_2.id,
+            'timesheet_product_id': self.product_delivery_timesheet3,
         })
         # create a task and 2 timesheets
         task = Task.with_context(default_project_id=self.project_non_billable.id).create({
@@ -146,10 +131,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         # Change project to billable at task rate
         self.project_non_billable.write({
             'allow_billable': True,
-            'bill_type': 'customer_project',
             'pricing_type': 'fixed_rate',
         })
-        task.timesheet_product_id = self.product_delivery_timesheet3
 
         # create wizard
         wizard = self.env['project.create.sale.order'].with_context(active_id=self.project_non_billable.id, active_model='project.project').create({})
@@ -202,7 +185,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         # Change project to billable at employee rate
         self.project_non_billable.write({
             'allow_billable': True,
-            'bill_type': 'customer_project',
             'pricing_type': 'employee_rate',
         })
 
@@ -260,9 +242,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
 
         self.assertTrue(task.allow_billable, "Task in project 'employee rate' should be billable")
-        self.assertEqual(task.bill_type, 'customer_project', "Task in project 'employee rate' should be billed at employee rate")
         self.assertEqual(task.pricing_type, 'employee_rate', "Task in project 'employee rate' should be billed at employee rate")
-        self.assertFalse(task.sale_line_id, "Task created in a project billed on 'employee rate' should not be linked to a SOL")
+        self.assertEqual(task.sale_line_id, self.project_employee_rate.sale_line_id, "Task created in a project billed on 'employee rate' should be linked to the SOL defined in the project.")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
         # log timesheet on task
@@ -307,7 +288,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         task._onchange_project()
 
         self.assertTrue(task.allow_billable, "Task in project 'task rate' should be billed at task rate")
-        self.assertEqual(task.sale_line_id, self.project_task_rate.sale_line_id, "Task moved in a task rate billable project")
+        self.assertEqual(task.sale_line_id, self.so2_line_deliver_project_task, "The SOL in the task should be the one that we selected")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
 
         # move subtask into task rate project
@@ -315,8 +296,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             'project_id': self.project_task_rate2.id,
         })
 
-        self.assertTrue(task.allow_billable, "Subtask should keep the billable type from its parent, even when they are moved into another project")
-        self.assertEqual(task.sale_line_id, self.project_task_rate.sale_line_id, "Subtask should keep the same sale order line than their mother, even when they are moved into another project")
+        self.assertTrue(subtask.allow_billable, "Subtask should keep the billable type from its parent, even when they are moved into another project")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "Subtask should keep the same sale order line than their mother, even when they are moved into another project")
 
         # create a second task in employee rate project
         task2 = Task.with_context(default_project_id=self.project_employee_rate.id).create({
@@ -364,8 +345,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
         task._onchange_project()
 
-        self.assertEqual(task.sale_line_id, self.project_task_rate.sale_line_id, "Task created in a project billed on 'task rate' should be linked to a SOL of the project")
-        self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
+        self.assertEqual(task.sale_line_id, self.so2_line_deliver_project_task, "Task created in a project billed on 'task rate' should be linked to a SOL containing a prepaid service product and the remaining hours of this SOL should be greater than 0.")
+        self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'task rate' should have the same customer as the one from the project")
 
         # log timesheet on task
         timesheet1 = Timesheet.create({
@@ -376,7 +357,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             'employee_id': self.employee_manager.id,
         })
 
-        self.assertEqual(self.project_task_rate.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the Employee manager in the map")
+        self.assertEqual(task.sale_line_id, timesheet1.so_line, "The timesheet should be linked to the SOL associated to the task since the pricing type of the project is task rate.")
 
         # create a subtask
         subtask = Task.with_context(default_project_id=self.project_task_rate.subtask_project_id.id).create({
@@ -413,3 +394,30 @@ class TestProjectBilling(TestCommonSaleTimesheet):
 
         self.assertFalse(subtask.sale_line_id, "Subask moved in a employee rate billable project have empty so line")
         self.assertEqual(subtask.partner_id, task.project_id.partner_id, "Subask created in a project billed on 'employee rate' should have the same customer as the one from the project")
+
+    def test_customer_change_in_project(self):
+        """ Test when the user change the customer in a project
+
+            Test Case:
+            =========
+            1) Take project with pricing_type="fixed_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+            2) Take project with pricing_type="employee_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+                2.1) Check if the SOL in mapping is also equal to False
+        """
+        # 1) Take project with pricing_type="fixed_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+        self.project_project_rate.write({
+            'partner_id': self.partner_2.id,
+        })
+        self.assertFalse(self.project_project_rate.sale_order_id, "The SO in the project should be False because the previous SO does not for the actual customer of the project.")
+        self.assertFalse(self.project_project_rate.sale_line_id, "The SOL in the project should be False because the SO is removed too.")
+
+        # 2) Take project with pricing_type="employee_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+        self.project_employee_rate.write({
+            'partner_id': self.partner_2.id,
+        })
+        self.assertFalse(self.project_employee_rate.sale_order_id, "The SO in the project should be False because the previous SO does not for the actual customer of the project.")
+        self.assertFalse(self.project_employee_rate.sale_line_id, "The SOL in the project should be False because the SO is removed too.")
+
+        # 2.1) Check if the SOL in mapping is also equal to False
+        self.assertFalse(self.project_employee_rate_manager.sale_line_id, "The SOL in the mapping should be False because the actual customer in the project has not this SOL.")
+        self.assertFalse(self.project_employee_rate_user.sale_line_id, "The SOL in the mapping should be False because the actual customer in the project has not this SOL.")

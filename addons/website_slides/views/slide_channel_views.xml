@@ -55,8 +55,8 @@
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Course Title"/>
-                            <h1><field name="name" default_focus="1" placeholder="Computer Science for kids"/></h1>
+                            <label for="name" string="Course Title"/>
+                            <h1><field name="name" default_focus="1" placeholder="e.g. Computer Science for kids"/></h1>
                         </div>
                         <div>
                             <field name="active" invisible="1"/>
@@ -89,7 +89,6 @@
                             <page name="options" string="Options">
                                 <group>
                                     <group name="course" string="Course">
-                                        <field string="Type" name="channel_type" widget="radio"/>
                                         <field name="user_id" domain="[('share', '=', False)]"/>
                                         <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                     </group>
@@ -102,10 +101,12 @@
                                 <group>
                                     <group name="communication" string="Communication">
                                         <field string="Allow Rating" name="allow_comment"/>
-                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
                                         <field name="share_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="completed_template_id"/>
                                     </group>
                                     <group name="display" string="Display">
+                                        <field string="Display" name="channel_type" widget="radio"/>
                                         <field name="visibility" widget="radio"/>
                                         <field name="promote_strategy" widget="radio"
                                         attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
@@ -214,20 +215,26 @@
                                     <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v" aria-hidden="false"/>
                                     </a>
-                                    <div class="dropdown-menu" role="menu">
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
-                                        <t t-if="widget.deletable">
-                                            <a class="dropdown-item" role="menuitem" type="delete">Delete</a>
-                                        </t>
-                                        <a class="dropdown-item" role="menuitem" type="edit">
-                                            Edit
-                                        </a>
-                                        <a class="dropdown-item" name="action_view_slides" role="menuitem" type="object">
-                                            Lessons
-                                        </a>
-                                        <a class="dropdown-item" name="action_channel_invite" role="menuitem" type="object">
-                                            Invite
-                                        </a>
+                                    <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                        <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                                            <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                        </div>
+                                        <div class="o_kanban_slides_card_manage_pane">
+                                            <t t-if="widget.deletable">
+                                                <div role="menuitem">
+                                                    <a class="dropdown-item" type="delete">Delete</a>
+                                                </div>
+                                            </t>
+                                            <div role="menuitem">
+                                                <a type="edit">Edit</a>
+                                            </div>
+                                            <div role="menuitem">
+                                                <a name="action_view_slides" type="object">Lessons</a>
+                                            </div>
+                                            <div role="menuitem" name="action_channel_invite">
+                                                <a name="action_channel_invite" type="object">Invite</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="o_kanban_card_header">
@@ -238,7 +245,7 @@
                                             </a>
                                         </div>
                                         <div t-if="record.tag_ids">
-                                            <field name="tag_ids" widget="many2many_tags"/>
+                                            <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
                                         </div>
                                     </div>
                                 </div>

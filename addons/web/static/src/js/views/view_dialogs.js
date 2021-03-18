@@ -1,12 +1,11 @@
-odoo.define('web.view_dialogs', function (require) {
-"use strict";
+/** @odoo-module alias=web.view_dialogs **/
 
-var config = require('web.config');
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var dom = require('web.dom');
-var view_registry = require('web.view_registry');
-var select_create_controllers_registry = require('web.select_create_controllers_registry');
+import config from 'web.config';
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import dom from 'web.dom';
+import view_registry from 'web.view_registry';
+import select_create_controllers_registry from 'web.select_create_controllers_registry';
 
 var _t = core._t;
 
@@ -467,9 +466,7 @@ var SelectCreateDialog = ViewDialog.extend({
     },
 });
 
-return {
+export default {
     FormViewDialog: FormViewDialog,
     SelectCreateDialog: SelectCreateDialog,
 };
-
-});

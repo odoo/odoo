@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestRecipients
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
 
 
-class TestSMSComposerComment(TestMailFullCommon, TestRecipients):
+class TestSMSComposerComment(TestMailFullCommon, TestMailFullRecipients):
     """ TODO LIST
 
      * add test for default_res_model / default_res_id and stuff like that;

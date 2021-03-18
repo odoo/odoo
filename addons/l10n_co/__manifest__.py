@@ -10,6 +10,7 @@
 
 {
     'name': 'Colombia - Accounting',
+    'icon': '/base/static/img/country_flags/co.png',
     'version': '0.8',
     'category': 'Accounting/Localizations/Account Charts',
     'description': 'Colombian Accounting and Tax Preconfiguration',

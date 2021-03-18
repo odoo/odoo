@@ -67,6 +67,7 @@
         <field name="target">current</field>
     </record>
 
-    <menuitem id="purchase_report" name="Reporting" parent="purchase.menu_purchase_root" sequence="99" groups="purchase.group_purchase_manager" action="action_purchase_order_report_all"/>
+    <menuitem id="purchase_report_main" name="Reporting" parent="purchase.menu_purchase_root" sequence="99" groups="purchase.group_purchase_manager"/>
+    <menuitem id="purchase_report" name="Purchase" parent="purchase.purchase_report_main" sequence="99" groups="purchase.group_purchase_manager" action="action_purchase_order_report_all"/>
 
 </odoo>

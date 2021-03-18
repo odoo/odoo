@@ -30,6 +30,7 @@ MockServer.include({
                 const visitor = this._getRecords('website.visitor', [['id', '=', channelInfo.livechat_visitor_id]])[0];
                 const country = this._getRecords('res.country', [['id', '=', visitor.country_id]])[0];
                 channelInfo.visitor = {
+<<<<<<< HEAD
                     name: visitor.display_name,
                     country_code: country && country.code,
                     country_id: country && country.id,
@@ -38,6 +39,16 @@ MockServer.include({
                     website: visitor.website,
                     lang: visitor.lang,
                     partner_id: visitor.partner_id,
+=======
+                    country_code: country && country.code,
+                    country_id: country && country.id,
+                    display_name: visitor.display_name,
+                    history: visitor.history, // TODO should be computed
+                    is_connected: visitor.is_connected,
+                    lang_name: visitor.lang_name,
+                    partner_id: visitor.partner_id,
+                    website_name: visitor.website_name,
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                 }
             }
         }

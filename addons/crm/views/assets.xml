@@ -7,7 +7,11 @@
             <script type="text/javascript" src="/crm/static/src/js/systray_activity_menu.js"/>
             <script type="text/javascript" src="/crm/static/src/js/tours/crm.js"></script>
         </xpath>
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/crm/static/src/scss/crm_team_member_views.scss"></link>
+        </xpath>
     </template>
+
     <template id="assets_tests" name="CRM Assets Tests" inherit_id="web.assets_tests">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/crm/static/tests/tours/crm_rainbowman.js"></script>

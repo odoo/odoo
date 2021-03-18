@@ -47,9 +47,8 @@ var PortalComposer = publicWidget.Widget.extend({
         this.$attachmentButton = this.$('.o_portal_chatter_attachment_btn');
         this.$fileInput = this.$('.o_portal_chatter_file_input');
         this.$sendButton = this.$('.o_portal_chatter_composer_btn');
-        this.$attachments = this.$('.o_portal_chatter_composer_form .o_portal_chatter_attachments');
-        this.$attachmentIds = this.$('.o_portal_chatter_attachment_ids');
-        this.$attachmentTokens = this.$('.o_portal_chatter_attachment_tokens');
+        this.$attachments = this.$('.o_portal_chatter_composer_input .o_portal_chatter_attachments');
+        this.$inputTextarea = this.$('.o_portal_chatter_composer_input textarea[name="message"]');
 
         return this._super.apply(this, arguments).then(function () {
             if (self.options.default_attachment_ids) {
@@ -139,15 +138,31 @@ var PortalComposer = publicWidget.Widget.extend({
         });
     },
     /**
-     * Returns a Promise that is never resolved to prevent sending the form
-     * twice when clicking twice on the button, in combination with the `async`
-     * in the event definition.
+     * prepares data to send message
      *
      * @private
-     * @returns {Promise}
      */
-    _onSubmitButtonClick: function () {
-        return new Promise(function (resolve, reject) {});
+    _prepareMessageData: function () {
+        return Object.assign(this.options || {}, {
+            'message': this.$('textarea[name="message"]').val(),
+            'attachment_ids': _.pluck(this.attachments, 'id'),
+            'attachment_tokens': _.pluck(this.attachments, 'access_token'),
+        });
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onSubmitButtonClick: function (ev) {
+        ev.preventDefault();
+        if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
+            this.$inputTextarea.addClass('border-danger');
+            const error = _t('Some fields are required. Please make sure to write a message or attach a document');
+            this.$(".o_portal_chatter_composer_error").text(error).removeClass('d-none');
+            return Promise.reject();
+        } else {
+            return this._chatterPostMessage(ev.currentTarget.getAttribute('data-action'));
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -158,12 +173,25 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      */
     _updateAttachments: function () {
-        this.$attachmentIds.val(_.pluck(this.attachments, 'id'));
-        this.$attachmentTokens.val(_.pluck(this.attachments, 'access_token'));
         this.$attachments.html(qweb.render('portal.Chatter.Attachments', {
             attachments: this.attachments,
             showDelete: true,
         }));
+    },
+    /**
+     * post message using rpc call and display new message and message count
+     *
+     * @private
+     * @param {String} route
+     * @returns {Promise}
+     */
+    _chatterPostMessage: async function (route) {
+        const result = await this._rpc({
+            route: route,
+            params: this._prepareMessageData(),
+        });
+        core.bus.trigger('reload_chatter_content', result);
+        return result;
     },
 });
 

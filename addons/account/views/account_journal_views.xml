@@ -26,8 +26,8 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" class="oe_inline"/></h1>
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Customer Invoices"/></h1>
                         </div>
                         <group>
                             <group>
@@ -42,7 +42,7 @@
                         <notebook>
                             <page name="bank_account" string="Journal Entries">
                                 <group>
-                                    <group string="Accounting information">
+                                    <group string="Accounting Information">
                                         <field name="default_account_type" invisible="1"/>
                                         <!-- Bank -->
                                         <field name="default_account_id" string="Bank Account"
@@ -67,7 +67,11 @@
                                                attrs="{'required': [('type', '=', 'purchase')], 'invisible': [('type', '!=', 'purchase')]}"
                                                groups="account.group_account_readonly"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
+<<<<<<< HEAD
                                         <field name="code"/>
+=======
+                                        <field name="code" placeholder="e.g. INV"/>
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                     <group string="Bank Account Number" attrs="{'invisible': [('type', '!=', 'bank')]}">

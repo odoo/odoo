@@ -40,7 +40,8 @@ class IrAttachment(models.Model):
                 if attachment.url:
                     # For attachments-by-url, unique is used as a cachebuster. They
                     # currently do not leverage max-age headers.
-                    attachment.image_src = '%s?unique=%s' % (attachment.url, unique)
+                    separator = '&' if '?' in attachment.url else '?'
+                    attachment.image_src = '%s%sunique=%s' % (attachment.url, separator, unique)
                 else:
                     name = url_quote(attachment.name)
                     attachment.image_src = '/web/image/%s-%s/%s' % (attachment.id, unique, name)

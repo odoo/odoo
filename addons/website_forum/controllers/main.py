@@ -90,9 +90,6 @@ class WebsiteForum(WebsiteProfile):
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, sitemap=sitemap_forum)
     def questions(self, forum, tag=None, page=1, filters='all', my=None, sorting=None, search='', **post):
-        if not forum.can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
         Post = request.env['forum.post']
 
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active'), ('can_view', '=', True)]
@@ -157,6 +154,7 @@ class WebsiteForum(WebsiteProfile):
             'edit_in_backend': not tag,
             'question_ids': question_ids,
             'question_count': question_count,
+            'search_count': question_count,
             'pager': pager,
             'tag': tag,
             'filters': filters,

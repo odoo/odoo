@@ -361,10 +361,21 @@ class IrModuleModule(models.Model):
         self._theme_upgrade_upstream()
 
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
+<<<<<<< HEAD
         if active_todo:
             return active_todo.action_launch()
         else:
             return website.button_go_website(mode_edit=True)
+=======
+        result = None
+        if active_todo:
+            result = active_todo.action_launch()
+        else:
+            result = website.button_go_website(mode_edit=True)
+        if result.get('url') and 'enable_editor' in result['url']:
+            result['url'] = result['url'].replace('enable_editor', 'with_loader=1&enable_editor')
+        return result
+>>>>>>> 3f1a31c4986257cd313d11b42d8a60061deae729
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""

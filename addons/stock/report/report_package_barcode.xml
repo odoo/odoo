@@ -13,9 +13,8 @@
                               <h1 t-field="o.name" class="mt0 float-left"/>
                             </th>
                             <th name="td_pk_barcode" style="text-align: center">
-                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" alt="Barcode"
-                                  style="width:300px;height:50px"/>
-                                  <p t-field="o.name"/>
+                                <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}"/>
+                                <p t-field="o.name"/>
                             </th>
                         </tr>
                     </table>
@@ -66,7 +65,7 @@
                     <div class="oe_structure"/>
                     <div class="row">
                         <div class="col-12 text-center">
-                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:600px;height:100px" alt="Barcode"/>
+                            <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}"/>
                             <p t-field="o.name"  style="font-size:20px;"></p>
                         </div>
                     </div>

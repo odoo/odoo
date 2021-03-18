@@ -4,7 +4,7 @@
 from odoo.tests import common
 
 
-class TestFiscalPosition(common.SavepointCase):
+class TestFiscalPosition(common.TransactionCase):
     """Tests for fiscal positions in auto apply (account.fiscal.position).
     If a partner has a vat number, the fiscal positions with "vat_required=True"
     are preferred.

@@ -2,15 +2,9 @@
 <odoo>
 
 <template id="s_products_recently_viewed" name="Viewed Products">
-    <section class="s_wsale_products_recently_viewed d-none pt24 pb24" style="min-height: 400px;">
+    <section class="s_wsale_products_recently_viewed o_snippet_invisible pt24 pb24 d-none" style="min-height: 400px;">
         <div class="container">
-            <div class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_non_editable_mode_hidden o_not_editable">
-                This is a preview of the recently viewed products by the user.<br/>
-                Once the user has seen at least one product this snippet will be visible.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> × </button>
-            </div>
-
-            <h3 class="text-center mb32">Recently viewed Products</h3>
+            <h3 class="text-center mb32">Recently Viewed Products</h3>
             <div class="slider o_not_editable"/>
         </div>
     </section>
@@ -106,6 +100,8 @@
                         data-no-preview="true"
                         data-reload="/"/>
         </div>
+
+        <div data-js="ProductsRecentlyViewed" data-selector=".s_wsale_products_recently_viewed"/>
     </xpath>
 </template>
 

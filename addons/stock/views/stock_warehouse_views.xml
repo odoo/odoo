@@ -15,33 +15,31 @@
                                     type="object"/>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Central Warehouse"/></h1>
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
-                                <field name="code"/>
+                                <field name="code" placeholder="e.g. CW"/>
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 <field name="partner_id"/>
                             </group>
                         </group>
-                        <notebook colspan="4" groups="stock.group_adv_location">
+                        <notebook colspan="4" groups="stock.group_adv_location,stock.group_stock_multi_warehouses">
                             <page string="Warehouse Configuration" name="warehouse_config" colspan="4">
                                 <group colspan="4">
-                                    <group string="Shipments">
+                                    <group string="Shipments" groups="stock.group_adv_location">
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                     </group>
-                                    <field name="show_resupply" invisible="1"/>
-                                    <group name="group_resupply" string="Resupply" attrs="{'invisible': [('show_resupply', '!=', True)]}">
-                                        <field name="warehouse_count" invisible="1"/>
-                                        <field name="resupply_wh_ids" attrs="{'invisible': [('show_resupply', '!=', True)]}" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                    <group name="group_resupply" string="Resupply" groups="stock.group_stock_multi_warehouses">
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget="many2many_checkboxes" groups="stock.group_stock_multi_warehouses"/>
                                     </group>
                                 </group>
                             </page>
-                            <page string="Technical Information" name="technical_info" groups='base.group_no_one'>
+                            <page string="Technical Information" name="technical_info" groups="base.group_no_one">
                                 <group>
                                     <group string="Locations">
                                         <field name="view_location_id" string="Warehouse view location" readonly="1" required="0"/>

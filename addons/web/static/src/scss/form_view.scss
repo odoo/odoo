@@ -5,6 +5,9 @@
         padding-left: $o-horizontal-padding*2;
     }
 }
+@mixin o-form-nosheet-inner-left-padding {
+    padding-left: $o-horizontal-padding;
+}
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
     @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
@@ -20,6 +23,17 @@
         margin-right: -$o-horizontal-padding*2;
     }
 }
+@mixin o-form-nosheet-negative-margin {
+    margin-left: -$o-horizontal-padding;
+    margin-right: -$o-horizontal-padding;
+}
+
+@mixin o-td-label-style {
+    width: 0%;
+    padding: 0 15px 0 0;
+    min-width: 150px;
+}
+$o-form-label-margin-right: 0px;
 
 .o_form_view {
     background-color: $o-view-background-color;
@@ -54,34 +68,32 @@
         float: right!important;
     }
 
-    @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
-        .o_row {
-            &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
-                display: flex;
-                width: auto!important;
-            }
+    .o_row {
+        &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
+            display: flex;
+            width: auto!important;
+        }
 
-            align-items: baseline;
-            min-width: 50px;
-            margin: 0 (-$o-form-spacing-unit/2);
+        align-items: baseline;
+        min-width: 50px;
+        margin: 0 (-$o-form-spacing-unit/2);
 
-            > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
-                flex: 0 0 auto;
-                width: auto!important;
-                margin-right: $o-form-spacing-unit/2;
-                margin-left: $o-form-spacing-unit/2;
-            }
+        > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
+            flex: 0 0 auto;
+            width: auto!important;
+            margin-right: $o-form-spacing-unit/2;
+            margin-left: $o-form-spacing-unit/2;
+        }
 
-            > .o_row {
-                margin: 0;
-            }
-            > .btn {
-                padding-top: 0;
-                padding-bottom: 0;
-            }
-            > .o_field_boolean {
-                align-self: center;
-            }
+        > .o_row {
+            margin: 0;
+        }
+        > .btn {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        > .o_field_boolean {
+            align-self: center;
         }
     }
 
@@ -99,6 +111,10 @@
             &, & > div {
                 display: inline-block;
             }
+        }
+
+        .o_quick_editable:not(.o_form_uri) {
+            cursor: default;
         }
     }
 
@@ -132,16 +148,18 @@
             max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
         }
 
-        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
-            .o_row {
-                > .o_field_widget, > div {
-                    flex: 1 1 auto;
-                    width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
+        .o_field_x2many .o_list_table .o_handle_cell .o_row_handle {
+            padding: 0.3rem;
+        }
 
-                    &.o_field_boolean, &.o_priority {
-                        flex: 0 0 auto;
-                        width: auto!important;
-                    }
+        .o_row {
+            > .o_field_widget, > div {
+                flex: 1 1 auto;
+                width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
+
+                &.o_field_boolean, &.o_priority {
+                    flex: 0 0 auto;
+                    width: auto!important;
                 }
             }
         }
@@ -154,6 +172,9 @@
 
         .o_form_statusbar {
             margin: (-$o-sheet-vpadding) (-$o-horizontal-padding) $o-sheet-vpadding (-$o-horizontal-padding);
+        }
+        .oe_button_box {
+            @include o-form-nosheet-negative-margin;
         }
     }
 
@@ -191,6 +212,10 @@
                 margin: $o-statusbar-buttons-vmargin 3px $o-statusbar-buttons-vmargin 0;
                 padding-top: 2px;
                 padding-bottom: 2px;
+
+                > .o_button_icon {
+                    margin-right: $o-statbutton-spacing;
+                }
             }
         }
 
@@ -218,17 +243,13 @@
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
                     border-left: 1px solid gray('400');
+                    &.disabled {
+                        border-color: gray('300');
+                    }
                 }
 
                 &:active {
                     box-shadow: none;
-                }
-
-                &.disabled {
-                    opacity: 1.0;
-                    color: $text-muted;
-                    pointer-events: none;
-                    border-left: 1px solid gray('300');
                 }
 
                 &:not(:first-child):before, &:not(:first-child):after {
@@ -272,6 +293,13 @@
                 }
             }
 
+            > .o_arrow_button, > .dropdown-menu > .o_arrow_button {
+                &.disabled {
+                    opacity: 1.0;
+                    color: $text-muted;
+                    pointer-events: none;
+                }
+            }
         }
 
         // Touch device mode
@@ -479,6 +507,12 @@
         .o_priority > .o_priority_star {
             font-size: inherit;
         }
+        > h1 {
+            min-height: 55px;
+        }
+        > h2 {
+            min-height: 43px;
+        }
     }
 
     // Avatar
@@ -500,6 +534,10 @@
         width: 100%;
         margin: 10px 0;
 
+        .o_group {
+            margin: 0;
+        }
+
         // o_group contains nested groups
         @for $i from 1 through $o-form-group-cols {
             .o_group_col_#{$i} {
@@ -514,9 +552,7 @@
 
             > tbody > tr > td {
                 &.o_td_label {
-                    width: 0%;
-                    padding: 0 15px 0 0;
-                    min-width: 150px;
+                    @include o-td-label-style;
                 }
                 vertical-align: top;
 
@@ -541,14 +577,16 @@
             }
         }
 
-        :not(.o_row):not(.o_data_cell) > .o_field_widget,
-        .o_row > .o_field_widget:last-child { // Note: this does not take care
-                                              // of an invisible last-child but
-                                              // it does not really matter
-            // Makes extra buttons (e.g. m2o external button) overflow on the
-            // right padding of the parent element
-            > .o_input_dropdown {
-                flex: 1 0 auto;
+        @include media-breakpoint-up(sm) {
+            :not(.o_row):not(.o_data_cell) > .o_field_widget,
+            .o_row > .o_field_widget:last-child { // Note: this does not take care
+                                                // of an invisible last-child but
+                                                // it does not really matter
+                // Makes extra buttons (e.g. m2o external button) overflow on the
+                // right padding of the parent element
+                .o_input_dropdown {
+                    flex: 1 0 auto;
+                }
             }
         }
 
@@ -558,7 +596,22 @@
 
         .o_td_label .o_form_label {
             font-weight: bold;
-            margin-right: 0px;
+            margin-right: $o-form-label-margin-right;
+        }
+    }
+
+    .o_checkbox_optional_field {
+        display: flex;
+
+        @include media-breakpoint-down(sm) {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        > .o_form_label {
+            @include o-td-label-style;
+            margin-right: $o-form-label-margin-right;
+            font-weight: bold;
         }
     }
 
@@ -597,6 +650,14 @@
         .o_field_widget {
             margin-bottom: 0px;
         }
+    }
+    .o_td_label .o_form_label:not(.o_status), .o_checkbox_optional_field > .o_form_label {
+        min-height: 33px;
+    }
+    td:not(.o_field_cell) .o_form_uri > span:first-child {
+        display: inline-block;
+        padding: 1px 0;
+        margin-bottom: 1px;
     }
 
     // Translate icon
