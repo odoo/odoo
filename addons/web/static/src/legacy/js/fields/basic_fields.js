@@ -2682,6 +2682,9 @@ var StateSelectionWidget = AbstractField.extend({
      */
     _setSelection: function (ev) {
         ev.preventDefault();
+        if (this.mode !== 'edit') {
+            ev.stopPropagation();
+        }
         var $item = $(ev.currentTarget);
         var value = String($item.data('value'));
         this._setValue(value);
