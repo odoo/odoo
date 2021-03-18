@@ -300,8 +300,9 @@ class SnailmailLetter(models.Model):
         invalid_address_letters = self - valid_address_letters
         invalid_address_letters._snailmail_print_invalid_address()
         if valid_address_letters and immediate:
-            valid_address_letters._snailmail_print_valid_address()
-        self.env.cr.commit()
+            for letter in valid_address_letters:
+                letter._snailmail_print_valid_address()
+                self.env.cr.commit()
 
     def _snailmail_print_invalid_address(self):
         error = 'MISSING_REQUIRED_FIELDS'
