@@ -4,6 +4,7 @@ odoo.define('mail/static/src/models/composer/composer.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 const mailUtils = require('mail.utils');
 
 const {
@@ -48,79 +49,11 @@ function factory(dependencies) {
         // Public
         //----------------------------------------------------------------------
 
+        /**
+         * Closes the suggestion list.
+         */
         closeSuggestions() {
-            if (this.activeSuggestedRecordName) {
-                this.update({
-                    [this.activeSuggestedRecordName]: [['unlink']],
-                });
-            }
-            if (this.extraSuggestedRecordsListName) {
-                this.update({
-                    [this.extraSuggestedRecordsListName]: [['unlink-all']],
-                });
-            }
-            if (this.mainSuggestedRecordsListName) {
-                this.update({
-                    [this.mainSuggestedRecordsListName]: [['unlink-all']],
-                });
-            }
-            this.update({
-                activeSuggestedRecordName: "",
-                extraSuggestedRecordsListName: "",
-                mainSuggestedRecordsListName: "",
-                suggestionDelimiter: "",
-            });
-        }
-
-        detectSuggestionDelimiter() {
-            if (this.textInputCursorStart !== this.textInputCursorEnd) {
-                return;
-            }
-            const lastInputChar = this.textInputContent.substring(this.textInputCursorStart - 1, this.textInputCursorStart);
-            const suggestionDelimiters = ['@', ':', '#', '/'];
-            if (suggestionDelimiters.includes(lastInputChar) && !this.hasSuggestions) {
-                this.update({ suggestionDelimiter: lastInputChar });
-            }
-            const mentionKeyword = this._validateMentionKeyword(false);
-            if (mentionKeyword !== false) {
-                switch (this.suggestionDelimiter) {
-                    case '@':
-                        this.update({
-                            activeSuggestedRecordName: "activeSuggestedPartner",
-                            extraSuggestedRecordsListName: "extraSuggestedPartners",
-                            mainSuggestedRecordsListName: "mainSuggestedPartners",
-                            suggestionModelName: "mail.partner",
-                        });
-                        this._executeOrQueueFunction(() => this._updateSuggestedPartners(mentionKeyword));
-                        break;
-                    case ':':
-                        this.update({
-                            activeSuggestedRecordName: "activeSuggestedCannedResponse",
-                            mainSuggestedRecordsListName: "suggestedCannedResponses",
-                            suggestionModelName: "mail.canned_response",
-                        });
-                        this._executeOrQueueFunction(() => this._updateSuggestedCannedResponses(mentionKeyword));
-                        break;
-                    case '/':
-                        this.update({
-                            activeSuggestedRecordName: "activeSuggestedChannelCommand",
-                            mainSuggestedRecordsListName: "suggestedChannelCommands",
-                            suggestionModelName: "mail.channel_command",
-                        });
-                        this._executeOrQueueFunction(() => this._updateSuggestedChannelCommands(mentionKeyword));
-                        break;
-                    case '#':
-                        this.update({
-                            activeSuggestedRecordName: "activeSuggestedChannel",
-                            mainSuggestedRecordsListName: "suggestedChannels",
-                            suggestionModelName: "mail.thread",
-                        });
-                        this._executeOrQueueFunction(() => this._updateSuggestedChannels(mentionKeyword));
-                        break;
-                }
-            } else {
-                this.closeSuggestions();
-            }
+            this.update({ suggestionDelimiterPosition: clear() });
         }
 
         /**
@@ -159,11 +92,19 @@ function factory(dependencies) {
                 this.textInputCursorEnd,
                 this.textInputContent.length
             );
+            let suggestionDelimiterPosition = this.suggestionDelimiterPosition;
+            if (
+                suggestionDelimiterPosition !== undefined &&
+                suggestionDelimiterPosition >= this.textInputCursorStart
+            ) {
+                suggestionDelimiterPosition = suggestionDelimiterPosition + content.length;
+            }
             this.update({
                 isLastStateChangeProgrammatic: true,
+                suggestionDelimiterPosition,
                 textInputContent: partA + content + partB,
-                textInputCursorStart: this.textInputCursorStart + content.length,
                 textInputCursorEnd: this.textInputCursorStart + content.length,
+                textInputCursorStart: this.textInputCursorStart + content.length,
             });
         }
 
@@ -171,7 +112,7 @@ function factory(dependencies) {
             const cursorPosition = this.textInputCursorStart;
             let textLeft = this.textInputContent.substring(
                 0,
-                this.textInputContent.substring(0, cursorPosition).lastIndexOf(this.suggestionDelimiter) + 1
+                this.suggestionDelimiterPosition + 1
             );
             let textRight = this.textInputContent.substring(
                 cursorPosition,
@@ -180,40 +121,32 @@ function factory(dependencies) {
             if (this.suggestionDelimiter === ':') {
                 textLeft = this.textInputContent.substring(
                     0,
-                    this.textInputContent.substring(0, cursorPosition).lastIndexOf(this.suggestionDelimiter)
+                    this.suggestionDelimiterPosition
                 );
                 textRight = this.textInputContent.substring(
                     cursorPosition,
                     this.textInputContent.length
                 );
             }
-            let recordReplacement = "";
-            switch (this.activeSuggestedRecordName) {
-                case 'activeSuggestedCannedResponse':
-                    recordReplacement = this[this.activeSuggestedRecordName].substitution;
-                    break;
-                case 'activeSuggestedChannel':
-                    recordReplacement = this[this.activeSuggestedRecordName].name;
-                    this.update({
-                        mentionedChannels: [['link', this[this.activeSuggestedRecordName]]],
-                    });
-                    break;
-                case 'activeSuggestedChannelCommand':
-                    recordReplacement = this[this.activeSuggestedRecordName].name;
-                    break;
-                case 'activeSuggestedPartner':
-                    recordReplacement = this[this.activeSuggestedRecordName].name;
-                    this.update({
-                        mentionedPartners: [['link', this[this.activeSuggestedRecordName]]],
-                    });
-                    break;
-            }
-            this.update({
+            const recordReplacement = this.activeSuggestedRecord.getMentionText();
+            const updateData = {
                 isLastStateChangeProgrammatic: true,
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
                 textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
                 textInputCursorStart: textLeft.length + recordReplacement.length + 1,
-            });
+            };
+            // Specific cases for channel and partner mentions: the message with
+            // the mention will appear in the target channel, or be notified to
+            // the target partner.
+            switch (this.activeSuggestedRecord.constructor.modelName) {
+                case 'mail.thread':
+                    Object.assign(updateData, { mentionedChannels: [['link', this.activeSuggestedRecord]] });
+                    break;
+                case 'mail.partner':
+                    Object.assign(updateData, { mentionedPartners: [['link', this.activeSuggestedRecord]] });
+                    break;
+            }
+            this.update(updateData);
         }
 
         /**
@@ -221,10 +154,6 @@ function factory(dependencies) {
          * @returns {mail.partner[]}
          */
         _computeRecipients() {
-            if (this.thread && this.thread.model === 'mail.channel') {
-                // prevent from notifying/adding to followers non-members
-                return [['unlink-all']];
-            }
             const recipients = [...this.mentionedPartners];
             if (this.thread && !this.isLog) {
                 for (const recipient of this.thread.suggestedRecipientInfoList) {
@@ -382,95 +311,60 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Sets the first suggestion as active. Main and extra records are
+         * considered together.
+         */
         setFirstSuggestionActive() {
-            if (!this[this.mainSuggestedRecordsListName][0]) {
-                if (!this[this.extraSuggestedRecordsListName][0]) {
-                    return;
-                }
-                this.update({
-                    [this.activeSuggestedRecordName]: [['link', this[this.extraSuggestedRecordsListName][0]]],
-                });
-            } else {
-                this.update({
-                    [this.activeSuggestedRecordName]: [['link', this[this.mainSuggestedRecordsListName][0]]],
-                });
-            }
+            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const firstRecord = suggestedRecords[0];
+            this.update({ activeSuggestedRecord: [['link', firstRecord]] });
         }
 
+        /**
+         * Sets the last suggestion as active. Main and extra records are
+         * considered together.
+         */
         setLastSuggestionActive() {
-            if (this[this.extraSuggestedRecordsListName].length === 0) {
-                if (this[this.mainSuggestedRecordsListName].length === 0) {
-                    return;
-                }
-                this.update({
-                    [this.activeSuggestedRecordName]: [[
-                        'link',
-                        this[this.mainSuggestedRecordsListName][this[this.mainSuggestedRecordsListName].length - 1]
-                    ]],
-                });
-                return;
-            }
-            this.update({
-                [this.activeSuggestedRecordName]: [[
-                    'link',
-                    this[this.extraSuggestedRecordsListName][this[this.extraSuggestedRecordsListName].length - 1]
-                ]],
-            });
+            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const { length, [length - 1]: lastRecord } = suggestedRecords;
+            this.update({ activeSuggestedRecord: [['link', lastRecord]] });
         }
 
+        /**
+         * Sets the next suggestion as active. Main and extra records are
+         * considered together.
+         */
         setNextSuggestionActive() {
-            const fullList = this.extraSuggestedRecordsListName ?
-                this[this.mainSuggestedRecordsListName].concat(this[this.extraSuggestedRecordsListName]) :
-                this[this.mainSuggestedRecordsListName];
-            if (fullList.length === 0) {
+            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const activeElementIndex = suggestedRecords.findIndex(
+                suggestion => suggestion === this.activeSuggestedRecord
+            );
+            if (activeElementIndex === suggestedRecords.length - 1) {
+                // loop when reaching the end of the list
+                this.setFirstSuggestionActive();
                 return;
             }
-            const activeElementIndex = fullList.findIndex(
-                suggestion => suggestion === this[this.activeSuggestedRecordName]
-            );
-            if (activeElementIndex !== fullList.length - 1) {
-                this.update({
-                    [this.activeSuggestedRecordName]: [[
-                        'link',
-                        fullList[activeElementIndex + 1]
-                    ]],
-                });
-            } else {
-                this.update({
-                    [this.activeSuggestedRecordName]: [['link', fullList[0]]],
-                });
-            }
+            const nextRecord = suggestedRecords[activeElementIndex + 1];
+            this.update({ activeSuggestedRecord: [['link', nextRecord]] });
         }
 
+        /**
+         * Sets the previous suggestion as active. Main and extra records are
+         * considered together.
+         */
         setPreviousSuggestionActive() {
-            const fullList = this.extraSuggestedRecordsListName ?
-                this[this.mainSuggestedRecordsListName].concat(this[this.extraSuggestedRecordsListName]) :
-                this[this.mainSuggestedRecordsListName];
-            if (fullList.length === 0) {
+            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const activeElementIndex = suggestedRecords.findIndex(
+                suggestion => suggestion === this.activeSuggestedRecord
+            );
+            if (activeElementIndex === 0) {
+                // loop when reaching the start of the list
+                this.setLastSuggestionActive();
                 return;
             }
-            const activeElementIndex = fullList.findIndex(
-                suggestion => suggestion === this[this.activeSuggestedRecordName]
-            );
-            if (activeElementIndex === -1) {
-                this.update({
-                    [this.activeSuggestedRecordName]: [['link', fullList[0]]]
-                });
-            } else if (activeElementIndex !== 0) {
-                this.update({
-                    [this.activeSuggestedRecordName]: [[
-                        'link',
-                        fullList[activeElementIndex - 1]
-                    ]],
-                });
-            } else {
-                this.update({
-                    [this.activeSuggestedRecordName]: [[
-                        'link',
-                        fullList[fullList.length - 1]
-                    ]],
-                });
-            }
+            const previousRecord = suggestedRecords[activeElementIndex - 1];
+            this.update({ activeSuggestedRecord: [['link', previousRecord]] });
         }
 
         //----------------------------------------------------------------------
@@ -478,11 +372,28 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * Clears the active suggested record on closing mentions or adapt it if
+         * the active current record is no longer part of the suggestions.
+         *
          * @private
          * @returns {mail.model}
          */
         _computeActiveSuggestedRecord() {
-            return this[this.activeSuggestedRecordName];
+            if (
+                this.mainSuggestedRecords.length === 0 &&
+                this.extraSuggestedRecords.length === 0
+            ) {
+                return [['unlink']];
+            }
+            if (
+                this.mainSuggestedRecords.includes(this.activeSuggestedRecord) ||
+                this.extraSuggestedRecords.includes(this.activeSuggestedRecord)
+            ) {
+                return;
+            }
+            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
+            const firstRecord = suggestedRecords[0];
+            return [['link', firstRecord]];
         }
 
         /**
@@ -497,25 +408,18 @@ function factory(dependencies) {
         }
 
         /**
-         * Ensure extraSuggestedPartners does not contain any partner already
-         * present in mainSuggestedPartners. This is necessary for the
-         * consistency of suggestion list.
+         * Clears the extra suggested record on closing mentions, and ensures
+         * the extra list does not contain any element already present in the
+         * main list, which is a requirement for the navigation process.
          *
-         * @private
-         * @returns {mail.partner[]}
-         */
-        _computeExtraSuggestedPartners() {
-            return [['unlink', this.mainSuggestedPartners]];
-        }
-
-        /**
          * @private
          * @returns {mail.model[]}
          */
-        _computeExtraSuggestedRecordsList() {
-            return this.extraSuggestedRecordsListName
-                ? this[this.extraSuggestedRecordsListName]
-                : [];
+        _computeExtraSuggestedRecords() {
+            if (this.suggestionDelimiterPosition === undefined) {
+                return [['unlink-all']];
+            }
+            return [['unlink', this.mainSuggestedRecords]];
         }
 
         /**
@@ -523,9 +427,7 @@ function factory(dependencies) {
          * @return {boolean}
          */
         _computeHasSuggestions() {
-            const hasMainSuggestedRecordsList = this.mainSuggestedRecordsListName ? this[this.mainSuggestedRecordsListName].length > 0 : false;
-            const hasExtraSuggestedRecordsList = this.extraSuggestedRecordsListName ? this[this.extraSuggestedRecordsListName].length > 0 : false;
-            return hasMainSuggestedRecordsList || hasExtraSuggestedRecordsList;
+            return this.mainSuggestedRecords.length > 0 || this.extraSuggestedRecords.length > 0;
         }
 
         /**
@@ -537,13 +439,15 @@ function factory(dependencies) {
         }
 
         /**
+         * Clears the main suggested record on closing mentions.
+         *
          * @private
          * @returns {mail.model[]}
          */
-        _computeMainSuggestedRecordsList() {
-            return this.mainSuggestedRecordsListName
-                ? this[this.mainSuggestedRecordsListName]
-                : [];
+        _computeMainSuggestedRecords() {
+            if (this.suggestionDelimiterPosition === undefined) {
+                return [['unlink-all']];
+            }
         }
 
         /**
@@ -596,6 +500,96 @@ function factory(dependencies) {
                 }
             }
             return [['unlink', unmentionedChannels]];
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeSuggestionDelimiter() {
+            if (
+                this.suggestionDelimiterPosition === undefined ||
+                this.suggestionDelimiterPosition >= this.textInputContent.length
+            ) {
+                return clear();
+            }
+            return this.textInputContent[this.suggestionDelimiterPosition];
+        }
+
+        /**
+         * @private
+         * @returns {integer}
+         */
+        _computeSuggestionDelimiterPosition() {
+            if (this.textInputCursorStart !== this.textInputCursorEnd) {
+                // avoid interfering with multi-char selection
+                return clear();
+            }
+            const candidatePositions = [];
+            // keep the current delimiter if it is still valid
+            if (
+                this.suggestionDelimiterPosition !== undefined &&
+                this.suggestionDelimiterPosition < this.textInputCursorStart
+            ) {
+                candidatePositions.push(this.suggestionDelimiterPosition);
+            }
+            // consider the char before the current cursor position if the
+            // current delimiter is no longer valid (or if there is none)
+            if (this.textInputCursorStart > 0) {
+                candidatePositions.push(this.textInputCursorStart - 1);
+            }
+            const suggestionDelimiters = ['@', ':', '#', '/'];
+            for (const candidatePosition of candidatePositions) {
+                if (
+                    candidatePosition < 0 ||
+                    candidatePosition >= this.textInputContent.length
+                ) {
+                    continue;
+                }
+                const candidateChar = this.textInputContent[candidatePosition];
+                if (!suggestionDelimiters.includes(candidateChar)) {
+                    continue;
+                }
+                const charBeforeCandidate = this.textInputContent[candidatePosition - 1];
+                if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
+                    continue;
+                }
+                return candidatePosition;
+            }
+            return clear();
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeSuggestionModelName() {
+            switch (this.suggestionDelimiter) {
+                case '@':
+                    return 'mail.partner';
+                case ':':
+                    return 'mail.canned_response';
+                case '/':
+                    return 'mail.channel_command';
+                case '#':
+                    return 'mail.thread';
+                default:
+                    return clear();
+            }
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeSuggestionSearchTerm() {
+            if (
+                this.suggestionDelimiterPosition === undefined ||
+                this.suggestionDelimiterPosition >= this.textInputCursorStart
+            ) {
+                return clear();
+            }
+            return this.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.textInputCursorStart);
         }
 
         /**
@@ -717,10 +711,44 @@ function factory(dependencies) {
         }
 
         /**
+         * Updates the suggestion state based on the currently saved composer
+         * state (in particular content and cursor position).
+         *
+         * @private
+         */
+        _onChangeUpdateSuggestionList() {
+            // Update the suggestion list immediately for a reactive UX...
+            this._updateSuggestionList();
+            // ...and then update it again after the server returned data.
+            this._executeOrQueueFunction(async () => {
+                if (
+                    this.suggestionDelimiterPosition === undefined ||
+                    this.suggestionSearchTerm === undefined ||
+                    !this.suggestionModelName
+                ) {
+                    // ignore obsolete call
+                    return;
+                }
+                const Model = this.env.models[this.suggestionModelName];
+                const searchTerm = this.suggestionSearchTerm;
+                await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.thread }));
+                this._updateSuggestionList();
+                if (
+                    this.suggestionSearchTerm &&
+                    this.suggestionSearchTerm === searchTerm &&
+                    this.suggestionModelName &&
+                    this.env.models[this.suggestionModelName] === Model &&
+                    !this.hasSuggestions
+                ) {
+                    this.closeSuggestions();
+                }
+            });
+        }
+
+        /**
          * @private
          */
         _reset() {
-            this.closeSuggestions();
             this.update({
                 attachments: [['unlink-all']],
                 isLastStateChangeProgrammatic: true,
@@ -734,199 +762,57 @@ function factory(dependencies) {
         }
 
         /**
-         * @private
-         * @param {string} mentionKeyword
-         */
-        _updateSuggestedCannedResponses(mentionKeyword) {
-            this.update({
-                suggestedCannedResponses: [['replace', this.env.messaging.cannedResponses.filter(
-                    cannedResponse => cannedResponse.source.includes(mentionKeyword)
-                )]],
-            });
-
-            if (this.suggestedCannedResponses[0]) {
-                this.update({
-                    activeSuggestedCannedResponse: [['link', this.suggestedCannedResponses[0]]],
-                    hasToScrollToActiveSuggestion: true,
-                });
-            } else {
-                this.update({
-                    activeSuggestedCannedResponse: [['unlink']],
-                });
-            }
-        }
-
-        /**
-         * @private
-         * @param {string} mentionKeyword
-         */
-        async _updateSuggestedChannels(mentionKeyword) {
-            const mentions = await this.async(() => this.env.services.rpc(
-                {
-                    model: 'mail.channel',
-                    method: 'get_mention_suggestions',
-                    kwargs: {
-                        limit: 8,
-                        search: mentionKeyword,
-                    },
-                },
-                { shadow: true }
-            ));
-
-            this.update({
-                suggestedChannels: [[
-                    'insert-and-replace',
-                    mentions.map(data => {
-                        const threadData = this.env.models['mail.thread'].convertData(data);
-                        return Object.assign({ model: 'mail.channel' }, threadData);
-                    })
-                ]],
-            });
-
-            if (this.suggestedChannels[0]) {
-                this.update({
-                    activeSuggestedChannel: [['link', this.suggestedChannels[0]]],
-                    hasToScrollToActiveSuggestion: true,
-                });
-            } else {
-                this.update({
-                    activeSuggestedChannel: [['unlink']],
-                });
-            }
-        }
-
-        /**
-         * @param {string} mentionKeyword
-         */
-        _updateSuggestedChannelCommands(mentionKeyword) {
-            const commands = this.env.messaging.commands.filter(command => {
-                if (!command.name.includes(mentionKeyword)) {
-                    return false;
-                }
-                if (command.channel_types) {
-                    return command.channel_types.includes(this.thread.channel_type);
-                }
-                return true;
-            });
-            this.update({ suggestedChannelCommands: [['replace', commands]] });
-            if (this.suggestedChannelCommands[0]) {
-                this.update({
-                    activeSuggestedChannelCommand: [['link', this.suggestedChannelCommands[0]]],
-                    hasToScrollToActiveSuggestion: true,
-                });
-            } else {
-                this.update({
-                    activeSuggestedChannelCommand: [['unlink']],
-                });
-            }
-        }
-
-        /**
-         * @private
-         * @param {string} mentionKeyword
-         */
-        async _updateSuggestedPartners(mentionKeyword) {
-            const mentions = await this.async(() => this.env.services.rpc(
-                {
-                    model: 'res.partner',
-                    method: 'get_mention_suggestions',
-                    kwargs: {
-                        limit: 8,
-                        search: mentionKeyword,
-                    },
-                },
-                { shadow: true }
-            ));
-
-            const mainSuggestedPartners = mentions[0];
-            const extraSuggestedPartners = mentions[1];
-            this.update({
-                extraSuggestedPartners: [[
-                    'insert-and-replace',
-                    extraSuggestedPartners.map(data =>
-                        this.env.models['mail.partner'].convertData(data)
-                    )
-                ]],
-                mainSuggestedPartners: [[
-                    'insert-and-replace',
-                    mainSuggestedPartners.map(data =>
-                        this.env.models['mail.partner'].convertData(data))
-                    ]],
-            });
-
-            if (this.mainSuggestedPartners[0]) {
-                this.update({
-                    activeSuggestedPartner: [['link', this.mainSuggestedPartners[0]]],
-                    hasToScrollToActiveSuggestion: true,
-                });
-            } else if (this.extraSuggestedPartners[0]) {
-                this.update({
-                    activeSuggestedPartner: [['link', this.extraSuggestedPartners[0]]],
-                    hasToScrollToActiveSuggestion: true,
-                });
-            } else {
-                this.update({
-                    activeSuggestedPartner: [['unlink']],
-                });
-            }
-        }
-
-        /**
-         * Validates user's current typing as a correct mention keyword in order
-         * to trigger mentions suggestions display.
-         * Returns the mention keyword without the suggestion delimiter if it
-         * has been validated and false if not.
+         * Updates the current suggestion list. This method should be called
+         * whenever the UI has to be refreshed following change in state.
+         *
+         * This method should ideally be a compute, but its dependencies are
+         * currently too complex to express due to accessing plenty of fields
+         * from all records of dynamic models.
          *
          * @private
-         * @param {boolean} beginningOnly
-         * @returns {string|boolean}
          */
-        _validateMentionKeyword(beginningOnly) {
-            const leftString = this.textInputContent.substring(0, this.textInputCursorStart);
-
-            // use position before suggestion delimiter because there should be whitespaces
-            // or line feed/carriage return before the suggestion delimiter
-            const beforeSuggestionDelimiterPosition = leftString.lastIndexOf(this.suggestionDelimiter) - 1;
-            if (beginningOnly && beforeSuggestionDelimiterPosition > 0) {
-                return false;
+        _updateSuggestionList() {
+            if (
+                this.suggestionDelimiterPosition === undefined ||
+                this.suggestionSearchTerm === undefined ||
+                !this.suggestionModelName
+            ) {
+                return;
             }
-            let searchStr = this.textInputContent.substring(
-                beforeSuggestionDelimiterPosition,
-                this.textInputCursorStart
-            );
-            // regex string start with suggestion delimiter or whitespace then suggestion delimiter
-            const pattern = "^" + this.suggestionDelimiter + "|^\\s" + this.suggestionDelimiter;
-            const regexStart = new RegExp(pattern, 'g');
-            // trim any left whitespaces or the left line feed/ carriage return
-            // at the beginning of the string
-            searchStr = searchStr.replace(/^\s\s*|^[\n\r]/g, '');
-            if (regexStart.test(searchStr) && searchStr.length) {
-                searchStr = searchStr.replace(pattern, '');
-                return !searchStr.includes(' ') && !/[\r\n]/.test(searchStr)
-                    ? searchStr.replace(this.suggestionDelimiter, '')
-                    : false;
-            }
-            return false;
+            const Model = this.env.models[this.suggestionModelName];
+            const [
+                mainSuggestedRecords,
+                extraSuggestedRecords = [],
+            ] = Model.searchSuggestions(this.suggestionSearchTerm, { thread: this.thread });
+            const sortFunction = Model.getSuggestionSortFunction(this.suggestionSearchTerm, { thread: this.thread });
+            mainSuggestedRecords.sort(sortFunction);
+            extraSuggestedRecords.sort(sortFunction);
+            // arbitrary limit to avoid displaying too many elements at once
+            // ideally a load more mechanism should be introduced
+            const limit = 8;
+            mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
+            extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
+            this.update({
+                extraSuggestedRecords: [['replace', extraSuggestedRecords]],
+                hasToScrollToActiveSuggestion: true,
+                mainSuggestedRecords: [['replace', mainSuggestedRecords]],
+            });
         }
     }
 
     Composer.fields = {
-        activeSuggestedCannedResponse: many2one('mail.canned_response'),
-        activeSuggestedChannel: many2one('mail.thread'),
-        activeSuggestedChannelCommand: many2one('mail.channel_command'),
-        activeSuggestedPartner: many2one('mail.partner'),
-        activeSuggestedRecord: attr({
+        /**
+         * Determines the suggested record that is currently active. This record
+         * is highlighted in the UI and it will be the selected record if the
+         * suggestion is confirmed by the user.
+         */
+        activeSuggestedRecord: many2one('mail.model', {
             compute: '_computeActiveSuggestedRecord',
             dependencies: [
-                'activeSuggestedCannedResponse',
-                'activeSuggestedChannel',
-                'activeSuggestedChannelCommand',
-                'activeSuggestedPartner',
-                'activeSuggestedRecordName',
+                'activeSuggestedRecord',
+                'extraSuggestedRecords',
+                'mainSuggestedRecords',
             ],
-        }),
-        activeSuggestedRecordName: attr({
-           default: "",
         }),
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
@@ -958,26 +844,19 @@ function factory(dependencies) {
         discussAsReplying: one2one('mail.discuss', {
             inverse: 'replyingToMessageOriginThreadComposer',
         }),
-        extraSuggestedPartners: many2many('mail.partner', {
-            compute: '_computeExtraSuggestedPartners',
-            dependencies: [
-                'extraSuggestedPartners',
-                'mainSuggestedPartners',
-            ],
-        }),
-        extraSuggestedRecordsList: attr({
-            compute: '_computeExtraSuggestedRecordsList',
-            dependencies: [
-                'extraSuggestedPartners',
-                'extraSuggestedRecordsListName',
-            ],
-        }),
         /**
-         * Allows to have different model types of mentions through a dynamic process
-         * RPC can provide 2 lists and the second is defined as "extra"
+         * Determines the extra records that are currently suggested.
+         * Allows to have different model types of mentions through a dynamic
+         * process. 2 arbitrary lists can be provided and the second is defined
+         * as "extra".
          */
-        extraSuggestedRecordsListName: attr({
-           default: "",
+        extraSuggestedRecords: many2many('mail.model', {
+            compute: '_computeExtraSuggestedRecords',
+            dependencies: [
+                'extraSuggestedRecords',
+                'mainSuggestedRecords',
+                'suggestionDelimiterPosition',
+            ],
         }),
         /**
          * This field determines whether some attachments linked to this
@@ -993,16 +872,15 @@ function factory(dependencies) {
         hasFocus: attr({
             default: false,
         }),
+        /**
+         * States whether there is any result currently found for the current
+         * suggestion delimiter and search term, if applicable.
+         */
         hasSuggestions: attr({
             compute: '_computeHasSuggestions',
             dependencies: [
-                'extraSuggestedRecordsListName',
-                'extraSuggestedPartners',
-                'mainSuggestedRecordsListName',
-                'mainSuggestedPartners',
-                'suggestedCannedResponses',
-                'suggestedChannelCommands',
-                'suggestedChannels',
+                'extraSuggestedRecords',
+                'mainSuggestedRecords',
             ],
             default: false,
         }),
@@ -1033,31 +911,49 @@ function factory(dependencies) {
          * Determines whether a post_message request is currently pending.
          */
         isPostingMessage: attr(),
-        mainSuggestedRecordsList: attr({
-            compute: '_computeMainSuggestedRecordsList',
+        /**
+         * Determines the main records that are currently suggested.
+         * Allows to have different model types of mentions through a dynamic
+         * process. 2 arbitrary lists can be provided and the first is defined
+         * as "main".
+         */
+        mainSuggestedRecords: many2many('mail.model', {
+            compute: '_computeMainSuggestedRecords',
             dependencies: [
-                'mainSuggestedPartners',
-                'mainSuggestedRecordsListName',
-                'suggestedCannedResponses',
-                'suggestedChannelCommands',
-                'suggestedChannels',
+                'mainSuggestedRecords',
+                'suggestionDelimiterPosition',
             ],
         }),
-        /**
-         * Allows to have different model types of mentions through a dynamic process
-         * RPC can provide 2 lists and the first is defined as "main"
-         */
-        mainSuggestedRecordsListName: attr({
-           default: "",
-        }),
-        mainSuggestedPartners: many2many('mail.partner'),
         mentionedChannels: many2many('mail.thread', {
             compute: '_computeMentionedChannels',
             dependencies: ['textInputContent'],
         }),
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
-            dependencies: ['textInputContent'],
+            dependencies: [
+                'mentionedPartners',
+                'mentionedPartnersName',
+                'textInputContent',
+            ],
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        mentionedPartnersName: attr({
+            related: 'mentionedPartners.name',
+        }),
+        /**
+         * Not a real field, used to trigger `_onChangeUpdateSuggestionList`
+         * when one of the dependencies changes.
+         */
+        onChangeUpdateSuggestionList: attr({
+            compute: '_onChangeUpdateSuggestionList',
+            dependencies: [
+                'suggestionDelimiterPosition',
+                'suggestionModelName',
+                'suggestionSearchTerm',
+                'thread',
+            ],
         }),
         /**
          * Determines the extra `mail.partner` (on top of existing followers)
@@ -1093,18 +989,54 @@ function factory(dependencies) {
         subjectContent: attr({
             default: "",
         }),
-        suggestedCannedResponses: many2many('mail.canned_response'),
-        suggestedChannelCommands: many2many('mail.channel_command'),
-        suggestedChannels: many2many('mail.thread'),
         /**
-         * Special character used to trigger different kinds of suggestions
-         * such as canned responses (:), channels (#), commands (/) and partners (@)
+         * States which type of suggestion is currently in progress, if any.
+         * The value of this field contains the magic char that corresponds to
+         * the suggestion currently in progress, and it must be one of these:
+         * canned responses (:), channels (#), commands (/) and partners (@)
          */
         suggestionDelimiter: attr({
-            default: "",
+            compute: '_computeSuggestionDelimiter',
+            dependencies: [
+                'suggestionDelimiterPosition',
+                'textInputContent',
+            ],
         }),
+        /**
+         * States the position inside textInputContent of the suggestion
+         * delimiter currently in consideration. Useful if the delimiter char
+         * appears multiple times in the content.
+         * Note: the position is 0 based so it's important to compare to
+         * `undefined` when checking for the absence of a value.
+         */
+        suggestionDelimiterPosition: attr({
+            compute: '_computeSuggestionDelimiterPosition',
+            dependencies: [
+                'textInputContent',
+                'textInputCursorEnd',
+                'textInputCursorStart',
+            ],
+        }),
+        /**
+         * States the target model name of the suggestion currently in progress,
+         * if any.
+         */
         suggestionModelName: attr({
-           default: "",
+            compute: '_computeSuggestionModelName',
+            dependencies: [
+                'suggestionDelimiter',
+            ],
+        }),
+        /**
+         * States the search term to use for suggestions (if any).
+         */
+        suggestionSearchTerm: attr({
+            compute: '_computeSuggestionSearchTerm',
+            dependencies: [
+                'suggestionDelimiterPosition',
+                'textInputContent',
+                'textInputCursorStart',
+            ],
         }),
         textInputContent: attr({
             default: "",

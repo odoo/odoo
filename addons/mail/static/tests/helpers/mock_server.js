@@ -1690,7 +1690,7 @@ MockServer.include({
          * @param {integer} limit
          * @returns {Object[]}
          */
-        const mentionSuggestionsFilter = function (partners, search, limit) {
+        const mentionSuggestionsFilter = (partners, search, limit) => {
             const matchingPartners = partners
                 .filter(partner => {
                     // no search term is considered as return all
@@ -1705,14 +1705,7 @@ MockServer.include({
                         return true;
                     }
                     return false;
-                }).map(partner => {
-                    // expected format
-                    return {
-                        email: partner.email,
-                        id: partner.id,
-                        name: partner.name,
-                    };
-                });
+                }).map(partner => this._mockResPartnerMailPartnerFormat(partner.id));
             // reduce results to max limit
             matchingPartners.length = Math.min(matchingPartners.length, limit);
             return matchingPartners;
@@ -1726,11 +1719,12 @@ MockServer.include({
 
         let extraMatchingPartners = [];
         // if not enough results add extra suggestions based on partners
+        const remainingLimit = limit - mainMatchingPartners.length;
         if (mainMatchingPartners.length < limit) {
             const partners = this._getRecords('res.partner', [['id', 'not in', mainMatchingPartners.map(partner => partner.id)]]);
-            extraMatchingPartners = mentionSuggestionsFilter(partners, search, limit);
+            extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
-        return [mainMatchingPartners, extraMatchingPartners];
+        return mainMatchingPartners.concat(extraMatchingPartners);
     },
     /**
      * Simulates `get_needaction_count` on `res.partner`.
@@ -1798,9 +1792,12 @@ MockServer.include({
             [['id', '=', id]],
             { active_test: false }
         )[0];
+        // Servers is also returning `user_id` and `is_internal_user` but not
+        // done here for simplification.
         return {
             "active": partner.active,
             "display_name": partner.display_name,
+            "email": partner.email,
             "id": partner.id,
             "im_status": partner.im_status,
             "name": partner.name,

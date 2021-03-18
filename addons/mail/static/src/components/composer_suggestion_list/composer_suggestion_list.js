@@ -22,23 +22,23 @@ class ComposerSuggestionList extends Component {
             const activeSuggestedRecord = composer
                 ? composer.activeSuggestedRecord
                 : undefined;
-            const extraSuggestedRecordsList = composer
-                ? composer.extraSuggestedRecordsList
+            const extraSuggestedRecords = composer
+                ? composer.extraSuggestedRecords
                 : [];
-            const mainSuggestedRecordsList = composer
-                ? composer.mainSuggestedRecordsList
+            const mainSuggestedRecords = composer
+                ? composer.mainSuggestedRecords
                 : [];
             return {
                 activeSuggestedRecord,
                 composer,
                 composerSuggestionModelName: composer && composer.suggestionModelName,
-                extraSuggestedRecordsList: extraSuggestedRecordsList,
-                mainSuggestedRecordsList: mainSuggestedRecordsList,
+                extraSuggestedRecords,
+                mainSuggestedRecords,
             };
         }, {
             compareDepth: {
-                extraSuggestedRecordsList: 1,
-                mainSuggestedRecordsList: 1,
+                extraSuggestedRecords: 1,
+                mainSuggestedRecords: 1,
             },
         });
     }
