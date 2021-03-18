@@ -7528,6 +7528,38 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
-});
 
+    QUnit.test("Instantiate widget with option parameters", async function (assert) {
+        assert.expect(2);
+
+        widgetRegistry.add('optionwidget', Widget.extend({
+            init(parent, state, options) {
+                this._super(...arguments);
+                this.title = options.attrs.title;
+            },
+            start() {
+                this.$el.html($("<div>", {text: this.title, class: 'option-widget'}));
+            },
+        }));
+
+        const kanban = await testUtils.createView({
+            data: this.data,
+            model: "partner",
+            View: KanbanView,
+            arch: `
+                <kanban><templates><t t-name="kanban-box">
+                    <div>
+                        <widget name="optionwidget" title="Widget with Option" />
+                    </div>
+                </t></templates></kanban>
+            `,
+        });
+
+        assert.containsN(kanban, '.option-widget', 4);
+        assert.strictEqual(kanban.$('.option-widget')[0].textContent, 'Widget with Option');
+
+        kanban.destroy();
+        delete widgetRegistry.map.optionwidget;
+    });
+});
 });
