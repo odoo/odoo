@@ -92,12 +92,16 @@ en Odoo):
         'data/l10n_do_chart_data.xml',
         'data/account_group.xml',
         'data/account_account_tag_data.xml',
+        'data/account.account.template-common.csv',
         'data/account.account.template.csv',
+        'data/account.account.template-gob.csv',
         'data/account_chart_template_data.xml',
         'data/account_data.xml',
         'data/account_tax_report_data.xml',
         'data/account.tax.template.xml',
         'data/l10n_do_res_partner_title.xml',
+
+        'data/account.analytic.account.csv',
         # Adds fiscal position
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
