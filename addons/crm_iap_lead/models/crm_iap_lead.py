@@ -1,20 +1,6 @@
 from odoo import api, fields, models
 
 
-class IndustryTag(models.Model):
-    """ Industry Tags of Acquisition Rules """
-    _name = 'crm.iap.lead.industry'
-    _description = 'Industry Tag'
-
-    name = fields.Char(string='Industry', required=True, translate=True)
-    reveal_id = fields.Char(required=True)
-    color = fields.Integer(string='Color Index')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Tag name already exists!'),
-    ]
-
-
 class PeopleRole(models.Model):
     """ CRM Reveal People Roles for People """
     _name = 'crm.iap.lead.role'
