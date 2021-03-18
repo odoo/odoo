@@ -123,7 +123,7 @@ class ProductionLot(models.Model):
             ]).mapped('move_id')
             stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
                 lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
-            lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            lot.sale_order_ids = stock_moves.sudo().mapped('sale_line_id.order_id')
             lot.sale_order_count = len(lot.sale_order_ids)
 
     def action_view_so(self):

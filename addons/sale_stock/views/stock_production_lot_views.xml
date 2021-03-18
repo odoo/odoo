@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_button_box')]/button" position="before">
                 <button class="oe_stat_button" name="action_view_so"
+                        groups="sales_team.group_sale_salesman"
                         type="object" icon="fa-pencil-square-o" attrs="{'invisible': [('sale_order_count', '=', 0)]}" help="Sale Orders">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
@@ -25,7 +26,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='main_group']" position="after">
                 <group>
-                    <field name="sale_order_ids" widget="many2many" readonly="True" attrs="{'invisible': [('sale_order_ids', '=', [])]}">
+                    <field name="sale_order_ids" widget="many2many" readonly="True" groups="sales_team.group_sale_salesman" attrs="{'invisible': [('sale_order_ids', '=', [])]}">
                         <tree>
                             <field name="name"/>
                             <field name="partner_id"/>
