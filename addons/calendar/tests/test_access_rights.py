@@ -14,6 +14,8 @@ class TestAccessRights(TransactionCase):
         super().setUpClass()
         cls.john = new_test_user(cls.env, login='john', groups='base.group_user')
         cls.raoul = new_test_user(cls.env, login='raoul', groups='base.group_user')
+        cls.bob = new_test_user(cls.env, login='bob', groups='base.group_user')
+        cls.jack = new_test_user(cls.env, login='jack', groups='calendar.group_calendar_event_admin')
         cls.portal = new_test_user(cls.env, login='pot', groups='base.group_portal')
 
     def create_event(self, user, **values):
@@ -37,9 +39,12 @@ class TestAccessRights(TransactionCase):
             self.john,
             privacy='private',
             name='my private event',
+            partner_ids=[(4, self.bob.partner_id.id)],
         )
         self.assertEqual(self.read_event(self.john, event, 'name'), 'my private event', "Owner should be able to read the event")
-        self.assertEqual(self.read_event(self.raoul, event, 'name'), 'Busy', "Private value should be obfuscated")
+        self.assertEqual(self.read_event(self.bob, event, 'name'), 'my private event', "Attendee should be able to read the event")
+        self.assertEqual(self.read_event(self.raoul, event, 'name'), 'Busy', "Private value should be obfuscated to non-attendee users")
+        self.assertEqual(self.read_event(self.jack, event, 'name'), 'Busy', "Private value should be obfuscated to calendar event admins")
         with self.assertRaises(AccessError):
             self.read_event(self.portal, event, 'name')
 
@@ -48,9 +53,12 @@ class TestAccessRights(TransactionCase):
             self.john,
             privacy='private',
             location='in the Sky',
+            partner_ids=[(4, self.bob.partner_id.id)],
         )
         self.assertEqual(self.read_event(self.john, event, 'location'), 'in the Sky', "Owner should be able to read the event")
-        self.assertEqual(self.read_event(self.raoul, event, 'location'), False, "Private value should be obfuscated")
+        self.assertEqual(self.read_event(self.bob, event, 'location'), 'in the Sky', "Attendee should be able to read the event")
+        self.assertEqual(self.read_event(self.raoul, event, 'location'), False, "Private value should be obfuscated to non-attendee users")
+        self.assertEqual(self.read_event(self.jack, event, 'location'), False, "Private value should be obfuscated to calendar event admins")
         with self.assertRaises(AccessError):
             self.read_event(self.portal, event, 'location')
 

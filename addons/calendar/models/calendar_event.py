@@ -829,7 +829,7 @@ class Meeting(models.Model):
                 for field, value in event.items()
             } for event in events]
 
-        events = super().read(fields=fields + ['privacy', 'user_id'], load=load)
+        events = super().read(fields=fields + ['privacy', 'user_id', 'partner_ids'], load=load)
         private_events, public_events = split_privacy(events)
         my_private_events, others_private_events = my_events(private_events)
 

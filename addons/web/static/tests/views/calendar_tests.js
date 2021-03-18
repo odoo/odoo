@@ -304,6 +304,84 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test("show Edit and Delete buttons to users with permissions", async function (assert) {
+        assert.expect(3);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                '<calendar class="o_calendar_test" ' +
+                'string="Events" ' +
+                'event_open_popup="true" ' +
+                'date_start="start" ' +
+                'date_stop="stop" ' +
+                'all_day="allday" ' +
+                'mode="month"/>',
+            archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(true);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+
+        assert.containsOnce(calendar, '.o_cw_popover',
+            "should open a popover clicking on event");
+        assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_edit',
+            "should have the 'Edit' Button");
+        assert.containsOnce(calendar, '.o_cw_popover .o_cw_popover_delete',
+            "should have the 'Delete' Button");
+
+        calendar.destroy();
+    });
+
+    QUnit.test("hide Edit and Delete buttons to users without permissions", async function (assert) {
+        assert.expect(3);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                '<calendar class="o_calendar_test" ' +
+                'string="Events" ' +
+                'event_open_popup="true" ' +
+                'date_start="start" ' +
+                'date_stop="stop" ' +
+                'all_day="allday" ' +
+                'mode="month"/>',
+            archs: archs,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_access_rule') {
+                    return Promise.resolve(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$('.fc-event:contains(event 4) .fc-content'));
+
+        assert.containsOnce(calendar, '.o_cw_popover',
+            "should open a popover clicking on event");
+        assert.containsNone(calendar, '.o_cw_popover .o_cw_popover_edit',
+            "should not have the 'Edit' Button");
+        assert.containsNone(calendar, '.o_cw_popover .o_cw_popover_delete',
+            "should not have the 'Delete' Button");
+
+        calendar.destroy();
+    });
+
     QUnit.test('breadcrumbs are updated with the displayed period', async function (assert) {
         assert.expect(4);
 
