@@ -324,6 +324,8 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--orientation', str(paperformat_id.orientation)])
             if paperformat_id.header_line:
                 command_args.extend(['--header-line'])
+            if paperformat_id.disable_shrinking:
+                command_args.extend(['--disable-smart-shrinking'])
 
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
