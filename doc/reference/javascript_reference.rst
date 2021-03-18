@@ -2811,10 +2811,14 @@ Therefore, patching a component constructor is always possible:
 Removing a patch
 -----------------
 
-We can also remove the patch by calling the ``unpatch`` function. This is really
-only useful for tests.
+In tests, it is sometimes useful to remove a patch for a specific test, for instance,
+to remove a patch applied when another addon is installed, which overrides the behavior
+implemented in the addon where the test is defined. The function ``unpatch`` exists for
+that purpose. It returns the removed patch, such that it can be re-applied at the end
+of the test.
 
 .. code-block:: javascript
 
-  unpatch(object, "patch name");
-
+  const p = unpatch(object, "patch name");
+  // test stuff here
+  patch(object, "patch name", p);

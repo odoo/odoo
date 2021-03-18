@@ -290,6 +290,52 @@ QUnit.module('core', {}, function () {
             });
         });
 
+        QUnit.test('unpatch and re-patch', async function (assert) {
+            assert.expect(13);
+
+            const BaseClass = makeBaseClass(assert);
+
+            patch(BaseClass.prototype, 'patch', {
+                setup() {
+                    this._super();
+                    assert.step('patch.setup');
+                },
+                fn() {
+                    this._super();
+                    assert.step('patch.fn');
+                },
+            });
+
+            (new BaseClass()).fn();
+
+            assert.verifySteps([
+                'base.setup',
+                'patch.setup',
+                'base.fn',
+                'patch.fn',
+            ]);
+
+            const p = unpatch(BaseClass.prototype, 'patch');
+
+            (new BaseClass()).fn();
+
+            assert.verifySteps([
+                'base.setup',
+                'base.fn',
+            ]);
+
+            patch(BaseClass.prototype, 'patch', p);
+
+            (new BaseClass()).fn();
+
+            assert.verifySteps([
+                'base.setup',
+                'patch.setup',
+                'base.fn',
+                'patch.fn',
+            ]);
+        });
+
         QUnit.test('patch for specialization', async function (assert) {
             assert.expect(1);
 
