@@ -3,6 +3,7 @@ odoo.define('web_editor.convertInline', function (require) {
 
 var FieldHtml = require('web_editor.field.html');
 
+const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/g;
 /**
  * Returns the css rules which applies on an element, tweaked so that they are
  * browser/mail client ok.
@@ -29,16 +30,7 @@ function getMatchedCSSRules(a) {
             if (rules) {
                 for (r = rules.length-1; r >= 0; r--) {
                     var selectorText = rules[r].selectorText;
-                    if (selectorText &&
-                            rules[r].cssText &&
-                            selectorText !== '*' &&
-                            selectorText.indexOf(':hover') === -1 &&
-                            selectorText.indexOf(':before') === -1 &&
-                            selectorText.indexOf(':after') === -1 &&
-                            selectorText.indexOf(':active') === -1 &&
-                            selectorText.indexOf(':link') === -1 &&
-                            selectorText.indexOf('::') === -1 &&
-                            selectorText.indexOf("'") === -1) {
+                    if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
                         var st = selectorText.split(/\s*,\s*/);
                         for (k = 0 ; k < st.length ; k++) {
                             rulesCache.push({ 'selector': st[k], 'style': rules[r].style });
