@@ -460,8 +460,8 @@ class MonetaryConverter(models.AbstractModel):
         #currency should be specified by monetary field
         field = record._fields[field_name]
 
-        if not options.get('display_currency') and field.type == 'monetary' and field.currency_field:
-            options['display_currency'] = record[field.currency_field]
+        if not options.get('display_currency') and field.type == 'monetary' and field.get_currency_field(record):
+            options['display_currency'] = record[field.get_currency_field(record)]
         if not options.get('display_currency'):
             # search on the model if they are a res.currency field to set as default
             fields = record._fields.items()
