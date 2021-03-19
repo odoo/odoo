@@ -992,7 +992,7 @@ class IrModelFields(models.Model):
             'store': bool(field.store),
             'copied': bool(field.copy),
             'on_delete': field.ondelete if field.type == 'many2one' else None,
-            'related': ".".join(field.related) if field.related else None,
+            'related': field.related or None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),

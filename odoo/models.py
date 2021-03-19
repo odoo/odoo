@@ -2536,7 +2536,7 @@ class BaseModel(metaclass=MetaModel):
         while field.inherited:
             # retrieve the parent model where field is inherited from
             parent_model = self.env[field.related_field.model_name]
-            parent_fname = field.related[0]
+            parent_fname = field.related.split('.')[0]
             # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
             parent_alias = query.left_join(
                 alias, parent_fname, parent_model._table, 'id', parent_fname,
@@ -2812,7 +2812,7 @@ class BaseModel(metaclass=MetaModel):
                 self._add_field(name, field.new(
                     inherited=True,
                     inherited_field=field,
-                    related=(parent_fname, name),
+                    related=f"{parent_fname}.{name}",
                     related_sudo=False,
                     copy=field.copy,
                     readonly=field.readonly,
@@ -4503,7 +4503,7 @@ Fields:
                     # `self.env['stock.picking'].search([('product_id', '=', product.id)])`
                     # Should flush `stock.move.picking_ids` as `product_id` on `stock.picking` is defined as:
                     # `product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)`
-                    for f in field.related:
+                    for f in field.related.split('.'):
                         rfield = model._fields.get(f)
                         if rfield:
                             to_flush[model._name].add(f)
@@ -4665,7 +4665,7 @@ Fields:
                 with the record ids corresponding to ``old`` and ``new``.
             """
             if field.inherited:
-                pname = field.related[0]
+                pname = field.related.split('.')[0]
                 return get_trans(field.related_field, old[pname], new[pname])
             return "%s,%s" % (field.model_name, field.name), old.id, new.id
 
@@ -4677,7 +4677,7 @@ Fields:
             if not field.copy:
                 continue
 
-            if field.inherited and field.related[0] in excluded:
+            if field.inherited and field.related.split('.')[0] in excluded:
                 # inherited fields that come from a user-provided parent record
                 # must not copy translations, as the parent record is not a copy
                 # of the old parent record
