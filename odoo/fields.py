@@ -260,7 +260,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
-        self._sequence = kwargs['_sequence'] = next(_global_seq)
+        self._sequence = next(_global_seq)
         self.args = {key: val for key, val in kwargs.items() if val is not Default}
 
     def new(self, **kwargs):
