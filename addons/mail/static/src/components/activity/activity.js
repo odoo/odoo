@@ -6,6 +6,7 @@ const components = {
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
     MailTemplate: require('mail/static/src/components/mail_template/mail_template.js'),
 };
+const session = require('web.session');
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
@@ -69,7 +70,11 @@ class Activity extends Component {
      * @returns {string}
      */
     get delayLabel() {
-        const today = moment().startOf('day');
+        const userTZ = session.user_context['tz']
+        const todayUTC = moment().utc();
+        // Convert using timezone identifier (e.g., "Europe/Brussels") :
+        const todayUserTZ = moment((new Date(todayUTC.format())).toLocaleString("en-US", {timeZone: userTZ}), "M/D/YYYY, h:m:s A")
+        const today = todayUserTZ.startOf('day');
         const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));
         // true means no rounding
         const diff = momentDeadlineDate.diff(today, 'days', true);
