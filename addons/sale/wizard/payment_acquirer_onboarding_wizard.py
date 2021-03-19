@@ -16,9 +16,7 @@ class PaymentWizard(models.TransientModel):
 
     payment_method = fields.Selection(selection_add=[
         ('digital_signature', "Electronic signature"),
-        ('paypal', "PayPal"),
-        ('stripe', "Credit card (via Stripe)"),
-        ('other', "Other payment acquirer"),
+        ('odoo', "Credit & Debit Card with Odoo Payment"),
         ('manual', "Custom payment instructions"),
     ], default=_get_default_payment_method)
     #
@@ -31,7 +29,7 @@ class PaymentWizard(models.TransientModel):
         self.env.company.sale_onboarding_payment_method = self.payment_method
         if self.payment_method == 'digital_signature':
             self.env.company.portal_confirmation_sign = True
-        if self.payment_method in ('paypal', 'stripe', 'other', 'manual'):
+        if self.payment_method in ('odoo', 'manual'):
             self.env.company.portal_confirmation_pay = True
 
         return super(PaymentWizard, self).add_payment_methods(*args, **kwargs)

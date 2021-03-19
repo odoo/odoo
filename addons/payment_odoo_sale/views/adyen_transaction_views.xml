@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="adyen_transaction_view_form" model="ir.ui.view">
+        <field name="model">adyen.transaction</field>
+        <field name="inherit_id" ref="adyen_platforms.adyen_transaction_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_sales_orders" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        attrs="{'invisible': [('sale_order_ids_nbr', '=', 0)]}">
+                    <field name="sale_order_ids_nbr" widget="statinfo" string="Sales Order(s)"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

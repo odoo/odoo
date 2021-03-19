@@ -11,13 +11,17 @@
     'data': [
         'data/adyen_platforms_data.xml',
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'views/adyen_account_templates.xml',
         'views/adyen_account_views.xml',
+        'views/adyen_bank_account_views.xml',
+        'views/adyen_shareholder_views.xml',
         'views/adyen_transaction_views.xml',
         ],
     'installable': True,
     'assets': {
         'web.assets_backend': [
+            'adyen_platforms/static/src/scss/**/*',
             'adyen_platforms/static/src/js/**/*',
         ],
         'web.assets_qweb': [

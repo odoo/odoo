@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="adyen_platforms_account_closed" model="ir.rule">
+        <field name="model_id" ref="model_adyen_account"/>
+        <field name="name">Readonly: Closed Accounts</field>
+        <field name="domain_force">[('account_status', '!=', 'closed')]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

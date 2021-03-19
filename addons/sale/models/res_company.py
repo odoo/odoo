@@ -20,9 +20,7 @@ class ResCompany(models.Model):
 
     sale_onboarding_payment_method = fields.Selection([
         ('digital_signature', 'Sign online'),
-        ('paypal', 'PayPal'),
-        ('stripe', 'Stripe'),
-        ('other', 'Pay with another payment acquirer'),
+        ('odoo', 'Credit & Debit Card with Odoo Payment'),
         ('manual', 'Manual Payment'),
     ], string="Sale onboarding selected payment method")
 

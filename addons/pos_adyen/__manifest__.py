@@ -10,6 +10,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/adyen_account_views.xml',
+        'views/adyen_transaction_views.xml',
         'views/pos_config_views.xml',
         'views/pos_payment_method_views.xml',
         'views/res_config_settings_views.xml',

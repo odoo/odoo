@@ -13,13 +13,10 @@ class PaymentAcquirer(models.Model):
         selection_add=[('odoo', "Odoo Payments")], ondelete={'odoo': 'set default'})
     odoo_adyen_account_id = fields.Many2one(
         related='company_id.adyen_account_id', required_if_provider='odoo')
-    odoo_adyen_payout_id = fields.Many2one(
-        string="Adyen Payout", comodel_name='adyen.payout', required_if_provider='odoo',
-        domain='[("adyen_account_id", "=", odoo_adyen_account_id)]')
 
-    @api.constrains('provider', 'state', 'odoo_adyen_payout_id', 'odoo_adyen_account_id')
+    @api.constrains('provider', 'state', 'odoo_adyen_account_id')
     def _check_state_is_not_test(self):
-        if any(a.provider == 'odoo' and a.state == 'enabled' and not a.odoo_adyen_account_id and not a.odoo_adyen_payout_id for a in self):
+        if any(a.provider == 'odoo' and a.state == 'enabled' and not a.odoo_adyen_account_id for a in self):
             raise ValidationError(_("Adyen and Payouts accounts are required."))
 
     def odoo_create_adyen_account(self):

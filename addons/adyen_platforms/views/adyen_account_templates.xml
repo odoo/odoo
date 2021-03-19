@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="kyc_status_message">
-        <p>New KYC Status: <t- t-esc="kyc_status"/></p>
-        <p t-if="account_holder_messages + shareholder_messages + bank_account_messages">
-            Reason(s):
-            <ul>
-                <li t-if="account_holder_messages" t-foreach="account_holder_messages" t-as="message">
-                    <t t-esc="message"/>
-                </li>
-                <li t-if="shareholder_messages">
-                    Shareholders:
-                    <ul>
-                        <li t-foreach="shareholder_messages" t-as="message">
-                            <t t-esc="message"/>
-                        </li>
-                    </ul>
-                </li>
-                <li t-if="bank_account_messages">
-                    Bank Accounts:
-                    <ul>
-                        <li t-foreach="bank_account_messages" t-as="message">
-                            <t t-esc="message"/>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </p>
+        <p t-if="message" t-esc="message" />
+        <t t-if="checks">
+            <t t-foreach="checks" t-as="verification_type">
+                <ul>
+                    <li><strong><t t-esc="verification_type" />:</strong>
+                        <ul>
+                            <t t-foreach="checks[verification_type]" t-as="check">
+                                <li>
+                                    <strong t-if="check['document']"><t t-esc="check['document']" />: </strong><t t-esc="check['message']" />
+                                </li>
+                            </t>
+                        </ul>
+                    </li>
+                </ul>
+            </t>
+        </t>
+    </template>
+
+    <template id="status_message">
+        <p t-if="message"><t t-esc="message" />:</p>
+        <ul>
+            <li t-foreach="reasons" t-as="reason">
+                <t t-esc="reason" />
+            </li>
+        </ul>
     </template>
 </odoo>

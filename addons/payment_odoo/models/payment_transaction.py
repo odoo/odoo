@@ -6,7 +6,7 @@ import pprint
 
 from werkzeug import urls
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -18,6 +18,8 @@ _logger = logging.getLogger(__name__)
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
+
+    adyen_transaction_id = fields.One2many('adyen.transaction', 'payment_transaction_id')
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Odoo-specific rendering values.
@@ -64,7 +66,7 @@ class PaymentTransaction(models.Model):
                 'merchant_signature': signature,
                 'notification_url': urls.url_join(base_url, OdooController._notification_url),
                 'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
-                'payout': self.acquirer_id.odoo_adyen_payout_id.code,
+                'payout': self.acquirer_id.odoo_adyen_account_id.account_code,
             },  # Proxy-specific data
         }
         return {
@@ -114,7 +116,7 @@ class PaymentTransaction(models.Model):
                 'merchant_signature': signature,
                 'notification_url': urls.url_join(base_url, OdooController._notification_url),
                 'adyen_uuid': self.acquirer_id.odoo_adyen_account_id.adyen_uuid,
-                'payout': self.acquirer_id.odoo_adyen_payout_id.code,
+                'payout': self.acquirer_id.odoo_adyen_account_id.account_code,
             },  # Proxy-specific data
         }
         response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payments', data)

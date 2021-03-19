@@ -41,8 +41,11 @@ class OdooController(http.Controller):
             return
 
         _logger.info("notification received:\n%s", pprint.pformat(notification_data))
+
         if notification_data['success'] != 'true':
             return  # Don't handle failed events
+
+        request.env['adyen.transaction'].sudo()._handle_payment_notification(notification_data, tx_sudo)
 
         # Reshape the notification data for parsing
         event_code = notification_data['eventCode']
@@ -50,6 +53,9 @@ class OdooController(http.Controller):
             notification_data['resultCode'] = 'Authorised'
         elif event_code == 'CANCELLATION':
             notification_data['resultCode'] = 'Cancelled'
+        elif event_code in ['NOTIFICATION_OF_CHARGEBACK', 'CHARGEBACK']:
+            notification_data['resultCode'] = 'Chargeback'
+            #raise NotImplementedError  # TODO eventually
         else:
             return  # Don't handle unsupported event codes
 

@@ -17,11 +17,14 @@
                     <field name="odoo_adyen_account_id"
                            readonly="1"
                            attrs="{'invisible': [('odoo_adyen_account_id', '=', False)]}"/>
-                    <field name="odoo_adyen_payout_id"
-                           attrs="{'invisible': [('odoo_adyen_account_id', '=', False)], 'required': [('provider', '=', 'odoo'), ('state', '=', 'enabled')]}"/>
                 </group>
             </xpath>
         </field>
     </record>
+
+    <menuitem id="root_adyen_menu" name="Odoo Payments" parent="account.root_payment_menu" sequence="10" />
+        <menuitem id="menu_adyen_transaction" parent="root_adyen_menu" action="adyen_platforms.adyen_transaction_action"/>
+        <menuitem id="menu_adyen_balance" parent="root_adyen_menu" action="adyen_platforms.adyen_balance_action"/>
+        <menuitem id="menu_adyen_account" parent="root_adyen_menu" action="adyen_platforms.adyen_account_action"/>
 
 </odoo>
