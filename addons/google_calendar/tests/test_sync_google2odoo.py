@@ -129,11 +129,7 @@ class TestSyncGoogle2Odoo(TransactionCase):
             'organizer': {'email': 'odoocalendarref@gmail.com'},
             'summary': 'Pricing new update',
             'visibility': 'private',
-            'attendees': [{
-                "email": user_sync.email,
-                "self": True,
-                "responseStatus": "needsAction"
-            }],
+            'attendees': [],
             'reminders': {'useDefault': True},
             'start': {
                 'dateTime': '2020-01-13T16:55:00+01:00',
@@ -151,7 +147,7 @@ class TestSyncGoogle2Odoo(TransactionCase):
         self.assertEqual(event.google_sync_user_id, user_sync)
         self.assertEqual(self.read_event(user, event, 'name'), 'Pricing new update', "Owner should be able to read the event")
         event.with_user(user).write({'description': 'owner writes something'})
-        self.assertEqual(self.read_event(user, event, 'description'), 'owner writes something',"Owner should be able to write the event")
+        self.assertEqual(self.read_event(user, event, 'description'), 'owner writes something', "Owner should be able to write the event")
         self.assertEqual(self.read_event(user_sync, event, 'name'), 'Busy', "Sync user should not be able to read the event")
         with self.assertRaises(AccessError):
             event.with_user(user_sync).write({'description': 'Sync user writes something'})

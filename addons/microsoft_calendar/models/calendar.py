@@ -39,7 +39,7 @@ class Meeting(models.Model):
 
     @api.model
     def _restart_microsoft_sync(self):
-        self.env['calendar.event'].search(self._get_microsoft_sync_domain()).write({
+        self.env['calendar.event'].search(self._get_microsoft_sync_domain()).sudo().write({
             'need_sync_m': True,
         })
 
