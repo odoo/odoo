@@ -448,6 +448,48 @@ class TestComposerResultsComment(TestMailComposer):
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_notifications_delete(self):
+        """ Notifications are correctly deleted once sent """
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record)
+        ).create({
+            'body': '<p>Test Body</p>',
+            'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
+        })
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            composer.send_mail()
+
+        # notifications
+        message = self.test_record.message_ids[0]
+        self.assertEqual(message.notified_partner_ids, self.partner_employee_2 + self.partner_1 + self.partner_2)
+
+        # global outgoing
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail (1 for users, 1 for customers)')
+        self.assertEqual(len(self._mails), 3, 'Should have sent an email each recipient')
+        self.assertEqual(self._new_mails.exists(), self.env['mail.mail'], 'Should have deleted mail.mail records')
+
+        # ensure ``mail_auto_delete`` context key allow to override this behavior
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record),
+            mail_auto_delete=False,
+        ).create({
+            'body': '<p>Test Body</p>',
+            'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
+        })
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            composer.send_mail()
+
+        # notifications
+        message = self.test_record.message_ids[0]
+        self.assertEqual(message.notified_partner_ids, self.partner_employee_2 + self.partner_1 + self.partner_2)
+
+        # global outgoing
+        self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail (1 for users, 1 for customers)')
+        self.assertEqual(len(self._mails), 3, 'Should have sent an email each recipient')
+        self.assertEqual(len(self._new_mails.exists()), 2, 'Should not have deleted mail.mail records')
+
+    @users('employee')
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail')
     def test_mail_composer_recipients(self):
         """ Test partner_ids given to composer are given to the final message. """
         composer = self.env['mail.compose.message'].with_context(

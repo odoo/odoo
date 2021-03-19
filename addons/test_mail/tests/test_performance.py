@@ -271,6 +271,27 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
+        with self.assertQueryCount(__system__=30, emp=36):
+            composer.send_mail()
+
+    @users('__system__', 'emp')
+    @warmup
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_nodelete(self):
+        self._create_test_records()
+        test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
+        customer_id = self.customer.id
+        with self.assertQueryCount(__system__=2, emp=2):
+            composer = self.env['mail.compose.message'].with_context({
+                'default_composition_mode': 'comment',
+                'default_model': test_record._name,
+                'default_res_id': test_record.id,
+                'mail_auto_delete': False,
+            }).create({
+                'body': '<p>Test Body</p>',
+                'partner_ids': [(4, customer_id)],
+            })
+
         with self.assertQueryCount(__system__=23, emp=29):
             composer.send_mail()
 
