@@ -363,7 +363,7 @@ class Field(MetaField('DummyField', (object,), {})):
         attrs['model_name'] = model_class._name
         attrs['name'] = name
         attrs['_module'] = modules[-1] if modules else None
-        attrs['_modules'] = set(modules)
+        attrs['_modules'] = tuple(set(modules))
 
         # initialize ``self`` with ``attrs``
         if name == 'state':
@@ -562,8 +562,8 @@ class Field(MetaField('DummyField', (object,), {})):
             # add modules from delegate and target fields; the first one ensures
             # that inherited fields introduced via an abstract model (_inherits
             # being on the abstract model) are assigned an XML id
-            self._modules.update(model._fields[self.related[0]]._modules)
-            self._modules.update(field._modules)
+            delegate_field = model._fields[self.related[0]]
+            self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
