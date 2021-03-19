@@ -152,14 +152,13 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         self.assertFalse(event_prev_scheduler.done)
 
         # execute event reminder scheduler explicitly, before scheduled date -> should not do anything
-        # FIXME: execute does not respect scheduled date
-        # now_start = event_date_begin + relativedelta(hours=-25)
-        # with freeze_time(now_start), self.mock_mail_gateway():
-        #     event_prev_scheduler.execute()
+        now_start = event_date_begin + relativedelta(hours=-25)
+        with freeze_time(now_start), self.mock_mail_gateway():
+            event_prev_scheduler.execute()
 
-        # self.assertFalse(event_prev_scheduler.mail_sent)
-        # self.assertFalse(event_prev_scheduler.done)
-        # self.assertEqual(len(self._new_mails, 0))
+        self.assertFalse(event_prev_scheduler.mail_sent)
+        self.assertFalse(event_prev_scheduler.done)
+        self.assertEqual(len(self._new_mails), 0)
 
         # execute cron to run schedulers
         now_start = event_date_begin + relativedelta(hours=-23)
