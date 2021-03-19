@@ -484,7 +484,7 @@ class Field(MetaField('DummyField', (object,), {})):
             else:
                 related_model = model.env[self.related_field.model_name]
                 depends, depends_context = self.related_field.get_depends(related_model)
-            return ['.'.join(self.related)], depends_context
+            return [self.related], depends_context
 
         if not self.compute:
             return (), self._depends_context or ()
@@ -517,13 +517,11 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def setup_related(self, model):
         """ Setup the attributes of a related field. """
-        # fix the type of self.related if necessary
-        if isinstance(self.related, str):
-            self.related = tuple(self.related.split('.'))
+        assert isinstance(self.related, str), self.related
 
         # determine the chain of fields, and make sure they are all set up
         model_name = self.model_name
-        for name in self.related:
+        for name in self.related.split('.'):
             field = model.pool[model_name]._fields[name]
             if not field._setup_done:
                 field.setup(model.env[model_name])
@@ -562,13 +560,13 @@ class Field(MetaField('DummyField', (object,), {})):
             # add modules from delegate and target fields; the first one ensures
             # that inherited fields introduced via an abstract model (_inherits
             # being on the abstract model) are assigned an XML id
-            delegate_field = model._fields[self.related[0]]
+            delegate_field = model._fields[self.related.split('.')[0]]
             self._modules = tuple({*self._modules, *delegate_field._modules, *field._modules})
 
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
-        for name in self.related[:-1]:
+        for name in self.related.split('.')[:-1]:
             record = first(record[name])
         return record, self.related_field
 
@@ -601,7 +599,7 @@ class Field(MetaField('DummyField', (object,), {})):
         # computation.
         #
         values = list(records)
-        for name in self.related[:-1]:
+        for name in self.related.split('.')[:-1]:
             try:
                 values = [first(value[name]) for value in values]
             except AccessError as e:
@@ -634,7 +632,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """
-        return [('.'.join(self.related), operator, value)]
+        return [(self.related, operator, value)]
 
     # properties used by setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
@@ -889,12 +887,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # optimization for computing simple related fields like 'foo_id.bar'
         if (
             not column
-            and len(self.related or ()) == 2
+            and self.related and self.related.count('.') == 1
             and self.related_field.store and not self.related_field.compute
             and not (self.related_field.type == 'binary' and self.related_field.attachment)
             and self.related_field.type not in ('one2many', 'many2many')
         ):
-            join_field = model._fields[self.related[0]]
+            join_field = model._fields[self.related.split('.')[0]]
             if (
                 join_field.type == 'many2one'
                 and join_field.store and not join_field.compute
@@ -956,6 +954,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def update_db_related(self, model):
         """ Compute a stored related field directly in SQL. """
         comodel = model.env[self.related_field.model_name]
+        join_field, comodel_field = self.related.split('.')
         model.env.cr.execute("""
             UPDATE "{model_table}" AS x
             SET "{model_field}" = y."{comodel_field}"
@@ -965,8 +964,8 @@ class Field(MetaField('DummyField', (object,), {})):
             model_table=model._table,
             model_field=self.name,
             comodel_table=comodel._table,
-            comodel_field=self.related[1],
-            join_field=self.related[0],
+            comodel_field=comodel_field,
+            join_field=join_field,
         ))
 
     ############################################################################
@@ -1110,7 +1109,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 # values as record for the corresponding inherited fields
                 def is_inherited_field(name):
                     field = record._fields[name]
-                    return field.inherited and field.related[0] == self.name
+                    return field.inherited and field.related.split('.')[0] == self.name
 
                 parent = record.env[self.comodel_name].new({
                     name: value
@@ -1195,7 +1194,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
             if self.inherited:
                 # special case: also assign parent records if they are new
-                parents = records[self.related[0]]
+                parents = records[self.related.split('.')[0]]
                 parents.filtered(lambda r: not r.id)[self.name] = value
 
         if other_ids:
