@@ -419,7 +419,9 @@ class Field(MetaField('DummyField', (object,), {})):
         if extra_keys:
             attrs['_extra_keys'] = extra_keys
 
-        self.__dict__.update(attrs)
+        for key, val in attrs.items():
+            if getattr(self, key, Default) != val:
+                setattr(self, key, val)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
