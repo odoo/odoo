@@ -390,6 +390,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/js/libs/underscore.js',
             'web/static/src/js/libs/popper.js',
             'web/static/src/js/libs/zoomodoo.js',
+            'web/static/src/js/libs/jSignatureCustom.js',
             'web/static/src/js/chrome/keyboard_navigation_mixin.js',
             'web/static/src/js/core/abstract_service.js',
             'web/static/src/js/core/abstract_storage_service.js',
