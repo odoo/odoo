@@ -148,6 +148,27 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
     return env['res.users'].with_context(**context).create(create_values)
 
+
+class RecordCapturer:
+    def __init__(self, model, domain):
+        self._model = model
+        self._domain = domain
+
+    def __enter__(self):
+        self._before = self._model.search(self._domain)
+        self._after = None
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        if exc_type is None:
+            self._after = self._model.search(self._domain) - self._before
+
+    @property
+    def records(self):
+        if self._after is None:
+            return self._model.search(self._domain) - self._before
+        return self._after
+
 # ------------------------------------------------------------
 # Main classes
 # ------------------------------------------------------------
