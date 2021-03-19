@@ -380,6 +380,36 @@
     <div data-js="ImageOptimize"
          data-selector="img">
         <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
+        <div class="o_we_image_shape">
+            <we-row string="Shape" class="o_we_full_row">
+                <we-select-pager data-name="shape" class="o_we_select_grid o_fake_transparent_background">
+                    <we-select-page string="Solids">
+                        <we-button data-set-img-shape="web_editor/solid/blob_1_solid_rd" data-select-label="Blob Solid 1" />
+                        <we-button data-set-img-shape="web_editor/solid/blob_2_solid_str" data-select-label="Blob Solid 2" />
+                        <we-button data-set-img-shape="web_editor/solid/blob_3_solid_rd" data-select-label="Blob Solid 3" />
+                        <we-button data-set-img-shape="web_editor/solid/oval_1_solid_rd" data-select-label="Oval Solid"/>
+                    </we-select-page>
+                    <we-select-page string="Patterns">
+                        <we-button data-set-img-shape="web_editor/pattern/organic_2_pattern_dot" data-select-label="Organic Dot" />
+                        <we-button data-set-img-shape="web_editor/pattern/organic_3_pattern_cross" data-select-label="Organic Cross" />
+                        <we-button data-set-img-shape="web_editor/pattern/organic_4_pattern_caps" data-select-label="Organic Caps" />
+                    </we-select-page>
+                    <we-select-page string="Lines">
+                        <we-button data-set-img-shape="web_editor/line/oval_3_pattern_line" data-select-label="Oval Line" />
+                        <we-button data-set-img-shape="web_editor/line/organic_1_line" data-select-label="Organic Line" />
+                        <we-button data-set-img-shape="web_editor/line/oval_2_line" data-select-label="Oval Line 2" />
+                    </we-select-page>
+                </we-select-pager>
+                <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape" class="o_we_image_shape_remove"><i class="fa fa-fw fa-times"/></we-button>
+            </we-row>
+            <we-row string=" ⌙ Colors">
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape" data-name="img-shape-color-0" data-color-id="0" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape" data-name="img-shape-color-1" data-color-id="1" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape" data-name="img-shape-color-2" data-color-id="2" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape" data-name="img-shape-color-3" data-color-id="3" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape" data-name="img-shape-color-4" data-color-id="4" />
+            </we-row>
+        </div>
     </div>
 
     <div data-js="DynamicSvg" data-selector="img">

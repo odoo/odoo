@@ -12,6 +12,7 @@ const weUtils = require('web_editor.utils');
 const {
     normalizeColor,
     getBgImageURL,
+    DEFAULT_PALETTE,
 } = weUtils;
 var weWidgets = require('wysiwyg.widgets');
 const {
@@ -4439,6 +4440,24 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
  */
 registry.ImageOptimize = ImageHandlerOption.extend({
     /**
+     * @constructor
+     */
+    init() {
+        this.shapeCache = {};
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    willStart() {
+        const img = this._getImg();
+        if (img.dataset.shape && img.dataset.originalMimetype) {
+            // Restore original image optimization features
+            img.dataset.mimetype = img.dataset.originalMimetype;
+        }
+        return this._super(...arguments);
+    },
+    /**
      * @override
      */
     start() {
@@ -4453,11 +4472,164 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         this.$target.off('.ImageOptimization');
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        const img = this._getImg();
+        if (img.dataset.shape) {
+            // The server needs to know that the file is an SVG in order to
+            // serve it properly. However, we need to remember the type of the
+            // image inside the SVG to keep image editing features
+            img.dataset.originalMimetype = img.dataset.mimetype;
+            img.dataset.mimetype = 'image/svg+xml';
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    async setImgShape(previewMode, widgetValue, params) {
+        const img = this._getImg();
+        if (widgetValue) {
+            await this._loadShape(widgetValue);
+            if (previewMode === 'reset' && img.dataset.shapeColors) {
+                // When we reset the shape we need to reapply the colors the
+                // user had selected.
+                await this._applyShapeAndColors(false, img.dataset.shapeColors.split(';'));
+            } else {
+                // If the preview mode === false we want to save the colors
+                // as the user chose their shape
+                await this._applyShapeAndColors(previewMode === false);
+            }
+        } else {
+            // Re-applying the modifications and deleting the shapes
+            img.src = await applyModifications(img);
+            delete img.dataset.shape;
+            delete img.dataset.shapeColors;
+            delete img.dataset.fileName;
+        }
+        img.classList.add('o_modified_image_to_save');
+    },
+    /**
+     * Handles color assignment on the shape. Widget is a color picker.
+     * If no value, we reset to the current color palette.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeColor(previewMode, widgetValue, params) {
+        const img = this._getImg();
+        const newColorId = parseInt(params.colorId);
+        if (widgetValue === '') {
+            widgetValue = weUtils.getCSSVariableValue(`o-color-${(newColorId + 1)}`);
+        }
+        const oldColors = img.dataset.shapeColors.split(';');
+        const newColors = oldColors.slice(0);
+        newColors[newColorId] = normalizeColor(widgetValue);
+        await this._applyShapeAndColors(true, newColors);
+        img.classList.add('o_modified_image_to_save');
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    async _applyOptions() {
+        const img = await this._super(...arguments);
+        if (img && img.dataset.shape) {
+            // Reapplying the shape
+            await this._loadShape(img.dataset.shape);
+            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+        }
+        return img;
+    },
+    /**
+     * Loads the shape into cache if not already and sets it in the dataset of
+     * the img
+     *
+     * @param {string} shapeName identifier of the shape
+     */
+    async _loadShape(shapeName) {
+        const [module, directory, fileName] = shapeName.split('/');
+        let shape = this.shapeCache[fileName];
+        if (!shape) {
+            const shapeURL = `/${module}/static/image_shapes/${directory}/${fileName}.svg`;
+            shape = await (await fetch(shapeURL)).text();
+            this.shapeCache[fileName] = shape;
+        }
+        this._getImg().dataset.shape = shapeName;
+    },
+
+    /**
+     * Applies the shape in img.dataset.shape and replaces the previous hex
+     * color values with new ones or current theme
+     * ones then calls _writeShape()
+     *
+     * @param {boolean} save true if the colors need to be saved in the
+     * data-attribute
+     * @param {string[]} [newColors] Array of HEX color code, default
+     * theme colors are applied if not supplied
+     */
+    async _applyShapeAndColors(save, newColors) {
+        const img = this._getImg();
+        let shape = this.shapeCache[img.dataset.shape.split('/')[2]];
+
+        // Map the default palette colors to an array if the shape includes them
+        // If they do not map a NULL, this way we know if a default color is in
+        // the shape
+        const oldColors = Object.values(DEFAULT_PALETTE).map(color => shape.includes(color) ? color : null);
+        if (!newColors) {
+            // If we do not have newColors, we still replace the default
+            // shape's colors by the current palette's
+            newColors = oldColors.map((color, i) => color !== null ? weUtils.getCSSVariableValue(`o-color-${(i + 1)}`) : null);
+        }
+        newColors.forEach((color, i) => shape = shape.replace(new RegExp(oldColors[i], 'g'), color));
+        await this._writeShape(shape);
+        if (save) {
+            img.dataset.shapeColors = newColors.join(';');
+        }
+    },
+    /**
+     * Sets the image in the supplied SVG and replace the src with a dataURL
+     *
+     * @param {string} svgText svg file as text
+     * @returns {Promise} resolved once the svg is properly loaded
+     * in the document
+     */
+    async _writeShape(svgText) {
+        const img = this._getImg();
+
+        const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
+        // We will store the image in base64 inside the SVG.
+        // applyModifications will return a dataURL with the current filters
+        // and size options.
+        const imgDataURL = await applyModifications(img);
+        svg.removeChild(svg.querySelector('#preview'));
+        svg.querySelector('image').setAttribute('xlink:href', imgDataURL);
+        svg.setAttribute('width', img.naturalWidth);
+        svg.setAttribute('height', img.naturalHeight);
+        // Transform the current SVG in a base64 file to be saved by the server
+        const blob = new Blob([svg.outerHTML], {
+            type: 'image/svg+xml',
+        });
+
+        const reader = new FileReader();
+        const readPromise = new Promise(resolve => {
+            reader.addEventListener('load', () => resolve(reader.result));
+        });
+        reader.readAsDataURL(blob);
+        const dataURL = await readPromise;
+        const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
+        img.dataset.fileName = `${imgFilename}.svg`;
+        return loadImage(dataURL, img);
+    },
     /**
      * @override
      */
@@ -4491,6 +4663,54 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         const titleTextEl = leftPanelEl.querySelector('we-title > span');
         this.$weight.appendTo(titleTextEl);
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName.startsWith('img-shape-color')) {
+            const img = this._getImg();
+            const shapeName = img.dataset.shape;
+            if (!shapeName) {
+                return false;
+            }
+            const colors = img.dataset.shapeColors.split(';');
+            return colors[parseInt(params.colorId)];
+        }
+        return this._super();
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'setImgShape':
+                return this._getImg().dataset.shape || '';
+            case 'setImgShapeColor': {
+                const img = this._getImg();
+                return (img.dataset.shapeColors && img.dataset.shapeColors.split(';')[parseInt(params.colorId)]) || '';
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Appends the SVG as an image.
+     * Due to the nature of image_shapes' SVGs, it is easier to render them as
+     * img compared to appending their content to the DOM
+     * (which is what the current data-img does)
+     *
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        await this._super(...arguments);
+        uiFragment.querySelectorAll('we-select-page we-button[data-set-img-shape]').forEach(btn => {
+            const image = document.createElement('img');
+            const [moduleName, directory, shapeName] = btn.dataset.setImgShape.split('/');
+            image.src = `/${moduleName}/static/image_shapes/${directory}/${shapeName}.svg`;
+            image.width = 80;
+            image.height = 60;
+            $(btn).prepend(image);
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -4515,6 +4735,11 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      * @param {Event} ev
      */
     async _onImageCropped(ev) {
+        const img = this._getImg();
+        if (img.dataset.shape) {
+            await this._loadShape(img.dataset.shape);
+            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+        }
         await this._rerenderXML();
     },
 });
