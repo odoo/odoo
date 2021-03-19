@@ -62,6 +62,36 @@ class TestAccessRights(TransactionCase):
         with self.assertRaises(AccessError):
             self.read_event(self.portal, event, 'location')
 
+    def test_private_edit_description(self):
+        event = self.create_event(
+            self.john,
+            privacy='private',
+            partner_ids=[(4, self.bob.partner_id.id)],
+        )
+        with self.assertRaises(AccessError):
+            event.with_user(self.bob).write({'description': 'bob writes something'})
+        with self.assertRaises(AccessError):
+            event.with_user(self.raoul).write({'description': 'raoul writes something'})
+        with self.assertRaises(AccessError):
+            event.with_user(self.jack).write({'description': 'jack writes something'})
+        event.with_user(self.john).write({'description': 'john writes something'})
+        self.assertEqual(self.read_event(self.john, event, 'description'), 'john writes something', 'A private event can be edited by its owner')
+
+    def test_public_edit_description(self):
+        event = self.create_event(
+            self.john,
+            privacy='public',
+            partner_ids=[(4, self.bob.partner_id.id)],
+        )
+        with self.assertRaises(AccessError):
+            event.with_user(self.bob).write({'description': 'bob writes something'})
+        with self.assertRaises(AccessError):
+            event.with_user(self.raoul).write({'description': 'raoul writes something'})
+        event.with_user(self.jack).write({'description': 'jack writes something'})
+        self.assertEqual(self.read_event(self.jack, event, 'description'), 'jack writes something', 'A public event can be edited by the calendar event admin')
+        event.with_user(self.john).write({'description': 'john writes something'})
+        self.assertEqual(self.read_event(self.john, event, 'description'), 'john writes something', 'A public event can be edited by its owner')
+
     def test_private_and_public(self):
         private = self.create_event(
             self.john,

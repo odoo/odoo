@@ -5,6 +5,7 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
 import pytz
 from datetime import datetime, date
 from odoo.tests.common import TransactionCase, new_test_user
+from odoo.exceptions import AccessError
 
 
 class TestSyncGoogle2Odoo(TransactionCase):
@@ -17,6 +18,14 @@ class TestSyncGoogle2Odoo(TransactionCase):
         google_recurrence = events.filter(GoogleEvent.is_recurrence)
         self.env['calendar.recurrence']._sync_google2odoo(google_recurrence)
         self.env['calendar.event']._sync_google2odoo(events - google_recurrence)
+
+    def read_event(self, user, events, field):
+        data = events.with_user(user).read([field])
+        if len(events) == 1:
+            return data[0][field]
+        mapped_data = {record['id']: record for record in data}
+        # Keep the same order
+        return [mapped_data[eid][field] for eid in events.ids]
 
     def test_new_google_event(self):
         values = {
@@ -104,6 +113,84 @@ class TestSyncGoogle2Odoo(TransactionCase):
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
         event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
         self.assertEqual(event.user_id, user)
+
+    # [TBD] the email address of the google event owner belongs to another odoo user.
+    # [TDB] the event has never been synced to the Odoo calendar before.
+    # [TBD] after sync
+    # [TBD] the original owner(odoo user) should become the owner of the odoo event
+    # [TBD] the sync user should not see detail of the private event.
+    # [TBD] the sync user should not be able to edit the private event.
+    def test_owner_another_user(self):
+        user = new_test_user(self.env, login='calendar-user', email='odoocalendarref@gmail.com')
+        user_sync = new_test_user(self.env, login='calendar-user-sync', email='odoocalendarsync@gmail.com')
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com'},
+            'summary': 'Pricing new update',
+            'visibility': 'private',
+            'attendees': [{
+                "email": user_sync.email,
+                "self": True,
+                "responseStatus": "needsAction"
+            }],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+
+        self.env['calendar.event'].with_user(user_sync).sudo()._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertEqual(event.user_id, user)
+        self.assertEqual(event.google_sync_user_id, user_sync)
+        self.assertEqual(self.read_event(user, event, 'name'), 'Pricing new update', "Owner should be able to read the event")
+        event.with_user(user).write({'description': 'owner writes something'})
+        self.assertEqual(self.read_event(user, event, 'description'), 'owner writes something',"Owner should be able to write the event")
+        self.assertEqual(self.read_event(user_sync, event, 'name'), 'Busy', "Sync user should not be able to read the event")
+        with self.assertRaises(AccessError):
+            event.with_user(user_sync).write({'description': 'Sync user writes something'})
+
+    def test_owner_external_user(self):
+        # [TBD] the email address of the google event owner belongs to a non-odoo gmail user.
+        # [TDB] the event has never been synced to the Odoo calendar before.
+        # [TBD] after sync
+        # [TBD] the original owner should be False.
+        # [TBD] the sync user has all permissions of the event.
+        # [TBD] however the local info edited by the sync user will not be synced to the google calendar without google calendar's permission
+        # [TBD] aslo, if the real owner of the google event changes something, the local info will be overwritten,
+        user_sync = new_test_user(self.env, login='calendar-user-sync', email='odoocalendarsync@gmail.com')
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'external@gmail.com'},
+            'summary': 'Pricing new update',
+            'visibility': 'private',
+            'attendees': [{
+                "email": user_sync.email,
+                "self": True,
+                "responseStatus": "needsAction"
+            }],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event'].with_user(user_sync).sudo()._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertEqual(self.read_event(user_sync, event, 'name'), 'Pricing new update', "Sync user should be able to read the event")
+        event.with_user(user_sync).write({"description": "new price"})
+        self.assertEqual(self.read_event(user_sync, event, 'description'), 'new price', "Sync user should be able to edit the event")
 
     def test_cancelled(self):
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
