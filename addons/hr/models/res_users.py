@@ -16,6 +16,7 @@ HR_READABLE_FIELDS = [
     'last_activity',
     'last_activity_time',
     'can_edit',
+    'is_system',
 ]
 
 HR_WRITABLE_FIELDS = [
@@ -132,6 +133,11 @@ class User(models.Model):
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
+    is_system = fields.Boolean(compute="_compute_is_system")
+
+    @api.depends_context('uid')
+    def _compute_is_system(self):
+        self.write({'is_system': self.env.user._is_system()})
 
     def _compute_can_edit(self):
         can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
