@@ -4,10 +4,33 @@
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, RecordCapturer
 
 
-class TestIrCron(TransactionCase):
+class CronMixinCase:
+    def capture_triggers(self, cron_id=None):
+        """
+        Get a context manager to get all cron triggers created during
+        the context lifetime. While in the context, it exposes the
+        triggers created so far from the beginning of the context. When
+        the context exits, it doesn't capture new triggers anymore.
+
+        The triggers are accessible on the `records` attribute of the
+        returned object.
+
+        :param cron_id: An optional cron record id (int) or xmlid (str)
+                        to only capture triggers for that cron.
+        """
+        if isinstance(cron_id, str):  # xmlid case
+            cron_id = self.env.ref(cron_id).id
+
+        return RecordCapturer(
+            model=self.env['ir.cron.trigger'].sudo(),
+            domain=[('cron_id', '=', cron_id)] if cron_id else []
+        )
+
+
+class TestIrCron(TransactionCase, CronMixinCase):
 
     def setUp(self):
         super(TestIrCron, self).setUp()
