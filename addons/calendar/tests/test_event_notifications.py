@@ -7,10 +7,11 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.tests.common import TransactionCase, new_test_user
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import MailCase
 
 
-class TestEventNotifications(TransactionCase, MailCase):
+class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -142,27 +143,23 @@ class TestEventNotifications(TransactionCase, MailCase):
             self.assertEqual(notif, bus_message)
 
     def test_email_alarm(self):
-        cron_id = self.env.ref('calendar.ir_cron_scheduler_alarm').id
-        triggers_before = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
-
-        alarm = self.env['calendar.alarm'].create({
-            'name': 'Alarm',
-            'alarm_type': 'email',
-            'interval': 'minutes',
-            'duration': 20,
-        })
         now = fields.Datetime.now()
-        self.event.write({
-            'start': now + relativedelta(minutes=15),
-            'stop': now + relativedelta(minutes=18),
-            'partner_ids': [fields.Command.link(self.partner.id)],
-            'alarm_ids': [fields.Command.link(alarm.id)],
-        })
+        with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
+            alarm = self.env['calendar.alarm'].create({
+                'name': 'Alarm',
+                'alarm_type': 'email',
+                'interval': 'minutes',
+                'duration': 20,
+            })
+            self.event.write({
+                'start': now + relativedelta(minutes=15),
+                'stop': now + relativedelta(minutes=18),
+                'partner_ids': [fields.Command.link(self.partner.id)],
+                'alarm_ids': [fields.Command.link(alarm.id)],
+            })
 
-        triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
-        new_triggers = triggers_after - triggers_before
-        new_triggers.ensure_one()
-        self.assertLessEqual(new_triggers.call_at, now)
+        capt.records.ensure_one()
+        self.assertLessEqual(capt.records.call_at, now)
 
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
