@@ -61,7 +61,7 @@ var MrpBomReport = stock_report_generic.extend({
       var activeID = $parent.data('id');
       var productID = $parent.data('product_id');
       var lineID = $parent.data('line');
-      var qty = $parent.data('qty');
+      var qty = $parent.data('qty') || 0;
       var level = $parent.data('level') || 0;
       return this._rpc({
               model: 'report.mrp.report_bom_structure',
@@ -82,7 +82,7 @@ var MrpBomReport = stock_report_generic.extend({
       var self = this;
       var $parent = $(event.currentTarget).closest('tr');
       var activeID = $parent.data('bom-id');
-      var qty = $parent.data('qty');
+      var qty = $parent.data('qty') || 0;
       var level = $parent.data('level') || 0;
       return this._rpc({
               model: 'report.mrp.report_bom_structure',
