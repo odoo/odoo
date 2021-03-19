@@ -10,7 +10,8 @@ class CrmIapLeadIndustry(models.Model):
     _description = 'CRM IAP Lead Industry'
 
     name = fields.Char(string='Industry', required=True, translate=True)
-    reveal_id = fields.Char(required=True)
+    reveal_ids = fields.Char(required=True,
+        help="The list of reveal_ids for this industry, separated with ','")
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
