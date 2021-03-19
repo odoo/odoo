@@ -385,6 +385,46 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
+    def test_channel_unfollow_should_not_post_message_if_the_partner_has_been_removed(self):
+        '''
+        When a partner leaves a channel, the system will help post a message under
+        that partner's name in the channel to notify others if `email_sent` is set `False`.
+        The message should only be posted when the partner is still a member of the channel
+        before method `_action_unfollow()` is called.
+        If the partner has been removed earlier, no more messages will be posted
+        even if `_action_unfollow()` is called again.
+        '''
+        channel = self.env['mail.channel'].browse(self.test_channel.id)
+        channel.write({'email_send': False})
+        channel._action_add_members(self.test_partner)
+
+        # no message should be posted under test_partner's name
+        messages_0 = self.env['mail.message'].search([
+            ('model', '=', 'mail.channel'),
+            ('res_id', '=', channel.id),
+            ('author_id', '=', self.test_partner.id)
+        ])
+        self.assertEqual(len(messages_0), 0)
+
+        # a message should be posted to notify others when a partner is about to leave
+        channel._action_unfollow(self.test_partner)
+        messages_1 = self.env['mail.message'].search([
+            ('model', '=', 'mail.channel'),
+            ('res_id', '=', channel.id),
+            ('author_id', '=', self.test_partner.id)
+        ])
+        self.assertEqual(len(messages_1), 1)
+
+        # no more messages should be posted if the partner has been removed before.
+        channel._action_unfollow(self.test_partner)
+        messages_2 = self.env['mail.message'].search([
+            ('model', '=', 'mail.channel'),
+            ('res_id', '=', channel.id),
+            ('author_id', '=', self.test_partner.id)
+        ])
+        self.assertEqual(len(messages_2), 1)
+        self.assertEqual(messages_1, messages_2)
+
     def test_multi_company_chat(self):
         self._activate_multi_company()
         self.assertEqual(self.env.user.company_id, self.company_admin)
