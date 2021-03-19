@@ -322,6 +322,9 @@ class Channel(models.Model):
         return self._action_unfollow(self.env.user.partner_id)
 
     def _action_unfollow(self, partner):
+        self.message_unsubscribe(partner.ids)
+        if partner not in self.with_context(active_test=False).channel_partner_ids:
+            return True
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
         result = self.write({'channel_partner_ids': [(3, partner.id)]})
         # side effect of unsubscribe that wasn't taken into account because

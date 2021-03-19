@@ -299,6 +299,36 @@ class TestChannelFeatures(TestMailCommon):
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
+    def test_channel_unfollow_should_also_unsubscribe_the_partner(self):
+        self.test_channel.message_subscribe(self.test_partner.ids)
+        self.test_channel._action_unfollow(self.test_partner)
+
+        self.assertFalse(self.test_channel.message_partner_ids)
+
+    def test_channel_unfollow_should_not_post_message_if_the_partner_has_been_removed(self):
+        '''
+        When a partner leaves a channel, the system will help post a message under
+        that partner's name in the channel to notify others if `email_sent` is set `False`.
+        The message should only be posted when the partner is still a member of the channel
+        before method `_action_unfollow()` is called.
+        If the partner has been removed earlier, no more messages will be posted
+        even if `_action_unfollow()` is called again.
+        '''
+        self.test_channel.write({'email_send': False})
+        self._join_channel(self.test_channel, self.test_partner)
+        self.test_channel.message_subscribe(self.partner_employee.ids)
+
+        # a message should be posted to notify others when a partner is about to leave
+        with self.assertSinglePostNotifications([{'partner': self.partner_employee, 'type': 'inbox'}], {
+            'message_type': 'notification',
+            'subtype': 'mail.mt_comment',
+        }):
+            self.test_channel._action_unfollow(self.test_partner)
+
+        # no more messages should be posted if the partner has been removed before.
+        with self.assertNoNotifications():
+            self.test_channel._action_unfollow(self.test_partner)
+
     def test_multi_company_chat(self):
         company_A = self.env['res.company'].create({'name': 'Company A'})
         company_B = self.env['res.company'].create({'name': 'Company B'})
