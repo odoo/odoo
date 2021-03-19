@@ -540,7 +540,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 field_type = field.type
                 if field_type == 'monetary':
                     # Compare monetary field.
-                    currency_field_name = record._fields[field_name].currency_field
+                    currency_field_name = record._fields[field_name].get_currency_field(record)
                     record_currency = record[currency_field_name]
                     if field_name not in candidate:
                         diff[field_name] = (record_value, None)
