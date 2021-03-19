@@ -1422,40 +1422,42 @@ class Monetary(Field):
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
-    _description_currency_field = property(attrgetter('currency_field'))
+    def _description_currency_field(self, env):
+        return self.get_currency_field(env[self.model_name])
 
-    def _setup_currency_field(self, model):
-        if not self.currency_field:
-            # pick a default, trying in order: 'currency_id', 'x_currency_id'
-            if 'currency_id' in model._fields:
-                self.currency_field = 'currency_id'
-            elif 'x_currency_id' in model._fields:
-                self.currency_field = 'x_currency_id'
-        assert self.currency_field in model._fields, \
-            "Field %s with unknown currency_field %r" % (self, self.currency_field)
+    def get_currency_field(self, model):
+        """ Return the name of the currency field. """
+        return self.currency_field or (
+            'currency_id' if 'currency_id' in model._fields else
+            'x_currency_id' if 'x_currency_id' in model._fields else
+            None
+        )
 
     def setup_nonrelated(self, model):
         super().setup_nonrelated(model)
-        self._setup_currency_field(model)
+        assert self.get_currency_field(model) in model._fields, \
+            "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
 
     def setup_related(self, model):
         super().setup_related(model)
         if self.inherited:
-            self.currency_field = self.related_field.currency_field
-        self._setup_currency_field(model)
+            self.currency_field = self.related_field.get_currency_field(model.env[self.related_field.model_name])
+        assert self.get_currency_field(model) in model._fields, \
+            "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
-        if values and self.currency_field in values:
-            field = record._fields[self.currency_field]
-            currency = field.convert_to_cache(values[self.currency_field], record, validate)
+        currency_field = self.get_currency_field(record)
+        if values and currency_field in values:
+            field = record._fields[currency_field]
+            currency = field.convert_to_cache(values[currency_field], record, validate)
             currency = field.convert_to_record(currency, record)
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record[:1].with_context(prefetch_fields=False)[self.currency_field]
+            currency = record[:1].with_context(prefetch_fields=False)[currency_field]
 
         value = float(value or 0.0)
         if currency:
@@ -1470,7 +1472,8 @@ class Monetary(Field):
             # a function or related field!
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record.sudo().with_context(prefetch_fields=False)[self.currency_field]
+            currency_field = self.get_currency_field(record)
+            currency = record.sudo().with_context(prefetch_fields=False)[currency_field]
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:

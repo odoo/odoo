@@ -355,8 +355,8 @@ class AccountMove(models.Model):
             return current_ids != after_write_ids
         if field.type == 'one2many':
             return True
-        if field.type == 'monetary' and record[field.currency_field]:
-            return not record[field.currency_field].is_zero(record[field_name] - vals[field_name])
+        if field.type == 'monetary' and record[field.get_currency_field(record)]:
+            return not record[field.get_currency_field(record)].is_zero(record[field_name] - vals[field_name])
         if field.type == 'float':
             record_value = field.convert_to_cache(record[field_name], record)
             to_write_value = field.convert_to_cache(vals[field_name], record)

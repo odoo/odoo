@@ -2042,22 +2042,26 @@ class TestFields(TransactionCaseWithUserDemo):
     def test_93_monetary_related(self):
         """ Check the currency field on related monetary fields. """
         # check base field
-        field = self.env['test_new_api.monetary_base']._fields['amount']
-        self.assertEqual(field.currency_field, 'base_currency_id')
+        model = self.env['test_new_api.monetary_base']
+        field = model._fields['amount']
+        self.assertEqual(field.get_currency_field(model), 'base_currency_id')
 
         # related fields must use the field 'currency_id' or 'x_currency_id'
-        field = self.env['test_new_api.monetary_related']._fields['amount']
+        model = self.env['test_new_api.monetary_related']
+        field = model._fields['amount']
         self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'currency_id')
+        self.assertEqual(field.get_currency_field(model), 'currency_id')
 
-        field = self.env['test_new_api.monetary_custom']._fields['x_amount']
+        model = self.env['test_new_api.monetary_custom']
+        field = model._fields['x_amount']
         self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'x_currency_id')
+        self.assertEqual(field.get_currency_field(model), 'x_currency_id')
 
         # inherited field must use the same field as its parent field
-        field = self.env['test_new_api.monetary_inherits']._fields['amount']
+        model = self.env['test_new_api.monetary_inherits']
+        field = model._fields['amount']
         self.assertEqual(field.related, ('monetary_id', 'amount'))
-        self.assertEqual(field.currency_field, 'base_currency_id')
+        self.assertEqual(field.get_currency_field(model), 'base_currency_id')
 
     def test_94_image(self):
         f = io.BytesIO()
