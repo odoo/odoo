@@ -12,6 +12,7 @@ import binascii
 import enum
 import itertools
 import logging
+import warnings
 
 from markupsafe import Markup
 import psycopg2
@@ -439,19 +440,30 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def setup_nonrelated(self, model):
         """ Determine the dependencies and inverse field(s) of ``self``. """
+        pass
+
+    def get_depends(self, model):
+        """ Return the field's dependencies and cache dependencies. """
         if self._depends is not None:
             # the parameter 'depends' has priority over 'depends' on compute
-            self.depends = self._depends
-            self.depends_context = self._depends_context or ()
-            return
+            return self._depends, self._depends_context or ()
+
+        if self.related:
+            if self._depends_context is not None:
+                depends_context = self._depends_context
+            else:
+                related_model = model.env[self.related_field.model_name]
+                depends, depends_context = self.related_field.get_depends(related_model)
+            return ['.'.join(self.related)], depends_context
+
+        if not self.compute:
+            return (), self._depends_context or ()
 
         # determine the functions implementing self.compute
         if isinstance(self.compute, str):
             funcs = resolve_mro(model, self.compute, callable)
-        elif self.compute:
-            funcs = [self.compute]
         else:
-            funcs = []
+            funcs = [self.compute]
 
         # collect depends and depends_context
         depends = []
@@ -461,14 +473,13 @@ class Field(MetaField('DummyField', (object,), {})):
             depends.extend(deps(model) if callable(deps) else deps)
             depends_context.extend(getattr(func, '_depends_context', ()))
 
-        self.depends = tuple(depends)
-        self.depends_context = tuple(depends_context)
-
         # display_name may depend on context['lang'] (`test_lp1071710`)
         if self.automatic and self.name == 'display_name' and model._rec_name:
             if model._fields[model._rec_name].base_field.translate:
-                if 'lang' not in self.depends_context:
-                    self.depends_context += ('lang',)
+                if 'lang' not in depends_context:
+                    depends_context.append('lang')
+
+        return depends, depends_context
 
     #
     # Setup of related fields
@@ -495,10 +506,6 @@ class Field(MetaField('DummyField', (object,), {})):
             raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
 
         # determine dependencies, compute, inverse, and search
-        if self._depends is not None:
-            self.depends = self._depends
-        else:
-            self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
@@ -527,11 +534,6 @@ class Field(MetaField('DummyField', (object,), {})):
             # being on the abstract model) are assigned an XML id
             self._modules.update(model._fields[self.related[0]]._modules)
             self._modules.update(field._modules)
-
-        if self._depends_context is not None:
-            self.depends_context = self._depends_context
-        else:
-            self.depends_context = field.depends_context
 
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
@@ -658,7 +660,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return the dependencies of `self` as a collection of field tuples. """
         Model0 = registry[self.model_name]
 
-        for dotnames in self.depends:
+        for dotnames in registry.field_depends[self]:
             field_seq = []
             model_name = self.model_name
 
@@ -676,8 +678,9 @@ class Field(MetaField('DummyField', (object,), {})):
                         f"Wrong @depends on '{self.compute}' (compute method of field {self}). "
                         f"Dependency field '{fname}' not found in model {model_name}."
                     )
-                if field is self and index:
+                if field is self and index and not self.recursive:
                     self.recursive = True
+                    warnings.warn(f"Field {self} should be declared with recursive=True")
 
                 field_seq.append(field)
 
@@ -713,7 +716,6 @@ class Field(MetaField('DummyField', (object,), {})):
     # properties used by get_description()
     _description_store = property(attrgetter('store'))
     _description_manual = property(attrgetter('manual'))
-    _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
     _description_readonly = property(attrgetter('readonly'))
@@ -723,6 +725,9 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
     _description_group_operator = property(attrgetter('group_operator'))
+
+    def _description_depends(self, env):
+        return env.registry.field_depends[self]
 
     @property
     def _description_searchable(self):
@@ -3196,14 +3201,15 @@ class _RelationalMulti(_Relational):
     def convert_to_display_name(self, value, record):
         raise NotImplementedError()
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        if isinstance(self.domain, list):
-            self.depends = tuple(unique(itertools.chain(self.depends, (
+    def get_depends(self, model):
+        depends, depends_context = super().get_depends(model)
+        if not self.related and isinstance(self.domain, list):
+            depends = unique(itertools.chain(depends, (
                 self.name + '.' + arg[0]
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
-            ))))
+            )))
+        return depends, depends_context
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just

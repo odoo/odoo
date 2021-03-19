@@ -526,7 +526,10 @@ class BaseModel(metaclass=MetaModel):
         if cls._rec_name == name:
             # fixup _rec_name and display_name's dependencies
             cls._rec_name = None
-            cls.display_name.depends = tuple(dep for dep in cls.display_name.depends if dep != name)
+            if cls.display_name in cls.pool.field_depends:
+                cls.pool.field_depends[cls.display_name] = tuple(
+                    dep for dep in cls.pool.field_depends[cls.display_name] if dep != name
+                )
         return field
 
     @api.model
@@ -3132,7 +3135,7 @@ Fields:
                 stored_fields.add(name)
             elif field.compute:
                 # optimization: prefetch direct field dependencies
-                for dotname in field.depends:
+                for dotname in self.pool.field_depends[field]:
                     f = self._fields[dotname.split('.')[0]]
                     if f.prefetch and (not f.groups or self.user_has_groups(f.groups)):
                         stored_fields.add(f.name)
