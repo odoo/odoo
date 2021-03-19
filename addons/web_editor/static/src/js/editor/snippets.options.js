@@ -12,6 +12,7 @@ const weUtils = require('web_editor.utils');
 const {
     normalizeColor,
     getBgImageURL,
+    DEFAULT_PALETTE,
 } = weUtils;
 var weWidgets = require('wysiwyg.widgets');
 const {
@@ -4453,7 +4454,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _renderCustomXML(uiFragment) {
         const img = this._getImg();
-        if (!this.originalSrc || !['image/png', 'image/jpeg'].includes(img.dataset.mimetype)) {
+        if (!this.originalSrc || !['image/png', 'image/jpeg'].includes(this._getImageMimetype(img))) {
             [...uiFragment.childNodes].forEach(node => node.remove());
             return;
         }
@@ -4462,7 +4463,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             $select.append(`<we-button data-select-width="${value}">${label}</we-button>`);
         });
 
-        if (img.dataset.mimetype !== 'image/jpeg') {
+        if (this._getImageMimetype(img) !== 'image/jpeg') {
             uiFragment.querySelector('we-range[data-set-quality]').remove();
         }
     },
@@ -4504,11 +4505,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         if (!update && !(img && img.complete)) {
             return;
         }
-        if (!['image/jpeg', 'image/png'].includes(img.dataset.mimetype)) {
+        if (!['image/jpeg', 'image/png'].includes(this._getImageMimetype(img))) {
             this.originalId = null;
             return;
         }
-        const dataURL = await applyModifications(img);
+        const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
         this._filesize = dataURL.split(',')[1].length / 4 * 3 / 1024;
 
         if (update) {
@@ -4571,12 +4572,44 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @param {HTMLImageElement} img
      */
     _applyImage(img) {},
+    /**
+     * @private
+     * @param {HTMLImageElement} img
+     * @returns {String} The right mimetype used to apply options on image.
+     */
+    _getImageMimetype(img) {
+        return img.dataset.mimetype;
+    },
 });
+
+/**
+ * @param {Element} containerEl
+ * @returns {Element}
+ */
+const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl) {
+    const labelEl = document.createElement('span');
+    labelEl.classList.add('o_we_shape_animated_label');
+    const labelStr = _t("Animated");
+    labelEl.textContent = labelStr[0];
+    const spanEl = document.createElement('span');
+    spanEl.textContent = labelStr.substr(1);
+    labelEl.appendChild(spanEl);
+    containerEl.classList.add('position-relative');
+    containerEl.appendChild(labelEl);
+    return labelEl;
+};
 
 /**
  * Controls image width and quality.
  */
 registry.ImageOptimize = ImageHandlerOption.extend({
+    /**
+     * @constructor
+     */
+    init() {
+        this.shapeCache = {};
+        return this._super(...arguments);
+    },
     /**
      * @override
      */
@@ -4594,9 +4627,159 @@ registry.ImageOptimize = ImageHandlerOption.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    async setImgShape(previewMode, widgetValue, params) {
+        const img = this._getImg();
+        const saveData = previewMode === false;
+        if (widgetValue) {
+            await this._loadShape(widgetValue);
+            if (previewMode === 'reset' && img.dataset.shapeColors) {
+                // When we reset the shape we need to reapply the colors the
+                // user had selected.
+                await this._applyShapeAndColors(false, img.dataset.shapeColors.split(';'));
+            } else {
+                // If the preview mode === false we want to save the colors
+                // as the user chose their shape
+                await this._applyShapeAndColors(saveData);
+                if (saveData && img.dataset.mimetype !== 'image/svg+xml') {
+                    img.dataset.originalMimetype = img.dataset.mimetype;
+                    img.dataset.mimetype = 'image/svg+xml';
+                }
+            }
+        } else {
+            // Re-applying the modifications and deleting the shapes
+            img.src = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+            delete img.dataset.shape;
+            delete img.dataset.shapeColors;
+            delete img.dataset.fileName;
+            if (saveData) {
+                img.dataset.mimetype = img.dataset.originalMimetype;
+                delete img.dataset.originalMimetype;
+            }
+        }
+        img.classList.add('o_modified_image_to_save');
+    },
+    /**
+     * Handles color assignment on the shape. Widget is a color picker.
+     * If no value, we reset to the current color palette.
+     *
+     * @see this.selectClass for parameters
+     */
+    async setImgShapeColor(previewMode, widgetValue, params) {
+        const img = this._getImg();
+        const newColorId = parseInt(params.colorId);
+        const oldColors = img.dataset.shapeColors.split(';');
+        const newColors = oldColors.slice(0);
+        newColors[newColorId] = this._getCSSColorValue(widgetValue === '' ? `o-color-${(newColorId + 1)}` : widgetValue);
+        await this._applyShapeAndColors(true, newColors);
+        img.classList.add('o_modified_image_to_save');
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    async _applyOptions() {
+        const img = await this._super(...arguments);
+        if (img && img.dataset.shape) {
+            // Reapplying the shape
+            await this._loadShape(img.dataset.shape);
+            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+        }
+        return img;
+    },
+    /**
+     * Loads the shape into cache if not already and sets it in the dataset of
+     * the img
+     *
+     * @param {string} shapeName identifier of the shape
+     */
+    async _loadShape(shapeName) {
+        const [module, directory, fileName] = shapeName.split('/');
+        let shape = this.shapeCache[fileName];
+        if (!shape) {
+            const shapeURL = `/${module}/static/image_shapes/${directory}/${fileName}.svg`;
+            shape = await (await fetch(shapeURL)).text();
+            this.shapeCache[fileName] = shape;
+        }
+        this._getImg().dataset.shape = shapeName;
+    },
+
+    /**
+     * Applies the shape in img.dataset.shape and replaces the previous hex
+     * color values with new ones or current theme
+     * ones then calls _writeShape()
+     *
+     * @param {boolean} save true if the colors need to be saved in the
+     * data-attribute
+     * @param {string[]} [newColors] Array of HEX color code, default
+     * theme colors are applied if not supplied
+     */
+    async _applyShapeAndColors(save, newColors) {
+        const img = this._getImg();
+        let shape = this.shapeCache[img.dataset.shape.split('/')[2]];
+
+        // Map the default palette colors to an array if the shape includes them
+        // If they do not map a NULL, this way we know if a default color is in
+        // the shape
+        const oldColors = Object.values(DEFAULT_PALETTE).map(color => shape.includes(color) ? color : null);
+        if (!newColors) {
+            // If we do not have newColors, we still replace the default
+            // shape's colors by the current palette's
+            newColors = oldColors.map((color, i) => color !== null ? this._getCSSColorValue(`o-color-${(i + 1)}`) : null);
+        }
+        newColors.forEach((color, i) => shape = shape.replace(new RegExp(oldColors[i], 'g'), color));
+        await this._writeShape(shape);
+        if (save) {
+            img.dataset.shapeColors = newColors.join(';');
+        }
+    },
+    /**
+     * Sets the image in the supplied SVG and replace the src with a dataURL
+     *
+     * @param {string} svgText svg file as text
+     * @returns {Promise} resolved once the svg is properly loaded
+     * in the document
+     */
+    async _writeShape(svgText) {
+        const img = this._getImg();
+
+        const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
+        // We will store the image in base64 inside the SVG.
+        // applyModifications will return a dataURL with the current filters
+        // and size options.
+        const imgDataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
+        svg.removeChild(svg.querySelector('#preview'));
+        svg.querySelector('image').setAttribute('xlink:href', imgDataURL);
+        // Force natural width & height (note: loading the original image is
+        // needed for Safari where natural width & height of SVG does not return
+        // the correct values).
+        const originalImage = await loadImage(img.src);
+        svg.setAttribute('width', originalImage.naturalWidth);
+        svg.setAttribute('height', originalImage.naturalHeight);
+        // Transform the current SVG in a base64 file to be saved by the server
+        const blob = new Blob([svg.outerHTML], {
+            type: 'image/svg+xml',
+        });
+
+        const reader = new FileReader();
+        const readPromise = new Promise(resolve => {
+            reader.addEventListener('load', () => resolve(reader.result));
+        });
+        reader.readAsDataURL(blob);
+        const dataURL = await readPromise;
+        const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
+        img.dataset.fileName = `${imgFilename}.svg`;
+        return loadImage(dataURL, img);
+    },
     /**
      * @override
      */
@@ -4630,6 +4813,77 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         const titleTextEl = leftPanelEl.querySelector('we-title > span');
         this.$weight.appendTo(titleTextEl);
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName.startsWith('img-shape-color')) {
+            const img = this._getImg();
+            const shapeName = img.dataset.shape;
+            if (!shapeName) {
+                return false;
+            }
+            const colors = img.dataset.shapeColors.split(';');
+            return colors[parseInt(params.colorId)];
+        }
+        return this._super();
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'setImgShape':
+                return this._getImg().dataset.shape || '';
+            case 'setImgShapeColor': {
+                const img = this._getImg();
+                return (img.dataset.shapeColors && img.dataset.shapeColors.split(';')[parseInt(params.colorId)]) || '';
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Appends the SVG as an image.
+     * Due to the nature of image_shapes' SVGs, it is easier to render them as
+     * img compared to appending their content to the DOM
+     * (which is what the current data-img does)
+     *
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        await this._super(...arguments);
+        uiFragment.querySelectorAll('we-select-page we-button[data-set-img-shape]').forEach(btn => {
+            const image = document.createElement('img');
+            const [moduleName, directory, shapeName] = btn.dataset.setImgShape.split('/');
+            image.src = `/${moduleName}/static/image_shapes/${directory}/${shapeName}.svg`;
+            $(btn).prepend(image);
+
+            if (btn.dataset.animated) {
+                _addAnimatedShapeLabel(btn);
+            }
+        });
+    },
+    /**
+     * @override
+     */
+    _getImageMimetype(img) {
+        if (img.dataset.shape) {
+            return img.dataset.originalMimetype;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Gets the CSS value of a color variable name so it can be used on shapes.
+     *
+     * @param {string} color
+     * @returns {string}
+     */
+    _getCSSColorValue(color) {
+        if (ColorpickerWidget.isCSSColor(color)) {
+            return color;
+        }
+        return weUtils.getCSSVariableValue(color);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -4643,7 +4897,12 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      */
     async _onImageChanged(ev) {
         this.trigger_up('snippet_edition_request', {exec: async () => {
+            const img = this._getImg();
             await this._autoOptimizeImage();
+            if (img.dataset.shape) {
+                img.dataset.originalMimetype = img.dataset.mimetype;
+                img.dataset.mimetype = 'image/svg+xml';
+            }
             this.trigger_up('cover_update');
         }});
     },
@@ -4654,6 +4913,11 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      * @param {Event} ev
      */
     async _onImageCropped(ev) {
+        const img = this._getImg();
+        if (img.dataset.shape) {
+            await this._loadShape(img.dataset.shape);
+            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+        }
         await this._rerenderXML();
     },
 });
@@ -5140,14 +5404,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             btnContent.appendChild(btnContentInnerDiv);
 
             if (btn.dataset.animated) {
-                const animatedLabelEl = document.createElement('span');
-                animatedLabelEl.classList.add('o_we_shape_animated_label');
-                const labelStr = _t("Animated");
-                animatedLabelEl.textContent = labelStr[0];
-                const spanEl = document.createElement('span');
-                spanEl.textContent = labelStr.substr(1);
-                animatedLabelEl.appendChild(spanEl);
-                btnContent.appendChild(animatedLabelEl);
+                _addAnimatedShapeLabel(btnContent);
             }
 
             const {shape} = btn.dataset;
@@ -6119,6 +6376,8 @@ return {
     buildTitleElement: _buildTitleElement,
     buildRowElement: _buildRowElement,
     buildCollapseElement: _buildCollapseElement,
+
+    addAnimatedShapeLabel: _addAnimatedShapeLabel,
 
     // Other names for convenience
     Class: SnippetOptionWidget,
