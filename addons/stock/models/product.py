@@ -340,9 +340,28 @@ class Product(models.Model):
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
         quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'], orderby='id')
+
+        # check if we need include zero values in result
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=') or
+            value > 0.0 and operator in ('<', '<=') or
+            value == 0.0 and operator in ('>=', '<=', '=')
+        )
+
+        processed_product_ids = set()
         for quant in quants_groupby:
+            product_id = quant['product_id'][0]
+            if include_zero:
+                processed_product_ids.add(product_id)
             if OPERATORS[operator](quant['quantity'], value):
-                product_ids.add(quant['product_id'][0])
+                product_ids.add(product_id)
+
+        if include_zero:
+            products_without_quants_in_domain = self.env['product.product'].search([
+                ('type', '=', 'product'),
+                ('id', 'not in', list(processed_product_ids))]
+            )
+            product_ids |= set(products_without_quants_in_domain.ids)
         return list(product_ids)
 
     def _compute_nbr_reordering_rules(self):
@@ -862,17 +881,26 @@ class UoM(models.Model):
                 lambda u: any(u[f].id != int(values[f]) if f in values else False
                               for f in {'category_id'}))
             if changed:
-                stock_move_lines = self.env['stock.move.line'].search_count([
-                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
-                    ('state', '!=', 'cancel'),
-                ])
-
-                if stock_move_lines:
-                    raise UserError(_(
-                        "You cannot change the ratio of this unit of measure as some"
-                        " products with this UoM have already been moved or are "
-                        "currently reserved."
-                    ))
+                error_msg = _(
+                    "You cannot change the ratio of this unit of mesure"
+                    " as some products with this UoM have already been moved"
+                    " or are currently reserved."
+                )
+                if self.env['stock.move'].sudo().search_count([
+                    ('product_uom', 'in', changed.ids),
+                    ('state', 'not in', ('cancel', 'done'))
+                ]):
+                    raise UserError(error_msg)
+                if self.env['stock.move.line'].sudo().search_count([
+                    ('product_uom_id', 'in', changed.ids),
+                    ('state', 'not in', ('cancel', 'done')),
+                ]):
+                    raise UserError(error_msg)
+                if self.env['stock.quant'].sudo().search_count([
+                    ('product_id.product_tmpl_id.uom_id', 'in', changed.ids),
+                    ('quantity', '!=', 0),
+                ]):
+                    raise UserError(error_msg)
         return super(UoM, self).write(values)
 
     def _adjust_uom_quantities(self, qty, quant_uom):

@@ -1368,6 +1368,29 @@ class IrModelSelection(models.Model):
 
     def _process_ondelete(self):
         """ Process the 'ondelete' of the given selection values. """
+        def safe_write(records, fname, value):
+            if not records:
+                return
+            try:
+                with self.env.cr.savepoint():
+                    records.write({fname: value})
+            except Exception as e:
+                # going through the ORM failed, probably because of an exception
+                # in an override or possibly a constraint.
+                _logger.warning(
+                    "Could not fulfill ondelete action for field %s.%s, "
+                    "attempting ORM bypass...", records._name, fname,
+                )
+                query = sql.SQL("UPDATE {} SET {}=%s WHERE id IN %s").format(
+                    sql.Identifier(records._table),
+                    sql.Identifier(fname),
+                )
+                # if this fails then we're shit out of luck and there's nothing
+                # we can do except fix on a case-by-case basis
+                value = field.convert_to_column(value, records)
+                self.env.cr.execute(query, [value, records._ids])
+                records.invalidate_cache([fname])
+
         for selection in self:
             Model = self.env[selection.field_id.model]
             # The field may exist in database but not in registry. In this case
@@ -1379,14 +1402,21 @@ class IrModelSelection(models.Model):
             if not field or not field.store or Model._abstract:
                 continue
 
-            ondelete = (field.ondelete or {}).get(selection.value) or 'set null'
-            if callable(ondelete):
+            ondelete = (field.ondelete or {}).get(selection.value)
+            # special case for custom fields
+            if ondelete is None and field.manual and not field.required:
+                ondelete = 'set null'
+
+            if ondelete is None:
+                # nothing to do, the selection does not come from a field extension
+                continue
+            elif callable(ondelete):
                 ondelete(selection._get_records())
             elif ondelete == 'set null':
-                selection._get_records().write({field.name: False})
+                safe_write(selection._get_records(), field.name, False)
             elif ondelete == 'set default':
                 value = field.convert_to_write(field.default(Model), Model)
-                selection._get_records().write({field.name: value})
+                safe_write(selection._get_records(), field.name, value)
             elif ondelete == 'cascade':
                 selection._get_records().unlink()
             else:
@@ -2143,13 +2173,12 @@ class IrModelData(models.Model):
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
-        # Remove fields, selections and relations. Note that the selections of
-        # removed fields do not require any "data fix", as their corresponding
-        # column no longer exists. We can therefore completely ignore them. That
-        # is why selections are removed after fields: most selections are
-        # deleted on cascade by their corresponding field.
-        delete(self.env['ir.model.fields'].browse(unique(field_ids)))
+        # If we delete a selection field, and some of its values have ondelete='cascade',
+        # we expect the records with that value to be deleted. If we delete the field first,
+        # the column is dropped and the selection is gone, and thus the records above will not
+        # be deleted.
         delete(self.env['ir.model.fields.selection'].browse(unique(selection_ids)).exists())
+        delete(self.env['ir.model.fields'].browse(unique(field_ids)))
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
 

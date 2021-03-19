@@ -116,9 +116,7 @@ class ComposerSuggestion extends Component {
      */
     _onClick(ev) {
         ev.preventDefault();
-        this.composer.update({
-            [this.composer.activeSuggestedRecordName]: [['link', this.record]],
-        });
+        this.composer.update({ activeSuggestedRecord: [['link', this.record]] });
         this.composer.insertSuggestion();
         this.composer.closeSuggestions();
         this.trigger('o-composer-suggestion-clicked');

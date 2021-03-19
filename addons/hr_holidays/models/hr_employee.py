@@ -87,12 +87,12 @@ class HrEmployeeBase(models.AbstractModel):
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
         rg_results = dict((d['employee_id'][0], d['number_of_days']) for d in data)
         for employee in self:
-            employee.allocation_count = rg_results.get(employee.id, 0.0)
+            employee.allocation_count = float_round(rg_results.get(employee.id, 0.0), precision_digits=2)
             employee.allocation_display = "%g" % employee.allocation_count
 
     def _compute_total_allocation_used(self):
         for employee in self:
-            employee.allocation_used_count = employee.allocation_count - employee.remaining_leaves
+            employee.allocation_used_count = float_round(employee.allocation_count - employee.remaining_leaves, precision_digits=2)
             employee.allocation_used_display = "%g" % employee.allocation_used_count
 
     def _compute_presence_state(self):
@@ -204,3 +204,13 @@ class HrEmployeeBase(models.AbstractModel):
             allocations = self.env['hr.leave.allocation'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
         return res
+
+class HrEmployeePrivate(models.Model):
+    _inherit = 'hr.employee'
+
+class HrEmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    def _compute_leave_status(self):
+        super()._compute_leave_status()
+        self.current_leave_id = False

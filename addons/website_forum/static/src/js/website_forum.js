@@ -143,6 +143,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                disableFullMediaDialog: true,
                 disableResizeImage: true,
             };
             if (!hasFullEdit) {
@@ -170,7 +171,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 offset: 10,
                 animation: false,
                 html: true,
-            });
+            }).popover('hide').data('bs.popover').tip.classList.add('o_wforum_bio_popover_container');
         });
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
