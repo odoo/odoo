@@ -982,12 +982,12 @@ const RemainingDays = AbstractField.extend({
             this.$el.removeClass('text-bf text-danger text-warning');
             return;
         }
-        // compare the value (in the user timezone) with now (also in the user
-        // timezone), to get a meaningful delta for the user
+        // compare the value with now (in the user timezone)
+        const userTZ = session.user_context['tz']
         const nowUTC = moment().utc();
-        const nowUserTZ = nowUTC.clone().add(session.getTZOffset(nowUTC), 'minutes');
-        const valueUserTZ = this.value.clone().add(session.getTZOffset(this.value), 'minutes');
-        const diffDays = valueUserTZ.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
+        // convert date using timezone identifier (e.g., "Europe/Brussels")
+        const nowUserTZ = moment((new Date(nowUTC.format())).toLocaleString("en-US", {timeZone: userTZ}), "M/D/YYYY, h:m:s A")
+        const diffDays = this.value.startOf('day').diff(nowUserTZ.startOf('day'), 'days');
         let text;
         if (Math.abs(diffDays) > 99) {
             text = this._formatValue(this.value, 'date');
