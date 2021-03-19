@@ -197,12 +197,12 @@ const glFilters = {
  * @param {HTMLImageElement} img the image to which modifications are applied
  * @returns {string} dataURL of the image with the applied modifications
  */
-async function applyModifications(img) {
+async function applyModifications(img, dataOptions = {}) {
     const data = Object.assign({
         glFilter: '',
         filter: '#0000',
         quality: '75',
-    }, img.dataset);
+    }, img.dataset, dataOptions);
     let {
         width,
         height,
