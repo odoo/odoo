@@ -136,9 +136,9 @@ class test_inherits(common.TransactionCase):
         Box = type(self.env['test.box'])
         Pallet = type(self.env['test.pallet'])
         self.assertTrue(Unit.name.translate)
-        self.assertIn('lang', Unit.display_name.depends_context)
-        self.assertIn('lang', Box.display_name.depends_context)
-        self.assertIn('lang', Pallet.display_name.depends_context)
+        self.assertIn('lang', self.registry.field_depends_context[Unit.display_name])
+        self.assertIn('lang', self.registry.field_depends_context[Box.display_name])
+        self.assertIn('lang', self.registry.field_depends_context[Pallet.display_name])
 
     def test_multi_write_m2o_inherits(self):
         """Verify that an inherits m2o field can be written to in batch"""

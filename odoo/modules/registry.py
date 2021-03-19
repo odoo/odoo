@@ -281,6 +281,15 @@ class Registry(Mapping):
         for model in models:
             model._setup_complete()
 
+        # determine field_depends and field_depends_context
+        self.field_depends = {}
+        self.field_depends_context = {}
+        for model in models:
+            for field in model._fields.values():
+                depends, depends_context = field.get_depends(model)
+                self.field_depends[field] = tuple(depends)
+                self.field_depends_context[field] = tuple(depends_context)
+
         # Reinstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
         if self.ready:

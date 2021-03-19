@@ -35,7 +35,7 @@ class IrUiMenu(models.Model):
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
-    complete_name = fields.Char(compute='_compute_complete_name', string='Full Path')
+    complete_name = fields.Char(string='Full Path', compute='_compute_complete_name', recursive=True)
     web_icon = fields.Char(string='Web Icon File')
     action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'),
                                          ('ir.actions.act_window', 'ir.actions.act_window'),

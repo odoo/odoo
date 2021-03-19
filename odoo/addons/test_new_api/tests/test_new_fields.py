@@ -159,7 +159,7 @@ class TestFields(TransactionCaseWithUserDemo):
             'ttype': 'boolean'
         })
         field = self.env['test_new_api.message']._fields['x_bool_false_computed']
-        self.assertFalse(field.depends)
+        self.assertFalse(self.registry.field_depends[field])
 
     def test_10_computed_custom_invalid_transitive_depends(self):
         self.patch(type(self.env["ir.model.fields"]), "_check_depends", lambda self: True)
@@ -264,7 +264,7 @@ class TestFields(TransactionCaseWithUserDemo):
         field = type(self.env['test_new_api.discussion']).display_name
         self.assertTrue(field.automatic)
         self.assertTrue(field.compute)
-        self.assertEqual(field.depends, ('name',))
+        self.assertEqual(self.registry.field_depends[field], ('name',))
 
     def test_10_non_stored(self):
         """ test non-stored fields """
@@ -517,7 +517,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_12_dynamic_depends(self):
         Model = self.registry['test_new_api.compute.dynamic.depends']
-        self.assertEqual(Model.full_name.depends, ())
+        self.assertEqual(self.registry.field_depends[Model.full_name], ())
 
         # the dependencies of full_name are stored in a config parameter
         self.env['ir.config_parameter'].set_param('test_new_api.full_name', 'name1,name2')
@@ -525,7 +525,7 @@ class TestFields(TransactionCaseWithUserDemo):
         # this must re-evaluate the field's dependencies
         self.env['base'].flush()
         self.registry.setup_models(self.cr)
-        self.assertEqual(Model.full_name.depends, ('name1', 'name2'))
+        self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
     def test_13_inverse(self):
         """ test inverse computation of fields """
