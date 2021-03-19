@@ -701,7 +701,7 @@ Reason(s) of this behavior could be:
                 )
                 invoice_item_sequence += 1
 
-            invoice_vals['invoice_line_ids'] = invoice_line_vals
+            invoice_vals['invoice_line_ids'] += invoice_line_vals
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
