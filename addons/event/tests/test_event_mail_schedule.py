@@ -133,8 +133,7 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(after_sub_scheduler_2.mail_registration_ids), 2, 'event: should have 2 scheduled communication (1 / registration)')
         self.assertTrue(all(mail_reg.mail_sent for mail_reg in after_sub_scheduler_2.mail_registration_ids))
-        # FIXME: field not updated
-        # self.assertTrue(after_sub_scheduler_2.done, 'event: all subscription mails should have been sent')
+        self.assertTrue(after_sub_scheduler_2.done, 'event: all subscription mails should have been sent')
 
         # check emails effectively sent
         self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
