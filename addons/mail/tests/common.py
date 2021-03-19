@@ -246,7 +246,9 @@ class MockEmail(common.BaseCase):
             if content:
                 self.assertIn(content, sent_mail.body_html)
             for fname, fvalue in (fields_values or {}).items():
-                self.assertEqual(sent_mail[fname], fvalue)
+                self.assertEqual(
+                    sent_mail[fname], fvalue,
+                    'Mail: expected %s for %s, got %s' % (fvalue, fname, sent_mail[fname]))
 
     def assertNoMail(self, author, recipients, mail_message=None):
         try:
