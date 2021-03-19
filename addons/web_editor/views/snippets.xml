@@ -256,7 +256,7 @@
                     <we-button data-shape="web_editor/Rainy/05_001" data-select-label="Rainy 07"/>
                     <we-button data-shape="web_editor/Rainy/03_001" data-select-label="Rainy 08" data-animated="true"/>
                     <we-button data-shape="web_editor/Rainy/08_001" data-select-label="Rainy 09" data-animated="true"/>
-                    <we-button data-shape="web_editor/Rainy/09_001" data-select-label="Rainy 10"/>  
+                    <we-button data-shape="web_editor/Rainy/09_001" data-select-label="Rainy 10"/>
                 </we-select-page>
                 <we-select-page string="Wavy">
                     <we-button data-shape="web_editor/Wavy/01_001" data-select-label="Wavy 01"/>
@@ -411,7 +411,97 @@
             title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."/>
         <we-input class="o_we_large_input" string="Tooltip" data-set-title="" placeholder="Title tag"
             title="'Title tag' is shown as a tooltip when you hover the picture."/>
+    </div>
 
+    <div data-js="ImageOptimize"
+         data-selector="img">
+        <div class="o_we_image_shape">
+            <we-row string="Shape" class="o_we_full_row">
+                <we-select-pager data-name="shape_img_opt" class="o_we_select_grid o_we_fake_transparent_background">
+                    <we-select-page string="Basics">
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_3" data-select-label="Square 3" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_4" data-select-label="Square 4" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_5" data-select-label="Square 5" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_6" data-select-label="Square 6" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_rounded_1" data-select-label="Square Rounded 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_square_rounded_2" data-select-label="Square Rounded 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_organic_1" data-select-label="Organic Soft" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_organic_2" data-select-label="Organic Medium" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/basic/bsc_organic_3" data-select-label="Organic Hard" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Solids">
+                        <we-button data-set-img-shape="web_editor/solid/blob_1_solid_rd" data-select-label="Blob Solid 1" />
+                        <we-button data-set-img-shape="web_editor/solid/blob_2_solid_str" data-select-label="Blob Solid 2" />
+                        <we-button data-set-img-shape="web_editor/solid/blob_3_solid_rd" data-select-label="Blob Solid 3" />
+                        <we-button data-set-img-shape="web_editor/solid/oval_1_solid_rd" data-select-label="Oval Solid"/>
+                        <we-button data-set-img-shape="web_editor/solid/sld_blob_4" data-select-label="Blob Solid 4" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/solid/sld_blob_shadow_1" data-select-label="Blob Shadow 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/solid/sld_blob_shadow_2" data-select-label="Blob Shadow 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/solid/sld_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/solid/sld_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/solid/sld_square_organic_1" data-select-label="Square - Organic" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Patterns">
+                        <we-button data-set-img-shape="web_editor/pattern/organic_2_pattern_dot" data-select-label="Organic Dot" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/pattern/organic_3_pattern_cross" data-select-label="Organic Cross" />
+                        <we-button data-set-img-shape="web_editor/pattern/organic_4_pattern_caps" data-select-label="Organic Caps" />
+                        <we-button data-set-img-shape="web_editor/pattern/pattern_labyrinth" data-select-label="Labyrinth" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/pattern/pattern_points_1" data-select-label="Points" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_1" data-select-label="Waves 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_2" data-select-label="Waves 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_3" data-select-label="Waves 3" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/pattern/pattern_waves_4" data-select-label="Waves 4" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Lines">
+                        <we-button data-set-img-shape="web_editor/line/oval_3_pattern_line" data-select-label="Oval Line" />
+                        <we-button data-set-img-shape="web_editor/line/organic_1_line" data-select-label="Organic Line" />
+                        <we-button data-set-img-shape="web_editor/line/oval_2_line" data-select-label="Oval Line 2" />
+                        <we-button data-set-img-shape="web_editor/line/little_lines_1" data-select-label="Little lines 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/line/little_lines_2" data-select-label="Little lines 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/line/little_lines_3" data-select-label="Little lines 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/line/line_square_1" data-select-label="Square" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/line/line_triangle" data-select-label="Triangles" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/line/line_star" data-select-label="Star" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/line/line_sun" data-select-label="Sun" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Floats">
+                        <we-button data-set-img-shape="web_editor/float/flt_primary_1" data-select-label="Primary shapes 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_primary_2" data-select-label="Primary shapes 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_primary_3" data-select-label="Primary shapes 3" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_planets_1" data-select-label="Planets 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_planets_2" data-select-label="Planets 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_1" data-select-label="Square 1" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_2" data-select-label="Square 2" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_3" data-select-label="Square 3" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/float/flt_square_4" data-select-label="Square 4" data-animated="true"/>
+                    </we-select-page>
+                    <we-select-page string="Specials">
+                        <we-button data-set-img-shape="web_editor/special/spl_speed_1" data-select-label="Speed" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_rain_1" data-select-label="Rain" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_snow_1" data-select-label="Snow" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_flag_1" data-select-label="Flag" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_filter_1" data-select-label="Filter" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_organics_1" data-select-label="Organics" data-animated="true"/>
+                        <we-button data-set-img-shape="web_editor/special/spl_circuit_1" data-select-label="Circuit" data-animated="true"/>
+                    </we-select-page>
+                </we-select-pager>
+                <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape_img_opt" class="o_we_image_shape_remove"><i class="fa fa-fw fa-times"/></we-button>
+            </we-row>
+            <we-row string=" ⌙ Colors">
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-0" data-color-id="0" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-1" data-color-id="1" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-2" data-color-id="2" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-3" data-color-id="3" />
+                <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-4" data-color-id="4" />
+            </we-row>
+        </div>
+
+        <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
+    </div>
+
+    <div data-js="ImageTools" data-selector="img">
         <we-row string="Transform">
             <we-button data-crop="" data-no-preview="true" title="Crop Image"><i class="fa fa-crop"></i></we-button>
             <we-button data-transform="" data-no-preview="true" title="Transform the picture (click twice to reset transformation)">
@@ -435,7 +525,7 @@
             <we-button data-align="right" title="Align Right">Right</we-button>
         </we-select>
 
-        <we-row string="Shape">
+        <we-row string="Style">
             <we-button data-toggle-shape-rounded="rounded" title="Shape: Rounded"><i class="fa fa-square fa-fw"></i></we-button>
             <we-button data-toggle-shape-circle="rounded-circle" title="Shape: Circle"><i class="fa fa-circle-o fa-fw"></i></we-button>
             <we-button data-toggle-shape-shadow="shadow" title="Shadow"><i class="fa fa-sun-o fa-fw"></i></we-button>
@@ -443,11 +533,6 @@
         </we-row>
 
         <we-input string="Padding" data-set-padding="" data-unit="px"/>
-    </div>
-
-    <div data-js="ImageOptimize"
-         data-selector="img">
-        <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
     </div>
 
     <div data-js="DynamicSvg" data-selector="img">
