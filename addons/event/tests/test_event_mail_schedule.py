@@ -205,8 +205,7 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         # NOTE: currently all schedulers are based on date_open which equals create_date
         # meaning several communications may be sent in the time time
         with freeze_time(now_start + relativedelta(hours=1)), self.mock_mail_gateway():
-            # FIXME: sudo should not be necessary
-            reg3.sudo().action_confirm()
+            reg3.action_confirm()
 
        # verify that subscription scheduler was auto-executed after new registration confirmed
         self.assertEqual(len(after_sub_scheduler.mail_registration_ids), 3, 'event: should have 3 scheduled communication (1 / registration)')
