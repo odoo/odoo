@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
 
@@ -56,6 +57,87 @@ class TestPartner(TransactionCase):
 
         with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"), self.cr.savepoint():
             test_partner_company.write({'company_id': company_2.id})
+
+    def test_lang_computation_code(self):
+        """ Check computation of lang: coming from installed languages, forced
+        default value and propagation from parent."""
+        default_lang_info = self.env['res.lang'].get_installed()[0]
+        default_lang_code = default_lang_info[0]
+        self.assertNotEqual(default_lang_code, 'de_DE')  # should not be the case, just to ease test
+        self.assertNotEqual(default_lang_code, 'fr_FR')  # should not be the case, just to ease test
+
+        # default is installed lang
+        partner = self.env['res.partner'].create({'name': "Test Company"})
+        self.assertEqual(partner.lang, default_lang_code)
+
+        # check propagation of parent to child
+        child = self.env['res.partner'].create({'name': 'First Child', 'parent_id': partner.id})
+        self.assertEqual(child.lang, default_lang_code)
+
+        # activate another languages to test language propagation when being in multi-lang
+        self.env['res.lang']._activate_lang('de_DE')
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        # default from context > default from installed
+        partner = self.env['res.partner'].with_context(default_lang='de_DE').create({'name': "Test Company"})
+        self.assertEqual(partner.lang, 'de_DE')
+        first_child = self.env['res.partner'].create({'name': 'First Child', 'parent_id': partner.id})
+        partner.write({'lang': 'fr_FR'})
+        second_child = self.env['res.partner'].create({'name': 'Second Child', 'parent_id': partner.id})
+
+        # check user input is kept
+        self.assertEqual(partner.lang, 'fr_FR')
+        self.assertEqual(first_child.lang, 'de_DE')
+        self.assertEqual(second_child.lang, 'fr_FR')
+
+    def test_lang_computation_form_view(self):
+        """ Check computation of lang: coming from installed languages, forced
+        default value and propagation from parent."""
+        default_lang_info = self.env['res.lang'].get_installed()[0]
+        default_lang_code = default_lang_info[0]
+        self.assertNotEqual(default_lang_code, 'de_DE')  # should not be the case, just to ease test
+        self.assertNotEqual(default_lang_code, 'fr_FR')  # should not be the case, just to ease test
+
+        # default is installed lang
+        partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
+        partner_form.name = "Test Company"
+        self.assertEqual(partner_form.lang, default_lang_code, "New partner's lang should be default one")
+        partner = partner_form.save()
+        self.assertEqual(partner.lang, default_lang_code)
+
+        # check propagation of parent to child
+        with partner_form.child_ids.new() as child:
+            child.name = "First Child"
+            self.assertEqual(child.lang, default_lang_code, "Child contact's lang should have the same as its parent")
+        partner = partner_form.save()
+        self.assertEqual(partner.child_ids.lang, default_lang_code)
+
+        # activate another languages to test language propagation when being in multi-lang
+        self.env['res.lang']._activate_lang('de_DE')
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        # default from context > default from installed
+        partner_form = Form(
+            self.env['res.partner'].with_context(default_lang='de_DE'),
+            'base.view_partner_form'
+        )
+        partner_form.is_company = True
+        partner_form.name = "Test Company"
+        self.assertEqual(partner_form.lang, 'de_DE', "New partner's lang should take default from context")
+        with partner_form.child_ids.new() as child:
+            child.name = "First Child"
+            self.assertEqual(child.lang, 'de_DE', "Child contact's lang should be the same as its parent.")
+        partner_form.lang = 'fr_FR'
+        self.assertEqual(partner_form.lang, 'fr_FR', "New partner's lang should take user input")
+        with partner_form.child_ids.new() as child:
+            child.name = "Second Child"
+            self.assertEqual(child.lang, 'fr_FR', "Child contact's lang should be the same as its parent.")
+        partner = partner_form.save()
+
+        # check final values (kept from form input)
+        self.assertEqual(partner.lang, 'fr_FR')
+        self.assertEqual(partner.child_ids.filtered(lambda p: p.name == "First Child").lang, 'de_DE')
+        self.assertEqual(partner.child_ids.filtered(lambda p: p.name == "Second Child").lang, 'fr_FR')
 
     def test_partner_merge_wizard_dst_partner_id(self):
         """ Check that dst_partner_id in merge wizard displays id along with partner name """
