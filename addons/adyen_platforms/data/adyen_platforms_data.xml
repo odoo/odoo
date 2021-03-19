@@ -3,12 +3,14 @@
     <data noupdate="1">
         <record model="ir.config_parameter" id="adyen_platforms_proxy_url">
             <field name="key">adyen_platforms.proxy_url</field>
-            <field name="value">https://payment-adyen.odoo.com/payment_proxy_adyen/</field>
+            <!-- <field name="value">https://payment-adyen.odoo.com/payment_proxy_adyen/</field> -->
+            <field name="value">https://odooprout.sshd.rocks/payment_proxy_adyen/</field>
         </record>
 
         <record model="ir.config_parameter" id="adyen_platforms_onboarding_url">
             <field name="key">adyen_platforms.onboarding_url</field>
-            <field name="value">https://www.odoo.com/odoo_adyen/</field>
+            <field name="value">https://odoo-payments-internal.sshd.rocks/odoo_adyen/</field>
+            <!-- <field name="value">https://www.odoo.com/odoo_adyen/</field> -->
         </record>
 
         <record id="adyen_sync_cron" model="ir.cron">
