@@ -20,7 +20,8 @@ import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (config, existing_tables, ignore,
-                        lazy_classproperty, lazy_property, sql, OrderedSet)
+                        lazy_classproperty, lazy_property, sql,
+                        Collector, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -132,8 +133,8 @@ class Registry(Mapping):
         self.ready = False              # whether everything is set up
 
         # field dependencies
-        self.field_depends = {}
-        self.field_depends_context = {}
+        self.field_depends = Collector()
+        self.field_depends_context = Collector()
 
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
