@@ -381,6 +381,13 @@ class Partner(models.Model):
                 result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
 
+    @api.onchange('parent_id')
+    def _onchange_parent_id_for_lang(self):
+        # While creating / updating child contact, take the parent lang by default if any
+        # otherwise, fallback to default context / DB lang
+        if self.parent_id:
+            self.lang = self.parent_id.lang or self.env.context.get('default_lang') or self.env.lang
+
     @api.onchange('country_id')
     def _onchange_country_id(self):
         if self.country_id and self.country_id != self.state_id.country_id:
@@ -608,6 +615,9 @@ class Partner(models.Model):
 
         for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)
+            # Lang: propagate from parent if no value was given
+            if 'lang' not in vals and partner.parent_id:
+                partner._onchange_parent_id_for_lang()
             partner._handle_first_contact_creation()
         return partners
 
