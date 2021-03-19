@@ -4438,6 +4438,15 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
  * Controls image width and quality.
  */
 registry.ImageOptimize = ImageHandlerOption.extend({
+
+    willStart() {
+        const img = this._getImg();
+        if (img.dataset.shape && img.dataset.originalMimetype) {
+            img.dataset.mimetype = img.dataset.originalMimetype;
+        }
+        return this._super(...arguments);
+    },
+
     /**
      * @override
      */
@@ -4454,10 +4463,154 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         return this._super(...arguments);
     },
 
+    /**
+     * @see this.selectClass for parameters
+     */
+    async shape(previewMode, widgetValue, params) {
+        if (previewMode === undefined) {
+            return;
+        }
+        await this._applyShape(widgetValue, previewMode);
+        this._getImg().classList.add('o_modified_image_to_save');
+    },
+    /**
+     * @see this.selectClass
+     */
+    async color(previewMode, widgetValue, params) {
+        if (this._getImg().dataset.shape) {
+            if (!widgetValue) {
+                await this._applyShape(this._getImg().dataset.shape);
+            } else {
+                await this._applyColor(widgetValue);
+            }
+            this._getImg().classList.add('o_modified_image_to_save');
+        }
+    },
+
+    /**
+     * @override
+     */
+    cleanForSave() {
+        if (this._getImg().dataset.shape) {
+            const img = this._getImg();
+            img.dataset.originalMimetype = img.dataset.mimetype;
+            img.dataset.mimetype = 'image/svg+xml';
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+    /**
+     * @override
+     */
+    async _applyOptions(update) {
+        const img = await this._super(...arguments);
+        if (img && img.dataset.shape) {
+            await this._applyShape(img.dataset.shape, 'reset');
+        }
+    },
 
+    /**
+     * Applies the shape to the current image by converting the image to base 64 and including it into the svg
+     * @param {string} shape Part of the path to the svg file
+     * @param {*} previewMode state of the current editor
+     * @returns Returns a promise
+     */
+    async _applyShape(shape, previewMode) {
+        const img = this._getImg();
+        if (!shape) {
+            if (!img.dataset.shape) {
+                return;
+            }
+            const svgUrl = img.getAttribute('src');
+            const svgText = await (await fetch(svgUrl)).text();
+            const SVGParser = new DOMParser();
+            const svg = SVGParser.parseFromString(svgText, 'image/svg+xml').documentElement;
+            const svgImage = svg.querySelector('image');
+            img.src = svgImage.getAttribute('xlink:href');
+            img.mimetype = 'image/jpeg';
+            delete img.dataset.shape;
+            return;
+        }
+        const [module, fileName] = shape.split('/');
+        const clipShapeURL = `/${module}/static/image_shapes/${fileName}.svg`;
+        const clipShape = await (await fetch(clipShapeURL)).text();
+        const SVGParser = new DOMParser();
+        const svg = SVGParser.parseFromString(clipShape, 'image/svg+xml').documentElement;
+
+        const base64 = await applyModifications(img);
+
+        const svgImage = svg.querySelector('image');
+        svgImage.setAttribute('xlink:href', base64);
+        svg.setAttribute('width', img.naturalWidth);
+        svg.setAttribute('height', img.naturalHeight);
+        img.dataset.shape = shape;
+        await this._writeSvg(svg.outerHTML, fileName);
+        return this._applyColor(img.dataset.shapeColor, true, previewMode);
+    },
+
+    /**
+     * Applies the correct color to the shape by looking for the default palette's hexcode inside the OG svg files
+     * @param {string} color HEX Code for the color of the background shape
+     * @param {bool} newShape wether it's a new shape or not so we know to look for default colors or previous ones
+     * @param {string} previewMode state of the editor to know which colors to look for
+     */
+    async _applyColor(color, newShape, previewMode) {
+        const img = this._getImg();
+        if (!img.dataset.shape) {
+            return;
+        }
+
+        const fileName = img.dataset.shape.split('/')[1];
+        const clipShapeURL = img.src;
+        let clipShape = await (await fetch(clipShapeURL)).text();
+        let newColor = color && normalizeColor(color);
+        if (newShape) {
+            const DEFAULT_PALETTE = weUtils.DEFAULT_PALETTE;
+            const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
+            if (previewMode === 'reset' && img.dataset.shapeColor) {
+                clipShape = clipShape.replace(combinedColorsRegex, img.dataset.shapeColor);
+            } else {
+                clipShape = clipShape.replace(combinedColorsRegex, match => {
+                    const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
+                    return newColor = weUtils.getCSSVariableValue('o-color-' + colorId);
+                });
+            }
+        } else {
+            clipShape = clipShape.replace(img.dataset.shapeColor, newColor);
+        }
+        await this._writeSvg(clipShape, fileName);
+        if (!previewMode) {
+            img.dataset.shapeColor = newColor;
+        }
+    },
+
+    /**
+     * Replace the URL with a dataURL of the SVG converted in base64
+     * @param {string} svgText svg XML file as a string (inner content)
+     * @param {string} fileName name the file will take place as
+     * @returns returns a promise that's resolved once the svg is properly loaded in the document
+     */
+    async _writeSvg(svgText, fileName) {
+        const img = this._getImg();
+        const file = new File([svgText], fileName, {
+            type: 'image/svg+xml',
+        });
+
+        const reader = new FileReader();
+        const readPromise = new Promise(resolve => {
+            reader.addEventListener('load', () => resolve(reader.result));
+        });
+        reader.readAsDataURL(file);
+        const dataURL = await readPromise;
+        const wrotePromise = new Promise((resolve, reject) => {
+            img.addEventListener('load', () => resolve(), {once: true});
+            img.addEventListener('error', () => reject(), {once: true});
+        });
+        img.src = dataURL;
+        return wrotePromise;
+    },
     /**
      * @override
      */
@@ -4476,6 +4629,18 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         }
         // If it's not in a col-lg, it's probably not going to change size depending on breakpoints
         return displayWidth;
+    },
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'shape':
+                return this._getImg().dataset.shape || '';
+            case 'color':
+                return this._getImg().dataset.shapeColor || '';
+        }
+        return this._super(...arguments);
     },
     /**
      * @override
@@ -4515,6 +4680,10 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      * @param {Event} ev
      */
     async _onImageCropped(ev) {
+        const img = this._getImg();
+        if (img.dataset.shape) {
+            await this._applyShape(img.dataset.shape);
+        }
         await this._rerenderXML();
     },
 });

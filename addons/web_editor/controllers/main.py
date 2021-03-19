@@ -488,7 +488,7 @@ class Web_Editor(http.Controller):
         return View.render_public_asset(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
@@ -498,6 +498,7 @@ class Web_Editor(http.Controller):
             'datas': data,
             'type': 'binary',
             'res_model': res_model or 'ir.ui.view',
+            'mimetype': mimetype or attachment.mimetype,
         }
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0

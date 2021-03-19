@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            @keyframes rotating {
+              from {
+                transform: rotate(0deg);
+              }
+              to {
+                transform: rotate(360deg);
+              }
+            }
+            clipPath > path {
+                transform-origin: .5px .5px;
+                animation: rotating 10s linear infinite;
+            }
+            svg {
+                position: fixed;
+                top: 50vh;
+                left: 50vw;
+            }
+        </style>
+    </head>
+    <body>
+        <input id="svgPicker" type="file" multiple>
+        <button id="submitButton" type="button" name="convert">convert</button>
+        <!-- <img src="./filter-test.jpeg" style='clip-path: url(#blob_3_solid_rd_clip);background-image: url("./blob_3_solid_rd_bg.svg");background-size: 100% 100%;'> -->
+        <div id="downloadArea">
+          <p>Your download link will appear here</p>
+        </div>
+        <script src="./convert-to-percentages.js" charset="utf-8"></script>
+    </body>
+</html>
