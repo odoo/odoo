@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import random
+import threading
+
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -8,8 +12,6 @@ from odoo import api, fields, models, tools
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
 
-import random
-import logging
 _logger = logging.getLogger(__name__)
 
 _INTERVALS = {
@@ -176,7 +178,7 @@ You receive this email because you are:
                 self.invalidate_cache()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit:
+                if autocommit and not getattr(threading.currentThread(), 'testing', False):
                     self.env.cr.commit()
         return True
 
