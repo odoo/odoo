@@ -113,6 +113,33 @@ class ProductProduct(models.Model):
                 continue
             product.mrp_product_qty = float_round(mapped_data.get(product.id, 0), precision_rounding=product.uom_id.rounding)
 
+    def _get_bom_kits(self):
+        products = self.filtered(lambda p: p.type != 'service' or p.product_tmpl_id.type != 'service')
+        if not products:
+            return {}
+
+        def get_bom(kits, product_id, produt_tmpl_id):
+            template_bom = kits.get((False, produt_tmpl_id), {'sequence': float('inf')})
+            product_bom = kits.get((product_id, produt_tmpl_id), {'sequence': float('inf')})
+            return template_bom.get('bom') if template_bom['sequence'] < product_bom['sequence'] else product_bom.get('bom')
+
+        company_domain = ['|',
+            ('company_id', '=', False),
+            ('company_id', '=', self.env.context.get('company_id'))] \
+            if self.env.context.get('company_id') else []
+        product_domain = ['|',
+            ('product_id', 'in', products.ids),
+            '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids)]
+        kits = {}
+        for bom in self.env['mrp.bom'].search(product_domain + company_domain + [('type', '=', 'phantom')], order='sequence, product_id'):
+            kits.setdefault((bom.product_id.id, bom.product_tmpl_id.id), {"bom": bom, "sequence": bom.sequence})
+        return {
+            product: bom
+            for product in products
+            for bom in (get_bom(kits, product.id, product.product_tmpl_id.id),)
+            if bom
+        }
+
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         """ When the product is a kit, this override computes the fields :
          - 'virtual_available'
@@ -124,12 +151,7 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
-        bom_kits = {
-            product: bom
-            for product in self
-            for bom in (self.env['mrp.bom']._bom_find(product=product, bom_type='phantom'),)
-            if bom
-        }
+        bom_kits = self._get_bom_kits()
         kits = self.filtered(lambda p: bom_kits.get(p))
         res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
         for product in bom_kits:
