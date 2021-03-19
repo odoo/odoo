@@ -334,7 +334,6 @@ class TracesAsyncRecorder(Recorder):
     def _start(self):
         self.profiler_thread.start()
 
-
 class TracesSyncRecorder(Recorder):
     """
     Record complete execution synchronously.
@@ -372,6 +371,41 @@ class TracesSyncRecorder(Recorder):
                 current_stack.pop()
             entry['stack'] = current_stack[:]
 
+class QwebRecorder(Recorder):
+    _row = 'qweb'
+
+    def __init__(self):
+        super().__init__()
+        def hook(results):
+            """
+            param data: {
+                    'archs': {view_id: string},
+                    'data': [{
+                        'view_id': number
+                        'arch': html
+                        'xpath': string
+                        'directive': string
+                        'time': float
+                        'delay': float
+                        'query': number
+                    }]
+                }
+            """
+            self._make_entry().update({'results': results})
+        self.hook = hook
+
+    def _start(self):
+        init_thread = self.profiler.init_thread
+        if not hasattr(init_thread, 'qweb_hooks'):
+            init_thread.qweb_hooks = []
+        if self.hook in init_thread.qweb_hooks:
+            _logger.warning('record qweb recursive call')
+        else:
+            init_thread.qweb_hooks.append(self.hook)
+
+    def _stop(self):
+        self.profiler.init_thread.qweb_hooks.remove(self.hook)
+
 
 class ExecutionContext():
     """
@@ -393,12 +427,12 @@ class ExecutionContext():
         threading.current_thread().exec_context.pop(self.init_stack_trace_level)
 
 
-class Profiler():
+class Profiler():     
     """
     Context manager to use to start the recording of some execution.
     Will save sql and async stack trace by default
     """
-    def __init__(self, db=True, cr=False, path=False, sql=True, traces=True, sync=False, interval=0.001, recorders=None, profile_session_id=False, description=False):
+    def __init__(self, db=True, cr=False, path=False, sql=True, traces=True, sync=False, interval=0.001, qweb=True, recorders=None, profile_session_id=False, description=False):
         self.cr = None
         self.start = 0
         self.duration = 0
@@ -430,6 +464,8 @@ class Profiler():
                     self.recorders.append(TracesSyncRecorder())
                 else:
                     self.recorders.append(TracesAsyncRecorder(interval=interval))
+            if qweb:
+                    self.recorders.append(QwebRecorder())
         # self.result = {}
 
     def _make_ir_profile_execution(self):

@@ -23,10 +23,23 @@ const DebugViewProfiling = basicFfields.AceEditor.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        // {template, xpath, directive, time, duration, query }[]
-        const data = this.value && JSON.parse(this.value) || {template: {}, profile: []};
-        this.profileLines = data.profile;
-        this.viewArch = data.template;
+        const data = this.value && JSON.parse(this.value);
+        /* {
+                'archs': {view_id: string},
+                'data': {
+                    'view_id': number
+                    'arch': html
+                    'xpath': string
+                    'directive': string
+                    'time': float
+                    'delay': float
+                    'query': number
+                }[]
+            }
+        */
+        const results = data && data.length ? data[0].results : {archs: {}, data: []};
+        this.profileLines = results.data;
+        this.viewArch = results.archs;
         this.viewIDs = Array.from(new Set(this.profileLines.map(line => line.view_id)));
         for (const line of this.profileLines) {
             line.xpath = line.xpath.replace(/([^\]])\//g, '$1[1]/').replace(/([^\]])$/g, '$1[1]');

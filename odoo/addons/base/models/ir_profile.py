@@ -27,7 +27,7 @@ class IrProfileSession(models.Model):
     def _profiling_enabled(self):
         return request.env['ir.config_parameter'].sudo().get_param('base.profiling_enabled') # change to duration?
 
-    def _update_profiling(self, profile=None, profile_sql=None, profile_traces_sync=None, profile_traces_async=None, **_kwargs):
+    def _update_profiling(self, profile=None, profile_sql=None, profile_traces_sync=None, profile_traces_async=None, profile_qweb=None, **_kwargs):
         if profile:
             if self._profiling_enabled():
                 if not request.session.profile_session_id:
@@ -46,6 +46,7 @@ class IrProfileSession(models.Model):
         check(profile_modes, 'profile_sql', profile_sql)
         check(profile_modes, 'profile_traces_sync', profile_traces_sync)
         check(profile_modes, 'profile_traces_async', profile_traces_async)
+        check(profile_modes, 'profile_qweb', profile_qweb)
         request.session.profile_modes = list(profile_modes)
         return {
             'profile_session_id': request.session.profile_session_id,
@@ -68,6 +69,7 @@ class IrProfileExcecution(models.Model):
     sql = fields.Char('Sql', prefetch=False)
     traces_async = fields.Char('Traces Async', prefetch=False)
     traces_sync = fields.Char('Traces Sync', prefetch=False)
+    qweb = fields.Char('Qweb', prefetch=False)
 
     speedscope = fields.Binary('Speedscope', prefetch=False)  # this binary field is painfull
     speedscope_url = fields.Char('Open', compute='_compute_url')

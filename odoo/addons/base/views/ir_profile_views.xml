@@ -60,8 +60,11 @@
                     <field name="description"/>
                     <field name="profile_session_id"/>
                 </group>
-                <group attrs="{'invisible': [('speedscope_url','=', False)]}">
+                <group attrs="{'invisible': [('speedscope_url','=', '')]}">
                     <field name="speedscope_url" string="Speedscope" widget="speedscope"/>
+                </group>
+                <group attrs="{'invisible': [('qweb','=', '')]}">
+                    <field name="qweb" widget="debug_profile_view" nolabel="1"/>
                 </group>
             </form>
         </field>

@@ -48,15 +48,34 @@ class IrQWeb(models.AbstractModel, QWeb):
             * ``profile`` (Boolean) activate the rendering profile displayed in log as debug
         """
 
-        # optionnal hooks for performance and tracing analysis
-        current_thread = threading.current_thread()
-        if hasattr(current_thread, 'qweb_hooks'):
-            self = self.with_context(profile=True)
-
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
+        current_thread = threading.current_thread()
+        if hasattr(current_thread, 'qweb_hooks') and current_thread.qweb_hooks:
+            # optionnal hooks for performance and tracing analysis
+            context['profile'] = True
+            log_profiling_arch = {}
+            log_profiling_results = []
+            def log_profile(view_id, arch, xpath, directive, now, delay, query):
+                if not view_id in log_profiling_arch:
+                    log_profiling_arch[view_id] = arch
+                log_profiling_results.append({
+                    'view_id': view_id,
+                    'xpath': xpath,
+                    'directive': directive,
+                    'now': now,
+                    'delay': delay,
+                    'query': query,
+                })
+            values['_log_profiling'] = log_profile
+
         result = super(IrQWeb, self)._render(id_or_xml_id, values=values, **context)
+
+        if hasattr(current_thread, 'qweb_hooks'):
+            # optionnal hooks for performance and tracing analysis
+            for hook in current_thread.qweb_hooks:
+                hook({'archs': log_profiling_arch, 'data': log_profiling_results})
 
         if b'data-pagebreak=' not in result:
             return result
@@ -421,21 +440,24 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         return (attributes, content, None)
 
-    def _start_log_profiling(self, ref, arch, xpath, directive, values, context):
+    def _hook_before_directive(self, ref, arch, xpath, directive, values, context):
         return (time(), self.env.cr.sql_log_count)
 
-    def _stop_log_profiling(self, ref, arch, xpath, directive, values, context, loginfo):
+    def _hook_after_directive(self, ref, arch, xpath, directive, values, context, loginfo):
         now, query = loginfo
         delay = (time() - now) * 1000
         dquery = self.env.cr.sql_log_count - query
-        _logger.debug({
-            'ref': ref,
-            'xpath': xpath,
-            'directive': directive,
-            'time': now,
-            'delay': delay,
-            'query': dquery,
-        })
+        if '_log_profiling' in values:
+            values['_log_profiling'](ref, arch, xpath, directive, now, delay, dquery)
+        else:
+            _logger.debug({
+                'view_id': ref,
+                'xpath': xpath,
+                'directive': directive,
+                'now': now,
+                'delay': delay,
+                'query': dquery,
+            })
 
     # compile expression add safe_eval
 
