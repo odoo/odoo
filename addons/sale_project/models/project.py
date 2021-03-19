@@ -48,7 +48,7 @@ class ProjectTask(models.Model):
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', help="Sales order to which the task is linked.")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
-        compute='_compute_sale_line', store=True, readonly=False, copy=False,
+        compute='_compute_sale_line', recursive=True, store=True, readonly=False, copy=False,
         help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')

@@ -583,7 +583,7 @@ class Task(models.Model):
         copy=False,
         readonly=True)
     project_id = fields.Many2one('project.project', string='Project',
-        compute='_compute_project_id', store=True, readonly=False,
+        compute='_compute_project_id', recursive=True, store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
     # Defines in which project the task will be displayed / taken into account in statistics.
     # Example: 1 task A with 1 subtask B in project P
@@ -599,7 +599,7 @@ class Task(models.Model):
         index=True, tracking=True)
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        compute='_compute_partner_id', store=True, readonly=False,
+        compute='_compute_partner_id', recursive=True, store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
@@ -630,7 +630,7 @@ class Task(models.Model):
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email From', help="These people will receive email.", index=True,
-        compute='_compute_email_from', store="True", readonly=False)
+        compute='_compute_email_from', recursive=True, store=True, readonly=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', store=True, group_operator="avg")
