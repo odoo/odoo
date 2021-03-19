@@ -259,3 +259,58 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertMemberAssign(sales_team_3_m1, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m2, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m3, 15)  # 15 max on one month
+
+    @mute_logger('odoo.models.unlink')
+    def test_assign_keep_master_team(self):
+        """ Check existing opportunity keep its
+            team and salesman when merged with a new lead
+        """
+        sales_team_master = self.env['crm.team'].create({
+            'name': 'Sales Team Master',
+            'sequence': 15,
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': False,
+            'assignment_domain': [('country_id', '!=', False)],
+        })
+
+        sales_team_dupe = self.env['crm.team'].create({
+            'name': 'Sales Team Dupe',
+            'sequence': 15,
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': False,
+            'assignment_domain': "[]",
+        })
+
+        self.env['crm.team.member'].create({
+            'user_id': self.user_sales_leads.id,
+            'crm_team_id': sales_team_dupe.id,
+            'assignment_max': 10,
+            'assignment_domain': "[]",
+        })
+
+        master_opp = self.env['crm.lead'].create({
+            'type': 'opportunity',
+            'name': 'Master',
+            'partner_id': self.contact_1.id,
+            'team_id': sales_team_master.id,
+            'user_id': self.user_sales_manager.id,
+        })
+
+        dupe_lead = self.env['crm.lead'].create({
+            'type': 'lead',
+            'name': 'Dupe',
+            'partner_id': self.contact_1.id,
+            'team_id': False,
+            'user_id': False,
+        })
+
+        sales_team_dupe._action_assign_leads(work_days=2)
+        self.assertFalse(dupe_lead.exists())
+        self.assertEqual(master_opp.team_id, sales_team_master, 'Opportunity should keep its crm team')
+        self.assertEqual(master_opp.user_id, self.user_sales_manager, 'Opportunity should keep its salesman')
