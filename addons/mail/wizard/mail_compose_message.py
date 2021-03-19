@@ -259,7 +259,7 @@ class MailComposer(models.TransientModel):
                             subtype_id=subtype_id,
                             notif_layout=notif_layout,
                             add_sign=not bool(wizard.template_id),
-                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
+                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else True,
                             model_description=model_description,
                             **mail_values)
                         if ActiveModel._name == 'mail.thread' and wizard.model:
