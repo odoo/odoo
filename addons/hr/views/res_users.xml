@@ -29,6 +29,12 @@
                 <field name="tz" position="attributes">
                     <attribute name="required">1</attribute>
                 </field>
+                <field name="tz" position="after">
+                    <field name="is_system" invisible="1"/>
+                </field>
+                <xpath expr="//button[@name='%(base.res_lang_act_window)d']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_system', '=', False)]}</attribute>
+                </xpath>
             </field>
         </record>
 
