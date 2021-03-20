@@ -11877,7 +11877,7 @@ msgstr "Tehniline väli kasutamiseks sularaha ümardamise rea taastamisel."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Technical field used to show the force tax included button"
-msgstr ""
+msgstr "Tehniline väli mille abil osundada maksu jõuga lisamise nupule"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__account_number
@@ -11885,6 +11885,8 @@ msgid ""
 "Technical field used to store the bank account number before its creation, "
 "upon the line's processing"
 msgstr ""
+"Tehniline väli panga kontonumbri salvestamiseks enne selle loomist, rea "
+"töötlemisel"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__display_currency_helper
@@ -11893,6 +11895,9 @@ msgid ""
 "conversion tooltip. The tooltip informs a currency conversion will be "
 "performed with the transfer."
 msgstr ""
+"Tehniline väli. Kasutatakse osundamaks, kas kuvada või mitte valuuta "
+"konverteerimise näpunäidet. Näpunäide: valuuta konverteerimine teostatakse "
+"ülekandega."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -11901,11 +11906,13 @@ msgid ""
 "warning. The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"Tehniline väli. Kasutatakse ümardamise hoiatuse kuvamiseks. Hoiatus: "
+"ümardamise määra muutus võib olla ohtlik res.currency vormivaates."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount
 msgid "Technical shortcut to parse the amount to a float"
-msgstr ""
+msgstr "Tehniline otsetee ujuvkursi määra sõelumiseks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
@@ -11915,7 +11922,7 @@ msgstr "Mall"
 #. module: account
 #: model:ir.model,name:account.model_account_group_template
 msgid "Template for Account Groups"
-msgstr ""
+msgstr "Mall kontogruppide jaoks"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -11960,7 +11967,7 @@ msgstr "Tingimused"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "See on avakande kuupäev."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -11978,6 +11985,8 @@ msgid ""
 "The 'Internal Group' is used to filter accounts based on the internal group "
 "set on the account type."
 msgstr ""
+"'Sisemine grupp' on kasutusel kontode kontotüübi järgi filtreerimisel "
+"sisemise grupi sätete alusel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_type
@@ -14597,6 +14606,15 @@ msgstr "tehniline väli maksu-grupi-kohandatud-välja vidinale"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "tehniline väli arvutamaks õigesti algsaldot"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
