@@ -6646,7 +6646,7 @@ msgstr "Factuurwidget voor uitstaande credits en debets"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Factuur partnerweergavenaam"
+msgstr "Factuurrelatie weergavenaam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -14660,8 +14660,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"U kunt niet meer dan een rekening hebben in \"Huidige Boekjaar\" van het "
-"type. (rekeningen: %s)"
+"U kunt niet meer dan één rekening hebben met als type \"Huidige Jaarwinst\"."
+" (rekeningen: %s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15055,6 +15055,18 @@ msgstr "technisch veld voor het tax-group-custom-field widget"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "technisch veld om het beginsaldo correct te berekenen"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"Het gekozen dagboek heeft een type dat niet compatibel is met uw "
+"factuurtype. Verkoopactiviteiten moeten naar 'verkoop dagboek' gaan en "
+"inkoopactiviteiten naar een 'inkoop dagboek'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

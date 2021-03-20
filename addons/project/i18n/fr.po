@@ -10,7 +10,6 @@
 # Florian Hatat, 2020
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
-# Fabien Pinckaers <fp@openerp.com>, 2020
 # Xavier Belmere <Info@cartmeleon.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
@@ -77,7 +76,7 @@ msgstr "\"Aujourd'hui\""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "# Days to Deadline"
-msgstr "Nb jours avant date limite"
+msgstr "Nb de jours avant l'échéance"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -1113,7 +1112,7 @@ msgstr "Créer un projet"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr "Créez une nouvelle étape dans le pipeline de tâches"
+msgstr "Créez une nouvelle étape dans le pipeline des tâches"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1267,13 +1266,13 @@ msgstr "Quotidien"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_month__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_month__date
 msgid "Date of the Month"
-msgstr "Jour du mois"
+msgstr "Date du mois"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__date
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__date
 msgid "Date of the Year"
-msgstr "Jour de l'année"
+msgstr "Date de l'année"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -2084,7 +2083,7 @@ msgstr "Dernière modification le"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr "Dernière étape de mise à jour"
+msgstr "Dernière mise à jour de l'étape"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -2280,7 +2279,7 @@ msgstr "Messages"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr "Mélange"
+msgstr "Mixing"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__mon
@@ -2427,7 +2426,7 @@ msgstr "Pas de sujet"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr "Pas encore d'évaluations de clients "
+msgstr "Aucunes évaluations de clients "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2438,7 +2437,7 @@ msgstr "Aucuns projets trouvés. Créons-en un!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr "Pas d'étiquettes trouvées. Créons-en une!"
+msgstr "Aucunes étiquettes trouvées. Créons-en une!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2832,7 +2831,7 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
-"Projet dans lequel les sous-tâches du projet actuel seront créées. Celà peut"
+"Projet dans lequel les sous-tâches du projet actuel seront créées. Cela peut"
 " être le projet actuel lui même."
 
 #. module: project
@@ -2951,7 +2950,7 @@ msgstr "Évaluation de la dernière image"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr "Dernier évaluation"
+msgstr "Dernière évaluation"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -3311,7 +3310,7 @@ msgstr "Séquence"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
 msgstr ""
-"Ajouter l'image\n"
+"Ajouter une image\n"
 "de couverture"
 
 #. module: project
@@ -3470,7 +3469,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
 msgid "Sub-task Project"
-msgstr "Sous-tâche du projet"
+msgstr "Projet des sous-tâches"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
@@ -3831,7 +3830,7 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
-"Ce rapport vous permet d'analyser la performance de vos projets et "
+"Ce rapport vous permet d'analyser la performance de vos projets et de vos "
 "utilisateurs. Vous pouvez analyser les tâches, les heures consommées par "
 "rapport aux heures prévues, le nombre moyen de jours pour démarrer ou fermer"
 " une tâche, etc."
@@ -3916,7 +3915,7 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
-"Utilisez les activités et les étapes sur une tâche. <br>\n"
+"Pour faire avancer les choses, utilisez les activités et les étapes sur vos tâches. <br>\n"
 "                   Discutez en temps réel ou par email pour collaborer efficacement."
 
 #. module: project

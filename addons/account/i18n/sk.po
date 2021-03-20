@@ -2118,7 +2118,7 @@ msgstr "Analytický účet"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_group_menu
 msgid "Analytic Account Groups"
-msgstr "Analytické skupiny účtov"
+msgstr "Skupiny projektov / zákaziek"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_accounting
@@ -2186,7 +2186,7 @@ msgstr "Analytické pravidlá"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_tags
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Tags"
-msgstr "Analytické tagy"
+msgstr "Strediská"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
@@ -14306,8 +14306,8 @@ msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
 msgstr ""
-"Na analytických značkách nemôžete nastaviť inú spoločnosť, pretože sú s ňou "
-"spojené niektoré položky denníka."
+"Na strediská nemôžete nastaviť inú spoločnosť, pretože sú s ňou spojené "
+"niektoré položky denníka."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14823,6 +14823,15 @@ msgstr "technické pole pre widget daňové skupiny-vlastné pole"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "technický odbor správne vypočítať počiatočnú rovnováhu"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
