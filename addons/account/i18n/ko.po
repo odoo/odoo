@@ -7,9 +7,9 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Seongseok Shin <shinss61@hotmail.com>, 2020
-# JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Mark Lee <odoos@soti.33mail.com>, 2021
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2021\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1369,7 +1369,7 @@ msgstr "회계"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "회계 대시보드"
+msgstr "회계 현황판"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1549,7 +1549,7 @@ msgstr "추가"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add Credit Note"
-msgstr "신용 전표 추가"
+msgstr "대변전표 추가"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__add_sign
@@ -2440,8 +2440,8 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"청구서 금액을 지급할 은행 계좌 번호입니다. 고객 청구서 또는 공급업체 신용 전표일 경우, 회사 은행 계좌이고 그렇지 않을 경우에는 "
-"협력사 은행 계좌 번호에 해당합니다."
+"청구서 금액을 지급할 은행 계좌 번호입니다. 고객 청구서 또는 공급업체 대변전표일 경우, 회사 은행 계좌이고 그렇지 않을 경우에는 협력사"
+" 은행 계좌 번호에 해당합니다."
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -2748,7 +2748,7 @@ msgstr "국가별"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "신용 전표별"
+msgstr "대변전표별"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -3170,7 +3170,7 @@ msgstr "계정에서 분개 항목의 청구서 및 결제 매칭을 허용할 �
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "이 분개장에서 작성한 청구서와 신용 전표에 다른 채번규칙을 사용하려면 이 상자에 표시해 주십시오."
+msgstr "이 분개장에서 작성한 청구서와 대변전표에 다른 채번규칙을 사용하려면 이 상자에 표시해 주십시오."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3660,7 +3660,7 @@ msgstr "은행 계좌 만들기"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "대변 전표 만들기"
+msgstr "대변전표 만들기"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -3730,7 +3730,7 @@ msgstr "공급업체 청구서 만들기"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "공급업체 대변 전표 만들기"
+msgstr "공급업체 대변전표 만들기"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3939,13 +3939,13 @@ msgstr "대변 이동"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "신용 전표"
+msgstr "대변전표"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr "대변 전표 작성됨"
+msgstr "대변전표 작성됨"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -3953,7 +3953,7 @@ msgstr "대변 전표 작성됨"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "신용 전표"
+msgstr "대변전표"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__credit_account_id
@@ -4073,7 +4073,7 @@ msgstr "고객"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "고객 신용 전표"
+msgstr "고객 대변전표"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_invoice
@@ -4206,7 +4206,7 @@ msgstr "다운"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "알림판"
+msgstr "현황판"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
@@ -4335,7 +4335,7 @@ msgstr "소수점 구분 기호"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "지정된 신용 전표 순서"
+msgstr "지정된 대변전표 순서"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
@@ -4791,7 +4791,7 @@ msgstr "청구서 초안"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "초안 신용 전표"
+msgstr "초안 대변전표"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4834,7 +4834,7 @@ msgstr "판매 영수증 초안"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "공급업체 대변 전표 초안"
+msgstr "공급업체 대변전표 초안"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -4886,7 +4886,7 @@ msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n"
 "%s"
 msgstr ""
-"중복된 공급업체 참조가 발견되었습니다. 동일한 공급업체 청구서/대변 전표를 두 번 인코딩한 것 같습니다 :\n"
+"중복된 공급업체 참조가 발견되었습니다. 동일한 공급업체 청구서/대변전표를 두 번 인코딩한 것 같습니다 :\n"
 "%s"
 
 #. module: account
@@ -6861,12 +6861,12 @@ msgstr "근거"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr "칸반 대시보드"
+msgstr "칸반 현황판"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr "칸반 대시보드 그래프"
+msgstr "칸반 현황판 그래프"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
@@ -7923,7 +7923,7 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"대변 전표를 만드는 가장 쉬운 방법은 고객 청구서에서 \n"
+"대변전표를 만드는 가장 쉬운 방법은 고객 청구서에서 \n"
 "                  직접 만드는 것입니다."
 
 #. module: account
@@ -7931,7 +7931,7 @@ msgstr ""
 msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
-msgstr "공급업체 대변 전표를 생성하는 가장 쉬운 방법은 공급업체 청구서에서 직접 작성하는 것입니다."
+msgstr "공급업체 대변전표를 생성하는 가장 쉬운 방법은 공급업체 청구서에서 직접 작성하는 것입니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -8130,7 +8130,7 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"Odoo를 설치하면 은행 계좌 설정에서 ‘은행 피드’를 ‘파일 가져오기’로 설정합니다. 회계 대시보드에서 가져오는 버튼이 추가됩니다."
+"Odoo를 설치하면 은행 계좌 설정에서 ‘은행 피드’를 ‘파일 가져오기’로 설정합니다. 회계 현황판에서 가져오는 버튼이 추가됩니다."
 
 #. module: account
 #. openerp-web
@@ -10573,7 +10573,7 @@ msgstr "비활성 세금 표시"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "대시보드에 분개장 표시"
+msgstr "현황판에 분개장 표시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_included
@@ -10699,7 +10699,7 @@ msgstr "시작 캐시박스"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_dashboard_onboarding_state
 msgid "State of the account dashboard onboarding panel"
-msgstr "계정 대시보드 온보딩 패널 상태"
+msgstr "계정 현황판 온보딩 패널 상태"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_invoice_onboarding_state
@@ -10904,7 +10904,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into refund/credit note"
-msgstr "환불/대변 전표로 전환"
+msgstr "환불/대변전표로 전환"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -11847,20 +11847,20 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
-msgstr "대변 전표는 자동으로 검증되고 청구서과 조정됩니다."
+msgstr "대변전표는 자동으로 검증되고 청구서과 조정됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid ""
 "The credit note is auto-validated and reconciled with the invoice.\n"
 "                               The original invoice is duplicated as a new draft."
-msgstr "대변 전표는 자동으로 검증되고 청구서과 조정됩니다. 원래 청구서은 새로운 초안으로 복제됩니다."
+msgstr "대변전표는 자동으로 검증되고 청구서과 조정됩니다. 원래 청구서은 새로운 초안으로 복제됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
-msgstr "대변 전표는 초안으로 작성되며 발행 전에 편집할 수 있습니다."
+msgstr "대변전표는 초안으로 작성되며 발행 전에 편집할 수 있습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -12617,7 +12617,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
-msgstr "이것은 회계 대시보드입니다."
+msgstr "이것은 회계 현황판입니다."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -13219,7 +13219,7 @@ msgstr "외부 참조를 포함하여 이 명세서를 생성합니다(가져온
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "대시보드 보기에서 분개장을 주문하는 데 사용합니다."
+msgstr "현황판 보기에서 분개장을 주문하는 데 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_method__sequence
@@ -13355,7 +13355,7 @@ msgstr "공급업체 청구서"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "공급업체 신용 전표"
+msgstr "공급업체 대변전표"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13497,7 +13497,7 @@ msgstr "메시지가 내부용 노트인지 여부 (의견 모드에만 해당)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "이 분개장을 대시보드에 표시할지 여부"
+msgstr "이 분개장을 현황판에 표시할지 여부"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
@@ -14001,8 +14001,8 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"총액이 마이너스인 청구서의 유효성을 승인할 수 없습니다. 대신 대변 전표를 작성해야 합니다. 작업 메뉴를 사용하여 대변 전표 또는 환불로"
-" 변환하십시오."
+"총액이 마이너스인 청구서의 유효성을 승인할 수 없습니다. 대신 대변전표를 작성해야 합니다. 작업 메뉴를 사용하여 대변전표 또는 환불로 "
+"변환하십시오."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14211,6 +14211,15 @@ msgstr "tax-group-custom-field 위젯에 대한 기술 필드"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
 msgstr ""
 
 #. module: account

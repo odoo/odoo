@@ -652,7 +652,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"časové rozvrhy účtů zapsané na tikety helpdesku."
+"Vyúčtování pracovního výkazu přihlášené na požadavky helpdesku."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -1214,7 +1214,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-" Při fakturacích časových rozvrzích umožňuje fakturaci buď všechny časové rozvrhy související s SO nebo pouze ověřené časové rozvrhy"
+" Při fakturacích pracovních výkazů umožňuje fakturaci buď všechny pracovní výkazy související s SO nebo pouze chválené pracovní výkazy"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_product_matrix
@@ -1378,7 +1378,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-" Modul propojující modul Docházky s časovým rozvrhem"
+" Modul propojující modul docházka s pracovním výkazem"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_saft
@@ -1490,8 +1490,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"* Předkládání a validace časového rozvrhu * \n"
-"Aktivace zobrazení mřížky pro časové rozvrhy "
+"* Předkládání a validace pracovního výkazu * \n"
+"Aktivace zobrazení mřížky pro pracovní výkazy "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -2407,7 +2407,7 @@ msgid ""
 "* Cost structure report\n"
 msgstr ""
 "\n"
-"Analytické účetnictví v Plánování potřeby materiálu\n"
+"Manažérské účetnictví v plánování potřeby materiálu\n"
 "========================== \n"
 "* Zpráva o struktuře nákladů \n"
 
@@ -2426,7 +2426,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Analytické účetnictví v MRP\n"
+"Manažérské účetnictví v MRP\n"
 "==========================\n"
 "\n"
 "* Zpráva o struktuře nákladů\n"
@@ -3558,6 +3558,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Správa služeb v terénu\n"
+"==========================\n"
+"Tento modul přidává funkce potřebné pro moderní správu služeb v terénu.\n"
+"Nainstaluje následující aplikace:\n"
+"- Projekt\n"
+"- Pracovní výkazy\n"
+"\n"
+"Přidá následující možnosti:\n"
+"- zprávy o úkolech\n"
+"- Aplikace FSM s vlastním pohledem pro pracovníka na místě\n"
+"- přidávat produkty na úkoly\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_accountant
@@ -6716,6 +6730,10 @@ msgid ""
 "======================================================================\n"
 "This module applies to companies based in Algeria.\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účetního grafu pro Alžírsko v Odoo.\n"
+"=======================================================================\n"
+"Tento modul se vztahuje na společnosti se sídlem v Alžírsku.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -8299,6 +8317,8 @@ msgid ""
 "- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Záznam je společnost %(company)r a %(field)r (%(fname)s: %(values)s) patří"
+" jiné společnosti."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8571,6 +8591,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Firemní adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Fakturační adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Dodací adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Jiná adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Soukromá adresa</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresa</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -10176,18 +10204,18 @@ msgstr "Pro vyhledání_nebo_vytvoření je vyžadován e-mail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr "Analytické účetnictví"
+msgstr "Manažérské účetnictví"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
 msgid "Analytic Accounting Enterprise"
-msgstr "Analytické účetní podnikání "
+msgstr "Manažérské účetnictví podniku "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "Analytické účetnictví ve výrobě"
+msgstr "Manažérské účetnictví ve výrobě"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -12149,12 +12177,12 @@ msgstr "Porovnat k zobrazení"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
 msgid "Compare timesheets and forecast for your projects"
-msgstr "Porovnat časové rozvrhy a prognózy pro své projekty"
+msgstr "Porovnat pracovní výkazy a prognózy pro své projekty"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
 msgid "Compare timesheets and plannings"
-msgstr "Srovnání časových rozvrhů a plánů"
+msgstr "Srovnání pracovních výkazu a plánů"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.reset_view_arch_wizard_action
@@ -14068,7 +14096,7 @@ msgstr "Hodnota domény"
 msgid ""
 "Domain on non-relational field \"%(name)s\" makes no sense "
 "(domain:%(domain)s)"
-msgstr ""
+msgstr "Doména v nerelačním poli „%(name)s“ nedává smysl (doména:%(domain)s)"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -15073,6 +15101,8 @@ msgstr "Pole \"Typ\" nelze na modelech měnit."
 msgid ""
 "Field %(name)s used in %(use)s is present in view but is in select multi."
 msgstr ""
+"Pole %(name)s použité v %(use)s je přítomno v pohledu, ale je ve vybraném "
+"multi."
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -15094,6 +15124,8 @@ msgid ""
 "Field '%(name)s' found in 'groupby' node can only be of type many2one, found"
 " %(type)s"
 msgstr ""
+"Pole '%(name)s' nalezeno v uzlu 'groupby' může být pouze typu many2one, "
+"nalezeno %(type)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__help
@@ -16174,7 +16206,7 @@ msgstr "H PŘEPRAVA A SKLADOVÁNÍ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
 msgid "HR Attendance Holidays"
-msgstr "HR docházky dovolené"
+msgstr "HR docházka dovolené"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gamification
@@ -16352,7 +16384,7 @@ msgstr "Pomáhá vám řídit docházku."
 #. module: base
 #: model:ir.module.category,description:base.module_category_services_timesheets
 msgid "Helps you manage the timesheets."
-msgstr "Pomáhá vám spravovat časové rozvrhy."
+msgstr "Pomáhá vám spravovat pracovní výkazy."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
@@ -19061,7 +19093,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Manage financial and analytic accounting"
-msgstr "Správa finančního a analytického účetnictví"
+msgstr "Správa finančního a manažérské účetnictví"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -24809,7 +24841,7 @@ msgstr "Prodejte pracovní dobu helpdesku"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr "Prodeje na základě časových rozvrhů"
+msgstr "Prodeje na základě pracovních výkazu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_digital
@@ -26685,6 +26717,8 @@ msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
 "current model)."
 msgstr ""
+"Hodnoty pro pole '%s' již existují (pravděpodobně jsou '%s' v aktuálním "
+"modelu)."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme
@@ -27102,7 +27136,7 @@ msgstr "Pracovní výkazy když jsou volné dny"
 #: model:ir.module.category,name:base.module_category_services_timesheets
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets"
-msgstr "Časové přehledy"
+msgstr "Pracovní výkazy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
@@ -28971,6 +29005,8 @@ msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Nemáte oprávnění přistupovat k záznamům '%(document_kind)s' "
+"(%(document_model)s)."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -28995,6 +29031,7 @@ msgid ""
 "You are not allowed to modify '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Není dovoleno upravovat '%(document_kind)s' (%(document_model)s) záznamy."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -29136,6 +29173,9 @@ msgid ""
 "\n"
 "(Operation: %(operation)s)"
 msgstr ""
+"Nemáte dostatečná práva pro přístup k polím „%(fields)s“ na %(document_kind)s (%(document_model)s). Obraťte se na správce systému.\n"
+"\n"
+"(Úkon: %(operation)s)"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0

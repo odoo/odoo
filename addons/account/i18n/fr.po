@@ -56,7 +56,6 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # Rémi CAZENAVE, 2020
 # Alain van de Werve <avw@openerp.com>, 2020
-# Jonathan Castillo <jcs@odoo.com>, 2020
 # Olivier ANDRE <frsw194@gmail.com>, 2020
 # omaodoo <oma@odoo.com>, 2020
 # lcaodoo <lca@odoo.com>, 2020
@@ -79,6 +78,7 @@
 # Pierre Delacroix <pde@odoo.com>, 2021
 # Benjamin Stienon <tsb@odoo.com>, 2021
 # Didier LUBERRIAGA <didier.luberriaga@gmail.com>, 2021
+# Jonathan Castillo <jcs@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -86,7 +86,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Didier LUBERRIAGA <didier.luberriaga@gmail.com>, 2021\n"
+"Last-Translator: Jonathan Castillo <jcs@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -9781,7 +9781,7 @@ msgstr "Motif ..."
 #: model:ir.ui.menu,name:account.menu_action_move_in_receipt_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_receipt_type
 msgid "Receipts"
-msgstr "Réceptions"
+msgstr "Reçus"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_receivable
@@ -14888,6 +14888,15 @@ msgstr "champ technique pour le widget tax-group-custom-field"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "champ technique pour calculer le solde d'ouverture correctement "
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

@@ -72,12 +72,12 @@
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
 # Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
-# Luc N, 2021
 # Pierre Delacroix <pde@odoo.com>, 2021
 # N GR <nathg212@gmail.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
 # Nathan Grognet <ngr@odoo.com>, 2021
+# Luc N, 2021
+# Cécile Collart <cco@odoo.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -85,7 +85,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Nathan Grognet <ngr@odoo.com>, 2021\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4880,6 +4880,11 @@ msgid ""
 "Improve the import of bank statement feature to support the SEPA recommended Cash Management format (CAMT.053).\n"
 "    "
 msgstr ""
+"\n"
+"Module d'importation de relevés bancaires CAMT.\n"
+"======================================\n"
+"\n"
+"Améliorez la fonctionnalité d'importation de relevés bancaires pour prendre en charge le format SEPA recommandé (CAMT.053)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -7354,6 +7359,20 @@ msgid ""
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
+"\n"
+"Ce module implémente la charte de compte pour les pays de l'HOADA.\n"
+"=======================================================\n"
+"\n"
+"Il permet à toute compagnie ou association de gérer sa comptabilité financière.\n"
+"\n"
+"Les pays qui utilisent OHADA sont les suivants :\n"
+"----------------------------------------------------------------\n"
+"    Benin, Burkina Faso, Cameroun, Centrafrique, Comores, Congo,\n"
+"\n"
+"    Côte d'Ivoire, Gabon, Guinée, Guinée-Bissau, Guinée Équatoriale, Mali, Niger,\n"
+"\n"
+"    République Démocratique du Congo, Sénégal, Tchad et Togo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -8064,6 +8083,9 @@ msgid ""
 "\n"
 "    Supported documents are SO, PO.\n"
 msgstr ""
+"Module de synchronisation des documents entre plusieurs entreprises. Par exemple, cela permet de créer automatiquement un ordre de vente quand un ordre d'achat est validé avec une autre société du système en tant que vendeur, et inversement.\n"
+"\n"
+"Documents supportés : SO, PO.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_inter_company_rules
@@ -8125,7 +8147,7 @@ msgstr "# Règles d'enregistrement"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(action_name)s is not a valid action on %(model_name)s"
-msgstr ""
+msgstr "%(action_name)s n'est pas une action valide sur %(model_name)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -8138,6 +8160,8 @@ msgstr ""
 #, python-format
 msgid "%(method)s on %(model)s is private and cannot be called from a button"
 msgstr ""
+"%(method)s sur %(model)s est privé et ne peut pas être appelé depuis un "
+"bouton."
 
 #. module: base
 #: code:addons/fields.py:0 code:addons/models.py:0
@@ -8312,6 +8336,8 @@ msgid ""
 "- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
 "%(values)s) belongs to another company."
 msgstr ""
+"- %(record)r appartient à la société %(company)r et %(field)r (%(fname)s: "
+"%(values)s) appartient à une autre société."
 
 #. module: base
 #: code:addons/model.py:0
@@ -8450,7 +8476,11 @@ msgid ""
 "partner_name = record.name + '_code'\n"
 "env['res.partner'].create({'name': partner_name})\n"
 "</code>"
-msgstr "<code style=\"white-space: pre-wrap\"/>"
+msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env['res.partner'].create({'name': partner_name})\n"
+"</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12301,7 +12331,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__compare_view_id
 msgid "Compare To View"
-msgstr ""
+msgstr "Comparer à la vue"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
@@ -13363,7 +13393,7 @@ msgstr "DLE 26 110 x 220 mm"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Dash"
-msgstr ""
+msgstr "Tiret"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet_dashboard
@@ -14630,7 +14660,7 @@ msgstr "Employés en Gantt"
 #: model:ir.module.module,shortdesc:base.module_hr_mobile
 #: model:ir.module.module,summary:base.module_hr_mobile
 msgid "Employees in Mobile"
-msgstr ""
+msgstr "Employés en Mobile"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -14665,7 +14695,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Enter a description of and purpose for the key."
-msgstr ""
+msgstr "Entrez une description et le but de la clef."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -16080,7 +16110,7 @@ msgstr "Générer les termes manquants"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Generate key"
-msgstr ""
+msgstr "Générer clef"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -17798,7 +17828,7 @@ msgstr "Fonction d'aggrégation non valide %r."
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid composed field %(definition)s in %(use)s"
-msgstr ""
+msgstr "Champ composé non valide %(definition)s dans %(use)s"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -17917,7 +17947,7 @@ msgstr "Valeur invalide pour %s.%s: %s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid view %(name)s definition in %(file)s"
-msgstr ""
+msgstr "Définition de vue %(name)s non valide dans %(file)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -18991,7 +19021,7 @@ msgstr "Rapports Comptables - Luxembourg"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_reports_electronic
 msgid "Luxembourg - Electronic Accounting Reports"
-msgstr ""
+msgstr "Luxembourg - Rapports comptables électroniques"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_saft
@@ -19286,7 +19316,7 @@ msgstr "Gérer les remises dans les calculs taxclouds avec livraison."
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
 msgid "Manage discounts in taxclouds computations."
-msgstr ""
+msgstr "Gérez les remises dans les calculs taxclouds."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -22352,7 +22382,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
-msgstr ""
+msgstr "Programme de référencement d'Odoo"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -22644,7 +22674,7 @@ msgstr "Mot de passe d'authentification SMTP (facultatif)"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Optional timezone name"
-msgstr ""
+msgstr "Nom optionnel du fuseau horaire"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_user
@@ -23149,7 +23179,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
 msgid "POS Six"
-msgstr ""
+msgstr "PdV Six"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
@@ -25146,7 +25176,7 @@ msgstr "Configurateur de salaire (Belgique)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_payroll
 msgid "Salary Configurator - Payroll"
-msgstr ""
+msgstr "Configurateur de salaire - Paie"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
@@ -25161,7 +25191,7 @@ msgstr "Promo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_accountant
 msgid "Sale Accounting"
-msgstr ""
+msgstr "Vente Comptabilité"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_sale_intrastat
@@ -25201,7 +25231,7 @@ msgstr "Ventes & Achats"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_margin
 msgid "Sale Stock Margin"
-msgstr ""
+msgstr "Marge Vente Stock"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
@@ -26373,7 +26403,7 @@ msgstr "Stock Intrastat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account_enterprise
 msgid "Stock account enterprise"
-msgstr ""
+msgstr "Stock compte enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_enterprise
@@ -26599,7 +26629,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Switch to"
-msgstr ""
+msgstr "Changer pour"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -26901,7 +26931,7 @@ msgstr "Test RPC"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
 msgid "Test Suite for Automated Marketing Campaigns"
-msgstr ""
+msgstr "Suite de tests pour les campagnes d'Automatisation Marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_data_cleaning
@@ -26928,7 +26958,7 @@ msgstr "Tests"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
 msgid "Tests flow of API keys"
-msgstr ""
+msgstr "Flux de test des clefs API"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
@@ -28288,6 +28318,8 @@ msgid ""
 "Turn emails received in your Outlook mailbox into leads and log their "
 "content as internal notes."
 msgstr ""
+"Transformez les emails reçus dans votre boîte Outlook en Pistes et "
+"enregistrez-en le contenu en note interne."
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -29595,7 +29627,7 @@ msgstr "Sahara Occidental"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "What's this key for?"
-msgstr ""
+msgstr "À quoi sert cette clef?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__sequence
@@ -30153,7 +30185,7 @@ msgstr "autorisé pour les groupes %s"
 #: code:addons/models.py:0
 #, python-format
 msgid "always forbidden"
-msgstr ""
+msgstr "toujours interdit"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
