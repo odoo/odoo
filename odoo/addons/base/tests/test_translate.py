@@ -222,8 +222,8 @@ class TranslationToolsTestCase(BaseCase):
         }
         expect = """<form string="Form stuff">
                         <h1>Blah <i>blah</i> blah</h1>
-                        Mettre &lt;b&gt;plus de texte&lt;/i&gt; ici
-                        <field name="foo"/>
+                        Mettre <b>plus de texte ici
+                        </b><field name="foo"/>
                     </form>"""
         result = xml_translate(translations.get, source)
         self.assertEqual(result, expect)
