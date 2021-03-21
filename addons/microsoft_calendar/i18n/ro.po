@@ -43,7 +43,7 @@ msgstr "%(reminder_type)s - %(duration)s Minute"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "%s - At time of event"
-msgstr ""
+msgstr "%s - La momentul evenimentului"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -66,6 +66,8 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
+"Un administrator trebuie să configureze sincronizarea Outlook înainte de ao "
+"putea folosi!"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -79,7 +81,7 @@ msgstr "Arhivează"
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Are you sure you want to archive this record ?"
-msgstr ""
+msgstr "Sigur doriți să arhivați această înregistrare?"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
@@ -154,7 +156,7 @@ msgstr "Șterge din amandouă"
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_microsoft
 msgid "Delete from the current Microsoft Calendar account"
-msgstr ""
+msgstr "Ștergeți din contul curent Microsoft Calendar"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__display_name
@@ -222,7 +224,7 @@ msgstr "Lăsați-le neatinse"
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_account_reset
 msgid "Microsoft Calendar Account Reset"
-msgstr ""
+msgstr "Resetare cont Microsoft Calendar"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_id
@@ -296,14 +298,14 @@ msgstr "Calendar Outlook"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_synchronization_stopped
 msgid "Outlook Synchronization stopped"
-msgstr ""
+msgstr "Sincronizarea Outlook sa oprit"
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
 #: model:ir.cron,cron_name:microsoft_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:microsoft_calendar.ir_cron_sync_all_cals
 msgid "Outlook: synchronization"
-msgstr ""
+msgstr "Outlook: Sincronizare"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -342,7 +344,7 @@ msgstr ""
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Stop the Synchronization"
-msgstr ""
+msgstr "Opriți sincronizarea"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -356,7 +358,7 @@ msgstr "Succes"
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Sync with <b>Outlook</b>"
-msgstr ""
+msgstr "Sincronizare <b>cu Outlook</b>"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -364,12 +366,12 @@ msgstr ""
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Synched with Outlook"
-msgstr ""
+msgstr "Sincronizat cu Outlook"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
-msgstr ""
+msgstr "Sincronizați o înregistrare cu Microsoft Calendar"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__all
@@ -389,19 +391,21 @@ msgid ""
 "The Outlook Synchronization needs to be configured before you can use it, do"
 " you want to do it now?"
 msgstr ""
+"Sincronizarea Outlook trebuie configurată înainte de ao putea utiliza, "
+"doriți să o faceți acum?"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid "The account for the Outlook Calendar service is not configured."
-msgstr ""
+msgstr "Contul pentru serviciul Outlook Calendar nu este configurat."
 
 #. module: microsoft_calendar
 #. openerp-web
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "The synchronization with Outlook calendar was successfully stopped."
-msgstr ""
+msgstr "Sincronizarea cu calendarul Outlook a fost oprită cu succes."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -423,7 +427,7 @@ msgstr "Operator"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "User Token"
-msgstr ""
+msgstr "Jeton de utilizator"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -443,6 +447,8 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Outlook. Are"
 " you sure you want to continue?"
 msgstr ""
+"Sunteți pe cale să opriți sincronizarea calendarului cu Outlook. Esti sigur "
+"ca vrei sa continui?"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/microsoft_sync.py:0
@@ -451,6 +457,8 @@ msgid ""
 "You cannot delete a record synchronized with Microsoft Calendar, archive it "
 "instead."
 msgstr ""
+"Nu puteți șterge o înregistrare sincronizată cu Microsoft Calendar, "
+"arhivați-o în schimb."
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -459,3 +467,5 @@ msgstr ""
 msgid ""
 "You will be redirected to Outlook to authorize the access to your calendar."
 msgstr ""
+"Veți fi redirecționat către Outlook pentru a autoriza accesul la calendarul "
+"dvs."

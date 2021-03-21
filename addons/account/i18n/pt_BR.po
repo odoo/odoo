@@ -15158,6 +15158,18 @@ msgid "technical field to compute starting balance correctly"
 msgstr "campo técnico para calcular o saldo inicial corretamente"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"O diário escolhido possui um tipo que não é compatível com o seu tipo de "
+"fatura. As operações de vendas devem ir para os diários de 'venda' e as "
+"operações de compra, para os diários de 'compra'."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "Companhia Relacionada"

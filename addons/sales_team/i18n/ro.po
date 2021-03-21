@@ -7,8 +7,8 @@
 # Cozmin Candea <office@terrabit.ro>, 2019
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Martin Trigaux, 2021
-# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-18 14:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2021\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"bg-error\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-error\">Arhivat</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -77,6 +77,8 @@ msgstr "Tipuri de activitate"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Adăugați membri pentru a atribui automat documentele lor acestei echipe de "
+"vânzări."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -403,12 +405,12 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Companie membru"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Avertisment membru"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -418,7 +420,7 @@ msgstr "Membri"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Avertisment privind numărul de membru"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -441,7 +443,7 @@ msgstr "Mobil"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Sunt permise mai multe abonamente"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -519,18 +521,18 @@ msgstr "Echipa de vânzări"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Membru al echipei de vânzări"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Membrii echipei de vânzări"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Membrii echipei de vânzări (inclusiv inactiv)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -584,7 +586,7 @@ msgstr "Etichete"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Detalii despre echipă"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -619,18 +621,22 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"Pentru a adăuga un agent de vânzări în mai multe echipe, activați opțiunea "
+"Multi-Team din setări."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: oferiți utilizatorilor să nu adauge în echipa aleasă în prezent pentru a"
+" evita duplicatele"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: Limitați la compania echipei sau la toate dacă nu există companie"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -659,21 +665,23 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Folosiți echipele de vânzări pentru a vă organiza departamentele de vânzări.\n"
+"                Fiecare echipă va lucra cu o conductă separată."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "Compania utilizatorului"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Utilizator în echipe"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "Echipa de vânzări a utilizatorilor"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -683,7 +691,7 @@ msgstr "Utilizator: Toate documentele"
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "Utilizator: Numai documente proprii"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -693,7 +701,7 @@ msgstr "Utilizatori"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Utilizatorii desemnați acestei echipe."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -711,12 +719,12 @@ msgstr ""
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "de exemplu. America de Nord"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "de exemplu. Servicii"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

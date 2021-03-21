@@ -74,6 +74,9 @@ msgid ""
 "                                    Contracts\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text text-danger\">\n"
+"                                    Ugovori\n"
+"                                </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -82,6 +85,9 @@ msgid ""
 "[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
 "Contract Since</span>"
 msgstr ""
+"<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> Ugovoreno "
+"od</span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -241,7 +247,7 @@ msgstr "Vrsta Ugovora"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_view_search
 msgid "Contract Warning"
-msgstr ""
+msgstr "Ugovor na čekanju"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
@@ -715,7 +721,7 @@ msgstr "Kalendar resursa"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "Radno vrijeme resursa"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_user_id

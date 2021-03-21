@@ -3,18 +3,20 @@
 # 	* base_address_city
 # 
 # Translators:
-# Martin Trigaux, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# waveyeung <waveyeung@qq.com>, 2017
+# Mack <mackz@sina.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# 刘群 <liuqun@22tianbo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: 刘群 <liuqun@22tianbo.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +40,7 @@ msgid "Cities"
 msgstr "城市"
 
 #. module: base_address_city
-#: code:addons/base_address_city/models/res_partner.py:55
+#: code:addons/base_address_city/models/res_partner.py:0
 #: model:ir.model,name:base_address_city.model_res_city
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
@@ -61,12 +63,12 @@ msgstr "联系人"
 #: model:ir.model,name:base_address_city.model_res_country
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
 msgid "Country"
-msgstr "国家/地区"
+msgstr "国家"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
@@ -75,6 +77,8 @@ msgstr "创建时间"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__display_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -86,25 +90,29 @@ msgid ""
 "                to enforce any address of it to have a city in this list."
 msgstr ""
 "显示和管理所有可以分配到的城市列表\n"
-"               你的伙伴记录。请注意，可以在每个国家单独设置一个选项\n"
-"               执行任何地址都必须在该列表中有一个匹配的城市。"
+"                 你的伙伴记录。 请注意，可以在每个国家单独设置一个选项\n"
+"                 执行任何地址在这个列表中有一个城市。"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
 #: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
-msgstr "强制匹配的城市"
+msgstr "强制的城市"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__id
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__id
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
+#: model:ir.model.fields,field_description:base_address_city.field_res_country____last_update
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "最后更改日"
+msgstr "最后修改日"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
@@ -114,7 +122,7 @@ msgstr "最后更新者"
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
 msgid "Last Updated on"
-msgstr "更新时间"
+msgstr "最后更新时间"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__name
@@ -129,7 +137,7 @@ msgstr "搜索城市"
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
-msgstr "状态"
+msgstr "省份"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode

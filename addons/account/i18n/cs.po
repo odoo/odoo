@@ -17,8 +17,8 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# David Kliment <daklime@gmail.com>, 2021
 # trendspotter, 2021
+# David Kliment <daklime@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: trendspotter, 2021\n"
+"Last-Translator: David Kliment <daklime@gmail.com>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -231,6 +231,23 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"  <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    Dobrý den  ${object.partner_id.name}<br/><br/>\n"
+"    Děkujeme Vám za vaši platbu.\n"
+"    Zde je váš doklad <strong>${(object.name or '').replace('/','-')}</strong> na částku\n"
+"    <strong>${format_amount(object.amount, object.currency_id)}</strong> od ${object.company_id.name}.\n"
+"    <br/><br/>\n"
+"    Při jakýchkoliv otázkách nás neváhejte kontaktovat.\n"
+"    <br/><br/>\n"
+"    S pozdravem,\n"
+"    % if user.signature:\n"
+"      <br/>\n"
+"     ${user.signature | safe}\n"
+"    % endif\n"
+"  </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -350,6 +367,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) od <strong>%s</strong> byl přesunut "
+"<strong>{account_target_name}</strong>na {link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -12535,6 +12554,10 @@ msgid ""
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
+"Mapování využívá regulární výrazy. \n"
+"- Chcete-li porovnat text na začátku řádku (v popisku nebo v poznámkách), jednoduše vyplňte text. \n"
+"- Chcete-li porovnat text kdekoliv (v popisku nebo v poznámkách), vložte váš text mezi .*\n"
+"př:  .*N°48748 abc123.*"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -13439,7 +13462,7 @@ msgstr "Přesuny"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr ""
+msgstr "Vyzkoušejte ukázkový účet dodavatele "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -14860,6 +14883,15 @@ msgstr "technické pole pro widget daňová-skupina-vlastní-pole"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "technické pole správně vypočítat počáteční zůstatek"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

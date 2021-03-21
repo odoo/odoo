@@ -27,8 +27,8 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Pieter Van de Wygaert <pieter.va.de.wygaert@telenet.be>, 2020
 # Martin Trigaux, 2021
-# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2021\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15136,6 +15136,18 @@ msgstr "technisch veld voor het tax-group-custom-field widget"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "technisch veld om het beginsaldo correct te berekenen"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"Het gekozen dagboek heeft een type dat niet compatibel is met uw "
+"factuurtype. Verkoopactiviteiten moeten naar 'verkoop dagboek' gaan en "
+"inkoopactiviteiten naar een 'inkoop dagboek'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

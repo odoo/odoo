@@ -72,6 +72,8 @@ msgid ""
 "<em class=\"font-weight-normal text-muted\">Timesheets for sales order "
 "item:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Fișe de timp pentru articolul "
+"comenzii de vânzare:</em>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -92,6 +94,12 @@ msgid ""
 "recording time on this project are not linked to any ales Order Item. This "
 "means that their time will be considered as non-billable.\"/>"
 msgstr ""
+"<i class=\"ml-2 fa fa-exclamation-triangle text-danger small\" role=\"img\" "
+"title=\"Some of the employees who are recording time on this project are not"
+" linked to any Sales Order Item. This means that their time will be "
+"considered as non-billable.\" aria-label=\"Some of the employees who are "
+"recording time on this project are not linked to any ales Order Item. This "
+"means that their time will be considered as non-billable.\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -193,7 +201,7 @@ msgstr "Valoare facturată"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
 msgid "Amount Re-invoiced"
-msgstr ""
+msgstr "Suma refacturată"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
@@ -203,7 +211,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
 msgid "Amount to Re-invoice"
-msgstr ""
+msgstr "Suma de refacturare"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -710,6 +718,7 @@ msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -760,7 +769,7 @@ msgstr "Metoda de actualizare a cantității livrate"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Milestone services"
-msgstr ""
+msgstr "Servicii importante"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_manual
@@ -838,7 +847,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Ordered,"
-msgstr ""
+msgstr "Ordonat,"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -1034,7 +1043,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours_available
 msgid "Remaining Hours Available"
-msgstr ""
+msgstr "Restul de ore disponibile"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
@@ -1046,7 +1055,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Remaining)"
-msgstr ""
+msgstr "Rămase)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1127,19 +1136,19 @@ msgstr "Comanda de vânzare la care este legată sarcina."
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Căutați în factură"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Căutați în Comanda de vânzare"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Căutați în articolul comenzii de vânzare"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
@@ -1233,7 +1242,7 @@ msgstr "Repetarea sarcinilor"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
-msgstr ""
+msgstr "Rata sarcinilor"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
