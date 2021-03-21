@@ -49,7 +49,7 @@ class AccountMove(models.Model):
 
         In this method we exclude the argentinian document type 99 from the generic constraint """
         ar_doctype_99 = self.filtered(
-            lambda x: x.l10n_latam_country_code == 'AR' and
+            lambda x: x.country_code == 'AR' and
             x.l10n_latam_document_type_id.code == '99' and
             x.move_type in ['out_refund', 'in_refund'])
 
