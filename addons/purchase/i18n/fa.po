@@ -27,9 +27,7 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state در ('پیش‌نویس', 'ارسال شده') و 'درخواست برای"
-" پیشنهاد قیمت - %s' % (object.name) یا\n"
-"                'سفارش خرید- %s' % (object.name))"
+"                ( 'استعلام - %s' % (object.name) if object.state in ('draft', 'sent') else 'سفارش خرید - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
