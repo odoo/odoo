@@ -194,36 +194,21 @@ class Meeting(models.Model):
             for event in self:
                 event.is_highlighted = False
 
+    # description
     name = fields.Char('Meeting Subject', required=True)
-
-    attendee_status = fields.Selection(
-        Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
-    display_time = fields.Char('Event Time', compute='_compute_display_time')
-    start = fields.Datetime(
-        'Start', required=True, tracking=True, default=fields.Date.today,
-        help="Start date of an event, without time for full days events")
-    stop = fields.Datetime(
-        'Stop', required=True, tracking=True, default=lambda self: fields.Datetime.today() + timedelta(hours=1),
-        compute='_compute_stop', readonly=False, store=True,
-        help="Stop date of an event, without time for full days events")
-
-    allday = fields.Boolean('All Day', default=False)
-    start_date = fields.Date(
-        'Start Date', store=True, tracking=True,
-        compute='_compute_dates', inverse='_inverse_dates')
-    stop_date = fields.Date(
-        'End Date', store=True, tracking=True,
-        compute='_compute_dates', inverse='_inverse_dates')
-    duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     description = fields.Text('Description')
+    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
+    partner_id = fields.Many2one(
+        'res.partner', string='Responsible Contact', related='user_id.partner_id', readonly=True)
+    location = fields.Char('Location', tracking=True, help="Location of Event")
+    videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
+    # visibility
     privacy = fields.Selection(
         [('public', 'Public'),
          ('private', 'Private'),
          ('confidential', 'Only internal users')],
         'Privacy', default='public', required=True,
         help="People to whom this event will be visible.")
-    location = fields.Char('Location', tracking=True, help="Location of Event")
-    videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
     show_as = fields.Selection(
         [('free', 'Available'),
          ('busy', 'Busy')], 'Show as', default='busy', required=True,
@@ -232,38 +217,54 @@ class Meeting(models.Model):
         that you are unavailable during that period of time. \n If the time is shown as 'free', this event won't \
         be visible to other people at all. Use this option to let other people know that you are available during \
         that period of time.")
-
+    is_highlighted = fields.Boolean(
+        compute='_compute_is_highlighted', string='Is the Event Highlighted')
+    # filtering
+    active = fields.Boolean(
+        'Active', default=True,
+        help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")
+    categ_ids = fields.Many2many(
+        'calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
+    # timing
+    start = fields.Datetime(
+        'Start', required=True, tracking=True, default=fields.Date.today,
+        help="Start date of an event, without time for full days events")
+    stop = fields.Datetime(
+        'Stop', required=True, tracking=True, default=lambda self: fields.Datetime.today() + timedelta(hours=1),
+        compute='_compute_stop', readonly=False, store=True,
+        help="Stop date of an event, without time for full days events")
+    display_time = fields.Char('Event Time', compute='_compute_display_time')
+    allday = fields.Boolean('All Day', default=False)
+    start_date = fields.Date(
+        'Start Date', store=True, tracking=True,
+        compute='_compute_dates', inverse='_inverse_dates')
+    stop_date = fields.Date(
+        'End Date', store=True, tracking=True,
+        compute='_compute_dates', inverse='_inverse_dates')
+    duration = fields.Float('Duration', compute='_compute_duration', store=True, readonly=False)
     # linked document
     # LUL TODO use fields.Reference ?
     res_id = fields.Integer('Document ID')
     res_model_id = fields.Many2one('ir.model', 'Document Model', ondelete='cascade')
     res_model = fields.Char(
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
+    # messaging
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
-
     #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
     message_ids = fields.One2many(auto_join=False)
-
-    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
-    partner_id = fields.Many2one(
-        'res.partner', string='Responsible Contact', related='user_id.partner_id', readonly=True)
-    active = fields.Boolean(
-        'Active', default=True,
-        help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")
-    categ_ids = fields.Many2many(
-        'calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
+    # attendees
     attendee_ids = fields.One2many(
         'calendar.attendee', 'event_id', 'Participant')
+    attendee_status = fields.Selection(
+        Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     partner_ids = fields.Many2many(
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
+    # alarms
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
         string='Reminders', ondelete="restrict",
         help="Notifications sent to all attendees to remind of the meeting.")
-    is_highlighted = fields.Boolean(
-        compute='_compute_is_highlighted', string='Is the Event Highlighted')
-
     # RECURRENCE FIELD
     recurrency = fields.Boolean('Recurrent')
     recurrence_id = fields.Many2one(
@@ -275,7 +276,6 @@ class Meeting(models.Model):
         ('all_events', "All events"),
     ], store=False, copy=False, default='self_only',
        help="Choose what to do with other events in the recurrence. Updating All Events is not allowed when dates or time is modified")
-
     # Those field are pseudo-related fields of recurrence_id.
     # They can't be "real" related fields because it should work at record creation
     # when recurrence_id is not created yet.

@@ -26,18 +26,20 @@ class Attendee(models.Model):
         ('accepted', 'Accepted'),
     ]
 
-    event_id = fields.Many2one(
-        'calendar.event', 'Meeting linked', required=True, ondelete='cascade')
+    # event
+    event_id = fields.Many2one('calendar.event', 'Meeting linked', required=True, ondelete='cascade')
+    recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
+    # attendee
     partner_id = fields.Many2one('res.partner', 'Attendee', required=True, readonly=True)
-    state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
-                             help="Status of the attendee's participation")
-    common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")
     phone = fields.Char('Phone', related='partner_id.phone', help="Phone number of Invited Person")
+    common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
+    access_token = fields.Char('Invitation Token', default=_default_access_token)
+    # state
+    state = fields.Selection(STATE_SELECTION, string='Status', readonly=True, default='needsAction',
+                             help="Status of the attendee's participation")
     availability = fields.Selection(
         [('free', 'Available'), ('busy', 'Busy')], 'Available/Busy', readonly=True)
-    access_token = fields.Char('Invitation Token', default=_default_access_token)
-    recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
 
     @api.depends('partner_id', 'partner_id.name', 'email')
     def _compute_common_name(self):
