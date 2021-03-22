@@ -2633,6 +2633,32 @@ var StateSelectionWidget = AbstractField.extend({
     },
 });
 
+const ListStateSelectionWidget = StateSelectionWidget.extend({
+    /**
+     * display the label next to the icon
+     * @override
+     */
+    _render() {
+        this._super.apply(this, arguments);
+
+        const hideLabel = utils.toBoolElse(this.nodeOptions.hide_label || '', false);
+        if (!hideLabel) {
+            const states = this._prepareDropdownValues();
+            const currentState = states.find(state => state.name === this.value) || states[0];
+            const statusEL = this.el.querySelector('.o_status_label');
+            if (statusEL) {
+                statusEL.innerText = currentState.state_name;
+            } else {
+                const labelEL = Object.assign(document.createElement('span'), {
+                    innerText: currentState.state_name,
+                    className: 'o_status_label align-middle',
+                });
+                this.el.appendChild(labelEL);
+            }
+        }
+    },
+});
+
 var FavoriteWidget = AbstractField.extend({
     className: 'o_favorite',
     events: {
@@ -3814,6 +3840,7 @@ return {
     AttachmentImage: AttachmentImage,
     LabelSelection: LabelSelection,
     StateSelectionWidget: StateSelectionWidget,
+    ListStateSelectionWidget: ListStateSelectionWidget,
     FavoriteWidget: FavoriteWidget,
     PriorityWidget: PriorityWidget,
     StatInfo: StatInfo,
