@@ -17,3 +17,11 @@ class Contact(models.Model):
     def _onchange_mobile_validation(self):
         if self.mobile:
             self.mobile = self.phone_format(self.mobile)
+            
+    @api.model_create_multi
+    def create(self, vals_list):
+        partners = super(Contact, self).create(vals_list)
+        for partner in partners:
+            partner._onchange_mobile_validation()
+            partner._onchange_phone_validation()
+        return partners
