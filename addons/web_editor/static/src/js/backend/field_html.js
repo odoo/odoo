@@ -35,6 +35,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
     isQuickEditable: true,
+    quickEditExclusion: [
+        '[href]',
+    ],
 
     custom_events: {
         wysiwyg_focus: '_onWysiwygFocus',

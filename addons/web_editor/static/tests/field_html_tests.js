@@ -2,6 +2,7 @@ odoo.define('web_editor.field_html_tests', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
+var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 var weTestUtils = require('web_editor.test_utils');
@@ -120,9 +121,13 @@ QUnit.module('web_editor', {}, function () {
                     throw 'Wrong template';
                 },
             });
+            testUtils.mock.patch(FormController, {
+                'multiClickTime': 0,
+            });
         },
         afterEach: function () {
             testUtils.mock.unpatch(ajax);
+            testUtils.mock.unpatch(FormController);
         },
     }, function () {
 
@@ -640,6 +645,34 @@ QUnit.module('web_editor', {}, function () {
             await testUtils.dom.click($field.find('.note-toolbar .note-back-color-preview .o_we_color_btn.bg-o-color-3'));
 
             await testUtils.form.clickSave(form);
+
+            form.destroy();
+        });
+
+        QUnit.test('Quick Edition: click on link inside html field', async function (assert) {
+            assert.expect(3);
+
+            this.data['note.note'].records[0]['body'] = '<p><a href="#">hello</a> world</p>';
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 1,
+            });
+
+            assert.containsOnce(form, '.o_form_view.o_form_readonly');
+
+            await testUtils.dom.click(form.$('.oe_form_field[name="body"] a'));
+            await testUtils.nextTick();
+            assert.containsOnce(form, '.o_form_view.o_form_readonly');
+
+            await testUtils.dom.click(form.$('.oe_form_field[name="body"] p'));
+            await testUtils.nextTick();
+            assert.containsOnce(form, '.o_form_view.o_form_editable');
 
             form.destroy();
         });
