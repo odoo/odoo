@@ -3611,7 +3611,7 @@ Fields:
                 records_to_inverse[field] = self.filtered('id')
             if field.relational or self._field_inverses[field]:
                 relational_names.append(fname)
-            if field.inverse or (field.compute and not field.readonly):
+            if field.inverse or (field.compute and field.editable):
                 if field.store or field.type not in ('one2many', 'many2many'):
                     # Protect the field from being recomputed while being
                     # inversed. In the case of non-stored x2many fields, the
@@ -3843,7 +3843,7 @@ Fields:
                     inversed[key] = val
                     inversed_fields.add(field)
                 # protect non-readonly computed fields against (re)computation
-                if field.compute and not field.readonly:
+                if field.compute and field.editable:
                     protected.update(self.pool.field_computed.get(field, [field]))
 
             data_list.append(data)

@@ -712,7 +712,8 @@ class Field(MetaField('DummyField', (object,), {})):
             return field_help.get(self.name) or self.help
         return self.help
 
-    def is_editable(self):
+    @property
+    def editable(self):
         """ Return whether the field can be editable in a view. """
         return not self.readonly or self.states and any(
             'readonly' in item for items in self.states.values() for item in items

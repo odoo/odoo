@@ -989,7 +989,7 @@ actual arch.
                     node.getparent().remove(node)
                     # no point processing view-level ``groups`` anymore, return
                     return
-                node_info['editable'] = node_info['editable'] and field.is_editable() and (
+                node_info['editable'] = node_info['editable'] and field.editable and (
                     node.get('readonly') not in ('1', 'True')
                     or get_dict_asts(node.get('attrs') or "{}")
                 )
