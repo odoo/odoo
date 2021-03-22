@@ -52,7 +52,7 @@
             'hr/static/src/scss/hr.scss',
             'hr/static/src/js/chat.js',
             'hr/static/src/js/language.js',
-            'hr/static/src/js/many2one_avatar_employee.js',
+            'hr/static/src/js/m2x_avatar_employee.js',
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
             'hr/static/src/models/employee/employee.js',
             'hr/static/src/models/messaging/messaging.js',
@@ -61,7 +61,7 @@
         ],
         'web.qunit_suite_tests': [
             'hr/static/tests/helpers/mock_models.js',
-            'hr/static/tests/many2one_avatar_employee_tests.js',
+            'hr/static/tests/m2x_avatar_employee_tests.js',
             'hr/static/tests/standalone_m2o_avatar_employee_tests.js',
         ],
         'web.assets_qweb': [

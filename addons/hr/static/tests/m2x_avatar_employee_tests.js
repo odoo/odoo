@@ -1,4 +1,4 @@
-odoo.define('hr.Many2OneAvatarEmployeeTests', function (require) {
+odoo.define('hr.M2XAvatarEmployeeTests', function (require) {
 "use strict";
 
 const {
@@ -15,7 +15,7 @@ const { Many2OneAvatarEmployee } = require('hr.Many2OneAvatarEmployee');
 const { dom, mock } = require('web.test_utils');
 
 QUnit.module('hr', {}, function () {
-    QUnit.module('Many2OneAvatarEmployee', {
+    QUnit.module('M2XAvatarEmployee', {
         beforeEach() {
             beforeEach(this);
 
@@ -26,9 +26,10 @@ QUnit.module('hr', {}, function () {
                 'foo': {
                     fields: {
                         employee_id: { string: "Employee", type: 'many2one', relation: 'hr.employee.public' },
+                        employee_ids: { string: "Employees", type: "many2many", relation: 'hr.employee.public' },
                     },
                     records: [
-                        { id: 1, employee_id: 11 },
+                        { id: 1, employee_id: 11, employee_ids: [11, 23] },
                         { id: 2, employee_id: 7 },
                         { id: 3, employee_id: 11 },
                         { id: 4, employee_id: 23 },
@@ -208,6 +209,172 @@ QUnit.module('hr', {}, function () {
             "You can only chat with employees that have a dedicated user.",
             "should display the correct information in the notification"
         );
+
+        form.destroy();
+    });
+
+    QUnit.test('many2many_avatar_employee widget in form view', async function (assert) {
+        assert.expect(8);
+
+        const { widget: form } = await start({
+            hasChatWindow: true,
+            hasView: true,
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                return this._super(...arguments);
+            },
+            res_id: 1,
+        });
+
+        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+            "should have 2 records");
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'),
+            '/web/image/hr.employee.public/11/image_128',
+            "should have correct avatar image");
+
+        await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));
+        await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
+
+        assert.verifySteps([
+            "read foo 1",
+            'read hr.employee.public 11,23',
+            "read hr.employee.public 11",
+            "read hr.employee.public 23",
+        ]);
+
+        assert.containsN(
+            document.body,
+            '.o_ChatWindowHeader_name',
+            2,
+            "should have 2 chat windows"
+        );
+
+        form.destroy();
+    });
+
+    QUnit.test('many2many_avatar_employee widget in list view', async function (assert) {
+        assert.expect(10);
+
+        const { widget: list } = await start({
+            hasChatWindow: true,
+            hasView: true,
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="employee_ids" widget="many2many_avatar_employee"/></tree>',
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:first .o_tag_badge_text').text().trim(), 'MarioYoshi');
+
+        // click on first employee badge
+        await afterNextRender(() =>
+            dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:first'))
+        );
+        assert.verifySteps(
+            ['read hr.employee.public 11,23', "read hr.employee.public 11"],
+            "first employee should have been read to find its partner"
+        );
+        assert.containsOnce(
+            document.body,
+            '.o_ChatWindowHeader_name',
+            'should have opened chat window'
+        );
+        assert.strictEqual(
+            document.querySelector('.o_ChatWindowHeader_name').textContent,
+            "Mario",
+            'chat window should be with clicked employee'
+        );
+
+        // click on second employee
+        await afterNextRender(() =>
+            dom.click(list.$('.o_data_cell:nth(0) .o_m2m_avatar:nth(1)')
+            ));
+        assert.verifySteps(
+            ['read hr.employee.public 23'],
+            "second employee should have been read to find its partner"
+        );
+        assert.containsN(
+            document.body,
+            '.o_ChatWindowHeader_name',
+            2,
+            'should have opened second chat window'
+        );
+        assert.strictEqual(
+            document.querySelectorAll('.o_ChatWindowHeader_name')[1].textContent,
+            "Yoshi",
+            'chat window should be with clicked employee'
+        );
+
+        list.destroy();
+    });
+
+    QUnit.test('many2many_avatar_employee: click on an employee not associated with a user', async function (assert) {
+        assert.expect(10);
+
+        this.data['hr.employee.public'].records[0].user_id = false;
+        this.data['hr.employee.public'].records[0].user_partner_id = false;
+        const { widget: form } = await start({
+            hasChatWindow: true,
+            hasView: true,
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: '<form><field name="employee_ids" widget="many2many_avatar_employee"/></form>',
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                return this._super(...arguments);
+            },
+            res_id: 1,
+        });
+
+        mock.intercept(form, 'call_service', (ev) => {
+            if (ev.data.service === 'notification') {
+                assert.step(`display notification "${ev.data.args[0].message}"`);
+            }
+        }, true);
+
+        assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+            "should have 2 records");
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'),
+            '/web/image/hr.employee.public/11/image_128',
+            "should have correct avatar image");
+
+        await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));
+        await dom.click(form.$('.o_field_many2manytags.avatar .badge:nth(1) .o_m2m_avatar'));
+
+        assert.verifySteps([
+            'read foo 1',
+            'read hr.employee.public 11,23',
+            "read hr.employee.public 11",
+            "read hr.employee.public 23"
+        ]);
+
+        assert.containsOnce(
+            document.body,
+            '.toast .o_notification_content',
+            "should display a toast notification after failing to open chat"
+        );
+        assert.strictEqual(
+            document.querySelector('.o_notification_content').textContent,
+            "You can only chat with employees that have a dedicated user.",
+            "should display the correct information in the notification"
+        );
+        assert.containsOnce(document.body, '.o_ChatWindowHeader_name',
+            "should have 1 chat window");
 
         form.destroy();
     });
