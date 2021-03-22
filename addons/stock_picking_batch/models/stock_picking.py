@@ -21,8 +21,10 @@ class StockPicking(models.Model):
         return res
 
     def write(self, vals):
+        batches = self.batch_id
         res = super().write(vals)
         if vals.get('batch_id'):
+            batches.filtered(lambda b: not b.picking_ids).state = 'cancel'
             if not self.batch_id.picking_type_id:
                 self.batch_id.picking_type_id = self.picking_type_id[0]
             self.batch_id._sanity_check()
