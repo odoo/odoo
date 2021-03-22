@@ -15,6 +15,7 @@ from odoo.addons.website.controllers.main import Website
 from odoo.addons.sale.controllers.product_configurator import ProductConfiguratorController
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
+from odoo.addons.phone_validation.tools.phone_validation import phone_format
 
 _logger = logging.getLogger(__name__)
 
@@ -677,6 +678,8 @@ class WebsiteSale(ProductConfiguratorController):
         # IF POSTED
         if 'submitted' in kw:
             pre_values = self.values_preprocess(order, mode, kw)
+            country = request.env['res.country'].search([('id', '=', pre_values['country_id'])])
+            pre_values['phone'] = phone_format(pre_values['phone'], country.code ,country.phone_code)
             errors, error_msg = self.checkout_form_validate(mode, kw, pre_values)
             post, errors, error_msg = self.values_postprocess(order, mode, pre_values, errors, error_msg)
 
