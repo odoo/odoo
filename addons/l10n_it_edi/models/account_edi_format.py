@@ -152,7 +152,8 @@ class AccountEdiFormat(models.Model):
             elif elements and elements[0].text and elements[0].text == 'TD04':
                 move_type = 'in_refund'
             # move could be a single record (editing) or be empty (new).
-            with Form(invoice.with_context(default_move_type=move_type)) as invoice_form:
+            with Form(invoice.with_context(default_move_type=move_type,
+                                           account_predictive_bills_disable_prediction=True)) as invoice_form:
                 message_to_log = []
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
