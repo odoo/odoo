@@ -2149,6 +2149,19 @@ kanban_state_selection (StateSelectionWidget)
 
   - Supported field types: *selection*
 
+list.state_selection (ListStateSelectionWidget)
+  In list views, the state_selection widget displays by default the label next to the icon.
+
+  - Supported field types: *selection*
+
+  Options:
+
+  - hide_label: hide the label next to the icon
+
+  .. code-block:: xml
+
+      <field name="kanban_state" widget="state_selection" options="{'hide_label': True}"/>
+
 boolean_favorite (FavoriteWidget)
   This widget is displayed as an empty (or not) star, depending on a boolean
   value. Note that it also can be edited in readonly mode.
