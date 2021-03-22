@@ -30,6 +30,9 @@ class StockPickingBatch(models.Model):
     show_check_availability = fields.Boolean(
         compute='_compute_move_ids',
         help='Technical field used to compute whether the check availability button should be shown.')
+    show_validate = fields.Boolean(
+        compute='_compute_show_validate',
+        help='Technical field used to decide whether the validate button should be shown.')
     allowed_picking_ids = fields.One2many('stock.picking', compute='_compute_allowed_picking_ids')
     move_ids = fields.One2many(
         'stock.move', string="Stock moves", compute='_compute_move_ids')
@@ -88,6 +91,11 @@ class StockPickingBatch(models.Model):
             batch.move_ids = batch.picking_ids.move_lines
             batch.move_line_ids = batch.picking_ids.move_line_ids
             batch.show_check_availability = any(m.state not in ['assigned', 'done'] for m in batch.move_ids)
+
+    @api.depends('picking_ids', 'picking_ids.show_validate')
+    def _compute_show_validate(self):
+        for batch in self:
+            batch.show_validate = any(picking.show_validate for picking in batch.picking_ids)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):
@@ -177,6 +185,10 @@ class StockPickingBatch(models.Model):
     def action_print(self):
         self.ensure_one()
         return self.env.ref('stock_picking_batch.action_report_picking_batch').report_action(self)
+
+    def action_set_quantities_to_reservation(self):
+        self.ensure_one()
+        self.picking_ids.filtered("show_validate").action_set_quantities_to_reservation()
 
     def action_done(self):
         self.ensure_one()

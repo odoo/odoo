@@ -68,13 +68,16 @@
         <field name="arch" type="xml">
             <form string="Stock Batch Transfer">
                 <field name="show_check_availability" invisible="1"/>
+                <field name="show_validate" invisible="1"/>
                 <header>
                     <button name="action_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
                         attrs="{'invisible': [
                             '|',
                                 ('state', '!=', 'in_progress'),
-                                ('show_check_availability', '=', True)]}"/>
+                                '|',
+                                    ('show_check_availability', '=', True),
+                                    ('show_validate', '=', False)]}"/>
                     <button name="action_assign" string="Check Availability" type="object" class="oe_highlight"
                         attrs="{'invisible': [
                             '|',
@@ -84,7 +87,14 @@
                         attrs="{'invisible': [
                             '|',
                                 ('state', '!=', 'in_progress'),
-                                ('show_check_availability', '=', False)]}"/>
+                                '|',
+                                    ('show_check_availability', '=', False),
+                                    ('show_validate', '=', False)]}"/>
+                    <button name="action_set_quantities_to_reservation" string="Set quantities" type="object"
+                        attrs="{'invisible': [
+                            '|',
+                                ('state', '!=', 'in_progress'),
+                                ('show_validate', '=', False)]}"/>
                     <button name="action_assign" string="Check Availability" type="object"
                         attrs="{'invisible': [
                             '|',
