@@ -214,10 +214,10 @@ class TestKitPicking(common.TestMrpCommon):
     def setUp(self):
         super(TestKitPicking, self).setUp()
 
-        def create_product(name, type='product'):
+        def create_product(name):
             p = Form(self.env['product.product'])
             p.name = name
-            p.type = type
+            p.type = 'product'
             return p.save()
 
         # Create a kit 'kit_parent' :
@@ -241,10 +241,10 @@ class TestKitPicking(common.TestMrpCommon):
         component_f = create_product('Comp F')
         component_g = create_product('Comp G')
         # Creating all kits
-        kit_1 = create_product('Kit 1', type='consu')
-        kit_2 = create_product('Kit 2', type='consu')
-        kit_3 = create_product('kit 3', type='consu')
-        self.kit_parent = create_product('Kit Parent', type='consu')
+        kit_1 = create_product('Kit 1')
+        kit_2 = create_product('Kit 2')
+        kit_3 = create_product('kit 3')
+        self.kit_parent = create_product('Kit Parent')
         # Linking the kits and the components via some 'phantom' BoMs
         bom_kit_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_1.product_tmpl_id.id,
