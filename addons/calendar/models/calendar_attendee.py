@@ -64,6 +64,10 @@ class Attendee(models.Model):
         self._unsubscribe_partner()
         return super().unlink()
 
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        raise UserError(_('You cannot duplicate a calendar attendee.'))
+
     def _subscribe_partner(self):
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id - event.message_partner_ids
@@ -75,10 +79,6 @@ class Attendee(models.Model):
         for event in self.event_id:
             partners = (event.attendee_ids & self).partner_id & event.message_partner_ids
             event.message_unsubscribe(partner_ids=partners.ids)
-
-    @api.returns('self', lambda value: value.id)
-    def copy(self, default=None):
-        raise UserError(_('You cannot duplicate a calendar attendee.'))
 
     def _send_mail_to_attendees(self, template_xmlid, force_send=False, ignore_recurrence=False):
         """ Send mail for event invitation to event attendees.
