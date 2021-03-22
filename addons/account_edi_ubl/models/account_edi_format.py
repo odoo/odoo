@@ -49,7 +49,8 @@ class AccountEdiFormat(models.Model):
 
         default_journal = invoice.with_context(default_move_type=move_type)._get_default_journal()
 
-        with Form(invoice.with_context(default_move_type=move_type, default_journal_id=default_journal.id)) as invoice_form:
+        with Form(invoice.with_context(default_move_type=move_type, default_journal_id=default_journal.id,
+                                       account_predictive_bills_disable_prediction=True)) as invoice_form:
             # Reference
             elements = tree.xpath('//cbc:ID', namespaces=namespaces)
             if elements:
