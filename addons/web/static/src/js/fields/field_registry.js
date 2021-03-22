@@ -56,6 +56,7 @@ registry
     .add('label_selection', basic_fields.LabelSelection)
     .add('kanban_label_selection', basic_fields.LabelSelection) // deprecated, use label_selection
     .add('state_selection', basic_fields.StateSelectionWidget)
+    .add('list.state_selection', basic_fields.ListStateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget) // deprecated, use state_selection
     .add('boolean_favorite', basic_fields.FavoriteWidget)
     .add('boolean_toggle', basic_fields.BooleanToggle)
