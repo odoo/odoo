@@ -571,7 +571,7 @@ class Task(models.Model):
     priority = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Important'),
-    ], default='0', index=True, string="Starred")
+    ], default='0', index=True, string="Starred", tracking=True)
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
@@ -616,7 +616,6 @@ class Task(models.Model):
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Phone", readonly=False, store=True, copy=False)
-    ribbon_message = fields.Char('Ribbon Message', compute='_compute_ribbon_message')
     partner_city = fields.Char(related='partner_id.city', readonly=False)
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one(
@@ -840,21 +839,6 @@ class Task(models.Model):
         for task in self:
             if task.partner_id and task.partner_phone != task.partner_id.phone:
                 task.partner_id.phone = task.partner_phone
-
-    @api.depends('partner_email', 'partner_phone', 'partner_id')
-    def _compute_ribbon_message(self):
-        for task in self:
-            will_write_email = task.partner_id and task.partner_email != task.partner_id.email
-            will_write_phone = task.partner_id and task.partner_phone != task.partner_id.phone
-
-            if will_write_email and will_write_phone:
-                task.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
-            elif will_write_email:
-                task.ribbon_message = _('By saving this change, the customer email will also be updated.')
-            elif will_write_phone:
-                task.ribbon_message = _('By saving this change, the customer phone number will also be updated.')
-            else:
-                task.ribbon_message = False
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
