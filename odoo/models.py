@@ -698,6 +698,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     _logger.warning("method %s.%s: @constrains parameter %r is not writeable", cls._name, attr, name)
             methods.append(func)
 
+        for field in cls._fields.values():
+            if isinstance(field.required, (list, tuple)):
+                @api.constrains(field.name)
+                def _constraint_required(self, domain=field.required, field=field):
+                    for record in self:
+                        if not record[field.name] and record == record.filtered_domain(domain):
+                            raise ValidationError(_("%s is required", field.name))
+                methods.append(_constraint_required)
+
         # optimization: memoize result on cls, it will not be recomputed
         cls._constraint_methods = methods
         return methods

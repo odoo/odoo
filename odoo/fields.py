@@ -498,7 +498,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not self.states:
                 self.states = field.states
             if field.required:
-                self.required = True
+                self.required = field.required
             self._modules.update(field._modules)
 
         if self._depends_context is not None:
@@ -869,12 +869,12 @@ class Field(MetaField('DummyField', (object,), {})):
         """
         has_notnull = column and column['is_nullable'] == 'NO'
 
-        if not column or (self.required and not has_notnull):
+        if not column or (self.required is True and not has_notnull):
             # the column is new or it becomes required; initialize its values
             if model._table_has_rows():
                 model._init_column(self.name)
 
-        if self.required and not has_notnull:
+        if self.required is True and not has_notnull:
             # _init_column may delay computations in post-init phase
             @model.pool.post_init
             def add_not_null():
@@ -882,7 +882,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
                 model.pool.post_constraint(apply_required, model, self.name)
 
-        elif not self.required and has_notnull:
+        elif self.required is not True and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
     def update_db_related(self, model):
@@ -2330,7 +2330,7 @@ class Selection(Field):
                 new_values = [kv[0] for kv in selection_add if kv[0] not in values]
                 for key in new_values:
                     ondelete.setdefault(key, 'set null')
-                if self.required and new_values and 'set null' in ondelete.values():
+                if self.required is True and new_values and 'set null' in ondelete.values():
                     raise ValueError(
                         "%r: required selection fields must define an ondelete policy that "
                         "implements the proper cleanup of the corresponding records upon "
@@ -2604,10 +2604,10 @@ class Many2one(_Relational):
                 # Many2one relations from TransientModel Model are annoying because
                 # they can block deletion due to foreign keys. So unless stated
                 # otherwise, we default them to ondelete='cascade'.
-                self.ondelete = 'cascade' if self.required else 'set null'
+                self.ondelete = 'cascade' if self.required is True else 'set null'
             else:
-                self.ondelete = 'restrict' if self.required else 'set null'
-        if self.ondelete == 'set null' and self.required:
+                self.ondelete = 'restrict' if self.required is True else 'set null'
+        if self.ondelete == 'set null' and self.required is True:
             raise ValueError(
                 "The m2o field %s of model %s is required but declares its ondelete policy "
                 "as being 'set null'. Only 'restrict' and 'cascade' make sense."
@@ -3972,7 +3972,7 @@ def apply_required(model, field_name):
     # the model's class is still the same. Retrieve the field to see whether the NOT NULL
     # constraint still applies
     field = model._fields[field_name]
-    if field.store and field.required:
+    if field.store and field.required is True:
         sql.set_not_null(model.env.cr, model._table, field_name)
 
 

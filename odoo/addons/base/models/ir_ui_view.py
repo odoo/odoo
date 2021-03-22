@@ -46,6 +46,7 @@ def transfer_field_to_modifiers(field, modifiers):
     for attr in ('invisible', 'readonly', 'required'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
+        default_values[attr] = field.get(attr)
     for state, modifs in field.get("states", {}).items():
         for modif in modifs:
             if default_values[modif[0]] != modif[1]:
