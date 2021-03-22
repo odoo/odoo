@@ -255,7 +255,8 @@ class AccountMove(models.Model):
         """ The constraint _check_unique_sequence_number is valid for customer bills but not valid for us on vendor
         bills because the uniqueness must be per partner and also because we want to validate on entry creation and
         not on entry validation """
-        for rec in self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents and x.l10n_latam_document_number):
+        for rec in self.filtered(lambda x: x.is_purchase_document() and x.l10n_latam_use_documents
+                                           and x.l10n_latam_document_number and x.commercial_partner_id):
             domain = [
                 ('type', '=', rec.type),
                 # by validating name we validate l10n_latam_document_number and l10n_latam_document_type_id
