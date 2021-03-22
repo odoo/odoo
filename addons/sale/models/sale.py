@@ -798,11 +798,6 @@ class SaleOrder(models.Model):
                 order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
 
     def action_done(self):
-        for order in self:
-            tx = order.sudo().transaction_ids.get_last_transaction()
-            if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
-                tx._set_transaction_done()
-                tx.write({'is_processed': True})
         return self.write({'state': 'done'})
 
     def action_unlock(self):

@@ -5,6 +5,17 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def _compute_amount(self):
+        super()._compute_amount()
+        order_ids = self.line_ids.sale_line_ids.order_id
+        for order in order_ids.filtered(lambda o: o.invoice_status == "invoiced" and all(invoice.amount_residual == 0 for invoice in o.invoice_ids)):
+            tx = order.sudo().transaction_ids.get_last_transaction()
+            if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+                tx._set_transaction_done()
+                tx.write({'is_processed': True})
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
