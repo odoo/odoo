@@ -55,11 +55,8 @@ class TestMrpCommon(common2.TestStockCommon):
         user_group_mrp_manager = cls.env.ref('mrp.group_mrp_manager')
 
         # Update demo products
-        (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_6 | cls.product_7 | cls.product_8).write({
+        (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7 | cls.product_8).write({
             'type': 'product',
-        })
-        cls.product_5.write({
-            'type': 'consu',
         })
 
         # User Data: mrp user and mrp manager

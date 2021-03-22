@@ -398,7 +398,7 @@
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="standard_price">600.0</field>
             <field name="list_price">147.0</field>
-            <field name="type">consu</field>
+            <field name="type">product</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description">Table kit</field>
@@ -407,7 +407,6 @@
         </record>
 
          <record id="product_product_table_kit_product_template" model="product.template">
-            <field name="type">consu</field>
             <field name="route_ids" eval="[(6, 0, [ref('mrp.route_warehouse0_manufacture')])]"/>
         </record>
 
@@ -539,6 +538,13 @@
         </record>
         <record id="stock_inventory_line_product_wear" model="stock.inventory.line">
             <field name="product_id" ref="product_product_wood_wear"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_drawer"/>
+            <field name="product_qty">30</field>
+            <field name="location_id" ref="stock.stock_location_14"/>
+        </record>
+        <record id="stock_inventory_line_product_table_kit" model="stock.inventory.line">
+            <field name="product_id" ref="product_product_table_kit"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">30</field>

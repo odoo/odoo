@@ -66,9 +66,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         product_a = create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
         product_c = create_product('Product C', self.uom_kg)
         product_b = create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
-        product_b.write({
-            'type': 'consu'
-        })
         product_d = create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
 
         # ------------------------------------------------------------------------------------------
@@ -335,6 +332,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
         product = self.env.ref('mrp.product_product_table_kit')
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, -product.qty_available)
         product.type = 'consu'
         product.invoice_policy = 'delivery'
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
@@ -419,7 +417,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         Product = self.env['product.product']
         self.finished_product = Product.create({
                 'name': 'Finished product',
-                'type': 'consu',
+                'type': 'product',
                 'uom_id': self.uom_unit.id,
                 'invoice_policy': 'delivery',
                 'categ_id': self.category.id})
