@@ -697,11 +697,14 @@ class WebsiteSale(http.Controller):
                     can_edit_vat = order.partner_id.can_edit_vat()
                 else:
                     shippings = Partner.search([('id', 'child_of', order.partner_id.commercial_partner_id.ids)])
-                    if partner_id in shippings.mapped('id'):
+                    if order.partner_id.commercial_partner_id.id == partner_id:
+                        mode = ('new', 'shipping')
+                        partner_id = -1
+                    elif partner_id in shippings.mapped('id'):
                         mode = ('edit', 'shipping')
                     else:
                         return Forbidden()
-                if mode:
+                if mode and partner_id != -1:
                     values = Partner.browse(partner_id)
             elif partner_id == -1:
                 mode = ('new', 'shipping')
