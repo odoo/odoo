@@ -65,6 +65,7 @@ require('web.dom_ready');
 const {qweb, _t} = require('web.core');
 const options = require('web_editor.snippets.options');
 var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+require('website.editor.snippets.options');
 
 if (!$('.website_blog').length) {
     return Promise.reject("DOM doesn't contain '.website_blog'");
