@@ -3,11 +3,10 @@
 from odoo import api, models, fields, tools, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
 from odoo.tests.common import Form
-from odoo.exceptions import UserError
-from odoo.osv import expression
 
 from pathlib import PureWindowsPath
 
+import base64
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -15,6 +14,17 @@ _logger = logging.getLogger(__name__)
 
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
+
+    ####################################################
+    # Helpers
+    ####################################################
+
+    def _is_ubl(self, filename, tree):
+        return tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice'
+
+    ####################################################
+    # Import
+    ####################################################
 
     def _import_ubl(self, tree, invoice):
         """ Decodes an UBL invoice into an invoice.
@@ -159,3 +169,85 @@ class AccountEdiFormat(models.Model):
                             invoice_line_form.tax_ids.add(tax)
 
         return invoice_form.save()
+
+    ####################################################
+    # Export
+    ####################################################
+
+    def _get_ubl_values(self, invoice):
+        ''' Get the necessary values to generate the XML. These values will be used in the qweb template when
+        rendering. Needed values differ depending on the implementation of the UBL, as (sub)template can be overriden
+        or called dynamically.
+        :returns:   a dictionary with the value used in the template has key and the value as value.
+        '''
+        def format_monetary(amount):
+            # Format the monetary values to avoid trailing decimals (e.g. 90.85000000000001).
+            return float_repr(amount, invoice.currency_id.decimal_places)
+
+        return {
+            **invoice._prepare_edi_vals_to_export(),
+            'ubl_version': 2.1,
+            'type_code': 380 if invoice.move_type == 'out_invoice' else 381,
+            'payment_means_code': 42 if invoice.journal_id.bank_account_id else 31,
+            'bank_account': invoice.partner_bank_id,
+            'format_monetary': format_monetary,
+            'customer_vals': {'partner': invoice.commercial_partner_id},
+            'supplier_vals': {'partner': invoice.company_id.partner_id.commercial_partner_id},
+        }
+
+    def _export_ubl(self, invoice):
+        self.ensure_one()
+        # Create file content.
+        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
+        xml_content += self.env.ref('account_edi_ubl.export_ubl_invoice')._render(self._get_ubl_values(invoice))
+        xml_name = '%s_ubl_2_1.xml' % (invoice.name.replace('/', '_'))
+        return self.env['ir.attachment'].create({
+            'name': xml_name,
+            'datas': base64.encodebytes(xml_content),
+            'res_model': 'account.move',
+            'res_id': invoice.id,
+            'mimetype': 'application/xml'
+        })
+
+    ####################################################
+    # Account.edi.format override
+    ####################################################
+
+    def _create_invoice_from_xml_tree(self, filename, tree):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
+            return self._import_ubl(tree, self.env['account.move'])
+        return super()._create_invoice_from_xml_tree(filename, tree)
+
+    def _update_invoice_from_xml_tree(self, filename, tree, invoice):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
+            return self._import_ubl(tree, invoice)
+        return super()._update_invoice_from_xml_tree(filename, tree, invoice)
+
+    def _is_compatible_with_journal(self, journal):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'ubl_2_1':
+            return super()._is_compatible_with_journal(journal)
+        return journal.type == 'sale'
+
+    def _post_invoice_edi(self, invoices, test_mode=False):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'ubl_2_1':
+            return super()._post_invoice_edi(invoices, test_mode=test_mode)
+        res = {}
+        for invoice in invoices:
+            attachment = self._export_ubl(invoice)
+            res[invoice] = {'attachment': attachment}
+        return res
+
+    def _is_embedding_to_invoice_pdf_needed(self):
+        # OVERRIDE
+        self.ensure_one()
+        if self.code != 'ubl_2_1':
+            return super()._is_embedding_to_invoice_pdf_needed()
+        return False  # ubl must not be embedded to PDF.
