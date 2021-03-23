@@ -20,7 +20,7 @@ class PaymentPortal(website_sale_controller.PaymentPortal):
         for line in order.order_line:
             if line.product_id.type == 'product' and line.product_id.inventory_availability in ['always', 'threshold']:
                 cart_qty = sum(order.order_line.filtered(lambda p: p.product_id.id == line.product_id.id).mapped('product_uom_qty'))
-                avl_qty = line.product_id.with_context(warehouse=order.warehouse_id.id).virtual_available
+                avl_qty = line.product_id.with_context(warehouse=order.warehouse_id.id).free_qty
                 if cart_qty > avl_qty:
                     values.append(_(
                         'You ask for %(quantity)s products but only %(available_qty)s is available',
