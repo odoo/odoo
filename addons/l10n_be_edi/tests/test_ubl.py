@@ -11,7 +11,7 @@ class TestUBL(common.TransactionCase):
         self.env.user.company_id = self.env['res.company'].create({'name': 'MyCompany'})
         self.env.user.company_id.country = self.env.ref('base.be')
         self.env.ref('l10n_be.l10nbe_chart_template').load_for_current_company(False, False)
-        self.partner_id = self.env['res.partner'].create({'name': 'TestUser', 'vat': 'BE0123456789'})
+        self.partner_id = self.env['res.partner'].create({'name': 'TestUser', 'vat': 'BE0477472701'})
 
     def test_ubl_invoice_import(self):
         xml_file_path = get_module_resource('l10n_be_edi', 'test_xml_file', 'efff_test.xml')
