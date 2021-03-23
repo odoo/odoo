@@ -46,6 +46,8 @@ class UserInputSession(http.Controller):
         - If the state of the session is 'ready'
           We render a template allowing the host to showcase the different options of the session
           and to actually start the session.
+          If there are no questions, a "void content" is displayed instead to avoid displaying a
+          blank survey.
         - If the state of the session is 'in_progress'
           We render a template allowing the host to show the question results, display the attendees
           leaderboard or go to the next question of the session. """
@@ -57,6 +59,11 @@ class UserInputSession(http.Controller):
             return NotFound()
 
         if survey.session_state == 'ready':
+            if not survey.question_ids:
+                return request.render('survey.survey_void_content', {
+                    'survey': survey,
+                    'answer': request.env['survey.user_input'],
+                })
             return request.render('survey.user_input_session_open', {
                 'survey': survey
             })
