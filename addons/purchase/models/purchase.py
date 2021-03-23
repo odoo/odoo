@@ -775,7 +775,11 @@ class PurchaseOrder(models.Model):
             if order.state in ['purchase', 'done'] and not order.mail_reminder_confirmed:
                 order.mail_reminder_confirmed = True
                 date = confirmed_date or self.date_planned.date()
+<<<<<<< HEAD
                 order.message_post(body=_("%s confirmed the receipt will take place on %s.", order.partner_id.name, date))
+=======
+                order.message_post(body=_("%(name)s confirmed the receipt will take place on %(date)s.", name=order.partner_id.name, date=date))
+>>>>>>> debf78c6d5f... temp
 
     def _approval_allowed(self):
         """Returns whether the order qualifies to be approved by the current user"""
@@ -792,7 +796,11 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state in ['purchase', 'done'] and not order.mail_reception_confirmed:
                 order.mail_reception_confirmed = True
+<<<<<<< HEAD
                 order.message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
+=======
+                order.message_post(body=_("The order receipt has been acknowledged by %(name)s.", name=order.partner_id.name))
+>>>>>>> debf78c6d5f... temp
 
     def _update_date_planned_for_lines(self, updated_dates):
         # create or update the activity
