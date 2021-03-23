@@ -20,11 +20,11 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             {
                 content: "select product attribute Steel",
                 extra_trigger: 'body:not(:has(#customize-menu:visible .dropdown-menu:visible))',
-                trigger: 'form.js_attributes label:contains(Steel - Test) input:not(:checked)',
+                trigger: 'form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
             },
             {
                 content: "check the selection",
-                trigger: 'form.js_attributes label:contains(Steel - Test) input:checked',
+                trigger: 'form.js_attributes input:checked + label:contains(Steel - Test)',
                 run: function () {}, // it's a check
             },
             {
