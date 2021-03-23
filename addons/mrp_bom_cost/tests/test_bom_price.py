@@ -25,7 +25,6 @@ class TestBom(common.TransactionCase):
         # Products.
         self.dining_table = self._create_product('Dining Table', 1000)
         self.table_head = self._create_product('Table Head', 300)
-        self.table_head.type = 'consu'
         self.screw = self._create_product('Screw', 10)
         self.leg = self._create_product('Leg', 25)
         self.glass = self._create_product('Glass', 100)

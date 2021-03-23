@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools.float_utils import float_round
-from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
@@ -22,12 +21,6 @@ class ProductTemplate(models.Model):
     def _compute_bom_count(self):
         for product in self:
             product.bom_count = self.env['mrp.bom'].search_count([('product_tmpl_id', '=', product.id)])
-
-    @api.constrains('type')
-    def _check_phantom_bom_is_consumable_template(self):
-        for product_tmpl in self:
-            if product_tmpl.type != 'consu' and 'phantom' in product_tmpl.bom_ids.mapped('type'):
-                raise ValidationError(_("The product type of %s must be 'Consumable' because it has at least one kit-type bill of materials." % product_tmpl.display_name))
 
     @api.multi
     def _compute_used_in_bom_count(self):
