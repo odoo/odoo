@@ -24,7 +24,6 @@ class AccountMove(models.Model):
             ('deemed_export', 'Deemed Export')
         ], string="GST Treatment", readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_state_id = fields.Many2one('res.country.state', string="Location of supply")
-    l10n_in_company_country_code = fields.Char(related='company_id.country_id.code', string="Country code")
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number', readonly=True, states={'draft': [('readonly', False)]})
@@ -35,7 +34,7 @@ class AccountMove(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
-        if self.l10n_in_company_country_code == 'IN':
+        if self.country_code == 'IN':
             self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
         return super()._onchange_partner_id()
 
@@ -56,7 +55,7 @@ class AccountMove(models.Model):
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
         # OVERRIDE to group taxes also by product.
         res = super()._get_tax_grouping_key_from_tax_line(tax_line)
-        if tax_line.move_id.journal_id.company_id.country_id.code == 'IN':
+        if tax_line.move_id.journal_id.company_id.account_fiscal_country_id.code == 'IN':
             res['product_id'] = tax_line.product_id.id
         return res
 
@@ -64,7 +63,7 @@ class AccountMove(models.Model):
     def _get_tax_grouping_key_from_base_line(self, base_line, tax_vals):
         # OVERRIDE to group taxes also by product.
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
-        if base_line.move_id.journal_id.company_id.country_id.code == 'IN':
+        if base_line.move_id.journal_id.company_id.account_fiscal_country_id.code == 'IN':
             res['product_id'] = base_line.product_id.id
         return res
 
@@ -92,7 +91,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
-        for move in posted.filtered(lambda m: m.l10n_in_company_country_code == 'IN'):
+        for move in posted.filtered(lambda m: m.country_code == 'IN'):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
             if not company_unit_partner.state_id:

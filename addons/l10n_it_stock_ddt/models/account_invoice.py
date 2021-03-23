@@ -57,7 +57,7 @@ class AccountMove(models.Model):
 
     @api.depends('invoice_line_ids', 'invoice_line_ids.sale_line_ids')
     def _compute_ddt_ids(self):
-        it_out_invoices = self.filtered(lambda i: i.move_type == 'out_invoice' and i.company_id.country_id.code == 'IT')
+        it_out_invoices = self.filtered(lambda i: i.move_type == 'out_invoice' and i.company_id.account_fiscal_country_id.code == 'IT')
         for invoice in it_out_invoices:
             invoice_line_pickings = invoice._get_ddt_values()
             pickings = self.env['stock.picking']

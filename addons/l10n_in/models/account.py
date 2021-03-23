@@ -18,7 +18,7 @@ class AccountJournal(models.Model):
         """
         result = super().name_get()
         result_dict = dict(result)
-        indian_journals = self.filtered(lambda j: j.company_id.country_id.code == 'IN' and
+        indian_journals = self.filtered(lambda j: j.company_id.account_fiscal_country_id.code == 'IN' and
             j.l10n_in_gstin_partner_id and j.l10n_in_gstin_partner_id.vat)
         for journal in indian_journals:
             name = result_dict[journal.id]
@@ -32,7 +32,7 @@ class AccountMoveLine(models.Model):
 
     @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
     def _compute_tax_base_amount(self):
-        aml = self.filtered(lambda l: l.company_id.country_id.code == 'IN' and l.tax_line_id  and l.product_id)
+        aml = self.filtered(lambda l: l.company_id.account_fiscal_country_id.code == 'IN' and l.tax_line_id  and l.product_id)
         for move_line in aml:
             base_lines = move_line.move_id.line_ids.filtered(lambda line: move_line.tax_line_id in line.tax_ids and move_line.product_id == line.product_id)
             move_line.tax_base_amount = abs(sum(base_lines.mapped('balance')))
@@ -49,7 +49,7 @@ class AccountTax(models.Model):
     def get_grouping_key(self, invoice_tax_val):
         """ Returns a string that will be used to group account.invoice.tax sharing the same properties"""
         key = super(AccountTax, self).get_grouping_key(invoice_tax_val)
-        if self.company_id.country_id.code == 'IN':
+        if self.company_id.account_fiscal_country_id.code == 'IN':
             key += "-%s-%s"% (invoice_tax_val.get('l10n_in_product_id', False),
                 invoice_tax_val.get('l10n_in_uom_id', False))
         return key

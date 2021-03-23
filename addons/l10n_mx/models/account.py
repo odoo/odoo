@@ -13,7 +13,7 @@ class AccountJournal(models.Model):
         # OVERRIDE
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)
 
-        if company.country_id.code == 'MX':
+        if company.account_fiscal_country_id.code == 'MX':
             # When preparing the values to use when creating the default debit and credit accounts of a
             # liquidity journal, set the correct tags for the mexican localization.
             account_vals.setdefault('tag_ids', [])
