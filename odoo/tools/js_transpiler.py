@@ -255,7 +255,7 @@ EXPORT_FROM_RE = re.compile(r"""
     export\s*                           # export
     (?P<object>{(\s*\w+\s*,?\s*)*})\s*  # { a, b, c as x, ... }
     from\s*                             # from
-    (?P<path>(\".*\")|('.*')|(`.*`))    # "file path" ("some/path.js")
+    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path.js")
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -286,7 +286,7 @@ EXPORT_STAR_FROM_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
     export\s*\*\s*from\s*               # export * from
-    (?P<path>(\".*\")|('.*')|(`.*`))    # "file path" ("some/path.js")
+    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path.js")
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -346,7 +346,7 @@ IMPORT_BASIC_RE = re.compile(r"""
     import\s+                           # import
     (?P<object>{(\s*\w+\s*,?\s*)+})\s*  # { a, b, c as x, ... }
     from\s*                             # from
-    (?P<path>(\".*\")|('.*')|(`.*`))    # "file path" ("some/path")
+    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -373,7 +373,7 @@ IMPORT_LEGACY_DEFAULT_RE = re.compile(r"""
     import\s+                                           # import
     (?P<identifier>\w+)\s*                              # default variable name
     from\s*                                             # from
-    (?P<path>(\"\w+\.\w+\")|('\w+\.\w+')|(`\w+\.\w+`))  # legacy alias file ("addon_name.module_name")
+    (?P<path>(?P<quote>["'`])([^@\."'`][^"'`]*)(?P=quote))  # legacy alias file ("addon_name.module_name" or "some/path")
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -400,7 +400,7 @@ IMPORT_DEFAULT = re.compile(r"""
     import\s+                           # import
     (?P<identifier>\w+)\s*              # default variable name
     from\s*                             # from
-    (?P<path>(\".*\")|('.*')|(`.*`))    # "file path" ("some/path")
+    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -420,7 +420,7 @@ def convert_default_import(content):
 
 
 RELATIVE_REQUIRE_RE = re.compile(r"""
-    require\((["'`])([^@"'`]+)(\1)\)  # require("some/path")
+    require\((?P<quote>["'`])([^@"'`]+)(?P=quote)\)  # require("some/path")
     """, re.VERBOSE)
 
 
@@ -443,9 +443,9 @@ def convert_relative_require(url, content):
         require("other_alias")
     """
     new_content = content
-    for open_quote, path, close_quote in RELATIVE_REQUIRE_RE.findall(new_content):
+    for quote, path in RELATIVE_REQUIRE_RE.findall(new_content):
         if path.startswith(".") and "/" in path:
-            pattern = rf"require\({open_quote}{path}{close_quote}\)"
+            pattern = rf"require\({quote}{path}{quote}\)"
             repl = f'require("{relative_path_to_module_path(url, path)}")'
             new_content = re.sub(pattern, repl, new_content)
     return new_content
@@ -500,11 +500,7 @@ def convert_unnamed_relative_import(content):
 URL_INDEX_RE = re.compile(r"""
     require\s*                 # require
     \(\s*                      # (
-    (?P<path>                  # path (three possibles syntax for the string)
-        (\".*/index/?\")|
-        ('.*/index/?')|
-        (`.*/index/?`)
-    )
+    (?P<path>(?P<quote>["'`])([^"'`]*/index/?)(?P=quote))  # path ended by /index or /index/
     \s*\)                      # )
 """, re.MULTILINE | re.VERBOSE)
 
