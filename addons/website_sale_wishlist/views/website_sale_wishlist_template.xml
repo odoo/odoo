@@ -5,7 +5,7 @@
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="in_wish" t-value="product._is_in_wishlist()"/>
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
-            <button t-if="product_variant_id" type="button" role="button" class="btn btn-secondary o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant_id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
+            <button t-if="product_variant_id" type="button" role="button" class="btn btn-outline-primary bg-white o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-template-id="product.id" t-att-data-product-product-id="product_variant_id" data-action="o_wishlist"><span class="fa fa-heart" role="img" aria-label="Add to wishlist"></span></button>
         </xpath>
     </template>
 

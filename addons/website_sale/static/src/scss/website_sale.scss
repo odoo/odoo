@@ -86,6 +86,9 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
 
     .o_wsale_products_searchbar_form {
         flex-grow: 1;
+        @include media-breakpoint-up(md) {
+            max-width: 450px;
+        }
     }
 
     .table-striped tbody tr:nth-of-type(even) {
@@ -97,6 +100,75 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     *:not(#product_attributes_simple) > .table-sm tbody td {
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
+    }
+    #products_grid_before {
+        @include media-breakpoint-up(lg) {
+            border-right: 1px solid gray('400');
+        }
+        #wsale_products_categories_collapse {
+            label {
+                &:hover {
+                    color: theme-color('primary');
+                    cursor: pointer;
+                }
+            }
+            .nav-hierarchy {
+                padding-left: map-get($spacers, 2);
+            }
+            i.fa {
+                color: gray('500');
+            }
+        }
+        .o_categories_collapse_title, .o_products_attributes_title {
+            font-size: 0.9rem;
+        }
+        .custom-control.custom-checkbox {
+            .custom-control-input {
+                ~ .custom-control-label:before {
+                    outline: none;
+                    border: 0px;
+                    border: 2px solid gray('400');
+                    border-radius: 0px;
+                    cursor: pointer;
+                }
+                &:checked {
+                    ~ .custom-control-label:before {
+                        background-color: theme-color('primary');
+                        border: 2px solid theme-color('primary');
+                    }
+                }
+            }
+            label:hover {
+                color: theme-color('primary');
+                cursor: pointer;
+            }
+        }
+        .css_attribute_color {
+            height: 32px;
+            width: 32px;
+            margin-bottom: 0.2rem;
+        }
+    }
+    .o_pricelist_dropdown, .o_sortby_dropdown {
+        min-width: fit-content;
+
+        > .btn {
+            &, &:hover, &:focus, &:active {
+                background-color: transparent !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+    .o_wsale_apply_layout > .btn {
+        color: gray('500');
+        background-color: transparent;
+        border-radius: 0%;
+
+        &.active, &:focus {
+            color: gray('600');
+            background-color: gray('200');
+            box-shadow: none !important;
+        }
     }
 }
 
@@ -129,16 +201,23 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         overflow: hidden;
         font-size: $font-size-sm;
         margin-bottom: map-get($spacers, 1);
+        opacity: 0;
         transform: scale(1, 0);
         transition: all ease 0.3s;
     }
     .o_wsale_product_btn {
-        @include o-position-absolute(auto, 0, 100%, 0);
+        @include o-position-absolute(auto, auto, 100%, 0);
         padding-bottom: map-get($spacers, 1);
+        z-index: 2;
 
         .btn {
+            width: 46px;
+            padding: 0.375rem 0.75rem; // prevent default Bootstrap padding from being modified by theme variables
+            line-height: 32px;
+            border-radius: 50%;
             transform: scale(0);
-            transition: transform ease 200ms 0s;
+            opacity: 0;
+            transition: transform ease 200ms 0s, opacity ease 50ms;
         }
 
         &:empty {
@@ -147,10 +226,8 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     }
 
     &:hover {
-        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
-
         .o_wsale_product_information {
-            background-color: gray('200') !important;
+            background-color: white !important;
         }
         .oe_subdescription {
             max-height: $line-height-base * 1em; // Max 1 line
@@ -164,6 +241,7 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         .oe_subdescription,
         .o_wsale_product_btn .btn {
             transform: scale(1);
+            opacity: 1;
         }
     }
 
@@ -176,7 +254,17 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         .oe_subdescription,
         .o_wsale_product_btn .btn {
             transform: scale(1);
+            opacity: 1;
         }
+    }
+
+    .o_ribbon_left, .o_ribbon_right {
+        box-shadow: 0px -10px 70px 30px rgba(black, 0.05);
+    }
+
+    .o_product_link {
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: 1;
     }
 }
 
@@ -227,13 +315,15 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
                 $-pos: ($o-wsale-products-layout-grid-gutter-width / 2);
                 @include o-position-absolute($-pos, $-pos, $-pos, $-pos);
 
-                @if $o-wsale-products-layout-grid-gutter-width <= 0 {
-                    &.card {
-                        border: none;
+                &.card {
+                    border: none;
 
-                        &, .card-body {
-                            border-radius: 0;
-                        }
+                    @if $o-wsale-products-layout-grid-gutter-width > 0 {
+                        border-bottom: 1px solid gray('400');
+                    }
+
+                    &, .card-body {
+                        border-radius: 0;
                     }
                 }
             }
@@ -302,13 +392,11 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
                     flex: 0 0 auto;
                     position: static;
                     display: flex;
-                    flex-flow: column nowrap;
-                    align-items: center;
+                    align-items: flex-end;
                     padding: map-get($spacers, 2);
-                    background-color: gray('200');
 
                     .btn + .btn {
-                        margin-top: map-get($spacers, 2);
+                        margin-left: map-get($spacers, 2);
                     }
                 }
 
@@ -318,18 +406,13 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
                 .oe_subdescription,
                 .o_wsale_product_btn .btn {
                     transform: scale(1) !important;
+                    opacity: 1;
                 }
 
                 &:hover {
                     .o_wsale_product_information {
                         background-color: $white !important;
                     }
-                }
-                .o_ribbon_right {
-                    @include o-ribbon-left();
-                }
-                .o_tag_right {
-                    @include o-tag-left();
                 }
             }
         }
