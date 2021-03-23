@@ -144,6 +144,9 @@ class AccountMove(models.Model):
         '''
         self.ensure_one()
 
+        def convert(amount):
+            return self.currency_id._convert(amount, self.company_currency_id, self.company_id, self.date)
+
         res = {
             'record': self,
             'invoice_line_vals_list': [],
@@ -163,7 +166,10 @@ class AccountMove(models.Model):
                     'tax': tax_vals['tax'],
                     'orig_tax': tax_vals['orig_tax'],
                     'tax_base_amount_currency': 0.0,
+                    'tax_amount': 0.0,
                     'tax_amount_currency': 0.0,
+                    'tax_amount_closing': 0.0,
+                    'tax_amount_currency_closing': 0.0,
                     'tag_ids': set(),
                 })
                 vals = tax_detail_per_tax[tax_vals['tax']]
@@ -176,6 +182,7 @@ class AccountMove(models.Model):
                     added_base_amount_keys.add(base_amount_key)
 
                 vals['tax_amount_currency'] += tax_vals['tax_amount_currency']
+                vals['tax_amount_currency_closing'] += tax_vals['tax_amount_currency_closing']
                 for tag in tax_vals['tags']:
                     vals['tag_ids'].add(tag.id)
 
@@ -185,6 +192,9 @@ class AccountMove(models.Model):
             res['tax_detail_vals_list'].append({
                 **tax_detail_vals,
                 'tags': self.env['account.account.tag'].browse(tax_detail_vals['tag_ids']),
+                'tax_base_amount': convert(tax_detail_vals['tax_base_amount_currency']),
+                'tax_amount': convert(tax_detail_vals['tax_amount_currency']),
+                'tax_amount_closing': convert(tax_detail_vals['tax_amount_currency_closing']),
             })
 
         # Totals.
@@ -380,6 +390,9 @@ class AccountMoveLine(models.Model):
         '''
         self.ensure_one()
 
+        def convert(amount):
+            return self.currency_id._convert(amount, self.company_currency_id, self.company_id, self.date)
+
         res = {
             'line': self,
             'price_unit_after_discount': self.price_unit * (1 - (self.discount / 100.0)),
@@ -409,6 +422,7 @@ class AccountMoveLine(models.Model):
                 'orig_tax': tax_vals['group'].id if tax_vals['group'] else tax.id,
                 'tax_base_amount_currency': 0.0,
                 'tax_amount_currency': 0.0,
+                'tax_amount_currency_closing': 0.0,
                 'tag_ids': set(),
             })
             vals = tax_detail_per_tax[tax]
@@ -427,6 +441,9 @@ class AccountMoveLine(models.Model):
             res['tax_detail_vals_list'].append({
                 **tax_detail_vals,
                 'tags': self.env['account.account.tag'].browse(tax_detail_vals['tag_ids']),
+                'tax_base_amount': convert(tax_detail_vals['tax_base_amount_currency']),
+                'tax_amount': convert(tax_detail_vals['tax_amount_currency']),
+                'tax_amount_closing': convert(tax_detail_vals['tax_amount_currency_closing']),
             })
 
         return res

@@ -36,10 +36,7 @@ class AccountEdiFormat(models.Model):
 
         # activate by default on journal
         journals = self.env['account.journal'].search([])
-        for journal in journals:
-            for edi_format in edi_formats:
-                if edi_format._is_compatible_with_journal(journal):
-                    journal.edi_format_ids += edi_format
+        journals._compute_edi_format_ids()
 
         # activate cron
         if any(edi_format._needs_web_services() for edi_format in edi_formats):
@@ -81,14 +78,23 @@ class AccountEdiFormat(models.Model):
 
     def _is_compatible_with_journal(self, journal):
         """ Indicate if the EDI format should appear on the journal passed as parameter to be selected by the user.
-        If True, this EDI format will be selected by default on the journal.
+        If True, this EDI format will appear on the journal.
 
         :param journal: The journal.
-        :returns:       True if this format can be enabled by default on the journal, False otherwise.
+        :returns:       True if this format can appear on the journal, False otherwise.
         """
         # TO OVERRIDE
         self.ensure_one()
         return journal.type == 'sale'
+
+    def _is_enabled_by_default_on_journal(self, journal):
+        """ Indicate if the EDI format should be selected by default on the journal passed as parameter.
+        If True, this EDI format will be selected by default on the journal.
+
+        :param journal: The journal.
+        :returns:       True if this format should be enabled by default on the journal, False otherwise.
+        """
+        return True
 
     def _is_embedding_to_invoice_pdf_needed(self):
         """ Indicate if the EDI must be embedded inside the PDF report.
