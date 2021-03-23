@@ -159,10 +159,9 @@ class ResPartner(models.Model):
             if not check_func(vat_country, vat_number):
                 #if fails, check with country code from country
                 country_code = partner.commercial_partner_id.country_id.code
-                if country_code:
-                    if not check_func(country_code.lower(), partner.vat):
-                        msg = partner._construct_constraint_msg(country_code.lower())
-                        raise ValidationError(msg)
+                if not country_code or not check_func(country_code.lower(), partner.vat):
+                    msg = partner._construct_constraint_msg(country_code.lower() if country_code else None)
+                    raise ValidationError(msg)
 
     def _construct_constraint_msg(self, country_code):
         self.ensure_one()
