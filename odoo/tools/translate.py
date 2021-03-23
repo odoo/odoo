@@ -581,7 +581,8 @@ class CSVFileReader:
                 # res_id is an external id and must follow <module>.<name>
                 entry["module"], entry["imd_name"] = entry["res_id"].split(".")
                 entry["res_id"] = None
-            entry["imd_model"] = entry["name"].split(":")[0]
+            if entry["type"] == "model" or entry["type"] == "model_terms":
+                entry["imd_model"] = entry["name"].partition(',')[0]
 
             if entry["type"] == "code":
                 if entry["src"] == self.prev_code_src:
