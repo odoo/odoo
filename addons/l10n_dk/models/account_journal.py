@@ -12,7 +12,7 @@ class AccountJournal(models.Model):
         # OVERRIDE
         account_vals = super()._prepare_liquidity_account_vals(company, code, vals)
 
-        if company.country_id.code == 'DK':
+        if company.account_fiscal_country_id.code == 'DK':
             # Ensure the newly liquidity accounts have the right account tag in order to be part
             # of the Danish financial reports.
             account_vals.setdefault('tag_ids', [])

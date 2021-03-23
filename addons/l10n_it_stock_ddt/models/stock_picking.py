@@ -20,7 +20,7 @@ class StockPicking(models.Model):
                                                 default="sender", string='Transport Method')
     l10n_it_transport_method_details = fields.Char('Transport Note')
     l10n_it_parcels = fields.Integer(string="Parcels", default=1)
-    l10n_it_country_code = fields.Char(related="company_id.country_id.code")
+    l10n_it_country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
     l10n_it_ddt_number = fields.Char('DDT Number', readonly=True)
 
     def _action_done(self):

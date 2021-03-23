@@ -61,7 +61,7 @@ class AccountFiscalPosition(models.Model):
                     raise ValidationError(_("You cannot create a fiscal position within your fiscal country with the same VAT number as the main one set on your company."))
 
                 if not record.state_ids:
-                    if record.company_id.country_id.state_ids:
+                    if record.company_id.account_fiscal_country_id.state_ids:
                         raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
                     else:
                         raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))

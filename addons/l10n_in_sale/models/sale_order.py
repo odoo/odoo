@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
         ], string="GST Treatment", readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, compute="_compute_l10n_in_gst_treatment", store=True)
-    l10n_in_company_country_code = fields.Char(related='company_id.country_id.code', string="Country code")
+    l10n_in_company_country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):

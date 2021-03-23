@@ -103,7 +103,7 @@ class AccountPaymentRegister(models.TransientModel):
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank',
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
-    country_code = fields.Char(related='company_id.country_id.code', readonly=True)
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
     # -------------------------------------------------------------------------
     # HELPERS
@@ -353,12 +353,12 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
-    
+
     @api.model
     def default_get(self, fields_list):
         # OVERRIDE
         res = super().default_get(fields_list)
-        
+
         if 'line_ids' in fields_list and 'line_ids' not in res:
 
             # Retrieve moves to pay from the context.
@@ -397,7 +397,7 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't register payments for journal items being either all inbound, either all outbound."))
 
             res['line_ids'] = [(6, 0, available_lines.ids)]
-        
+
         return res
 
     # -------------------------------------------------------------------------

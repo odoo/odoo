@@ -39,7 +39,7 @@ class AccountFiscalPosition(models.Model):
 
     @api.onchange('l10n_ar_afip_responsibility_type_ids', 'country_group_id', 'country_id', 'zip_from', 'zip_to')
     def _onchange_afip_responsibility(self):
-        if self.company_id.country_id.code == "AR":
+        if self.company_id.account_fiscal_country_id.code == "AR":
             if self.l10n_ar_afip_responsibility_type_ids and any(['country_group_id', 'country_id', 'zip_from', 'zip_to']):
                 return {'warning': {
                     'title': _("Warning"),

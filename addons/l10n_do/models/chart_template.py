@@ -9,7 +9,7 @@ class AccountChartTemplate(models.Model):
 
     @api.model
     def _get_default_bank_journals_data(self):
-        if self.env.company.country_id and self.env.company.country_id.code.upper() == 'DO':
+        if self.env.company.account_fiscal_country_id.code == 'DO':
             return [
                 {'acc_name': _('Cash'), 'account_type': 'cash'},
                 {'acc_name': _('Caja Chica'), 'account_type': 'cash'},

@@ -23,7 +23,7 @@ class ResPartner(models.Model):
 
     @api.onchange('country_id')
     def _onchange_country(self):
-        country = self.country_id or self.company_id.country_id or self.env.company.country_id
+        country = self.country_id or self.company_id.account_fiscal_country_id or self.env.company.account_fiscal_country_id
         identification_type = self.l10n_latam_identification_type_id
         if not identification_type or (identification_type.country_id != country):
             self.l10n_latam_identification_type_id = self.env['l10n_latam.identification.type'].search(

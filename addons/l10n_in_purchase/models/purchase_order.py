@@ -19,7 +19,7 @@ class PurchaseOrder(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export')
         ], string="GST Treatment", states=Purchase.READONLY_STATES)
-    l10n_in_company_country_code = fields.Char(related='company_id.country_id.code', string="Country code")
+    l10n_in_company_country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
 
     @api.onchange('company_id')
     def l10n_in_onchange_company_id(self):

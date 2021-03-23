@@ -11,7 +11,7 @@ class PosOrder(models.Model):
     def _get_account_move_line_group_data_type_key(self, data_type, values, options={}):
         res = super(PosOrder, self)._get_account_move_line_group_data_type_key(data_type, values, options)
         if data_type == 'tax' and res:
-            if self.env['account.tax'].browse(values['tax_line_id']).company_id.country_id.code == 'IN':
+            if self.env['account.tax'].browse(values['tax_line_id']).company_id.account_fiscal_country_id.code == 'IN':
                 return res + (values['product_uom_id'], values['product_id'])
         return res
 

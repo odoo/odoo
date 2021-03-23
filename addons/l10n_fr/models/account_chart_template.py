@@ -11,7 +11,7 @@ class AccountChartTemplate(models.Model):
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         journal_data = super(AccountChartTemplate, self)._prepare_all_journals(
             acc_template_ref, company, journals_dict)
-        if company.country_id.code != 'FR':
+        if company.account_fiscal_country_id.code != 'FR':
             return journal_data
 
         for journal in journal_data:
