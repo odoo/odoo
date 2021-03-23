@@ -9,6 +9,7 @@
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-set="partner" t-value="partner_vals['partner']"/>
                 <cbc:WebsiteURI
                     t-if="partner.website"
                     t-esc="partner.website"/>
@@ -110,17 +111,23 @@
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cbc:UBLVersionID t-esc="ubl_version"/>
+                <cbc:CustomizationID t-if="customization_id" t-esc="customization_id"/>
+                <cbc:ProfileID t-if="profile_id" t-esc="profile_id"/>
+                <cbc:UBLVersionID t-if="ubl_version" t-esc="ubl_version"/>
                 <cbc:ID t-esc="record.name"/>
                 <cbc:IssueDate t-esc="record.invoice_date"/>
                 <cbc:InvoiceTypeCode t-esc="type_code"/>
                 <cbc:Note t-esc="record.narration"/>
                 <cbc:DocumentCurrencyCode t-esc="record.currency_id.name"/>
+                <cbc:BuyerReference t-esc="record.commercial_partner_id.name"/>
+                <cac:OrderReference t-if="record.invoice_origin">
+                    <cbc:ID t-esc="record.invoice_origin"/>
+                </cac:OrderReference>
                 <cac:AccountingSupplierParty t-call="account_edi_ubl.export_ubl_invoice_partner">
-                    <t t-set="partner" t-value="record.company_id.partner_id.commercial_partner_id"/>
+                    <t t-set="partner_vals" t-value="supplier_vals"/>
                 </cac:AccountingSupplierParty>
                 <cac:AccountingCustomerParty t-call="account_edi_ubl.export_ubl_invoice_partner">
-                    <t t-set="partner" t-value="record.commercial_partner_id"/>
+                    <t t-set="partner_vals" t-value="customer_vals"/>
                 </cac:AccountingCustomerParty>
                 <cac:PaymentMeans>
                     <cbc:PaymentMeansCode listID="UN/ECE 4461" t-esc="payment_means_code"/>
@@ -137,7 +144,7 @@
                 <cac:PaymentTerms t-if="record.invoice_payment_term_id">
                     <cbc:Note t-esc="record.invoice_payment_term_id.name"/>
                 </cac:PaymentTerms>
-                <cac:TaxTotal t-if="not record.currency_id.is_zero(record.amount_tax)">
+                <cac:TaxTotal>
                     <cbc:TaxAmount
                         t-att-currencyID="record.currency_id.name"
                         t-esc="format_monetary(record.amount_tax)"/>
