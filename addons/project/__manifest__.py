@@ -57,6 +57,7 @@
             'project/static/src/js/project_task_kanban_examples.js',
             'project/static/src/js/tours/project.js',
             'project/static/src/js/project_calendar.js',
+            'project/static/src/js/burndown_chart/*',
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
         ],
