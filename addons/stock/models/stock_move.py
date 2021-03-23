@@ -582,17 +582,6 @@ class StockMove(models.Model):
             move_to_recompute_state._recompute_state()
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
-        # when assign picking for inter-warehouse transfers, set the warehouses as partners on pickings
-        if 'picking_id' in vals:
-            picking = self.picking_id
-            partner = self.env['res.partner']
-            if picking.location_dest_id == picking.company_id.internal_transit_location_id:
-                partner = self.move_dest_ids.location_dest_id.warehouse_id.partner_id
-            if picking.location_id == picking.company_id.internal_transit_location_id:
-                partner = self.move_orig_ids.location_id.warehouse_id.partner_id
-            if len(partner) == 1:
-                picking.partner_id = partner
-
         return res
 
     def _delay_alert_get_documents(self):
