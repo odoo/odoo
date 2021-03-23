@@ -67,14 +67,9 @@ class AccountJournal(models.Model):
 
         letters = letters_data['issued' if self.type == 'sale' else 'received'][
             self.company_id.l10n_ar_afip_responsibility_type_id.code]
-        if not counterpart_partner:
-            return letters
-
-        if not counterpart_partner.l10n_ar_afip_responsibility_type_id:
-            letters = []
-        else:
-            counterpart_letters = letters_data['issued' if self.type == 'purchase' else 'received'][
-                counterpart_partner.l10n_ar_afip_responsibility_type_id.code]
+        if counterpart_partner:
+            counterpart_letters = letters_data['issued' if self.type == 'purchase' else 'received'].get(
+                counterpart_partner.l10n_ar_afip_responsibility_type_id.code, [])
             letters = list(set(letters) & set(counterpart_letters))
         return letters
 
