@@ -255,7 +255,10 @@ import Line12  from "@test.Dialog"; //HELLO
 import {Line13}  from "@test.Dialog" //HELLO
 
 
-const test = `import { Line13, Notification } from "../src/Dialog";`
+const test = `import { Line14, Notification } from "../src/Dialog";`
+
+import Line15 from "test/Dialog";
+import Line16 from "test.Dialog.error";
 """
         result = transpile_javascript("/test_assetsbundle/static/src/import.js", input_content)
 
@@ -284,7 +287,10 @@ const Line12 = require("@test.Dialog")[Symbol.for("default")]; //HELLO
 const {Line13} = require("@test.Dialog") //HELLO
 
 
-const test = `import { Line13, Notification } from "../src/Dialog";`
+const test = `import { Line14, Notification } from "../src/Dialog";`
+
+const Line15 = require("test/Dialog");
+const Line16 = require("test.Dialog.error");
 
 return __exports;
 });
