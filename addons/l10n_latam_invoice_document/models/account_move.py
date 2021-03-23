@@ -203,7 +203,7 @@ class AccountMove(models.Model):
             internal_types = ['credit_note']
         else:
             internal_types = ['invoice', 'debit_note']
-        return [('internal_type', 'in', internal_types), ('country_id', '=', self.company_id.country_id.id)]
+        return [('internal_type', 'in', internal_types), ('country_id', '=', self.company_id.account_fiscal_country_id.id)]
 
     @api.depends('journal_id', 'partner_id', 'company_id', 'move_type')
     def _compute_l10n_latam_available_document_types(self):

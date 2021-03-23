@@ -26,7 +26,7 @@ class AccountMove(models.Model):
         for invoice in self.filtered(lambda move: move.is_invoice()):
             for line in invoice.invoice_line_ids:
                 account_tax = line.account_id.tax_ids.ids
-                if account_tax and invoice.company_id.country_id.code == 'DE':
+                if account_tax and invoice.company_id.account_fiscal_country_id.code == 'DE':
                     account_name = line.account_id.name
                     for tax in line.tax_ids:
                         if tax.id not in account_tax:
@@ -43,7 +43,7 @@ class ProductTemplate(models.Model):
          invoicing to not be blocked by the above constraint"""
         result = super(ProductTemplate, self)._get_product_accounts()
         company = self.env.company
-        if company.country_id.code == "DE":
+        if company.account_fiscal_country_id.code == "DE":
             if not self.property_account_income_id:
                 taxes = self.taxes_id.filtered(lambda t: t.company_id == company)
                 if not result['income'] or (result['income'].tax_ids and taxes and taxes[0] not in result['income'].tax_ids):

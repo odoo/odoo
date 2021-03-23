@@ -6,9 +6,9 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='ref']" position="after">
-                <field name="l10n_in_company_country_code" invisible="1"/>
+                <field name="country_code" invisible="1"/>
                 <field name="l10n_in_gst_treatment"
-                    attrs="{'invisible': ['|', ('l10n_in_company_country_code', '!=', 'IN'), ('move_type', '=', 'entry')], 'required': [('l10n_in_company_country_code', '=', 'IN'), ('move_type', '!=', 'entry')]}"/>
+                    attrs="{'invisible': ['|', ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')], 'required': [('country_code', '=', 'IN'), ('move_type', '!=', 'entry')]}"/>
             </xpath>
             <xpath expr="//page[@id='other_tab']/group[@id='other_tab_group']" position="after">
                 <group string="Export India" attrs="{'invisible': ['|', ('l10n_in_gst_treatment', 'not in', ['overseas', 'deemed_export']), ('move_type', 'not in', ['out_invoice', 'out_refund'])]}">
@@ -25,7 +25,7 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="l10n_in_reseller_partner_id"
                        groups="l10n_in.group_l10n_in_reseller"
-                       attrs="{'invisible': ['|', '|',('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_in_company_country_code', '!=', 'IN'), ('move_type', '=', 'entry')]}"
+                       attrs="{'invisible': ['|', '|',('move_type', 'not in', ('out_invoice', 'out_refund')), ('country_code', '!=', 'IN'), ('move_type', '=', 'entry')]}"
                        />
             </xpath>
         </field>

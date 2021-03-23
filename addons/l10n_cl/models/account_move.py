@@ -17,7 +17,7 @@ class AccountMove(models.Model):
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
-        if self.journal_id.company_id.country_id != self.env.ref('base.cl') or not \
+        if self.journal_id.company_id.account_fiscal_country_id != self.env.ref('base.cl') or not \
                 self.journal_id.l10n_latam_use_documents:
             return super()._get_l10n_latam_documents_domain()
         if self.journal_id.type == 'sale':
@@ -46,7 +46,7 @@ class AccountMove(models.Model):
 
     def _check_document_types_post(self):
         for rec in self.filtered(
-                lambda r: r.company_id.country_id.code == "CL" and
+                lambda r: r.company_id.account_fiscal_country_id.code == "CL" and
                           r.journal_id.type in ['sale', 'purchase']):
             tax_payer_type = rec.partner_id.l10n_cl_sii_taxpayer_type
             vat = rec.partner_id.vat
@@ -104,14 +104,14 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 6 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.env.company.country_id.code == "CL":
+        if self.journal_id.l10n_latam_use_documents and self.env.company.account_fiscal_country_id.code == "CL":
             if self.l10n_latam_document_type_id:
                 return self._l10n_cl_get_formatted_sequence()
         return super()._get_starting_sequence()
 
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)
-        if self.company_id.country_id.code == "CL" and self.l10n_latam_use_documents:
+        if self.company_id.account_fiscal_country_id.code == "CL" and self.l10n_latam_use_documents:
             where_string = where_string.replace('journal_id = %(journal_id)s AND', '')
             where_string += ' AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s AND ' \
                             'company_id = %(company_id)s AND move_type IN (\'out_invoice\', \'out_refund\')'
@@ -121,6 +121,6 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         self.ensure_one()
-        if self.l10n_latam_use_documents and self.company_id.country_id.code == 'CL':
+        if self.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == 'CL':
             return 'l10n_cl.report_invoice_document'
         return super()._get_name_invoice_report()

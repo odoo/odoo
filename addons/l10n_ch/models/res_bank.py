@@ -52,7 +52,7 @@ class ResPartnerBank(models.Model):
     # fields to configure ISR payment slip generation
     l10n_ch_isr_subscription_chf = fields.Char(string='CHF ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in CHF. eg. 01-162-8')
     l10n_ch_isr_subscription_eur = fields.Char(string='EUR ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in EUR. eg. 03-162-5')
-    l10n_ch_show_subscription = fields.Boolean(compute='_compute_l10n_ch_show_subscription', default=lambda self: self.env.company.country_id.code == 'CH')
+    l10n_ch_show_subscription = fields.Boolean(compute='_compute_l10n_ch_show_subscription', default=lambda self: self.env.company.account_fiscal_country_id.code == 'CH')
 
     def _is_isr_issuer(self):
         return (_is_l10n_ch_isr_issuer(self.l10n_ch_postal, 'CHF')
@@ -92,9 +92,9 @@ class ResPartnerBank(models.Model):
             if bank.partner_id:
                 bank.l10n_ch_show_subscription = bool(bank.partner_id.ref_company_ids)
             elif bank.company_id:
-                bank.l10n_ch_show_subscription = bank.company_id.country_id.code == 'CH'
+                bank.l10n_ch_show_subscription = bank.company_id.account_fiscal_country_id.code == 'CH'
             else:
-                bank.l10n_ch_show_subscription = self.env.company.country_id.code == 'CH'
+                bank.l10n_ch_show_subscription = self.env.company.account_fiscal_country_id.code == 'CH'
 
     @api.depends('acc_number', 'acc_type')
     def _compute_sanitized_acc_number(self):

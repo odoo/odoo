@@ -36,7 +36,7 @@ class l10n_eu_service(models.TransientModel):
     def _default_done_country_ids(self):
         user = self.env.user
         eu_country_group = self._get_eu_res_country_group()
-        return eu_country_group.country_ids - self._default_todo_country_ids() - user.company_id.country_id
+        return eu_country_group.country_ids - self._default_todo_country_ids() - user.company_id.account_fiscal_country_id
 
     def _default_todo_country_ids(self):
         user = self.env.user
@@ -45,7 +45,7 @@ class l10n_eu_service(models.TransientModel):
             [('country_id', 'in', eu_country_group.country_ids.ids),
              ('vat_required', '=', False), ('auto_apply', '=', True),
              ('company_id', '=', user.company_id.id)])
-        return eu_country_group.country_ids - eu_fiscal.mapped('country_id') - user.company_id.country_id
+        return eu_country_group.country_ids - eu_fiscal.mapped('country_id') - user.company_id.account_fiscal_country_id
 
     company_id = fields.Many2one(
         'res.company', string='Company', required=True, default=_get_default_company_id)

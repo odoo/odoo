@@ -249,7 +249,7 @@ class AccountBankStatement(models.Model):
     is_valid_balance_start = fields.Boolean(string="Is Valid Balance Start", store=True,
         compute="_compute_is_valid_balance_start",
         help="Technical field to display a warning message in case starting balance is different than previous ending balance")
-    country_code = fields.Char(related='company_id.country_id.code')
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
 
     def write(self, values):
         res = super(AccountBankStatement, self).write(values)
@@ -549,7 +549,7 @@ class AccountBankStatementLine(models.Model):
         compute='_compute_is_reconciled',
         help="Technical field indicating if the statement line is already reconciled.")
     state = fields.Selection(related='statement_id.state', string='Status', readonly=True)
-    country_code = fields.Char(related='company_id.country_id.code')
+    country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
 
     # -------------------------------------------------------------------------
     # HELPERS
