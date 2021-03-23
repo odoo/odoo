@@ -27,10 +27,10 @@ class ProductTemplate(models.Model):
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
-            virtual_available = product.with_context(warehouse=website.warehouse_id.id).virtual_available
+            free_qty = product.with_context(warehouse=website.warehouse_id.id).free_qty
             combination_info.update({
-                'virtual_available': virtual_available,
-                'virtual_available_formatted': self.env['ir.qweb.field.float'].value_to_html(virtual_available, {'precision': 0}),
+                'free_qty': free_qty,
+                'free_qty_formatted': self.env['ir.qweb.field.float'].value_to_html(free_qty, {'precision': 0}),
                 'product_type': product.type,
                 'inventory_availability': product.inventory_availability,
                 'available_threshold': product.available_threshold,
@@ -42,7 +42,7 @@ class ProductTemplate(models.Model):
         else:
             product_template = self.sudo()
             combination_info.update({
-                'virtual_available': 0,
+                'free_qty': 0,
                 'product_type': product_template.type,
                 'inventory_availability': product_template.inventory_availability,
                 'available_threshold': product_template.available_threshold,

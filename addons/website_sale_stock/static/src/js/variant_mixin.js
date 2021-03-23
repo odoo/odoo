@@ -48,18 +48,16 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     $parent.find('#add_to_cart').removeClass('out_of_stock');
     $parent.find('.o_we_buy_now').removeClass('out_of_stock');
     if (combination.product_type === 'product' && _.contains(['always', 'threshold'], combination.inventory_availability)) {
-        combination.virtual_available -= parseInt(combination.cart_qty);
-        if (combination.virtual_available < 0) {
-            combination.virtual_available = 0;
+        combination.free_qty -= parseInt(combination.cart_qty);
+        if (combination.free_qty < 0) {
+            combination.free_qty = 0;
         }
-        // Handle case when manually write in input
-        if (qty > combination.virtual_available) {
-            var $input_add_qty = $parent.find('input[name="add_qty"]');
-            qty = combination.virtual_available || 1;
-            $input_add_qty.val(qty);
+        if (qty > combination.free_qty) {
+            var $addQtyInput = $parent.find('input[name="add_qty"]');
+            qty = combination.free_qty || 1;
+            $addQtyInput.val(qty);
         }
-        if (qty > combination.virtual_available
-            || combination.virtual_available < 1 || qty < 1) {
+        if (combination.free_qty < 1) {
             $parent.find('#add_to_cart').addClass('disabled out_of_stock');
             $parent.find('.o_we_buy_now').addClass('disabled out_of_stock');
         }
