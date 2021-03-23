@@ -168,7 +168,7 @@ def file_path(file_path, filter_ext=('',)):
         # final path sep required to avoid partial match
         parent_path = os.path.normpath(os.path.normcase(addons_dir)) + os.sep
         fpath = (normalized_path if is_abs else
-                 os.path.normpath(os.path.normcase(os.path.join(parent_path, file_path))))
+                 os.path.normpath(os.path.normcase(os.path.join(parent_path, normalized_path))))
         if fpath.startswith(parent_path) and os.path.exists(fpath):
             return fpath
 
