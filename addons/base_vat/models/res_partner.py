@@ -187,10 +187,9 @@ class ResPartner(models.Model):
             if not check_func(vat_country, vat_number):
                 #if fails, check with country code from country
                 country_code = partner.commercial_partner_id.country_id.code
-                if country_code:
-                    if not check_func(country_code.lower(), partner.vat):
-                        msg = partner._construct_constraint_msg(country_code.lower())
-                        raise ValidationError(msg)
+                if not country_code or not check_func(country_code.lower(), partner.vat):
+                    msg = partner._construct_constraint_msg(country_code.lower() if country_code else None)
+                    raise ValidationError(msg)
 
     def _construct_constraint_msg(self, country_code):
         self.ensure_one()
@@ -212,7 +211,7 @@ class ResPartner(models.Model):
         '''
         # A new VAT number format in Switzerland has been introduced between 2011 and 2013
         # https://www.estv.admin.ch/estv/fr/home/mehrwertsteuer/fachinformationen/steuerpflicht/unternehmens-identifikationsnummer--uid-.html
-        # The old format "TVA 123456" is not valid since 2014 
+        # The old format "TVA 123456" is not valid since 2014
         # Accepted format are: (spaces are ignored)
         #     CHE#########MWST
         #     CHE#########TVA
