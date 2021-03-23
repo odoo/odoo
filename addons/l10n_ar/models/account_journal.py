@@ -48,6 +48,7 @@ class AccountJournal(models.Model):
                 '9': ['I'],
                 '10': [],
                 '13': ['C', 'E'],
+                '99': []
             },
             'received': {
                 '1': ['A', 'B', 'C', 'M', 'I'],
@@ -58,6 +59,7 @@ class AccountJournal(models.Model):
                 '9': ['E'],
                 '10': ['E'],
                 '13': ['B', 'C', 'I'],
+                '99': ['B', 'C', 'I']
             },
         }
         if not self.company_id.l10n_ar_afip_responsibility_type_id:
