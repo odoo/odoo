@@ -59,6 +59,35 @@ class TestStructure(SavepointCase):
                 company.vat = "BE0987654321"  # VIES refused, don't fallback on other check
             company.vat = "BE0477472701"
 
+    def test_vat_syntactic_validation(self):
+        """ Tests VAT validation (both successes and failures), with the different country
+        detection cases possible.
+        """
+        # Disable VIES; syntactic verification is enough for this test case
+        self.env.user.company_id.vat_check_vies = False
+
+        test_partner =self.env['res.partner'].create({'name': "John Dex"})
+
+        # VAT starting with country code: use the starting country code
+        test_partner.write({'vat': 'BE0477472701', 'country_id': self.env.ref('base.fr').id})
+        test_partner.write({'vat': 'BE0477472701', 'country_id': None})
+
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': 'BE42', 'country_id': self.env.ref('base.fr').id})
+
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': 'BE42', 'country_id': None})
+
+        # No country code in VAT: use the partner's country
+        test_partner.write({'vat': '0477472701', 'country_id': self.env.ref('base.be').id})
+
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': '42', 'country_id': self.env.ref('base.be').id})
+
+        # If no country can be guessed: VAT number cannot be validated
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': '0477472701', 'country_id': None})
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
