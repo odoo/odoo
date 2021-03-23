@@ -1,6 +1,4 @@
 .ribbon {
-    width: 150px;
-    height: 150px;
     overflow: hidden;
     position: absolute;
 
@@ -14,30 +12,17 @@
 
     & span {
         z-index: 1;
-        position: absolute;
         display: grid;
         align-items: center;
-        width: 225px;
-        height: 48px;
-        padding: 0 44px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
         color: #fff;
-        font: 700 18px/1 'Lato', sans-serif;
         text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
         text-transform: uppercase;
         text-align: center;
         overflow: hidden;
         user-select: none;
-        &.o_small {
-            font-size: 12px;
-        }
-        &.o_medium {
-            font-size: 15px;
-        }
     }
 
     &-top-right {
-        margin-top: -$o-sheet-vpadding;
         right: 0;
 
         &::before, &::after {
@@ -54,11 +39,57 @@
             bottom: 0;
             right: 0;
         }
+    }
+}
+
+.o_form_view {
+    .ribbon {
+        width: 150px;
+        height: 150px;
 
         & span {
-            left: -15px;
-            top: 30px;
-            transform: rotate(45deg);
+            position: absolute;
+            width: 225px;
+            height: 48px;
+            padding: 0 44px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+            font: 700 18px/1 'Lato', sans-serif;
+            &.o_small {
+                font-size: 12px;
+            }
+            &.o_medium {
+                font-size: 15px;
+            }
+        }
+
+        &-top-right {
+            margin-top: -$o-sheet-vpadding;
+
+            & span {
+                left: -15px;
+                top: 30px;
+                transform: rotate(45deg);
+            }
+        }
+    }
+}
+
+.o_kanban_view {
+    .ribbon {
+        height: 25px;
+
+        & span {
+            width: fit-content;
+            height: 19px;
+            padding: 0 18px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, .1);
+            font: 700 9px/1 'Lato', sans-serif;
+            &.o_small {
+                font-size: 5px;
+            }
+            &.o_medium {
+                font-size: 7px;
+            }
         }
     }
 }
