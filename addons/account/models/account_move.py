@@ -2586,7 +2586,10 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        self._post(soft=False)
+        if self.payment_id:
+            self.payment_id.action_post()
+        else:
+            self._post(soft=False)
         return False
 
     def js_assign_outstanding_line(self, line_id):
