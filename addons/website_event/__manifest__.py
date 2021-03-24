@@ -17,8 +17,11 @@
     ],
     'data': [
         'data/event_data.xml',
+        'data/website_snippet_data.xml',
         'views/res_config_settings_views.xml',
         'views/event_snippets.xml',
+        'views/snippets/s_events.xml',
+        'views/snippets/snippets.xml',
         'views/event_templates_list.xml',
         'views/event_templates_page.xml',
         'views/event_templates_page_registration.xml',
@@ -55,13 +58,15 @@
             'website_event/static/src/scss/event_templates_page.scss',
             'website_event/static/src/js/display_timer_widget.js',
             'website_event/static/src/js/register_toaster_widget.js',
-            'website_event/static/src/js/website_geolocation.js',
             'website_event/static/src/js/website_event.js',
             'website_event/static/src/js/website_event_ticket_details.js',
             'website_event/static/src/js/website_event_set_customize_options.js',
         ],
         'website.assets_editor': [
             'website_event/static/src/js/website_event.editor.js',
+        ],
+        'website.assets_wysiwyg': [
+            '/website_event/static/src/snippets/s_events/options.js',
         ],
     },
     'license': 'LGPL-3',
