@@ -191,7 +191,7 @@ class TestProjectFlow(TestProjectCommon):
         })
 
         self.assertEqual(
-            child_task_1.partner_id, self.project_pigs.partner_id, 
+            child_task_1.partner_id, self.project_pigs.partner_id,
             "When the project changes, the subtask should have the same partner id as the new project.")
 
         # restore the partner_id of the 'goats' project
@@ -246,8 +246,8 @@ class TestProjectFlow(TestProjectCommon):
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
         first_task.invalidate_cache()
 
-        self.assertEqual(rating_good.rating_text, 'satisfied')
-        self.assertEqual(rating_bad.rating_text, 'okay')
+        self.assertEqual(rating_good.rating_text, 'top')
+        self.assertEqual(rating_bad.rating_text, 'ok')
         self.assertEqual(first_task.rating_count, 1, "Task should have only one rating associated, since one is not consumed")
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
 

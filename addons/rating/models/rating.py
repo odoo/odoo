@@ -55,10 +55,10 @@ class Rating(models.Model):
     rating = fields.Float(string="Rating Value", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 5=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
     rating_text = fields.Selection([
-        ('satisfied', 'Satisfied'),
-        ('okay', 'Okay'),
-        ('dissatisfied', 'Dissatisfied'),
-        ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
+        ('top', 'Satisfied'),
+        ('ok', 'Okay'),
+        ('ko', 'Dissatisfied'),
+        ('none', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one(
         'mail.message', string="Message",
@@ -117,13 +117,13 @@ class Rating(models.Model):
     def _compute_rating_text(self):
         for rating in self:
             if rating.rating >= RATING_LIMIT_SATISFIED:
-                rating.rating_text = 'satisfied'
+                rating.rating_text = 'top'
             elif rating.rating >= RATING_LIMIT_OK:
-                rating.rating_text = 'okay'
+                rating.rating_text = 'ok'
             elif rating.rating >= RATING_LIMIT_MIN:
-                rating.rating_text = 'dissatisfied'
+                rating.rating_text = 'ko'
             else:
-                rating.rating_text = 'no_rating'
+                rating.rating_text = 'none'
 
     @api.model_create_multi
     def create(self, vals_list):
