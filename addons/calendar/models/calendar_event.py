@@ -596,7 +596,7 @@ class Meeting(models.Model):
                     deadline = event.start
                     user_tz = self.env.context.get('tz')
                     if user_tz and not event.allday:
-                        deadline = pytz.UTC.localize(deadline)
+                        deadline = pytz.utc.localize(deadline)
                         deadline = deadline.astimezone(pytz.timezone(user_tz))
                     activity_values['date_deadline'] = deadline.date()
                 if 'user_id' in fields:
