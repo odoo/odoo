@@ -84,7 +84,7 @@ class SaleOrder(models.Model):
             ])
             if domain_inv:
                 refund_ids = self.env['account.invoice'].search(expression.AND([
-                    ['&', ('type', '=', 'out_refund'), ('origin', '!=', False)], 
+                    ['&', ('type', '=', 'out_refund'), ('origin', '!=', False)],
                     domain_inv
                 ]))
             else:
@@ -396,6 +396,11 @@ class SaleOrder(models.Model):
                                  "You may be unable to honor the commitment date.")
                 }
             }
+
+    @api.constrains('company_id', 'order_line')
+    def _check_order_products_company(self):
+        """Ensure there are no conflicts among companies in sale order and products."""
+        self.order_line._check_order_products_company()
 
     @api.model
     def create(self, vals):
@@ -1009,6 +1014,26 @@ class SaleOrderLine(models.Model):
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
+
+    @api.constrains('order_id', 'product_id')
+    def _check_order_products_company(self):
+        """Ensure there are no conflicts among companies in sale order and products."""
+        # Need sudo to actually be able to see all companies' stuff
+        for line in self.sudo():
+            if not (line.order_id.company_id and line.product_id.company_id):
+                continue
+            if line.product_id.company_id != line.order_id.company_id:
+                raise ValidationError(
+                    _(
+                        "Product %(product)s in sale order %(order)s belongs to a "
+                        "different company than the sale order. Products and sale "
+                        "orders should belong to the same company, or to none (to let "
+                        "them apply to any company)."
+                    ) % {
+                        'product': line.product_id.display_name,
+                        'order': line.order_id.display_name,
+                    }
+                )
 
     @api.depends('product_id', 'order_id.state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):

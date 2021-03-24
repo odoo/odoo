@@ -54,6 +54,14 @@ class ProductTemplate(models.Model):
         for product in self:
             product.sales_count = float_round(sum([p.sales_count for p in product.with_context(active_test=False).product_variant_ids]), precision_rounding=product.uom_id.rounding)
 
+    @api.constrains("company_id")
+    def _check_sale_order_products_company(self):
+        """Ensure there are no conflicts among companies in sale order and products."""
+        lines = self.sudo().env['sale.order.line'].search([
+            ('product_id.product_tmpl_id', 'in', self.ids),
+        ])
+        lines._check_order_products_company()
+
     @api.multi
     def action_view_sales(self):
         date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365), time.min))
