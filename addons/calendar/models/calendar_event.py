@@ -21,6 +21,12 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 
 _logger = logging.getLogger(__name__)
 
+try:
+    import vobject
+except ImportError:
+    _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
+    vobject = None
+
 SORT_ALIASES = {
     'start': 'sort_start',
     'start_date': 'sort_start',
@@ -790,11 +796,7 @@ class Meeting(models.Model):
                 return idate.replace(tzinfo=pytz.timezone('UTC'))
             return False
 
-        try:
-            # FIXME: why isn't this in CalDAV?
-            import vobject
-        except ImportError:
-            _logger.warning("The `vobject` Python module is not installed, so iCal file generation is unavailable. Please install the `vobject` Python module")
+        if not vobject:
             return result
 
         for meeting in self:
