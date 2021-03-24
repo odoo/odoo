@@ -420,7 +420,7 @@ class AccountEdiFormat(models.Model):
         element = xml_element.xpath(xpath, namespaces=namespaces)
         return element[0].text if element else None
 
-    def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None):
+    def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None, domain=None):
         '''Search all partners and find one that matches one of the parameters.
 
         :param name:    The name of the partner.
@@ -430,14 +430,17 @@ class AccountEdiFormat(models.Model):
         :returns:       A partner or an empty recordset if not found.
         '''
         domains = []
-        for value, domain in (
+        for value, dom in (
             (name, [('name', 'ilike', name)]),
             (phone, expression.OR([[('phone', '=', phone)], [('mobile', '=', phone)]])),
             (mail, [('email', '=', mail)]),
             (vat, [('vat', 'like', vat)]),
         ):
             if value is not None:
-                domains.append(domain)
+                domains.append(dom)
+
+        if domain:
+            domains.append(domain)
 
         domain = expression.OR(domains)
         return self.env['res.partner'].search(domain, limit=1)

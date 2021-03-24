@@ -234,6 +234,14 @@ class AccountEdiFormat(models.Model):
             return super()._is_compatible_with_journal(journal)
         return journal.type == 'sale'
 
+    def _is_enabled_by_default_on_journal(self, journal):
+        # OVERRIDE
+        # UBL is disabled by default to prevent conflict with other implementations of UBL.
+        self.ensure_one()
+        if self.code != 'ubl_2_1':
+            return super()._is_enabled_by_default_on_journal(journal)
+        return False
+
     def _post_invoice_edi(self, invoices, test_mode=False):
         # OVERRIDE
         self.ensure_one()
