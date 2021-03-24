@@ -6,7 +6,7 @@
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
                 <tree string="Rating" create="false" edit="false" sample="1">
-                    <field name="rating_text" decoration-danger="rating_text == 'dissatisfied'" decoration-warning="rating_text == 'okay'" decoration-success="rating_text == 'satisfied'" class="font-weight-bold"/>
+                    <field name="rating_text" decoration-danger="rating_text == 'ko'" decoration-warning="rating_text == 'ok'" decoration-success="rating_text == 'top'" class="font-weight-bold"/>
                     <field name="feedback"/>
                     <field name="rated_partner_id"/>
                     <field name="partner_id"/>
@@ -137,9 +137,9 @@
                     <field name="res_name" filter_domain="[('res_name','ilike',self)]"/>
                     <field name="res_id"/>
                     <field name="parent_res_name" filter_domain="[('parent_res_name','ilike',self)]"/>
-                    <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'satisfied')]"/>
-                    <filter string="Okay" name="rating_okay" domain="[('rating_text', '=', 'okay')]"/>
-                    <filter string="Dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'dissatisfied')]"/>
+                    <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'top')]"/>
+                    <filter string="Okay" name="rating_okay" domain="[('rating_text', '=', 'ok')]"/>
+                    <filter string="Dissatisfied" name="rating_unhappy" domain="[('rating_text', '=', 'ko')]"/>
                     <separator/>
                     <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
                     <separator/>
