@@ -179,6 +179,7 @@ class ir_cron(models.Model):
                     WHERE call_at <= (now() at time zone 'UTC')
                 )
               )
+            ORDER BY priority
         """)
         return cr.dictfetchall()
 
@@ -224,6 +225,7 @@ class ir_cron(models.Model):
                 )
               )
               AND id in %s
+            ORDER BY priority
             LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED
         """, [job_ids])
         return cr.dictfetchone()
