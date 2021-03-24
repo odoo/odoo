@@ -18,8 +18,11 @@ class ChooseDeliveryPackage(models.TransientModel):
         total_weight = 0.0
         for ml in move_line_ids:
             qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
-            total_weight += qty * ml.product_id.weight
+            total_weight += self._calc_weight_for_move_line(ml, qty)
         return total_weight
+
+    def _calc_weight_for_move_line(self, move_line, qty):
+        return move_line.product_id.weight * qty
 
     picking_id = fields.Many2one('stock.picking', 'Picking')
     delivery_packaging_id = fields.Many2one('product.packaging', 'Delivery Packaging', check_company=True)
