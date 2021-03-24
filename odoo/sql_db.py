@@ -398,6 +398,11 @@ class Cursor(BaseCursor):
     @check
     def autocommit(self, on):
         if on:
+            warnings.warn(
+                "Since Odoo 13.0, the ORM delays UPDATE queries for "
+                "performance reasons. Since then, using the ORM with "
+                " autocommit(True) is unsafe, as computed fields may not be "
+                "fully computed at commit.", DeprecationWarning, stacklevel=2)
             isolation_level = ISOLATION_LEVEL_AUTOCOMMIT
         else:
             # If a serializable cursor was requested, we
