@@ -432,18 +432,20 @@
                     <field name="invoice_partner_display_name" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund','in_receipt')" string="Bill Date"/>
                     <field name="invoice_date" optional="show" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Invoice Date"/>
+                    <field name="date" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')" string="Accounting Date"/>
                     <field name="invoice_date_due" widget="remaining_days" optional="show" attrs="{'invisible': [['payment_state', 'in', ('paid', 'in_payment', 'reversed')]]}"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
                     <field name="ref" optional="hide"/>
                     <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person" widget="many2one_avatar_user"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
                     <field name="amount_tax_signed" string="Tax" sum="Total" optional="hide"/>
                     <field name="amount_total_signed" string="Total" sum="Total" decoration-bf="1" optional="show"/>
+                    <field name="amount_total_in_currency_signed" string="Total in Currency" groups="base.group_multi_currency"  optional="show"/>
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
-                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
                     <field name="payment_state" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')" attrs="{'invisible': [('payment_state', 'in', ('invoicing_legacy'))]}"/>
@@ -462,6 +464,21 @@
                 <xpath expr="//tree" position="attributes">
                     <attribute name="banner_route">/account/account_invoice_onboarding</attribute>
                 </xpath>
+                <field name="currency_id" position="attributes">
+                    <attribute name="string">Invoice Currency</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_out_credit_note_tree" model="ir.ui.view">
+            <field name="name">account.out.invoice.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="attributes">
+                    <attribute name="string">Credit Note Currency</attribute>
+                </field>
             </field>
         </record>
 
@@ -478,6 +495,42 @@
                 <xpath expr="//field[@name='payment_state']" position="attributes">
                     <attribute name="optional">hide</attribute>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_in_invoice_bill_tree" model="ir.ui.view">
+            <field name="name">account.out.invoice.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_in_invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="attributes">
+                    <attribute name="string">Bill Currency</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_in_invoice_refund_tree" model="ir.ui.view">
+            <field name="name">account.out.invoice.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_in_invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="attributes">
+                    <attribute name="string">Refund Currency</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_in_invoice_receipt_tree" model="ir.ui.view">
+            <field name="name">account.out.invoice.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_in_invoice_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="attributes">
+                    <attribute name="string">Receipt Currency</attribute>
+                </field>
             </field>
         </record>
 
@@ -1234,6 +1287,7 @@
                     <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
+                    <filter name="date" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')" string="Accounting Date" date="date"/>
                     <filter name="due_date" string="Due Date" date="invoice_date_due"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -1395,7 +1449,7 @@
             <field name="name">Credit Notes</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="view_invoice_tree"/>
+            <field name="view_id" ref="view_out_credit_note_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', '=', 'out_refund')]</field>
             <field name="context">{'default_move_type': 'out_refund'}</field>
@@ -1413,7 +1467,7 @@
             <field name="name">Bills</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="view_in_invoice_tree"/>
+            <field name="view_id" ref="view_in_invoice_bill_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', '=', 'in_invoice')]</field>
             <field name="context">{'default_move_type': 'in_invoice'}</field>
@@ -1430,7 +1484,7 @@
             <field name="name">Refunds</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="view_in_invoice_tree"/>
+            <field name="view_id" ref="view_in_invoice_refund_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', '=', 'in_refund')]</field>
             <field name="context">{'default_move_type': 'in_refund'}</field>
@@ -1465,7 +1519,7 @@
             <field name="name">Receipts</field>
             <field name="res_model">account.move</field>
             <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="view_in_invoice_tree"/>
+            <field name="view_id" ref="view_in_invoice_receipt_tree"/>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="domain">[('move_type', '=', 'in_receipt')]</field>
             <field name="context">{'default_move_type': 'in_receipt'}</field>
