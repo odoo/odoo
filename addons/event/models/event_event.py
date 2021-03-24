@@ -398,7 +398,7 @@ class EventEvent(models.Model):
 
             # lines to keep: those with already sent emails or registrations
             mails_to_remove = event.event_mail_ids.filtered(
-                lambda mail: not(mail._origin.mail_sent or mail._origin.mail_registration_ids)
+                lambda mail: not(mail._origin.mail_done) and not(mail._origin.mail_registration_ids)
             )
             command = [Command.unlink(mail.id) for mail in mails_to_remove]
             if event.event_type_id.use_mail_schedule:
