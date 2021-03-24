@@ -89,7 +89,7 @@ class Meeting(models.Model):
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.bodyPreview,
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
-            'user_id': microsoft_event.owner(self.env).id,
+            # 'user_id': microsoft_event.owner(self.env).id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
             'attendee_ids': commands_attendee,
             'partner_ids': commands_partner,
@@ -99,6 +99,9 @@ class Meeting(models.Model):
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
         }
+
+        if not microsoft_event.isOrganizer:
+            values["user_id"] = microsoft_event.owner(self.env).id
 
         values['microsoft_id'] = microsoft_event.id
         if microsoft_event.is_recurrent():
