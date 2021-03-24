@@ -15,7 +15,8 @@
 
     <t t-name="website.slides.fullscreen.video">
         <div class="player embed-responsive embed-responsive-16by9 embed-responsive-item h-100">
-            <iframe t-att-id="'youtube-player' + widget.slide.id" t-att-src="widget.slide.embedUrl" allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
+                <iframe t-att-id="'video-player' + widget.slide.id" t-att-src="widget.slide.embedUrl" 
+                allowFullScreen="true" frameborder="0" enablejsapi="1" autoplay="1" allow="autoplay"></iframe>
         </div>
     </t>
 

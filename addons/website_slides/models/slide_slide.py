@@ -8,6 +8,7 @@ import re
 import requests
 import PyPDF2
 import json
+import logging
 
 from dateutil.relativedelta import relativedelta
 from PIL import Image
@@ -168,7 +169,7 @@ class Slide(models.Model):
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
-    document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
+    document_id = fields.Char('Document ID', help="Youtube, Google Document or PeerTube ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
     slide_resource_downloadable = fields.Boolean('Allow Download', default=True, help="Allow the user to download the content of the slide.")
@@ -199,6 +200,7 @@ class Slide(models.Model):
     nbr_webpage = fields.Integer("Number of Webpages", compute='_compute_slides_statistics', store=True)
     nbr_quiz = fields.Integer("Number of Quizs", compute="_compute_slides_statistics", store=True)
     total_slides = fields.Integer(compute='_compute_slides_statistics', store=True)
+
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
@@ -342,10 +344,14 @@ class Slide(models.Model):
                 record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
-                    # embed youtube video
-                    query = urls.url_parse(record.url).query
-                    query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
+                    if re.search('\/videos\/(?:watch|embed)\/.*',record.url):
+                        embedurl = re.sub('watch','embed', record.url)
+                        record.embed_code = '<iframe src="%s?api=1" frameborder="0" sandbox="allow-same-origin allow-scripts" allowfullscreen="allowfullscreen"></iframe>' % (embedurl)
+                    else:
+                        # embed youtube video
+                        query = urls.url_parse(record.url).query
+                        query = query + '&theme=light' if query else 'theme=light'
+                        record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -361,7 +367,7 @@ class Slide(models.Model):
                 raise Warning(res.get('error'))
             values = res['values']
             if not values.get('document_id'):
-                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
+                raise Warning(_('Please enter valid Youtube,  Google Doc or PeerTube URL'))
             for key, value in values.items():
                 self[key] = value
 
@@ -748,7 +754,10 @@ class Slide(models.Model):
             split_path = url_obj.path.split('/')
             if len(split_path) >= 3 and split_path[1] in ('v', 'embed'):
                 return ('youtube', split_path[2])
-
+        peertube = re.match('.*\/videos\/(?:watch|embed)\/(.*)',url_obj.to_url())
+        if peertube:
+            return ('peertube',peertube.group(1))
+        
         expr = re.compile(r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)')
         arg = expr.match(url)
         document_id = arg and arg.group(2) or False
@@ -760,8 +769,42 @@ class Slide(models.Model):
     def _parse_document_url(self, url, only_preview_fields=False):
         document_source, document_id = self._find_document_data_from_url(url)
         if document_source and hasattr(self, '_parse_%s_document' % document_source):
-            return getattr(self, '_parse_%s_document' % document_source)(document_id, only_preview_fields)
-        return {'error': _('Unknown document')}
+            if document_source == 'peertube':
+                return getattr(self, '_parse_%s_document' % document_source)(document_id,url, only_preview_fields)
+            else:
+                return getattr(self, '_parse_%s_document' % document_source)(document_id, only_preview_fields)
+            return {'error': _('Unknown document')}
+
+    def _parse_peertube_document(self,document_id,url,only_preview_fields):
+        base_url = re.search('(.*)(?:\/videos\/.*)',url).group(1)
+        fetch_res = self._fetch_data(base_url+'/api/v1/videos/'+document_id,{}, 'json')
+        if fetch_res.get('error'):
+            #return {'error': self._extractpeertube_error_message(fetch_res.get('error'))}
+            return {'error': 'PeerTube error'}
+
+        values = {'slide_type': 'video', 'document_id': document_id}
+        if not fetch_res['values']:
+            return {'error': _('Please enter valid Youtube, Google Doc or PeerTube URL')}
+        values['completion_time'] = (int(fetch_res['values'].get('duration')))/3600
+        if fetch_res['values'].get('previewPath'):
+            snippet = base_url + fetch_res['values'].get('previewPath')
+            if only_preview_fields:
+                values.update({
+                    'url_src': snippet,
+                    'title': fetch_res['values'].get('name'),
+                    'description': fetch_res['values'].get('description')
+                })
+
+                return values
+
+            values.update({
+                'name': fetch_res['values'].get('name'),
+                'image_1920':  self._fetch_data(base_url + fetch_res['values'].get('thumbnailPath'),{}, 'image')['values'],
+                'description': fetch_res['values'].get('description'),
+                'mime_type': False,
+            })
+        return {'values': values}            
+
 
     def _parse_youtube_document(self, document_id, only_preview_fields):
         """ If we receive a duration (YT video), we use it to determine the slide duration.
@@ -775,7 +818,7 @@ class Slide(models.Model):
         values = {'slide_type': 'video', 'document_id': document_id}
         items = fetch_res['values'].get('items')
         if not items:
-            return {'error': _('Please enter valid Youtube or Google Doc URL')}
+            return {'error': _('Please enter valid Youtube, Google Doc or PeerTube URL')}
         youtube_values = items[0]
 
         youtube_duration = youtube_values.get('contentDetails', {}).get('duration')

@@ -1013,7 +1013,7 @@ class WebsiteSlides(WebsiteProfile):
         unused, document_id = Slide._find_document_data_from_url(data['url'])
         preview = {}
         if not document_id:
-            preview['error'] = _('Please enter valid youtube or google doc url')
+            preview['error'] = _('Please enter valid youtube, google doc or peertube url')
             return preview
         existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
         if existing_slide:

@@ -1402,6 +1402,7 @@ var VideoWidget = MediaWidget.extend({
             vimeo: /\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*/,
             dailymotion: /.+dailymotion.com\/(video|hub|embed)\/([^_?]+)[^#]*(#video=([^_&]+))?/,
             youku: /(.*).youku\.com\/(v_show\/id_|embed\/)(.+)/,
+            peerTube: /\/\/(.*)\/videos\/(?:watch|embed)\/([^?]*)/,
         };
         const matches = _.mapObject(regexes, regex => url.match(regex));
         const autoplay = options.autoplay ? '?autoplay=1&mute=1' : '?autoplay=0';
@@ -1436,8 +1437,11 @@ var VideoWidget = MediaWidget.extend({
             const videoId = matches.youku[3].indexOf('.html?') >= 0 ? matches.youku[3].substring(0, matches.youku[3].indexOf('.html?')) : matches.youku[3];
             embedURL = `//player.youku.com/embed/${videoId}`;
             type = 'youku';
+        } else if (matches.peerTube && matches.peerTube[1].length){
+                  const peerTubeAutoplay = autoplay.replace('mute', 'muted');
+                  embedURL = `//${matches.peerTube[1]}/videos/embed/${matches.peerTube[2]}${peerTubeAutoplay}${loop}`;
+                  type = 'peertube';
         }
-
         return {type: type, embedURL: embedURL};
     },
 });
