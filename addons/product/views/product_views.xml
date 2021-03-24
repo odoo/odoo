@@ -24,7 +24,12 @@
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
                         <label for="name" string="Product Name"/>
-                        <h1><field class="o_text_overflow" name="name" placeholder="e.g. Cheese Burger"/></h1>
+                        <h1>
+                            <div class="d-flex">
+                                <field name="priority" widget="priority" class="mr-3"/>
+                                <field class="o_text_overflow" name="name" placeholder="e.g. Cheese Burger"/>
+                            </div>
+                        </h1>
                         <div name="options" groups="base.group_user">
                             <div>
                                 <field name="sale_ok"/>
@@ -149,6 +154,8 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
+                <separator/>
+                <filter string="Favorites" name="favorites" domain="[('priority','=','1')]"/>
                 <separator/>
                 <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
@@ -298,6 +305,7 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Product Variants" multi_edit="1" duplicate="false" sample="1">
+                    <field name="priority" widget="priority" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
                     <field name="name" readonly="1"/>
@@ -330,6 +338,9 @@
                     <field name="default_code"/>
                     <field name="barcode"/>
                 </field>
+                <xpath expr="//field[@name='priority']" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </xpath>
                 <field name="list_price" position="attributes">
                    <attribute name="name">lst_price</attribute>
                    <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
@@ -366,6 +377,7 @@
                                     <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)" alt="Product" class="o_image_64_contain"/>
                                 </div>
                                 <div class="oe_kanban_details">
+                                    <field name="priority" widget="priority" readonly="1"/>
                                     <strong class="o_kanban_record_title">
                                         <field name="name"/>
                                         <small t-if="record.default_code.value">[<field name="default_code"/>]</small>
