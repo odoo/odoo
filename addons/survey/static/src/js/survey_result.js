@@ -107,6 +107,9 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 case 'doughnut':
                     self.chartConfig = self._getDoughnutChartConfig();
                     break;
+                case 'by_section':
+                    self.chartConfig = self._getSectionResultsChartConfig();
+                    break;
             }
 
             self._loadChart();
@@ -240,15 +243,15 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
     },
 
     _getDoughnutChartConfig: function () {
-        var scoring_percentage = this.$el.data("scoring_percentage") || 0.0;
-        var counts = this.graphData.map(function (point) {
+        var totalsGraphData = this.graphData.totals;
+        var counts = totalsGraphData.map(function (point) {
             return point.count;
         });
 
         return {
             type: 'doughnut',
             data: {
-                labels: this.graphData.map(function (point) {
+                labels: totalsGraphData.map(function (point) {
                     return point.text;
                 }),
                 datasets: [{
@@ -257,14 +260,113 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     backgroundColor: counts.map(function (val, index) {
                         return D3_COLORS[index % 20];
                     }),
+                    borderColor: 'rgba(0, 0, 0, 0.1)'
                 }]
             },
             options: {
                 title: {
                     display: true,
-                    text: _.str.sprintf(_t("Overall Performance %.2f%s"), parseFloat(scoring_percentage), '%'),
+                    text: _t("Overall Performance"),
                 },
             }
+        };
+    },
+
+    /**
+     * Displays the survey results grouped by section.
+     * For each section, user can see the percentage of answers
+     * - Correct
+     * - Partially correct (multiple choices and not all correct answers ticked)
+     * - Incorrect
+     * - Unanswered
+     *
+     * e.g:
+     *
+     * Mathematics:
+     * - Correct 75%
+     * - Incorrect 25%
+     * - Partially correct 0%
+     * - Unanswered 0%
+     *
+     * Geography:
+     * - Correct 0%
+     * - Incorrect 0%
+     * - Partially correct 50%
+     * - Unanswered 50%
+     *
+     *
+     * @private
+     */
+    _getSectionResultsChartConfig: function () {
+        var sectionGraphData = this.graphData.by_section;
+
+        var resultKeys = {
+            'correct': _t('Correct'),
+            'partial': _t('Partially'),
+            'incorrect': _t('Incorrect'),
+            'skipped': _t('Unanswered'),
+        };
+        var resultColorIndex = 0;
+        var datasets = [];
+        for (var resultKey in resultKeys) {
+            var data = [];
+            for (var section in sectionGraphData) {
+                data.push((sectionGraphData[section][resultKey]) / sectionGraphData[section]['question_count'] * 100);
+            }
+            datasets.push({
+                label: resultKeys[resultKey],
+                data: data,
+                backgroundColor: D3_COLORS[resultColorIndex % 20],
+            });
+            resultColorIndex++;
+        }
+
+        return {
+            type: 'bar',
+            data: {
+                labels: Object.keys(sectionGraphData),
+                datasets: datasets
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: _t("Performance by Section"),
+                },
+                legend: {
+                    display: true,
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            callback: this._customTick(20),
+                        },
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                        },
+                        ticks: {
+                            precision: 0,
+                            callback: function (label) {
+                                return label + '%';
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            maxTicksLimit: 5,
+                            stepSize: 25
+                        },
+                    }],
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            var roundedValue = Math.round(tooltipItem.yLabel * 100) / 100;
+                            return `${datasetLabel}: ${roundedValue}%`;
+                        }
+                    }
+                }
+            },
         };
     },
 

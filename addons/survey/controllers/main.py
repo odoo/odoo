@@ -194,7 +194,7 @@ class Survey(http.Controller):
         if token:
             values['token'] = token
         if survey.scoring_type != 'no_scoring' and survey.certification:
-            values['graph_data'] = json.dumps(answer._prepare_statistics()[0])
+            values['graph_data'] = json.dumps(answer._prepare_statistics()[answer])
         return values
 
     # ------------------------------------------------------------
