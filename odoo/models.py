@@ -185,6 +185,34 @@ class MetaModel(api.Meta):
         if self._module:
             self.module_to_models[self._module].append(self)
 
+        if not self._abstract and self._name not in self._inherit:
+            # this class defines a model: add magic fields
+            def add(name, field):
+                setattr(self, name, field)
+                field.__set_name__(self, name)
+
+            def add_default(name, field):
+                if name not in attrs:
+                    setattr(self, name, field)
+                    field.__set_name__(self, name)
+
+            add('id', fields.Id(automatic=True))
+            add(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
+                string='Last Modified on', automatic=True,
+                compute='_compute_concurrency_field', compute_sudo=False))
+            add_default('display_name', fields.Char(
+                string='Display Name', automatic=True, compute='_compute_display_name'))
+
+            if attrs.get('_log_access', self._auto):
+                add_default('create_uid', fields.Many2one(
+                    'res.users', string='Created by', automatic=True, readonly=True))
+                add_default('create_date', fields.Datetime(
+                    string='Created on', automatic=True, readonly=True))
+                add_default('write_uid', fields.Many2one(
+                    'res.users', string='Last Updated by', automatic=True, readonly=True))
+                add_default('write_date', fields.Datetime(
+                    string='Last Updated on', automatic=True, readonly=True))
+
 
 class NewId(object):
     """ Pseudo-ids for new records, encapsulating an optional origin id (actual
@@ -360,6 +388,11 @@ VALID_AGGREGATE_FUNCTIONS = {
 # classes.  In that case, the framework recreates the field on the model's
 # registry class.  The field's setup will be based on its definitions, and will
 # not be shared across registries.
+#
+# The so-called magic fields ('id', 'display_name', ...) used to be added on
+# registry classes.  But doing so prevents them from being shared.  So instead,
+# we add them on definition classes that define a model without extending it.
+# This increases the number of fields that are shared across registries.
 
 def is_definition_class(cls):
     """ Return whether ``cls`` is a model definition class. """
@@ -539,58 +572,6 @@ class BaseModel(metaclass=MetaModel):
                     dep for dep in cls.pool.field_depends[cls.display_name] if dep != name
                 )
         return field
-
-    @api.model
-    def _add_magic_fields(self):
-        """ Introduce magic fields on the current class
-
-        * id is a "normal" field (with a specific getter)
-        * create_uid, create_date, write_uid and write_date have become
-          "normal" fields
-        * $CONCURRENCY_CHECK_FIELD is a computed field with its computing
-          method defined dynamically. Uses ``str(datetime.datetime.utcnow())``
-          to get the same structure as the previous
-          ``(now() at time zone 'UTC')::timestamp``::
-
-              # select (now() at time zone 'UTC')::timestamp;
-                        timezone
-              ----------------------------
-               2013-06-18 08:30:37.292809
-
-              >>> str(datetime.datetime.utcnow())
-              '2013-06-18 08:31:32.821177'
-        """
-        if self._abstract:
-            return
-
-        def add(name, field):
-            """ add ``field`` with the given ``name`` if it does not exist yet """
-            if name not in self._fields:
-                self._add_field(name, field)
-
-        # cyclic import
-        from . import fields
-
-        # this field 'id' must override any other column or field
-        self._add_field('id', fields.Id(automatic=True))
-
-        # this field must override any other column or field
-        self._add_field(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
-            string='Last Modified on', compute='_compute_concurrency_field',
-            compute_sudo=False, automatic=True))
-
-        add('display_name', fields.Char(string='Display Name', automatic=True,
-            compute='_compute_display_name'))
-
-        if self._log_access:
-            add('create_uid', fields.Many2one(
-                'res.users', string='Created by', automatic=True, readonly=True))
-            add('create_date', fields.Datetime(
-                string='Created on', automatic=True, readonly=True))
-            add('write_uid', fields.Many2one(
-                'res.users', string='Last Updated by', automatic=True, readonly=True))
-            add('write_date', fields.Datetime(
-                string='Last Updated on', automatic=True, readonly=True))
 
     @api.depends(lambda model: ('create_date', 'write_date') if model._log_access else ())
     def _compute_concurrency_field(self):
@@ -2889,8 +2870,6 @@ class BaseModel(metaclass=MetaModel):
                 cls._fields[name] = fields_[0]
             else:
                 self._add_field(name, fields_[-1].new(_base_fields=fields_))
-
-        self._add_magic_fields()
 
         # 2. add manual fields
         if self.pool._init_modules:
@@ -6649,5 +6628,7 @@ def lazy_name_get(self):
 
 
 # keep those imports here to avoid dependency cycle errors
+# pylint: disable=wrong-import-position
+from . import fields
 from .osv import expression
 from .fields import Field, Datetime, Command
