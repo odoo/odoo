@@ -61,6 +61,14 @@ class MicrosoftCalendarService():
         return MicrosoftEvent(events), next_sync_token, default_reminders
 
     @requires_auth_token
+    def get_microsoft_email_address(self, token=None, timeout=TIMEOUT):
+        url = "/v1.0/me"
+        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        params = {}
+        status, data, time = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
+        return data['userPrincipalName']
+
+    @requires_auth_token
     def insert(self, values, token=None, timeout=TIMEOUT):
         url = "/v1.0/me/calendar/events"
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}

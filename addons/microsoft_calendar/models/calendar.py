@@ -137,12 +137,10 @@ class Meeting(models.Model):
             existing_attendees = self.env['calendar.attendee'].search([
                 ('event_id', '=', microsoft_event.odoo_id(self.env)),
                 ('email', 'in', emails)])
-        elif self.env.user.partner_id.email not in emails:
-            commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
-            commands_partner += [(4, self.env.user.partner_id.id)]
         attendees_by_emails = {a.email: a for a in existing_attendees}
         for attendee in microsoft_attendees:
             email = attendee.get('emailAddress').get('address')
+            email = self.env.user.email if email and email == self.env.user.microsoft_email else email
             state = ATTENDEE_CONVERTER_M2O.get(attendee.get('status').get('response'))
 
             if email in attendees_by_emails:

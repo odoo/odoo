@@ -18,6 +18,7 @@ class User(models.Model):
     _inherit = 'res.users'
 
     microsoft_calendar_sync_token = fields.Char('Microsoft Next Sync Token', copy=False)
+    microsoft_email = fields.Char('Microsoft Email Address', copy=False)
     microsoft_synchronization_stopped = fields.Boolean('Outlook Synchronization stopped', copy=False)
 
     def __init__(self, pool, cr):
@@ -92,6 +93,7 @@ class User(models.Model):
                 events, next_sync_token, default_reminders = calendar_service.get_events(token=token)
                 full_sync = True
         self.microsoft_calendar_sync_token = next_sync_token
+        self.microsoft_email = calendar_service.get_microsoft_email_address(token=token)
 
         # Microsoft -> Odoo
         recurrences = events.filter(lambda e: e.is_recurrent())
