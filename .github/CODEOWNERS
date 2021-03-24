@@ -31,13 +31,16 @@
 # Generic fallback rules
 
 # /addons/account*/ @odoo/rd-accounting
+/addons/crm*/ @odoo/rd-sm
+/addons/event*/ @odoo/rd-sm
 # /addons/l10n_*/ @odoo/rd-accounting
+/addons/*/data/mail_template_data.xml @odoo/rd-sm
 /addons/*/models/ir_http.py @odoo/rd-website
 /addons/*/models/ir_qweb.py @odoo/rd-website
 /addons/*/models/ir_qweb_fields.py @odoo/rd-website
 /addons/website*/ @odoo/rd-website
-/addons/website_event*/ @odoo/rd-notif-muted
-/addons/website_slides*/ @odoo/rd-notif-muted
+/addons/website_event*/ @odoo/rd-notif-muted @odoo/rd-sm
+/addons/website_slides*/ @odoo/rd-notif-muted @odoo/rd-sm
 
 
 # Specific rules
@@ -59,7 +62,11 @@
 
 /addons/mass_mailing/**/*.py @odoo/rd-sm
 
+/addons/phone_validation/ @odoo/rd-sm
+
 /addons/portal/models/ir_http.py @odoo/rd-website
+
+/addons/rating/**/*.py @odoo/rd-sm
 
 /addons/sms/ @odoo/rd-discuss
 /addons/sms/**/*.py @odoo/rd-discuss @odoo/rd-sm
@@ -83,6 +90,7 @@
 /addons/website/models/ir_qweb_fields.py @odoo/rd-website
 
 /addons/website_livechat/ @odoo/rd-discuss @odoo/rd-website
+
 /addons/website_sale/tests/test_website_sale_image.py @odoo/rd-images @odoo/rd-website
 
 /odoo/addons/base/models/ir_attachment.py @odoo/rd-images
