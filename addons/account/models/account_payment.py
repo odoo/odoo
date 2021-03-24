@@ -49,12 +49,14 @@ class AccountPayment(models.Model):
         compute='_compute_partner_bank_id',
         domain="[('partner_id', '=', partner_id)]",
         check_company=True)
-    is_internal_transfer = fields.Boolean(string="Is Internal Transfer",
+    is_internal_transfer = fields.Boolean(string="Internal Transfer",
         readonly=False, store=True,
         compute="_compute_is_internal_transfer")
     qr_code = fields.Char(string="QR Code",
         compute="_compute_qr_code",
         help="QR-code report URL to use to generate the QR-code to scan with a banking app to perform this payment.")
+    paired_internal_transfer_payment_id = fields.Many2one('account.payment', help="When an internal transfer is posted, a paired payment is created. "
+        "They cross referenced trough this field")
 
     # == Payment methods fields ==
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method',
@@ -75,8 +77,8 @@ class AccountPayment(models.Model):
     # == Synchronized fields with the account.move.lines ==
     amount = fields.Monetary(currency_field='currency_id')
     payment_type = fields.Selection([
-        ('outbound', 'Send Money'),
-        ('inbound', 'Receive Money'),
+        ('outbound', 'Send'),
+        ('inbound', 'Receive'),
     ], string='Payment Type', default='inbound', required=True)
     partner_type = fields.Selection([
         ('customer', 'Customer'),
@@ -101,6 +103,12 @@ class AccountPayment(models.Model):
         compute='_compute_destination_account_id',
         domain="[('user_type_id.type', 'in', ('receivable', 'payable')), ('company_id', '=', company_id)]",
         check_company=True)
+    destination_journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        string='Destination Journal',
+        domain="[('type', 'in', ('bank','cash')), ('company_id', '=', company_id), ('id', '!=', journal_id)]",
+        check_company=True,
+    )
 
     # == Stat buttons ==
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
@@ -108,6 +116,10 @@ class AccountPayment(models.Model):
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_invoices_count = fields.Integer(string="# Reconciled Invoices",
         compute="_compute_stat_buttons_from_reconciliation")
+    reconciled_invoices_type = fields.Selection(
+        [('credit_note', 'Credit Note'), ('invoice', 'Invoice')],
+        compute='_compute_stat_buttons_from_reconciliation',
+        help="Technical field used to determine label 'invoice' or 'credit note' in view")
     reconciled_bill_ids = fields.Many2many('account.move', string="Reconciled Bills",
         compute='_compute_stat_buttons_from_reconciliation',
         help="Invoices whose journal items have been reconciled with these payments.")
@@ -130,6 +142,12 @@ class AccountPayment(models.Model):
         compute='_compute_show_require_partner_bank',
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
+    country_code = fields.Char(related='company_id.country_id.code')
+    amount_signed = fields.Monetary(
+        currency_field='currency_id', compute='_compute_amount_signed',
+        help='Negative value of amount field if payment_type is outbound')
+    amount_company_currency_signed = fields.Monetary(
+        currency_field='company_currency_id', compute='_compute_amount_company_currency_signed')
 
     _sql_constraints = [
         (
@@ -315,22 +333,39 @@ class AccountPayment(models.Model):
             payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
             payment.require_partner_bank_account = payment.state == 'draft' and payment.payment_method_code in self._get_method_codes_needing_bank_account()
 
-    @api.depends('partner_id')
+    @api.depends('amount_total_signed', 'payment_type')
+    def _compute_amount_company_currency_signed(self):
+        for payment in self:
+            if payment.payment_type == 'outbound':
+                payment.amount_company_currency_signed = -payment.amount_total_signed
+            else:
+                payment.amount_company_currency_signed = payment.amount_total_signed
+
+    @api.depends('amount', 'payment_type')
+    def _compute_amount_signed(self):
+        for payment in self:
+            if payment.payment_type == 'outbound':
+                payment.amount_signed = -payment.amount
+            else:
+                payment.amount_signed = payment.amount
+
+    @api.depends('partner_id', 'destination_journal_id', 'is_internal_transfer')
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
-            if available_partner_bank_accounts:
-                pay.partner_bank_id = available_partner_bank_accounts[0]._origin
+            if pay.is_internal_transfer:
+                pay.partner_bank_id = self.destination_journal_id.bank_account_id
             else:
-                pay.partner_bank_id = False
+                available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
+                if available_partner_bank_accounts:
+                    pay.partner_bank_id = available_partner_bank_accounts[0]._origin
+                else:
+                    pay.partner_bank_id = False
 
     @api.depends('partner_id', 'destination_account_id', 'journal_id')
     def _compute_is_internal_transfer(self):
         for payment in self:
-            is_partner_ok = payment.partner_id == payment.journal_id.company_id.partner_id
-            is_account_ok = payment.destination_account_id and payment.destination_account_id == payment.journal_id.company_id.transfer_account_id
-            payment.is_internal_transfer = is_partner_ok and is_account_ok
+            payment.is_internal_transfer = payment.partner_id == payment.journal_id.company_id.partner_id
 
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_id(self):
@@ -358,8 +393,15 @@ class AccountPayment(models.Model):
                 pay.available_payment_method_ids = pay.journal_id.inbound_payment_method_ids
             else:
                 pay.available_payment_method_ids = pay.journal_id.outbound_payment_method_ids
-
+            to_exclude = self._get_payment_method_codes_to_exclude()
+            if to_exclude:
+                pay.available_payment_method_ids = pay.available_payment_method_ids.filtered(lambda x: x.code not in to_exclude)
             pay.hide_payment_method = len(pay.available_payment_method_ids) == 1 and pay.available_payment_method_ids.code == 'manual'
+
+    def _get_payment_method_codes_to_exclude(self):
+        # can be overriden to exclude payment methods based on the payment charachteristics
+        self.ensure_one()
+        return []
 
     @api.depends('journal_id')
     def _compute_currency_id(self):
@@ -435,6 +477,7 @@ class AccountPayment(models.Model):
         if not stored_payments:
             self.reconciled_invoice_ids = False
             self.reconciled_invoices_count = 0
+            self.reconciled_invoices_type = ''
             self.reconciled_bill_ids = False
             self.reconciled_bills_count = 0
             self.reconciled_statement_ids = False
@@ -514,6 +557,10 @@ class AccountPayment(models.Model):
             statement_ids = query_res.get(pay.id, [])
             pay.reconciled_statement_ids = [(6, 0, statement_ids)]
             pay.reconciled_statements_count = len(statement_ids)
+            if len(pay.reconciled_invoice_ids.mapped('move_type')) == 1 and pay.reconciled_invoice_ids[0].move_type == 'out_refund':
+                pay.reconciled_invoices_type = 'credit_note'
+            else:
+                pay.reconciled_invoices_type = 'invoice'
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -605,7 +652,7 @@ class AccountPayment(models.Model):
 
     @api.depends('move_id.name')
     def name_get(self):
-        return [(payment.id, payment.move_id.name or _('Draft Payment')) for payment in self]
+        return [(payment.id, payment.move_id.name != '/' and payment.move_id.name or _('Draft Payment')) for payment in self]
 
     # -------------------------------------------------------------------------
     # SYNCHRONIZATION account.payment <-> account.move
@@ -638,32 +685,41 @@ class AccountPayment(models.Model):
                 all_lines = move.line_ids
                 liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
 
-                if len(liquidity_lines) != 1 or len(counterpart_lines) != 1:
+                if len(liquidity_lines) != 1:
                     raise UserError(_(
-                        "The journal entry %s reached an invalid state relative to its payment.\n"
-                        "To be consistent, the journal entry must always contains:\n"
-                        "- one journal item involving the outstanding payment/receipts account.\n"
-                        "- one journal item involving a receivable/payable account.\n"
-                        "- optional journal items, all sharing the same account.\n\n"
-                    ) % move.display_name)
+                        "Journal Entry %s is not valid. In order to proceed, the journal items must "
+                        "include one and only one outstanding payments/receipts account.",
+                        move.display_name,
+                    ))
+
+                if len(counterpart_lines) != 1:
+                    raise UserError(_(
+                        "Journal Entry %s is not valid. In order to proceed, the journal items must "
+                        "include one and only one receivable/payable account (with an exception of "
+                        "internal transfers).",
+                        move.display_name,
+                    ))
 
                 if writeoff_lines and len(writeoff_lines.account_id) != 1:
                     raise UserError(_(
-                        "The journal entry %s reached an invalid state relative to its payment.\n"
-                        "To be consistent, all the write-off journal items must share the same account."
-                    ) % move.display_name)
+                        "Journal Entry %s is not valid. In order to proceed, "
+                        "all optional journal items must share the same account.",
+                        move.display_name,
+                    ))
 
                 if any(line.currency_id != all_lines[0].currency_id for line in all_lines):
                     raise UserError(_(
-                        "The journal entry %s reached an invalid state relative to its payment.\n"
-                        "To be consistent, the journal items must share the same currency."
-                    ) % move.display_name)
+                        "Journal Entry %s is not valid. In order to proceed, the journal items must "
+                        "share the same currency.",
+                        move.display_name,
+                    ))
 
                 if any(line.partner_id != all_lines[0].partner_id for line in all_lines):
                     raise UserError(_(
-                        "The journal entry %s reached an invalid state relative to its payment.\n"
-                        "To be consistent, the journal items must share the same partner."
-                    ) % move.display_name)
+                        "Journal Entry %s is not valid. In order to proceed, the journal items must "
+                        "share the same partner.",
+                        move.display_name,
+                    ))
 
                 if counterpart_lines.account_id.user_type_id.type == 'receivable':
                     partner_type = 'customer'
@@ -746,6 +802,33 @@ class AccountPayment(models.Model):
                 'line_ids': line_ids_commands,
             })
 
+    def _create_paired_internal_transfer_payment(self):
+        ''' When an internal transfer is posted, a paired payment is created
+        with opposite payment_type and swapped journal_id & destination_journal_id.
+        Both payments liquidity transfer lines are then reconciled.
+        '''
+        for payment in self:
+
+            paired_payment = payment.copy({
+                'journal_id': payment.destination_journal_id.id,
+                'destination_journal_id': payment.journal_id.id,
+                'payment_type': payment.payment_type == 'outbound' and 'inbound' or 'outbound',
+                'move_id': None,
+                'ref': payment.ref,
+                'paired_internal_transfer_payment_id': payment.id
+            })
+            paired_payment.move_id._post(soft=False)
+            payment.paired_internal_transfer_payment_id = paired_payment
+
+            body = _('This payment has been created from <a href=# data-oe-model=account.payment data-oe-id=%d>%s</a>') % (payment.id, payment.name)
+            paired_payment.message_post(body=body)
+            body = _('A second payment has been created: <a href=# data-oe-model=account.payment data-oe-id=%d>%s</a>') % (paired_payment.id, paired_payment.name)
+            payment.message_post(body=body)
+
+            lines = (payment.move_id.line_ids + paired_payment.move_id.line_ids).filtered(
+                lambda l: l.account_id == payment.destination_account_id and not l.reconciled)
+            lines.reconcile()
+
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
@@ -759,6 +842,10 @@ class AccountPayment(models.Model):
     def action_post(self):
         ''' draft -> posted '''
         self.move_id._post(soft=False)
+
+        self.filtered(
+            lambda pay: pay.is_internal_transfer and not pay.paired_internal_transfer_payment_id
+        )._create_paired_internal_transfer_payment()
 
     def action_cancel(self):
         ''' draft -> cancelled '''
@@ -838,4 +925,35 @@ class AccountPayment(models.Model):
                 'view_mode': 'list,form',
                 'domain': [('id', 'in', self.reconciled_statement_ids.ids)],
             })
+        return action
+
+    def button_open_journal_entry(self):
+        ''' Redirect the user to this payment journal.
+        :return:    An action on account.move.
+        '''
+        self.ensure_one()
+        return {
+            'name': _("Journal Entry"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'context': {'create': False},
+            'view_mode': 'form',
+            'res_id': self.move_id.id,
+        }
+
+    def action_open_destination_journal(self):
+        ''' Redirect the user to this destination journal.
+        :return:    An action on account.move.
+        '''
+        self.ensure_one()
+
+        action = {
+            'name': _("Destination journal"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.journal',
+            'context': {'create': False},
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': self.destination_journal_id.id,
+        }
         return action
