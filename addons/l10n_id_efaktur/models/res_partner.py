@@ -8,7 +8,6 @@ class ResPartner(models.Model):
     """Inherit res.partner object to add NPWP field and Kode Transaksi"""
     _inherit = "res.partner"
 
-    country_code = fields.Char(related='country_id.code', string='Country Code')
     l10n_id_pkp = fields.Boolean(string="ID PKP", compute='_compute_l10n_id_pkp', store=True, readonly=False)
     l10n_id_nik = fields.Char(string='NIK')
     l10n_id_tax_address = fields.Char('Tax Address')

@@ -7,7 +7,6 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="vat" position="after">
-                    <field name="country_code" invisible="1"/>
                     <field name="l10n_id_pkp" attrs="{'invisible': [('country_id', '!=', False), ('country_code', '!=', 'ID')]}"/>
                 </field>
                 <page name="accounting" position="inside">
