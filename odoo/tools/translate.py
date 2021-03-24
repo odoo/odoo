@@ -1070,7 +1070,8 @@ class TranslationModuleReader:
                 continue
 
             for record in records:
-                xml_name = "%s.%s" % (imd_per_id[record.id].module, imd_per_id[record.id].name)
+                module = imd_per_id[record.id].module
+                xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
                 for field_name, field in record._fields.items():
                     if field.translate:
                         name = model + "," + field_name
