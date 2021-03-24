@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
-    'version': '1.4',
+    'version': '1.5',
     'website': 'https://www.odoo.com/page/events',
     'category': 'Marketing/Events',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
@@ -27,6 +27,7 @@ Key Features
         'views/event_stage_views.xml',
         'report/event_event_templates.xml',
         'report/event_event_reports.xml',
+        'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
         'data/event_data.xml',
         'views/res_config_settings_views.xml',
@@ -43,4 +44,7 @@ Key Features
     ],
     'installable': True,
     'auto_install': False,
+    'qweb': [
+        'static/src/xml/field_icon_selection.xml',
+    ],
 }

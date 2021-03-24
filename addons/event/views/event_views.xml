@@ -266,7 +266,10 @@
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
-                                        <field name="done"/>
+                                        <field name="scheduled_date" groups="base.group_no_one"/>
+                                        <field name="mail_count_done"/>
+                                        <field name="mail_state" widget="icon_selection" string=" "
+                                            options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
                                     </tree>
                                 </field>
                             </page>
@@ -750,7 +753,7 @@
                                 <field name="event_id"/>
                                 <field name="notification_type" invisible="1"/>
                                 <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
-                                <field name="mail_sent"/>
+                                <field name="mail_state"/>
                             </group>
                             <group>
                                 <label for="interval_nbr"/>
@@ -787,8 +790,9 @@
                     <field name="notification_type" invisible="1"/>
                     <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
                     <field name="scheduled_date"/>
-                    <field name="mail_sent" string="Sent"/>
-                    <field name="done"/>
+                    <field name="mail_count_done"/>
+                    <field name="mail_state" widget="icon_selection" string=" "
+                        options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
                 </tree>
             </field>
         </record>
