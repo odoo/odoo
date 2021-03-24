@@ -53,5 +53,11 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.move_lines.quantity_done = 1.0
         picking_receipt.action_done()
 
-        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 30)
-        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 30)
+        # Finished is made of 1 comp1 and 1 comp2.
+        # Cost of comp1 = 10
+        # Cost of comp2 = 20
+        # --> Cost of finished = 10 + 20 = 30
+        # Additionnal cost = 30 (from the purchase order line or directly set on the stock move here)
+        # Total cost of subcontracting 1 unit of finished = 30 + 30 = 60
+        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 60)
+        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 60)
