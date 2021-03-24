@@ -7412,7 +7412,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.form.clickEdit(form);
-        assert.hasAttrValue(form.$('input[name="display_name"]'), 'autocomplete', 'none',
+        assert.hasAttrValue(form.$('input[name="display_name"]'), 'autocomplete', 'off',
             "attribute autocomplete should be set to none by default");
         form.destroy();
     });
