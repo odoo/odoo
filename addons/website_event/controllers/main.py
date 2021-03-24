@@ -376,31 +376,6 @@ class WebsiteEventController(http.Controller):
         }
 
     # ------------------------------------------------------------
-    # TOOLS (JSON)
-    # ------------------------------------------------------------
-
-    @http.route('/event/get_country_event_list', type='json', auth='public', website=True)
-    def get_country_events(self, **post):
-        Event = request.env['event.event']
-        country_code = request.session['geoip'].get('country_code')
-        result = {'events': [], 'country': False}
-        events = None
-        domain = request.website.website_domain()
-        if country_code:
-            country = request.env['res.country'].search([('code', '=', country_code)], limit=1)
-            events = Event.search(domain + ['|', ('address_id', '=', None), ('country_id.code', '=', country_code), ('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
-        if not events:
-            events = Event.search(domain + [('date_begin', '>=', '%s 00:00:00' % fields.Date.today())], order="date_begin")
-        for event in events:
-            if country_code and event.country_id.code == country_code:
-                result['country'] = country
-            result['events'].append({
-                "date": self.get_formated_date(event),
-                "event": event,
-                "url": event.website_url})
-        return request.env['ir.ui.view']._render_template("website_event.country_events_list", result)
-
-    # ------------------------------------------------------------
     # TOOLS (HELPERS)
     # ------------------------------------------------------------
 

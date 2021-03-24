@@ -318,13 +318,4 @@
     </xpath>
 </template>
 
-<!-- Index - Sidebar - Snippet - Country Events -->
-<template id="index_sidebar_country_event" inherit_id="website_event.index_sidebar" active="False" customize_show="True" name="Country Events" priority="70">
-    <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
-        <div class="o_wevent_sidebar_block">
-            <t t-snippet-call="website_event.s_country_events"/>
-        </div>
-    </xpath>
-</template>
-
 </odoo>

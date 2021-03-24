@@ -111,7 +111,7 @@
                     <t id="sale_products_hook"/>
                     <t t-snippet="website.s_searchbar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar.svg"/>
                     <t id="blog_posts_hook"/>
-                    <t id="event_local_events_hook"/>
+                    <t id="event_upcoming_snippet_hook"/>
                     <t id="snippet_google_map_hook"/>
                     <t id="mass_mailing_newsletter_block_hook"/>
                     <t id="mass_mailing_newsletter_popup_hook"/>
@@ -166,6 +166,7 @@
 
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
     <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]" position="after">
+        <t t-install="website_event" string="Events" t-thumbnail="/website/static/src/img/snippets_thumbs/s_event_upcoming_snippet.svg"/>
         <t id="newsletter_popup_snippet" t-install="mass_mailing" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
         <t t-install="website_mail_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg"/>
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.svg"/>
