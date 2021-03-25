@@ -107,8 +107,16 @@ class AccountPartialReconcile(models.Model):
         if not self:
             return True
 
-        # Reverse all exchange moves at once.
+        # Retrieve the matching number to unlink.
+        full_to_unlink = self.full_reconcile_id
+
+        # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
+
+        # Unlink partials before doing anything else to avoid 'Record has already been deleted' due to the recursion.
+        res = super().unlink()
+
+        # Reverse CABA entries.
         today = fields.Date.context_today(self)
         default_values_list = [{
             'date': move.date if move.date > (move.company_id.period_lock_date or date.min) else today,
@@ -116,10 +124,9 @@ class AccountPartialReconcile(models.Model):
         } for move in moves_to_reverse]
         moves_to_reverse._reverse_moves(default_values_list, cancel=True)
 
-        # Unlink partials then the full in this order to avoid a recursive call to the same partials.
-        full_to_unlink = self.full_reconcile_id
-        res = super().unlink()
+        # Remove the matching numbers.
         full_to_unlink.unlink()
+
         return res
 
     # -------------------------------------------------------------------------
