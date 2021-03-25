@@ -49,7 +49,7 @@ class TestL10nBeEdi(AccountEdiTestCommon):
             'children_tax_ids': [(6, 0, (cls.tax_10_include + cls.tax_20).ids)],
         })
 
-        cls.partner_a.vat = 'BE0123456789'
+        cls.partner_a.vat = 'BE0477472701'
 
         # ==== Invoice ====
 

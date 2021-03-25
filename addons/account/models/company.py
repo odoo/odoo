@@ -78,9 +78,6 @@ class ResCompany(models.Model):
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
-    tax_exigibility = fields.Boolean(string='Use Cash Basis')
-    account_tax_fiscal_country_id = fields.Many2one('res.country', string="Fiscal Country", compute='compute_account_tax_fiscal_country', store=True, readonly=False, help="The country to use the tax reports from for this company")
-
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
@@ -129,7 +126,24 @@ class ResCompany(models.Model):
     # Technical field to hide country specific fields in company form view
     country_code = fields.Char(related='country_id.code')
 
+    # Taxes
+    account_fiscal_country_id = fields.Many2one(
+        string="Fiscal Country",
+        comodel_name='res.country',
+        compute='compute_account_tax_fiscal_country',
+        store=True,
+        readonly=False,
+        help="The country to use the tax reports from for this company")
+
+    account_enabled_tax_country_ids = fields.Many2many(
+        string="l10n-used countries",
+        comodel_name='res.country',
+        compute='_compute_account_enabled_tax_country_ids',
+        help="Technical field containing the countries for which this company is using tax-related features"
+             "(hence the ones for which l10n modules need to show tax-related fields).")
+
     # Cash basis taxes
+    tax_exigibility = fields.Boolean(string='Use Cash Basis')
     tax_cash_basis_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string="Cash Basis Journal")
@@ -160,7 +174,13 @@ class ResCompany(models.Model):
     @api.depends('country_id')
     def compute_account_tax_fiscal_country(self):
         for record in self:
-            record.account_tax_fiscal_country_id = record.country_id
+            record.account_fiscal_country_id = record.country_id
+
+    @api.depends('account_fiscal_country_id')
+    def _compute_account_enabled_tax_country_ids(self):
+        for record in self:
+            foreign_vat_fpos = self.env['account.fiscal.position'].search([('company_id', '=', record.id), ('foreign_vat', '!=', False)])
+            record.account_enabled_tax_country_ids = foreign_vat_fpos.country_id + record.account_fiscal_country_id
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations

@@ -40,7 +40,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         '''Test fields consistency for ('account.tax', 'account.tax.template')
         '''
         self.check_fields_consistency('account.tax.template', 'account.tax', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.tax', 'account.tax.template', exceptions=['company_id'])
+        self.check_fields_consistency('account.tax', 'account.tax.template', exceptions=['company_id', 'country_id'])
         self.check_fields_consistency('account.tax.repartition.line.template', 'account.tax.repartition.line', exceptions=['plus_report_line_ids', 'minus_report_line_ids'])
         self.check_fields_consistency('account.tax.repartition.line', 'account.tax.repartition.line.template', exceptions=['tag_ids', 'country_id', 'company_id', 'sequence'])
 
@@ -49,7 +49,7 @@ class AccountingTestTemplConsistency(TransactionCase):
         '''
         #main
         self.check_fields_consistency('account.fiscal.position.template', 'account.fiscal.position', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.fiscal.position', 'account.fiscal.position.template', exceptions=['active', 'company_id', 'states_count'])
+        self.check_fields_consistency('account.fiscal.position', 'account.fiscal.position.template', exceptions=['active', 'company_id', 'states_count', 'foreign_vat'])
         #taxes
         self.check_fields_consistency('account.fiscal.position.tax.template', 'account.fiscal.position.tax')
         self.check_fields_consistency('account.fiscal.position.tax', 'account.fiscal.position.tax.template')

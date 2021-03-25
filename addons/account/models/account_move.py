@@ -327,6 +327,7 @@ class AccountMove(models.Model):
     display_inactive_currency_warning = fields.Boolean(
         compute="_compute_display_inactive_currency_warning",
         help="Technical field used for tracking the status of the currency")
+    tax_country_id = fields.Many2one(comodel_name='res.country', compute='_compute_tax_country_id', help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
     # Technical field to hide Reconciled Entries stat button
     has_reconciled_entries = fields.Boolean(compute="_compute_has_reconciled_entries")
     show_reset_to_draft_button = fields.Boolean(compute='_compute_show_reset_to_draft_button')
@@ -1572,6 +1573,14 @@ class AccountMove(models.Model):
         for move in self:
             move.show_reset_to_draft_button = not move.restrict_mode_hash_table and move.state in ('posted', 'cancel')
 
+    @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
+    def _compute_tax_country_id(self):
+        for record in self:
+            if record.fiscal_position_id.foreign_vat:
+                record.tax_country_id = record.fiscal_position_id.country_id
+            else:
+                record.tax_country_id = record.company_id.account_fiscal_country_id
+
     # -------------------------------------------------------------------------
     # BUSINESS MODELS SYNCHRONIZATION
     # -------------------------------------------------------------------------
@@ -1705,6 +1714,17 @@ class AccountMove(models.Model):
 
             if record.is_sale_document() and journal_type != 'sale' or record.is_purchase_document() and journal_type != 'purchase':
                 raise ValidationError(_("The chosen journal has a type that is not compatible with your invoice type. Sales operations should go to 'sale' journals, and purchase operations to 'purchase' ones."))
+
+    @api.constrains('line_ids', 'fiscal_position_id', 'company_id')
+    def _validate_taxes_country(self):
+        """ By playing with the fiscal position in the form view, it is possible to keep taxes on the invoices from
+        a different country than the one allowed by the fiscal country or the fiscal position.
+        This contrains ensure such account.move cannot be kept, as they could generate inconsistencies in the reports.
+        """
+        self._compute_tax_country_id() # We need to ensure this field has been computed, as we use it in our check
+        for record in self:
+            if record.line_ids.tax_ids and record.line_ids.tax_ids.country_id != record.tax_country_id:
+                raise ValidationError(_("This entry contains some tax from an unallowed country. Please check its fiscal position and your tax configuration."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -1900,7 +1920,7 @@ class AccountMove(models.Model):
         return res
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_parts_of_chain(self):
+    def _unlink_forbid_parts_of_chain(self):
         """ Moves with a sequence number can only be deleted if they are the last element of a chain of sequence.
         If they are not, deleting them would create a gap. If the user really wants to do this, he still can
         explicitly empty the 'name' field of the move; but we discourage that practice.
@@ -2986,6 +3006,7 @@ class AccountMove(models.Model):
         """
         return []
 
+
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
     _description = "Journal Item"
@@ -3006,7 +3027,6 @@ class AccountMoveLine(models.Model):
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
         help='Utility field to express amount currency')
-    tax_fiscal_country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.account_tax_fiscal_country_id')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",

@@ -335,7 +335,12 @@
                     <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="forced_vat or company.vat" class="list-inline-item">
+                        <i class="fa fa-building-o" role="img" aria-label="Fiscal number"/>
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                        <span t-if="forced_vat" t-esc="forced_vat"/>
+                        <span t-else="" t-field="company.vat"/>
+                    </li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'" class="text-muted">
@@ -380,7 +385,11 @@
                     <li t-if="company.phone" class="list-inline-item"><span class="o_force_ltr" t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item"><span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item"><span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="forced_vat or company.vat" class="list-inline-item">
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                        <span t-if="forced_vat" t-esc="forced_vat"/>
+                        <span t-else="" t-field="company.vat"/>
+                    </li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
@@ -400,7 +409,11 @@
                 <div class="col-5 offset-1" name="company_address">
                     <ul class="list-unstyled">
                         <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
-                        <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                        <li t-if="forced_vat or company.vat">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-if="forced_vat" t-esc="forced_vat"/>
+                            <span t-else="" t-field="company.vat"/>
+                        </li>
                         <li t-if="company.phone">Tel: <span class="o_force_ltr" t-field="company.phone"/></li>
                         <li t-if="company.email"><span t-field="company.email"/></li>
                         <li t-if="company.website"><span t-field="company.website"/></li>
@@ -474,7 +487,11 @@
                     <li t-if="company.phone" class="list-inline-item d-inline"><span class="o_force_ltr" t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item d-inline"><span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item d-inline"><span t-field="company.website"/></li>
-                    <li t-if="company.vat" class="list-inline-item d-inline"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="forced_vat or company.vat" class="list-inline-item d-inline">
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                        <span t-if="forced_vat" t-esc="forced_vat"/>
+                        <span t-else="" t-field="company.vat"/>
+                    </li>
                 </ul>
 
                 <div name="financial_infos">
