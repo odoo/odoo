@@ -674,6 +674,7 @@
                         <field name="display_inactive_currency_warning" invisible="1"/>
                         <field name="statement_id" invisible="1"/>
                         <field name="payment_id" invisible="1"/>
+                        <field name="tax_country_id" invisible="1"/>
 
                         <div class="oe_title">
                             <!-- Invoice draft header -->
@@ -816,7 +817,7 @@
                                         <field name="price_unit" string="Price"/>
                                         <field name="discount" string="Disc.%" optional="hide"/>
                                         <field name="tax_ids" widget="many2many_tags"
-                                               domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id)]"
+                                               domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
                                                options="{'no_create': True}"
                                                optional="show"/>
@@ -1034,8 +1035,7 @@
                                         <field name="credit"
                                                sum="Total Credit"
                                                attrs="{'invisible': [('display_type', 'in', ('line_section', 'line_note'))]}"/>
-                                        <field name="tax_fiscal_country_id" invisible="1"/>
-                                        <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', tax_fiscal_country_id), ('applicability', '=', 'taxes')]"/>
+                                        <field name="tax_tag_ids" widget="many2many_tags" string="Tax Grids" optional="show" domain="[('country_id', '=', parent.tax_country_id), ('applicability', '=', 'taxes')]"/>
                                         <field name="tax_tag_invert" readonly="1" optional="hide" groups="base.group_no_one"/>
 
                                         <!-- Buttons -->
@@ -1144,6 +1144,7 @@
                                                attrs="{'invisible': [('move_type', '!=', 'entry')]}" />
                                     </group>
                                     <group>
+                                        <field name="fiscal_position_id"/>
                                         <field name="company_id" groups="base.group_multi_company" required="1"/>
                                     </group>
                                 </group>
