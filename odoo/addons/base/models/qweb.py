@@ -255,13 +255,40 @@ class QWeb(object):
             * ``profile`` (boolean) profile the rendering
         """
 
-        values = values or {}
+        print('')
+        t = time()
+        _compiled_fn = self.compile(template, options)
+        print('render compile: ', (time() - t) * 1000)
+        t = time()
+
         body = []
-        self.compile(template, options)(self, body.append, values)
-        joined = u''.join(body)
+        _compiled_fn(self, body.append, values)
+
+        print('render render: ', (time() - t) * 1000)
+        t = time()
+
+        l = list(body)
+
+        print('render list: ', (time() - t) * 1000, '  number: ', len(l))
+        t = time()
+
+        joined = u''.join(l)
+
+        print('render join: ', (time() - t) * 1000)
+        t = time()
+
         if not values.get('__keep_empty_lines'):
             joined = QWeb._empty_line.sub('\n', joined.strip())
-        return joined.encode('utf8')
+
+        print('render space: ', (time() - t) * 1000)
+        t = time()
+
+        html = joined.encode('utf8')
+
+        print('render encode: ', (time() - t) * 1000)
+        t = time()
+
+        return html
 
     def compile(self, template, options):
         """ Compile the given template into a rendering function::

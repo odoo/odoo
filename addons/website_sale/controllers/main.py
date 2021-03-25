@@ -4,6 +4,7 @@ import json
 import logging
 from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
+from time import time
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
 from odoo.http import request
@@ -207,6 +208,7 @@ class WebsiteSale(http.Controller):
         '''/shop/category/<model("product.public.category"):category>/page/<int:page>'''
     ], type='http', auth="public", website=True, sitemap=sitemap_shop)
     def shop(self, page=0, category=None, search='', ppg=False, **post):
+        t = time()
         add_qty = int(post.get('add_qty', 1))
         Category = request.env['product.public.category']
         if category:
@@ -227,6 +229,9 @@ class WebsiteSale(http.Controller):
 
         ppr = request.env['website'].get_current_website().shop_ppr or 4
 
+        print('shop a', (time() - t) * 1000)
+        t = time()
+
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
@@ -235,6 +240,9 @@ class WebsiteSale(http.Controller):
         domain = self._get_search_domain(search, category, attrib_values)
 
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, order=post.get('order'))
+
+        print('shop b', (time() - t) * 1000)
+        t = time()
 
         pricelist_context, pricelist = self._get_pricelist_context()
 
@@ -245,6 +253,9 @@ class WebsiteSale(http.Controller):
             post["search"] = search
         if attrib_list:
             post['attrib'] = attrib_list
+
+        print('shop c', (time() - t) * 1000)
+        t = time()
 
         Product = request.env['product.template'].with_context(bin_size=True)
 
@@ -261,6 +272,9 @@ class WebsiteSale(http.Controller):
         if category:
             url = "/shop/category/%s" % slug(category)
 
+        print('shop d', (time() - t) * 1000)
+        t = time()
+
         product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         offset = pager['offset']
@@ -273,12 +287,18 @@ class WebsiteSale(http.Controller):
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
+        print('shop e', (time() - t) * 1000)
+        t = time()
+
         layout_mode = request.session.get('website_sale_shop_layout_mode')
         if not layout_mode:
             if request.website.viewref('website_sale.products_list_view').active:
                 layout_mode = 'list'
             else:
                 layout_mode = 'grid'
+
+        print('shop f', (time() - t) * 1000)
+        t = time()
 
         values = {
             'search': search,
