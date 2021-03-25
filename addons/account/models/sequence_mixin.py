@@ -132,7 +132,7 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         return "00000000"
 
-    def _get_last_sequence(self, relaxed=False):
+    def _get_last_sequence(self, relaxed=False, with_prefix=None):
         """Retrieve the previous sequence.
 
         This is done by taking the number with the greatest alphabetical value within
@@ -149,6 +149,7 @@ class SequenceMixin(models.AbstractModel):
         :param relaxed: this should be set to True when a previous request didn't find
             something without. This allows to find a pattern from a previous period, and
             try to adapt it for the new period.
+        :param with_prefix: The sequence prefix to restrict the search on, if any.
 
         :return: the string of the previous sequence or None if there wasn't any.
         """
@@ -159,6 +160,9 @@ class SequenceMixin(models.AbstractModel):
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin
+        if with_prefix:
+            where_string += " AND sequence_prefix = %(with_prefix)s "
+            param['with_prefix'] = with_prefix
 
         query = """
             UPDATE {table} SET write_date = write_date WHERE id = (
@@ -239,3 +243,14 @@ class SequenceMixin(models.AbstractModel):
 
         self[self._sequence_field] = format.format(**format_values)
         self._compute_split_sequence()
+
+    def _is_last_from_seq_chain(self):
+        """Tells whether or not this element is the last one of the sequence chain.
+        :return: True if it is the last element of the chain.
+        """
+        last_sequence = self._get_last_sequence(with_prefix=self.sequence_prefix)
+        if not last_sequence:
+            return True
+        seq_format, seq_format_values = self._get_sequence_format_param(last_sequence)
+        seq_format_values['seq'] += 1
+        return seq_format.format(**seq_format_values) == self.name

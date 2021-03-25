@@ -654,11 +654,58 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
             self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', '/'])
             moves.button_draft()
-            moves.posted_before = False
-            moves.unlink()
+            moves.with_context(force_delete=True).unlink()
             journal.unlink()
             account.unlink()
             env0.cr.commit()
+
+    def test_sequence_deletion(self):
+        """ The last element of a sequence chain should always be deletable
+        (as long as in draft state, of course). Trying to delete another part
+        of the chain shouldn't work.
+        """
+        def create_test_move(journal, date, name=None, post=True):
+            move = self.test_move.copy({
+                'journal_id': journal.id,
+                'date': date,
+            })
+
+            if name:
+                move.name = name
+
+            if post:
+                move.action_post()
+
+            return move
+
+        journal = self.env['account.journal'].create({
+            'name': 'Test sequences - deletion',
+            'code': 'SEQDEL',
+            'type': 'general',
+        })
+
+        move_1_1 = create_test_move(journal, '2021-01-01', name='TOTO/2021/01/0001')
+        move_1_2 = create_test_move(journal, '2021-01-02')
+        move_1_3 = create_test_move(journal, '2021-01-03')
+        move_2_1 = create_test_move(journal, '2021-02-01')
+        move_draft = create_test_move(journal, '2021-02-02', post=False)
+        move_2_2 = create_test_move(journal, '2021-02-03')
+        move_3_1 = create_test_move(journal, '2021-02-10', name='TURLUTUTU/21/02/001')
+
+        # A draft move without any name can always be deleted.
+        move_draft.unlink()
+
+        # The moves that are not at the end of their sequence chain cannot be deleted
+        for move in (move_1_1, move_1_2, move_2_1):
+            with self.assertRaises(UserError):
+                move.button_draft()
+                move.unlink()
+
+        # The last element of each sequence chain should allow deletion.
+        # Everything should be deletable if we follow this order (a bit randomized on purpose)
+        for move in (move_1_3, move_1_2, move_3_1, move_2_2, move_2_1, move_1_1):
+            move.button_draft()
+            move.unlink()
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company
