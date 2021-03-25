@@ -15,6 +15,7 @@
             <field name="cash_account_code_prefix">270</field>
             <field name="transfer_account_code_prefix">288</field>
             <field name="currency_id" ref="base.EUR"/>
+            <field name="country_id" ref="base.at"/>
         </record>
         <record id="chart_at_template_transfer_288" model="account.account.template">
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
@@ -1033,7 +1034,7 @@
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
-        
+
         <record id="chart_at_template_3530" model="account.account.template">
           <field name="name">Verrechnungskonto Finanzamt</field>
           <field name="code">3530</field>
@@ -1043,7 +1044,7 @@
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
           <field eval="[(6,0,[])]" name="tax_ids"/>
         </record>
-        
+
         <record id="chart_at_template_3540" model="account.account.template">
           <field name="name">Verrechnung Lohnsteuer</field>
           <field name="code">3540</field>
