@@ -236,7 +236,7 @@ var PosDB = core.Class.extend({
         if(partner.vat){
             str += '|' + partner.vat;
         }
-        str = '' + partner.id + ':' + str.replace(':','') + '\n';
+        str = '' + partner.id + ':' + str.replace(':', '').replace(/\n/g, ' ') + '\n';
         return str;
     },
     add_partners: function(partners){
