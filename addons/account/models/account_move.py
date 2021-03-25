@@ -1629,7 +1629,6 @@ class AccountMove(models.Model):
                 AND move2.company_id = journal.company_id
                 AND move2.commercial_partner_id = partner.commercial_partner_id
                 AND move2.move_type = move.move_type
-                AND (move.invoice_date is NULL OR move2.invoice_date = move.invoice_date)
                 AND move2.id != move.id
             WHERE move.id IN %s
         ''', [tuple(moves.ids)])
