@@ -227,7 +227,10 @@
                             <t t-if="answer.is_session_answer or survey_last">Submit</t>
                             <t t-else="">Continue</t>
                         </button>
-                        <span class="font-weight-bold text-muted ml-2 d-none d-md-inline">or press Enter</span>
+                        <span class="font-weight-bold text-muted ml-2 d-none d-md-inline">
+                            <span t-if="question.question_type == 'text_box'">or press CTRL+Enter</span>
+                            <span t-else="">or press Enter</span>
+                        </span>
                     </div>
                 </div>
             </t>
