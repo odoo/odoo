@@ -952,8 +952,8 @@ QUnit.test("channel with no commands should not prompt any command suggestions o
     );
 });
 
-QUnit.test('use a command after some text', async function (assert) {
-    assert.expect(5);
+QUnit.test('command suggestion should only open if command is the first character', async function (assert) {
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
@@ -995,18 +995,10 @@ QUnit.test('use a command after some text', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
+    assert.containsNone(
         document.body,
         '.o_ComposerSuggestion',
-        "should have a command suggestion"
-    );
-    await afterNextRender(() =>
-        document.querySelector('.o_ComposerSuggestion').click()
-    );
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
-        "bluhbluh /who ",
-        "text content of composer should have previous content + used command + additional whitespace afterwards"
+        "should not have a command suggestion"
     );
 });
 
