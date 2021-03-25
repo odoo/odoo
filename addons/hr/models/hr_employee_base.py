@@ -177,18 +177,4 @@ class HrEmployeeBase(models.AbstractModel):
             employee_ids = self.filtered(lambda e: e.tz == tz)
             resource_calendar_ids = employee_ids.mapped('resource_calendar_id')
             raise NameError(resource_calendar_ids)
-            for calendar_id in resource_calendar_ids:
-                res_employee_ids = employee_ids.filtered(lambda e: e.resource_calendar_id.id == calendar_id.id)
-                start_dt = fields.Datetime.now()
-                stop_dt = start_dt + timedelta(hours=1)
-                from_datetime = utc.localize(start_dt).astimezone(timezone(tz or 'UTC'))
-                to_datetime = utc.localize(stop_dt).astimezone(timezone(tz or 'UTC'))
-                # Getting work interval of the first is working. Functions called on resource_calendar_id
-                # are waiting for singleton
-                work_interval = res_employee_ids[0].resource_calendar_id._work_intervals_batch(from_datetime, to_datetime)[False]
-                # Employee that is not supposed to work have empty items.
-                if len(work_interval._items) > 0:
-                    # The employees should be working now according to their work schedule
-                    working_now += res_employee_ids.ids
-        return working_now
 
