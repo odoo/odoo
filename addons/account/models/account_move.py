@@ -1267,12 +1267,9 @@ class AccountMove(models.Model):
             total_residual_currency = 0.0
             total = 0.0
             total_currency = 0.0
-            currencies = set()
+            currencies = move._get_lines_onchange_currency().currency_id
 
             for line in move.line_ids:
-                if line.currency_id and line in move._get_lines_onchange_currency():
-                    currencies.add(line.currency_id)
-
                 if move._payment_state_matters():
                     # === Invoices ===
 
@@ -1313,7 +1310,7 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
 
-            currency = len(currencies) == 1 and currencies.pop() or move.company_id.currency_id
+            currency = currencies if len(currencies) == 1 else move.company_id.currency_id
 
             # Compute 'payment_state'.
             new_pmt_state = 'not_paid' if move.move_type != 'entry' else False
