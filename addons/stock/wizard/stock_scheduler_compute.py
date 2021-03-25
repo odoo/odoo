@@ -45,4 +45,4 @@ class StockSchedulerCompute(models.TransientModel):
     def procure_calculation(self):
         threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=())
         threaded_calculation.start()
-        return {'type': 'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
