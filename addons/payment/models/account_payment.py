@@ -106,7 +106,10 @@ class AccountPayment(models.Model):
 
         res = super(AccountPayment, self - payments_need_trans).action_post()
 
-        transactions.s2s_do_transaction()
+        for trans in transactions:
+            trans.s2s_do_transaction()
+
+        payments_need_trans.filtered(lambda payment: payment.payment_transaction_id.state == 'done').write({'state': 'posted'})
 
         # Post payments for issued transactions.
         transactions._post_process_after_done()
