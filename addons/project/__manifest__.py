@@ -68,5 +68,8 @@
         'web.assets_qweb': [
             'project/static/src/xml/**/*',
         ],
+        'web.qunit_suite_tests': [
+            'project/static/tests/burndown_chart_tests.js',
+        ]
     }
 }
