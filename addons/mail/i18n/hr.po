@@ -14,7 +14,6 @@
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Ivan Marijanović <ivanm101@yahoo.com>, 2020
 # Martin Trigaux, 2020
-# Bole <bole@dajmi5.com>, 2020
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
@@ -22,6 +21,7 @@
 # Tina Milas, 2020
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2020
+# Bole <bole@dajmi5.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Vojislav Opačić <vojislav.opacic@gmail.com>, 2020\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "${object.partner_id.lang}"
-msgstr ""
+msgstr "${object.partner_id.lang}"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
@@ -72,7 +72,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%d Message"
-msgstr ""
+msgstr "%d Poruka"
 
 #. module: mail
 #. openerp-web
@@ -157,7 +157,7 @@ msgstr "(od"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "(originally assigned to"
-msgstr ""
+msgstr "(izvorno dodijeljeno "
 
 #. module: mail
 #. openerp-web
@@ -248,7 +248,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #. openerp-web
@@ -302,7 +302,7 @@ msgstr "<p>Ovdje stvorite kanal.</p>"
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr ""
+msgstr "<p>Stvori javni ili privatni kanal.</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -474,7 +474,7 @@ msgstr "Radni prozor"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
 msgid "Action to Perform"
-msgstr ""
+msgstr "Radnja za napraviti"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -483,6 +483,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Akcije mogu pokrenuti specifično ponašanje kao npr. otvaranje pregleda "
+"kalendara ili automatski označiti kao dovršeno kad je dokument učitan"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -567,7 +569,7 @@ msgstr "Vrsta aktivnosti"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -1601,7 +1603,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_bounced_content
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Prilagođena poruka odbijanja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__custom_channel_name
@@ -2195,7 +2197,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email cc"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -2247,7 +2249,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Enable desktop notifications to chat."
-msgstr ""
+msgstr "Omogući desktop obavjesti za chat."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -2547,7 +2549,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__activity_type_icon
 #: model:ir.model.fields,help:mail.field_res_users__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -2930,7 +2932,7 @@ msgstr "Slika"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Image is a link"
-msgstr ""
+msgstr "Slika je poveznica"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -3415,7 +3417,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Tip mail aktivnosti"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -3595,7 +3597,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "Čarobnjak za spajanje partnera"
 
 #. module: mail
 #: code:addons/mail/wizard/base_partner_merge.py:0
@@ -6948,6 +6950,7 @@ msgstr "dana"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
+#: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "document"
 msgstr "dokument"
@@ -7171,4 +7174,11 @@ msgstr ""
 #: code:addons/mail/static/src/models/follower/follower.js:0
 #, python-format
 msgid "The subscription preferences were successfully applied."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
 msgstr ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -154,6 +154,12 @@ msgstr "-> Переглянути частково узгоджені запис
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr ". Можливо ви захочете вказати тут більше число."
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s інші)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -2491,6 +2497,13 @@ msgid "Balance"
 msgstr "Баланс"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Звіт балансу"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr "Баланс обчислюється на основі відкритого балансу та рядків транзакції"
@@ -4151,7 +4164,7 @@ msgstr "Валюта"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__display_currency_helper
 msgid "Currency Conversion Helper"
-msgstr ""
+msgstr "Помічник конвертації валюти"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_exchange_journal_id
@@ -4334,7 +4347,7 @@ msgstr "ПОСТАЧАННЯ В МІСЦІ ПРИЗНАЧЕННЯ"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
 msgid "DELIVERED AT PLACE UNLOADED"
-msgstr ""
+msgstr "ДОСТАВКА В МІСЦІ РОЗВАНТАЖЕННЯ"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
@@ -5158,7 +5171,7 @@ msgstr "Записи хешовані від %s (%s)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries are not from the same account: %s != %s"
-msgstr ""
+msgstr "Записи не з того ж місця, що і рахунок: %s != %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8556,6 +8569,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Options"
 msgstr "Опції"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -13349,6 +13368,12 @@ msgid "Transfers"
 msgstr "Переміщення"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13548,6 +13573,12 @@ msgstr "Оновити курси обміну автоматично"
 #, python-format
 msgid "Upload"
 msgstr "Завантажити"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14699,6 +14730,18 @@ msgstr "технічне поле для віджету tax-group-custom-field"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"Обраний журнал має тип не сумісний з типом вашого рахунку. Операції продажу "
+"повинні потрапляти в журнал 'продажу', а операції купівлі в журнал "
+"'купівлі'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

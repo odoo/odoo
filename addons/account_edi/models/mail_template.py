@@ -14,7 +14,7 @@ class MailTemplate(models.Model):
             res_ids = [res_ids]
             multi_mode = False
 
-        if self.model != 'account.move':
+        if self.model not in ['account.move', 'account.payment']:
             return res
 
         records = self.env[self.model].browse(res_ids)

@@ -8,6 +8,7 @@
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2020\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,11 +38,14 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"A relative or absolute URL pointing to a square image of your brand or "
+"product. As defined in your Stripe profile. See: "
+"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "Checkout Image URL"
 
 #. module: payment_stripe
 #. openerp-web
@@ -79,13 +83,16 @@ msgid ""
 "signature of events sent by Stripe to Odoo. Failing to set this field in "
 "Odoo will disable the webhook system for this acquirer entirely."
 msgstr ""
+"If you enable webhooks, this secret is used to verify the electronic "
+"signature of events sent by Stripe to Odoo. Failing to set this field in "
+"Odoo will disable the webhook system for this acquirer entirely."
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Just one more second, We are redirecting you to Stripe..."
-msgstr ""
+msgstr "Just one more second, We are redirecting you to Stripe..."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer____last_update
@@ -102,7 +109,7 @@ msgstr "NCC dịch vụ Thanh toán"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Payment Method ID"
-msgstr ""
+msgstr "Payment Method ID"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -119,7 +126,7 @@ msgstr "Giao dịch thanh toán"
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "Payment error"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -128,6 +135,8 @@ msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
 "details, or contacting your bank?"
 msgstr ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
@@ -142,12 +151,12 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr ""
+msgstr "Stripe Payment Intent ID"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
 msgid "Stripe Payment Intent Secret"
-msgstr ""
+msgstr "Stripe Payment Intent Secret"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -162,26 +171,26 @@ msgstr "Stripe Secret Key"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
 msgid "Stripe Webhook Secret"
-msgstr ""
+msgstr "Stripe Webhook Secret"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
-msgstr ""
+msgstr "Stripe gave us the following info about the problem: '%s'"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: %(count)s orders found for reference %(reference)s"
-msgstr ""
+msgstr "Stripe: %(count)s orders found for reference %(reference)s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "Stripe: no order found for reference %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -190,23 +199,25 @@ msgid ""
 "Unable to convert Stripe customer for SCA compatibility. Is there at least "
 "one card for this customer in the Stripe backend?"
 msgstr ""
+"Unable to convert Stripe customer for SCA compatibility. Is there at least "
+"one card for this customer in the Stripe backend?"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Unable to save card"
-msgstr ""
+msgstr "Unable to save card"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment. "
-msgstr ""
+msgstr "We are not able to add your payment method at the moment. "
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
-msgstr ""
+msgstr "We're sorry to report that the transaction has failed."

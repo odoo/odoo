@@ -680,7 +680,7 @@ class PaymentTransaction(models.Model):
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_id.commercial_partner_id.id,
             'partner_type': 'customer',
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
@@ -997,7 +997,7 @@ class PaymentTransaction(models.Model):
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), values['partner_country_id'])
+                values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id', self._get_default_partner_country_id()))
             values['fees'] = fees
 
         # custom create

@@ -11,7 +11,6 @@
 # woutvanrooij <wout.vanrooij@dynapps.be>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
 # ca2da8678cdb9cbd573eaf985f02c476, 2020
-# Martin Trigaux, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
 # dpms <pieter.van.de.wygaert@telenet.be>, 2020
@@ -20,15 +19,16 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -166,6 +166,12 @@ msgstr "-> Zie de gedeeltelijk afgeletterde boekingen"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr ". Misschien wilt u hier een hoger nummer neerzetten."
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s overige)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -1369,7 +1375,7 @@ msgstr "Rekening op product"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__account_id
 msgid "Account on which to post the tax amount"
-msgstr "Rekening waarop het BTW-bedrag te posten"
+msgstr "Rekening waarop het belastingbedrag moet worden geboekt"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -2518,6 +2524,13 @@ msgstr "Slechte betaler"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__balance
 msgid "Balance"
 msgstr "Saldo"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Balans"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -6368,10 +6381,10 @@ msgid ""
 "transactions will be reconciled with entries on the Outstanding Receipts "
 "Account instead of the receivable account."
 msgstr ""
-"Inkomende betalingen die worden geactiveerd door facturen creditfacturen, "
+"Inkomende betalingen die worden geactiveerd door facturen/creditfacturen, "
 "worden geboekt op de rekening voor openstaande ontvangsten en worden "
 "weergegeven als blauwe lijnen bij het afletteren. Tijdens het afletterproces"
-" worden de betreffende transacties afgeletterd met posten op de rekening "
+" worden de betreffende transacties afgeletterd met boekingen op de rekening "
 "voor openstaande ontvangsten in plaats van de rekening voor ontvangsten."
 
 #. module: account
@@ -6633,7 +6646,7 @@ msgstr "Factuurwidget voor uitstaande credits en debets"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Factuur partnerweergavenaam"
+msgstr "Factuurrelatie weergavenaam"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -7158,7 +7171,7 @@ msgstr "Kanban dashboard grafiek"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
 msgid "Keep current order"
-msgstr "Behoud huidige order"
+msgstr "Houd de huidige volgorde aan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8636,6 +8649,12 @@ msgid "Options"
 msgstr "Opties"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr "Of stuur een factuur naar %s@%s"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr "Ordening"
@@ -9345,7 +9364,7 @@ msgstr "Portaal toegang URL"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Post"
-msgstr "Posten"
+msgstr "Boeken"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -13418,7 +13437,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "To"
-msgstr "Aan"
+msgstr "Naar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
@@ -13569,7 +13588,7 @@ msgstr "Verplaatsing"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr "Verplaatsingsdatum"
+msgstr "Boekingsdatum"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -13601,6 +13620,12 @@ msgstr "Overboeken naar %s"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Transfers"
 msgstr "Verplaatsingen"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr "Probeer een voorbeeld van een leveranciersfactuur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -13809,6 +13834,12 @@ msgstr "Automatisch wisselkoersen updaten"
 #, python-format
 msgid "Upload"
 msgstr "Upload"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr "Upload uw eigen factuur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14629,8 +14660,8 @@ msgid ""
 "You cannot have more than one account with \"Current Year Earnings\" as "
 "type. (accounts: %s)"
 msgstr ""
-"U kunt niet meer dan een rekening hebben in \"Huidige Boekjaar\" van het "
-"type. (rekeningen: %s)"
+"U kunt niet meer dan één rekening hebben met als type \"Huidige Jaarwinst\"."
+" (rekeningen: %s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14829,7 +14860,7 @@ msgstr "Maak een 'tussenrekening' aan in uw kas register."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."
-msgstr "Je moet een regel toevoegen voordat je kunt posten."
+msgstr "U moet een regel toevoegen voordat u boekt."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15024,6 +15055,18 @@ msgstr "technisch veld voor het tax-group-custom-field widget"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "technisch veld om het beginsaldo correct te berekenen"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"Het gekozen dagboek heeft een type dat niet compatibel is met uw "
+"factuurtype. Verkoopactiviteiten moeten naar 'verkoop dagboek' gaan en "
+"inkoopactiviteiten naar een 'inkoop dagboek'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

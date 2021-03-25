@@ -194,6 +194,7 @@ class StockMove(models.Model):
                 move.state in ('partially_available', 'assigned', 'confirmed') and
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots
+                and not move.origin_returned_move_id.id
             )
 
     @api.depends('picking_id.priority')
@@ -1213,7 +1214,7 @@ class StockMove(models.Model):
         # way, we'll never reserve more than allowed. We do not apply this logic if
         # `available_quantity` is brought by a chained move line. In this case, `_prepare_move_line_vals`
         # will take care of changing the UOM to the UOM of the product.
-        if not strict:
+        if not strict and self.product_id.uom_id != self.product_uom:
             taken_quantity_move_uom = self.product_id.uom_id._compute_quantity(taken_quantity, self.product_uom, rounding_method='DOWN')
             taken_quantity = self.product_uom._compute_quantity(taken_quantity_move_uom, self.product_id.uom_id, rounding_method='HALF-UP')
 
@@ -1758,6 +1759,9 @@ class StockMove(models.Model):
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """
+        if not self or self.env['ir.config_parameter'].sudo().get_param('stock.no_auto_scheduler'):
+            return
+
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         for move in self:
             orderpoint = self.env['stock.warehouse.orderpoint'].search([

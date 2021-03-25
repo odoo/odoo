@@ -20,7 +20,7 @@ class ResPartner(models.Model):
             ('partner_id', 'in', self.ids),
             ('date_order', '>', fields.Date.today() - timedelta(365)),
             ('qty_received', '!=', 0),
-        ]).filtered(lambda l: l.product_id.product_tmpl_id.type != 'service' and l.order_id.state in ['done', 'purchase'])
+        ]).filtered(lambda l: l.product_id.sudo().product_tmpl_id.type != 'service' and l.order_id.state in ['done', 'purchase'])
         partner_dict = {}
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))

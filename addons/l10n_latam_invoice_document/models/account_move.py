@@ -192,8 +192,7 @@ class AccountMove(models.Model):
         for rec in self.filtered('l10n_latam_document_type_id.internal_type'):
             internal_type = rec.l10n_latam_document_type_id.internal_type
             invoice_type = rec.move_type
-            if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund'] and \
-               rec.l10n_latam_document_type_id.code != '99':
+            if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund']:
                 raise ValidationError(_('You can not use a %s document type with a refund invoice', internal_type))
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
                 raise ValidationError(_('You can not use a %s document type with a invoice', internal_type))
@@ -230,17 +229,33 @@ class AccountMove(models.Model):
         for move in move_with_doc_type:
             lang_env = move.with_context(lang=move.partner_id.lang).env
             tax_lines = move.l10n_latam_tax_ids
+            tax_balance_multiplicator = -1 if move.is_inbound(True) else 1
             res = {}
             # There are as many tax line as there are repartition lines
             done_taxes = set()
             for line in tax_lines:
                 res.setdefault(line.tax_line_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_line_id.tax_group_id]['amount'] += line.price_subtotal
+                res[line.tax_line_id.tax_group_id]['amount'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
                 if tax_key_add_base not in done_taxes:
+                    if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
+                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.today())
+                    else:
+                        amount = line.tax_base_amount
+                    res[line.tax_line_id.tax_group_id]['base'] += amount
                     # The base should be added ONCE
-                    res[line.tax_line_id.tax_group_id]['base'] += line.tax_base_amount
                     done_taxes.add(tax_key_add_base)
+
+            # At this point we only want to keep the taxes with a zero amount since they do not
+            # generate a tax line.
+            zero_taxes = set()
+            for line in move.line_ids:
+                for tax in line.tax_ids.flatten_taxes_hierarchy():
+                    if tax.tax_group_id not in res or tax.id in zero_taxes:
+                        res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
+                        res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
+                        zero_taxes.add(tax.id)
+
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             move.amount_by_group = [(
                 group.name, amounts['amount'],
@@ -248,7 +263,7 @@ class AccountMove(models.Model):
                 formatLang(lang_env, amounts['amount'], currency_obj=move.currency_id),
                 formatLang(lang_env, amounts['base'], currency_obj=move.currency_id),
                 len(res),
-                group.id,
+                group.id
             ) for group, amounts in res]
         super(AccountMove, self - move_with_doc_type)._compute_invoice_taxes_by_group()
 

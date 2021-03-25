@@ -445,10 +445,10 @@ class AccountMove(models.Model):
 
         self._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
-    @api.onchange('payment_reference', 'ref')
+    @api.onchange('payment_reference')
     def _onchange_payment_reference(self):
         for line in self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-            line.name = self.payment_reference or self.ref or ''
+            line.name = self.payment_reference or ''
 
     @api.onchange('invoice_vendor_bill_id')
     def _onchange_invoice_vendor_bill(self):
@@ -963,7 +963,7 @@ class AccountMove(models.Model):
                     # Create new line.
                     create_method = in_draft_mode and self.env['account.move.line'].new or self.env['account.move.line'].create
                     candidate = create_method({
-                        'name': self.payment_reference or self.ref or '',
+                        'name': self.payment_reference or '',
                         'debit': balance < 0.0 and -balance or 0.0,
                         'credit': balance > 0.0 and balance or 0.0,
                         'quantity': 1.0,
@@ -1111,7 +1111,7 @@ class AccountMove(models.Model):
                 if (
                     not final_batches
                     or final_batches[-1]['format'] != date_group['format']
-                    or final_batches[-1]['format_values'] != date_group['format_values']
+                    or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
                 ):
                     final_batches += [date_group]
                 elif date_group['reset'] == 'never':
@@ -1154,6 +1154,9 @@ class AccountMove(models.Model):
 
         if not relaxed:
             domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
+            if self.journal_id.refund_sequence:
+                refund_types = ('out_refund', 'in_refund')
+                domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
                 reference_move_name = self.search(domain, order='date asc', limit=1).name
@@ -1161,9 +1164,15 @@ class AccountMove(models.Model):
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date::timestamp without time zone) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
+                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
             elif sequence_number_reset == 'month':
                 where_string += " AND date_trunc('month', date::timestamp without time zone) = date_trunc('month', %(date)s) "
                 param['date'] = self.date
+            else:
+                param['anti_regex'] = re.sub(r"\?P<\w+>", "?:", self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
+
+            if param.get('anti_regex') and not self.journal_id.sequence_override_regex:
+                where_string += " AND sequence_prefix !~ %(anti_regex)s "
 
         if self.journal_id.refund_sequence:
             if self.move_type in ('out_refund', 'in_refund'):
@@ -1685,6 +1694,14 @@ class AccountMove(models.Model):
                 raise UserError(message)
         return True
 
+    @api.constrains('move_type', 'journal_id')
+    def _check_journal_type(self):
+        for record in self:
+            journal_type = record.journal_id.type
+
+            if record.is_sale_document() and journal_type != 'sale' or record.is_purchase_document() and journal_type != 'purchase':
+                raise ValidationError(_("The chosen journal has a type that is not compatible with your invoice type. Sales operations should go to 'sale' journals, and purchase operations to 'purchase' ones."))
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -1741,30 +1758,15 @@ class AccountMove(models.Model):
         '''
         new_vals_list = []
         for vals in vals_list:
-            if not vals.get('invoice_line_ids'):
-                new_vals_list.append(vals)
-                continue
-            if vals.get('line_ids'):
-                vals.pop('invoice_line_ids', None)
-                new_vals_list.append(vals)
-                continue
-            if not vals.get('move_type') and not self._context.get('default_move_type'):
-                vals.pop('invoice_line_ids', None)
-                new_vals_list.append(vals)
-                continue
-            vals['move_type'] = vals.get('move_type', self._context.get('default_move_type', 'entry'))
-            if not vals['move_type'] in self.get_invoice_types(include_receipts=True):
-                new_vals_list.append(vals)
-                continue
-
-            vals['line_ids'] = vals.pop('invoice_line_ids')
+            vals = dict(vals)
 
             if vals.get('invoice_date') and not vals.get('date'):
                 vals['date'] = vals['invoice_date']
 
-            ctx_vals = {'default_move_type': vals.get('move_type') or self._context.get('default_move_type')}
-            if vals.get('currency_id'):
-                ctx_vals['default_currency_id'] = vals['currency_id']
+            default_move_type = vals.get('move_type') or self._context.get('default_move_type')
+            ctx_vals = {}
+            if default_move_type:
+                ctx_vals['default_move_type'] = default_move_type
             if vals.get('journal_id'):
                 ctx_vals['default_journal_id'] = vals['journal_id']
                 # reorder the companies in the context so that the company of the journal
@@ -1775,9 +1777,21 @@ class AccountMove(models.Model):
                 reordered_companies = sorted(allowed_companies, key=lambda cid: cid != journal_company.id)
                 ctx_vals['allowed_company_ids'] = reordered_companies
             self_ctx = self.with_context(**ctx_vals)
-            new_vals = self_ctx._add_missing_default_values(vals)
+            vals = self_ctx._add_missing_default_values(vals)
 
-            move = self_ctx.new(new_vals)
+            is_invoice = vals.get('move_type') in self.get_invoice_types(include_receipts=True)
+
+            if 'line_ids' in vals:
+                vals.pop('invoice_line_ids', None)
+                new_vals_list.append(vals)
+                continue
+
+            if is_invoice and 'invoice_line_ids' in vals:
+                vals['line_ids'] = vals['invoice_line_ids']
+
+            vals.pop('invoice_line_ids', None)
+
+            move = self_ctx.new(vals)
             new_vals_list.append(move._move_autocomplete_invoice_lines_values())
 
         return new_vals_list
@@ -2510,6 +2524,7 @@ class AccountMove(models.Model):
 
     def action_post(self):
         self._post(soft=False)
+        return False
 
     def js_assign_outstanding_line(self, line_id):
         ''' Called by the 'payment' widget to reconcile a suggested journal item to the present
@@ -2971,7 +2986,12 @@ class AccountMoveLine(models.Model):
         help="The bank statement used for bank reconciliation")
 
     # ==== Tax fields ====
-    tax_ids = fields.Many2many('account.tax', string='Taxes', help="Taxes that apply on the base amount", check_company=True)
+    tax_ids = fields.Many2many(
+        comodel_name='account.tax',
+        string="Taxes",
+        context={'active_test': False},
+        check_company=True,
+        help="Taxes that apply on the base amount")
     tax_line_id = fields.Many2one('account.tax', string='Originator Tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id', help="Indicates that this journal item is a tax line")
     tax_group_id = fields.Many2one(related='tax_line_id.tax_group_id', string='Originator tax group',
@@ -3201,7 +3221,7 @@ class AccountMoveLine(models.Model):
         # adapt the price_unit to the new tax.
         # E.g. mapping a 10% price-included tax to a 20% price-included tax for a price_unit of 110 should preserve
         # 100 as balance but set 120 as price_unit.
-        if self.tax_ids and self.move_id.fiscal_position_id:
+        if self.tax_ids and self.move_id.fiscal_position_id and self.move_id.fiscal_position_id.tax_ids:
             price_subtotal = self._get_price_total_and_subtotal()['price_subtotal']
             self.tax_ids = self.move_id.fiscal_position_id.map_tax(
                 self.tax_ids._origin,
@@ -4101,8 +4121,8 @@ class AccountMoveLine(models.Model):
 
         :return: A recordset of account.partial.reconcile.
         '''
-        debit_lines = iter(self.filtered('debit'))
-        credit_lines = iter(self.filtered('credit'))
+        debit_lines = iter(self.filtered(lambda line: line.balance > 0.0 or line.amount_currency > 0.0))
+        credit_lines = iter(self.filtered(lambda line: line.balance < 0.0 or line.amount_currency < 0.0))
         debit_line = None
         credit_line = None
 
@@ -4146,17 +4166,21 @@ class AccountMoveLine(models.Model):
                     credit_line_currency = credit_line.company_currency_id
 
             min_amount_residual = min(debit_amount_residual, -credit_amount_residual)
+            has_debit_residual_left = not debit_line.company_currency_id.is_zero(debit_amount_residual) and debit_amount_residual > 0.0
+            has_credit_residual_left = not credit_line.company_currency_id.is_zero(credit_amount_residual) and credit_amount_residual < 0.0
+            has_debit_residual_curr_left = not debit_line_currency.is_zero(debit_amount_residual_currency) and debit_amount_residual_currency > 0.0
+            has_credit_residual_curr_left = not credit_line_currency.is_zero(credit_amount_residual_currency) and credit_amount_residual_currency < 0.0
 
             if debit_line_currency == credit_line_currency:
                 # Reconcile on the same currency.
 
                 # The debit line is now fully reconciled.
-                if debit_line_currency.is_zero(debit_amount_residual_currency) or debit_amount_residual_currency < 0.0:
+                if not has_debit_residual_curr_left and (has_credit_residual_curr_left or not has_debit_residual_left):
                     debit_line = None
                     continue
 
                 # The credit line is now fully reconciled.
-                if credit_line_currency.is_zero(credit_amount_residual_currency) or credit_amount_residual_currency > 0.0:
+                if not has_credit_residual_curr_left and (has_debit_residual_curr_left or not has_credit_residual_left):
                     credit_line = None
                     continue
 
@@ -4168,12 +4192,12 @@ class AccountMoveLine(models.Model):
                 # Reconcile on the company's currency.
 
                 # The debit line is now fully reconciled.
-                if debit_line.company_currency_id.is_zero(debit_amount_residual) or debit_amount_residual < 0.0:
+                if not has_debit_residual_left and (has_credit_residual_left or not has_debit_residual_curr_left):
                     debit_line = None
                     continue
 
                 # The credit line is now fully reconciled.
-                if credit_line.company_currency_id.is_zero(credit_amount_residual) or credit_amount_residual > 0.0:
+                if not has_credit_residual_left and (has_debit_residual_left or not has_credit_residual_curr_left):
                     credit_line = None
                     continue
 
@@ -4714,6 +4738,7 @@ class AccountMoveLine(models.Model):
             'name': default_name,
             'date': self.date,
             'account_id': distribution.account_id.id,
+            'group_id': distribution.account_id.group_id.id,
             'partner_id': self.partner_id.id,
             'tag_ids': [(6, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
             'unit_amount': self.quantity,

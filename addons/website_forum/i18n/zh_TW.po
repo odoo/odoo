@@ -4,15 +4,15 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# Martin Trigaux, 2020
+# Mandy Choy <mnc@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -542,6 +542,11 @@ msgid ""
 msgstr "<small class=\"text-muted\">被標記的</small>"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
 msgstr ""
@@ -617,11 +622,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
-msgstr "<span>&amp;times;</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -718,6 +718,7 @@ msgid ""
 msgstr "發帖後，使用者將提議分享其問題或社交網路上的回答，使論壇內容以社會化網路傳播。"
 
 #. module: website_forum
+#. openerp-web
 #: code:addons/website_forum/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
@@ -2936,7 +2937,7 @@ msgstr "自我學習者"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__seo_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo 名稱"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
@@ -2970,7 +2971,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Sign in"
-msgstr "打卡-開始"
+msgstr "登入"
 
 #. module: website_forum
 #. openerp-web

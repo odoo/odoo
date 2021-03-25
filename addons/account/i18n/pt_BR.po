@@ -61,14 +61,14 @@
 # Marcelo at JambuTec <marcelo@jambu.com.br>, 2020
 # Frederico Freire Boaventura <fboaventura@live.com>, 2020
 # Liane Cafarate <lic@odoo.com>, 2020
-# Luis Felipe Miléo <mileo@kmee.com.br>, 2020
+# Luis Felipe Miléo <mileo@kmee.com.br>, 2021
 # Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -206,6 +206,12 @@ msgstr "-> Ver entradas parcialmente reconciliadas"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr ". Você pode querer colocar um número maior aqui "
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s outro)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -2555,6 +2561,13 @@ msgstr "Devedor Ruim"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__balance
 msgid "Balance"
 msgstr "Saldo"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Balanço patrimonial"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -6135,8 +6148,8 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
-"Se definido, o montante calculado por este imposto será atribuído para a "
-"mesma conta analítica como a linha da fatura (se houver)"
+"Se definido, o montante calculado por este imposto será atribuído para o "
+"mesmo centro de custo como na linha da fatura (se houver)"
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
@@ -8678,6 +8691,12 @@ msgid "Options"
 msgstr "Opções"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr "Ou envie uma conta para %s@%s"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr "Encomenda"
@@ -10632,7 +10651,7 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this account, it will automatically take this as an analytic account)"
 msgstr ""
-"Selecione uma conta contábil que usará a conta analítica especificada no "
+"Selecione uma conta contábil que usará o centro de custo especificada no "
 "padrão analítico (por exemplo, criar uma nova fatura do cliente ou pedido de"
 " venda se selecionarmos esta conta, será considerada automaticamente como "
 "uma conta analítica)"
@@ -13636,6 +13655,12 @@ msgid "Transfers"
 msgstr "Transferências"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr "Experimente uma amostra de fatura de fornecedor"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13842,6 +13867,12 @@ msgstr "Atualizar cambio de moedas automaticamente"
 #, python-format
 msgid "Upload"
 msgstr "Enviar"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr "Carregue sua própria conta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -15058,6 +15089,18 @@ msgstr "campo técnico para o widget tax-group-custom-field"
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "campo técnico para calcular o saldo inicial corretamente"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
+"O diário escolhido possui um tipo que não é compatível com o seu tipo de "
+"fatura. As operações de vendas devem ir para os diários de 'venda' e as "
+"operações de compra, para os diários de 'compra'."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

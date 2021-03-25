@@ -1360,6 +1360,7 @@ span.list-inline-item.o_add_language:last-child {
     }
 }
 
+// Ribbons
 $ribbon-padding: 100px;
 .o_ribbon {
     margin: 0;
@@ -1371,30 +1372,19 @@ $ribbon-padding: 100px;
 }
 
 .o_ribbon_right {
-    @include o-position-absolute($top: 0, $right: 0);
-    padding: 0.5rem $ribbon-padding;
-    // 0.708 is 1 - cos(45deg)
-    // Transforms are applied right-to-left
-    // Cannot use matrix because of the use of % values.
-    transform: translateX(calc(-0.708 * (100% - #{2 * $ribbon-padding}))) rotate(45deg) translateX(calc(100% - #{$ribbon-padding}));
-    transform-origin: top right;
+    @include o-ribbon-right();
 }
 
 .o_ribbon_left {
-    @include o-position-absolute($top: 0, $left: 0);
-    padding: 0.5rem $ribbon-padding;
-    transform: translateX(calc(0.708 * (100% - #{2 * $ribbon-padding}) - 100%)) rotate(-45deg) translateX($ribbon-padding);
-    transform-origin: top right;
+    @include o-ribbon-left();
 }
 
 .o_tag_right {
-    @include o-position-absolute($top: 0, $right: 0);
-    padding: 0.25rem 1rem;
+    @include o-tag-right();
 }
 
 .o_tag_left {
-    @include o-position-absolute($top: 0, $left: 0);
-    padding: 0.25rem 1rem;
+    @include o-tag-left();
 }
 
 // Cookies Bar
@@ -1410,4 +1400,13 @@ $ribbon-padding: 100px;
     .fa:not(.fa-spin) {
         display: none;
     }
+}
+
+// Snippet Showcase
+.s_showcase_icon {
+    // Avoid images stretched depending on title size (when icons
+    // are images an not Font Awesome icons). Because the default
+    // value of "align-self" is "strech". We put this code here to
+    // avoid having to create a new scss file in a stable version.
+    align-self: flex-start;
 }

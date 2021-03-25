@@ -8,9 +8,9 @@
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# Jiří Podhorecký, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Data načtena"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -842,7 +842,7 @@ msgstr "Analytická řádka"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Analytické značky"
+msgstr "Střediska"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -1679,7 +1679,7 @@ msgstr "Externí odkaz"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Extra hodnoty"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -1704,6 +1704,9 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
+"Mapování daní se používají k přizpůsobení daní a účtů pro konkrétní "
+"zákazníky nebo prodejní objednávky / faktury. Výchozí hodnota pochází od "
+"zákazníka."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2266,7 +2269,7 @@ msgstr "Ruční"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
 msgid "Manual Payment"
-msgstr ""
+msgstr "Ruční platba"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
@@ -2282,7 +2285,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Manuálně nastavené veličiny na objednávku: Faktura na základě ručně zadaného"
-" množství, bez vytvoření analytického účtu. Časové výkazy na zakázce: "
+" množství, bez vytvoření analytického účtu. Pracovní výkazy na zakázce: "
 "Faktura na základě zapsaných hodin na příslušném časovém výkazu. Tvorba "
 "úkolu k ověření platnosti objednávky a sledování pracovní doby."
 
@@ -2306,7 +2309,7 @@ msgstr "Marketing"
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
-msgstr "Střední hodnoty"
+msgstr "Médium"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -3122,7 +3125,7 @@ msgstr "Odmítnout tuto nabídku"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "Sestavy"
+msgstr "Přehledy"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
@@ -3172,7 +3175,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
-msgstr ""
+msgstr "Příjmy"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
@@ -3695,7 +3698,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
@@ -3991,7 +3994,7 @@ msgstr ""
 "Tato sestava analyzuje nabídky a zakázky. Kontrolují se tržby a řadí se do "
 "skupin podle různých kritérií (obchodník, kontakt, produkt, atd.). "
 "Zohledňují se dosud nefakturované zakázky. Pokud chcete analyzovat váš "
-"obrat, měli byste použít sestavu Analýza fakturace v účetnictví."
+"obrat, měli byste použít sestavu analýza fakturace v účetnictví."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4006,7 +4009,7 @@ msgstr ""
 "prodeje a seřadí je podle různých skupinových kritérií (prodavač, partner, "
 "produkt atd.). Tuto zprávu použijte k analýze prodeje, která ještě nebyla "
 "fakturována. Pokud chcete analyzovat svůj obrat, měli byste použít přehled "
-"Analýza faktur v aplikaci Účtování."
+"analýza faktur v aplikaci Účtování."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4021,7 +4024,7 @@ msgstr ""
 "kontroluje tržby z prodeje a třídí podle různých skupinových kritérií "
 "(prodavač, partner, produkt atd.) Pomocí tohoto přehledu můžete provést "
 "analýzu prodeje, která dosud nebyla fakturována. Pokud chcete analyzovat "
-"obrat, měli byste použít zprávu Analýza faktur v aplikaci Účetnictví."
+"obrat, měli byste použít zprávu analýza faktur v aplikaci Účetnictví."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

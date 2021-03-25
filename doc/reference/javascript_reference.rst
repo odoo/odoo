@@ -2182,6 +2182,8 @@ many2many (FieldMany2Many)
 
   - create_text: allow the customization of the text displayed when adding a
     new record
+  - link: domain determining whether or not records can be added to the relation (default: True).
+  - unlink: domain determining whether or not records can be removed from the relation (default: True).
 
 many2many_binary (FieldMany2ManyBinaryMultiFiles)
   This widget helps the user to upload or delete one or more files at the same
@@ -2234,8 +2236,11 @@ kanban.many2many_tags (KanbanFieldMany2ManyTags)
   - Supported field types: *many2many*
 
 many2many_checkboxes (FieldMany2ManyCheckBoxes)
-  This field displays a list of checkboxes and allow the user to select a
-  subset of the choices.
+  This field displays a list of checkboxes and allows the user to select a
+  subset of the choices. Note that the number of displayed values is limited to
+  100. This limit isn't customizable. It simply allows to handle extreme cases
+  where this widget is wrongly set on a field with a huge comodel. In those
+  cases, a list view is more adequate as it allows pagination and filtering.
 
   - Supported field types: *many2many*
 

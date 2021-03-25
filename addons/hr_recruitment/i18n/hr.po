@@ -6,7 +6,6 @@
 # Ivan Marijanović <ivanm101@yahoo.com>, 2020
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
 # Martin Trigaux, 2020
-# Bole <bole@dajmi5.com>, 2020
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
@@ -16,6 +15,7 @@
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
+# Bole <bole@dajmi5.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Igor Krizanovic <krizanovic.igor@gmail.com>, 2020\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +79,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr ""
-"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Upravljaj\" "
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" "
 "title=\"Upravljaj\"/>"
 
 #. module: hr_recruitment
@@ -95,7 +95,7 @@ msgstr "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Dokumenti\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -103,6 +103,8 @@ msgid ""
 "<span class=\"badge badge-pill badge-danger pull-right mr-4\" "
 "attrs=\"{'invisible': [('active', '=', True)]}\">Refused</span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-danger pull-right mr-4\" "
+"attrs=\"{'invisible': [('active', '=', True)]}\">Odbijeno</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -383,7 +385,7 @@ msgstr "Status aktivnosti"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -674,7 +676,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Događaj na kalendaru"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
@@ -827,7 +829,7 @@ msgstr "Datum kreiranja"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Prilagođena poruka odbijanja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -1024,7 +1026,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email cc"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
@@ -1125,7 +1127,7 @@ msgstr "Pratitelji (Partneri)"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1684,7 +1686,7 @@ msgstr "Nema još kandidata"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_job
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_analysis
 msgid "No data yet!"
-msgstr ""
+msgstr "Nema još podataka!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0

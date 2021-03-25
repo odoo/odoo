@@ -8,7 +8,7 @@
 # Gilles Dupont <gid@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
-# Florian Laboureix <fll@odoo.com>, 2020
+# Florian <fll@odoo.com>, 2020
 # Fred Gilson <fgi@odoo.com>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2020
@@ -33,7 +33,6 @@
 # nle_odoo, 2020
 # Xavier Belmere <Info@cartmeleon.com>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2020
 # Jonathan Castillo <jcs@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
@@ -42,6 +41,8 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # khalid chamakh <elbissat@gmail.com>, 2021
 # Caroline Renson <car@odoo.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
+# Luc N, 2021
 # 
 msgid ""
 msgstr ""
@@ -49,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Caroline Renson <car@odoo.com>, 2021\n"
+"Last-Translator: Luc N, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2788,6 +2789,8 @@ msgstr "Cacher le sous-type dans les options de followers"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
+"Cachez aux utilisateurs publiques/portail, indépendamment de la "
+"configuration du sous-type."
 
 #. module: mail
 #. openerp-web
@@ -2961,6 +2964,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Si défini, ce contenu sera automatiquement envoyé à tous les utilisateurs "
+"non-autorisés à la place du message par défaut."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -4255,7 +4260,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "Pas de donnée"
 
 #. module: mail
 #. openerp-web
@@ -6146,6 +6151,8 @@ msgstr "Cette action enverra un email"
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Cette adresse email fait partie de la liste noire. Cliquez pour l'en "
+"retirer."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -7115,6 +7122,7 @@ msgstr "jours"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
+#: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "document"
 msgstr "document"
@@ -7341,4 +7349,11 @@ msgstr "semaines"
 #: code:addons/mail/static/src/models/follower/follower.js:0
 #, python-format
 msgid "The subscription preferences were successfully applied."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
 msgstr ""

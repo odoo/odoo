@@ -322,6 +322,9 @@ class Channel(models.Model):
         return self._action_unfollow(self.env.user.partner_id)
 
     def _action_unfollow(self, partner):
+        self.message_unsubscribe(partner.ids)
+        if partner not in self.with_context(active_test=False).channel_partner_ids:
+            return True
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
         result = self.write({'channel_partner_ids': [(3, partner.id)]})
         # side effect of unsubscribe that wasn't taken into account because
@@ -413,7 +416,14 @@ class Channel(models.Model):
 
         self.filtered(lambda channel: channel.is_chat).mapped('channel_last_seen_partner_ids').sudo().write({'is_pinned': True})
 
-        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(message_type=message_type, moderation_status=moderation_status, **kwargs)
+        # mail_post_autofollow=False is necessary to prevent adding followers
+        # when using mentions in channels. Followers should not be added to
+        # channels, and especially not automatically (because channel membership
+        # should be managed with channel.partner instead).
+        # The current client code might be setting the key to True on sending
+        # message but it is only useful when targeting customers in chatter.
+        # This value should simply be set to False in channels no matter what.
+        message = super(Channel, self.with_context(mail_create_nosubscribe=True, mail_post_autofollow=False)).message_post(message_type=message_type, moderation_status=moderation_status, **kwargs)
 
         # Notifies the message author when his message is pending moderation if required on channel.
         # The fields "email_from" and "reply_to" are filled in automatically by method create in model mail.message.
@@ -1013,7 +1023,7 @@ class Channel(models.Model):
                             [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
                         ])
                     ])
-        return self.search_read(domain, ['id', 'name', 'public'], limit=limit)
+        return self.search_read(domain, ['id', 'name', 'public', 'channel_type'], limit=limit)
 
     @api.model
     def channel_fetch_listeners(self, uuid):

@@ -16,8 +16,10 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
-            this.env.services['bus_service'].off('notification');
-            this.env.services['bus_service'].stopPolling();
+            if (this.env.services['bus_service']) {
+                this.env.services['bus_service'].off('notification');
+                this.env.services['bus_service'].stopPolling();
+            }
             return super._willDelete(...arguments);
         }
 
@@ -87,9 +89,6 @@ function factory(dependencies) {
                             return;
                         }
                         return this._handleNotificationPartner(Object.assign({}, message));
-                    default:
-                        console.warn(`mail.messaging_notification_handler: Unhandled notification "${model}"`);
-                        return;
                 }
             });
             await this.async(() => Promise.all(proms));

@@ -9,16 +9,16 @@
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Martin Trigaux, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Dorin Hongu <dhongu@gmail.com>, 2021
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2021\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,6 +153,12 @@ msgstr "-> Afișare reconcilieri parțiale"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr "Poate doriți să puneți un număr mai mare aici."
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr "... (%s altul,altele)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -373,6 +379,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) de la <strong>%s</strong> au fost transferate "
+"la <strong>{account_target_name}</strong> după {link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -381,6 +389,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from {link}, "
 "<strong>%(account_source_name)s</strong></li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) de la {link}, "
+"<strong>%(account_source_name)s</strong></li>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1390,12 +1400,12 @@ msgstr "Contul la care să transferi."
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr ""
+msgstr "Factura de încărcare a turului contului"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr ""
+msgstr "Confirmare e-mail factură încărcare tur cont"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__revenue_accrual_account
@@ -1744,6 +1754,9 @@ msgid ""
 "cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Au fost create intrări de ajustare pentru această factură:<ul><li>%(link1)s "
+"anulând {percent:f}%% a {amount}</li><li>%(link0)s amânând-o la "
+"{new_date}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2456,7 +2469,7 @@ msgstr "Intrări automate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
 msgid "Automatic Entry Default Journal"
-msgstr ""
+msgstr "Jurnal implicit de intrare automată"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2495,6 +2508,13 @@ msgstr "Rău platnic"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__balance
 msgid "Balance"
 msgstr "Sold"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "Bilanț"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -4163,7 +4183,7 @@ msgstr "Asistent Conversie Valutară"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__currency_exchange_journal_id
 msgid "Currency Exchange Journal"
-msgstr ""
+msgstr "Jurnal de Schimb Valutar"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8613,6 +8633,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
 msgid "Options"
 msgstr "Opțiuni"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr "Sau trimiteți o factură la%s@%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -13418,6 +13444,12 @@ msgid "Transfers"
 msgstr "Transferuri"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13617,6 +13649,12 @@ msgid "Upload"
 msgstr "Încărcare "
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
 msgstr "Utilizare contabilitate anglo-saxonă "
@@ -13676,7 +13714,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
 msgid "Used"
-msgstr ""
+msgstr "Folosit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type__include_initial_balance
@@ -14256,6 +14294,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
+"Nu puteți adăuga / modifica intrările anterioare și inclusiv datei de "
+"blocare %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14264,8 +14304,8 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
-"Nu puteți adăuga / modifica intrările anterioare și inclusiv date de blocare"
-" %s. Verificați setările de companie sau solicită pe cineva cu rolul "
+"Nu puteți adăuga / modifica intrările anterioare și inclusiv datei de "
+"blocare %s. Verificați setările de companie sau solicită pe cineva cu rolul "
 "\"Expert contabil\""
 
 #. module: account
@@ -14613,12 +14653,12 @@ msgstr "code"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__after_invoice_month
 msgid "days after the end of the invoice month"
-msgstr ""
+msgstr "zile după sfârșitul lunii din data facturii"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
 msgid "days after the invoice date"
-msgstr ""
+msgstr "zile după data de facturare"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -14659,6 +14699,8 @@ msgstr "pentru acest client. Puteți să o alocați la această factură ca plat
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this vendor. You can allocate them to mark this bill as paid."
 msgstr ""
+"pentru acest furnizor. Puteți să le alocați pentru a marca plata acestei "
+"facturi."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
@@ -14715,6 +14757,15 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
 msgstr ""
 
 #. module: account

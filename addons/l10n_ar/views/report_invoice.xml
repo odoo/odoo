@@ -16,7 +16,7 @@
                         <span style="font-size: x-small;" t-esc="not pre_printed_report and document_legend or '&#160;'"/>
                     </span>
                 </div>
-                <div name="right-upper-side" class="col-5 text-right" t-if="not pre_printed_report">
+                <div name="right-upper-side" class="col-5 text-right" style="padding-left: 0px;" t-if="not pre_printed_report">
 
                     <!-- (6) Titulo de Documento -->
                     <h4 t-att-style="'color: %s;' % o.company_id.primary_color"><strong>
@@ -87,7 +87,7 @@
 
             <t t-set="custom_footer">
                 <div class="row">
-                    <div name="footer_left_column" class="col-8 text-center">
+                    <div name="footer_left_column" class="col-8 text-left">
                     </div>
                     <div name="footer_right_column" class="col-4 text-right">
                         <div name="pager" t-if="report_type == 'pdf'">

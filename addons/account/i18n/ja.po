@@ -24,16 +24,16 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Ryoko Tsuda <ryoko@quartile.co>, 2020
 # Noma Yuki, 2020
-# Martin Trigaux, 2021
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Tsuda Ryoko <ryoko04nov@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,6 +158,12 @@ msgstr "-> 部分的に消込済の仕訳照会"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
 msgstr "ここにより大きな数字を適用した方が良い場合もあります。"
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
+msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -2441,6 +2447,13 @@ msgstr "悪い"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__balance
 msgid "Balance"
 msgstr "残高"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "貸借対照表"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -8350,6 +8363,12 @@ msgid "Options"
 msgstr "オプション"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr "発注"
@@ -12996,6 +13015,12 @@ msgid "Transfers"
 msgstr "運送"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13193,6 +13218,12 @@ msgstr "為替レートを自動更新"
 #, python-format
 msgid "Upload"
 msgstr "アップロード"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14276,6 +14307,15 @@ msgstr "ウィジェットtax-group-custom-fieldのテクニカルフィール�
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
 msgstr "開始残高を正しく計算するためのテクニカルフィールド"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

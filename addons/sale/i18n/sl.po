@@ -312,6 +312,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Pozdravljeni,\n"
+"        <br/><br/>\n"
+"        Vaš\n"
+"        % if ctx.get('proforma'):\n"
+"            Predračun za ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (z referenco: ${object.origin} )\n"
+"            % endif\n"
+"            v znesku <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> je na voljo.\n"
+"        % else:\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (z referenco: ${object.origin} )\n"
+"            % endif\n"
+"            v znesku <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> je pripravljen za pregled.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Če imate kakršna koli vprašanja, nas kontaktirajte.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1592,7 +1617,7 @@ msgstr "Predvideni datum"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr ""
+msgstr "Pričakovano:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1606,7 +1631,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "Veljavnost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2130,7 +2155,7 @@ msgstr "Aktivnosti z zamudo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr ""
+msgstr "Dobavni rok"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2221,7 +2246,7 @@ msgstr "Marže"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "Označi ponudbo kot poslano"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -3533,7 +3558,7 @@ msgstr "Podpis prejet preko portala."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed By"
-msgstr ""
+msgstr "Podpisal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on

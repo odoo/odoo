@@ -195,6 +195,14 @@ class ComposerTextInput extends Component {
     /**
      * @private
      */
+    _onClickTextarea() {
+        // clicking might change the cursor position
+        this.saveStateInStore();
+    }
+
+    /**
+     * @private
+     */
     _onFocusinTextarea() {
         this.composer.focus();
         this.trigger('o-focusin-composer');
@@ -278,8 +286,7 @@ class ComposerTextInput extends Component {
             !ev.altKey &&
             !ev.ctrlKey &&
             !ev.metaKey &&
-            !ev.shiftKey &&
-            !this.env.messaging.device.isMobile
+            !ev.shiftKey
         ) {
             this.trigger('o-composer-text-input-send-shortcut');
             ev.preventDefault();
@@ -373,7 +380,6 @@ class ComposerTextInput extends Component {
             // Otherwise, check if a mention is typed
             default:
                 this.saveStateInStore();
-                this.composer.detectSuggestionDelimiter();
         }
     }
 

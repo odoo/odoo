@@ -10,16 +10,16 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
-# Martin Trigaux, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2021-01-26 09:03+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
 "Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -480,6 +480,13 @@ msgid "All"
 msgstr "Alle"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "All Tickets"
+msgstr "Alle tickets"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -818,6 +825,7 @@ msgstr "Kan geen wisselgeld terug geven bij een niet contant betaalwijze"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 #, python-format
@@ -1338,6 +1346,7 @@ msgstr "Aangepast"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderList.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -1388,6 +1397,7 @@ msgstr "Dashboard"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderList.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__date_order
@@ -2859,6 +2869,13 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Ongoing"
+msgstr "Lopend"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
 msgid "Only apply rounding on cash"
 msgstr "Alleen afronden op cash betalingen"
@@ -3174,6 +3191,7 @@ msgstr "Betaal order"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
@@ -3944,6 +3962,13 @@ msgid "Ready to launch your <b>point of sale</b>?"
 msgstr "Klaar om uw <b>kassa</b> te lanceren?"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Receipt"
+msgstr "Ontvangst"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
@@ -3961,6 +3986,7 @@ msgstr "Koptekst Kassabon"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 #, python-format
@@ -4219,6 +4245,20 @@ msgstr "Zoek producten..."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
 msgstr "Verkooporder zoeken"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
+#, python-format
+msgid "Search Tickets..."
+msgstr "Zoek tickets..."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/SearchBar.js:0
+#, python-format
+msgid "Select"
+msgstr "Selecteren"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4832,8 +4872,8 @@ msgid ""
 "The payment method is of type cash. A cash statement will be automatically "
 "generated."
 msgstr ""
-"De betalingsmiddel is van het type contant geld. Een kassafschrift zal "
-"automatisch gegenereerd worden."
+"De betalingswijze is van het type contant. Er wordt automatisch een "
+"kasoverzicht gegenereerd."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_payment.py:0

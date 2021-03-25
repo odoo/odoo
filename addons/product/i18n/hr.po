@@ -5,23 +5,23 @@
 # Translators:
 # Mario Jureša <mario.juresa@uvid.hr>, 2020
 # Ivan Marijanović <ivanm101@yahoo.com>, 2020
-# Martin Trigaux, 2020
-# Bole <bole@dajmi5.com>, 2020
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2020
 # Tina Milas, 2020
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
+# Martin Trigaux, 2020
+# Bole <bole@dajmi5.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Milan Tribuson <one.mile.code@gmail.com>, 2020\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "# Proizvodi"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr ""
+msgstr "%(percentage)s %% popust %(price)s cijena"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -62,13 +62,13 @@ msgstr "%s (kopija)"
 #: model:ir.actions.report,print_report_name:product.report_product_label
 #: model:ir.actions.report,print_report_name:product.report_product_template_label
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'Labele proizvoda - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_product_barcode
 #: model:ir.actions.report,print_report_name:product.report_product_template_barcode
 msgid "'Products barcode - %s' % (object.name)"
-msgstr ""
+msgstr "'Barkod proizvoda - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
@@ -240,25 +240,25 @@ msgstr "Status aktivnosti"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona tipa aktivnosti"
 
 #. module: product
 #. openerp-web
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
-msgstr ""
+msgstr "Dodaj količinu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Advanced Pricelists"
-msgstr ""
+msgstr "Napredni cjenici"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
 msgid "Advanced price rules (discounts, formulas)"
-msgstr ""
+msgstr "Napredna pravila cijena (popusti, formule)"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -271,7 +271,7 @@ msgstr "Svi proizvodi"
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
-msgstr ""
+msgstr "Dozvoli korisnicima da unose prilagođene vrijednosti za ovaj atribut"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
@@ -347,7 +347,7 @@ msgstr "Značajka"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "Stavka atributa"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -416,7 +416,7 @@ msgstr "Prema"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr ""
+msgstr "Osnovni cjenici"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -546,7 +546,7 @@ msgstr "Postava"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Configure Variants"
-msgstr ""
+msgstr "Postavi varijante"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
@@ -561,17 +561,17 @@ msgstr "Kontakt"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
-msgstr ""
+msgstr "Sadržana količina"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
-msgstr ""
+msgstr "Sadržana količina"
 
 #. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
-msgid "Corner Desk Black"
+msgid "Corner Desk Left Sit"
 msgstr ""
 
 #. module: product
@@ -591,7 +591,7 @@ msgstr "Trošak"
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Valuta troška"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -606,7 +606,7 @@ msgstr "Grupe država"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr ""
+msgstr "Kreiraj novi cjenik"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
@@ -619,7 +619,7 @@ msgstr "Kreiraj novi proizvod"
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "Kreiraj novu varijantu proizvoda"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -819,6 +819,7 @@ msgstr "Popusti"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
+#: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "Naziv"
 
@@ -839,7 +840,7 @@ msgstr ""
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
-msgstr ""
+msgstr "Crna ladica"
 
 #. module: product
 #: model:product.product,description:product.product_product_27
@@ -932,7 +933,7 @@ msgstr "Pratitelji (Partneri)"
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikona npr. fa-tasks"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -972,7 +973,7 @@ msgstr "Opći podaci"
 #: model:ir.actions.server,name:product.action_product_price_list_report
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist"
-msgstr ""
+msgstr "Generiraj cjenik"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1040,6 +1041,7 @@ msgstr "Sati"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
+#: model:ir.model.fields,field_description:product.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
 
@@ -1161,7 +1163,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr ""
+msgstr "Trenutno"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1221,19 +1223,19 @@ msgstr "Kilogrami"
 #: model:product.product,name:product.product_product_6
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
-msgstr ""
+msgstr "Veliki ormar"
 
 #. module: product
 #: model:product.product,name:product.product_product_8
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
-msgstr ""
+msgstr "Veliki stol"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_02
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Large Meeting Table"
-msgstr ""
+msgstr "Veliki stol za sastanke"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_decimal_precision____last_update
@@ -1255,6 +1257,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:product.field_res_country_group____last_update
 #: model:ir.model.fields,field_description:product.field_res_partner____last_update
+#: model:ir.model.fields,field_description:product.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
@@ -1385,7 +1388,7 @@ msgstr "Min. količina"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__basic
 msgid "Multiple prices per product"
-msgstr ""
+msgstr "Višestruke cijene za proizvod"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__product_pricelist_setting
@@ -1434,7 +1437,7 @@ msgstr "Tip sljedeće aktivnosti"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "Nije pronađen nabavni cjenik"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1865,7 +1868,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Vrijednost atributa predloška proizvoda"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -1873,6 +1876,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Product Type"
 msgstr "Tip artikla"
+
+#. module: product
+#: model:ir.model,name:product.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "JM proizvoda"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
@@ -2225,7 +2233,7 @@ msgstr "Cjenik dobavljača"
 #: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,help:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Technical compute"
-msgstr ""
+msgstr "Tehnički izračun"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__pricelist_id
@@ -2376,6 +2384,15 @@ msgid ""
 msgstr ""
 "Ovaj cjenik će se koristiti, umjesto predefiniranog, za prodaju trenutnom "
 "partneru"
+
+#. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2703,6 +2720,13 @@ msgid "Volume unit of measure label"
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Upozorenje!"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "Upozorenja"
@@ -2734,6 +2758,16 @@ msgstr ""
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Bijela"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

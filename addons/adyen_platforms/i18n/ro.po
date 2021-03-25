@@ -7,7 +7,7 @@
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:42+0000\n"
 "PO-Revision-Date: 2020-11-16 13:49+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,7 @@ msgstr "<span class=\"o_stat_text\"> Tranzacții</span>"
 #, python-format
 msgid "A timeout occured while trying to reach the Adyen proxy."
 msgstr ""
+"A apărut un timeout în timp ce încercați să ajungeți la proxy-ul Adyen."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__code
@@ -487,7 +488,7 @@ msgstr "Descriere"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Disclaimers"
-msgstr ""
+msgstr "declinări de responsabilitate"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__display_name
@@ -918,29 +919,29 @@ msgstr "Plăți"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Payouts cost 0.20€ (EU) or 0.22$ (US) each."
-msgstr ""
+msgstr "Plățile costă 0,20 € (UE) sau 0,22 $ (SUA) fiecare."
 
 #. module: adyen_platforms
 #. openerp-web
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Payouts will be blocked until your application has been accepted."
-msgstr ""
+msgstr "Plățile vor fi blocate până când cererea dvs. va fi acceptată."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingcredit
 msgid "Pending Credit"
-msgstr ""
+msgstr "Credit în așteptare"
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingdebit
 msgid "Pending Debit"
-msgstr ""
+msgstr "Debit în așteptare"
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingfundtransfer
 msgid "Pending Fund Transfer"
-msgstr ""
+msgstr "Transfer de fond în așteptare"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -994,12 +995,12 @@ msgstr ""
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__proxy_token
 msgid "Proxy Token"
-msgstr ""
+msgstr "Jeton Proxy"
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
 msgid "Reason(s):"
-msgstr ""
+msgstr "Motiv(e):"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_account_reference
@@ -1014,17 +1015,17 @@ msgstr "Referință"
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__registration_number
 #, python-format
 msgid "Registration Number"
-msgstr ""
+msgstr "Nr. de Înregistrare"
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_payout_view_form
 msgid "Request a payout now"
-msgstr ""
+msgstr "Solicitați o plată acum"
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__account_type__savings
 msgid "Savings"
-msgstr ""
+msgstr "Economii"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__payout_schedule
@@ -1074,26 +1075,26 @@ msgstr "Stradă"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Submitted data"
-msgstr ""
+msgstr "Date trimise"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "Successfully sent payout request for %s"
-msgstr ""
+msgstr "Cererea de plată a fost trimisă cu succes pentru %s"
 
 #. module: adyen_platforms
 #. openerp-web
 #: code:addons/adyen_platforms/static/src/xml/adyen_transactions_templates.xml:0
 #, python-format
 msgid "Sync Transactions"
-msgstr ""
+msgstr "Sincronizare Tranzacții"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "The Adyen proxy is not reachable, please try again later."
-msgstr ""
+msgstr "Proxy-ul Adyen nu este accesibil, încercați din nou mai târziu."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_account__country_code
@@ -1113,6 +1114,8 @@ msgid ""
 "The bank account to which the payout is to be made. If left blank, a bank "
 "account is automatically selected"
 msgstr ""
+"Contul bancar în care urmează să se efectueze plata. Dacă este lăsat "
+"necompletat, un cont bancar este selectat automat"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1159,7 +1162,7 @@ msgstr "Tranzacții"
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__transactions_count
 msgid "Transactions Count"
-msgstr ""
+msgstr "Nr. Tranzacții"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_transaction__status
@@ -1185,7 +1188,7 @@ msgstr "Contor mesaje necitite"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_account__document_type__visa
 msgid "Visa"
-msgstr ""
+msgstr "Visa"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1217,6 +1220,8 @@ msgid ""
 "We had troubles reaching Adyen, please retry later or contact the support if"
 " the problem persists"
 msgstr ""
+"Am întâmpinat probleme cu Adyen, vă rugăm să reîncercați mai târziu sau să "
+"contactați asistența dacă problema persistă"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1226,6 +1231,8 @@ msgid ""
 "We will notify you when the status of the review changes, or if additional "
 "data is required."
 msgstr ""
+"Vă vom anunța când se modifică starea examinării sau dacă sunt necesare date"
+" suplimentare."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__week
@@ -1238,6 +1245,7 @@ msgstr "Săptămânal"
 #, python-format
 msgid "You can start processing payments as soon as your application is sent."
 msgstr ""
+"Puteți începe procesarea plăților imediat ce cererea dvs. este trimisă."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_bank_account__bank_statement
@@ -1249,6 +1257,12 @@ msgid ""
 "the account holder.        Allowed formats: jpg, pdf, png. Maximum allowed "
 "size: 10MB."
 msgstr ""
+"Trebuie să furnizați un extras bancar pentru a permite plățile. Fișierul "
+"trebuie să fie un extras bancar, o captură de ecran a mediului dvs. bancar "
+"online, o scrisoare de la bancă sau un cec și trebuie să conțină sigla "
+"băncii sau numele acestuia într-un font unic, detaliile contului bancar, "
+"numele contului titular. Formate permise: jpg, pdf, png. Dimensiune maximă "
+"permisă: 10MB."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__zip
@@ -1265,7 +1279,7 @@ msgstr "Cod poștal"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "adyen.com/pricing"
-msgstr ""
+msgstr "adyen.com/pricing"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1281,4 +1295,4 @@ msgstr "aici"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "to download and review)"
-msgstr ""
+msgstr "pentru decărcare și revizuire)"

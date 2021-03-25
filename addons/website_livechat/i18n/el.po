@@ -3,17 +3,18 @@
 # 	* website_livechat
 # 
 # Translators:
+# Giota Dandidou <giotadandidou@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Kostas Goutoudis <goutoudis@gmail.com>, 2020
-# Giota Dandidou <giotadandidou@gmail.com>, 2020
+# Alexandros Kapetanios <alexandros@gnugr.org>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2020\n"
+"Last-Translator: Alexandros Kapetanios <alexandros@gnugr.org>, 2021\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
 msgid "# Sessions"
-msgstr ""
+msgstr "# Συνεδρίες"
 
 #. module: website_livechat
 #: code:addons/website_livechat/models/mail_channel.py:0
@@ -63,6 +64,13 @@ msgid "Available"
 msgstr "Διαθέσιμη"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "Άβαταρ"
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Bad"
 msgstr "Κακό"
@@ -90,7 +98,7 @@ msgstr "Chat"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ρυθμίσεις διαμόρφωσης"
 
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
@@ -101,6 +109,8 @@ msgstr "Περιγραφή του καναλιού που εμφανίζεται
 #: model:ir.model,name:website_livechat.model_mail_channel
 msgid "Discussion Channel"
 msgstr ""
+"Κανάλι συζήτησης\n"
+" "
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
@@ -128,6 +138,13 @@ msgid "Happy face"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "History"
+msgstr "Ιστορικό"
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel__id
@@ -140,6 +157,13 @@ msgstr "Κωδικός"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
 msgid "Is Published"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Lang"
 msgstr ""
 
 #. module: website_livechat
@@ -207,6 +231,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Okay"
 msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Online"
+msgstr "Online"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
@@ -300,6 +331,13 @@ msgid "Visitor"
 msgstr "Επισκέπτης"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Visitor is online"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
 msgid "Visitor's Sessions"
 msgstr ""
@@ -315,7 +353,10 @@ msgid "Visitors"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
 #: model:ir.model,name:website_livechat.model_website
+#, python-format
 msgid "Website"
 msgstr "Ιστότοπος"
 

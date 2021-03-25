@@ -9,19 +9,19 @@
 # Somchart Jabsung <jabsung.s@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Seksan Poltree <seksan.poltree@gmail.com>, 2020
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
 # Prawit Boonthue <prawit.boonthue@gmail.com>, 2020
 # Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2020
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:35+0000\n"
+"POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,6 +148,12 @@ msgstr "-> กระทบยอดแล้ว"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_resequence.py:0
+#, python-format
+msgid "... (%s other)"
 msgstr ""
 
 #. module: account
@@ -2376,6 +2382,13 @@ msgstr "ลูกหนี้เสีย"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__balance
 msgid "Balance"
 msgstr "ยอดเงินคงเหลือ"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/js/account_selection.js:0
+#, python-format
+msgid "Balance Sheet"
+msgstr "งบดุล"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -8384,6 +8397,12 @@ msgid "Options"
 msgstr "ตัวเลือก"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Or send a bill to %s@%s"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
 msgstr ""
@@ -13120,6 +13139,12 @@ msgid "Transfers"
 msgstr "โอนย้าย"
 
 #. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Try a sample vendor bill"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__user_type_id
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
@@ -13319,6 +13344,12 @@ msgstr "อัพเดตอัตราแลกเปลี่ยนโดย
 #, python-format
 msgid "Upload"
 msgstr "อัพโหลด"
+
+#. module: account
+#: code:addons/account/wizard/account_tour_upload_bill.py:0
+#, python-format
+msgid "Upload your own bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14461,6 +14492,15 @@ msgstr "ฟิลด์ทางเทคนิคสำหรับวิดเ
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id
 msgid "technical field to compute starting balance correctly"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
 msgstr ""
 
 #. module: account

@@ -6,26 +6,29 @@
 # Amit Spilman <amit@laylinetech.com>, 2020
 # Ofir Blum <ofir.blum@gmail.com>, 2020
 # Adi Sharashov <Adi@laylinetech.com>, 2020
-# Martin Trigaux, 2020
 # Moshe Flam <pashute@gmail.com>, 2020
-# ExcaliberX <excaliberx@gmail.com>, 2020
 # yacov mosbacher <ymosba@gmail.com>, 2020
 # hed shefetr <hed@laylinetech.com>, 2020
 # דודי מלכה <Dudimalka6@gmail.com>, 2020
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2020
 # Yihya Hugirat <hugirat@gmail.com>, 2020
 # שהאב חוסיין <shhab89@gmail.com>, 2020
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # yotam katzuni, 2021
 # coral haron <coral@laylinetech.com>, 2021
+# yotam linder <linder@laylinetech.com>, 2021
+# Martin Trigaux, 2021
+# ExcaliberX <excaliberx@gmail.com>, 2021
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
+# Lilach Gilliam <lilach@apprcase.com>, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"POT-Creation-Date: 2021-01-26 09:03+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: coral haron <coral@laylinetech.com>, 2021\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -392,7 +395,7 @@ msgstr "מצב פעילות"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "סוג פעילות"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -469,6 +472,13 @@ msgstr "מסוף תשלום Adyen"
 #, python-format
 msgid "All"
 msgstr "הכל"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "All Tickets"
+msgstr "כל קריאות השירות"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -572,7 +582,7 @@ msgstr "האם אתה בטוח שהלקוח מעוניין לשלם"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing (advised)"
-msgstr ""
+msgstr "בסוף העונה (מומלץ)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -580,7 +590,7 @@ msgstr ""
 msgid ""
 "At the session closing: A picking is created for the entire session when it's closed\n"
 " In real time: Each order sent to the server create its own picking"
-msgstr ""
+msgstr "בזמן אמת"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
@@ -801,6 +811,7 @@ msgstr "לא ניתן להחזיר עודף כאשר לא בוצע תשלום ב
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 #, python-format
@@ -1315,6 +1326,7 @@ msgstr "מותאם"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderList.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -1365,6 +1377,7 @@ msgstr "לוח בקרה"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderList.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__date_order
@@ -1901,7 +1914,7 @@ msgstr "עוקבים (לקוחות/ספקים)"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "פונט מדהים למשל עבור משימות fa-tasks"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2700,7 +2713,7 @@ msgstr "לא נמצא תדפיס מזומן עבור משמרת זו. לא ני�
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
 msgid "No data yet!"
-msgstr ""
+msgstr "אין דירוג עדיין"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/report/pos_invoice.py:0
@@ -2817,6 +2830,13 @@ msgstr "הזמנות לא מקוונות"
 #, python-format
 msgid "Ok"
 msgstr "בסדר"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Ongoing"
+msgstr "מתמשך"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -3132,6 +3152,7 @@ msgstr "שלם על הזמנה"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
@@ -3897,6 +3918,13 @@ msgid "Ready to launch your <b>point of sale</b>?"
 msgstr "מוכן לפתוח את  ה<b>קופה</b> שלך?"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Receipt"
+msgstr "קבלה"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Receipt %s"
@@ -3914,6 +3942,7 @@ msgstr "כותרת עליונה קבלה"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 #, python-format
@@ -4016,7 +4045,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr "קורות חיים"
+msgstr "המשך"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4170,6 +4199,20 @@ msgstr "חפש מוצר"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Search Sales Order"
 msgstr "חפש הזמנת לקוח"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
+#, python-format
+msgid "Search Tickets..."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Misc/SearchBar.js:0
+#, python-format
+msgid "Select"
+msgstr "בחר"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5407,7 +5450,7 @@ msgstr "יחידת מידה"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "עדכן את כמויות המלאי "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal

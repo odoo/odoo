@@ -105,7 +105,7 @@ class StockPicking(models.Model):
         return self.picking_type_id.code == 'incoming' and any(m.is_subcontract for m in self.move_lines)
 
     def _get_subcontracted_productions(self):
-        return self.move_lines.move_orig_ids.production_id
+        return self.move_lines.filtered(lambda move: move.is_subcontract).move_orig_ids.production_id
 
     def _get_warehouse(self, subcontract_move):
         return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id
@@ -145,7 +145,3 @@ class StockPicking(models.Model):
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
             mo.action_assign()
-
-            if move._has_tracked_subcontract_components():
-                mo.qty_producing = move.product_uom_qty
-                mo.with_context(subcontract_move_id=True)._set_qty_producing()
