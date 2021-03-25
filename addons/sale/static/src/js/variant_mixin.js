@@ -341,7 +341,6 @@ var VariantMixin = {
         $parent
             .find('option, input, label')
             .removeClass('css_not_available')
-            .prop('disabled', false)
             .attr('title', function () { return $(this).data('value_name') || ''; })
             .data('excluded-by', '');
 
@@ -414,7 +413,6 @@ var VariantMixin = {
             .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
         $input.addClass('css_not_available');
         $input.closest('label').addClass('css_not_available');
-        $input.prop('disabled', true);
 
         if (excludedBy && attributeNames) {
             var $target = $input.is('option') ? $input : $input.closest('label').add($input);
