@@ -434,6 +434,12 @@ class Task(models.Model):
         return self.stage_find(project_id, [('fold', '=', False)])
 
     @api.model
+    def _default_company_id(self):
+        if self._context.get('default_project_id'):
+            return self.env['project.project'].browse(self._context['default_project_id']).company_id
+        return self.env['res.company']._company_default_get()
+
+    @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         search_domain = [('id', 'in', stages.ids)]
         if 'default_project_id' in self.env.context:
@@ -490,9 +496,7 @@ class Task(models.Model):
         string='Customer',
         default=lambda self: self._get_default_partner())
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
-    company_id = fields.Many2one('res.company',
-        string='Company',
-        default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_company_id)
     color = fields.Integer(string='Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True, related_sudo=False)
     attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
@@ -600,6 +604,8 @@ class Task(models.Model):
                 self.partner_id = self.project_id.partner_id
             if self.project_id not in self.stage_id.project_ids:
                 self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+            # keep multi company consistency
+            self.company_id = self.project_id.company_id
         else:
             self.stage_id = False
 
