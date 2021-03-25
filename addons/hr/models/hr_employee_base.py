@@ -176,6 +176,7 @@ class HrEmployeeBase(models.AbstractModel):
         for tz in all_employee_tz:
             employee_ids = self.filtered(lambda e: e.tz == tz)
             resource_calendar_ids = employee_ids.mapped('resource_calendar_id')
+            raise NameError(resource_calendar_ids)
             for calendar_id in resource_calendar_ids:
                 res_employee_ids = employee_ids.filtered(lambda e: e.resource_calendar_id.id == calendar_id.id)
                 start_dt = fields.Datetime.now()
