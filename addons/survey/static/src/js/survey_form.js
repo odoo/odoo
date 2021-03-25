@@ -88,8 +88,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * @param {Event} event
      */
     _onKeyDown: function (event) {
-        // If user is answering a text input, do not handle keydown
-        if (this.$("textarea").is(":focus") || this.$('input').is(':focus')) {
+        // If user is answering a text input, do not handle keydown (can be forced by pressing CTRL)
+        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) && !event.ctrlKey) {
             return;
         }
         // If in session mode and question already answered, do not handle keydown
@@ -570,6 +570,11 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                         if (lengthMin && (lengthMin > length || length > lengthMax)) {
                             errors[questionId] = validationErrorMsg;
                         }
+                    }
+                    break;
+                case 'text_box':
+                    if (questionRequired && !$input.val()) {
+                        errors[questionId] = constrErrorMsg;
                     }
                     break;
                 case 'numerical_box':
