@@ -1695,6 +1695,9 @@ var UrlWidget = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
+        if (!this.value) {
+            return;
+        }
         let href = this.value;
         if (this.value && !this.websitePath) {
             const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
