@@ -100,12 +100,18 @@ class Country(models.Model):
         for vals in vals_list:
             if vals.get('code'):
                 vals['code'] = vals['code'].upper()
-        return super(Country, self).create(vals_list)
+        self.clear_caches()
+        return super().create(vals_list)
 
     def write(self, vals):
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
-        return super(Country, self).write(vals)
+        self.clear_caches()
+        return super().write(vals)
+
+    def unlink(self):
+        self.clear_caches()
+        return super().unlink()
 
     def get_address_fields(self):
         self.ensure_one()
@@ -128,6 +134,19 @@ class CountryGroup(models.Model):
     name = fields.Char(required=True, translate=True)
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
+
+    @api.model
+    def create(self, vals):
+        self.clear_caches()
+        return super().create(vals)
+
+    def write(self, vals):
+        self.clear_caches()
+        return super().write(vals)
+
+    def unlink(self):
+        self.clear_caches()
+        return super().unlink()
 
 
 class CountryState(models.Model):
@@ -170,3 +189,16 @@ class CountryState(models.Model):
         for record in self:
             result.append((record.id, "{} ({})".format(record.name, record.country_id.code)))
         return result
+
+    @api.model
+    def create(self, vals):
+        self.clear_caches()
+        return super().create(vals)
+
+    def write(self, vals):
+        self.clear_caches()
+        return super().write(vals)
+
+    def unlink(self):
+        self.clear_caches()
+        return super().unlink()

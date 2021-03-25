@@ -6,7 +6,7 @@ import logging
 
 from psycopg2 import sql, DatabaseError
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, tools
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
@@ -99,12 +99,14 @@ class AccountFiscalPosition(models.Model):
             zip_to = zip_to.rjust(max_length, '0')
         return zip_from, zip_to
 
-    @api.model
-    def create(self, vals):
-        zip_from = vals.get('zip_from')
-        zip_to = vals.get('zip_to')
-        if zip_from and zip_to:
-            vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            zip_from = vals.get('zip_from')
+            zip_to = vals.get('zip_to')
+            if zip_from and zip_to:
+                vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from, zip_to)
+        self.clear_caches()
         return super(AccountFiscalPosition, self).create(vals)
 
     def write(self, vals):
@@ -113,9 +115,15 @@ class AccountFiscalPosition(models.Model):
         if zip_from or zip_to:
             for rec in self:
                 vals['zip_from'], vals['zip_to'] = self._convert_zip_values(zip_from or rec.zip_from, zip_to or rec.zip_to)
+        self.clear_caches()
         return super(AccountFiscalPosition, self).write(vals)
 
+    def unlink(self):
+        self.clear_caches()
+        return super().unlink()
+
     @api.model
+    @tools.cache('self.env.company.id', 'country_id', 'state_id', 'zipcode', 'vat_required')
     def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
         if not country_id:
             return False
@@ -154,7 +162,7 @@ class AccountFiscalPosition(models.Model):
         if not fpos:
             # Fallback on catchall (no country, no group)
             fpos = self.search(base_domain + null_country_dom, limit=1)
-        return fpos
+        return fpos.id
 
     @api.model
     def get_fiscal_position(self, partner_id, delivery_id=None):
@@ -162,8 +170,10 @@ class AccountFiscalPosition(models.Model):
         :return: fiscal position found (recordset)
         :rtype: :class:`account.fiscal.position`
         """
+        Fp = self.env['account.fiscal.position']
+
         if not partner_id:
-            return self.env['account.fiscal.position']
+            return Fp
 
         # This can be easily overridden to apply more complex fiscal rules
         PartnerObj = self.env['res.partner']
@@ -181,13 +191,13 @@ class AccountFiscalPosition(models.Model):
 
         # First search only matching VAT positions
         vat_required = bool(partner.vat)
-        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
+        fp_id = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
 
         # Then if VAT required found no match, try positions that do not require it
-        if not fp and vat_required:
-            fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
+        if not fp_id and vat_required:
+            fp_id = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
 
-        return fp or self.env['account.fiscal.position']
+        return Fp.browse(fp_id)
 
 
 class AccountFiscalPositionTax(models.Model):
