@@ -262,15 +262,6 @@ class ProjectTask(models.Model):
             if not self.sale_line_id:
                 self.sale_line_id = self.project_id.sale_line_id
 
-    def write(self, values):
-        res = super(ProjectTask, self).write(values)
-        # Done after super to avoid constraints on field recomputation
-        if values.get('project_id'):
-            project_dest = self.env['project.project'].browse(values['project_id'])
-            if project_dest.pricing_type == 'employee_rate':
-                self.write({'sale_line_id': False})
-        return res
-
     def _get_last_sol_of_customer(self):
         # Get the last SOL made for the customer in the current task where we need to compute
         self.ensure_one()
@@ -284,7 +275,7 @@ class ProjectTask(models.Model):
     def _get_timesheet(self):
         # return not invoiced timesheet and timesheet without so_line or so_line linked to task
         timesheet_ids = super(ProjectTask, self)._get_timesheet()
-        return timesheet_ids.filtered(lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel') and (not t.so_line or t.so_line == t.task_id._origin.sale_line_id))
+        return timesheet_ids.filtered(lambda t: t._is_not_billed())
 
     def _get_action_view_so_ids(self):
         return list(set((self.sale_order_id + self.timesheet_ids.so_line.order_id).ids))

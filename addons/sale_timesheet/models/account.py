@@ -46,7 +46,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
         for timesheet in self.filtered(lambda t: not t.is_so_line_edited and t._is_not_billed()):  # Get only the timesheets are not yet invoiced
-            timesheet.so_line = timesheet.project_id.allow_billable and timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
+            timesheet.so_line = timesheet.project_id.allow_billable and timesheet._timesheet_determine_sale_line()
 
     def _is_not_billed(self):
         self.ensure_one()
@@ -76,29 +76,29 @@ class AccountAnalyticLine(models.Model):
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
         return values
 
-    @api.model
-    def _timesheet_determine_sale_line(self, task, employee, project):
+    def _timesheet_determine_sale_line(self):
         """ Deduce the SO line associated to the timesheet line:
             1/ timesheet on task rate: the so line will be the one from the task
             2/ timesheet on employee rate task: find the SO line in the map of the project (even for subtask), or fallback on the SO line of the task, or fallback
                 on the one on the project
         """
-        if not task:
-            if project.pricing_type == 'employee_rate':
-                map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', project.id), ('employee_id', '=', employee.id)])
+        self.ensure_one()
+
+        if not self.task_id:
+            if self.project_id.pricing_type == 'employee_rate':
+                map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', self.project_id.id), ('employee_id', '=', self.employee_id.id)])
                 if map_entry:
                     return map_entry.sale_line_id
-            if project.sale_line_id:
-                return project.sale_line_id
-        if task.allow_billable and task.sale_line_id:
-            if task.pricing_type in ('task_rate', 'fixed_rate'):
-                return task.sale_line_id
+            if self.project_id.sale_line_id:
+                return self.project_id.sale_line_id
+        if self.task_id.allow_billable and self.task_id.sale_line_id:
+            if self.task_id.pricing_type in ('task_rate', 'fixed_rate'):
+                return self.task_id.sale_line_id
             else:  # then pricing_type = 'employee_rate'
-                map_entry = project.sale_line_employee_ids.filtered(lambda map_entry: map_entry.employee_id == employee)
+                map_entry = self.project_id.sale_line_employee_ids.filtered(lambda map_entry: map_entry.employee_id == self.employee_id)
                 if map_entry:
                     return map_entry.sale_line_id
-                if task.sale_line_id or project.sale_line_id:
-                    return task.sale_line_id or project.sale_line_id
+                return self.task_id.sale_line_id
         return False
 
     def _timesheet_get_portal_domain(self):
