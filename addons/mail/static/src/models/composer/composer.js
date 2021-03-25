@@ -547,6 +547,9 @@ function factory(dependencies) {
                     continue;
                 }
                 const candidateChar = this.textInputContent[candidatePosition];
+                if (candidateChar === '/' && candidatePosition !== 0) {
+                    continue;
+                }
                 if (!suggestionDelimiters.includes(candidateChar)) {
                     continue;
                 }
