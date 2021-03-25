@@ -20,7 +20,7 @@ class Lead2OpportunityPartner(models.TransientModel):
         """
         result = super(Lead2OpportunityPartner, self).default_get(fields)
         if self._context.get('active_id'):
-            tomerge = {int(self._context['active_id'])}
+            tomerge = set(self._context.get('active_ids')) or {int(self._context['active_id'])}
 
             partner_id = result.get('partner_id')
             lead = self.env['crm.lead'].browse(self._context['active_id'])
@@ -173,8 +173,6 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             res['action'] = 'each_exist_or_create'
         if 'name' in fields:
             res['name'] = 'convert'
-        if 'opportunity_ids' in fields:
-            res['opportunity_ids'] = False
         return res
 
     user_ids = fields.Many2many('res.users', string='Salesmen')
