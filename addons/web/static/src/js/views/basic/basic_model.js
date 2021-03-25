@@ -2438,7 +2438,7 @@ var BasicModel = AbstractModel.extend({
 
                     this.do_warn(
                         _.str.sprintf(
-                            _t(`'%s' is unsynchronized with ''.`),
+                            _t(`'%s' is unsynchronized with '%s'.`),
                             referenceFieldName,
                             modelFieldName,
                         ),
