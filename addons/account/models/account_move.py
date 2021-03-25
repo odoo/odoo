@@ -1900,9 +1900,13 @@ class AccountMove(models.Model):
         return res
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_except_posted_before(self):
-        if not self._context.get('force_delete') and any(move.posted_before for move in self):
-            raise UserError(_("You cannot delete an entry which has been posted once."))
+    def _unlink_except_parts_of_chain(self):
+        """ Moves with a sequence number can only be deleted if they are the last element of a chain of sequence.
+        If they are not, deleting them would create a gap. If the user really wants to do this, he still can
+        explicitly empty the 'name' field of the move; but we discourage that practice.
+        """
+        if not self._context.get('force_delete') and any(move.name != '/' and not move._is_last_from_seq_chain() for move in self):
+            raise UserError(_("You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. Probably you should revert it instead."))
 
     def unlink(self):
         self.line_ids.unlink()
