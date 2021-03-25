@@ -52,7 +52,7 @@ class TestHrEmployee(TestHrCommon):
     def test_employee_working_now(self):
         #arrange
         _tz = 'Europe/Brussels'
-        self.calendar_jean = self.env['resource.calendar'].create({
+        self.calendar = self.env['resource.calendar'].create({
             'name': '8h on Mon',
             'tz': 'Europe/Brussels',
             'attendance_ids': [
@@ -64,6 +64,12 @@ class TestHrEmployee(TestHrCommon):
                 })
             ]
         })
+        
+        self.empl = self.env['hr.employee.base'].create({
+            'name': "John tester",
+            'resource_calendar_id': self.calendar_jean.id,
+        })
+        
         with patch('odoo.fields.datetime', wraps=FieldsDatetime) as mock_datetime:
             mock_datetime.now.return_value = datetime(2021, 3, 15, 9, 30, 28) #Monday 09:30
             # act
