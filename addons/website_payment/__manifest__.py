@@ -6,7 +6,7 @@
     'summary': 'Payment integration with website',
     'version': '1.0',
     'description': """
-This is a bridge module which integrates payment acquirers with Website app.
+This is a bridge module that adds multi-website support for payment acquirers.
     """,
     'depends': [
         'website',
@@ -16,5 +16,5 @@ This is a bridge module which integrates payment acquirers with Website app.
     'data': [
         'views/payment_acquirer.xml',
     ],
-    'auto_install': False,
+    'auto_install': True,
 }
