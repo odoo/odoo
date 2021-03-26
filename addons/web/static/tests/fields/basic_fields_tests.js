@@ -3501,8 +3501,8 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldDateRange');
 
-    QUnit.test('Datetime field [REQUIRE FOCUS]', async function (assert) {
-        assert.expect(20);
+    QUnit.test('Datetime field without quickedit [REQUIRE FOCUS]', async function (assert) {
+        assert.expect(21);
 
         this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
         this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
@@ -3535,10 +3535,16 @@ QUnit.module('basic_fields', {
         // Check date range picker initialization
         assert.containsN(document.body, '.daterangepicker', 2,
             "should initialize 2 date range picker");
-        assert.strictEqual($('.daterangepicker:first').css('display'), 'block',
-            "date range picker should be opened initially");
+        assert.strictEqual($('.daterangepicker:first').css('display'), 'none',
+            "first date range picker should be closed initially");
         assert.strictEqual($('.daterangepicker:last').css('display'), 'none',
-            "date range picker should be closed initially");
+            "second date range picker should be closed initially");
+        
+        // open the first one
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+
+        assert.strictEqual($('.daterangepicker:first').css('display'), 'block',
+            "first date range picker should be opened");
         assert.strictEqual($('.daterangepicker:first .drp-calendar.left .active.start-date').text(), '8',
             "active start date should be '8' in date range picker");
         assert.strictEqual($('.daterangepicker:first .drp-calendar.left .hourselect').val(), '15',
@@ -3553,7 +3559,6 @@ QUnit.module('basic_fields', {
             "active end date minute should be '30' in date range picker");
         assert.containsN($('.daterangepicker:first .drp-calendar.left .minuteselect'), 'option', 12,
             "minute selection should contain 12 options (1 for each 5 minutes)");
-
         // Close picker
         await testUtils.dom.click($('.daterangepicker:first .cancelBtn'));
         assert.strictEqual($('.daterangepicker:first').css('display'), 'none',
@@ -3579,8 +3584,8 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('Date field [REQUIRE FOCUS]', async function (assert) {
-        assert.expect(18);
+    QUnit.test('Date field without quickedit [REQUIRE FOCUS]', async function (assert) {
+        assert.expect(19);
 
         this.data.partner.fields.date_end = {string: 'Date End', type: 'date'};
         this.data.partner.records[0].date_end = '2017-02-08';
@@ -3613,10 +3618,113 @@ QUnit.module('basic_fields', {
         // Check date range picker initialization
         assert.containsN(document.body, '.daterangepicker', 2,
             "should initialize 2 date range picker");
-        assert.strictEqual($('.daterangepicker:first').css('display'), 'block',
-            "date range picker should be opened initially");
+        assert.strictEqual($('.daterangepicker:first').css('display'), 'none',
+            "first date range picker should be closed initially");
         assert.strictEqual($('.daterangepicker:last').css('display'), 'none',
-            "date range picker should be closed initially");
+            "second date range picker should be closed initially");
+
+        // open the first one
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+
+        assert.strictEqual($('.daterangepicker:first').css('display'), 'block',
+        "first date range picker should be opened");
+        assert.strictEqual($('.daterangepicker:first .active.start-date').text(), '3',
+            "active start date should be '3' in date range picker");
+        assert.strictEqual($('.daterangepicker:first .active.end-date').text(), '8',
+            "active end date should be '8' in date range picker");
+
+        // Change date
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.left .available:contains("16")'), 'mousedown');
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.right .available:contains("12")'), 'mousedown');
+        await testUtils.dom.click($('.daterangepicker:first .applyBtn'));
+
+        // Check date after change
+        assert.strictEqual($('.daterangepicker:first').css('display'), 'none',
+            "date range picker should be closed");
+        assert.strictEqual(form.$('.o_field_date_range:first').val(), '02/16/2017',
+            "the date should be '02/16/2017'");
+        assert.strictEqual(form.$('.o_field_date_range:last').val(), '03/12/2017',
+            "'the date should be '03/12/2017'");
+
+        // Try to change range with end date
+        await testUtils.dom.click(form.$('.o_field_date_range:last'));
+        assert.strictEqual($('.daterangepicker:last').css('display'), 'block',
+            "date range picker should be opened");
+        assert.strictEqual($('.daterangepicker:last .active.start-date').text(), '16',
+            "start date should be a 16 in date range picker");
+        assert.strictEqual($('.daterangepicker:last .active.end-date').text(), '12',
+            "end date should be a 12 in date range picker");
+
+        // Change date
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:last .drp-calendar.left .available:contains("13")'), 'mousedown');
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:last .drp-calendar.right .available:contains("18")'), 'mousedown');
+        await testUtils.dom.click($('.daterangepicker:last .applyBtn'));
+
+        // Check date after change
+        assert.strictEqual($('.daterangepicker:last').css('display'), 'none',
+            "date range picker should be closed");
+        assert.strictEqual(form.$('.o_field_date_range:first').val(), '02/13/2017',
+            "the start date should be '02/13/2017'");
+        assert.strictEqual(form.$('.o_field_date_range:last').val(), '03/18/2017',
+            "the end date should be '03/18/2017'");
+
+        // Save
+        await testUtils.form.clickSave(form);
+
+        // Check date after save
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/13/2017',
+            "the start date should be '02/13/2017' after save");
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '03/18/2017',
+            "the end date should be '03/18/2017' after save");
+
+        form.destroy();
+    });
+
+    QUnit.test('Date field with quickedit [REQUIRE FOCUS]', async function (assert) {
+        assert.expect(18);
+
+        this.data.partner.fields.date_end = {string: 'Date End', type: 'date'};
+        this.data.partner.records[0].date_end = '2017-02-08';
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="date" widget="daterange" options="{\'related_end_date\': \'date_end\'}"/>' +
+                    '<field name="date_end" widget="daterange" options="{\'related_start_date\': \'date\'}"/>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                // Date field should not have an offset as they are ignored. 
+                // However, in the test environement, a UTC timezone is set to run all tests. And if any code does not use the safe timezone method
+                // provided by the framework (which happens in this case inside the date range picker lib), unexpected behavior kicks in as the timezone
+                // of the dev machine collides with the timezone set by the test env. 
+                // To avoid failing test on dev's local machines, a hack is to apply an timezone offset greater than the difference between UTC and the dev's
+                // machine timezone. For belgium, > 60 is enough. For India, > 5h30 is required, hence 330.
+                // Note that prod and runbot will never have a problem with this, it only happens as you mock the getTZOffset method (like in tests).
+                getTZOffset: function () {
+                    return 330;
+                },
+            },
+        });
+
+        // Check date display correctly in readonly
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/03/2017',
+            "the start date should be correctly displayed in readonly");
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '02/08/2017',
+            "the end date should be correctly displayed in readonly");
+
+        // open the first one with quick edit
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+        
+        // Check date range picker initialization
+        assert.containsN(document.body, '.daterangepicker', 2,
+            "should initialize 2 date range picker");
+        assert.strictEqual($('.daterangepicker:first').css('display'), 'block',
+            "first date range picker should be opened initially");
+        assert.strictEqual($('.daterangepicker:last').css('display'), 'none',
+            "second date range picker should be closed initially");
         assert.strictEqual($('.daterangepicker:first .active.start-date').text(), '3',
             "active start date should be '3' in date range picker");
         assert.strictEqual($('.daterangepicker:first .active.end-date').text(), '8',
