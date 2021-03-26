@@ -1,119 +1,94 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import logging
 import pprint
 
 import requests
 import werkzeug
-from werkzeug import urls
 
-from odoo import http
-from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo import _, http
+from odoo.exceptions import ValidationError
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
 
 class PaypalController(http.Controller):
-    _notify_url = '/payment/paypal/ipn/'
     _return_url = '/payment/paypal/dpn/'
-    _cancel_url = '/payment/paypal/cancel/'
+    _notify_url = '/payment/paypal/ipn/'
 
-    def _parse_pdt_response(self, response):
-        """ Parse a text response for a PDT verification.
+    @http.route(_return_url, type='http', auth='public', methods=['POST'], csrf=False)
+    def paypal_dpn(self, **data):
+        """ Route used by the PDT notification.
 
-            :param str response: text response, structured in the following way:
-                STATUS\nkey1=value1\nkey2=value2...\n
-             or STATUS\nError message...\n
-            :rtype tuple(str, dict)
-            :return: tuple containing the STATUS str and the key/value pairs
-                     parsed as a dict
+        The "PDT notification" is actually POST data sent along the user redirection.
         """
-        lines = [line for line in response.split('\n') if line]
-        status = lines.pop(0)
+        _logger.info("beginning DPN with post data:\n%s", pprint.pformat(data))
+        self._validate_data_authenticity(**data)
+        request.env['payment.transaction']._handle_feedback_data('paypal', data)
+        return werkzeug.utils.redirect('/payment/status')
 
-        pdt_post = {}
-        for line in lines:
-            split = line.split('=', 1)
-            if len(split) == 2:
-                pdt_post[split[0]] = urls.url_unquote_plus(split[1])
-            else:
-                _logger.warning('Paypal: error processing pdt response: %s', line)
-
-        return status, pdt_post
-
-    def paypal_validate_data(self, **post):
-        """ Paypal IPN: three steps validation to ensure data correctness
-
-         - step 1: return an empty HTTP 200 response -> will be done at the end
-           by returning ''
-         - step 2: POST the complete, unaltered message back to Paypal (preceded
-           by cmd=_notify-validate or _notify-synch for PDT), with same encoding
-         - step 3: paypal send either VERIFIED or INVALID (single word) for IPN
-                   or SUCCESS or FAIL (+ data) for PDT
-
-        Once data is validated, process it. """
-        res = False
-        post['cmd'] = '_notify-validate'
-        reference = post.get('item_number')
-        tx = None
-        if reference:
-            tx = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
-        if not tx:
-            # we have seemingly received a notification for a payment that did not come from
-            # odoo, acknowledge it otherwise paypal will keep trying
-            _logger.warning('received notification for unknown payment reference')
-            return False
-        paypal_url = tx.acquirer_id.paypal_get_form_action_url()
-        pdt_request = bool(post.get('amt'))  # check for specific pdt param
-        if pdt_request:
-            # this means we are in PDT instead of DPN like before
-            # fetch the PDT token
-            post['at'] = tx and tx.acquirer_id.paypal_pdt_token or ''
-            post['cmd'] = '_notify-synch'  # command is different in PDT than IPN/DPN
-        urequest = requests.post(paypal_url, post)
-        urequest.raise_for_status()
-        resp = urequest.text
-        if pdt_request:
-            resp, post = self._parse_pdt_response(resp)
-        if resp in ['VERIFIED', 'SUCCESS']:
-            _logger.info('Paypal: validated data')
-            res = request.env['payment.transaction'].sudo().form_feedback(post, 'paypal')
-            if not res and tx:
-                tx._set_transaction_error('Validation error occured. Please contact your administrator.')
-        elif resp in ['INVALID', 'FAIL']:
-            _logger.warning('Paypal: answered INVALID/FAIL on data verification')
-            if tx:
-                tx._set_transaction_error('Invalid response from Paypal. Please contact your administrator.')
-        else:
-            _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED/SUCCESS or INVALID/FAIL (validation: %s)' % (resp, 'PDT' if pdt_request else 'IPN/DPN'))
-            if tx:
-                tx._set_transaction_error('Unrecognized error from Paypal. Please contact your administrator.')
-        return res
-
-    @http.route('/payment/paypal/ipn/', type='http', auth='public', methods=['POST'], csrf=False)
-    def paypal_ipn(self, **post):
-        """ Paypal IPN. """
-        _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
+    @http.route(_notify_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False)
+    def paypal_ipn(self, **data):
+        """ Route used by the IPN. """
+        _logger.info("beginning IPN with post data:\n%s", pprint.pformat(data))
         try:
-            self.paypal_validate_data(**post)
-        except ValidationError:
-            _logger.exception('Unable to validate the Paypal payment')
+            self._validate_data_authenticity(**data)
+            request.env['payment.transaction']._handle_feedback_data('paypal', data)
+        except ValidationError:  # Acknowledge the notification to avoid getting spammed
+            _logger.exception("unable to handle the IPN data; skipping to acknowledge the notif")
         return ''
 
-    @http.route('/payment/paypal/dpn', type='http', auth="public", methods=['POST', 'GET'], csrf=False)
-    def paypal_dpn(self, **post):
-        """ Paypal DPN """
-        _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
-        try:
-            res = self.paypal_validate_data(**post)
-        except ValidationError:
-            _logger.exception('Unable to validate the Paypal payment')
-        return werkzeug.utils.redirect('/payment/process')
+    def _validate_data_authenticity(self, **data):
+        """ Validate the authenticity of data received through DPN or IPN
 
-    @http.route('/payment/paypal/cancel', type='http', auth="public", csrf=False)
-    def paypal_cancel(self, **post):
-        """ When the user cancels its Paypal payment: GET on this route """
-        _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
-        return werkzeug.utils.redirect('/payment/process')
+        The verification is done in three steps:
+          - 1: POST the complete, unaltered, message back to Paypal (preceded by
+               `cmd=_notify-validate`), in the same encoding.
+          - 2: PayPal sends back either 'VERIFIED' or 'INVALID'.
+          - 3: Return an empty HTTP 200 response (done at the end of the route method).
+        See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNIntro
+
+        As per https://developer.paypal.com/docs/api-basics/notifications/payment-data-transfer/,
+        PDT notifications should be verified in a similar but different manner:
+          - The transaction ID should be retrieved from the GET param `tx`.
+          - The POST should use `_notify-synch` (as per previous versions of this method) as `cmd`,
+            and only have as params the transaction ID and the PDT Identity Token (under the key
+            `at`, as per previous versions of this method).
+          - The payment data should be parsed from the response of the check request.
+        In practice, however, the transaction ID is never given by PayPal and the documentation
+        has no mention of `_notify_synch` nor `at`. Because of this, PDT cannot be verified as
+        prescribed by the documentation.
+        Nevertheless, previous versions of this method used a bad heuristic (assessing the presence
+        of the optional, PDT-specific, param `amt`) to determine whether the notification was a PDT.
+        Since PDT notifications have in practice always been successfully authenticated by using the
+        IPN protocol, this method does explicitly that for both PDT and IPN.
+
+        :param dict data: The data whose authenticity to check
+        :return: None
+        :raise: ValidationError if the authenticity could not be verified
+        """
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            'paypal', data
+        )
+        acquirer_sudo = tx_sudo.acquirer_id
+
+        # Request PayPal for an authenticity check
+        data['cmd'] = '_notify-validate'
+        response = requests.post(acquirer_sudo._paypal_get_api_url(), data, timeout=60)
+        response.raise_for_status()
+
+        # Inspect the response code and raise if not 'VERIFIED'.
+        response_code = response.text
+        if response_code == 'VERIFIED':
+            _logger.info("authenticity of notification data verified")
+        elif response_code == 'INVALID':
+            raise ValidationError("PayPal: " + _("Notification data were not acknowledged."))
+        else:
+            raise ValidationError(
+                "PayPal: " + _(
+                    "Received unrecognized authentication check response code: received %s, "
+                    "expected VERIFIED or INVALID.",
+                    response_code
+                )
+            )
