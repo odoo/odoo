@@ -75,6 +75,24 @@ class res_partner(models.Model):
     # define a one2many field based on the inherited field partner_id
     daughter_ids = fields.One2many('test.inherit.daughter', 'partner_id')
 
+    # define two computed fields, one of which is initialized by _init_column()
+    test_init_computed = fields.Char(compute='_compute_test_init_computed', store=True)
+    test_init_optimized = fields.Char(compute='_compute_test_init_optimized', store=True)
+
+    def _compute_test_init_computed(self):
+        self.test_init_computed = 'computed'
+
+    def _compute_test_init_optimized(self):
+        self.test_init_optimized = 'computed'
+
+    def _init_column(self, column_name):
+        if column_name == "test_init_optimized":
+            # initialize the field and return True to avoid the field being
+            # computed with '_compute_test_init_optimized'
+            self.env.cr.execute("UPDATE res_partner p SET test_init_optimized = 'optimized'")
+            return True
+        return super()._init_column(column_name)
+
 
 # Check the overriding of property fields by non-property fields.
 # Contribution by Adrien Peiffer (ACSONE).
