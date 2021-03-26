@@ -25,10 +25,15 @@ class WebsiteSnippetFilter(models.Model):
     filter_id = fields.Many2one('ir.filters', 'Filter', ondelete='cascade')
     limit = fields.Integer(help='The limit is the maximum number of records retrieved', required=True)
     website_id = fields.Many2one('website', string='Website', ondelete='cascade')
+    model_name = fields.Char(string='Model name', compute='_compute_model_name')
 
-    @api.model
-    def escape_falsy_as_empty(self, s):
-        return escape(s) if s else ''
+    @api.depends('filter_id', 'action_server_id')
+    def _compute_model_name(self):
+        for snippet_filter in self:
+            if snippet_filter.filter_id:
+                snippet_filter.model_name = snippet_filter.filter_id.model_id
+            else:  # self.action_server_id
+                snippet_filter.model_name = snippet_filter.action_server_id.model_id.model
 
     @api.constrains('action_server_id', 'filter_id')
     def _check_data_source_is_provided(self):
@@ -63,13 +68,11 @@ class WebsiteSnippetFilter(models.Model):
         records = self._prepare_values(limit, search_domain)
         is_sample = with_sample and not records
         if is_sample:
-            records = self._prepare_sample()
+            records = self._prepare_sample(limit)
         View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
-        escaped_records = self._record_to_escaped_values(records)
         content = View._render_template(template_key, dict(
-            records=escaped_records,
+            records=records,
             is_sample=is_sample,
-            to_generic=self._to_generic,
         )).decode('utf-8')
         return [ET.tostring(el, encoding='utf-8') for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
 
@@ -81,6 +84,8 @@ class WebsiteSnippetFilter(models.Model):
         if self.filter_id:
             filter_sudo = self.filter_id.sudo()
             domain = filter_sudo._get_eval_domain()
+            if 'website_id' in self.env[filter_sudo.model_id]:
+                domain = expression.AND([domain, self.env['website'].get_current_website().website_domain()])
             if 'is_published' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:
@@ -106,78 +111,6 @@ class WebsiteSnippetFilter(models.Model):
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
                 return []
 
-    def _to_generic(self, records):
-        """Converts a list of dictionary records into the structure used by generic templates for rendering:
-
-            [{
-                'fields':
-                    OrderedDict([
-                        ('name', 'Afghanistan'),
-                        ('code', 'AF'),
-                    ]),
-                'image_fields':
-                    OrderedDict([
-                        ('image', '/web/image/res.country/3/image?unique=5d9b44e')
-                    ]),
-                'call_to_action_url': 'some/location'
-            }, ... , ...]
-
-        @param records: records as dictionaries of non-escaped values associated to field names
-
-        @return List of Dict matching the rendering structure for generic templates
-        """
-        meta_data = self._get_filter_meta_data()
-
-        result = []
-        for record in records:
-            data = {
-                'fields': OrderedDict({}),
-                'image_fields': OrderedDict({}),
-            }
-            for field_name, field_widget in meta_data.items():
-                value = record[field_name]
-                if field_widget in ('binary', 'image'):
-                    data['image_fields'][field_name] = value
-                else:
-                    data['fields'][field_name] = value
-            data['call_to_action_url'] = record.get('call_to_action_url')
-            result.append(data)
-        return result
-
-    def _record_to_escaped_values(self, records):
-        """Converts a list of dictionary records into rendered values
-
-        @param records: records as dictionaries of non-escaped values associated to field names
-
-        @return List of Dict containing rendered values of each field
-        """
-        meta_data = self._get_filter_meta_data()
-        result = []
-        for record in records:
-            data = {}
-            for field_name, field_widget in meta_data.items():
-                value = record[field_name]
-                if field_widget in ('binary', 'image'):
-                    data[field_name] = self.escape_falsy_as_empty(value)
-                elif field_widget == 'monetary':
-                    FieldMonetary = self.env['ir.qweb.field.monetary']
-                    website_currency = self._get_website_currency()
-                    data[field_name] = FieldMonetary.value_to_html(
-                        value,
-                        {'display_currency': website_currency}
-                    )
-                elif 'ir.qweb.field.%s' % field_widget in self.env:
-                    options = {}
-                    if field_widget == 'html':
-                        options['template_options'] = {}
-                    data[field_name] = self.env['ir.qweb.field.%s' % field_widget].value_to_html(
-                        value, options)
-                else:
-                    data[field_name] = self.escape_falsy_as_empty(value)
-            data['call_to_action_url'] = record.get('call_to_action_url')
-            result.append(data)
-        return result
-
     def _get_field_name_and_type(self, model, field_name):
         """
         Separates the name and the widget type
@@ -189,7 +122,7 @@ class WebsiteSnippetFilter(models.Model):
         """
         field_name, _, field_widget = field_name.partition(":")
         if not field_widget:
-            field = model._fields.get(field_name) if model else None
+            field = model._fields.get(field_name)
             if field:
                 field_type = field.type
             elif 'image' in field_name:
@@ -206,15 +139,14 @@ class WebsiteSnippetFilter(models.Model):
 
         @return OrderedDict containing the widget type for each field name
         """
-        model = self.env[self.filter_id.model_id] if self.filter_id else (
-            self.action_server_id.model_id if self.action_server_id else None)
+        model = self.env[self.model_name]
         meta_data = OrderedDict({})
         for field_name in self.field_names.split(","):
             field_name, field_widget = self._get_field_name_and_type(model, field_name)
             meta_data[field_name] = field_widget
         return meta_data
 
-    def _prepare_sample(self, length=4):
+    def _prepare_sample(self, length=6):
         """
         Generates sample data and returns it the right format for render.
 
@@ -224,15 +156,27 @@ class WebsiteSnippetFilter(models.Model):
         """
         if not length:
             return []
+        records = self._prepare_sample_records(length)
+        return self._filter_records_to_values(records, is_sample=True)
+
+    def _prepare_sample_records(self, length):
+        """
+        Generates sample records.
+
+        @param length: Number of sample records to generate
+
+        @return List of of sample records
+        """
+        if not length:
+            return []
 
         sample = []
-        model = self.env[self.filter_id.model_id] if self.filter_id else (
-            self.action_server_id.model_id if self.action_server_id else None)
+        model = self.env[self.model_name]
         sample_data = self._get_hardcoded_sample(model)
         for index in range(0, length):
             single_sample_data = sample_data[index % len(sample_data)].copy()
             self._fill_sample(single_sample_data, index)
-            sample.append(single_sample_data)
+            sample.append(model.new(single_sample_data))
         return sample
 
     def _fill_sample(self, sample, index):
@@ -243,19 +187,17 @@ class WebsiteSnippetFilter(models.Model):
         @param index: Index of the sample within the dataset
         """
         meta_data = self._get_filter_meta_data()
+        model = self.env[self.model_name]
         for field_name, field_widget in meta_data.items():
-            if field_name not in sample:
-                if field_widget == 'binary':
+            if field_name not in sample and field_name in model:
+                if field_widget in ('image', 'binary'):
                     sample[field_name] = None
-                elif field_widget == 'image':
-                    sample[field_name] = '/web/image'
                 elif field_widget == 'monetary':
                     sample[field_name] = randint(100, 10000) / 10.0
                 elif field_widget in ('integer', 'float'):
                     sample[field_name] = index
                 else:
                     sample[field_name] = _('Sample %s', index + 1)
-        sample['call_to_action_url'] = ''
         return sample
 
     def _get_hardcoded_sample(self, model):
@@ -268,30 +210,33 @@ class WebsiteSnippetFilter(models.Model):
         """
         return [{}]
 
-    def _filter_records_to_values(self, records):
+    def _filter_records_to_values(self, records, is_sample=False):
         """
         Extract the fields from the data source 'records' and put them into a dictionary of values
 
         @param records: Model records returned by the filter
+        @param is_sample: True if conversion if for sample records
 
         @return List of dict associating the field value to each field name
         """
-
         self.ensure_one()
         meta_data = self._get_filter_meta_data()
 
         values = []
-        model = self.env[self.filter_id.model_id]
+        model = self.env[self.model_name]
         Website = self.env['website']
         for record in records:
             data = {}
             for field_name, field_widget in meta_data.items():
                 field = model._fields.get(field_name)
-                if field.type == 'binary':
-                    data[field_name] = Website.image_url(record, field_name)
+                if field and field.type in ('binary', 'image'):
+                    if is_sample:
+                        data[field_name] = record[field_name].decode('utf8') if field_name in record else '/web/image'
+                    else:
+                        data[field_name] = Website.image_url(record, field_name)
                 elif field_widget == 'monetary':
                     model_currency = None
-                    if field.type == 'monetary':
+                    if field and field.type == 'monetary':
                         model_currency = record[record[field_name].currency_field]
                     elif 'currency_id' in model._fields:
                         model_currency = record['currency_id']
@@ -309,6 +254,7 @@ class WebsiteSnippetFilter(models.Model):
                     data[field_name] = record[field_name]
 
             data['call_to_action_url'] = 'website_url' in record and record['website_url']
+            data['_record'] = record
             values.append(data)
         return values
 

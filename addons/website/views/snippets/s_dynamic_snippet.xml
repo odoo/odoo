@@ -4,7 +4,7 @@
         <section t-attf-class="#{snippet_name} s_dynamic d-none pt24 pb24">
             <div class="container o_not_editable">
                 <div class="css_non_editable_mode_hidden">
-                    <div class="missing_option_warning alert alert-info rounded-0 fade show d-print-none">
+                    <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none">
                         Your Dynamic Snippet will be displayed here... This message is displayed because you did not provided both a filter and a template to use.<br/>
                     </div>
                 </div>
@@ -41,14 +41,14 @@
                 <we-button data-select-data-attribute="16">16</we-button>
             </we-select>
             <we-title class="mt-2"><t t-esc="grouping_message"/></we-title>
-            <we-select string="⌙ Normal devices" data-name="number_of_elements_opt" data-attribute-name="numberOfElements" data-no-preview="true"><!-- &emsp; -->
+            <we-select string="⌙ Desktop" data-name="number_of_elements_opt" data-attribute-name="numberOfElements" data-no-preview="true"><!-- &emsp; -->
                 <we-button data-select-data-attribute="1">1</we-button>
                 <we-button data-select-data-attribute="2">2</we-button>
                 <we-button data-select-data-attribute="3">3</we-button>
                 <we-button data-select-data-attribute="4">4</we-button>
                 <we-button data-select-data-attribute="6">6</we-button>
             </we-select>
-            <we-select string="⌙ Small devices" data-name="number_of_elements_small_devices_opt" data-attribute-name="numberOfElementsSmallDevices" data-no-preview="true"><!-- &emsp; -->
+            <we-select string="⌙ Mobile" data-name="number_of_elements_small_devices_opt" data-attribute-name="numberOfElementsSmallDevices" data-no-preview="true"><!-- &emsp; -->
                 <we-button data-select-data-attribute="1">1</we-button>
                 <we-button data-select-data-attribute="2">2</we-button>
                 <we-button data-select-data-attribute="3">3</we-button>
