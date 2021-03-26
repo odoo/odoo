@@ -19,14 +19,13 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
         super(TestLeadAssignCommon, cls).setUpClass()
         cls._switch_to_multi_membership()
         cls._switch_to_auto_assign()
-
         # don't mess with existing teams, deactivate them to make tests repeatable
         cls.sales_teams = cls.sales_team_1 + cls.sales_team_convert
         cls.members = cls.sales_team_1_m1 | cls.sales_team_1_m2 | cls.sales_team_1_m3 | cls.sales_team_convert_m1 | cls.sales_team_convert_m2
         cls.env['crm.team'].search([('id', 'not in', cls.sales_teams.ids)]).write({'active': False})
 
         # don't mess with existing leads, deactivate those assigned to users used here to make tests repeatable
-        cls.env['crm.lead'].search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).write({'active': False})
+        cls.env['crm.lead'].with_context(active_test=False).search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).unlink()
         cls.bundle_size = 5
         cls.env['ir.config_parameter'].set_param('crm.assignment.bundle', '%s' % cls.bundle_size)
         cls.env['ir.config_parameter'].set_param('crm.assignment.delay', '0')
