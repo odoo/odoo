@@ -182,6 +182,14 @@ Object.assign(ThreadView, {
             type: String,
             validate: prop => ['auto', 'card', 'hover', 'none'].includes(prop),
         },
+        /**
+         * Function returns the exact scrollable element from the parent
+         * to manage proper scroll heights which affects the load more messages.
+         */
+        getScrollableElement: {
+            type: Function,
+            optional: true,
+        },
         hasComposer: Boolean,
         hasComposerCurrentPartnerAvatar: {
             type: Boolean,
