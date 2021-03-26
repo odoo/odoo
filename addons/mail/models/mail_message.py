@@ -1160,10 +1160,16 @@ class Message(models.Model):
                     continue
                 else:
                     messages |= message
+        messages_per_partner = defaultdict(lambda: self.env['mail.message'])
+        for message in messages:
+            if not self.env.user._is_public():
+                messages_per_partner[self.env.user.partner_id] |= message
+            if message.author_id and not any(user._is_public() for user in message.author_id.with_context(active_test=False).user_ids):
+                messages_per_partner[message.author_id] |= message
         updates = [[
-            (self._cr.dbname, 'res.partner', author.id),
-            {'type': 'message_notification_update', 'elements': self.env['mail.message'].concat(*author_messages)._message_notification_format()}
-        ] for author, author_messages in groupby(messages.sorted('author_id'), itemgetter('author_id'))]
+            (self._cr.dbname, 'res.partner', partner.id),
+            {'type': 'message_notification_update', 'elements': messages._message_notification_format()}
+        ] for partner, messages in messages_per_partner.items()]
         self.env['bus.bus'].sendmany(updates)
 
     # ------------------------------------------------------
