@@ -1,24 +1,25 @@
-odoo.define('mail/static/src/components/discuss/tests/discuss_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const BusService = require('bus.BusService');
+import BusService from 'bus.BusService';
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
-const { makeTestPromise, file: { createFile, inputFiles } } = require('web.test_utils');
+import Bus from 'web.Bus';
+import { makeTestPromise, file } from 'web.test_utils';
 
-const {
+import {
     applyFilter,
     toggleAddCustomFilter,
     toggleFilterMenu,
-} = require('web.test_utils_control_panel');
+} from 'web.test_utils_control_panel';
+
+const { createFile, inputFiles } = file;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -4231,6 +4232,4 @@ QUnit.test('add custom filter should filter messages accordingly to selected fil
 
 });
 });
-});
-
 });

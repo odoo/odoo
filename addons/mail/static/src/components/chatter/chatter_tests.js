@@ -1,18 +1,17 @@
-odoo.define('mail/static/src/components/chatter/chatter_tests', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Chatter: require('mail/static/src/components/chatter/chatter.js'),
-    Composer: require('mail/static/src/components/composer/composer.js'),
-};
-const {
+import Chatter from '@mail/components/chatter/chatter';
+import Composer from '@mail/components/composer/composer';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { Chatter, Composer };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -527,6 +526,4 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
 
 });
 });
-});
-
 });

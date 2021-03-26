@@ -9,7 +9,7 @@ odoo.define('hr.Many2OneAvatarEmployee', function (require) {
     //   <field name="employee_id" widget="many2one_avatar_employee"/>
 
     const fieldRegistry = require('web.field_registry');
-    const { Many2OneAvatarUser, KanbanMany2OneAvatarUser } = require('mail.Many2OneAvatarUser');
+    const { Many2OneAvatarUser, KanbanMany2OneAvatarUser } = require('@mail/js/many2one_avatar_user');
 
     const { Component } = owl;
 

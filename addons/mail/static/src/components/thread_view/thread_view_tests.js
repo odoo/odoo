@@ -1,18 +1,17 @@
-odoo.define('mail/static/src/components/thread_view/thread_view_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
-};
-const { insert, link } = require('mail/static/src/model/model_field_command.js');
-const {
+import ThreadView from '@mail/components/thread_view/thread_view';
+import { insert, link } from '@mail/model/model_field_command';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     dragenterFiles,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { ThreadView };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -2175,6 +2174,4 @@ QUnit.test("not highlighting the message if not mentioning the current user insi
 
 });
 });
-});
-
 });

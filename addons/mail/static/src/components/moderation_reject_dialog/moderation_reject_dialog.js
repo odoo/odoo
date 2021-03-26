@@ -1,15 +1,14 @@
-odoo.define('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
 
-const components = {
-    Dialog: require('web.OwlDialog'),
-};
+import Dialog from 'web.OwlDialog';
 
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
+
+const components = { Dialog };
 
 class ModerationRejectDialog extends Component {
 
@@ -99,6 +98,4 @@ Object.assign(ModerationRejectDialog, {
     template: 'mail.ModerationRejectDialog',
 });
 
-return ModerationRejectDialog;
-
-});
+export default ModerationRejectDialog;

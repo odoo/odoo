@@ -1,13 +1,12 @@
-odoo.define('mail/static/src/models/message/message.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const emojis = require('mail.emojis');
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
-const { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } = require('mail.utils');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import emojis from '@mail/js/emojis';
+import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
 
-const { str_to_datetime } = require('web.time');
+import { str_to_datetime } from 'web.time';
 
 function factory(dependencies) {
 
@@ -832,5 +831,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.message', factory);
-
-});

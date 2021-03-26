@@ -1,11 +1,8 @@
-odoo.define('mail/static/src/components/composer/composer_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Composer: require('mail/static/src/components/composer/composer.js'),
-};
-const { create } = require('mail/static/src/model/model_field_command.js');
-const {
+import Composer from '@mail/components/composer/composer';
+import { create } from '@mail/model/model_field_command';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
@@ -15,15 +12,15 @@ const {
     nextAnimationFrame,
     pasteFiles,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const {
-    file: {
-        createFile,
-        inputFiles,
-    },
+import {
+    file,
     makeTestPromise,
-} = require('web.test_utils');
+} from 'web.test_utils';
+
+const { createFile, inputFiles } = file;
+const components = { Composer };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -2334,6 +2331,4 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
 
 });
 });
-});
-
 });

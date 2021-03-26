@@ -1,16 +1,15 @@
-odoo.define('mail/static/src/components/message_seen_indicator/message_seen_indicator_tests', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    MessageSendIndicator: require('mail/static/src/components/message_seen_indicator/message_seen_indicator.js'),
-};
-const { create, insert, link } = require('mail/static/src/model/model_field_command.js');
-const {
+import MessageSendIndicator from '@mail/components/message_seen_indicator/message_seen_indicator';
+import { create, insert, link } from '@mail/model/model_field_command';
+import {
     afterEach,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { MessageSendIndicator };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -290,6 +289,4 @@ QUnit.test('rendering when just everyone has seen the message', async function (
 
 });
 });
-});
-
 });

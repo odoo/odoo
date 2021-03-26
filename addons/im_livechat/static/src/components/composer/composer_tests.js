@@ -1,15 +1,14 @@
-odoo.define('im_livechat/static/src/components/composer/composer_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Composer: require('mail/static/src/components/composer/composer.js'),
-};
-const {
+import Composer from '@mail/components/composer/composer';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { Composer };
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
@@ -63,6 +62,4 @@ QUnit.test('livechat: no add attachment button', async function (assert) {
 
 });
 });
-});
-
 });

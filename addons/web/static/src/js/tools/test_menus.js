@@ -14,7 +14,7 @@
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
-        var DiscussWidget = odoo.__DEBUG__.services['mail/static/src/widgets/discuss/discuss.js'];
+        var DiscussWidget = odoo.__DEBUG__.services['@mail/widgets/discuss/discuss'][Symbol.for("default")];
         var WebClient = odoo.__DEBUG__.services["web.WebClient"];
 
         WebClient.include({

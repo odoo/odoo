@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/utils/throttle/throttle_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
-const throttle = require('mail/static/src/utils/throttle/throttle.js');
-const { nextTick } = require('mail/static/src/utils/utils.js');
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
+import throttle from '@mail/utils/throttle/throttle';
+import { nextTick } from '@mail/utils/utils';
 
 const { ThrottleReinvokedError, ThrottleCanceledError } = throttle;
 
@@ -402,6 +401,4 @@ QUnit.test('clear throttled call', async function (assert) {
 
 });
 });
-});
-
 });

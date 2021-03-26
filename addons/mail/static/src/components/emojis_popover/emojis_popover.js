@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/components/emojis_popover/emojis_popover.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const emojis = require('mail.emojis');
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useUpdate from '@mail/component_hooks/use_update/use_update';
+import emojis from '@mail/js/emojis';
 
 const { Component } = owl;
 
@@ -73,6 +72,4 @@ Object.assign(EmojisPopover, {
     template: 'mail.EmojisPopover',
 });
 
-return EmojisPopover;
-
-});
+export default EmojisPopover;

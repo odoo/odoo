@@ -1,7 +1,7 @@
 odoo.define('snailmail/static/src/models/message.message.js', function (require) {
 'use strict';
 
-const { registerInstancePatchModel } = require('mail/static/src/model/model_core.js');
+const { registerInstancePatchModel } = require('@mail/model/model_core');
 
 registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.message.js', {
 

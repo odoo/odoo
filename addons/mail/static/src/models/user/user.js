@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/models/user/user.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2one } = require('mail/static/src/model/model_field.js');
-const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, one2one } from '@mail/model/model_field';
+import { insert, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -253,5 +252,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.user', factory);
-
-});

@@ -1,8 +1,7 @@
-odoo.define('mail.DebugManager.Backend', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-var DebugManager = require('web.DebugManager.Backend');
+import core from 'web.core';
+import DebugManager from 'web.DebugManager.Backend';
 
 var _t = core._t;
 /**
@@ -28,6 +27,4 @@ DebugManager.include({
             },
         });
     },
-});
-
 });

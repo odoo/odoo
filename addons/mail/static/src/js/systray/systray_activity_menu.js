@@ -1,11 +1,9 @@
-odoo.define('mail.systray.ActivityMenu', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-var session = require('web.session');
-var SystrayMenu = require('web.SystrayMenu');
-var Widget = require('web.Widget');
-var QWeb = core.qweb;
+import { qweb as QWeb } from 'web.core';
+import session  from 'web.session';
+import SystrayMenu from 'web.SystrayMenu';
+import Widget from 'web.Widget';
 
 const { Component } = owl;
 
@@ -128,7 +126,7 @@ var ActivityMenu = Widget.extend({
             if (targetAction.data('domain')) {
                 domain = domain.concat(targetAction.data('domain'))
             }
-            
+
             this.do_action({
                 type: 'ir.actions.act_window',
                 name: targetAction.data('model_name'),
@@ -160,12 +158,12 @@ var ActivityMenu = Widget.extend({
         // Necessary because activity_ids of mail.activity.mixin has auto_join
         // So, duplicates are faking the count and "Load more" doesn't show up
         context['force_search_count'] = 1;
-        
+
         var domain = [['activity_ids.user_id', '=', session.uid]]
         if (data.domain) {
             domain = domain.concat(data.domain)
         }
-        
+
         this.do_action({
             type: 'ir.actions.act_window',
             name: data.model_name,
@@ -195,6 +193,4 @@ var ActivityMenu = Widget.extend({
 
 SystrayMenu.Items.push(ActivityMenu);
 
-return ActivityMenu;
-
-});
+export default ActivityMenu;

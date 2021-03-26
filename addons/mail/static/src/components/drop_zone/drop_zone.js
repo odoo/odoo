@@ -1,7 +1,6 @@
-odoo.define('mail/static/src/components/drop_zone/drop_zone.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
 const { Component, useState } = owl;
 
@@ -134,6 +133,4 @@ Object.assign(DropZone, {
     template: 'mail.DropZone',
 });
 
-return DropZone;
-
-});
+export default DropZone;

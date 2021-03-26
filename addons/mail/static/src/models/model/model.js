@@ -1,8 +1,7 @@
-odoo.define('mail/static/src/models/Model', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { RecordDeletedError } = require('mail/static/src/model/model_errors.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { RecordDeletedError } from '@mail/model/model_errors';
 
 /**
  * This function generates a class that represent a model. Instances of such
@@ -287,5 +286,3 @@ function factory() {
 }
 
 registerNewModel('mail.model', factory);
-
-});

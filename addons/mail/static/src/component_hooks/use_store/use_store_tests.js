@@ -1,11 +1,10 @@
-odoo.define('mail/static/src/component_hooks/use_store/use_store_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const {
+import useStore from '@mail/component_hooks/use_store/use_store';
+import {
     afterNextRender,
     nextAnimationFrame,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
 const { Component, QWeb, Store } = owl;
 const { onPatched, useGetters } = owl.hooks;
@@ -184,6 +183,4 @@ QUnit.test("compare keys, depth 1, proxy", async function (assert) {
 
 });
 });
-});
-
 });

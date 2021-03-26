@@ -1,35 +1,35 @@
-odoo.define('mail/static/src/utils/test_utils.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const BusService = require('bus.BusService');
+import BusService from 'bus.BusService';
 
-const {
+import {
     addMessagingToEnv,
     addTimeControlToEnv,
-} = require('mail/static/src/env/test_env.js');
-const ModelManager = require('mail/static/src/model/model_manager.js');
-const ChatWindowService = require('mail/static/src/services/chat_window_service/chat_window_service.js');
-const DialogService = require('mail/static/src/services/dialog_service/dialog_service.js');
-const { nextTick } = require('mail/static/src/utils/utils.js');
-const DiscussWidget = require('mail/static/src/widgets/discuss/discuss.js');
-const MessagingMenuWidget = require('mail/static/src/widgets/messaging_menu/messaging_menu.js');
-const MockModels = require('mail/static/tests/helpers/mock_models.js');
+} from '@mail/env/test_env';
+import ModelManager from '@mail/model/model_manager';
+import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
+import DialogService from '@mail/services/dialog_service/dialog_service';
+import { nextTick } from '@mail/utils/utils';
+import DiscussWidget from '@mail/widgets/discuss/discuss';
+import MessagingMenuWidget from '@mail/widgets/messaging_menu/messaging_menu';
+import MockModels from '@mail/../tests/helpers/mock_models';
 
-const AbstractStorageService = require('web.AbstractStorageService');
-const NotificationService = require('web.NotificationService');
-const RamStorage = require('web.RamStorage');
-const {
+import AbstractStorageService from 'web.AbstractStorageService';
+import NotificationService from 'web.NotificationService';
+import RamStorage from 'web.RamStorage';
+import {
     createActionManager,
     createView,
     makeTestPromise,
-    mock: {
-        addMockEnvironment,
-        patch: legacyPatch,
-        unpatch: legacyUnpatch,
-    },
-} = require('web.test_utils');
-const Widget = require('web.Widget');
+    mock,
+} from 'web.test_utils';
+import Widget from 'web.Widget';
 
+const {
+    addMockEnvironment,
+    patch: legacyPatch,
+    unpatch: legacyUnpatch,
+} = mock;
 const { Component } = owl;
 
 //------------------------------------------------------------------------------
@@ -751,7 +751,7 @@ function pasteFiles(el, files) {
 // Export
 //------------------------------------------------------------------------------
 
-return {
+export {
     afterEach,
     afterNextRender,
     beforeEach,
@@ -763,5 +763,3 @@ return {
     pasteFiles,
     start,
 };
-
-});

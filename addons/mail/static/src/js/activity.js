@@ -1,16 +1,15 @@
-odoo.define('mail.Activity', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var mailUtils = require('mail.utils');
+import * as mailUtils from '@mail/js/utils';
 
-var AbstractField = require('web.AbstractField');
-var BasicModel = require('web.BasicModel');
-var config = require('web.config');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var session = require('web.session');
-var framework = require('web.framework');
-var time = require('web.time');
+import AbstractField from 'web.AbstractField';
+import BasicModel from 'web.BasicModel';
+import config from 'web.config';
+import core from 'web.core';
+import field_registry from 'web.field_registry';
+import session from 'web.session';
+import framework from 'web.framework';
+import time from 'web.time';
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -863,6 +862,4 @@ field_registry
     .add('list_activity', ListActivity)
     .add('activity_exception', ActivityException);
 
-return Activity;
-
-});
+export default Activity;

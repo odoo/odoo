@@ -1,42 +1,40 @@
-odoo.define("mail.ActivityCell", function (require) {
-    "use strict";
+/** @odoo-module **/
 
-    require("mail.Activity");
-    const field_registry = require('web.field_registry');
+import '@mail/js/activity';
 
-    const KanbanActivity = field_registry.get('kanban_activity');
+import field_registry from 'web.field_registry';
 
-    const ActivityCell = KanbanActivity.extend({
-        /**
-         * @override
-         * @private
-         */
-        _render() {
-            // replace clock by closest deadline
-            const $date = $('<div class="o_closest_deadline">');
-            const date = new Date(this.record.data.closest_deadline);
-            // To remove year only if current year
-            if (moment().year() === moment(date).year()) {
-                $date.text(date.toLocaleDateString(moment().locale(), {
-                    day: 'numeric', month: 'short'
-                }));
-            } else {
-                $date.text(moment(date).format('ll'));
-            }
-            this.$('a').html($date);
-            if (this.record.data.activity_ids.res_ids.length > 1) {
-                this.$('a').append($('<span>', {
-                    class: 'badge badge-light badge-pill border-0 ' + this.record.data.activity_state,
-                    text: this.record.data.activity_ids.res_ids.length,
-                }));
-            }
-            if (this.$el.hasClass('show')) {
-                // note: this part of the rendering might be asynchronous
-                this._renderDropdown();
-            }
+const KanbanActivity = field_registry.get('kanban_activity');
+
+const ActivityCell = KanbanActivity.extend({
+    /**
+     * @override
+     * @private
+     */
+    _render() {
+        // replace clock by closest deadline
+        const $date = $('<div class="o_closest_deadline">');
+        const date = new Date(this.record.data.closest_deadline);
+        // To remove year only if current year
+        if (moment().year() === moment(date).year()) {
+            $date.text(date.toLocaleDateString(moment().locale(), {
+                day: 'numeric', month: 'short'
+            }));
+        } else {
+            $date.text(moment(date).format('ll'));
         }
-    });
-
-    return ActivityCell;
-
+        this.$('a').html($date);
+        if (this.record.data.activity_ids.res_ids.length > 1) {
+            this.$('a').append($('<span>', {
+                class: 'badge badge-light badge-pill border-0 ' + this.record.data.activity_state,
+                text: this.record.data.activity_ids.res_ids.length,
+            }));
+        }
+        if (this.$el.hasClass('show')) {
+            // note: this part of the rendering might be asynchronous
+            this._renderDropdown();
+        }
+    }
 });
+
+export default ActivityCell;

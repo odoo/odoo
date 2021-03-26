@@ -1,7 +1,6 @@
-odoo.define('mail_bot/static/tests/helpers/mock_server.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const MockServer = require('web.MockServer');
+import MockServer from 'web.MockServer';
 
 MockServer.include({
     //--------------------------------------------------------------------------
@@ -31,6 +30,4 @@ MockServer.include({
         // TODO implement this mock task-2300480
         // and improve test "OdooBot initialized after 2 minutes"
     },
-});
-
 });

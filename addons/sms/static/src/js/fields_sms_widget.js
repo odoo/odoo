@@ -3,7 +3,7 @@ odoo.define('sms.sms_widget', function (require) {
 
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
-var FieldTextEmojis = require('mail.field_text_emojis');
+var FieldTextEmojis = require('@mail/js/field_text_emojis')[Symbol.for("default")];
 
 var _t = core._t;
 /**
@@ -24,7 +24,7 @@ var SmsWidget = FieldTextEmojis.extend({
         this.encoding = 'GSM7';
         this.enableEmojis = !!this.nodeOptions.enable_emojis;
     },
-    
+
     /**
      * @override
      *"This will add the emoji dropdown to a target field (controlled by the "enableEmojis" attribute)

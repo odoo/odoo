@@ -1,20 +1,19 @@
-odoo.define('mail/static/src/widgets/form_renderer/form_renderer_tests.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
-const {
+import { makeDeferred } from '@mail/utils/deferred/deferred';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const config = require('web.config');
-const FormView = require('web.FormView');
-const {
-    dom: { triggerEvent },
-} = require('web.test_utils');
+import config from 'web.config';
+import FormView from 'web.FormView';
+import { dom } from 'web.test_utils';
+
+const { triggerEvent } = dom;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
@@ -977,6 +976,4 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
 
 });
 });
-});
-
 });

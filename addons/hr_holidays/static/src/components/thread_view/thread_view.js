@@ -2,7 +2,7 @@ odoo.define('hr_holidays/static/src/components/thread_view/thread_view.js', func
 'use strict';
 
 const components = {
-    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
+    ThreadView: require('@mail/components/thread_view/thread_view')[Symbol.for("default")],
 };
 
 const { patch } = require('web.utils');

@@ -1,19 +1,17 @@
-odoo.define('mail/static/src/components/chat_window_manager/chat_window_manager_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
-const {
+import { makeDeferred } from '@mail/utils/deferred/deferred';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const {
-    file: { createFile, inputFiles },
-    dom: { triggerEvent },
-} = require('web.test_utils');
+import { file, dom } from 'web.test_utils';
+const { createFile, inputFiles } = file;
+const { triggerEvent } = dom;
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -2491,6 +2489,4 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
 
 });
 });
-});
-
 });

@@ -1,7 +1,7 @@
 odoo.define('hr_holidays/static/tests/helpers/mock_server.js', function (require) {
 'use strict';
 
-require('mail.MockServer'); // ensure mail overrides are applied first
+require('@mail/../tests/helpers/mock_server'); // ensure mail overrides are applied first
 
 const MockServer = require('web.MockServer');
 

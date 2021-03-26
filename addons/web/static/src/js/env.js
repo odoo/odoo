@@ -12,4 +12,3 @@ const env = Object.assign(commonEnv, { dataManager });
 env.services = Object.assign(env.services, { blockUI, unblockUI });
 
 export default env;
-

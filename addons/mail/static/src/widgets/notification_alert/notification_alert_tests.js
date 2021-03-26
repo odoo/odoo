@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/widgets/notification_alert/notification_alert_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
-const FormView = require('web.FormView');
+import FormView from 'web.FormView';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
@@ -98,6 +97,4 @@ QUnit.test('notification_alert widget: no notification alert when default', asyn
 
 });
 });
-});
-
 });

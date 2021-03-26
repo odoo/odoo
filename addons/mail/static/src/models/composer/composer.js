@@ -1,17 +1,14 @@
-odoo.define('mail/static/src/models/composer/composer.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const emojis = require('mail.emojis');
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
-const { clear, insert, link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
-const mailUtils = require('mail.utils');
-
-const {
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
+import { clear, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import emojis from '@mail/js/emojis';
+import {
     addLink,
     escapeAndCompactTextContent,
     parseAndTransform,
-} = require('mail.utils');
+} from '@mail/js/utils';
 
 function factory(dependencies) {
 
@@ -173,7 +170,7 @@ function factory(dependencies) {
 
             const context = {
                 default_attachment_ids: attachmentIds,
-                default_body: mailUtils.escapeAndCompactTextContent(this.textInputContent),
+                default_body: escapeAndCompactTextContent(this.textInputContent),
                 default_is_log: this.isLog,
                 default_model: this.thread.model,
                 default_partner_ids: this.recipients.map(partner => partner.id),
@@ -1071,5 +1068,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.composer', factory);
-
-});

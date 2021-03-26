@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/component_hooks/use_update/use_update.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 const { onMounted, onPatched } = owl.hooks;
 
@@ -14,6 +13,4 @@ function useUpdate({ func }) {
     onPatched(func);
 }
 
-return useUpdate;
-
-});
+export default useUpdate;

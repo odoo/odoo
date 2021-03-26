@@ -1,10 +1,9 @@
-odoo.define('mail/static/src/models/thread_view/thread_view.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { RecordDeletedError } = require('mail/static/src/model/model_errors.js');
-const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
-const { clear, link, unlink } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { RecordDeletedError } from '@mail/model/model_errors';
+import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
+import { clear, link, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -440,5 +439,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.thread_view', factory);
-
-});

@@ -1,25 +1,33 @@
-odoo.define('mail/static/src/components/discuss/discuss.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    AutocompleteInput: require('mail/static/src/components/autocomplete_input/autocomplete_input.js'),
-    Composer: require('mail/static/src/components/composer/composer.js'),
-    DiscussMobileMailboxSelection: require('mail/static/src/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection.js'),
-    DiscussSidebar: require('mail/static/src/components/discuss_sidebar/discuss_sidebar.js'),
-    MobileMessagingNavbar: require('mail/static/src/components/mobile_messaging_navbar/mobile_messaging_navbar.js'),
-    ModerationDiscardDialog: require('mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js'),
-    ModerationRejectDialog: require('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js'),
-    NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
-    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import AutocompleteInput from '@mail/components/autocomplete_input/autocomplete_input';
+import Composer from '@mail/components/composer/composer';
+import DiscussMobileMailboxSelection from '@mail/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection';
+import DiscussSidebar from '@mail/components/discuss_sidebar/discuss_sidebar';
+import MobileMessagingNavbar from '@mail/components/mobile_messaging_navbar/mobile_messaging_navbar';
+import ModerationDiscardDialog from '@mail/components/moderation_discard_dialog/moderation_discard_dialog';
+import ModerationRejectDialog from '@mail/components/moderation_reject_dialog/moderation_reject_dialog';
+import NotificationList from '@mail/components/notification_list/notification_list';
+import ThreadView from '@mail/components/thread_view/thread_view';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-class Discuss extends Component {
+const components = {
+    AutocompleteInput,
+    Composer,
+    DiscussMobileMailboxSelection,
+    DiscussSidebar,
+    MobileMessagingNavbar,
+    ModerationDiscardDialog,
+    ModerationRejectDialog,
+    NotificationList,
+    ThreadView,
+};
 
+class Discuss extends Component {
     /**
      * @override
      */
@@ -306,6 +314,4 @@ Object.assign(Discuss, {
     template: 'mail.Discuss',
 });
 
-return Discuss;
-
-});
+export default Discuss;

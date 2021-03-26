@@ -4,9 +4,9 @@ odoo.define('website_livechat/static/src/models/thread/thread.js', function (req
 const {
     registerClassPatchModel,
     registerFieldPatchModel,
-} = require('mail/static/src/model/model_core.js');
-const { many2one } = require('mail/static/src/model/model_field.js');
-const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
+} = require('@mail/model/model_core');
+const { many2one } = require('@mail/model/model_field');
+const { insert, unlink } = require('@mail/model/model_field_command');
 
 registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/thread/thread.js', {
 

@@ -1,12 +1,11 @@
-odoo.define('mail/static/tests/tours/mail_full_composer_test_tour.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const {
+import {
     createFile,
     inputFiles,
-} = require('web.test_utils_file');
+} from 'web.test_utils_file';
 
-const tour = require('web_tour.tour');
+import tour from 'web_tour.tour';
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -85,5 +84,3 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     content: "Check message contains the attachment",
     trigger: '.o_Message .o_Attachment_filename:contains("text.txt")',
 }]);
-
-});

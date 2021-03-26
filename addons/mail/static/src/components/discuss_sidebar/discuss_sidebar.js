@@ -1,16 +1,15 @@
-odoo.define('mail/static/src/components/discuss_sidebar/discuss_sidebar.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    AutocompleteInput: require('mail/static/src/components/autocomplete_input/autocomplete_input.js'),
-    DiscussSidebarItem: require('mail/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import useUpdate from '@mail/component_hooks/use_update/use_update';
+import AutocompleteInput from '@mail/components/autocomplete_input/autocomplete_input';
+import DiscussSidebarItem from '@mail/components/discuss_sidebar_item/discuss_sidebar_item';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
+
+const components = { AutocompleteInput, DiscussSidebarItem };
 
 class DiscussSidebar extends Component {
 
@@ -303,6 +302,4 @@ Object.assign(DiscussSidebar, {
     template: 'mail.DiscussSidebar',
 });
 
-return DiscussSidebar;
-
-});
+export default DiscussSidebar;

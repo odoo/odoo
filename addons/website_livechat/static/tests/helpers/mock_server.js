@@ -1,7 +1,7 @@
 odoo.define('website_livechat/static/tests/helpers/mock_server.js', function (require) {
 'use strict';
 
-require('im_livechat/static/tests/helpers/mock_server.js'); // ensure mail overrides are applied first
+require('@im_livechat/../tests/helpers/mock_server'); // ensure mail overrides are applied first
 
 const MockServer = require('web.MockServer');
 

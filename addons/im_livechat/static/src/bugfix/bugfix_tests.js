@@ -1,5 +1,4 @@
-odoo.define('im_livechat/static/src/bugfix/bugfix_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 /**
  * This file allows introducing new QUnit test modules without contaminating
@@ -13,6 +12,4 @@ QUnit.module('bugfix_tests.js', {
 
 });
 });
-});
-
 });

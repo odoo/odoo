@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/models/notification_group/notification_group.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2one, one2many } from '@mail/model/model_field';
+import { insert, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -125,5 +124,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.notification_group', factory);
-
-});

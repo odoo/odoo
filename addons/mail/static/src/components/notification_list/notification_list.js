@@ -1,16 +1,20 @@
-odoo.define('mail/static/src/components/notification_list/notification_list.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    NotificationGroup: require('mail/static/src/components/notification_group/notification_group.js'),
-    NotificationRequest: require('mail/static/src/components/notification_request/notification_request.js'),
-    ThreadNeedactionPreview: require('mail/static/src/components/thread_needaction_preview/thread_needaction_preview.js'),
-    ThreadPreview: require('mail/static/src/components/thread_preview/thread_preview.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import NotificationGroup from '@mail/components/notification_group/notification_group';
+import NotificationRequest from '@mail/components/notification_request/notification_request';
+import ThreadNeedactionPreview from '@mail/components/thread_needaction_preview/thread_needaction_preview';
+import ThreadPreview from '@mail/components/thread_preview/thread_preview';
 
 const { Component } = owl;
+
+const components = {
+    NotificationGroup,
+    NotificationRequest,
+    ThreadNeedactionPreview,
+    ThreadPreview,
+};
 
 class NotificationList extends Component {
 
@@ -221,6 +225,4 @@ Object.assign(NotificationList, {
     template: 'mail.NotificationList',
 });
 
-return NotificationList;
-
-});
+export default NotificationList;
