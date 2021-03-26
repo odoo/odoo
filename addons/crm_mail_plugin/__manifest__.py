@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'CRM Mail Client Extension',
+    'name': 'CRM Mail Plugin',
     'version': '1.0',
     'category': 'Sales/CRM',
     'sequence': 5,
@@ -11,10 +11,10 @@
     'website': 'https://www.odoo.com/page/crm',
     'depends': [
         'crm',
-        'mail_client_extension',
+        'mail_plugin',
     ],
     'data': [
-        'views/crm_mail_client_extension_lead.xml',
+        'views/crm_mail_plugin_lead.xml',
         'views/crm_lead_views.xml'
     ],
     'installable': True,

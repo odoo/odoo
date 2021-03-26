@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Mail Client Extension',
+    'name': 'Mail Plugin',
     'version': '1.0',
     'category': 'Sales/CRM',
     'sequence': 5,
@@ -14,7 +14,7 @@
         'iap'
     ],
     'data': [
-        'views/mail_client_extension_login.xml',
+        'views/mail_plugin_login.xml',
     ],
     'installable': True,
     'application': False,
