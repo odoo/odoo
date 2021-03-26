@@ -6,34 +6,38 @@
             <t t-if="threadView">
                 <!-- No result messages -->
                 <t t-if="threadView.nonEmptyMessages.length === 0">
-                    <div class="o_MessageList_empty o_MessageList_item">
-                        <t t-if="threadView.thread === env.messaging.inbox">
-                            <div class="o_MessageList_emptyTitle">
-                                Congratulations, your inbox is empty
-                            </div>
-                            New messages appear here.
-                        </t>
-                        <t t-elif="threadView.thread === env.messaging.starred">
-                            <div class="o_MessageList_emptyTitle">
-                                No starred messages
-                            </div>
-                            You can mark any message as 'starred', and it shows up in this mailbox.
-                        </t>
-                        <t t-elif="threadView.thread === env.messaging.history">
-                            <div class="o_MessageList_emptyTitle o-neutral-face-icon">
-                                No history messages
-                            </div>
-                            Messages marked as read will appear in the history.
-                        </t>
-                        <t t-elif="threadView.thread === env.messaging.moderation">
-                            <div class="o_MessageList_emptyTitle">
-                                You have no messages to moderate.
-                            </div>
-                            Messages pending moderation appear here.
-                        </t>
-                        <t t-else="">
-                            There are no messages in this conversation.
-                        </t>
+                    <div class="o_view_nocontent">
+                        <div class="o_MessageList_empty o_MessageList_item o_nocontent_help">
+                            <t t-if="threadView.thread === env.messaging.inbox">
+                                <!-- Test -->
+                                <div id="o_mail_test"/>
+                                <div class="o_MessageList_emptyTitle o_view_nocontent_smiling_face">
+                                    Congratulations, your inbox is empty
+                                </div>
+                                New messages appear here.
+                            </t>
+                            <t t-elif="threadView.thread === env.messaging.starred">
+                                <div class="o_MessageList_emptyTitle">
+                                    No starred messages
+                                </div>
+                                You can mark any message as 'starred', and it shows up in this mailbox.
+                            </t>
+                            <t t-elif="threadView.thread === env.messaging.history">
+                                <div class="o_MessageList_emptyTitle o-neutral-face-icon">
+                                    No history messages
+                                </div>
+                                Messages marked as read will appear in the history.
+                            </t>
+                            <t t-elif="threadView.thread === env.messaging.moderation">
+                                <div class="o_MessageList_emptyTitle">
+                                    You have no messages to moderate.
+                                </div>
+                                Messages pending moderation appear here.
+                            </t>
+                            <t t-else="">
+                                There are no messages in this conversation.
+                            </t>
+                        </div>
                     </div>
                 </t>
                 <!-- LOADING (if order asc)-->
