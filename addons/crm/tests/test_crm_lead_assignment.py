@@ -22,11 +22,12 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
 
         # don't mess with existing teams, deactivate them to make tests repeatable
         cls.sales_teams = cls.sales_team_1 + cls.sales_team_convert
-        cls.members = cls.sales_team_1_m1 | cls.sales_team_1_m2 | cls.sales_team_1_m3 | cls.sales_team_convert_m1 | cls.sales_team_convert_m2
+        cls.members = cls.sales_team_1_m1 + cls.sales_team_1_m2 + cls.sales_team_1_m3 + cls.sales_team_convert_m1 + cls.sales_team_convert_m2
         cls.env['crm.team'].search([('id', 'not in', cls.sales_teams.ids)]).write({'active': False})
 
-        # don't mess with existing leads, deactivate those assigned to users used here to make tests repeatable
-        cls.env['crm.lead'].search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).write({'active': False})
+        # don't mess with existing leads, unlink those assigned to users used here to make tests
+        # repeatable (archive is not sufficient because of lost leads)
+        cls.env['crm.lead'].with_context(active_test=False).search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).unlink()
         cls.bundle_size = 5
         cls.env['ir.config_parameter'].set_param('crm.assignment.bundle', '%s' % cls.bundle_size)
         cls.env['ir.config_parameter'].set_param('crm.assignment.delay', '0')
@@ -103,6 +104,66 @@ class TestLeadAssign(TestLeadAssignCommon):
             self.assertFalse(self.assign_cron.active)
             self.assertEqual(self.assign_cron.nextcall, datetime(2020, 11, 1, 10, 0, 0))
 
+    def test_assign_count(self):
+        """ Test number of assigned leads when dealing with some existing data (leads
+        or opportunities) as well as with opt-out management. """
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            partner_ids=[False, False, False, self.contact_1.id],
+            probabilities=[30],
+            count=8
+        )
+        # commit probability and related fields
+        leads.flush()
+        self.assertInitialData()
+
+        # archived members should not be taken into account
+        self.sales_team_1_m1.action_archive()
+        # assignment_max = 0 means opt_out
+        self.sales_team_1_m2.assignment_max = 0
+
+        # assign probability to leads (bypass auto probability as purpose is not to test pls)
+        leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
+        for idx, lead in enumerate(leads):
+            lead.probability = idx * 10
+        # commit probability and related fields
+        leads.flush()
+        self.assertEqual(leads[0].probability, 0)
+
+        # create exiting leads for user_sales_salesman (sales_team_1_m3, sales_team_convert_m1)
+        existing_leads = self._create_leads_batch(
+            lead_type='lead', user_ids=[self.user_sales_salesman.id],
+            probabilities=[10],
+            count=14)
+        self.assertEqual(existing_leads.team_id, self.sales_team_1, "Team should have lower sequence")
+        existing_leads[0].active = False  # lost
+        existing_leads[1].probability = 100  # not won
+        existing_leads[2].probability = 0  # not lost
+        existing_leads.flush()
+
+        self.members.invalidate_cache(fnames=['lead_month_count'])
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 12)
+        self.assertEqual(self.sales_team_convert_m1.lead_month_count, 0)
+
+        with self.with_user('user_sales_manager'):
+            self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
+
+        # salespersons assign
+        self.members.invalidate_cache(fnames=['lead_month_count'])
+        self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)  # archived do not get leads
+        self.assertEqual(self.sales_team_1_m2.lead_month_count, 0)  # opt-out through assignment_max = 0
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 14)  # 15 max on 4 days (2) + existing 12
+
+        with self.with_user('user_sales_manager'):
+            self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
+
+        # salespersons assign
+        self.members.invalidate_cache(fnames=['lead_month_count'])
+        self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)  # archived do not get leads
+        self.assertEqual(self.sales_team_1_m2.lead_month_count, 0)  # opt-out through assignment_max = 0
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 15)  # 15 max on 4 days (2) + existing 14 but capped at 15
+
     @mute_logger('odoo.models.unlink')
     def test_assign_duplicates(self):
         """ Test assign process with duplicates on partner. Allow to ensure notably
@@ -113,6 +174,8 @@ class TestLeadAssign(TestLeadAssignCommon):
             partner_ids=[self.contact_1.id, self.contact_2.id, False, False, False],
             count=50
         )
+        # commit probability and related fields
+        leads.flush()
         self.assertInitialData()
 
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
@@ -121,6 +184,8 @@ class TestLeadAssign(TestLeadAssignCommon):
             sliced_leads = leads[idx:len(leads):5]
             for lead in sliced_leads:
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
+        # commit probability and related fields
+        leads.flush()
 
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
@@ -146,7 +211,7 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         # teams assign: everything should be done due to duplicates
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
-        self.assertTrue(len(leads.filtered_domain([('team_id', '=', False)])) == 0)
+        self.assertEqual(len(leads.filtered_domain([('team_id', '=', False)])), 0)
 
         # deduplicate should have removed all duplicated linked to contact_1 and contact_2
         new_assigned_leads_wpartner = self.env['crm.lead'].search([
@@ -163,6 +228,8 @@ class TestLeadAssign(TestLeadAssignCommon):
             partner_ids=[False],
             count=50
         )
+        # commit probability and related fields
+        leads.flush()
         self.assertInitialData()
 
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
@@ -171,6 +238,8 @@ class TestLeadAssign(TestLeadAssignCommon):
             sliced_leads = leads[idx:len(leads):5]
             for lead in sliced_leads:
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
+        # commit probability and related fields
+        leads.flush()
 
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
@@ -203,7 +272,10 @@ class TestLeadAssign(TestLeadAssignCommon):
             country_ids=[self.env.ref('base.be').id, self.env.ref('base.fr').id, False],
             count=_lead_count,
             email_dup_count=_email_dup_count)
+        # commit probability and related fields
+        leads.flush()
         self.assertInitialData()
+
         # assign for one month, aka a lot
         self.env.ref('crm.ir_cron_crm_lead_assign').write({'interval_type': 'days', 'interval_number': 30})
         self.env['ir.config_parameter'].set_param('crm.assignment.bundle', '20')
@@ -246,6 +318,8 @@ class TestLeadAssign(TestLeadAssignCommon):
             sliced_leads = leads[idx:len(leads):5]
             for lead in sliced_leads:
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
+        # commit probability and related fields
+        leads.flush()
 
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
@@ -259,3 +333,78 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertMemberAssign(sales_team_3_m1, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m2, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m3, 15)  # 15 max on one month
+
+    def test_assign_specific_won_lost(self):
+        """ Test leads taken into account in assign process: won, lost, stage
+        configuration. """
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            user_ids=[False],
+            partner_ids=[False, False, False, self.contact_1.id],
+            probabilities=[30],
+            count=6
+        )
+        leads[0].stage_id = self.stage_gen_won.id  # is won -> should not be taken into account
+        leads[1].stage_id = False
+        leads[2].update({'stage_id': False, 'probability': 0})
+        leads[3].update({'stage_id': False, 'probability': False})
+        leads[4].active = False  # is lost -> should not be taken into account
+        leads[5].update({'team_id': self.sales_team_convert.id, 'user_id': self.user_sales_manager.id})  # assigned lead should not be re-assigned
+
+        # commit probability and related fields
+        leads.flush()
+
+        with self.with_user('user_sales_manager'):
+            self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
+
+        # self.assertEqual(leads[0].team_id, self.env['crm.team'], 'Won lead should not be assigned')
+        # self.assertEqual(leads[0].user_id, self.env['res.users'], 'Won lead should not be assigned')
+        for lead in leads[1:4]:
+            self.assertIn(lead.user_id, self.sales_team_1.member_ids)
+            self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(leads[4].team_id, self.env['crm.team'], 'Lost lead should not be assigned')
+        self.assertEqual(leads[4].user_id, self.env['res.users'], 'Lost lead should not be assigned')
+        self.assertEqual(leads[5].team_id, self.sales_team_convert, 'Assigned lead should not be reassigned')
+        self.assertEqual(leads[5].user_id, self.user_sales_manager, 'Assigned lead should not be reassigned')
+
+    @mute_logger('odoo.models.unlink')
+    def test_merge_assign_keep_master_team(self):
+        """ Check existing opportunity keep its team and salesman when merged with a new lead """
+        sales_team_dupe = self.env['crm.team'].create({
+            'name': 'Sales Team Dupe',
+            'sequence': 15,
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': False,
+            'assignment_domain': "[]",
+        })
+        self.env['crm.team.member'].create({
+            'user_id': self.user_sales_salesman.id,
+            'crm_team_id': sales_team_dupe.id,
+            'assignment_max': 10,
+            'assignment_domain': "[]",
+        })
+
+        master_opp = self.env['crm.lead'].create({
+            'name': 'Master',
+            'type': 'opportunity',
+            'probability': 50,
+            'partner_id': self.contact_1.id,
+            'team_id': self.sales_team_1.id,
+            'user_id': self.user_sales_manager.id,
+        })
+        dupe_lead = self.env['crm.lead'].create({
+            'name': 'Dupe',
+            'type': 'lead',
+            'email_from': 'Duplicate Email <%s>' % master_opp.email_normalized,
+            'probability': 10,
+            'team_id': False,
+            'user_id': False,
+        })
+
+        sales_team_dupe._action_assign_leads(work_days=2)
+        self.assertFalse(dupe_lead.exists())
+        self.assertEqual(master_opp.team_id, sales_team_dupe, 'Opportunity: current team wins lead even if was on duplicated lead')
+        self.assertEqual(master_opp.user_id, self.user_sales_manager, 'Opportunity: should keep its salesman')
