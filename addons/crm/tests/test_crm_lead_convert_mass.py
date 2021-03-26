@@ -109,10 +109,10 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         """ Test duplicated_lead_ids fields having another behavior in mass convert
         because why not. Its use is: among leads under convert, store those with
         duplicates if deduplicate is set to True. """
-        lead_1_dups = self._create_duplicates(self.lead_1, create_opp=False)
+        _customer, lead_1_dups = self._create_duplicates(self.lead_1, create_opp=False)
         lead_1_final = self.lead_1  # after merge: same but with lower ID
 
-        lead_w_partner_dups = self._create_duplicates(self.lead_w_partner, create_opp=False)
+        _customer2, lead_w_partner_dups = self._create_duplicates(self.lead_w_partner, create_opp=False)
         lead_w_partner_final = lead_w_partner_dups[0]  # lead_w_partner has no stage -> lower in sort by confidence
         lead_w_partner_dups_partner = lead_w_partner_dups[1]  # copy with a partner_id (with the same email)
 
@@ -166,7 +166,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
         user_ids = self.assign_users.ids
 
-        with self.assertQueryCount(user_sales_manager=1367):  # still some randomness (1366 spotted) - crm only: 1357
+        with self.assertQueryCount(user_sales_manager=1368):  # still some randomness (1366 spotted) - crm only: ??
             mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
                 'active_model': 'crm.lead',
                 'active_ids': test_leads.ids,
