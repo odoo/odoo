@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Chart template -->
+        <record model="account.chart.template" id="l10n_gh">
+                <field name="name">GH Account Chart Template - erpSOFTapp</field>
+                <field name="bank_account_code_prefix">1200</field>
+                <field name="cash_account_code_prefix">1210</field>
+                <field name="code_digits">6</field>
+                <field name="currency_id" ref="base.GHS"/>
+                <field name="transfer_account_code_prefix"></field>
+        </record>
+
+
+        <record model="account.account.template" id="transfer_account">
+                <field name="name">Transfer Account</field>
+                <field name="code">1220</field>
+                <field name="reconcile" eval="True"/>
+                <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+                <field name="chart_template_id" ref="l10n_gh"/>
+        </record>
+</odoo>
