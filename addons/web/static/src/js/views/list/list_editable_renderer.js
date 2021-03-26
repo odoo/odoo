@@ -230,6 +230,11 @@ ListRenderer.include({
                 }
             });
 
+             // Keep ref of the current row's widgets 
+             const currentRowFieldWidgets = self.allFieldWidgets[id];
+             // Remove it from the list just for a clean start for generating the new content (avoid later memory leak)
+             delete self.allFieldWidgets[id];
+
             // re-render whole body (outside the dom)
             self.defs = [];
             var $newBody = self._renderBody();
@@ -237,6 +242,12 @@ ListRenderer.include({
             delete self.defs;
 
             return Promise.all(defs).then(function () {
+                // All the field widgets have now be recreated, but we don't want the current row's ones.
+                // We destroy it and get it back from our reference. 
+                // This manipulation avoids a memory leak, where field widgets in the current row wouldn't be destroyed and were kept in memory.
+                self._destroyFieldWidgets(id);
+                self.allFieldWidgets[id] = currentRowFieldWidgets;
+
                 // update registered modifiers to edit 'mode' because the call to
                 // _renderBody set baseModeByRecord as 'readonly'
                 _.each(self.columns, function (node) {
