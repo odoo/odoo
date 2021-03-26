@@ -202,6 +202,32 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.website, lead_data['website'], "Website should keep its initial value")
 
     @users('user_sales_manager')
+    def test_crm_lead_create_pipe_data(self):
+        """ Test creation pipe data: user, team, stage, depending on some default
+        configuration. """
+        # gateway-like creation: no user, no team, generic stage
+        lead = self.env['crm.lead'].with_context(default_user_id=False).create({
+            'name': 'Test',
+            'contact_name': 'Test Contact',
+            'email_from': self.test_email,
+            'phone': self.test_phone,
+        })
+        self.assertEqual(lead.user_id, self.env['res.users'])
+        self.assertEqual(lead.team_id, self.env['crm.team'])
+        self.assertEqual(lead.stage_id, self.stage_gen_1)
+
+        # pipe creation: current user's best team and default stage
+        lead = self.env['crm.lead'].create({
+            'name': 'Test',
+            'contact_name': 'Test Contact',
+            'email_from': self.test_email,
+            'phone': self.test_phone,
+        })
+        self.assertEqual(lead.user_id, self.user_sales_manager)
+        self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.stage_id, self.stage_team1_1)
+
+    @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
         lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
         partner_email, partner_phone = self.contact_2.email, self.contact_2.phone
