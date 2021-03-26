@@ -1533,25 +1533,19 @@
 
                             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
-                            <div id="payment_method" class="mt-3" t-if="(acquirers or tokens) and website_sale_order.amount_total">
-                                <h3 class="mb24">Pay with </h3>
-                                <t t-call="payment.payment_tokens_list">
-                                    <t t-set="mode" t-value="'payment'"/>
-                                    <t t-set="submit_txt">Pay Now</t>
-                                    <t t-set="icon_right" t-value="1"/>
-                                    <t t-set="icon_class" t-value="'fa-chevron-right'"/>
-                                    <t t-set="submit_class" t-value="'btn btn-primary'"/>
-                                    <t t-set="pms" t-value="tokens"/>
-                                    <t t-set="form_action" t-value="'/shop/payment/token'"/>
-                                    <t t-set="prepare_tx_url" t-value="'/shop/payment/transaction/'"/>
-                                    <t t-set="partner_id" t-value="partner"/>
-
-                                    <t t-set="back_button_icon_class" t-value="'fa-chevron-left'"/>
-                                    <t t-set="back_button_txt">Return to Cart</t>
-                                    <t t-set="back_button_class" t-value="'btn btn-secondary'"/>
-                                    <t t-set="back_button_link" t-value="'/shop/cart'"/>
-                                </t>
-                            </div>
+                            <t t-if="website_sale_order.amount_total">
+                                <div t-if="acquirers or tokens" id="payment_method" class="mt-3">
+                                    <h3 class="mb24">Pay with </h3>
+                                    <t t-call="payment.checkout">
+                                        <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
+                                        <t t-set="submit_button_label" t-value="'Pay Now'"/>
+                                    </t>
+                                </div>
+                                <div t-else="" class="alert alert-warning">
+                                    <strong>No suitable payment option could be found.</strong><br/>
+                                    If you believe that it is an error, please contact the website administrator.
+                                </div>
+                            </t>
 
                             <div t-if="not acquirers" class="mt-2">
                                 <a role="button" class="btn-link"
@@ -1560,13 +1554,12 @@
                                         <i class="fa fa-arrow-right"></i> Add payment acquirers
                                 </a>
                             </div>
-                            <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method">
-                                <form target="_self" action="/shop/payment/validate" method="post" class="float-right">
+                            <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
+                                <form target="_self" action="/shop/payment/validate" method="post">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                    <a role="button" class="btn btn-primary a-submit" href="#">
-                                        <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
-                                        <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-chevron-right"></span></span>
-                                    </a>
+                                    <t t-call="website_sale.payment_footer">
+                                        <t t-set="submit_button_label" t-value="'Confirm Order'"/>
+                                    </t>
                                 </form>
                             </div>
                         </div>
@@ -1576,7 +1569,29 @@
             </div>
         </t>
     </template>
-
+    
+    <template id="payment_footer" name="Payment Footer">
+        <div class="custom-control custom-checkbox mt-2 o_accept_tc_button">
+            <input type="checkbox" id="checkbox_tc" class="custom-control-input"/>
+            <label for="checkbox_tc" class="custom-control-label">
+                I agree to the <a target="_BLANK" href="/terms">terms &amp; conditions</a>
+            </label>
+        </div>
+        <div class="float-left mt-2">
+            <a role="button" href="/shop/cart" class="btn btn-secondary">
+                <i class="fa fa-chevron-left"/> Return to Cart
+            </a>
+        </div>
+        <div class="float-right mt-2">
+            <button name="o_payment_submit_button"
+                    type="submit"
+                    class="btn btn-primary"
+                    disabled="true"
+                    data-icon-class="fa-chevron-right">
+                <t t-esc="submit_button_label"/> <i class="fa fa-chevron-right"/>
+            </button>
+        </div>
+    </template>
 
     <template id="short_cart_summary" name="Short Cart right column">
         <div class="card js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
@@ -1654,17 +1669,6 @@
         </div>
     </template>
 
-    <template id="payment_sale_note" inherit_id="payment" name="Accept Terms &amp; Conditions" customize_show="True" active="False">
-        <xpath expr="//div[@id='payment_method'][hasclass('js_payment')]" position="after">
-            <div class="custom-control custom-checkbox float-right mt-2 oe_accept_cgv_button">
-                <input type="checkbox" id="checkbox_cgv" class="custom-control-input"/>
-                <label for="checkbox_cgv" class="custom-control-label">
-                    I agree to the <a target="_BLANK" href="/terms">terms &amp; conditions</a>
-                </label>
-            </div>
-        </xpath>
-    </template>
-
     <template id="confirmation">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop - Confirmed</t>
@@ -1697,7 +1701,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="order.get_portal_last_transaction().acquirer_id.name" />
+                                                <t t-esc="order.get_portal_last_transaction().acquirer_id.sudo().name" />
                                             </td>
                                             <td class="text-right" width="100">
                                                 <strong>Total:</strong>
@@ -1795,13 +1799,13 @@
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="payment_tx_id.state == 'pending'">
-                        <t t-raw="payment_tx_id.acquirer_id.pending_msg"/>
+                        <t t-raw="payment_tx_id.acquirer_id.sudo().pending_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'done'">
-                        <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
+                        <span t-if='payment_tx_id.acquirer_id.sudo().done_msg' t-raw="payment_tx_id.acquirer_id.sudo().done_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'cancel'">
-                        <t t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
+                        <t t-raw="payment_tx_id.acquirer_id.sudo().cancel_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
                         <span>Your payment has been authorized.</span>
@@ -1810,17 +1814,18 @@
                         <span t-esc="payment_tx_id.state_message"/>
                     </t>
                 </div>
-                <div t-if="payment_tx_id.acquirer_id.provider == 'transfer' and order.reference" class="card-body">
-                    <b>Communication: </b><span t-esc='order.reference'/>
-                </div>
-
-                <div t-if="payment_tx_id.acquirer_id.qr_code and (payment_tx_id.acquirer_id.provider == 'transfer')">
-                    <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
-                    <div class="card-body" t-if="qr_code">
-                        <h3>Or scan me with your banking app.</h3>
-                        <img class="border border-dark rounded" t-att-src="qr_code"/>
+                <t t-if="payment_tx_id.provider == 'transfer'">
+                    <div t-if="order.reference" class="card-body">
+                        <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
-                </div>
+                    <div t-if="payment_tx_id.acquirer_id.sudo().qr_code">
+                        <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.sudo().journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                        <div class="card-body" t-if="qr_code">
+                            <h3>Or scan me with your banking app.</h3>
+                            <img class="border border-dark rounded" t-att-src="qr_code"/>
+                        </div>
+                    </div>
+                </t>
             </div>
         </div>
     </template>

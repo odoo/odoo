@@ -15,11 +15,11 @@ class GiftCardController(main.WebsiteSale):
         gift_card_status = order._pay_with_gift_card(gift_card)
         return request.redirect('/shop/payment' + ('?gift_card_error=%s' % gift_card_status if gift_card_status else ''))
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True)
-    def payment(self, **post):
+    @http.route()
+    def shop_payment(self, **post):
         order = request.website.sale_get_order()
         order._recompute_gift_card_lines()
-        return super().payment(**post)
+        return super().shop_payment(**post)
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):

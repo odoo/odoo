@@ -1,4 +1,4 @@
-odoo.define('payment.processing', function (require) {
+odoo.define('payment.post_processing', function (require) {
     'use strict';
 
     var publicWidget = require('web.public.widget');
@@ -11,9 +11,9 @@ odoo.define('payment.processing', function (require) {
     $.blockUI.defaults.css["background-color"] = '';
     $.blockUI.defaults.overlayCSS["opacity"] = '0.9';
 
-    publicWidget.registry.PaymentProcessing = publicWidget.Widget.extend({
-        selector: '.o_payment_processing',
-        xmlDependencies: ['/payment/static/src/xml/payment_processing.xml'],
+    publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
+        selector: 'div[name="o_payment_status"]',
+        xmlDependencies: ['/payment/static/src/xml/payment_post_processing.xml'],
 
         _pollCount: 0,
 
@@ -38,9 +38,14 @@ odoo.define('payment.processing', function (require) {
         },
         poll: function () {
             var self = this;
-            ajax.jsonRpc('/payment/process/poll', 'call', {}).then(function(data) {
+            this._rpc({
+                route: '/payment/status/poll',
+                params: {
+                    'csrf_token': core.csrf_token,
+                }
+            }).then(function(data) {
                 if(data.success === true) {
-                    self.processPolledData(data.transactions);
+                    self.processPolledData(data.display_values_list);
                 }
                 else {
                     switch(data.error) {
@@ -61,7 +66,7 @@ odoo.define('payment.processing', function (require) {
                 self.startPolling();
             });
         },
-        processPolledData: function (transactions) {
+        processPolledData: function (display_values_list) {
             var render_values = {
                 'tx_draft': [],
                 'tx_pending': [],
@@ -71,16 +76,23 @@ odoo.define('payment.processing', function (require) {
                 'tx_error': [],
             };
 
-            if (transactions.length > 0 && ['transfer', 'sepa_direct_debit'].indexOf(transactions[0].acquirer_provider) >= 0) {
-                window.location = transactions[0].return_url;
+            if (display_values_list.length > 0) {
+                // In almost every cases there will be a single transaction to display. If there are
+                // more than one transaction, the last one will most likely be the one that was
+                // confirmed. We use this one to redirect the user to the final page.
+                if (display_values_list[0].is_validation) {
+                    window.location = display_values_list[0].validation_route;
+                } else {
+                    window.location = display_values_list[0].landing_route;
+                }
                 return;
             }
 
             // group the transaction according to their state
-            transactions.forEach(function (tx) {
-                var key = 'tx_' + tx.state;
+            display_values_list.forEach(function (display_values) {
+                var key = 'tx_' + display_values.state;
                 if(key in render_values) {
-                    render_values[key].push(tx);
+                    render_values[key].push(display_values);
                 }
             });
 
@@ -97,7 +109,7 @@ odoo.define('payment.processing', function (require) {
             if(countTxInState(['tx_done', 'tx_error', 'tx_pending', 'tx_authorized']) === 1) {
                 var tx = render_values['tx_done'][0] || render_values['tx_authorized'][0] || render_values['tx_error'][0];
                 if (tx) {
-                    window.location = tx.return_url;
+                    window.location = tx.landing_route;
                     return;
                 }
             }
@@ -107,7 +119,7 @@ odoo.define('payment.processing', function (require) {
         displayContent: function (xmlid, render_values) {
             var html = core.qweb.render(xmlid, render_values);
             $.unblockUI();
-            this.$el.find('.o_payment_processing_content').html(html);
+            this.$el.find('div[name="o_payment_status_content"]').html(html);
         },
         displayLoading: function () {
             var msg = _t("We are processing your payment, please wait ...");

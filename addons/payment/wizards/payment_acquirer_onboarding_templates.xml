@@ -12,7 +12,7 @@
             <t t-set="state" t-value="state.get('payment_acquirer_onboarding_state')" />
         </t>
     </template>
-    <!--PAYMENT ACQUIRER-->
+
     <record model="ir.ui.view" id="payment_acquirer_onboarding_wizard_form">
         <field name="name">payment.acquirer.onboarding.wizard.form</field>
         <field name="model">payment.acquirer.onboarding.wizard</field>
@@ -81,6 +81,7 @@
             </form>
         </field>
     </record>
+
     <record id="action_open_payment_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">
         <field name="name">Choose a payment method</field>
         <field name="type">ir.actions.act_window</field>
