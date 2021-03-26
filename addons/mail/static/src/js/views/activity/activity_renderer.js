@@ -1,15 +1,15 @@
-odoo.define('mail.ActivityRenderer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const AbstractRendererOwl = require('web.AbstractRendererOwl');
-const ActivityCell = require('mail.ActivityCell');
-const ActivityRecord = require('mail.ActivityRecord');
-const { ComponentAdapter } = require('web.OwlCompatibility');
-const core = require('web.core');
-const KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
-const QWeb = require('web.QWeb');
-const session = require('web.session');
-const utils = require('web.utils');
+import ActivityCell from '@mail/js/views/activity/activity_cell';
+import ActivityRecord from '@mail/js/views/activity/activity_record';
+
+import AbstractRendererOwl from 'web.AbstractRendererOwl';
+import core  from 'web.core';
+import KanbanColumnProgressBar from 'web.KanbanColumnProgressBar';
+import { ComponentAdapter } from 'web.OwlCompatibility';
+import QWeb from 'web.QWeb';
+import session from 'web.session';
+import utils from 'web.utils';
 
 const _t = core._t;
 
@@ -58,7 +58,7 @@ class KanbanColumnProgressBarAdapter extends ComponentAdapter {
     updateWidget(nextProps) {
         const options = nextProps.widgetArgs[0];
         const columnState = nextProps.widgetArgs[1];
-        
+
         const columnId = options.columnID;
         const nextActiveFilter = options.progressBarStates[columnId].activeFilter;
         this.widget.activeFilter = nextActiveFilter ? this.widget.activeFilter : false;
@@ -98,7 +98,7 @@ class ActivityRenderer extends AbstractRendererOwl {
 
     /**
      * Gets all activity resIds in the view.
-     * 
+     *
      * @returns filtered resIds first then the rest.
      */
     get activityResIds() {
@@ -204,6 +204,4 @@ ActivityRenderer.components = {
 };
 ActivityRenderer.template = 'mail.ActivityRenderer';
 
-return ActivityRenderer;
-
-});
+export default ActivityRenderer;

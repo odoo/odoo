@@ -1,7 +1,7 @@
-odoo.define('sms.onchange_in_keyup', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var FieldChar = require('web.basic_fields').FieldChar;
+import { FieldChar } from 'web.basic_fields';
+
 FieldChar.include({
 
     //--------------------------------------------------------------------------
@@ -51,6 +51,4 @@ FieldChar.include({
     _triggerOnchange: function () {
         this.$input.trigger('change');
     },
-});
-
 });

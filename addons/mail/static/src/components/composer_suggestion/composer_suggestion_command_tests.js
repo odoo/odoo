@@ -1,15 +1,14 @@
-odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion_command_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/;
 
-const components = {
-    ComposerSuggestion: require('mail/static/src/components/composer_suggestion/composer_suggestion.js'),
-};
-const {
+import ComposerSuggestion  from '@mail/components/composer_suggestion/composer_suggestion';
+import {
     afterEach,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { ComposerSuggestion };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -146,6 +145,4 @@ QUnit.test('command suggestion active', async function (assert) {
 
 });
 });
-});
-
 });

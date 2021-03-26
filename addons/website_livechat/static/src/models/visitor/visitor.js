@@ -1,9 +1,9 @@
 odoo.define('website_livechat/static/src/models/partner/partner.js', function (require) {
 'use strict';
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { insert, link, unlink } = require('mail/static/src/model/model_field_command.js');
+const { registerNewModel } = require('@mail/model/model_core');
+const { attr, many2one, one2many } = require('@mail/model/model_field');
+const { insert, link, unlink } = require('@mail/model/model_field_command');
 
 function factory(dependencies) {
 

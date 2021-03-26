@@ -1,29 +1,35 @@
-odoo.define('mail/static/src/components/message/message.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    AttachmentList: require('mail/static/src/components/attachment_list/attachment_list.js'),
-    MessageSeenIndicator: require('mail/static/src/components/message_seen_indicator/message_seen_indicator.js'),
-    ModerationBanDialog: require('mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.js'),
-    ModerationDiscardDialog: require('mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js'),
-    ModerationRejectDialog: require('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js'),
-    NotificationPopover: require('mail/static/src/components/notification_popover/notification_popover.js'),
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import useUpdate from '@mail/component_hooks/use_update/use_update';
+import AttachmentList from '@mail/components/attachment_list/attachment_list';
+import MessageSeenIndicator from '@mail/components/message_seen_indicator/message_seen_indicator';
+import ModerationBanDialog from '@mail/components/moderation_ban_dialog/moderation_ban_dialog';
+import ModerationDiscardDialog from '@mail/components/moderation_discard_dialog/moderation_discard_dialog';
+import ModerationRejectDialog from '@mail/components/moderation_reject_dialog/moderation_reject_dialog';
+import NotificationPopover from '@mail/components/notification_popover/notification_popover';
+import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
-const { _lt } = require('web.core');
-const { format } = require('web.field_utils');
-const { getLangDatetimeFormat } = require('web.time');
+import { _lt } from 'web.core';
+import { format } from 'web.field_utils';
+import { getLangDatetimeFormat } from 'web.time';
 
 const { Component, useState } = owl;
 const { useRef } = owl.hooks;
 
 const READ_MORE = _lt("read more");
 const READ_LESS = _lt("read less");
-const { isEventHandled, markEventHandled } = require('mail/static/src/utils/utils.js');
+const components = {
+    AttachmentList,
+    MessageSeenIndicator,
+    ModerationBanDialog,
+    ModerationDiscardDialog,
+    ModerationRejectDialog,
+    NotificationPopover,
+    PartnerImStatusIcon,
+};
 
 class Message extends Component {
 
@@ -693,6 +699,4 @@ Object.assign(Message, {
     template: 'mail.Message',
 });
 
-return Message;
-
-});
+export default Message;

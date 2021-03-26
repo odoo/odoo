@@ -1,10 +1,9 @@
-odoo.define('mail.document_viewer_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var DocumentViewer = require('mail.DocumentViewer');
+import DocumentViewer from '@mail/js/document_viewer';
 
-var testUtils = require('web.test_utils');
-var Widget = require('web.Widget');
+import testUtils from 'web.test_utils';
+import Widget from 'web.Widget';
 
 /**
  * @param {Object} params
@@ -227,6 +226,4 @@ QUnit.module('document_viewer_tests.js', {
         viewer.destroy();
     });
 });
-});
-
 });

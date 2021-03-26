@@ -5,7 +5,7 @@ const {
     afterEach,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} = require('@mail/utils/test_utils');
 
 QUnit.module('website_livechat', {}, function () {
 QUnit.module('components', {}, function () {

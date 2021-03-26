@@ -1,7 +1,6 @@
-odoo.define('mail_bot/static/src/models/messaging_initializer/messaging_initializer_tests.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail_bot', {}, function () {
 QUnit.module('models', {}, function () {
@@ -51,6 +50,4 @@ QUnit.test('OdooBot initialized at init', async function (assert) {
 
 });
 });
-});
-
 });

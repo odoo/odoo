@@ -1,10 +1,9 @@
-odoo.define('mail/static/src/models/messaging_initializer/messaging_initializer.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { one2one } = require('mail/static/src/model/model_field.js');
-const { executeGracefully } = require('mail/static/src/utils/utils.js');
-const { create, link, insert } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { one2one } from '@mail/model/model_field';
+import { executeGracefully } from '@mail/utils/utils';
+import { create, link, insert } from '@mail/model/model_field_command';
 
 
 function factory(dependencies) {
@@ -288,5 +287,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.messaging_initializer', factory);
-
-});

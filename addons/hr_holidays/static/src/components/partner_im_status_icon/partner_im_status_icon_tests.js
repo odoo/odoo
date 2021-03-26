@@ -2,14 +2,14 @@ odoo.define('hr_holidays/static/src/components/partner_im_status_icon/partner_im
 'use strict';
 
 const components = {
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
+    PartnerImStatusIcon: require('@mail/components/partner_im_status_icon/partner_im_status_icon')[Symbol.for("default")],
 };
 const {
     afterEach,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} = require('@mail/utils/test_utils');
 
 QUnit.module('hr_holidays', {}, function () {
 QUnit.module('components', {}, function () {

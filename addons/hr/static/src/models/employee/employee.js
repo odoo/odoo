@@ -1,9 +1,9 @@
 odoo.define('hr/static/src/models/employee/employee.js', function (require) {
 'use strict';
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2one } = require('mail/static/src/model/model_field.js');
-const { insert, unlink } = require('mail/static/src/model/model_field_command.js');
+const { registerNewModel } = require('@mail/model/model_core');
+const { attr, one2one } = require('@mail/model/model_field');
+const { insert, unlink } = require('@mail/model/model_field_command');
 
 function factory(dependencies) {
 

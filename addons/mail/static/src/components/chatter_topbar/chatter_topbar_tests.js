@@ -1,18 +1,17 @@
-odoo.define('mail/static/src/components/chatter_topbar/chatter_topbar_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ChatterTopBar: require('mail/static/src/components/chatter_topbar/chatter_topbar.js'),
-};
-const {
+import ChatterTopBar from '@mail/components/chatter_topbar/chatter_topbar';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const { makeTestPromise } = require('web.test_utils');
+import { makeTestPromise } from 'web.test_utils';
+
+const components = { ChatterTopBar };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -642,6 +641,4 @@ QUnit.test('send message toggling', async function (assert) {
 
 });
 });
-});
-
 });

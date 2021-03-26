@@ -1,27 +1,34 @@
-odoo.define('mail/static/src/components/composer/composer.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    AttachmentList: require('mail/static/src/components/attachment_list/attachment_list.js'),
-    ComposerSuggestedRecipientList: require('mail/static/src/components/composer_suggested_recipient_list/composer_suggested_recipient_list.js'),
-    DropZone: require('mail/static/src/components/drop_zone/drop_zone.js'),
-    EmojisPopover: require('mail/static/src/components/emojis_popover/emojis_popover.js'),
-    FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
-    TextInput: require('mail/static/src/components/composer_text_input/composer_text_input.js'),
-    ThreadTextualTypingStatus: require('mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status.js'),
-};
-const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
-const { replace } = require('mail/static/src/model/model_field_command.js');
-const {
+import useDragVisibleDropZone from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import useUpdate from '@mail/component_hooks/use_update/use_update';
+import AttachmentList from '@mail/components/attachment_list/attachment_list';
+import ComposerSuggestedRecipientList from '@mail/components/composer_suggested_recipient_list/composer_suggested_recipient_list';
+import DropZone from '@mail/components/drop_zone/drop_zone';
+import EmojisPopover from '@mail/components/emojis_popover/emojis_popover';
+import FileUploader from '@mail/components/file_uploader/file_uploader';
+import TextInput from '@mail/components/composer_text_input/composer_text_input';
+import ThreadTextualTypingStatus from '@mail/components/thread_textual_typing_status/thread_textual_typing_status';
+import { replace } from '@mail/model/model_field_command';
+import {
     isEventHandled,
     markEventHandled,
-} = require('mail/static/src/utils/utils.js');
+} from '@mail/utils/utils';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
+
+const components = {
+    AttachmentList,
+    ComposerSuggestedRecipientList,
+    DropZone,
+    EmojisPopover,
+    FileUploader,
+    TextInput,
+    ThreadTextualTypingStatus,
+};
 
 class Composer extends Component {
 
@@ -440,6 +447,4 @@ Object.assign(Composer, {
     template: 'mail.Composer',
 });
 
-return Composer;
-
-});
+export default Composer;

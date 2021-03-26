@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/models/chat_window/chat_window.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
-const { clear, create } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
+import { clear, create } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -477,5 +476,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.chat_window', factory);
-
-});

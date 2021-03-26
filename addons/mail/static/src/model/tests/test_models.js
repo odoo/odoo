@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { registerNewModel } from 'mail/static/src/model/model_core.js';
-import { attr, many2one, one2many, one2one } from 'mail/static/src/model/model_field.js';
-import { create } from 'mail/static/src/model/model_field_command.js';
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
+import { create } from '@mail/model/model_field_command';
 
 function factoryAddress(dependencies) {
     class Address extends dependencies['mail.model'] {

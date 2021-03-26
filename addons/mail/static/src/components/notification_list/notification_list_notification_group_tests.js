@@ -1,19 +1,17 @@
-odoo.define('mail/static/src/components/notification_list/notification_list_notification_group_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
-};
-
-const {
+import NotificationList from '@mail/components/notification_list/notification_list';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
+
+const components = { NotificationList };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -541,6 +539,4 @@ QUnit.test('non-failure notifications are ignored', async function (assert) {
 
 });
 });
-});
-
 });

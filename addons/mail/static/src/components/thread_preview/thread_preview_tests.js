@@ -1,17 +1,15 @@
-odoo.define('mail/static/src/components/thread_preview/thread_preview_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ThreadPreview: require('mail/static/src/components/thread_preview/thread_preview.js'),
-};
-
-const {
+import ThreadPreview from '@mail/components/thread_preview/thread_preview';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { ThreadPreview };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -108,6 +106,4 @@ QUnit.test('mark as read', async function (assert) {
 
 });
 });
-});
-
 });

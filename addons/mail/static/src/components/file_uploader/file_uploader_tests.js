@@ -1,23 +1,18 @@
-odoo.define('mail/static/src/components/file_uploader/file_uploader_tests.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const components = {
-    FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
-};
-const {
+import FileUploader from '@mail/components/file_uploader/file_uploader';
+import {
     afterEach,
     beforeEach,
     createRootComponent,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const {
-    file: {
-        createFile,
-        inputFiles,
-    },
-} = require('web.test_utils');
+import { file } from 'web.test_utils';
+
+const { createFile, inputFiles } = file;
+const components = { FileUploader };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -89,6 +84,4 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
 
 });
 });
-});
-
 });

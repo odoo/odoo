@@ -1,17 +1,16 @@
-odoo.define('mail/static/src/components/chat_window_header/chat_window_header.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const {
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import {
     isEventHandled,
     markEventHandled,
-} = require('mail/static/src/utils/utils.js');
+} from '@mail/utils/utils';
+import ThreadIcon from '@mail/components/thread_icon/thread_icon';
 
 const { Component } = owl;
+
+const components = { ThreadIcon };
 
 class ChatWindowHeader extends Component {
 
@@ -143,6 +142,4 @@ Object.assign(ChatWindowHeader, {
     template: 'mail.ChatWindowHeader',
 });
 
-return ChatWindowHeader;
-
-});
+export default ChatWindowHeader;

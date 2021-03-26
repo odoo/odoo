@@ -5,9 +5,9 @@ const {
     registerClassPatchModel,
     registerFieldPatchModel,
     registerInstancePatchModel,
-} = require('mail/static/src/model/model_core.js');
-const { attr, one2one } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+} = require('@mail/model/model_core');
+const { attr, one2one } = require('@mail/model/model_field');
+const { clear } = require('@mail/model/model_field_command');
 
 const { str_to_datetime } = require('web.time');
 
