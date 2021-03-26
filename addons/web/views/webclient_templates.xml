@@ -505,6 +505,7 @@
 
     <template id="web.login_layout" name="Login Layout">
         <t t-call="web.frontend_layout">
+            <t t-set="head" t-value="" />
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="body_classname" t-value="'bg-100'"/>
             <t t-set="no_header" t-value="True"/>
