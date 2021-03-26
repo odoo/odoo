@@ -35,7 +35,7 @@ class CrmClient(http.Controller):
             deprecated as of saas-14.3, not needed for newer versions of the mail plugin but necessary
             for supporting older versions
         """
-        server_action = http.request.env.ref("crm_mail_client_extension.lead_creation_prefilled_action")
+        server_action = http.request.env.ref("crm_mail_plugin.lead_creation_prefilled_action")
         return werkzeug.utils.redirect(
             '/web#action=%s&model=crm.lead&partner_id=%s' % (server_action.id, int(partner_id)))
 
