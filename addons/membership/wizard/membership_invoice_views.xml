@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Membership Invoice">
                     <group>
-                        <field name="product_id" domain="[('membership','=',True)]" widget="selection"/>
+                        <field name="product_id" domain="[('membership','=',True)]" options="{'no_open': True, 'no_create': True}"/>
                         <field name="member_price"/>
                     </group>
                     <footer>

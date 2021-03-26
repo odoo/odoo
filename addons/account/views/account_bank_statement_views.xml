@@ -162,7 +162,7 @@
                             <field name="journal_type" invisible="1"/>
                             <field name="cashbox_start_id" invisible="1"/>
                             <field name="cashbox_end_id" invisible="1"/>
-                            <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" widget="selection"/>
+                            <field name="journal_id" domain="[('type', '=', journal_type)]" attrs="{'readonly': [('move_line_count','!=', 0)]}" options="{'no_open': True, 'no_create': True}"/>
                             <field name="date"
                                    attrs="{'readonly': [('state', '!=', 'open')]}"
                                    options="{'datepicker': {'warn_future': true}}"/>
