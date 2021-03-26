@@ -265,7 +265,7 @@
                                 <field name="journal_id"
                                        domain="[('type', 'in', ('bank', 'cash'))]"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="payment_method_id" required="1" widget="selection"
+                                <field name="payment_method_id" required="1" options="{'no_open': True, 'no_create': True}"
                                        attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method', '=', True)]}"/>
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"

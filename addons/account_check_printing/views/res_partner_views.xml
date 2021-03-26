@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <field name="property_supplier_payment_term_id" position="after">
-                <field name="property_payment_method_id" widget="selection" groups="account.group_account_invoice,account.group_account_readonly"/>
+                <field name="property_payment_method_id" options="{'no_open': True, 'no_create': True}" groups="account.group_account_invoice,account.group_account_readonly"/>
             </field>
         </field>
     </record>
