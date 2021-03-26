@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="data" t-att-value="data"/>
+        </form>
+    </template>
+
+</odoo>
