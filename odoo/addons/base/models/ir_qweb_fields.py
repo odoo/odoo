@@ -6,10 +6,11 @@ from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
-from lxml import etree
+from lxml import etree, html
 import math
 
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
+from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import babel_locale_parse
 
 import logging
@@ -614,12 +615,22 @@ class BarcodeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options=None):
+        if not value:
+            return ''
         barcode_symbology = options.get('symbology', 'Code128')
         barcode = self.env['ir.actions.report'].barcode(
             barcode_symbology,
             value,
             **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable']})
-        return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')
+
+        img_element = html.Element('img')
+        for k, v in options.items():
+            if k.startswith('img_') and k[4:] in safe_attrs:
+                img_element.set(k[4:], v)
+        if not img_element.get('alt'):
+            img_element.set('alt', _('Barcode %s') % value)
+        img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
+        return html.tostring(img_element, encoding='unicode')
 
 
 class Contact(models.AbstractModel):
