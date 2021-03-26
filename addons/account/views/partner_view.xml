@@ -136,7 +136,7 @@
                         <separator string="Warning on the Invoice" colspan="4"/>
                         <field name="invoice_warn" nolabel="1" />
                         <field name="invoice_warn_msg" colspan="3" nolabel="1"
-                                attrs="{'required':[('invoice_warn', '!=', False), ('invoice_warn','!=','no-message')],'readonly':[('invoice_warn','=','no-message')]}"/>
+                            attrs="{'required':[('invoice_warn','!=', False), ('invoice_warn','!=','no-message')], 'invisible':[('invoice_warn','in',(False,'no-message'))]}"/>
                     </group>
                 </page>
             </field>
