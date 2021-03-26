@@ -12,22 +12,36 @@ class ResConfigSettings(models.TransientModel):
     group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
     group_project_rating = fields.Boolean("Customer Ratings", implied_group='project.group_project_rating')
     group_project_recurring_tasks = fields.Boolean("Recurring Tasks", implied_group="project.group_project_recurring_tasks")
+    group_project_task_dependencies = fields.Boolean("Task Dependencies", implied_group="project.group_project_task_dependencies")
+
+    @api.model
+    def _get_basic_project_domain(self):
+        return []
 
     def set_values(self):
-
         # Ensure that settings on existing projects match the above fields
         projects = self.env["project.project"].search([])
-        features = (
-            # Pairs of associated (config_flag, project_flag)
-            ("group_subtask_project", "allow_subtasks"),
-            ("group_project_rating", "rating_active"),
-            ("group_project_recurring_tasks", "allow_recurring_tasks"),
-            )
-        for (config_flag, project_flag) in features:
-            config_flag_global = "project." + config_flag
-            config_feature_enabled = self[config_flag]
-            if (self.user_has_groups(config_flag_global)
-                    is not config_feature_enabled):
-                projects[project_flag] = config_feature_enabled
+        global_features = {  # key: config_flag, value: project_flag
+            "group_project_rating": "rating_active",
+            "group_project_recurring_tasks": "allow_recurring_tasks",
+        }
+        basic_project_features = {
+            "group_subtask_project": "allow_subtasks",
+            "group_project_task_dependencies": "allow_task_dependencies",
+        }
+        config_feature_vals = {config_flag: self[config_flag]
+                               for config_flag in global_features.keys() | basic_project_features.keys()}
+
+        def update_projects(projects, features):
+            for (config_flag, project_flag) in features.items():
+                config_flag_global = "project." + config_flag
+                config_feature_enabled = config_feature_vals[config_flag]
+                if self.user_has_groups(config_flag_global) != config_feature_enabled:
+                    projects[project_flag] = config_feature_enabled
+
+        # update for all projects
+        update_projects(projects, global_features)
+        # update for basic projects
+        update_projects(projects.filtered_domain(self._get_basic_project_domain()), basic_project_features)
 
         super(ResConfigSettings, self).set_values()
