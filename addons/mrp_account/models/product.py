@@ -48,7 +48,7 @@ class ProductProduct(models.Model):
         if stock_moves:
             product_moves = defaultdict(lambda: self.env['stock.move'])
             for sm in stock_moves:
-                product_moves[sm.product_id] |= stock_moves
+                product_moves[sm.product_id] |= sm
             value = 0
             for product, moves in product_moves.items():
                 qty = sum(moves.mapped('product_qty'))
