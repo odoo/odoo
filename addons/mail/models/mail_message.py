@@ -700,6 +700,22 @@ class Message(models.Model):
                 elem._invalidate_documents()
         return super(Message, self).unlink()
 
+    @api.model
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators are allowed to use grouped read on message model"))
+
+        return super(Message, self)._read_group_raw(
+            domain=domain, fields=fields, groupby=groupby, offset=offset,
+            limit=limit, orderby=orderby, lazy=lazy,
+        )
+
+    def export_data(self, fields_to_export):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators are allowed to export mail message"))
+
+        return super(Message, self).export_data(fields_to_export)
+
     # ------------------------------------------------------
     # DISCUSS API
     # ------------------------------------------------------
