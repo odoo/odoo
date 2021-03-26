@@ -138,10 +138,8 @@ class StockPicking(models.Model):
                                     self.env['stock.move.line'].create(ml_vals)
                     else:
                         move._action_assign()
-                        sum_of_lots = 0
                         for move_line in move.move_line_ids:
                             move_line.qty_done = move_line.product_uom_qty
-                            sum_of_lots += move_line.product_uom_qty
                         if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
                             remaining_qty = move.product_uom_qty - move.quantity_done
                             ml_vals = move._prepare_move_line_vals()
@@ -149,6 +147,14 @@ class StockPicking(models.Model):
                             self.env['stock.move.line'].create(ml_vals)
 
                 else:
+                    move._action_assign()
+                    for move_line in move.move_line_ids:
+                        move_line.qty_done = move_line.product_uom_qty
+                    if float_compare(move.product_uom_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
+                        remaining_qty = move.product_uom_qty - move.quantity_done
+                        ml_vals = move._prepare_move_line_vals()
+                        ml_vals.update({'qty_done':remaining_qty})
+                        self.env['stock.move.line'].create(ml_vals)
                     move.quantity_done = move.product_uom_qty
 
     def _send_confirmation_email(self):
