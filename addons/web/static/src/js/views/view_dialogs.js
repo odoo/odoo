@@ -118,6 +118,8 @@ var FormViewDialog = ViewDialog.extend({
                         self.form_view.model.discardChanges(self.form_view.handle, {
                             rollback: self.shouldSaveLocally,
                         });
+                    } else {
+                        self._save().then(self.close.bind(self));
                     }
                 },
             }];
