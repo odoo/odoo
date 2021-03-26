@@ -26,7 +26,7 @@ class Authenticate(http.Controller):
          old route name "/mail_client_extension/auth is deprecated as of saas-14.3,it is not needed for newer
          versions of the mail plugin but necessary for supporting older versions
          """
-        return request.render('mail_client_extension.app_auth', values)
+        return request.render('mail_plugin.app_auth', values)
 
     @http.route(['/mail_client_extension/auth/confirm', '/mail_plugin/auth/confirm'], type='http', auth="user", methods=['POST'])
     def auth_confirm(self, scope, friendlyname, redirect, info=None, do=None, **kw):
@@ -75,7 +75,7 @@ class Authenticate(http.Controller):
         data, auth_code_signature = auth_code.split('.')
         data = base64.b64decode(data)
         auth_code_signature = base64.b64decode(auth_code_signature)
-        signature = odoo.tools.misc.hmac(request.env(su=True), 'mail_client_extension', data).encode()
+        signature = odoo.tools.misc.hmac(request.env(su=True), 'mail_plugin', data).encode()
         if not hmac.compare_digest(auth_code_signature, signature):
             return None
 
@@ -98,7 +98,7 @@ class Authenticate(http.Controller):
             'uid': request.uid,
         }
         auth_message = json.dumps(auth_dict, sort_keys=True).encode()
-        signature = odoo.tools.misc.hmac(request.env(su=True), 'mail_client_extension', auth_message).encode()
+        signature = odoo.tools.misc.hmac(request.env(su=True), 'mail_plugin', auth_message).encode()
         auth_code = "%s.%s" % (base64.b64encode(auth_message).decode(), base64.b64encode(signature).decode())
         _logger.info('Auth code created - user %s, scope %s', request.env.user, scope)
         return auth_code
