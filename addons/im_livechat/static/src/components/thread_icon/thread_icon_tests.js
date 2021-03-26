@@ -1,16 +1,15 @@
-odoo.define('im_livechat/static/src/components/thread_icon/thread_icon_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
-};
-const {
+import ThreadIcon from '@mail/components/thread_icon/thread_icon';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { ThreadIcon };
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
@@ -91,6 +90,4 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
 
 });
 });
-});
-
 });

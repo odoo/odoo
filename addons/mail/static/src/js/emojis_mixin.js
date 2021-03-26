@@ -1,7 +1,6 @@
-odoo.define('mail.emoji_mixin', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var emojis = require('mail.emojis');
+import emojis from '@mail/js/emojis';
 
 /**
  * This mixin gathers a few methods that are used to handle emojis.
@@ -14,7 +13,7 @@ var emojis = require('mail.emojis');
  * Methods are based on the collections of emojis available in mail.emojis
  *
  */
-return {
+export default {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -87,5 +86,3 @@ return {
         return message;
     }
 };
-
-});

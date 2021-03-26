@@ -2,14 +2,14 @@ odoo.define('hr_holidays/static/src/components/thread_icon/thread_icon_tests.js'
 'use strict';
 
 const components = {
-    ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
+    ThreadIcon: require('@mail/components/thread_icon/thread_icon')[Symbol.for("default")],
 };
 const {
     afterEach,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} = require('@mail/utils/test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {

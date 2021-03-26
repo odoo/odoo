@@ -1,11 +1,10 @@
-odoo.define('mail/static/src/js/main.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const ModelManager = require('mail/static/src/model/model_manager.js');
-const MessagingService = require('@mail/services/messaging/messaging')[Symbol.for("default")];
+import ModelManager from '@mail/model/model_manager';
+import MessagingService from '@mail/services/messaging/messaging';
 
-const env = require('web.commonEnv');
-const { serviceRegistry } = require('web.core');
+import env from 'web.commonEnv';
+import { serviceRegistry } from 'web.core';
 
 const { Store } = owl;
 const { EventBus } = owl.core;
@@ -124,5 +123,3 @@ env.bus.on(
 );
 
 serviceRegistry.add('messaging', MessagingService);
-
-});

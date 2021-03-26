@@ -1,12 +1,11 @@
-odoo.define('mail/static/src/components/discuss/tests/discuss_moderation_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -1174,6 +1173,4 @@ QUnit.test('accept multiple moderation messages after having accepted other mess
 
 });
 });
-});
-
 });

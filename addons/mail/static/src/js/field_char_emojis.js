@@ -1,10 +1,10 @@
-odoo.define('mail.field_char_emojis', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var basicFields = require('web.basic_fields');
-var registry = require('web.field_registry');
-var FieldEmojiCommon = require('mail.field_emojis_common');
-var MailEmojisMixin = require('mail.emoji_mixin');
+import MailEmojisMixin from '@mail/js/emojis_mixin';
+import FieldEmojiCommon from '@mail/js/field_emojis_common';
+
+import basicFields from 'web.basic_fields';
+import registry from 'web.field_registry';
 
 /**
  * Extension of the FieldChar that will add emojis support
@@ -13,6 +13,4 @@ var FieldCharEmojis = basicFields.FieldChar.extend(MailEmojisMixin, FieldEmojiCo
 
 registry.add('char_emojis', FieldCharEmojis);
 
-return FieldCharEmojis;
-
-});
+export default FieldCharEmojis;

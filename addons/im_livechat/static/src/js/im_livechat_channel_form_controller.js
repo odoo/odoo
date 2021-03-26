@@ -1,7 +1,6 @@
-odoo.define('im_livechat.ImLivechatChannelFormController', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const FormController = require('web.FormController');
+import FormController from 'web.FormController';
 
 const ImLivechatChannelFormController = FormController.extend({
     events: Object.assign({}, FormController.prototype.events, {
@@ -49,6 +48,4 @@ const ImLivechatChannelFormController = FormController.extend({
     },
 });
 
-return ImLivechatChannelFormController;
-
-});
+export default ImLivechatChannelFormController;

@@ -3,8 +3,8 @@ odoo.define('hr/static/src/models/user/user.js', function (require) {
 
 const {
     registerFieldPatchModel,
-} = require('mail/static/src/model/model_core.js');
-const { one2one } = require('mail/static/src/model/model_field.js');
+} = require('@mail/model/model_core');
+const { one2one } = require('@mail/model/model_field');
 
 registerFieldPatchModel('mail.user', 'hr/static/src/models/user/user.js', {
     /**

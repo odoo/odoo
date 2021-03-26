@@ -1,7 +1,6 @@
-odoo.define('mail.mail_utils_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var utils = require('mail.utils');
+import * as utils from '@mail/js/utils';
 
 QUnit.module('mail', {}, function () {
 
@@ -107,5 +106,4 @@ QUnit.test('addLink: linkify inside text node (2 occurrences)', function (assert
     );
 });
 
-});
 });

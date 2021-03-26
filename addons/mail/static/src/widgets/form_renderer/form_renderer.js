@@ -1,12 +1,11 @@
-odoo.define('mail/static/src/widgets/form_renderer/form_renderer.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const components = {
-    ChatterContainer: require('mail/static/src/components/chatter_container/chatter_container.js'),
-};
+import ChatterContainer from '@mail/components/chatter_container/chatter_container';
 
-const FormRenderer = require('web.FormRenderer');
-const { ComponentWrapper } = require('web.OwlCompatibility');
+import FormRenderer from 'web.FormRenderer';
+import { ComponentWrapper } from 'web.OwlCompatibility';
+
+const components = { ChatterContainer };
 
 class ChatterContainerWrapperComponent extends ComponentWrapper {}
 
@@ -183,6 +182,4 @@ FormRenderer.include({
      * @param {mail.thread} ev.data.thread
      */
     _onChatterRendered(ev) {},
-});
-
 });

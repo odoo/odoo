@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 const { useState, onMounted, onWillUnmount } = owl.hooks;
 
@@ -88,6 +87,4 @@ function useDragVisibleDropZone() {
     return isVisible;
 }
 
-return useDragVisibleDropZone;
-
-});
+export default useDragVisibleDropZone;

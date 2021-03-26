@@ -1,7 +1,6 @@
-odoo.define('mail/static/src/models/attachment/attachment_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
@@ -139,6 +138,4 @@ QUnit.test('isViewable', async function (assert) {
 
 });
 });
-});
-
 });

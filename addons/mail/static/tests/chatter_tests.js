@@ -1,11 +1,10 @@
-odoo.define('mail.chatter_tests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
-var FormView = require('web.FormView');
-var ListView = require('web.ListView');
-var testUtils = require('web.test_utils');
+import FormView from 'web.FormView';
+import ListView from 'web.ListView';
+import testUtils from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('Chatter', {
@@ -561,8 +560,6 @@ QUnit.test('many2many_tags_email widget can load more than 40 records', async fu
     assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 101);
 
     form.destroy();
-});
-
 });
 
 });

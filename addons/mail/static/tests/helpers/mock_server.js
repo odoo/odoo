@@ -1,9 +1,8 @@
-odoo.define('mail.MockServer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { nextAnimationFrame } = require('mail/static/src/utils/test_utils.js');
+import { nextAnimationFrame } from '@mail/utils/test_utils';
 
-const MockServer = require('web.MockServer');
+import MockServer from 'web.MockServer';
 
 MockServer.include({
     /**
@@ -1803,6 +1802,4 @@ MockServer.include({
             "name": partner.name,
         };
     },
-});
-
 });

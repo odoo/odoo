@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/component_hooks/use_store/use_store.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 /**
  * Similar to owl.hooks.useStore but to decide if a new render has to be done it
@@ -121,6 +120,4 @@ function useStore(selector, options = {}) {
     }));
 }
 
-return useStore;
-
-});
+export default useStore;

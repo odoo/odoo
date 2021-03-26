@@ -1,4 +1,4 @@
-odoo.define('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js', function (require) {
+/** @odoo-module **/
 'use strict';
 
 const { Component } = owl;
@@ -67,6 +67,4 @@ function useShouldUpdateBasedOnProps({ compareDepth = {} } = {}) {
     };
 }
 
-return useShouldUpdateBasedOnProps;
-
-});
+export default useShouldUpdateBasedOnProps;

@@ -2,7 +2,7 @@ odoo.define('snailmail/static/src/components/notification_list/notification_list
 'use strict';
 
 const components = {
-    NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
+    NotificationList: require('@mail/components/notification_list/notification_list')[Symbol.for("default")],
 };
 
 const {
@@ -10,7 +10,7 @@ const {
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} = require('@mail/utils/test_utils');
 
 const Bus = require('web.Bus');
 

@@ -1,7 +1,6 @@
-odoo.define('mail.utils', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
+import core from 'web.core';
 
 var _t = core._t;
 
@@ -171,17 +170,15 @@ function timeFromNow(date) {
     return date.fromNow();
 }
 
-return {
-    addLink: addLink,
-    getTextToHTML: getTextToHTML,
-    htmlToTextContentInline,
-    inline: inline,
-    linkify: linkify,
-    parseAndTransform: parseAndTransform,
-    parseEmail: parseEmail,
-    stripHTML: stripHTML,
-    timeFromNow: timeFromNow,
+export {
+    addLink,
     escapeAndCompactTextContent,
+    getTextToHTML,
+    htmlToTextContentInline,
+    inline,
+    linkify,
+    parseAndTransform,
+    parseEmail,
+    stripHTML,
+    timeFromNow,
 };
-
-});

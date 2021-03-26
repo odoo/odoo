@@ -1,7 +1,7 @@
 odoo.define('calendar.Activity', function (require) {
 "use strict";
 
-var Activity = require('mail.Activity');
+var Activity = require('@mail/js/activity')[Symbol.for("default")];
 var Dialog = require('web.Dialog');
 var core = require('web.core');
 var _t = core._t;

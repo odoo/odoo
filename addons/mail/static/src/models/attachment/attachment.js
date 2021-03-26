@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/models/attachment/attachment.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
-const { clear, insert, link, replace } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2many, many2one } from '@mail/model/model_field';
+import { clear, insert, link, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -437,5 +436,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.attachment', factory);
-
-});

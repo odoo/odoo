@@ -1,7 +1,6 @@
-odoo.define('mail/static/src/model/model_field.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { FieldCommand, link, replace, unlink, unlinkAll } = require('mail/static/src/model/model_field_command.js');
+import { FieldCommand, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 /**
  * Class whose instances represent field on a model.
@@ -894,6 +893,9 @@ class ModelField {
 
 }
 
-return ModelField;
-
-});
+export default ModelField;
+export const attr = ModelField.attr;
+export const many2many = ModelField.many2many;
+export const many2one = ModelField.many2one;
+export const one2many = ModelField.one2many;
+export const one2one = ModelField.one2one;

@@ -1,7 +1,6 @@
-odoo.define('mail.debugManagerTests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var testUtils = require('web.test_utils');
+import testUtils from 'web.test_utils';
 
 var createDebugManager = testUtils.createDebugManager;
 
@@ -60,5 +59,4 @@ QUnit.module('Mail DebugManager', {}, function () {
 
         debugManager.destroy();
     });
-});
 });

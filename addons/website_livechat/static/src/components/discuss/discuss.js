@@ -2,7 +2,7 @@ odoo.define('website_livechat/static/src/components/discuss/discuss.js', functio
 'use strict';
 
 const components = {
-    Discuss: require('mail/static/src/components/discuss/discuss.js'),
+    Discuss: require('@mail/components/discuss/discuss')[Symbol.for("default")],
     VisitorBanner: require('website_livechat/static/src/components/visitor_banner/visitor_banner.js'),
 };
 const { patch } = require('web.utils');

@@ -1,20 +1,19 @@
-odoo.define('mail/static/src/components/activity_mark_done_popover/activity_mark_done_popover_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ActivityMarkDonePopover: require('mail/static/src/components/activity_mark_done_popover/activity_mark_done_popover.js'),
-};
+import ActivityMarkDonePopover from '@mail/components/activity_mark_done_popover/activity_mark_done_popover';
 
-const { insert } = require('mail/static/src/model/model_field_command.js');
-const {
+import { insert } from '@mail/model/model_field_command';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
+
+const components = { ActivityMarkDonePopover };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -293,6 +292,4 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
 
 });
 });
-});
-
 });

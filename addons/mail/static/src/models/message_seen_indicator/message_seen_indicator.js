@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/models/message_seen_indicator/message_seen_indicator.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { insert, replace, unlinkAll } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { insert, replace, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -359,5 +358,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.message_seen_indicator', factory);
-
-});

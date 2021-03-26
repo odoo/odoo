@@ -1,5 +1,4 @@
-odoo.define('mail/static/tests/helpers/mock_models.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 /**
  * Allows to generate mocked models that will be used by the mocked server.
@@ -251,6 +250,4 @@ class MockModels {
 
 }
 
-return MockModels;
-
-});
+export default MockModels;

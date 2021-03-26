@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/component_hooks/use_refs/use_refs.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 const { Component } = owl;
 
@@ -16,6 +15,4 @@ function useRefs() {
     };
 }
 
-return useRefs;
-
-});
+export default  useRefs;

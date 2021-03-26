@@ -1,12 +1,9 @@
-odoo.define('mail/static/src/widgets/messaging_menu/messaging_menu.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    MessagingMenu: require('mail/static/src/components/messaging_menu/messaging_menu.js'),
-};
+import MessagingMenuComponent from '@mail/components/messaging_menu/messaging_menu';
 
-const SystrayMenu = require('web.SystrayMenu');
-const Widget = require('web.Widget');
+import SystrayMenu from 'web.SystrayMenu';
+import Widget from 'web.Widget';
 
 /**
  * Odoo Widget, necessary to instantiate component.
@@ -30,7 +27,6 @@ const MessagingMenu = Widget.extend({
         this._super(...arguments);
     },
     async on_attach_callback() {
-        const MessagingMenuComponent = components.MessagingMenu;
         this.component = new MessagingMenuComponent(null);
         await this.component.mount(this.el);
         // unwrap
@@ -51,6 +47,4 @@ if (activityMenuIndex > 0) {
     SystrayMenu.Items.push(MessagingMenu);
 }
 
-return MessagingMenu;
-
-});
+export default MessagingMenu;

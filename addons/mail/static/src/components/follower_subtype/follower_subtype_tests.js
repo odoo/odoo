@@ -1,17 +1,16 @@
-odoo.define('mail/static/src/components/follower_subtype/follower_subtype_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    FollowerSubtype: require('mail/static/src/components/follower_subtype/follower_subtype.js'),
-};
-const { insert, link } = require('mail/static/src/model/model_field_command.js');
-const {
+import FollowerSubtype from '@mail/components/follower_subtype/follower_subtype';
+import { insert, link } from '@mail/model/model_field_command';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { FollowerSubtype };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -226,6 +225,4 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
 
 });
 });
-});
-
 });

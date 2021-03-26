@@ -1,8 +1,7 @@
-odoo.define('im_livechat/static/src/models/messaging_initializer/messaging_initializer.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerInstancePatchModel } = require('mail/static/src/model/model_core.js');
-const { executeGracefully } = require('mail/static/src/utils/utils.js');
+import { registerInstancePatchModel } from '@mail/model/model_core';
+import { executeGracefully } from '@mail/utils/utils';
 
 registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src/models/messaging_initializer/messaging_initializer.js', {
 
@@ -28,6 +27,4 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
             }
         }));
     },
-});
-
 });

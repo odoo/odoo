@@ -1,10 +1,9 @@
-odoo.define('im_livechat.ImLivechatChannelFormView', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const ImLivechatChannelFormController = require('im_livechat.ImLivechatChannelFormController');
+import ImLivechatChannelFormController from '@im_livechat/js/im_livechat_channel_form_controller';
 
-const FormView = require('web.FormView');
-const viewRegistry = require('web.view_registry');
+import FormView from 'web.FormView';
+import viewRegistry from 'web.view_registry';
 
 const ImLivechatChannelFormView = FormView.extend({
     config: Object.assign({}, FormView.prototype.config, {
@@ -14,6 +13,4 @@ const ImLivechatChannelFormView = FormView.extend({
 
 viewRegistry.add('im_livechat_channel_form_view_js', ImLivechatChannelFormView);
 
-return ImLivechatChannelFormView;
-
-});
+export default ImLivechatChannelFormView;

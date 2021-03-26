@@ -1,11 +1,10 @@
-odoo.define('im_livechat/static/src/components/discuss/discuss.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Discuss: require('mail/static/src/components/discuss/discuss.js'),
-};
+import Discuss from '@mail/components/discuss/discuss';
 
-const { patch } = require('web.utils');
+import { patch } from 'web.utils';
+
+const components = { Discuss };
 
 patch(components.Discuss.prototype, 'im_livechat/static/src/components/discuss/discuss.js', {
 
@@ -23,7 +22,5 @@ patch(components.Discuss.prototype, 'im_livechat/static/src/components/discuss/d
             label: this.env._t("Livechat"),
         }];
     }
-
-});
 
 });

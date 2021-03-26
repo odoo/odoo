@@ -1,11 +1,10 @@
-odoo.define('im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    DiscussSidebar: require('mail/static/src/components/discuss_sidebar/discuss_sidebar.js'),
-};
+import DiscussSidebar from '@mail/components/discuss_sidebar/discuss_sidebar';
 
-const { patch } = require('web.utils');
+import { patch } from 'web.utils';
+
+const components = { DiscussSidebar };
 
 patch(components.DiscussSidebar.prototype, 'im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.js', {
 
@@ -72,7 +71,5 @@ patch(components.DiscussSidebar.prototype, 'im_livechat/static/src/components/di
             allOrderedAndPinnedLivechats: this.quickSearchOrderedAndPinnedLivechatList(),
         });
     },
-
-});
 
 });
