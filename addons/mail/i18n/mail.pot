@@ -3377,6 +3377,12 @@ msgid "Moderated channels"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:191
+#, python-format
+msgid "Moderated channels must have moderators."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
 msgid "Moderated emails count"
 msgstr ""
@@ -3419,6 +3425,18 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderator_ids
 msgid "Moderators"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:175
+#, python-format
+msgid "Moderators must have an email address."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:181
+#, python-format
+msgid "Moderators should be members of the channel they moderate."
 msgstr ""
 
 #. module: mail
@@ -3677,6 +3695,12 @@ msgid "No message matches your search. Try to change your search filters."
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/wizard/mail_resend_message.py:51
+#, python-format
+msgid "No message_id found in context"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:131
 #, python-format
@@ -3884,9 +3908,21 @@ msgid "Only administrators are allowed to use grouped read on message model"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:436
+#, python-format
+msgid "Only an administrator or a moderator can send guidelines to channel members!"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/ir_model.py:56
 #, python-format
 msgid "Only custom models can be modified."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:186
+#, python-format
+msgid "Only mailing lists can be moderated."
 msgstr ""
 
 #. module: mail
@@ -4202,6 +4238,15 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
+#: code:addons/mail/static/src/xml/discuss.xml:13
+#: code:addons/mail/static/src/xml/discuss.xml:18
+#: code:addons/mail/static/src/xml/thread.xml:36
+#, python-format
+msgid "Please wait..."
+msgstr ""
+
+#. module: mail
+#. openerp-web
 #: code:addons/mail/static/src/js/composers/basic_composer.js:268
 #, python-format
 msgid "Please, wait while the file is uploading."
@@ -4420,6 +4465,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_force_thread_id
 msgid "Record Thread ID"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:737
+#: code:addons/mail/models/mail_message.py:908
+#, python-format
+msgid "Records:"
 msgstr ""
 
 #. module: mail
@@ -5527,7 +5579,14 @@ msgid "Unsubscribe"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_template.py:484
+#. openerp-web
+#: code:addons/mail/static/src/js/services/mail_notification_manager.js:511
+#, python-format
+msgid "Unsubscribed"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_template.py:485
 #, python-format
 msgid "Unsupported report type %s found."
 msgstr ""
@@ -5652,6 +5711,13 @@ msgid "User name"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_message.py:737
+#: code:addons/mail/models/mail_message.py:908
+#, python-format
+msgid "User:"
+msgstr ""
+
+#. module: mail
 #: model:ir.model,name:mail.model_res_users
 msgid "Users"
 msgstr ""
@@ -5685,7 +5751,13 @@ msgid "View"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:755
+#: code:addons/mail/models/mail_channel.py:459
+#, python-format
+msgid "View \"mail.mail_channel_send_guidelines\" was not found. No email has been sent. Please contact an administrator to fix this issue."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:767
 #, python-format
 msgid "View %s"
 msgstr ""
@@ -6303,6 +6375,14 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:1024
 #, python-format
 msgid "unknown target model %s"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/attachment_box.js:40
+#: code:addons/mail/static/src/js/models/messages/abstract_message.js:52
+#, python-format
+msgid "unnamed"
 msgstr ""
 
 #. module: mail
