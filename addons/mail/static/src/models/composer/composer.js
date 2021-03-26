@@ -311,6 +311,12 @@ function factory(dependencies) {
             if (!this.thread) {
                 return;
             }
+            if (
+                this.suggestionModelName === 'mail.channel_command' ||
+                this._getCommandFromText(this.textInputContent)
+            ) {
+                return;
+            }
             if (this.thread.typingMembers.includes(this.env.messaging.currentPartner)) {
                 this.thread.refreshCurrentPartnerIsTyping();
             } else {
@@ -720,6 +726,9 @@ function factory(dependencies) {
                     continue;
                 }
                 const candidateChar = this.textInputContent[candidatePosition];
+                if (candidateChar === '/' && candidatePosition !== 0) {
+                    continue;
+                }
                 if (!suggestionDelimiters.includes(candidateChar)) {
                     continue;
                 }

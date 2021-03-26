@@ -99,8 +99,8 @@ class MessageList extends Component {
             isLastMessageVisible:
                 lastMessageRef &&
                 lastMessageRef.isBottomVisible({ offset: 10 }),
-            scrollHeight: this.el.scrollHeight,
-            scrollTop: this.el.scrollTop,
+            scrollHeight: this._getScrollableElement().scrollHeight,
+            scrollTop: this._getScrollableElement().scrollTop,
         };
     }
 
@@ -189,14 +189,14 @@ class MessageList extends Component {
      * @returns {integer}
      */
     getScrollHeight() {
-        return this.el.scrollHeight;
+        return this._getScrollableElement().scrollHeight;
     }
 
     /**
      * @returns {integer}
      */
     getScrollTop() {
-        return this.el.scrollTop;
+        return this._getScrollableElement().scrollTop;
     }
 
     /**
@@ -277,11 +277,11 @@ class MessageList extends Component {
      * @param {integer} value
      */
     setScrollTop(value) {
-        if (this.el.scrollTop === value) {
+        if (this._getScrollableElement().scrollTop === value) {
             return;
         }
         this._isLastScrollProgrammatic = true;
-        this.el.scrollTop = value;
+        this._getScrollableElement().scrollTop = value;
     }
 
     /**
@@ -355,13 +355,13 @@ class MessageList extends Component {
             hasScrollAdjust,
             order,
         } = this._lastRenderedValues();
-        if (!this.el || !hasScrollAdjust) {
+        if (!this._getScrollableElement() || !hasScrollAdjust) {
             return;
         }
         if (!hasAutoScrollOnMessageReceived) {
             if (order === 'desc' && this._willPatchSnapshot) {
                 const { scrollHeight, scrollTop } = this._willPatchSnapshot;
-                this.setScrollTop(this.el.scrollHeight - scrollHeight + scrollTop);
+                this.setScrollTop(this._getScrollableElement().scrollHeight - scrollHeight + scrollTop);
             }
             return;
         }
@@ -377,7 +377,7 @@ class MessageList extends Component {
             order,
         } = this._lastRenderedValues();
         if (
-            !this.el ||
+            !this._getScrollableElement() ||
             !hasScrollAdjust ||
             !this._willPatchSnapshot ||
             order === 'desc'
@@ -385,7 +385,7 @@ class MessageList extends Component {
             return;
         }
         const { scrollHeight, scrollTop } = this._willPatchSnapshot;
-        this.setScrollTop(this.el.scrollHeight - scrollHeight + scrollTop);
+        this.setScrollTop(this._getScrollableElement().scrollHeight - scrollHeight + scrollTop);
     }
 
     /**
@@ -397,12 +397,12 @@ class MessageList extends Component {
             threadCacheInitialScrollHeight,
             threadCacheInitialScrollPosition,
         } = this._lastRenderedValues();
-        if (!this.el || !hasScrollAdjust) {
+        if (!this._getScrollableElement() || !hasScrollAdjust) {
             return;
         }
         if (
             threadCacheInitialScrollPosition !== undefined &&
-            this.el.scrollHeight === threadCacheInitialScrollHeight
+            this._getScrollableElement().scrollHeight === threadCacheInitialScrollHeight
         ) {
             this.setScrollTop(threadCacheInitialScrollPosition);
             return;
@@ -435,6 +435,18 @@ class MessageList extends Component {
 
     /**
      * @private
+     * @returns {Element|undefined} Scrollable Element
+     */
+    _getScrollableElement() {
+        if (this.props.getScrollableElement) {
+            return this.props.getScrollableElement();
+        } else {
+            return this.el;
+        }
+    }
+
+    /**
+     * @private
      * @returns {boolean}
      */
     _isLoadMoreVisible() {
@@ -443,7 +455,7 @@ class MessageList extends Component {
             return false;
         }
         const loadMoreRect = loadMore.getBoundingClientRect();
-        const elRect = this.el.getBoundingClientRect();
+        const elRect = this._getScrollableElement().getBoundingClientRect();
         const isInvisible = loadMoreRect.top > elRect.bottom || loadMoreRect.bottom < elRect.top;
         return !isInvisible;
     }
@@ -466,7 +478,7 @@ class MessageList extends Component {
      */
     _scrollToEnd() {
         const { order } = this._lastRenderedValues();
-        this.setScrollTop(order === 'asc' ? this.el.scrollHeight - this.el.clientHeight : 0);
+        this.setScrollTop(order === 'asc' ? this._getScrollableElement().scrollHeight - this._getScrollableElement().clientHeight : 0);
     }
 
     /**
@@ -511,11 +523,11 @@ class MessageList extends Component {
             threadView,
             threadViewer,
         } = this._lastRenderedValues();
-        if (!this.el) {
+        if (!this._getScrollableElement()) {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
         }
-        const scrollTop = this.el.scrollTop;
+        const scrollTop = this._getScrollableElement().scrollTop;
         this.env.messagingBus.trigger('o-component-message-list-scrolled', {
             orderedMessages,
             scrollTop,
@@ -529,12 +541,12 @@ class MessageList extends Component {
             // Automatically scroll to new received messages only when the list is
             // currently fully scrolled.
             const hasAutoScrollOnMessageReceived = (order === 'asc')
-                ? scrollTop >= this.el.scrollHeight - this.el.clientHeight - margin
+                ? scrollTop >= this._getScrollableElement().scrollHeight - this._getScrollableElement().clientHeight - margin
                 : scrollTop <= margin;
             threadView.update({ hasAutoScrollOnMessageReceived });
         }
         if (threadViewer && threadViewer.exists()) {
-            threadViewer.saveThreadCacheScrollHeightAsInitial(this.el.scrollHeight, threadCache);
+            threadViewer.saveThreadCacheScrollHeightAsInitial(this._getScrollableElement().scrollHeight, threadCache);
             threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);
         }
         if (!this._isLastScrollProgrammatic && this._isLoadMoreVisible()) {
@@ -562,6 +574,14 @@ Object.assign(MessageList, {
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
         hasScrollAdjust: Boolean,
+        /**
+         * Function returns the exact scrollable element from the parent
+         * to manage proper scroll heights which affects the load more messages.
+         */
+        getScrollableElement: {
+            type: Function,
+            optional: true,
+        },
         order: {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
