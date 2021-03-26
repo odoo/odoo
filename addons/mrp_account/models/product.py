@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
@@ -44,17 +45,24 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if stock_moves.product_id == self:
             return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves)
-        bom = self.env['mrp.bom']._bom_find(product=self, company_id=stock_moves.company_id.id, bom_type='phantom')
+        if stock_moves:
+            product_moves = defaultdict(lambda: self.env['stock.move'])
+            for sm in stock_moves:
+                product_moves[sm.product_id] |= stock_moves
+            value = 0
+            for product, moves in product_moves.items():
+                qty = sum(moves.mapped('product_qty'))
+                value += product._compute_average_price(qty_invoiced * qty, qty_to_invoice * qty, moves)
+            return value
+        bom = self.env['mrp.bom']._bom_find(product=self, bom_type='phantom')
         if not bom:
             return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves)
         dummy, bom_lines = bom.explode(self, 1)
-        bom_lines = {line: data for line, data in bom_lines}
         value = 0
-        for move in stock_moves:
-            bom_line = move.bom_line_id
-            bom_line_data = bom_lines[bom_line]
-            bom_line_qty = bom_line_data['qty']
-            value += move.product_id._compute_average_price(qty_invoiced * bom_line_qty, qty_to_invoice * bom_line_qty, move)
+        for dummy, data in bom_lines:
+            bom_line_qty = data['qty']
+            bom_line_product = data['product']
+            value += bom_line_product._compute_average_price(qty_invoiced * bom_line_qty, qty_to_invoice * bom_line_qty, stock_moves)
         return value
 
     def _compute_bom_price(self, bom, boms_to_recompute=False):
