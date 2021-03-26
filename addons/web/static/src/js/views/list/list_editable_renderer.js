@@ -273,6 +273,19 @@ ListRenderer.include({
                     $(row).insertAfter($editedRow);
                 });
 
+                // Call on_attach_callback methods on widgets that implement it
+                if (self._isInDom) {
+                    for (const handle in self.allFieldWidgets) {
+                        if (handle !== id) {
+                            self.allFieldWidgets[handle].forEach(widget => {
+                                if (widget.on_attach_callback) {
+                                    widget.on_attach_callback();
+                                }
+                            });
+                        }
+                    }
+                }
+
                 if (self.currentRow !== null) {
                     var newRowIndex = $editedRow.prop('rowIndex') - 1;
                     self.currentRow = newRowIndex;

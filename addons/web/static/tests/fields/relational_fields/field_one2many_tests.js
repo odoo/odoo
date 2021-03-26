@@ -9835,6 +9835,43 @@ QUnit.module('fields', {}, function () {
             form.destroy();
             delete fieldRegistry.map.my_relational_field;
         });
+
+        QUnit.test("Editable list's field widgets call on_attach_callback on row update", async function (assert) {
+            // We use here a badge widget (owl component, does have a on_attach_callback method) and check its decoration
+            // is properly managed in this scenario.       
+            assert.expect(3);
+
+            this.data.partner.records[0].p = [1, 2];
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="int_field"/>
+                                <field name="color" widget="badge" decoration-warning="int_field == 9"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+            });
+
+            assert.containsN(form, '.o_data_row', 2);
+            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning-light');
+
+            await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first'));
+            await testUtils.owlCompatibilityExtraNextTick();
+            await testUtils.fields.editInput(form.$('.o_selected_row .o_field_integer'), '44');
+            await testUtils.owlCompatibilityExtraNextTick();
+
+            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning-light');
+
+            form.destroy();
+            delete fieldRegistry.map.my_field;
+        });
+
     });
 });
 });
