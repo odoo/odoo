@@ -13,6 +13,7 @@
     import PivotController from 'web.PivotController';
     import PivotRenderer from './pivot_renderer';
     import RendererWrapper from 'web.RendererWrapper';
+    import { sortBy } from 'web.utils';
 
     const _t = core._t;
     const _lt = core._lt;
@@ -57,7 +58,12 @@
                         measures[name] = field;
                     }
                     if (GROUPABLE_TYPES.includes(field.type)) {
-                        groupableFields[name] = field;
+                        groupableFields[name] = Object.assign({
+                            description: field.string,
+                            fieldName: name,
+                            fieldType: field.type,
+                            name,
+                        }, field);
                     }
                 }
             });
@@ -115,7 +121,6 @@
             this.loadParams.rowGroupBys = rowGroupBys;
             this.loadParams.fields = this.fields;
             this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
-            this.loadParams.groupableFields = groupableFields;
 
             const disableLinking = !!(this.arch.attrs.disable_linking &&
                                         JSON.stringify(this.arch.attrs.disable_linking));
@@ -124,8 +129,7 @@
             this.rendererParams.disableLinking = disableLinking;
             const { searchModel } = this.controllerParams;
             this.rendererParams.searchModel = searchModel;
-            this.rendererParams.fields = this.fields;
-            
+            this.rendererParams.groupableFields = sortBy(Object.values(groupableFields), (f) => f.description);
 
             this.controllerParams.disableLinking = disableLinking;
             this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");

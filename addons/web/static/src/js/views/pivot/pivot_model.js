@@ -306,14 +306,11 @@ var PivotModel = AbstractModel.extend({
      * @param {string} groupBy
      * @param {'row'|'col'} type
      */
-    addGroupBy: function (groupBy, type, customGroup = false) {
+    addGroupBy: function (groupBy, type) {
         if (type === 'row') {
             this.data.expandedRowGroupBys.push(groupBy);
         } else {
             this.data.expandedColGroupBys.push(groupBy);
-        }
-        if (customGroup) {
-            this.data.customGroupBys.push(groupBy);
         }
     },
     /**
@@ -373,9 +370,6 @@ var PivotModel = AbstractModel.extend({
         } else {
             expandedGroupBys.splice(newGroupBysLength - groupBys.length);
         }
-        this.data.customGroupBys = this.data.customGroupBys.filter((groupBy) => {
-            return expandedGroupBys.includes(groupBy);
-        });
     },
     /**
      * Reload the view with the current rowGroupBys and colGroupBys
@@ -540,8 +534,7 @@ var PivotModel = AbstractModel.extend({
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
-            selectionGroupBys: this._getSelectionGroupBy.bind(this),
-            modelName: this.modelName,
+            modelName: this.modelName
         };
         if (!raw && state.hasData) {
             state.table = this._getTable();
@@ -572,7 +565,6 @@ var PivotModel = AbstractModel.extend({
      * @param {string[]} params.rowGroupBys
      * @param {string} [params.default_order]
      * @param {string} params.modelName
-     * @param {Object[]} params.groupableFields
      * @param {Object} params.timeRanges
      * @returns {Promise}
      */
@@ -583,13 +575,11 @@ var PivotModel = AbstractModel.extend({
 
         this.fields = params.fields;
         this.modelName = params.modelName;
-        this.groupableFields = params.groupableFields;
         const measures = this._processMeasures(params.context.pivot_measures) ||
                             params.measures.map(m => m);
         this.data = {
             expandedRowGroupBys: [],
             expandedColGroupBys: [],
-            customGroupBys: [],
             domain: this.initialDomain,
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.context.pivot_row_groupby || params.groupedBy,
@@ -1066,58 +1056,6 @@ var PivotModel = AbstractModel.extend({
         });
 
         return originRow;
-    },
-
-    /**
-     * Get the selection needed to display the group by dropdown
-     * if hasSearchGroups is true i.e. searchview has group tag then return all groupable fields
-     * if hasSearchGroups is false then return all fields defined inside searchview group tag
-     *
-     * @param {Boolean} hasSearchGroups
-     * @param {Object[]} searchGroups
-     * @returns {Object[]}
-     * @private
-     */
-    _getSelectionGroupBy: function (hasSearchGroups, searchGroups) {
-        const groupBys = this._getGroupBys();
-
-        const groupedFieldNames = groupBys.rowGroupBys
-            .concat(groupBys.colGroupBys)
-            .map(function (g) {
-                return g.split(':')[0];
-            });
-
-        if (!hasSearchGroups) {
-            const fields = Object.keys(this.groupableFields)
-                .map((fieldName, index) => {
-                    const field = this.groupableFields[fieldName]
-                    return {
-                        description: field.string,
-                        fieldName,
-                        fieldType: field.type,
-                    };
-                })
-                .sort((left, right) => left.description < right.description ? -1 : 1);
-            return fields;
-        }
-
-        // concat custom items which was previously applied from custom group selection
-        // so that previously added custom group also dispalyed in dropdown
-        this.data.customGroupBys.map((fieldName, index) => {
-            fieldName = fieldName.split(":")[0];
-            const isFieldAvailable = searchGroups.find(f => f.fieldName === fieldName);
-            const field = this.groupableFields[fieldName];
-            if (!isFieldAvailable) {
-                searchGroups.push({
-                    description: field.string,
-                    fieldName,
-                    fieldType: field.type,
-                    groupNumber: 1000, // for instance static 1000
-                });
-            }
-        });
-
-        return searchGroups;
     },
 
     /**

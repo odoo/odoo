@@ -37,7 +37,7 @@ QUnit.module('Views', {
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     other_product_id: {string: "Other Product", type: "many2one", relation: 'product', store: true},
                     non_stored_m2o: {string: "Non Stored M2O", type: "many2one", relation: 'product'},
-                    customer: {string: "Customer", type: "many2one", relation: 'customer', store: true},
+                    customer: {string: "Customer", type: "many2one", relation: 'customer', store: true},    
                     computed_field: {string: "Computed and not stored", type: 'integer', compute: true, group_operator: 'sum'},
                     company_type: {
                         string: "Company Type", type: "selection",
@@ -712,7 +712,7 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
-    QUnit.test('pivot renders group dropdown same as search groupby dropdown if group tag given in searchview', async function (assert) {
+    QUnit.test('pivot renders group dropdown same as search groupby dropdown if group bys are specified in search arch', async function (assert) {
         assert.expect(6);
 
         const pivot = await createView({
@@ -728,11 +728,9 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
-                        <group>
-                            <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
-                            <field name="foo" string="foo" context="{'group_by': 'foo'}"/>
-                            <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
-                        </group>
+                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                        <field name="foo" string="foo" context="{'group_by': 'foo'}"/>
+                        <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
                     </search>
                 `,
             },
@@ -753,11 +751,20 @@ QUnit.module('Views', {
             "should have custom group generator same as searchview groupby");
         // check custom groupby selection has groupable fields only
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
-        assert.containsN(pivot, '.o_pivot_field_menu .o_generator_menu .o_group_by_selector option', 3,
+        assert.containsN(pivot, '.o_pivot_field_menu .o_generator_menu .o_group_by_selector option', 6,
             "should have 3 fields in custom groupby");
         const optionDescriptions = [...pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector option')]
             .map(option => option.innerText.trim());
-        assert.deepEqual(optionDescriptions, ['Company Type', 'Date', 'bar'],
+        assert.deepEqual(
+            optionDescriptions,
+            [
+                "Company Type",
+                "Customer",
+                "Date",
+                "Other Product",
+                "Product",
+                "bar"
+            ],
             "should only have groupable fields in custom groupby");
 
         pivot.destroy();
@@ -778,10 +785,8 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
-                        <group>
-                            <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
-                            <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
-                        </group>
+                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                        <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
                     </search>
                 `,
             },
@@ -839,10 +844,8 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
-                        <group>
-                            <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
-                            <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
-                        </group>
+                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                        <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
                     </search>
                 `,
             },
@@ -886,9 +889,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
-                        <group>
-                            <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
-                        </group>
+                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
                     </search>
                 `,
             },
@@ -912,7 +913,7 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
-    QUnit.test('pivot view with searchview without group tag', async function (assert) {
+    QUnit.test('pivot view without group by specified in search arch', async function (assert) {
         assert.expect(3);
 
         const pivot = await createView({
@@ -925,7 +926,7 @@ QUnit.module('Views', {
                 <field name="foo" type="measure"/>
             </pivot>`,
             archs: {
-                'partner,false,search': `<search></search>`,
+                'partner,false,search': `<search/>`,
             },
         });
 
@@ -943,22 +944,19 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
-    QUnit.test('pivot view do not show custom group selection if there is no groupable fields', async function (assert) {
+    QUnit.test('pivot view do not show custom group selection if there are no groupable fields', async function (assert) {
         assert.expect(4);
 
-        delete this.data.partner.fields.bar;
-        delete this.data.partner.fields.date;
-        delete this.data.partner.fields.company_type;
+        for (const fieldName of ["bar", "company_type", "customer", "date", "other_product_id"]) {
+            delete this.data.partner.fields[fieldName];
+        }
 
-        this.data.partner.records = [
-            {
-                id: 1,
-                foo: 12,
-                product_id: 37,
-                customer: 1,
-                computed_field: 19,
-            },
-        ];
+        this.data.partner.records = [{
+            id: 1,
+            foo: 12,
+            product_id: 37,
+            computed_field: 19,
+        }];
 
         const pivot = await createView({
             View: PivotView,
@@ -966,15 +964,13 @@ QUnit.module('Views', {
             data: this.data,
             arch: `
             <pivot>
-                <field name="product_id" type="row"/>
                 <field name="foo" type="measure"/>
+                <field name="product_id" invisible="1"/>
             </pivot>`,
             archs: {
                 'partner,false,search': `
                     <search>
-                        <group>
-                            <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
-                        </group>
+                        <filter name="product_id" string="product" context="{'group_by': 'product_id'}"/>
                     </search>
                 `,
             },
@@ -1012,9 +1008,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                 <search>
-                    <group>
-                        <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
-                    </group>
+                    <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
                 </search>
             `,
             },

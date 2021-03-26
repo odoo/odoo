@@ -1,14 +1,20 @@
 /** @odoo-module alias=web.PivotRenderer **/
 
-    const GroupByMenu = require('web.GroupByMenu');
-    const CustomGroupByItem = require('web.CustomGroupByItem');
-    const OwlAbstractRenderer = require('web.AbstractRendererOwl');
-    const field_utils = require('web.field_utils');
-    const { DEFAULT_INTERVAL } = require('web.searchUtils');
+    import DropdownMenu from 'web.DropdownMenu';
+    import DropdownMenuItem from 'web.DropdownMenuItem';
+    import OwlAbstractRenderer from '../abstract_renderer_owl';
+    import field_utils from 'web.field_utils';
+    import { DEFAULT_INTERVAL, INTERVAL_OPTIONS } from 'web.searchUtils';
 
-    const { useExternalListener, useState, useSubEnv, onMounted, onPatched } = owl.hooks;
+    const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
 
-    class PivotCustomGroupByItem extends CustomGroupByItem {
+    class PivotCustomGroupByItem extends DropdownMenuItem {
+        constructor() {
+            super(...arguments);
+            this.canBeOpened = true;
+            this.state.fieldName = this.props.fields[0].name;
+        }
+
         //---------------------------------------------------------------------
         // Handlers
         //---------------------------------------------------------------------
@@ -17,19 +23,19 @@
          * @private
          */
         _onApply() {
-            const field = this.props.fields.find(f => f.name === this.state.fieldName);
-            let interval;
-            if (['date', 'datetime'].includes(field.type)) {
+            const { fieldName } = this.state;
+            const { type } = this.props.fields.find(f => f.name === fieldName);
+            let interval = null;
+            if (['date', 'datetime'].includes(type)) {
                 interval = DEFAULT_INTERVAL;
             }
-            this.trigger('groupby_menu_selection', { field, interval, customGroup: true });
+            this.trigger('groupby-menu-selection', { fieldName, interval, custom: true });
             this.state.open = false;
         }
 
         /**
          * Stops propagation of click event if custom groupby menu is toggled
          * propagate click event when Apply button is clicked to close dropdown
-         *
          * @param {OwlEvent} ev
          */
         _onToggleCustomGroupbyItem(ev) {
@@ -40,9 +46,15 @@
         }
     }
 
+    PivotCustomGroupByItem.props = { fields: Array };
     PivotCustomGroupByItem.template = "web.PivotCustomGroupByItem";
 
-    class PivotGroupByMenu extends GroupByMenu {
+    class PivotGroupByMenu extends DropdownMenu {
+
+        constructor() {
+            super(...arguments);
+            this.intervalOptions = INTERVAL_OPTIONS;
+        }
 
         //---------------------------------------------------------------------
         // Getters
@@ -52,32 +64,26 @@
          * @override
          */
         get items() {
-            const searchGroups = this.model.get('filters', f => f.type === 'groupBy');
-            return this.props.selectionGroupBys(this.props.hasSearchGroups, searchGroups);
-        }
-
-        //----------------------------------------------------------------------
-        // Handlers
-        //----------------------------------------------------------------------
-
-        /**
-         * @private
-         * @param {OwlEvent} ev
-         */
-        _onItemSelected(ev) {
-            const { item, interval } = ev.detail;
-            const field = {
-                name: item.fieldName,
-            };
-            this.trigger('groupby_menu_selection', { field, interval });
+            if (this.props.hasSearchArchGroupBys) {
+                const groupBys = this.props.searchModel.get('filters', f => f.type === 'groupBy');
+                let groupNumber = 1 + Math.max(...groupBys.map(g => g.groupNumber), 0);
+                for (const [_, customGroupBy] of this.props.customGroupBys) {
+                    customGroupBy.groupNumber = groupNumber++;
+                    groupBys.push(customGroupBy);
+                }
+                return groupBys;
+            }
+            return this.props.fields;
         }
     }
+
     PivotGroupByMenu.template = "web.PivotGroupByMenu";
     PivotGroupByMenu.components = { PivotCustomGroupByItem };
-    PivotGroupByMenu.props = Object.assign({}, GroupByMenu.props, {
+    PivotGroupByMenu.props = Object.assign({}, DropdownMenu.props, {
+        customGroupBys: Map,
         fields: Object,
-        selectionGroupBys: Function,
-        hasSearchGroups: Boolean,
+        hasSearchArchGroupBys: Boolean,
+        searchModel: true,
     });
 
     /**
@@ -116,12 +122,14 @@
                 },
             });
 
-            useSubEnv({
-                searchModel: this.props.searchModel,
-            });
-            const searchGroups = this.props.searchModel.get('filters', f => f.type === 'groupBy' && !f.customGroup)
-            this.hasSearchGroups = searchGroups && !!searchGroups.length;
-            this.customGroupableFields = this._formatFields(this.props.fields);
+            const searchArchGroupBys = this.props.searchModel.get(
+                'filters',
+                f => f.type === 'groupBy' && !f.custom
+            );
+            // searchArchGroupBys is not an array when the control panel model
+            // extension is not installed (e.g. in an embedded pivot view)
+            this.hasSearchArchGroupBys = searchArchGroupBys && Boolean(searchArchGroupBys.length);
+            this.customGroupBys = new Map();
 
             onMounted(() => this._updateTooltip());
 
@@ -134,23 +142,6 @@
         // Private
         //----------------------------------------------------------------------
 
-        /**
-         * Give `name` and `description` keys to the fields given to the control
-         * panel.
-         * @private
-         * @param {Object} fields
-         * @returns {Object}
-         */
-        _formatFields(fields) {
-            const formattedFields = {};
-            for (const fieldName in fields) {
-                formattedFields[fieldName] = Object.assign({
-                    description: fields[fieldName].string,
-                    name: fieldName,
-                }, fields[fieldName]);
-            }
-            return formattedFields;
-        }
         /**
          * Get the formatted value of the cell
          *
@@ -234,6 +225,19 @@
         // Handlers
         //----------------------------------------------------------------------
 
+        /**
+         * @private
+         * @param {OwlEvent} ev
+         */
+        _onGroupByMenuSelection(ev) {
+            if (this.hasSearchArchGroupBys) {
+                const { custom, fieldName } = ev.detail;
+                if (custom && !this.customGroupBys.has(fieldName)) {
+                    const field = this.props.groupableFields.find(g => g.fieldName === fieldName)
+                    this.customGroupBys.set(fieldName, field);
+                }
+            }
+        }
 
         /**
          * Handles a click on a header node
@@ -281,8 +285,6 @@
     }
 
     PivotRenderer.template = 'web.PivotRenderer';
-    PivotRenderer.components = {
-        PivotGroupByMenu,
-    };
+    PivotRenderer.components = { PivotGroupByMenu };
 
     export default PivotRenderer;
