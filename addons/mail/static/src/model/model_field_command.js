@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/model/model_field_command.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 /**
  * Allows field update to detect if the value it received is a command to
@@ -175,10 +174,8 @@ function unlinkAll() {
     return new FieldCommand('unlink-all');
 }
 
-return {
-    // class
+export {
     FieldCommand,
-    // shortcuts
     clear,
     create,
     decrement,
@@ -192,4 +189,3 @@ return {
     unlinkAll,
 };
 
-});

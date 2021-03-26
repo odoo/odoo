@@ -1,8 +1,7 @@
-odoo.define('mail/static/src/components/message_author_prefix/message_author_prefix.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
@@ -62,6 +61,4 @@ Object.assign(MessageAuthorPrefix, {
     template: 'mail.MessageAuthorPrefix',
 });
 
-return MessageAuthorPrefix;
-
-});
+export default MessageAuthorPrefix;

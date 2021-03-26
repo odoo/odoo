@@ -1,20 +1,19 @@
-odoo.define('mail/static/src/components/follower/follower_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Follower: require('mail/static/src/components/follower/follower.js'),
-};
-const { insert, link } = require('mail/static/src/model/model_field_command.js');
-const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
-const {
+import Follower from '@mail/components/follower/follower';
+import { insert, link } from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred/deferred';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
+
+const components = { Follower };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -325,6 +324,4 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
 
 });
 });
-});
-
 });

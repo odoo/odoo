@@ -1,9 +1,9 @@
-odoo.define('mail/static/src/components/notification_popover/notification_popover.js', function (require) {
-'use strict';
+/** @odoo-module **/
+
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 class NotificationPopover extends Component {
 
@@ -90,6 +90,4 @@ Object.assign(NotificationPopover, {
     template: 'mail.NotificationPopover',
 });
 
-return NotificationPopover;
-
-});
+export default NotificationPopover;

@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { create, insert } from 'mail/static/src/model/model_field_command.js';
+import { create, insert } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
     start,
-} from 'mail/static/src/utils/test_utils.js';
+} from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('model', {}, function () {

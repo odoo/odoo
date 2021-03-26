@@ -1,23 +1,21 @@
-odoo.define('mail/static/src/components/activity/activity_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Activity: require('mail/static/src/components/activity/activity.js'),
-};
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const { insert } = require('mail/static/src/model/model_field_command.js');
-const {
+import useStore from '@mail/component_hooks/use_store/use_store';
+import Activity from '@mail/components/activity/activity';
+import { insert } from '@mail/model/model_field_command';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
-const { date_to_str } = require('web.time');
+import Bus from 'web.Bus';
+import { date_to_str } from 'web.time';
 
 const { Component, tags: { xml } } = owl;
+const components = { Activity };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -1152,6 +1150,4 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
 
 });
 });
-});
-
 });

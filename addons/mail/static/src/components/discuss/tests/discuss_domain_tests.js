@@ -1,12 +1,11 @@
-odoo.define('mail/static/src/components/discuss/tests/discuss_domain_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -405,6 +404,4 @@ QUnit.test('select all and unselect all buttons should work on filtered thread',
 
 });
 });
-});
-
 });

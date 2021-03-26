@@ -1,10 +1,9 @@
-odoo.define('mail/static/src/models/message/message_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
-const { insert, insertAndReplace, link } = require('mail/static/src/model/model_field_command.js');
+import { insert, insertAndReplace, link } from '@mail/model/model_field_command';
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
-const { str_to_datetime } = require('web.time');
+import { str_to_datetime } from 'web.time';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
@@ -183,6 +182,4 @@ QUnit.test('message with body "test" should not be considered empty', async func
 
 });
 });
-});
-
 });

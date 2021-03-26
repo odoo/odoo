@@ -1538,7 +1538,7 @@ return ThreadTypingMixin;
 odoo.define('im_livechat.legacy.mail.model.AbstractMessage', function (require) {
 "use strict";
 
-var mailUtils = require('mail.utils');
+var mailUtils = require('@mail/js/utils');
 
 var Class = require('web.Class');
 var core = require('web.core');
@@ -2012,7 +2012,7 @@ var _t = core._t;
 
 /**
  * This is an abstract widget for rendering thread windows.
- * AbstractThreadWindow is kept for legacy reasons. 
+ * AbstractThreadWindow is kept for legacy reasons.
  */
 var AbstractThreadWindow = Widget.extend({
     template: 'im_livechat.legacy.mail.AbstractThreadWindow',
@@ -2840,7 +2840,7 @@ odoo.define('im_livechat.legacy.mail.widget.Thread', function (require) {
 "use strict";
 
 var DocumentViewer = require('im_livechat.legacy.mail.DocumentViewer');
-var mailUtils = require('mail.utils');
+var mailUtils = require('@mail/js/utils');
 
 var core = require('web.core');
 var time = require('web.time');
@@ -3912,3 +3912,4 @@ var DocumentViewer = Widget.extend({
 });
 return DocumentViewer;
 });
+

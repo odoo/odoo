@@ -1,19 +1,17 @@
-odoo.define('mail/static/src/components/thread_needaction_preview/thread_needaction_preview_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ThreadNeedactionPreview: require('mail/static/src/components/thread_needaction_preview/thread_needaction_preview.js'),
-};
-
-const {
+import ThreadNeedactionPreview from '@mail/components/thread_needaction_preview/thread_needaction_preview';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
+
+const components = { ThreadNeedactionPreview };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -409,6 +407,4 @@ QUnit.test('chat window header should not have unread counter for non-channel th
 
 });
 });
-});
-
 });

@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/components/file_uploader/file_uploader.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
 
-const core = require('web.core');
+import core from 'web.core';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -236,6 +235,4 @@ Object.assign(FileUploader, {
     template: 'mail.FileUploader',
 });
 
-return FileUploader;
-
-});
+export default FileUploader;

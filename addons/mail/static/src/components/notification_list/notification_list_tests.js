@@ -1,17 +1,15 @@
-odoo.define('mail/static/src/components/notification_list/notification_list_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
-};
-
-const {
+import NotificationList from '@mail/components/notification_list/notification_list';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { NotificationList };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -152,6 +150,4 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
 
 });
 });
-});
-
 });

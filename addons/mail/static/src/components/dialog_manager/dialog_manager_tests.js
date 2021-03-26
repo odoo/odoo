@@ -1,13 +1,12 @@
-odoo.define('mail/static/src/components/dialog_manager/dialog_manager_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
-const {
+import { makeDeferred } from '@mail/utils/deferred/deferred';
+import {
     afterEach,
     beforeEach,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -77,6 +76,4 @@ QUnit.test('initial mount', async function (assert) {
 
 });
 });
-});
-
 });

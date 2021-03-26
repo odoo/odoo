@@ -1,8 +1,7 @@
-odoo.define('mail/static/src/models/messaging_menu/messaging_menu.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2one } = require('mail/static/src/model/model_field.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, one2one } from '@mail/model/model_field';
 
 function factory(dependencies) {
 
@@ -150,5 +149,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.messaging_menu', factory);
-
-});

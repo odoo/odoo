@@ -3,7 +3,7 @@ odoo.define('sms/static/src/models/notification_group/notification_group.js', fu
 
 const {
     registerInstancePatchModel,
-} = require('mail/static/src/model/model_core.js');
+} = require('@mail/model/model_core');
 
 registerInstancePatchModel('mail.notification_group', 'sms/static/src/models/notification_group/notification_group.js', {
 

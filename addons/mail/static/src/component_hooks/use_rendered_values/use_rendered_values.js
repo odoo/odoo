@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/component_hooks/use_rendered_values/use_rendered_values.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 const { Component } = owl;
 const { onMounted, onPatched } = owl.hooks;
@@ -31,6 +30,4 @@ function useRenderedValues(selector) {
     return () => patchedValues;
 }
 
-return useRenderedValues;
-
-});
+export default useRenderedValues;

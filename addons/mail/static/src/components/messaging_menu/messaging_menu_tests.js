@@ -1,15 +1,14 @@
-odoo.define('mail/static/src/components/messaging_menu/messaging_menu_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const { makeTestPromise } = require('web.test_utils');
+import { makeTestPromise } from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -1034,6 +1033,4 @@ QUnit.test('respond to notification prompt (denied)', async function (assert) {
 
 });
 });
-});
-
 });

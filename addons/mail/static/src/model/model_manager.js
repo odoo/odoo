@@ -1,10 +1,9 @@
-odoo.define('mail/static/src/model/model_manager.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registry } = require('mail/static/src/model/model_core.js');
-const ModelField = require('mail/static/src/model/model_field.js');
-const { patchClassMethods, patchInstanceMethods } = require('mail/static/src/utils/utils.js');
-const { unlinkAll } = require('mail/static/src/model/model_field_command.js');
+import { registry } from '@mail/model/model_core';
+import ModelField from '@mail/model/model_field';
+import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
+import { unlinkAll } from '@mail/model/model_field_command';
 
 /**
  * Inner separator used between bits of information in string that is used to
@@ -1118,6 +1117,4 @@ class ModelManager {
 
 }
 
-return ModelManager;
-
-});
+export default ModelManager;

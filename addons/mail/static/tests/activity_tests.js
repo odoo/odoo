@@ -1,8 +1,7 @@
-odoo.define('mail.activity_view_tests', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var ActivityView = require('mail.ActivityView');
-var testUtils = require('web.test_utils');
+import ActivityView from '@mail/js/views/activity/activity_view';
+import testUtils from 'web.test_utils';
 
 var createActionManager = testUtils.createActionManager;
 
@@ -518,5 +517,4 @@ QUnit.test('Activity view: discard an activity creation dialog', async function 
     actionManager.destroy();
 });
 
-});
 });

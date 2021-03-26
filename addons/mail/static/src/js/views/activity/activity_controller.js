@@ -1,11 +1,11 @@
-odoo.define('mail.ActivityController', function (require) {
-"use strict";
+/** @odoo-module **/
 
-require('mail.Activity');
-var BasicController = require('web.BasicController');
-var core = require('web.core');
-var field_registry = require('web.field_registry');
-var ViewDialogs = require('web.view_dialogs');
+import '@mail/js/activity';
+
+import BasicController from 'web.BasicController';
+import core from 'web.core';
+import field_registry from 'web.field_registry';
+import ViewDialogs from 'web.view_dialogs';
 
 var KanbanActivity = field_registry.get('kanban_activity');
 var _t = core._t;
@@ -119,6 +119,4 @@ var ActivityController = BasicController.extend({
     },
 });
 
-return ActivityController;
-
-});
+export default ActivityController;

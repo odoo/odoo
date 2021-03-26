@@ -1,13 +1,12 @@
-odoo.define('mail/static/src/components/activity_box/activity_box.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Activity: require('mail/static/src/components/activity/activity.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import Activity from '@mail/components/activity/activity';
 
 const { Component } = owl;
+
+const components = { Activity };
 
 class ActivityBox extends Component {
 
@@ -59,6 +58,4 @@ Object.assign(ActivityBox, {
     template: 'mail.ActivityBox',
 });
 
-return ActivityBox;
-
-});
+export default ActivityBox;

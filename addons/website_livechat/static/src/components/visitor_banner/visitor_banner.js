@@ -1,7 +1,7 @@
 odoo.define('website_livechat/static/src/components/visitor_banner/visitor_banner.js', function (require) {
 'use strict';
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useStore = require('@mail/component_hooks/use_store/use_store')[Symbol.for("default")];
 
 const { Component } = owl;
 

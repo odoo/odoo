@@ -1,12 +1,11 @@
-odoo.define('mail/static/src/components/composer_suggested_recipient/composer_suggested_recipient.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import useUpdate from '@mail/component_hooks/use_update/use_update';
 
-const { FormViewDialog } = require('web.view_dialogs');
-const { ComponentAdapter } = require('web.OwlCompatibility');
+import { FormViewDialog } from 'web.view_dialogs';
+import { ComponentAdapter } from 'web.OwlCompatibility';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -153,6 +152,4 @@ Object.assign(ComposerSuggestedRecipient, {
     template: 'mail.ComposerSuggestedRecipient',
 });
 
-return ComposerSuggestedRecipient;
-
-});
+export default ComposerSuggestedRecipient;

@@ -1,26 +1,25 @@
-odoo.define('mail/static/src/components/message/message_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Message: require('mail/static/src/components/message/message.js'),
-};
-const {
+import Message from '@mail/components/message/message';
+import {
     create,
     insert,
     insertAndReplace,
     link,
-} = require('mail/static/src/model/model_field_command.js');
-const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
-const {
+} from '@mail/model/model_field_command';
+import { makeDeferred } from '@mail/utils/deferred/deferred';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
+
+const components = { Message };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -1593,6 +1592,4 @@ QUnit.test('basic rendering of tracking value (monetary type)', async function (
 
 });
 });
-});
-
 });

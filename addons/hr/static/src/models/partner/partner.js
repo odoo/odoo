@@ -4,8 +4,8 @@ odoo.define('hr/static/src/models/partner/partner.js', function (require) {
 const {
     registerInstancePatchModel,
     registerFieldPatchModel,
-} = require('mail/static/src/model/model_core.js');
-const { attr, one2one } = require('mail/static/src/model/model_field.js');
+} = require('@mail/model/model_core');
+const { attr, one2one } = require('@mail/model/model_field');
 
 registerInstancePatchModel('mail.partner', 'hr/static/src/models/partner/partner.js', {
     //--------------------------------------------------------------------------

@@ -6,7 +6,7 @@ const {
     afterNextRender,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} = require('@mail/utils/test_utils');
 
 const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');

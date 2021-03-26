@@ -1,12 +1,11 @@
-odoo.define('mail/static/src/components/discuss_mobile_mailbox_selection/discuss_mobile_mailbox_selection_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -125,6 +124,4 @@ QUnit.test('auto-select "Inbox" when discuss had channel as active thread', asyn
 
 });
 });
-});
-
 });

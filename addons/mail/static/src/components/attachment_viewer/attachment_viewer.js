@@ -1,10 +1,9 @@
-odoo.define('mail/static/src/components/attachment_viewer/attachment_viewer.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useRefs = require('mail/static/src/component_hooks/use_refs/use_refs.js');
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const { link } = require('mail/static/src/model/model_field_command.js');
+import useRefs from '@mail/component_hooks/use_refs/use_refs';
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import { link } from '@mail/model/model_field_command';
 
 const { Component, QWeb } = owl;
 const { useRef } = owl.hooks;
@@ -597,6 +596,4 @@ Object.assign(AttachmentViewer, {
 
 QWeb.registerComponent('AttachmentViewer', AttachmentViewer);
 
-return AttachmentViewer;
-
-});
+export default AttachmentViewer;

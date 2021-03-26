@@ -1,14 +1,13 @@
-odoo.define('mail/static/src/components/chatter_topbar/chatter_topbar.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    FollowButton: require('mail/static/src/components/follow_button/follow_button.js'),
-    FollowerListMenu: require('mail/static/src/components/follower_list_menu/follower_list_menu.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import FollowButton from '@mail/components/follow_button/follow_button';
+import FollowerListMenu from '@mail/components/follower_list_menu/follower_list_menu';
 
 const { Component } = owl;
+
+const components = { FollowButton, FollowerListMenu };
 
 class ChatterTopbar extends Component {
 
@@ -132,6 +131,4 @@ Object.assign(ChatterTopbar, {
     template: 'mail.ChatterTopbar',
 });
 
-return ChatterTopbar;
-
-});
+export default ChatterTopbar;

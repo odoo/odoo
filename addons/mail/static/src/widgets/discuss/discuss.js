@@ -1,15 +1,14 @@
-odoo.define('mail/static/src/widgets/discuss/discuss.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Discuss: require('mail/static/src/components/discuss/discuss.js'),
-};
-const InvitePartnerDialog = require('mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js');
+import Discuss from '@mail/components/discuss/discuss';
+import InvitePartnerDialog from '@mail/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog';
 
-const AbstractAction = require('web.AbstractAction');
-const { action_registry, qweb } = require('web.core');
+import AbstractAction from 'web.AbstractAction';
+import { action_registry, qweb } from 'web.core';
 
 const { Component } = owl;
+
+const components = { Discuss };
 
 const DiscussWidget = AbstractAction.extend({
     template: 'mail.widgets.Discuss',
@@ -392,6 +391,4 @@ const DiscussWidget = AbstractAction.extend({
 
 action_registry.add('mail.widgets.discuss', DiscussWidget);
 
-return DiscussWidget;
-
-});
+export default DiscussWidget;

@@ -1,7 +1,6 @@
-odoo.define('mail/static/src/js/core/translation.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { TranslationDataBase } = require('web.translation');
+import { TranslationDataBase } from 'web.translation';
 
 const { Component } = owl;
 
@@ -23,6 +22,4 @@ TranslationDataBase.include({
         }
         return res;
     },
-});
-
 });

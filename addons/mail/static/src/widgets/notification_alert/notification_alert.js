@@ -1,14 +1,12 @@
-odoo.define('mail/static/src/widgets/notification_alert/notification_alert.js', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const components = {
-    NotificationAlert: require('mail/static/src/components/notification_alert/notification_alert.js'),
-};
+import NotificationAlertComponent from '@mail/components/notification_alert/notification_alert';
 
-const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
+import { ComponentWrapper, WidgetAdapterMixin } from 'web.OwlCompatibility';
+import Widget from 'web.Widget';
+import widgetRegistry from 'web.widget_registry';
 
-const Widget = require('web.Widget');
-const widgetRegistry = require('web.widget_registry');
+const components = { NotificationAlertComponent };
 
 class NotificationAlertWrapper extends ComponentWrapper {}
 
@@ -31,7 +29,7 @@ const NotificationAlert = Widget.extend(WidgetAdapterMixin, {
 
         this.component = new NotificationAlertWrapper(
             this,
-            components.NotificationAlert,
+            components.NotificationAlertComponent,
             {}
         );
         await this.component.mount(this.el);
@@ -40,6 +38,4 @@ const NotificationAlert = Widget.extend(WidgetAdapterMixin, {
 
 widgetRegistry.add('notification_alert', NotificationAlert);
 
-return NotificationAlert;
-
-});
+export default NotificationAlert;

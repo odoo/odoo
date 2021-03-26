@@ -1,12 +1,11 @@
-odoo.define('mail/static/src/services/chat_window_service/chat_window_service.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ChatWindowManager: require('mail/static/src/components/chat_window_manager/chat_window_manager.js'),
-};
+import ChatWindowManager from '@mail/components/chat_window_manager/chat_window_manager';
 
-const AbstractService = require('web.AbstractService');
-const { bus, serviceRegistry } = require('web.core');
+import AbstractService from 'web.AbstractService';
+import { bus, serviceRegistry } from 'web.core';
+
+const components = { ChatWindowManager };
 
 const ChatWindowService = AbstractService.extend({
     /**
@@ -99,6 +98,4 @@ const ChatWindowService = AbstractService.extend({
 
 serviceRegistry.add('chat_window', ChatWindowService);
 
-return ChatWindowService;
-
-});
+export default ChatWindowService;

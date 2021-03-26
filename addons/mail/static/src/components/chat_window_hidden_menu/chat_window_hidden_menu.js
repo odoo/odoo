@@ -1,14 +1,12 @@
-odoo.define('mail/static/src/components/chat_window_hidden_menu/chat_window_hidden_menu.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ChatWindowHeader: require('mail/static/src/components/chat_window_header/chat_window_header.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
+import ChatWindowHeader from '@mail/components/chat_window_header/chat_window_header';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
+
+const components = { ChatWindowHeader };
 
 class ChatWindowHiddenMenu extends Component {
 
@@ -136,6 +134,4 @@ Object.assign(ChatWindowHiddenMenu, {
     template: 'mail.ChatWindowHiddenMenu',
 });
 
-return ChatWindowHiddenMenu;
-
-});
+export default ChatWindowHiddenMenu;

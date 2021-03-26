@@ -2,7 +2,7 @@ odoo.define('snailmail/static/src/components/message/message.js', function (requ
 'use strict';
 
 const components = {
-    Message: require('mail/static/src/components/message/message.js'),
+    Message:  require('@mail/components/message/message')[Symbol.for("default")],
     SnailmailErrorDialog: require('snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js'),
     SnailmailNotificationPopover: require('snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js'),
 };

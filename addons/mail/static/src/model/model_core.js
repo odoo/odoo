@@ -1,5 +1,4 @@
-odoo.define('mail/static/src/model/model_core.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
 /**
  * Module that contains registry for adding new models or patching models.
@@ -114,7 +113,7 @@ function registerNewModel(name, factory, dependencies = []) {
 // Export
 //------------------------------------------------------------------------------
 
-return {
+export {
     registerClassPatchModel,
     registerFieldPatchModel,
     registerInstancePatchModel,
@@ -122,4 +121,3 @@ return {
     registry,
 };
 
-});

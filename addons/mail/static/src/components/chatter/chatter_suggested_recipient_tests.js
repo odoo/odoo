@@ -1,17 +1,16 @@
-odoo.define('mail/static/src/components/chatter/chatter_suggested_recipient_tests', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Chatter: require('mail/static/src/components/chatter/chatter.js'),
-    Composer: require('mail/static/src/components/composer/composer.js'),
-};
-const {
+import Chatter from '@mail/components/chatter/chatter';
+import Composer from '@mail/components/composer/composer';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
+
+const components = { Chatter, Composer };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -415,6 +414,4 @@ QUnit.test("suggested recipients should not be notified when posting an internal
 
 });
 });
-});
-
 });

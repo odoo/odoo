@@ -1,16 +1,15 @@
-odoo.define('mail/static/src/components/thread_view/thread_view.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Composer: require('mail/static/src/components/composer/composer.js'),
-    MessageList: require('mail/static/src/components/message_list/message_list.js'),
-};
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import useUpdate from '@mail/component_hooks/use_update/use_update';
+import Composer from '@mail/components/composer/composer';
+import MessageList from '@mail/components/message_list/message_list';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
+
+const components = { Composer, MessageList };
 
 class ThreadView extends Component {
 
@@ -231,6 +230,4 @@ Object.assign(ThreadView, {
     template: 'mail.ThreadView',
 });
 
-return ThreadView;
-
-});
+export default ThreadView;

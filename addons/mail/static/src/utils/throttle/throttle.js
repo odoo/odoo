@@ -1,7 +1,6 @@
-odoo.define('mail/static/src/utils/throttle/throttle.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
+import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 /**
  * This module define an utility function that enables throttling calls on a
@@ -377,6 +376,4 @@ Object.assign(throttle, {
 });
 
 
-return throttle;
-
-});
+export default throttle;

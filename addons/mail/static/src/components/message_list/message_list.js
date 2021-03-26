@@ -1,17 +1,16 @@
-odoo.define('mail/static/src/components/message_list/message_list.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    Message: require('mail/static/src/components/message/message.js'),
-};
-const useRefs = require('mail/static/src/component_hooks/use_refs/use_refs.js');
-const useRenderedValues = require('mail/static/src/component_hooks/use_rendered_values/use_rendered_values.js');
-const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
+import useRefs from '@mail/component_hooks/use_refs/use_refs';
+import useRenderedValues from '@mail/component_hooks/use_rendered_values/use_rendered_values';
+import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props';
+import useStore from '@mail/component_hooks/use_store/use_store';
+import useUpdate from '@mail/component_hooks/use_update/use_update';
+import Message from '@mail/components/message/message';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
+
+const components = { Message };
 
 class MessageList extends Component {
 
@@ -606,6 +605,4 @@ Object.assign(MessageList, {
     template: 'mail.MessageList',
 });
 
-return MessageList;
-
-});
+export default MessageList;

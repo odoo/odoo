@@ -1,12 +1,11 @@
-odoo.define('mail.Many2OneAvatarUserTests', function (require) {
-"use strict";
+/** @odoo-module **/
 
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
-const KanbanView = require('web.KanbanView');
-const ListView = require('web.ListView');
-const { Many2OneAvatarUser } = require('mail.Many2OneAvatarUser');
-const { dom, mock } = require('web.test_utils');
+import KanbanView from 'web.KanbanView';
+import ListView from 'web.ListView';
+import { Many2OneAvatarUser } from '@mail/js/many2one_avatar_user';
+import { dom, mock } from 'web.test_utils';
 
 
 QUnit.module('mail', {}, function () {
@@ -119,5 +118,4 @@ QUnit.module('mail', {}, function () {
 
         kanban.destroy();
     });
-});
 });

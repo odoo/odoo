@@ -1,13 +1,12 @@
-odoo.define('im_livechat/static/src/components/discuss/discuss_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     nextAnimationFrame,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
@@ -439,6 +438,4 @@ QUnit.test('invite button should be present on livechat', async function (assert
 
 });
 });
-});
-
 });

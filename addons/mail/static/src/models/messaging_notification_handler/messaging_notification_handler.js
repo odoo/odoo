@@ -1,10 +1,9 @@
-odoo.define('mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { one2one } = require('mail/static/src/model/model_field.js');
-const { decrement, increment, insert, link } = require('mail/static/src/model/model_field_command.js');
-const { htmlToTextContentInline } = require('mail.utils');
+import { registerNewModel } from '@mail/model/model_core';
+import { one2one } from '@mail/model/model_field';
+import { decrement, increment, insert, link } from '@mail/model/model_field_command';
+import { htmlToTextContentInline } from '@mail/js/utils';
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -779,5 +778,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.messaging_notification_handler', factory);
-
-});

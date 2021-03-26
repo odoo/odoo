@@ -1,8 +1,7 @@
-odoo.define('mail/static/src/models/thread/thread_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { insert } = require('mail/static/src/model/model_field_command.js');
-const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
+import { insert } from '@mail/model/model_field_command';
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
@@ -146,6 +145,4 @@ QUnit.test('create (chat)', async function (assert) {
 
 });
 });
-});
-
 });

@@ -1,13 +1,10 @@
-odoo.define('mail_bot/static/src/models/messaging/messaging.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerInstancePatchModel } = require('mail/static/src/model/model_core.js');
+import { registerInstancePatchModel } from '@mail/model/model_core';
 
 registerInstancePatchModel('mail.messaging', 'mail_bot/static/src/models/messaging/messaging.js', {
     //----------------------------------------------------------------------
     // Public
     //----------------------------------------------------------------------
-
-});
 
 });

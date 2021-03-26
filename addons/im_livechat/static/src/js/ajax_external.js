@@ -1,7 +1,6 @@
-odoo.define('web.ajax_external', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var ajax = require('web.ajax');
+import ajax from 'web.ajax';
 
 /**
   * This file should be used in the context of an external widget loading (e.g: live chat in a non-Odoo website)
@@ -11,4 +10,3 @@ var ajax = require('web.ajax');
 ajax.loadJS = function (url) {
     console.warn('Tried to load the following script on an external website: ' + url);
 };
-});

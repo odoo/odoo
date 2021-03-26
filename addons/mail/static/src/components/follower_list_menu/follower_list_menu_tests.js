@@ -1,19 +1,18 @@
-odoo.define('mail/static/src/components/follower_list_menu/follower_list_menu_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    FollowerListMenu: require('mail/static/src/components/follower_list_menu/follower_list_menu.js'),
-};
-const { insert, link } = require('mail/static/src/model/model_field_command.js');
-const {
+import FollowerListMenu from '@mail/components/follower_list_menu/follower_list_menu';
+import { insert, link } from '@mail/model/model_field_command';
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     createRootComponent,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from '@mail/utils/test_utils';
 
-const Bus = require('web.Bus');
+import Bus from 'web.Bus';
+
+const components = { FollowerListMenu };
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -298,6 +297,4 @@ QUnit.test('click on remove follower', async function (assert) {
 
 });
 });
-});
-
 });

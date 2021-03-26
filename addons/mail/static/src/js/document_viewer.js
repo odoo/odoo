@@ -1,8 +1,7 @@
-odoo.define('mail.DocumentViewer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-var Widget = require('web.Widget');
+import core from 'web.core';
+import Widget from 'web.Widget';
 
 var QWeb = core.qweb;
 
@@ -392,5 +391,5 @@ var DocumentViewer = Widget.extend({
         this._zoom(1);
     },
 });
-return DocumentViewer;
-});
+
+export default DocumentViewer;
