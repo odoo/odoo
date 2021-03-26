@@ -1,19 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Odoo Payments by Adyen Payment Acquirer',
+    'name': 'Odoo Payments Payment Acquirer',
+    'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 330,
-    'summary': 'Payment Acquirer: Odoo Payments by Adyen',
-    'version': '1.0',
-    'description': """Odoo Payments by Adyen""",
+    'summary': 'Payment Acquirer: Odoo Payments',
+    'description': """Odoo Payments""",
     'depends': ['payment', 'adyen_platforms'],
     'data': [
         'views/payment_views.xml',
-        'views/payment_odoo_by_adyen_templates.xml',
+        'views/payment_odoo_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
-    'installable': True,
     'application': True,
+    'post_init_hook': 'create_missing_journals',
+    'uninstall_hook': 'uninstall_hook',
 }
