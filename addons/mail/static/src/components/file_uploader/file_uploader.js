@@ -58,11 +58,12 @@ class FileUploader extends Component {
     //--------------------------------------------------------------------------
 
     /**
+     * @deprecated
      * @private
      * @param {Object} fileData
      * @returns {mail.attachment}
      */
-     _createAttachment(fileData) {
+    _createAttachment(fileData) {
         return this.env.models['mail.attachment'].create(Object.assign(
             {},
             fileData,
@@ -91,11 +92,16 @@ class FileUploader extends Component {
      */
     _createTemporaryAttachments(files) {
         for (const file of files) {
-            this._createAttachment({
-                filename: file.name,
-                isTemporary: true,
-                name: file.name
-            });
+            this.env.models['mail.attachment'].create(
+                Object.assign(
+                    {
+                        filename: file.name,
+                        isTemporary: true,
+                        name: file.name
+                    },
+                    this.props.newAttachmentExtraData
+                ),
+            );
         }
     }
     /**
@@ -180,13 +186,18 @@ class FileUploader extends Component {
             // Without this the useStore selector of component could be not called
             // E.g. in attachment_box_tests.js
             await new Promise(resolve => setTimeout(resolve));
-            const attachment = this._createAttachment({
-                filename,
-                id,
-                mimetype,
-                name,
-                size,
-            });
+            const attachment = this.env.models['mail.attachment'].insert(
+                Object.assign(
+                    {
+                        filename,
+                        id,
+                        mimetype,
+                        name,
+                        size,
+                    },
+                    this.props.newAttachmentExtraData
+                ),
+            );
             this.trigger('o-attachment-created', { attachment });
         }
     }
