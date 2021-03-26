@@ -28,7 +28,7 @@ tour.register("sale_tour", {
 }, {
     trigger: ".modal-content button[name='action_save_onboarding_company_step']",
     content: _t("Looks good. Let's continue."),
-    position: "bottom",
+    position: "left",
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_base_document_layout]',
     extra_trigger: ".o_sale_order",
