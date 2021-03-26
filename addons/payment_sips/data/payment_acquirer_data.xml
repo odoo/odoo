@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="0">
+<odoo noupdate="1">
 
-        <record id="payment.payment_acquirer_sips" model="payment.acquirer">
-            <field name="name">Sips</field>
-            <field name="image_128" type="base64" file="payment_sips/static/src/img/sips_icon.png"/>
-            <field name="provider">sips</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="view_template_id" ref="payment_sips.sips_form"/>
-        </record>
+    <record id="payment.payment_acquirer_sips" model="payment.acquirer">
+        <field name="provider">sips</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="support_authorization">False</field>
+        <field name="support_fees_computation">False</field>
+        <field name="support_tokenization">False</field>
+    </record>
 
-    </data>
 </odoo>
