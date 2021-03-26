@@ -599,6 +599,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
+                <div class="oe_structure oe_empty" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
                 <section t-attf-class="container py-2 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail" t-att-data-view-track="view_track and '1' or '0'">
                     <div class="row">
                         <div class="col-md-4">
@@ -638,6 +639,7 @@
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
+                                        <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
                                         <t t-if="combination" t-call="sale.variants">
                                             <t t-set="ul_class" t-value="'flex-column'" />
                                             <t t-set="parent_combination" t-value="None" />
@@ -676,6 +678,7 @@
                     </div>
                 </section>
                 <div itemprop="description" t-field="product.website_description" class="oe_structure oe_empty mt16" id="product_full_description"/>
+                <div class="oe_structure oe_empty mt16" id="oe_structure_website_sale_product_2" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
             </div>
         </t>
     </template>
@@ -726,12 +729,6 @@
                     </t>
                 </div>
             </div>
-        </xpath>
-    </template>
-
-    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="False" customize_show="True" name="Recently Viewed Products" priority="16">
-        <xpath expr="//div[@t-field='product.website_description']" position="after">
-            <t t-snippet-call="website_sale.s_products_recently_viewed"/>
         </xpath>
     </template>
 
