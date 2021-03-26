@@ -6,18 +6,15 @@ import json
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.sql import column_exists, create_column
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _auto_init(self):
-        if not column_exists(self.env.cr, "stock_picking", "weight"):
+    def _init_column(self, column_name):
+        if column_name == "weight":
             # In order to speed up module installation when dealing with hefty data
-            # We create the column weight manually, but the computation will be skipped
-            # Therefore we do the computation in a query by getting weight sum from stock moves
-            create_column(self.env.cr, "stock_picking", "weight", "numeric")
+            # we do the computation in a query by getting weight sum from stock moves
             self.env.cr.execute("""
                 WITH computed_weight AS (
                     SELECT SUM(weight) AS weight_sum, picking_id
@@ -30,7 +27,8 @@ class StockPicking(models.Model):
                 FROM computed_weight
                 WHERE stock_picking.id = computed_weight.picking_id;
             """)
-        return super()._auto_init()
+            return True
+        return super()._init_column(column_name)
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):

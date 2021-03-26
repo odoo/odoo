@@ -1005,26 +1005,9 @@ class Field(MetaField('DummyField', (object,), {})):
         # create/update the column, not null constraint; the index will be
         # managed by registry.check_indexes()
         self.update_db_column(model, column)
-        self.update_db_notnull(model, column)
+        initialized = self.update_db_notnull(model, column)
 
-        # optimization for computing simple related fields like 'foo_id.bar'
-        if (
-            not column
-            and self.related and self.related.count('.') == 1
-            and self.related_field.store and not self.related_field.compute
-            and not (self.related_field.type == 'binary' and self.related_field.attachment)
-            and self.related_field.type not in ('one2many', 'many2many')
-        ):
-            join_field = model._fields[self.related.split('.')[0]]
-            if (
-                join_field.type == 'many2one'
-                and join_field.store and not join_field.compute
-            ):
-                model.pool.post_init(self.update_db_related, model)
-                # discard the "classical" computation
-                return False
-
-        return not column
+        return not initialized
 
     def update_db_column(self, model, column):
         """ Create/update the column corresponding to ``self``.
@@ -1051,13 +1034,15 @@ class Field(MetaField('DummyField', (object,), {})):
 
             :param model: an instance of the field's model
             :param column: the column's configuration (dict) if it exists, or ``None``
+            :return: ``True`` if the column has been initialized in database
         """
+        initialized = True
         has_notnull = column and column['is_nullable'] == 'NO'
 
         if not column or (self.required and not has_notnull):
             # the column is new or it becomes required; initialize its values
             if model._table_has_rows():
-                model._init_column(self.name)
+                initialized = model._init_column(self.name)
 
         if self.required and not has_notnull:
             # _init_column may delay computations in post-init phase
@@ -1070,22 +1055,57 @@ class Field(MetaField('DummyField', (object,), {})):
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
-    def update_db_related(self, model):
+        return initialized
+
+    def initialize(self, model):
+        """ Possibly initialize the field, and return ``True`` if it has been
+        actually done.
+        """
+        # optimization for computing simple related fields like 'foo_id.bar'
+        if self.related and self.related.count('.') == 1:
+            join_field = model._fields[self.related.split('.')[0]]
+            if (
+                self.related_field.column_type
+                and self.related_field.store
+                and not self.related_field.compute
+                and not (self.related_field.type == 'binary' and self.related_field.attachment)
+                and self.related_field.type not in ('one2many', 'many2many')
+                and join_field.type == 'many2one'
+                and join_field.store
+                and not join_field.compute
+            ):
+                model.pool.post_init(self.initialize_related, model)
+                # consider it done, to avoid the classical computation
+                return True
+
+        # get the default value; ideally, we should use default_get(), but it
+        # fails due to ir.default not being ready
+        if self.default is not None:
+            value = self.default(model)
+            value = self.convert_to_write(value, model)
+            value = self.convert_to_column(value, model)
+        else:
+            value = None
+        # Write value if non-NULL, except for booleans for which False means
+        # the same as NULL - this saves us an expensive query on large tables.
+        necessary = (value is not None) if self.type != 'boolean' else value
+        if necessary:
+            _logger.debug("Table '%s': setting default value of new column %s to %r",
+                          model._table, self.name, value)
+            query = f'UPDATE "{model._table}" SET "{self.name}" = %s WHERE "{self.name}" IS NULL'
+            model._cr.execute(query, (value,))
+            return True
+
+    def initialize_related(self, model):
         """ Compute a stored related field directly in SQL. """
         comodel = model.env[self.related_field.model_name]
         join_field, comodel_field = self.related.split('.')
-        model.env.cr.execute("""
-            UPDATE "{model_table}" AS x
-            SET "{model_field}" = y."{comodel_field}"
-            FROM "{comodel_table}" AS y
+        model.env.cr.execute(f"""
+            UPDATE "{model._table}" AS x
+            SET "{self.name}" = y."{comodel_field}"
+            FROM "{comodel._table}" AS y
             WHERE x."{join_field}" = y.id
-        """.format(
-            model_table=model._table,
-            model_field=self.name,
-            comodel_table=comodel._table,
-            comodel_field=comodel_field,
-            join_field=join_field,
-        ))
+        """)
 
     ############################################################################
     #

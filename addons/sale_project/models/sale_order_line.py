@@ -6,7 +6,6 @@ from markupsafe import escape
 
 from odoo import api, Command, fields, models, _
 from odoo.tools import format_amount
-from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrderLine(models.Model):

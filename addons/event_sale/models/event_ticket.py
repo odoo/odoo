@@ -73,7 +73,7 @@ class EventTemplateTicket(models.Model):
         self.env.cr.execute("SELECT id FROM %s WHERE product_id IS NULL" % self._table)
         ticket_type_ids = self.env.cr.fetchall()
         if not ticket_type_ids:
-            return
+            return True
 
         # update existing columns
         _logger.debug("Table '%s': setting default value of new column %s to unique values for each row",
@@ -98,6 +98,7 @@ class EventTemplateTicket(models.Model):
             f'UPDATE {self._table} SET product_id = %s WHERE id IN %s;',
             (product_id, tuple(ticket_type_ids))
         )
+        return True
 
     @api.model
     def _get_event_ticket_fields_whitelist(self):

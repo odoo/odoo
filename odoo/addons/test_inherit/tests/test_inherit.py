@@ -173,3 +173,13 @@ class TestXMLIDS(common.TransactionCase):
         self.assertCountEqual(xml_ids.get(baz.id), [
             'test_inherit.selection__test_new_api_selection__state__baz',
         ])
+
+
+class TestInitColumn(common.TransactionCase):
+    def test_init_column(self):
+        # the installation of this module should:
+        #  - use the compute method to initialize field 'test_init_computed'
+        #  - bypass the compute method to initialize field 'test_init_optimized'
+        partner = self.env.user.partner_id
+        self.assertEqual(partner.test_init_computed, 'computed')
+        self.assertEqual(partner.test_init_optimized, 'optimized')

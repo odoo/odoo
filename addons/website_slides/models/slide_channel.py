@@ -551,7 +551,7 @@ class Channel(models.Model):
             it for every record.
         """
         if column_name != 'access_token':
-            super(Channel, self)._init_column(column_name)
+            return super(Channel, self)._init_column(column_name)
         else:
             query = """
                 UPDATE %(table_name)s
@@ -559,6 +559,7 @@ class Channel(models.Model):
                 WHERE access_token IS NULL
             """ % {'table_name': self._table}
             self.env.cr.execute(query)
+            return True
 
     @api.model_create_multi
     def create(self, vals_list):
