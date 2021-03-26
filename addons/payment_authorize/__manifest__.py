@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Authorize.Net Payment Acquirer',
+    'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 350,
     'summary': 'Payment Acquirer: Authorize.net Implementation',
-    'version': '1.0',
     'description': """Authorize.Net Payment Acquirer""",
     'depends': ['payment'],
     'data': [
+        'views/assets.xml',
         'views/payment_views.xml',
         'views/payment_authorize_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
-    'installable': True,
     'application': True,
-    'post_init_hook': 'create_missing_journal_for_acquirers',
+    'post_init_hook': 'create_missing_journals',
     'uninstall_hook': 'uninstall_hook',
 }
