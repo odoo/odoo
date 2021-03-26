@@ -6,10 +6,11 @@ from random import choice
 from string import digits
 from werkzeug.urls import url_encode
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv.query import Query
-from odoo.exceptions import ValidationError, AccessError
+from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.osv import expression
 from odoo.tools.misc import format_date
 
@@ -281,17 +282,20 @@ class HrEmployeePrivate(models.Model):
             vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
-        url = '/web#%s' % url_encode({
-            'action': 'hr.plan_wizard_action',
-            'active_id': employee.id,
-            'active_model': 'hr.employee',
-            'menu_id': self.env.ref('hr.menu_hr_root').id,
-        })
-        employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         if employee.department_id:
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
             ])._subscribe_users_automatically()
+        # Launch onboarding plans
+        if not employee._launch_plans_from_trigger(trigger='employee_creation'):
+            # Keep the recommend message if no plans are launched
+            url = '/web#%s' % url_encode({
+                'action': 'hr.plan_wizard_action',
+                'active_id': employee.id,
+                'active_model': 'hr.employee',
+                'menu_id': self.env.ref('hr.menu_hr_root').id,
+            })
+            employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         return employee
 
     def write(self, vals):
@@ -336,9 +340,9 @@ class HrEmployeePrivate(models.Model):
         archived_addresses = unarchived_employees.mapped('address_home_id').filtered(lambda addr: not addr.active)
         archived_addresses.toggle_active()
 
-        # Empty links to this employees (example: manager, coach, time off responsible, ...)
         archived_employees = self.filtered(lambda e: not e.active)
         if archived_employees:
+            # Empty links to this employees (example: manager, coach, time off responsible, ...)
             employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
             user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
             employee_domain = [[(field, 'in', archived_employees.ids)] for field in employee_fields_to_empty]
@@ -351,6 +355,9 @@ class HrEmployeePrivate(models.Model):
                 for field in user_fields_to_empty:
                     if employee[field] in archived_employees.user_id:
                         employee[field] = False
+
+            # Launch automatic offboarding plans
+            archived_employees._launch_plans_from_trigger(trigger='employee_archive')
 
         if len(self) == 1 and not self.active:
             return {
@@ -409,6 +416,71 @@ class HrEmployeePrivate(models.Model):
         if self.env.is_superuser() and real_user:
             self = self.with_user(real_user)
         return self
+
+    def _launch_plans_from_trigger(self, trigger):
+        '''
+        Launches all plans for given trigger
+
+        Returns False if no plans are launched, True otherwise
+        '''
+        plan_ids = self.env['hr.plan'].search([('trigger', '=', trigger)])
+        if not plan_ids or not self:
+            return False
+        #Group plans and employees by company id
+        plans_per_company = defaultdict(lambda: self.env['hr.plan'])
+        for plan_id in plan_ids:
+            plans_per_company[plan_id.company_id.id] |= plan_id
+        employees_per_company = defaultdict(lambda: self.env['hr.employee'])
+        for employee_id in self:
+            employees_per_company[employee_id.company_id.id] |= employee_id
+        #Launch the plans
+        for company_id in employees_per_company:
+            employees_per_company[company_id]._launch_plan(plans_per_company[company_id])
+        return True
+
+    def _launch_plan(self, plan_ids):
+        '''
+        Launch all given plans
+        '''
+        for employee_id in self:
+            for plan_id in plan_ids:
+                employee_id._message_log(
+                    body=_('Plan %s has been launched.', plan_id.name),
+                )
+                errors = []
+                for activity_type in plan_id.plan_activity_type_ids:
+                    responsible = False
+                    try:
+                        responsible = activity_type.get_responsible_id(employee_id)
+                    except UserError as error:
+                        errors.append(_(
+                            'Warning ! The step "%(name)s: %(summary)s" assigned to %(responsible)s '
+                            'could not be started because: "%(error)s"',
+                            name=activity_type.activity_type_id.name,
+                            summary=activity_type.summary,
+                            responsible=activity_type.responsible,
+                            error=str(error)
+                        ))
+                        continue
+
+                    if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
+                        if activity_type.deadline_type == 'default':
+                            date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
+                        elif activity_type.deadline_type == 'plan_active':
+                            date_deadline = fields.Date.context_today(self)
+                        elif activity_type.deadline_type == 'trigger_offset':
+                            date_deadline = fields.Date.add(fields.Date.context_today(self), days=activity_type.deadline_days)
+
+                        employee_id.activity_schedule(
+                            activity_type_id=activity_type.activity_type_id.id,
+                            summary=activity_type.summary,
+                            note=activity_type.note,
+                            user_id=responsible.id,
+                            date_deadline=date_deadline,
+                        )
+                employee_id._message_log(
+                    body='<br/>'.join(errors),
+                )
 
     # ---------------------------------------------------------
     # Messaging

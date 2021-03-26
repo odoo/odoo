@@ -221,6 +221,9 @@
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1"/>
                     <field name="work_email"/>
+                    <field name="activity_ids" widget="list_activity"/>
+                    <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
+                    <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
@@ -303,6 +306,9 @@
                                         <div class="oe_kanban_bottom_left"/>
                                         <div class="oe_kanban_bottom_right">
                                             <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                            <div class="hr_activity_container">
+                                                <field name="activity_ids" widget="kanban_activity"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
