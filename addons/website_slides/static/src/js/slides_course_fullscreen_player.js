@@ -30,7 +30,7 @@ odoo.define('website_slides.fullscreen', function (require) {
     };
 
     /**
-     * This widget is responsible of display Youtube Player
+     * This widget is responsible of display Youtube/PeerTube Player
      *
      * The widget will trigger an event `change_slide` when the video is at
      * its end, and `slide_completed` when the player is at 30 sec before the
@@ -39,6 +39,7 @@ odoo.define('website_slides.fullscreen', function (require) {
     var VideoPlayer = publicWidget.Widget.extend({
         template: 'website.slides.fullscreen.video',
         youtubeUrl: 'https://www.youtube.com/iframe_api',
+        peerTubeUrl: 'https://unpkg.com/@peertube/embed-api/build/player.min.js',
 
         init: function (parent, slide) {
             this.slide = slide;
@@ -46,15 +47,34 @@ odoo.define('website_slides.fullscreen', function (require) {
         },
         start: function (){
             var self = this;
-            return Promise.all([this._super.apply(this, arguments), this._loadYoutubeAPI()]).then(function() {
-                self._setupYoutubePlayer();
+            if (this.slide.embedUrl.match(/youtube/i)) {
+                return Promise.all([this._super.apply(this, arguments), this._loadYoutubeAPI()]).then(function () {
+                    self._setupYoutubePlayer();
+                });
+            } else {
+                return Promise.all([this._super.apply(this, arguments), this._loadPeerTubeAPI()]).then(function(){
+                    self._setupPeerTubePlayer()
+                });
+            }
+        },
+        _loadPeerTubeAPI: function () {
+            var self = this;
+            var prom = new Promise(function (resolve, reject) {
+                if ($(document).find('script[src="' + self.peerTubeUrl + '"]').length === 0) {
+                    var $peerTubeElement = $('<script/>', { src: self.peerTubeUrl, async:false,defer:false });
+                    $(document.head).append($peerTubeElement);
+                    resolve(self);
+                } else {
+                    resolve();
+                }
             });
+            return prom;
         },
         _loadYoutubeAPI: function () {
             var self = this;
             var prom = new Promise(function (resolve, reject) {
                 if ($(document).find('script[src="' + self.youtubeUrl + '"]').length === 0) {
-                    var $youtubeElement = $('<script/>', {src: self.youtubeUrl});
+                    var $youtubeElement = $('<script/>', {src: self.youtubeUrl });
                     $(document.head).append($youtubeElement);
 
                     // function called when the Youtube asset is loaded
@@ -68,13 +88,22 @@ odoo.define('website_slides.fullscreen', function (require) {
             });
             return prom;
         },
+        _setupPeerTubePlayer: function () {
+            var self = this;
+            setTimeout(function(){
+                self.player = new PeerTubePlayer(document.querySelector('#video-player' + self.slide.id));
+                self.player.ready; // wait for the player to be ready
+                self.player.addEventListener('playbackStatusUpdate', self._onPlaybackStatusUpdate.bind(self));
+                self.player.play();
+            },3000);
+        },
         /**
          * Links the youtube api to the iframe present in the template
          *
          * @private
          */
         _setupYoutubePlayer: function (){
-            this.player = new YT.Player('youtube-player' + this.slide.id, {
+            this.player = new YT.Player('video-player' + this.slide.id, {
                 playerVars: {
                     'autoplay': 1,
                     'origin': window.location.origin
@@ -84,10 +113,47 @@ odoo.define('website_slides.fullscreen', function (require) {
                 }
             });
         },
+        _onPlaybackStatusUpdate: function (event) {
+            var self = this;
+            if (self.slide.completed) {
+                return;
+            }
+
+            if (event.playbackState !== 'ended') {
+                //if (!event.target.getCurrentTime) {
+                //    return;
+                //}
+
+                if (self.tid) {
+                    clearInterval(self.tid);
+                }
+
+                self.currentVideoTime = event.position;
+                self.totalVideoTime = event.duration;
+                self.tid = setInterval(function () {
+                    self.currentVideoTime += 1;
+                    if (self.totalVideoTime && self.currentVideoTime > self.totalVideoTime - 30) {
+                        clearInterval(self.tid);
+                        if (!self.slide.hasQuestion && !self.slide.completed) {
+                            self.trigger_up('slide_to_complete', self.slide);
+                        }
+                    }
+                }, 1000);
+            } else {
+                if (self.tid) {
+                    clearInterval(self.tid);
+                }
+                this.player = undefined;
+                if (this.slide.hasNext) {
+                    this.trigger_up('slide_go_next');
+                }
+            }
+        },            
+        
         /**
          * Specific method of the youtube api.
          * Whenever the player starts playing/pausing/buffering/..., a setinterval is created.
-         * This setinterval is used to check te user's progress in the video.
+         * This setinterval is used to check the user's progress in the video.
          * Once the user reaches a particular time in the video (30s before end), the slide will be considered as completed
          * if the video doesn't have a mini-quiz.
          * This method also allows to automatically go to the next slide (or the quiz associated to the current
