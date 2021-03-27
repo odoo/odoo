@@ -8,9 +8,9 @@ declaration.
 
 Signed,
 
-*  Mark Clarke> mark@jumpingbean.co.za https://github.com/mxc
+*  Mark Clarke> dev@jumpingbean.co.za https://github.com/mxc
 
 List of contributors:
 
-*  Mark Clarke mark@jumpingbean.co.za https://github.com/mxc
+*  Mark Clarke dev@jumpingbean.co.za https://github.com/mxc
 
