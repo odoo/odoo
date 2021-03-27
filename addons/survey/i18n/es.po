@@ -15,14 +15,15 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
 # Martin Trigaux, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Caroline Renson <car@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 15:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
+"Last-Translator: Caroline Renson <car@odoo.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,11 +83,6 @@ msgstr "%s certificación aprobada"
 #, python-format
 msgid "%s challenge certification"
 msgstr "%s certificación de desafío"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
@@ -290,7 +286,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimado ${object.partner_id.name or 'participante’}<br/><br/>\n"
+"        Estimado ${object.partner_id.name or 'participant'}<br/><br/>\n"
 "        % if object.survey_id.certification:\n"
 "            Se le ha invitado a realizar una nueva certificación.\n"
 "        % else:\n"
@@ -782,7 +778,7 @@ msgstr "Ha ocurrido un problema"
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
-msgid "A question is either skipped or answered, not both."
+msgid "A question can either be skipped or answered, not both."
 msgstr ""
 
 #. module: survey

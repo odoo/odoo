@@ -2604,7 +2604,7 @@ msgstr "Ryhmittele..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_move_lines
 msgid "Has Move Lines"
-msgstr "On muuttolinjoja"
+msgstr "Siirtorivejä on olemassa"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
@@ -2619,7 +2619,7 @@ msgstr "On paketteja"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
 msgid "Has Scrap Moves"
-msgstr "On jätteitä"
+msgstr "On romutussiirtoja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
@@ -3767,7 +3767,7 @@ msgstr "Siirto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
-msgstr "Siirrä tiedot"
+msgstr "Siirron tiedot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_entire_packs
@@ -3788,18 +3788,18 @@ msgstr "Siirtorivi"
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_nosuggest_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_nosuggest_ids
 msgid "Move Line Nosuggest"
-msgstr "Siirrä Line Nosuggest"
+msgstr "Älä ehdota siirtoriviä"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Move Lines"
-msgstr "Siirrä linjat"
+msgstr "Siirtorivit"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
 msgid "Move that created the return move"
-msgstr "Siirrä, joka on luonut paluuliikkeen"
+msgstr "Siirto, joka on luonut palautuksen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__product_return_moves
@@ -3973,7 +3973,7 @@ msgstr "Lähdekohtaa ei ole määritetty varastosäännössä: %s!"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
 msgid "No stock move found"
-msgstr ""
+msgstr "Varastosiirtoa ei löytynyt"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -4189,12 +4189,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_dest_ids
 msgid "Optional: next stock move when chaining them"
-msgstr "Vaihtoehtoinen: seuraava varastonsiirto kun ketjutetaan"
+msgstr "Vaihtoehtoinen: seuraava varastonsiirto ketjuttaessa"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_orig_ids
 msgid "Optional: previous stock move when chaining them"
-msgstr "Valinnainen: edellinen varastosiirto siirtyy ketjunvaihdossa"
+msgstr "Valinnainen: edellinen varastosiirto ketjuttaessa"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -4238,12 +4238,12 @@ msgstr "Lähde"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Origin Moves"
-msgstr "Alkuperä Liikkuu"
+msgstr "Alkuperäiset siirrot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin_returned_move_id
 msgid "Origin return move"
-msgstr "Alkuperä-paluuliike"
+msgstr "Alkuperäinen palautus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
@@ -4584,7 +4584,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add some items to move."
-msgstr "Lisää muutettavia kohteita."
+msgstr "Ole hyvä ja lisää siirrettäviä kohteita."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -5713,7 +5713,7 @@ msgstr "Romutuspaikka"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__move_id
 msgid "Scrap Move"
-msgstr "Siirrä romutettavaksi"
+msgstr "Romutussiirto"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
@@ -7887,13 +7887,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr "Et voi jakaa luonnosliikettä. Se on vahvistettava ensin."
+msgstr "Et voi jakaa luonnossiirtoa. Se on vahvistettava ensin."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr "Et voi jakaa varaston siirtoa, joka on asetettu 'Valmis'."
+msgstr "Et voi jakaa valmista varastosiirtoa."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7907,7 +7907,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
-msgstr "Et voi poistaa varausta, joka on asetettu 'Valmis'."
+msgstr "Et voi poistaa varausta valmiilta varastosiirrolta."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
