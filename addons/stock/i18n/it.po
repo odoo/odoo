@@ -67,7 +67,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Trasferimenti %s: impossibile validare i trasferimenti senza quantità riservate o completate. Per forzarli, passare alla modalità di modifica e inserire le quantità completate."
+"Trasferimenti %s: impossibile validare i trasferimenti senza quantità prenotate o completate. Per forzarli, passare alla modalità di modifica e inserire le quantità completate."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -143,7 +143,7 @@ msgid ""
 "%s use default source or destination locations from warehouse %s that will "
 "be archived."
 msgstr ""
-"%s utilizza ubicazioni di origine o destinazione predefinite del magazzino "
+"%s utilizza ubicazioni di origine o destinazione predefinite dal magazzino "
 "%s che verrà archiviato."
 
 #. module: stock
@@ -805,6 +805,8 @@ msgid ""
 "Allows to start with a pre-filled counted quantity for each lines or with "
 "all counted quantities set to zero."
 msgstr ""
+"Consente di partire con una quantità conteggiata precompilata per ciascuna "
+"riga oppure con tutte impostate a zero."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
@@ -1153,7 +1155,7 @@ msgid ""
 "move lines."
 msgstr ""
 "Impossibile impostare la quantità completata dal movimento di magazzino, "
-"lavorare direttamente con le righe dei movimenti. "
+"lavorare direttamente con le righe del movimento."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
@@ -1366,7 +1368,7 @@ msgstr "Conferma"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__confirmed
 msgid "Confirmed"
-msgstr "Confermata"
+msgstr "Confermato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -1534,7 +1536,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__move_ids
 msgid "Created Moves"
-msgstr "Movimenti generati"
+msgstr "Movimenti creati"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__create_uid
@@ -2235,7 +2237,7 @@ msgstr "E-mail di conferma"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_move_email_validation
 msgid "Email Confirmation picking"
-msgstr ""
+msgstr "E-mail di conferma prelievo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2246,7 +2248,7 @@ msgstr "Modello e-mail"
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_mail_confirmation_template_id
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email Template confirmation picking"
-msgstr ""
+msgstr "Modello e-mail di conferma prelievo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__stock_mail_confirmation_template_id
@@ -2304,7 +2306,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "Si è verificata un'eccezione durante il prelievo"
+msgstr "Si sono verificate eccezioni nel prelievo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -2685,12 +2687,12 @@ msgstr "Raggruppa per..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_move_lines
 msgid "Has Move Lines"
-msgstr "Ha righe di movimento"
+msgstr "Contiene righe di movimento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
 msgid "Has Pack Operations"
-msgstr "Ha operazioni di confezionamento"
+msgstr "Contiene operazioni di imballaggio"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_packages
@@ -2705,13 +2707,13 @@ msgstr "Contiene movimenti di scarto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
 msgid "Has Tracking"
-msgstr "È tracciato"
+msgstr "È monitorato"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_has_variants
 msgid "Has variants"
-msgstr "Ha varianti"
+msgstr "Contiene varianti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
@@ -2726,7 +2728,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__hide_picking_type
 msgid "Hide Picking Type"
-msgstr ""
+msgstr "Nascondi tipo prelievo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__id
@@ -2928,8 +2930,8 @@ msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
 msgstr ""
-"Se questa spedizione è stata divisa, questo campo rimanda alla spedizione "
-"che contiene la parte già elaborata."
+"Se la spedizione è stata suddivisa, il campo rimanda alla spedizione che "
+"contiene la parte già elaborata."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__picking_type_entire_packs
@@ -3006,7 +3008,7 @@ msgstr "Includi prodotti esauriti"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__exhausted
 msgid "Include also products with quantity of 0"
-msgstr ""
+msgstr "Include anche i prodotti con quantità pari a 0"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__incoming_qty
@@ -3136,7 +3138,7 @@ msgstr "Dominio non valido per operando destro %s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
-msgstr ""
+msgstr "Quantità inventariata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__line_ids
@@ -3290,12 +3292,13 @@ msgstr "La richiesta iniziale è modificabile"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_deadline_issue
 msgid "Is late"
-msgstr ""
+msgstr "È in ritardo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_deadline_issue
 msgid "Is late or will be late depending on the deadline and scheduled date"
 msgstr ""
+"È in ritardo o lo sarà a seconda della scadenza e della data programmata"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
@@ -3321,7 +3324,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr "Specifica le merci da consegnare parzialmente o tutte in una volta"
+msgstr "Indica le merci da consegnare parzialmente oppure tutte in una volta"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -4013,12 +4016,12 @@ msgstr "Nessuna tracciabilità"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "No negative quantities allowed"
-msgstr "Non sono ammesse quantità negative"
+msgstr "Quantità negative non consentite"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr "Nessuna operazione eseguita su questo lotto."
+msgstr "Nessuna operazione eseguita sul lotto."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -4077,7 +4080,7 @@ msgstr "Nessun movimento di magazzino trovato"
 #: model_terms:ir.actions.act_window,help:stock.action_picking_type_list
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "No transfer found. Let's create one!"
-msgstr ""
+msgstr "Nessun trasferimento trovato. Creane uno!"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -4256,7 +4259,7 @@ msgstr "Tipi di operazioni"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr "Operazioni senza colli"
+msgstr "Operazioni senza collo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -4694,7 +4697,7 @@ msgstr "Giacenza positiva"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_reserved
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_reserved
 msgid "Pre-fill Detailed Operations"
-msgstr ""
+msgstr "Operazioni dettagliate precompilate"
 
 #. module: stock
 #. openerp-web
@@ -4858,7 +4861,7 @@ msgstr "Etichetta prodotto (ZPL)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Product Lots Filter"
-msgstr "Filtri dei lotti prodotto"
+msgstr "Filtro lotti prodotto"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -5602,7 +5605,7 @@ msgstr "Rifornimenti"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
 msgid "Resupply From"
-msgstr "Forma di rifornimento"
+msgstr "Rifornire da"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
@@ -5885,7 +5888,7 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "Selezionando l'opzione \"Avviso\" l'utente viene notificato con un "
-"messaggio. Selezionando \"Messaggio bloccante\" viene inviata un'eccezione "
+"messaggio. Selezionando \"Messaggio di blocco\" viene inviata un'eccezione "
 "con il messaggio e viene bloccato il flusso. Scrivere il messaggio nel campo"
 " successivo."
 
@@ -5900,14 +5903,14 @@ msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are "
 "done"
 msgstr ""
-"Invia un messaggio SMS di conferma automatico a ordine di consegna "
+"Invio di un messaggio SMS di conferma automatico a ordine di consegna "
 "completato"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Invia una e-mail di conferma automatica a ordine di consegna completato"
+"Invio di una e-mail di conferma automatica a ordine di consegna completato"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
@@ -5976,9 +5979,8 @@ msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
 msgstr ""
-"Indica una strategia di rimozione specifica che verrà usata "
-"indipendentemente dall'ubicazione di origine per questa categoria di "
-"prodotti. "
+"Imposta una precisa strategia di rimozione da usare a prescindere "
+"dall'ubicazione di origine della categoria di prodotto."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_reset_product_qty
@@ -6088,33 +6090,33 @@ msgstr "Mostrare i lotti M2O"
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__show_lots_text
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_lots_text
 msgid "Show Lots Text"
-msgstr "Mostra «Testo dei lotti»"
+msgstr "Mostra testo dei lotti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr "Mostra «Segna da fare»"
+msgstr "Mostra segna da fare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_operations
 msgid "Show Operations"
-msgstr "Mostra «Operazioni»"
+msgstr "Mostra operazioni"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__show_resupply
 msgid "Show Resupply"
-msgstr "Mostrare Rifornire"
+msgstr "Mostra rifornire"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__show_transfers
 msgid "Show Transfers"
-msgstr ""
+msgstr "Mostra trasferimenti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
 msgid "Show Validate"
-msgstr "Mostra «Convalida»"
+msgstr "Mostra valida"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6283,7 +6285,7 @@ msgstr "Giacenza"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_assign_serial
 msgid "Stock Assign Serial Numbers"
-msgstr ""
+msgstr "Assegnazione numeri di serie magazzino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -6336,12 +6338,12 @@ msgstr "Operazione di magazzino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr ""
+msgstr "Destinazione collo di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr ""
+msgstr "Livello collo di magazzino"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -6625,13 +6627,14 @@ msgid ""
 "The combination of serial number and product must be unique across a company.\n"
 "Following combination contains duplicates:\n"
 msgstr ""
+"La combinazione numero seriale e prodotto deve essere univoca all'interno di una azienda.\n"
+"La seguente combinazione contiene duplicati:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
 msgid "The company is automatically set from your user preferences."
 msgstr ""
-"L'azienda viene definita automaticamente in base alle preferenze "
-"dell'utente. "
+"L'azienda viene impostata in modo automatico dalle preferenze dell'utente. "
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6743,8 +6746,7 @@ msgid ""
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
 "L'operazione richiesta non può essere elaborata a causa di un errore nel "
-"programma: è stato usato il campo \"product_qty\" invece del campo "
-"\"product_uom_qty`\"."
+"programma: impostato il campo `product_qty` al posto di `product_uom_qty`."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6987,8 +6989,8 @@ msgid ""
 "location for stock moves generated by manufacturing orders."
 msgstr ""
 "Questa ubicazione di giacenza verrà utilizzata, al posto di quella "
-"predefinita, come origine per movimenti di magazzino generati dagli ordini "
-"di produzione."
+"predefinita, come origine per i movimenti di magazzino generati dagli ordini"
+" di produzione."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_inventory
@@ -6997,8 +6999,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
-"Questa ubicazione verrà utilizzata, al posto di quella predefinita, come "
-"origine per movimenti di magazzino generati durante un inventario."
+"Questa ubicazione di giacenza verrà utilizzata, al posto di quella "
+"predefinita, come origine per i movimenti di magazzino generati durante "
+"l'inventario."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -7652,7 +7655,7 @@ msgstr "Avviso"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "Avviso su prelievo"
+msgstr "Avviso sul prelievo"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8090,7 +8093,7 @@ msgid ""
 "You cannot validate a transfer if no quantities are reserved nor done. To "
 "force the transfer, switch in edit mode and encode the done quantities."
 msgstr ""
-"Impossibile validare un trasferimento senza quantità riservate o completate."
+"Impossibile validare un trasferimento senza quantità prenotate o completate."
 " Per forzarlo, passare alla modalità di modifica e inserire le quantità "
 "completate."
 
