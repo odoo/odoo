@@ -8,10 +8,10 @@
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2019
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Martin Trigaux, 2021
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-18 14:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,13 +101,15 @@ msgstr ""
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
 msgstr ""
+"<b>Trimiteți oferta</b>cătra dumneavoastră și verificați ce primesc "
+"clienții."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "<b>Set a price</b>."
-msgstr ""
+msgstr "<b>Setați un preț</b>."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -997,6 +999,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"O comandă este de a revinde atunci când cantitățile livrate depășesc cantitățile comandate inițial\n"
+"                iar politica de facturare se bazează pe cantitățile comandate."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1050,6 +1054,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"De exemplu, dacă vindeți ore preplătite de servicii, Odoo vă recomandă\n"
+"                să vindeți ore suplimentare când toate orele comandate au fost consumate."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1472,7 +1478,7 @@ msgstr "Personalizați aspectul cotațiilor dvs."
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "Personalizați-vă ofertele și comenzile."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1670,7 +1676,7 @@ msgstr "Tipul de afișare"
 #: code:addons/sale/static/src/js/sale_order_view.js:0
 #, python-format
 msgid "Do you want to apply this discount to all order lines?"
-msgstr ""
+msgstr "Doriți să aplicați această reducere la toate liniile de comandă?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1698,7 +1704,7 @@ msgstr "Valoare avans"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Suma avansului (fix)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -1773,7 +1779,7 @@ msgstr "Editare Configurare"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr ""
+msgstr "Semnatură Electronică"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
@@ -1892,6 +1898,7 @@ msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
 msgstr ""
+"Valori interzise pe linia de comandă de vânzare care nu este responsabilă"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -1947,7 +1954,7 @@ msgstr "Obțineți avertismente la comenzi pentru produse sau clienți"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "Bună treabă, să continuăm."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2071,7 +2078,7 @@ msgstr "Importare Modele pentru Produse"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr ""
+msgstr "Incl. impozit)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -2587,7 +2594,7 @@ msgstr "Nu sunt comenzi de facturat"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Nu s-au găsit ordine de vânzare."
 
 #. module: sale
 #. openerp-web
@@ -2620,7 +2627,7 @@ msgstr "Nimic de facturat"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "Acum, vom crea un eșantion de ofertă."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3155,7 +3162,7 @@ msgstr "Cantitate"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_qty_configurator
 msgid "Quantity visible in configurator"
-msgstr ""
+msgstr "Cantitatea vizibilă în configurator"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3385,7 +3392,7 @@ msgstr "Avertismente la vânzare"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Vânzare Plata achiziționează asistent de bord"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3547,7 +3554,7 @@ msgstr "Avertismente la vânzare"
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr ""
+msgstr "Vânzări pe canale (All in One)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -4297,6 +4304,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Pentru a accelera confirmarea comenzii, putem activa semnături electronice "
+"sau plăți."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4529,7 +4538,7 @@ msgstr "Istoric comunicare website"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "Scrieți un nume de companie pentru a crea unul sau vedeți sugestii."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0

@@ -384,6 +384,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Výrobní objednávka je již hotová nebo zrušena."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
 msgstr "Přístupový token"
@@ -1926,12 +1933,12 @@ msgstr "Výška obrazu"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Image Src"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "Image Width"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2860,7 +2867,7 @@ msgstr "Objednávky"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
-msgstr ""
+msgstr "Originální (neoptimalizovaná, nezměněná) příloha"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_production
@@ -4871,6 +4878,14 @@ msgid ""
 msgstr ""
 "Můžete buď nahrát soubor z počítače, nebo zkopírovat / vložit internetový "
 "odkaz do souboru."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0

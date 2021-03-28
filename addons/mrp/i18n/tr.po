@@ -404,6 +404,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Üretim Emri bitmiş ya da iptal edilmiş."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
 msgstr "Erişim Token'ı"
@@ -4970,6 +4977,14 @@ msgid ""
 msgstr ""
 "Bilgisayarınızdan bir dosya yükleyebilir ya da dosyanıza internet "
 "bağlantınızı kopyalayıp yapıştırabilirsiniz."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
