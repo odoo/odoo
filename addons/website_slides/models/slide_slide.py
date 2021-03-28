@@ -344,7 +344,7 @@ class Slide(models.Model):
                 record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
-                    if re.search('r\/videos\/(?:watch|embed)\/.*', record.url):
+                    if re.search(r'\/videos\/(?:watch|embed)\/.*', record.url):
                         embedurl = re.sub('watch', 'embed', record.url)
                         record.embed_code = '<iframe src="%s?api=1" frameborder="0" sandbox="allow-same-origin allow-scripts" allowfullscreen="allowfullscreen"></iframe>' % (embedurl)
                     else:
