@@ -108,7 +108,7 @@
                             </h1>
                         </div>
                         <group class="o_label_nowrap">
-                            <field name="active" invisible="1"/>
+                            <field name="active" widget="boolean_toggle"/>
                             <field name="email_send"/>
                             <field name="moderation" attrs="{'invisible': [('email_send', '=', False)]}"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
