@@ -36,7 +36,6 @@
             <field name="arch" type="xml">
                 <form string="Carrier">
                     <sheet>
-                      <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_prod_environment"
                                     attrs="{'invisible': ['|', '|', ('prod_environment', '=', False), ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"
@@ -74,6 +73,7 @@
                                 </div>
                             </button>
                         </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title" name="title">
                             <label for="name" string="Shipping Method"/>
                             <h1>
