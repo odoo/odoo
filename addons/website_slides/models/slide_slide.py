@@ -344,7 +344,7 @@ class Slide(models.Model):
                 record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
-                    if re.search('\/videos\/(?:watch|embed)\/.*', record.url):
+                    if re.search('r\/videos\/(?:watch|embed)\/.*', record.url):
                         embedurl = re.sub('watch', 'embed', record.url)
                         record.embed_code = '<iframe src="%s?api=1" frameborder="0" sandbox="allow-same-origin allow-scripts" allowfullscreen="allowfullscreen"></iframe>' % (embedurl)
                     else:
@@ -757,7 +757,7 @@ class Slide(models.Model):
             split_path = url_obj.path.split('/')
             if len(split_path) >= 3 and split_path[1] in ('v', 'embed'):
                 return ('youtube', split_path[2])
-        peertube = re.match('.*\/videos\/(?:watch|embed)\/(.*)', url_obj.to_url())
+        peertube = re.match(r'.*\/videos\/(?:watch|embed)\/(.*)', url_obj.to_url())
         if peertube:
             return ('peertube', peertube.group(1))
         expr = re.compile(r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)')
@@ -772,12 +772,12 @@ class Slide(models.Model):
         document_source, document_id = self._find_document_data_from_url(url)
         if document_source and hasattr(self, '_parse_%s_document' % document_source):
             if document_source == 'peertube':
-                return getattr(self, '_parse_%s_document' % document_source)(document_id,url, only_preview_fields)
+                return getattr(self, '_parse_%s_document' % document_source)(document_id, url, only_preview_fields)
             else:
                 return getattr(self, '_parse_%s_document' % document_source)(document_id, only_preview_fields)
             return {'error': _('Unknown document')}
 
-    def _parse_peertube_document(self, document_id,url, only_preview_fields):
+    def _parse_peertube_document(self, document_id, url, only_preview_fields):
         base_url = re.search(r'(.*)(?:\/videos\/.*)', url).group(1)
         fetch_res = self._fetch_data(base_url+'/api/v1/videos/'+document_id, {}, 'json')
         if fetch_res.get('error'):
@@ -805,7 +805,7 @@ class Slide(models.Model):
                 'description': fetch_res['values'].get('description'),
                 'mime_type': False,
             })
-        return {'values': values}  
+        return {'values': values}
 
     def _parse_youtube_document(self, document_id, only_preview_fields):
         """ If we receive a duration (YT video), we use it to determine the slide duration.
