@@ -1154,7 +1154,7 @@ msgstr "Destinatari in copia carbone (ammessi segnaposto)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall
 msgid "Catchall Email"
-msgstr "Email Catchall"
+msgstr "E-mail catchall"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -2125,7 +2125,7 @@ msgstr ""
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a channel cannot follow twice the same object."
-msgstr "Errore, un canale non può seguire due volte lo stesso argomento."
+msgstr "Errore, un canale non può seguire lo stesso oggetto due volte."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
@@ -4093,6 +4093,18 @@ msgid "Online"
 msgstr "In linea"
 
 #. module: mail
+#: code:addons/mail/models/mail_message.py:1052
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:1043
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:436
 #, python-format
 msgid ""
@@ -4332,7 +4344,7 @@ msgstr "Partner in sola lettura"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additionnal information for mail resend"
-msgstr "Partner con informazioni aggiuntive per il rinvio della email"
+msgstr "Partner con informazioni aggiuntive per il reinvio della e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__needaction_partner_ids
@@ -4503,7 +4515,7 @@ msgstr "Attività precedenti"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preferred reply address"
-msgstr "Indirizzo per risposta preferito"
+msgstr "Indirizzo preferito per le risposte"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__reply_to
@@ -5589,7 +5601,7 @@ msgstr "Valori di monitoraggio"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__track_sequence
 msgid "Tracking field sequence"
-msgstr ""
+msgstr "Sequenza campo di monitoraggio"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__tracking_value_ids

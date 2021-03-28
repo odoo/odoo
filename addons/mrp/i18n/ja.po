@@ -16,7 +16,7 @@
 # 森岡広道 <hiromichi.morioka@pro-spire.co.jp>, 2018
 # Tim Siu Lai <tl@roomsfor.hk>, 2019
 # Hau Dao <hau@quartile.co>, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Noma Yuki, 2020
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # 
@@ -315,6 +315,13 @@ msgstr "<strong>作業区</strong>"
 #: code:addons/mrp/models/mrp_workorder.py:502
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
 
 #. module: mrp
@@ -1290,12 +1297,6 @@ msgstr "フォロワー (チャネル)"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "フォロワー (取引先)"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:86
-#, python-format
-msgid "For %s to be a kit, its product type must be 'Consumable'."
-msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3488,14 +3489,6 @@ msgstr ""
 "この部品表で製造するための操作。工順が指定されている場合、製造オーダは作業オーダを介して実行されます。それ以外の場合は、すべてが製造オーダ自身で処理されます。"
 
 #. module: mrp
-#: code:addons/mrp/models/product.py:30
-#, python-format
-msgid ""
-"The product type of %s must be 'Consumable' because it has at least one kit-"
-"type bill of materials."
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:56
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -4294,6 +4287,14 @@ msgstr "完了した作業オーダを変更することはできません。"
 #: code:addons/mrp/models/mrp_production.py:657
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
 msgstr ""
 
 #. module: mrp

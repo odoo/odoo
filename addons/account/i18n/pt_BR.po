@@ -36,6 +36,7 @@
 # Yannick Belot <yannickbh@gmail.com>, 2018
 # Silmar <pinheirosilmar@gmail.com>, 2018
 # Emanuel Martins <emanuel.breno@gmail.com>, 2018
+# Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2018
 # Martin Trigaux, 2019
 # rogeriojlle <rogerio.s.machado@gmail.com>, 2019
 # Paulo C Pinheiro <clanslive@gmail.com>, 2019
@@ -44,13 +45,12 @@
 # Charles Fonseca <charlesjrfonseca@gmail.com>, 2019
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
 # renato sabo <renato.sabo@bradootech.com>, 2020
-# Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2020
-# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Eduardo Aparicio <eduardo.caparica@gmail.com>, 2020
 # Guilherme Libardi <guilherme.libardig@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2020
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -58,7 +58,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
+"Last-Translator: Marcel Savegnago <marcel.savegnago@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -906,8 +906,8 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Um usuário não pode ter ao mesmo tempo Taxa B2B e Taxa B2C.\n"
-"Você deve ir até as Configurações Gerais, e escolher nos Preços de Produto para exibir ou 'Com taxa' ou 'Sem taxa' (ou alterar duas vezes, caso já esteja configurado na visualização desjeada)."
+"Um usuário não pode ter ao mesmo tempo Imposto B2B e Imposto B2C.\n"
+"Você deve ir até as Configurações Gerais, e escolher nos Preços de Produto para exibir ou 'Com Impostos' ou 'Sem Impostos' (ou alterar duas vezes, caso já esteja configurado na visualização desejeda)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -2730,17 +2730,17 @@ msgstr "Diário Base Dinheiro"
 #: code:addons/account/models/chart_template.py:413
 #, python-format
 msgid "Cash Basis Tax Journal"
-msgstr "Diário de Taxa Base Dinheiro"
+msgstr "Diário de Impostos de Regime de Caixa"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
 msgid "Cash Box In"
-msgstr "Em dinheiro"
+msgstr "Entrada de Dinheiro"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "Cash Box Out"
-msgstr "Sacar"
+msgstr "Saída de Dinheiro"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:212
@@ -2801,7 +2801,7 @@ msgstr "Caixa Físico"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__cashbox_lines_ids
 msgid "Cashbox Lines"
-msgstr "Cashbox Lines"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_categ_id
@@ -4944,7 +4944,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__force_second_tax_included
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__force_second_tax_included
 msgid "Force the second tax to be managed as a price included tax."
-msgstr "Forçar a asegunda taxa a ser gerenciada como taxa incluída no preço."
+msgstr ""
+"Força o segundo imposto a ser administrado como um imposto incluído no "
+"preço."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__force_tax_included
@@ -8788,7 +8790,7 @@ msgstr "Saldo restante em aberto."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_dest_id
 msgid "Replacement Tax"
-msgstr "Taxa para Troca"
+msgstr "Imposto para Troca"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__reply_to
@@ -8898,7 +8900,7 @@ msgstr "Reconhecimento de Receita"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_line_id
 msgid "Revenue/Expense Account"
-msgstr "Conta de receita / despesa"
+msgstr "Conta de Receita / Despesa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__reverse_date
@@ -8953,7 +8955,7 @@ msgstr "Arredondamento Global"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr "Rodada por linha"
+msgstr "Arredondamento por Linha"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.rounding_form_view
@@ -9178,7 +9180,7 @@ msgstr "Segunda Conta Analítica"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_analytic_tag_ids
 msgid "Second Analytic Tags"
-msgstr "Segundas etiquetas analíticas"
+msgstr "Segunda Tag Analítica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_journal_id
@@ -9195,7 +9197,7 @@ msgstr "Etiqueta do Segundo Item do Diário"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__second_tax_id
 msgid "Second Tax"
-msgstr "Segunda Taxa"
+msgstr "Segundo Imposto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_tax_amount_type
@@ -9223,7 +9225,7 @@ msgstr "Seção"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_token
 msgid "Security Token"
-msgstr "Chave de segurança"
+msgstr "Chave de Segurança"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -9310,7 +9312,7 @@ msgstr "Enviar E-mail"
 #: code:addons/account/wizard/account_invoice_send.py:76
 #, python-format
 msgid "Send Invoice"
-msgstr "Enviar fatura"
+msgstr "Enviar Fatura"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9935,7 +9937,7 @@ msgstr "Mapeamento fiscal ou posição fiscal"
 #: model:ir.model.fields,field_description:account.field_account_tax__name
 #: model:ir.model.fields,field_description:account.field_account_tax_template__name
 msgid "Tax Name"
-msgstr "Nome da taxa"
+msgstr "Nome do Imposto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_account_id
@@ -9987,12 +9989,12 @@ msgstr "Método de aredondamento de imposto"
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
 msgid "Tax display B2B"
-msgstr "Mostrar taxas em B2B"
+msgstr "Mostrar impostos em B2B"
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_included
 msgid "Tax display B2C"
-msgstr "Mostrar taxas em B2C"
+msgstr "Mostrar impostos em B2C"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_tax_signed
@@ -10017,12 +10019,12 @@ msgstr "Imposto a Aplicar"
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
 msgid "Tax-Excluded"
-msgstr "Taxas Excluídas"
+msgstr "Sem Impostos"
 
 #. module: account
 #: selection:res.config.settings,show_line_subtotals_tax_selection:0
 msgid "Tax-Included"
-msgstr "Imposto incluso"
+msgstr "Com Impostos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10052,7 +10054,7 @@ msgstr "Impostos Aplicados"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Taxes Mapping"
-msgstr "Mapear taxas"
+msgstr "Mapear Impostos"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_ids

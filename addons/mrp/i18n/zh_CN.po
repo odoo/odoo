@@ -332,6 +332,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "生产单已经完成或者被取消."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
 msgstr "访问令牌"
@@ -1307,12 +1314,6 @@ msgstr "关注者(渠道)"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "关注者(业务伙伴)"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:86
-#, python-format
-msgid "For %s to be a kit, its product type must be 'Consumable'."
-msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3514,14 +3515,6 @@ msgid ""
 msgstr "生产这个BOM的操作。 在指定工艺路线时，将通过工单执行生产订单，否则所有工作都将在生产订单本身中进行处理。"
 
 #. module: mrp
-#: code:addons/mrp/models/product.py:30
-#, python-format
-msgid ""
-"The product type of %s must be 'Consumable' because it has at least one kit-"
-"type bill of materials."
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:56
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -4322,6 +4315,14 @@ msgstr "不能变更已完成的工单."
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "你不能不知道你消费了多少东西"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117
