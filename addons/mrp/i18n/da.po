@@ -327,6 +327,14 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "En produktionsordre er allerede udført eller annulleret."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:288
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+"Et produkt med en sæt-type stykliste kan ikke have en genbestillings-regel."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
 msgid "Access Token"
 msgstr "Adgangstoken"
@@ -1317,14 +1325,6 @@ msgstr "Følgere (kanaler)"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Følgere (partnere)"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:86
-#, python-format
-msgid "For %s to be a kit, its product type must be 'Consumable'."
-msgstr ""
-"For at %s skal være et sæt, skal dens produktionstype være angivet til "
-"'Forbrugsvare'."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3576,16 +3576,6 @@ msgstr ""
 "behandles alt i selve produktionsordren. "
 
 #. module: mrp
-#: code:addons/mrp/models/product.py:30
-#, python-format
-msgid ""
-"The product type of %s must be 'Consumable' because it has at least one kit-"
-"type bill of materials."
-msgstr ""
-"Produkttypen på %s skal være 'Forbrugsvare', fordi den har mindst én sæt-"
-"type stykliste."
-
-#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:56
 #, python-format
 msgid "The production order for '%s' has no quantity specified."
@@ -4430,6 +4420,16 @@ msgstr "Du kan ikke ændre den afsluttede arbejdsordre."
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
 "Du kan ikke forbruge, uden at fortælle fra hvilken lot du forbruger det."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:122
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
+"Du kan ikke oprette et sæt-type stykliste for produkter som har mindst én "
+"genbestillings-regel."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:117

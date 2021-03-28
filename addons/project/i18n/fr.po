@@ -13,7 +13,7 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2018
 # Clo <clo@odoo.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Rémi CAZENAVE, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # Florian Hatat, 2019
@@ -3331,6 +3331,12 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas supprimer un projet contenant des tâches. Vous pouvez "
 "soit l'archiver, soit supprimer toutes ses tâches."
+
+#. module: project
+#: code:addons/project/models/project.py:628
+#, python-format
+msgid "Your task must be in the same company as its project."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
