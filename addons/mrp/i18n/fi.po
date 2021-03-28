@@ -5,7 +5,7 @@
 # Translators:
 # Tommi Rintala <tommi.rintala@gmail.com>, 2019
 # Kimmo Lehtonen <leban@netzionale.com>, 2019
-# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna@vividi.fi>, 2019
 # Simo Suurla <simo@suurla.fi>, 2019
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2019
 # Marko Happonen <marko.happonen@sprintit.fi>, 2019
@@ -358,6 +358,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
 
 #. module: mrp
@@ -4758,6 +4765,14 @@ msgstr "Et voi muuttaa valmista työtilausta."
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
 msgstr ""
 
 #. module: mrp

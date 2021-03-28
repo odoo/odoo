@@ -353,6 +353,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Výrobní objednávka je již hotová nebo zrušena."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
@@ -1749,12 +1756,12 @@ msgstr "Výška obrazu"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Image Src"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "Image Width"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -4801,6 +4808,14 @@ msgstr "Hotovou zakázku nelze změnit."
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
 msgstr ""
 
 #. module: mrp

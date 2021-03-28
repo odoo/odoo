@@ -360,6 +360,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "제조 주문이 이미 완료되었거나 취소되었습니다."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
@@ -4785,6 +4792,14 @@ msgstr "완료된 작업 지시는 변경할 수 없습니다."
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "어떤 것을 소비했는지 말하지 않고는 소비할 수 없습니다"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
