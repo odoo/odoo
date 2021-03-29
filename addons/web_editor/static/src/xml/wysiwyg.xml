@@ -53,10 +53,6 @@
                 odoo.define('web_editor.wysiwyg.iniframe', function (require) {
                     'use strict';
                     var editor = require('web_editor.editor');
-
-                    window._summernoteSlave = $.summernote;
-                    window._summernoteSlave.iframe = true;
-                    window._summernoteSlave.lang = window.top.$.summernote.lang;
                     if (window.top.<t t-esc="updateIframeId"/>) {
                         window.top.<t t-esc="updateIframeId"/>(editor.Class, <t t-esc="avoidDoubleLoad"/>);
                     }

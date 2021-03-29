@@ -332,7 +332,6 @@ async function createWysiwyg(params) {
 /**
  * Char codes.
  */
-var dom = $.summernote.dom;
 var keyboardMap = {
     "8": "BACKSPACE",
     "9": "TAB",

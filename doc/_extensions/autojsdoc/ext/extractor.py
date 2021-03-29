@@ -80,8 +80,4 @@ ABSTRACT_MODULES = [
             'doc': u'maybe tourmanager instance?',
         }),
     }),
-    jsdoc.ModuleDoc({
-        'module': u'summernote/summernote',
-        'exports': jsdoc.NSDoc({'doc': u"totally real summernote"}),
-    })
 ]

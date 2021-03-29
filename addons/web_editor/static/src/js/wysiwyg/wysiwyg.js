@@ -1,8 +1,6 @@
 odoo.define('web_editor.wysiwyg', function (require) {
 'use strict';
-var Widget = require('web.Widget');
-var SummernoteManager = require('web_editor.rte.summernote');
-var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
+const customColors = require('web_editor.custom_colors');
 var id = 0;
 
 // core.bus
@@ -25,7 +23,7 @@ var Wysiwyg = Widget.extend({
         'styleWithSpan': false,
         'inlinemedia': ['p'],
         'lang': 'odoo',
-        'colors': summernoteCustomColors,
+        'colors': customColors,
         recordInfo: {
             context: {},
         },
