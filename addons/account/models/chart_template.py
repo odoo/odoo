@@ -244,11 +244,11 @@ class AccountChartTemplate(models.Model):
             ).unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
-            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal', 'account.group']
+            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.move.line', 'account.move', 'account.journal', 'account.tax', 'account.group']
             for model in models_to_delete:
                 res = self.env[model].sudo().search([('company_id', '=', company.id)])
                 if len(res):
-                    res.unlink()
+                    res.with_context(force_delete=True).unlink()
             existing_accounts.unlink()
 
         company.write({'currency_id': self.currency_id.id,
@@ -339,11 +339,11 @@ class AccountChartTemplate(models.Model):
         the provided company (meaning hence that its chart of accounts cannot
         be changed anymore).
         """
-        model_to_check = ['account.move.line', 'account.payment', 'account.bank.statement']
+        model_to_check = ['account.payment', 'account.bank.statement']
         for model in model_to_check:
             if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
                 return True
-        if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('name', '!=', '/')], limit=1):
+        if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('state', '!=', 'draft')], limit=1):
             return True
         return False
 
