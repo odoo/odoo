@@ -33,6 +33,8 @@
     'application': True,
     'assets': {
         'website.assets_wysiwyg': [
+            'website_blog/static/src/js/options.js',
+            'website_blog/static/src/js/wysiwyg.js',
             'website_blog/static/src/snippets/s_blog_posts/options.js',
         ],
         'website.assets_editor': [

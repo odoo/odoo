@@ -35,6 +35,7 @@ options.registry.TableOfContent = options.Class.extend({
      * @private
      */
     _generateNav: function (ev) {
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         const $nav = this.$target.find('.s_table_of_content_navbar');
         const $headings = this.$target.find(this.targetedElements);
         $nav.empty();

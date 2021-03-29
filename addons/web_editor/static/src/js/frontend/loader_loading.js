@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (var i = 0; i < textareaEls.length; i++) {
         var textarea = textareaEls[i];
         var wrapper = document.createElement('div');
-        wrapper.classList.add('position-relative', 'o_wysiwyg_wrapper');
+        wrapper.classList.add('position-relative', 'o_wysiwyg_textarea_wrapper');
 
         var loadingElement = document.createElement('div');
         loadingElement.classList.add('o_wysiwyg_loading');

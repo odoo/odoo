@@ -11,6 +11,11 @@
     <t t-call-assets="web_editor.assets_wysiwyg"/>
 </template>
 
+<template id="assets_edit_html_field" name="Wysiwyg Editor Assets for html field (style-inline)" groups="base.group_user,base.group_portal">
+    <t t-call-assets="web.assets_common" t-js="false"/>
+    <t t-call-assets="web_editor.assets_wysiwyg" t-js="false"/>
+</template>
+
 <!--
     The web_editor.colorpicker template regroups section of colorpicker menu for website customization
     (text foreground/background but also snippet background color option).

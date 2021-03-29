@@ -3,9 +3,8 @@ odoo.define('web_editor.field.html', function (require) {
 
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
-var config = require('web.config');
 var core = require('web.core');
-var Wysiwyg = require('web_editor.wysiwyg.root');
+var wysiwygLoader = require('web_editor.loader');
 var field_registry = require('web.field_registry');
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 require('web._field_registry');
@@ -13,7 +12,6 @@ require('web._field_registry');
 var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
-var assetsLoaded;
 
 var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
 
@@ -49,26 +47,16 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     /**
      * @override
      */
-    willStart: function () {
-        var self = this;
+    willStart: async function () {
         this.isRendered = false;
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
-        var defAsset;
+        await this._super();
         if (this.nodeOptions.cssReadonly) {
-            defAsset = ajax.loadAsset(this.nodeOptions.cssReadonly);
+            this.cssReadonly = await ajax.loadAsset(this.nodeOptions.cssReadonly);
         }
-
-        if (!assetsLoaded) { // avoid flickering when begin to edit
-            assetsLoaded = new Promise(function (resolve) {
-                var wysiwyg = new Wysiwyg(self, {});
-                wysiwyg.attachTo($('<textarea>')).then(function () {
-                    wysiwyg.destroy();
-                    resolve();
-                });
-            });
+        if (this.nodeOptions.cssEdit || this.nodeOptions['style-inline']) {
+            this.cssEdit = await ajax.loadAsset(this.nodeOptions.cssEdit || 'web_editor.assets_edit_html_field');
         }
-
-        return Promise.all([this._super(), assetsLoaded, defAsset]);
     },
     /**
      * @override
@@ -102,20 +90,13 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     commitChanges: function () {
-        var self = this;
-        if (config.isDebug() && this.mode === 'edit') {
-            var layoutInfo = $.summernote.core.dom.makeLayoutInfo(this.wysiwyg.$editor);
-            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
-        }
         if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
         var _super = this._super.bind(this);
-        return this.wysiwyg.saveModifiedImages(this.$content).then(function () {
-            return self.wysiwyg.save().then(function (result) {
-                self._isDirty = result.isDirty;
-                _super();
-            });
+        return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
+            this._isDirty = this.wysiwyg.isDirty();
+            _super();
         });
     },
     /**
@@ -129,7 +110,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     getFocusableElement: function () {
-        return this.$target || $();
+        return this.$wysiwygWrapper || $();
     },
     /**
      * Do not re-render this field if it was the origin of the onchange call.
@@ -144,7 +125,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         value = this._textToHtml(value);
         if (!event || event.target !== this) {
-            if (this.mode === 'edit') {
+            if (this.cssReadonly) {
+                return Promise.resolve();
+            } else if (this.mode === 'edit') {
                 this.wysiwyg.setValue(value);
             } else {
                 this.$content.html(value);
@@ -161,7 +144,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     _getValue: function () {
-        var value = this.$target.val();
+        var value = this.wysiwyg.getValue();
         if (this.nodeOptions.wrapper) {
             return this._unWrap(value);
         }
@@ -174,17 +157,16 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @private
      * @returns {$.Promise}
      */
-    _createWysiwygIntance: function () {
-        var self = this;
-        this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
+    _createWysiwygIntance: async function () {
+        if (this.cssReadonly) {
+            return;
+        }
+        this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
         this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
-
-        // by default this is synchronous because the assets are already loaded in willStart
-        // but it can be async in the case of options such as iframe, snippets...
-        return this.wysiwyg.attachTo(this.$target).then(function () {
-            self.$content = self.wysiwyg.$editor.closest('body, odoo-wysiwyg-container');
-            self._onLoadWysiwyg();
-            self.isRendered = true;
+        return this.wysiwyg.appendTo(this.$el).then(() => {
+            this.$content = this.wysiwyg.$editable;
+            this._onLoadWysiwyg();
+            this.isRendered = true;
         });
     },
     /**
@@ -194,7 +176,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
-        var self = this;
         return Object.assign({}, this.nodeOptions, {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
@@ -205,36 +186,13 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             inIframe: !!this.nodeOptions.cssEdit,
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
+            value: this.value,
+            mediaModalParams: {noVideos: true},
+            linkForceNewWindow: true,
 
             tabsize: 0,
-            height: 180,
-            generateOptions: function (options) {
-                var toolbar = options.toolbar || options.airPopover || {};
-                var para = _.find(toolbar, function (item) {
-                    return item[0] === 'para';
-                });
-                if (para && para[1] && para[1].indexOf('checklist') === -1) {
-                    para[1].splice(2, 0, 'checklist');
-                }
-                if (config.isDebug()) {
-                    options.codeview = true;
-                    var view = _.find(toolbar, function (item) {
-                        return item[0] === 'view';
-                    });
-                    if (view) {
-                        if (!view[1].includes('codeview')) {
-                            view[1].splice(-1, 0, 'codeview');
-                        }
-                    } else {
-                        toolbar.splice(-1, 0, ['view', ['codeview']]);
-                    }
-                }
-                if (self.model === "mail.compose.message" || self.model === "mailing.mailing") {
-                    options.noVideos = true;
-                }
-                options.prettifyHtml = false;
-                return options;
-            },
+            height: 380,
+            resizable: true,
         });
     },
     /**
@@ -269,9 +227,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         if (this.nodeOptions.wrapper) {
             value = this._wrap(value);
         }
-        this.$target = $('<textarea>').val(value).hide();
-        this.$target.appendTo(this.$el);
-
         var fieldNameAttachment = _.chain(this.recordData)
             .pairs()
             .find(function (value) {
@@ -517,8 +472,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             top: '+5px',
         });
         this.$el.append($button);
-        $.summernote.eventHandler.modules.linkDialog.options = _.extend({},
-            $.summernote.eventHandler.modules.linkDialog.options, {forceNewWindow: true});
     },
     /**
      * @private

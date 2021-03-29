@@ -32,13 +32,13 @@
 }
 
 // EDITOR TOP BAR AND POPOVER
-.o_we_website_top_actions {
-    @include o-position-absolute($top: 0, $right: 0);
-    z-index: ($zindex-fixed + $zindex-modal-backdrop) / 2 + 2; // $o-we-zindex
+#oe_snippets .o_we_website_top_actions {
     display: flex;
     justify-content: flex-end;
     width: $o-we-sidebar-width;
     height: $o-we-sidebar-top-height;
+    // Firefox css fix
+    min-height: $o-we-sidebar-top-height;
     background-color: $o-we-sidebar-tabs-bg;
 
     .btn-group, .btn {
@@ -73,11 +73,12 @@
 }
 
 #oe_snippets {
-    top: $o-we-sidebar-top-height;
-}
-
-.note-statusbar {
-    display: none;
+    top: 0;
+    .oe-toolbar {
+        .color-indicator {
+            padding: 0 2px 2px 2px;
+        }
+    }
 }
 
 // TRANSLATIONS

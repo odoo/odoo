@@ -2710,11 +2710,11 @@ var exportVariable = (function (exports) {
                             };
                             if (!record.nextSibling && record.target.oid) {
                                 mutation.append = record.target.oid;
-                            } else if (record.nextSibling.oid) {
+                            } else if (record.nextSibling && record.nextSibling.oid) {
                                 mutation.before = record.nextSibling.oid;
                             } else if (!record.previousSibling && record.target.oid) {
                                 mutation.prepend = record.target.oid;
-                            } else if (record.previousSibling.oid) {
+                            } else if (record.previousSibling && record.previousSibling.oid) {
                                 mutation.after = record.previousSibling.oid;
                             } else {
                                 return false;
@@ -3331,7 +3331,7 @@ var exportVariable = (function (exports) {
             setCursor(...position, ...position, false);
         }
 
-        _insertHTML(html) {
+        _insert(data, isText = true) {
             const selection = this.document.defaultView.getSelection();
             const range = selection.getRangeAt(0);
             let startNode;
@@ -3356,7 +3356,11 @@ var exportVariable = (function (exports) {
             }
 
             const fakeEl = document.createElement('fake-element');
-            fakeEl.innerHTML = html;
+            if (isText) {
+                fakeEl.innerText = data;
+            } else {
+                fakeEl.innerHTML = data;
+            }
             let nodeToInsert;
             const insertedNodes = [...fakeEl.childNodes];
             while ((nodeToInsert = fakeEl.childNodes[0])) {
@@ -3376,6 +3380,14 @@ var exportVariable = (function (exports) {
             newRange.setEnd(lastPosition[0], lastPosition[1]);
             selection.addRange(newRange);
             return insertedNodes;
+        }
+
+        _insertHTML(data) {
+            this._insert(data, false);
+        }
+
+        _insertText(data) {
+            this._insert(data);
         }
 
         /**
@@ -4111,7 +4123,7 @@ var exportVariable = (function (exports) {
             // editable zones.
             this.automaticStepSkipStack();
             const link = closestElement(ev.target, 'a');
-            if (link && !link.querySelector('div')) {
+            if (link && !link.querySelector('div') && !closestElement(ev.target, '.o_not_editable')) {
                 const editableChildren = link.querySelectorAll('[contenteditable=true]');
                 this._stopContenteditable();
                 [...editableChildren, link].forEach(node => node.setAttribute('contenteditable', true));
@@ -4173,7 +4185,7 @@ var exportVariable = (function (exports) {
         _onPaste(ev) {
             ev.preventDefault();
             const pastedText = (ev.originalEvent || ev).clipboardData.getData('text/plain');
-            this._insertHTML(pastedText.replace(/\n+/g, '<br/>'));
+            this._insertText(pastedText.replace(/\n+/g, '<br/>'));
         }
 
         /**
@@ -4501,8 +4513,13 @@ var exportVariable = (function (exports) {
                     selectionDirection === DIRECTIONS.RIGHT
                         ? closestAnchorNodeEl.previousSibling
                         : closestAnchorNodeEl.nextSibling;
-                fixedSelection.anchorOffset =
-                    selectionDirection === DIRECTIONS.RIGHT ? fixedSelection.anchorNode.length : 0;
+                if (fixedSelection.anchorNode) {
+                    fixedSelection.anchorOffset =
+                        selectionDirection === DIRECTIONS.RIGHT ? fixedSelection.anchorNode.length : 0;
+                } else {
+                    fixedSelection.anchorNode = closestAnchorNodeEl.parentElement;
+                    fixedSelection.anchorOffset = 0;
+                }
             }
             // check and fix focus node
             const closestFocusNodeEl = closestElement(selection.focusNode);
@@ -4512,8 +4529,13 @@ var exportVariable = (function (exports) {
                     selectionDirection === DIRECTIONS.RIGHT
                         ? closestFocusNodeEl.nextSibling
                         : closestFocusNodeEl.previousSibling;
-                fixedSelection.focusOffset =
-                    selectionDirection === DIRECTIONS.RIGHT ? 0 : fixedSelection.focusNode.length;
+                if (fixedSelection.focusNode) {
+                    fixedSelection.focusOffset =
+                        selectionDirection === DIRECTIONS.RIGHT ? 0 : fixedSelection.focusNode.length;
+                } else {
+                    fixedSelection.focusNode = closestFocusNodeEl.parentElement;
+                    fixedSelection.focusOffset = 0;
+                }
             }
             if (shouldUpdateSelection) {
                 setCursor(
