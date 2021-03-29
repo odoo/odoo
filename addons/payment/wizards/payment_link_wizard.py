@@ -72,7 +72,7 @@ class PaymentLinkWizard(models.TransientModel):
             link = ('%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s'
                     '&partner_id=%s&access_token=%s') % (
                         record.get_base_url(),
-                        urls.url_quote(payment_link.description),
+                        urls.url_quote_plus(payment_link.description),
                         payment_link.amount,
                         payment_link.currency_id.id,
                         payment_link.partner_id.id,
