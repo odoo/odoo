@@ -1218,10 +1218,8 @@
                           t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"/>
                 </t>
             </we-row>
-            <we-range string="⌙ Hue" data-customize-gray="" data-min="0" data-max="360"
-                data-param="gray-hue" class="o_we_slider_tint"/>
-            <we-range string="⌙ Saturation" data-customize-gray="" data-min="-20" data-max="100"
-                data-param="gray-extra-saturation"/>
+            <we-range string="⌙ Hue" class="o_we_slider_tint" data-customize-gray="" data-param="gray-hue" data-min="0" data-max="359.9" data-step="0.1"/>
+            <we-range string="⌙ Saturation" data-customize-gray="" data-param="gray-extra-saturation" data-step="0.1"/>
         </we-collapse>
     </div>
     <div data-js="OptionsTab" data-selector="website-settings" data-no-check="true">
