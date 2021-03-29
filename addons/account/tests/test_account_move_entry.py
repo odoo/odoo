@@ -511,8 +511,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         next.action_post()
         self.assertEqual(next.name, '00000876-G 0002/2021')  # Wait, I didn't want this!
 
-        next.journal_id.sequence_override_regex = r'^(?P<seq>\d*)(?P<suffix1>.*?)(?P<year>(\d{4})?)(?P<suffix2>)$'
-        next.name = '/'
+        next.button_draft()
+        next.name = False
+        next.journal_id.sequence_override_regex = r'^(?P<seq>\d*)(?P<suffix1>.*?)(?P<year>(\d{4})?)(?P<suffix2>)$'        
         next.action_post()
         self.assertEqual(next.name, '00000877-G 0002/2020')  # Pfew, better!
         next = self.test_move.copy({'date': self.test_move.date})
