@@ -2,15 +2,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests.common import Form
 
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
+        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
+        self.finished.categ_id.property_valuation = 'real_time'
+        self.finished.write({
+            'property_account_expense_id': self.expense_account.id,
+        })
+        self.finished.categ_id.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
         self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.env.ref('product.product_category_all').property_valuation = 'real_time'
 
         # IN 10@10 comp1 10@20 comp2
         move1 = self.env['stock.move'].create({
@@ -61,3 +74,4 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         # Total cost of subcontracting 1 unit of finished = 30 + 30 = 60
         self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 60)
         self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 60)
+        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.account_move_id.amount_total, 60)
