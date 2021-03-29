@@ -342,7 +342,7 @@ class Post(models.Model):
         for post in self:
             post.self_reply = post.parent_id.create_uid.id == post._uid
 
-    @api.depends('child_ids.create_uid', 'website_message_ids')
+    @api.depends('child_ids', 'website_message_ids')
     def _get_child_count(self):
         def process(node):
             total = len(node.website_message_ids) + len(node.child_ids)
