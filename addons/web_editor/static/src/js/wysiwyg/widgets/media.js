@@ -1180,7 +1180,7 @@ var IconWidget = SearchableMediaWidget.extend({
 });
 
 /**
- * Let users choose a video, support all summernote video, and embed iframe.
+ * Let users choose a video, support embed iframe.
  */
 var VideoWidget = MediaWidget.extend({
     template: 'wysiwyg.widgets.video',
