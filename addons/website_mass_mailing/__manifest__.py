@@ -24,6 +24,7 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
             'website_mass_mailing/static/src/js/website_mass_mailing.js',
         ],
         'website.assets_wysiwyg': [
+            'website_mass_mailing/static/src/js/wysiwyg.js',
             'website_mass_mailing/static/src/js/website_mass_mailing.editor.js',
         ],
         'web.assets_tests': [

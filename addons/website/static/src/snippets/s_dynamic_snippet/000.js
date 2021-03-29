@@ -51,7 +51,9 @@ const DynamicSnippet = publicWidget.Widget.extend({
         return this._super.apply(this, arguments)
             .then(() => {
                 this._setupSizeChangedManagement(true);
+                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
                 this._render();
+                this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
             });
     },
     /**
@@ -59,9 +61,11 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @override
      */
     destroy: function () {
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
         this._toggleVisibility(false);
         this._setupSizeChangedManagement(false);
         this._clearContent();
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         this._super.apply(this, arguments);
     },
 

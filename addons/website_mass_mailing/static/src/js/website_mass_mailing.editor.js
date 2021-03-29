@@ -3,8 +3,6 @@ odoo.define('website_mass_mailing.editor', function (require) {
 
 var core = require('web.core');
 var rpc = require('web.rpc');
-var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
-var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
 var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 
@@ -168,48 +166,6 @@ options.registry.newsletter_popup = options.registry.mailing_list_subscribe.exte
             self.$target.removeData('content');
             return self._refreshPublicWidgets();
         });
-    },
-});
-
-WysiwygMultizone.include({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _saveElement: function (outerHTML, recordInfo, editable) {
-        var self = this;
-        var defs = [this._super.apply(this, arguments)];
-        var $popups = $(editable).find('.o_newsletter_popup');
-        _.each($popups, function (popup) {
-            var $popup = $(popup);
-            var content = $popup.data('content');
-            if (content) {
-                defs.push(self._rpc({
-                    route: '/website_mass_mailing/set_content',
-                    params: {
-                        'newsletter_id': parseInt($popup.attr('data-list-id')),
-                        'content': content,
-                    },
-                }));
-            }
-        });
-        return Promise.all(defs);
-    },
-});
-
-WysiwygTranslate.include({
-    /**
-     * @override
-     */
-    start: function () {
-        this.$target.on('click.newsletter_popup_option', '.o_edit_popup', function (ev) {
-            alert(_t('Website popups can only be translated through mailing list configuration in the Email Marketing app.'));
-        });
-        this._super.apply(this, arguments);
     },
 });
 

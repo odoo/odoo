@@ -161,9 +161,10 @@ var PublicRoot = publicWidget.RootWidget.extend({
                 $from = this.$el;
             }
         }
-        if (options === undefined) {
-            options = {};
-        }
+
+        options = Object.assign({}, options, {
+            wysiwyg: $('#wrapwrap').data('wysiwyg'),
+        });
 
         this._stopWidgets($from);
 

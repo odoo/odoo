@@ -8,17 +8,17 @@ const wSnippetOptions = require('website.editor.snippets.options');
 
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
-weSnippetEditor.Class.include({
-    xmlDependencies: (weSnippetEditor.Class.prototype.xmlDependencies || [])
+weSnippetEditor.SnippetsMenu.include({
+    xmlDependencies: (weSnippetEditor.SnippetsMenu.prototype.xmlDependencies || [])
         .concat(['/website/static/src/xml/website.editor.xml']),
-    events: _.extend({}, weSnippetEditor.Class.prototype.events, {
+    events: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
     }),
-    custom_events: Object.assign({}, weSnippetEditor.Class.prototype.custom_events, {
+    custom_events: Object.assign({}, weSnippetEditor.SnippetsMenu.prototype.custom_events, {
         'gmap_api_request': '_onGMapAPIRequest',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
     }),
-    tabs: _.extend({}, weSnippetEditor.Class.prototype.tabs, {
+    tabs: _.extend({}, weSnippetEditor.SnippetsMenu.prototype.tabs, {
         THEME: 'theme',
     }),
     optionsTabStructure: [
@@ -126,7 +126,7 @@ weSnippetEditor.Class.include({
     /**
      * @override
      */
-    _updateLeftPanelContent: function ({content, tab}) {
+    _updateRightPanelContent: function ({content, tab}) {
         this._super(...arguments);
         this.$('.o_we_customize_theme_btn').toggleClass('active', tab === this.tabs.THEME);
     },
@@ -192,7 +192,7 @@ weSnippetEditor.Class.include({
             this.topFakeOptionEl.classList.add('d-none');
             editor.toggleOverlay(false);
 
-            this._updateLeftPanelContent({
+            this._updateRightPanelContent({
                 tab: this.tabs.THEME,
             });
         } catch (e) {
@@ -207,9 +207,9 @@ weSnippetEditor.Class.include({
     },
 });
 
-weSnippetEditor.Editor.include({
+weSnippetEditor.SnippetEditor.include({
     layoutElementsSelector: [
-        weSnippetEditor.Editor.prototype.layoutElementsSelector,
+        weSnippetEditor.SnippetEditor.prototype.layoutElementsSelector,
         '.s_parallax_bg',
         '.o_bg_video_container',
     ].join(','),

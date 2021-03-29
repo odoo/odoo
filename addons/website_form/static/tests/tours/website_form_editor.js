@@ -226,6 +226,14 @@ odoo.define('website_form_editor.tour', function (require) {
 
         ...addExistingField('attachment_ids', 'file', 'Invoice Scan'),
 
+        {
+            content: "Insure the history step of the editor is not checking for unbreakable",
+            trigger: '#wrapwrap',
+            run: () => {
+                const wysiwyg = $('#wrapwrap').data('wysiwyg');
+                wysiwyg.odooEditor.historyStep(true);
+            },
+        },
         // Edit the submit button using linkDialog.
         {
             content: "Click submit button to show edit popover",
@@ -235,27 +243,19 @@ odoo.define('website_form_editor.tour', function (require) {
             trigger: '.o_edit_menu_popover .o_we_edit_link',
         }, {
             content: "Check that no URL field is suggested",
-            trigger: 'form:has(#o_link_dialog_label_input:hidden)',
-            run: () => null,
-        }, {
-            content: "Check that preview element has the same style",
-            trigger: '.o_link_dialog_preview:has(.s_website_form_send.btn.btn-lg.btn-primary)',
+            trigger: '#toolbar:has(#url_row:hidden)',
             run: () => null,
         }, {
             content: "Change button's style",
-            trigger: 'label:has(input[name="link_style_color"][value="secondary"])',
+            trigger: '.dropdown-toggle[data-original-title="Link Style"]',
             run: () => {
-                $('input[name="link_style_color"][value="secondary"]').click();
-                $('select[name="link_style_shape"]').val('rounded-circle').change();
-                $('select[name="link_style_size"]').val('sm').change();
+                $('.dropdown-toggle[data-original-title="Link Style"]').click();
+                $('[data-value="secondary"]').click();
+                $('[data-original-title="Link Shape"]').click();
+                $('[data-value="rounded-circle"]').click();
+                $('[data-original-title="Link Size"]').click();
+                $('[data-value="sm"]').click();
             },
-        }, {
-            content: "Check that preview is updated too",
-            trigger: '.o_link_dialog_preview:has(.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle)',
-            run: () => null,
-        }, {
-            content: "Save changes from linkDialog",
-            trigger: '.modal-footer .btn-primary',
         }, {
             content: "Check the resulting button",
             trigger: '.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
