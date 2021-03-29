@@ -1,6 +1,44 @@
 odoo.define('website_sale.utils', function (require) {
 'use strict';
 
+const wUtils = require('website.utils');
+
+const cartHandlerMixin = {
+    getRedirectOption() {
+        const html = document.documentElement;
+        this.stayOnPageOption = html.dataset.add2cartRedirect !== '0';
+    },
+    getCartHandlerOptions(ev) {
+        this.isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
+        const targetSelector = ev.currentTarget.dataset.animationSelector || 'img';
+        this.$itemImgContainer = this.$(ev.currentTarget).closest(`:has(${targetSelector})`);
+    },
+    /**
+     * Used to add product depending on stayOnPageOption value.
+     */
+    addToCart(params) {
+        if (this.isBuyNow) {
+            params.express = true;
+        } else if (this.stayOnPageOption) {
+            return this._addToCartInPage(params);
+        }
+        return wUtils.sendRequest('/shop/cart/update', params);
+    },
+    /**
+     * @private
+     */
+    _addToCartInPage(params) {
+        params.force_create = true;
+        this._rpc({
+            route: "/shop/cart/update_json",
+            params: params,
+        }).then(data => {
+            updateCartNavBar(data);
+            animateClone($('header .o_wsale_my_cart').first(), this.$itemImgContainer, 25, 40);
+        });
+    },
+};
+
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
     $cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
         $(this).removeClass("o_shadow_animation").dequeue();
@@ -17,6 +55,11 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
                 })
                 .addClass('o_website_sale_animate')
                 .appendTo(document.body)
+                .css({
+                    // Keep the same size on cloned img.
+                    width: $imgtodrag.width(),
+                    height: $imgtodrag.height(),
+                })
                 .animate({
                     top: $cart.offset().top + offsetTop,
                     left: $cart.offset().left + offsetLeft,
@@ -55,5 +98,6 @@ function updateCartNavBar(data) {
 return {
     animateClone: animateClone,
     updateCartNavBar: updateCartNavBar,
+    cartHandlerMixin: cartHandlerMixin,
 };
 });

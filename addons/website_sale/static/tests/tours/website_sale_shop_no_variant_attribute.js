@@ -2,6 +2,7 @@ odoo.define('website_sale.tour_shop_no_variant_attribute', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
+const tourUtils = require('website_sale.tour_utils');
 
 // This tour relies on a data created from the python test.
 tour.register('tour_shop_no_variant_attribute', {
@@ -22,6 +23,7 @@ tour.register('tour_shop_no_variant_attribute', {
         content: "add to cart",
         trigger: 'a:contains(Add to Cart)',
     },
+        tourUtils.goToCart(),
     {
         content: "check no_variant value is present",
         trigger: '.td-product_name:contains(No Variant Attribute: No Variant Value)',

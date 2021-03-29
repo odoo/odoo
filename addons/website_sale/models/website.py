@@ -50,6 +50,8 @@ class Website(models.Model):
 
     shop_extra_field_ids = fields.One2many('website.sale.extra.field', 'website_id', string='E-Commerce Extra Fields')
 
+    cart_add_on_page = fields.Boolean("Stay on page after adding to cart", default=True)
+
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
         Pricelist = self.env['product.pricelist']

@@ -53,6 +53,7 @@
 
     <template id="assets_common" name="tour" inherit_id="web.assets_common">
         <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale/static/src/js/tours/tour_utils.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/tours/website_sale_shop.js"></script>
         </xpath>
     </template>
@@ -771,7 +772,7 @@
 
     <template id="product_buy_now" inherit_id="website_sale.product" active="False" customize_show="True" name="Buy Now Button">
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <a role="button" id="buy_now" class="btn btn-outline-primary btn-lg mt16 d-block d-sm-inline-block" href="#"><i class="fa fa-bolt"/> Buy Now</a>
+            <a role="button" class="btn btn-outline-primary btn-lg mt16 d-block d-sm-inline-block o_we_buy_now" href="#"><i class="fa fa-bolt"/> Buy Now</a>
         </xpath>
     </template>
 
@@ -1932,4 +1933,9 @@
         </xpath>
     </template>
 
+    <template id="add_to_cart_redirect" inherit_id="website.layout" name="Cart Redirection" priority="1">
+        <xpath expr="//html" position="before">
+            <t t-set="html_data" t-value="dict(html_data, **{'data-add2cart-redirect': website.cart_add_on_page and '1' or '0'})"/>
+        </xpath>
+    </template>
 </odoo>

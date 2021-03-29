@@ -111,7 +111,9 @@
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                     <input type="hidden" class="product_id" name="product_id" t-att-value="channel.product_id.id"/>
                     <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="channel.product_id.id"/>
-                    <a id="add_to_cart" role="button" class="btn btn-primary btn-block js_check_product o_js_add_to_cart a-submit" href="#">
+                    <a id="add_to_cart" role="button" href="#"
+                       class="btn btn-primary btn-block js_check_product o_js_add_to_cart a-submit"
+                       data-animation-selector=".o_wslides_course_pict">
                         <i class="fa fa-shopping-cart"></i> Add to Cart
                     </a>
                     <div id="product_option_block"/>

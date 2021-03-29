@@ -3,6 +3,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
 
     var tour = require('web_tour.tour');
     var rpc = require('web.rpc');
+    const tourUtils = require('website_sale.tour_utils');
 
     tour.register('product_comparison', {
         test: true,
@@ -159,6 +160,7 @@ odoo.define('website_sale_comparison.tour_comparison', function (require) {
         content: "add product 'Conference Chair' to cart",
         trigger: '.product_summary:contains("Conference Chair") .a-submit:contains("Add to Cart")',
     },
+        tourUtils.goToCart(),
     {
         content: "check product correctly added to cart",
         trigger: '#cart_products:contains("Conference Chair") .js_quantity[value="1"]',

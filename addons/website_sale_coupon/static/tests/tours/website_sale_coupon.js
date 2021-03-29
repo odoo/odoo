@@ -4,6 +4,7 @@ odoo.define('website_sale_coupon.test', function (require) {
 require("website_sale.tour");
 var tour = require("web_tour.tour");
 var ajax = require('web.ajax');
+const tourUtils = require('website_sale.tour_utils');
 
 tour.register('shop_sale_coupon', {
     test: true,
@@ -39,6 +40,7 @@ tour.register('shop_sale_coupon', {
             content: "click on 'Add to Cart' button",
             trigger: "a:contains(Add to Cart)",
         },
+            tourUtils.goToCart(2),
         {
             content: "open customize menu",
             extra_trigger: '.oe_website_sale .oe_cart',
@@ -119,6 +121,7 @@ tour.register('shop_sale_coupon', {
             content: "click on 'Add to Cart' button",
             trigger: "a:contains(Add to Cart)",
         },
+            tourUtils.goToCart(3),
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
             extra_trigger: '.oe_currency_value:contains("-﻿75.50"):not(#cart_total .oe_currency_value:contains("-﻿75.50"))',

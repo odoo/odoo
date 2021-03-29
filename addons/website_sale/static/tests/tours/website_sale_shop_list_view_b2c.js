@@ -2,6 +2,7 @@ odoo.define('website_sale.tour_shop_list_view_b2c', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
+const tourUtils = require('website_sale.tour_utils');
 
 tour.register('shop_list_view_b2c', {
     test: true,
@@ -60,6 +61,7 @@ tour.register('shop_list_view_b2c', {
             content: "click on 'Add to Cart' button",
             trigger: 'a:contains(Add to Cart)',
         },
+            tourUtils.goToCart(),
         {
             content: "check price on /cart",
             trigger: '#cart_products .oe_currency_value:containsExact("880.44")',

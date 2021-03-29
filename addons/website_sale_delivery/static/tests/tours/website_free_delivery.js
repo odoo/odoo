@@ -2,6 +2,7 @@ odoo.define('website_sale_delivery.tour', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
+const tourUtils = require('website_sale.tour_utils');
 
 tour.register('check_free_delivery', {
         test: true,
@@ -17,6 +18,7 @@ tour.register('check_free_delivery', {
             content: "click on add to cart",
             trigger: '#product_details #add_to_cart',
         },
+            tourUtils.goToCart(),
         {
             content: "go to checkout",
             extra_trigger: '#cart_products input.js_quantity:propValue(1)',

@@ -150,11 +150,11 @@ var config = require('web.config');
 var publicWidget = require('web.public.widget');
 var VariantMixin = require('sale.VariantMixin');
 var wSaleUtils = require('website_sale.utils');
-const wUtils = require('website.utils');
+const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 require("web.zoomodoo");
 
 
-publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
+publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
     events: _.extend({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
@@ -172,7 +172,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
-        'click #add_to_cart, #buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
+        'click #add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit': 'async _onClickAdd',
         'click input.js_product_change': 'onChangeVariant',
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_optional_products_modal [data-attribute_exclusions]': 'onChangeVariant',
@@ -222,6 +222,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             this.triggerVariantChange(this.$el);
         });
 
+        this.getRedirectOption();
         return def;
     },
     /**
@@ -472,7 +473,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
+        this.getCartHandlerOptions(ev);
         return this._handleAdd($(ev.currentTarget).closest('form'));
     },
     /**
@@ -519,10 +520,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
     /**
      * Add custom variant values and attribute values that do not generate variants
-     * in the form data and trigger submit.
+     * in the params to submit form if 'stay on page' option is disabled, or call
+     * '_addToCartInPage' otherwise.
      *
      * @private
-     * @returns {Promise} never resolved
+     * @returns {Promise}
      */
     _submitForm: function () {
         let params = this.rootProduct;
@@ -530,12 +532,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
         params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
         params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
-        
-        if (this.isBuyNow) {
-            params.express = true;
-        }
-
-        return wUtils.sendRequest('/shop/cart/update', params);
+        this.addToCart(params);
     },
     /**
      * @private
@@ -687,7 +684,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     _toggleDisable: function ($parent, isCombinationPossible) {
         VariantMixin._toggleDisable.apply(this, arguments);
         $parent.find("#add_to_cart").toggleClass('disabled', !isCombinationPossible);
-        $parent.find("#buy_now").toggleClass('disabled', !isCombinationPossible);
+        $parent.find(".o_we_buy_now").toggleClass('disabled', !isCombinationPossible);
     },
     /**
      * Write the properties of the form elements in the DOM to prevent the

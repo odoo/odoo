@@ -3,6 +3,7 @@ odoo.define('website_sale_tour.tour', function (require) {
 
     var tour = require("web_tour.tour");
     var rpc = require("web.rpc");
+    const tourUtils = require('website_sale.tour_utils');
 
     tour.register('website_sale_tour', {
         test: true,
@@ -26,6 +27,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
+        tourUtils.goToCart(2),
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
@@ -220,6 +222,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
+        tourUtils.goToCart(2),
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
@@ -359,6 +362,7 @@ odoo.define('website_sale_tour.tour', function (require) {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
     },
+        tourUtils.goToCart(),
     {
         content: "Proceed to checkout",
         trigger: 'a[href*="/shop/checkout"]',
