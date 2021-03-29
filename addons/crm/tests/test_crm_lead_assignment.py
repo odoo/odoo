@@ -177,7 +177,7 @@ class TestLeadAssign(TestLeadAssignCommon):
             lead_type='lead',
             user_ids=[False],
             partner_ids=[self.contact_1.id, self.contact_2.id, False, False, False],
-            count=50
+            count=200
         )
         # commit probability and related fields
         leads.flush()
@@ -196,25 +196,20 @@ class TestLeadAssign(TestLeadAssignCommon):
             self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
-        # due to duplicate management keeping master team, we may not ensure leads to be
-        # fulfilling their original team volume
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
-        self.assertEqual(len(leads_st1), 10)  # 2 * 2 * 75 / 30.0
-        self.assertEqual(len(leads_stc), 12)  # 2 * 2 * 90 / 30.0
+        self.assertLessEqual(len(leads_st1), 128)
+        self.assertLessEqual(len(leads_stc), 96)
+        self.assertEqual(len(leads_st1) + len(leads_stc), len(leads))  # Make sure all lead are assigned
 
         # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
-        self.assertMemberAssign(self.sales_team_1_m1, 3)  # 45 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m2, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_convert_m1, 2)  # 30 max on 15
-        self.assertMemberAssign(self.sales_team_convert_m2, 4)  # 60 max on 15
-
-        # run a second round to finish leads
-        with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+        self.assertMemberAssign(self.sales_team_1_m1, 11)  # 45 max on 2 days (3) + compensation (8.4)
+        self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days (1) + compensation (2.8)
+        self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days (1) + compensation (2.8)
+        self.assertMemberAssign(self.sales_team_convert_m1, 8)  # 30 max on 15 (2) + compensation (5.6)
+        self.assertMemberAssign(self.sales_team_convert_m2, 15)  # 60 max on 15 (4) + compsantion (11.2)
 
         # teams assign: everything should be done due to duplicates
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -233,7 +228,7 @@ class TestLeadAssign(TestLeadAssignCommon):
             lead_type='lead',
             user_ids=[False],
             partner_ids=[False],
-            count=50
+            count=100
         )
         # commit probability and related fields
         leads.flush()
@@ -255,16 +250,17 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
-        self.assertEqual(len(leads_st1), 10)  # 2 * 2 * 75 / 30.0
-        self.assertEqual(len(leads_stc), 12)  # 2 * 2 * 90 / 30.0
+        self.assertEqual(len(leads_st1) + len(leads_stc), 100)  # 2 * 2 * 75 / 30.0
+        self.assertLessEqual(len(leads_st1), 100)  # 2 * 2 * 75 / 30.0
+        self.assertLessEqual(len(leads_stc), 66)  # 2 * 2 * 90 / 30.0
 
         # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
-        self.assertMemberAssign(self.sales_team_1_m1, 3)  # 45 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m2, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_convert_m1, 2)  # 30 max on 15
-        self.assertMemberAssign(self.sales_team_convert_m2, 4)  # 60 max on 15
+        self.assertMemberAssign(self.sales_team_1_m1, 11)  # 45 max on 2 days (3) + compensation (8.4)
+        self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days (1) + compensation (2.8)
+        self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days (1) + compensation (2.8)
+        self.assertMemberAssign(self.sales_team_convert_m1, 8)  # 30 max on 15 (2) + compensation (5.6)
+        self.assertMemberAssign(self.sales_team_convert_m2, 15)  # 60 max on 15 (4) + compsantion (11.2)
 
     @mute_logger('odoo.models.unlink')
     def test_assign_populated(self):
@@ -331,6 +327,12 @@ class TestLeadAssign(TestLeadAssignCommon):
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
+        # teams assign
+        leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])
+        self.assertEqual(leads.team_id, sales_teams)
+        self.assertEqual(leads.user_id, sales_teams.member_ids)
+
+        # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
         self.assertMemberAssign(self.sales_team_1_m1, 45)  # 45 max on one month
         self.assertMemberAssign(self.sales_team_1_m2, 15)  # 15 max on one month
@@ -340,6 +342,69 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertMemberAssign(sales_team_3_m1, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m2, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m3, 15)  # 15 max on one month
+
+    def test_assign_quota(self):
+        """ Test quota computation """
+        self.assertInitialData()
+
+        # quota computation without existing leads
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=1),
+            10,
+            "Assignment quota: 45 max on 1 days -> 1.5, compensation (45-1.5)/5 -> 8.7"
+        )
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=2),
+            11,
+            "Assignment quota: 45 max on 2 days -> 3, compensation (45-3)/5 -> 8.4"
+        )
+
+        # quota should not exceed maximum
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=30),
+            45,
+            "Assignment quota: anyway 45 max available"
+        )
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=60),
+            45,
+            "Assignment quota: anyway 45 max available"
+        )
+
+        # create exiting leads for user_sales_leads (sales_team_1_m1)
+        existing_leads = self._create_leads_batch(
+            lead_type='lead', user_ids=[self.user_sales_leads.id],
+            probabilities=[10],
+            count=30)
+        self.assertEqual(existing_leads.team_id, self.sales_team_1, "Team should have lower sequence")
+        existing_leads.flush()
+
+        self.sales_team_1_m1.invalidate_cache(fnames=['lead_month_count'])
+        self.assertEqual(self.sales_team_1_m1.lead_month_count, 30)
+
+        # quota computation with existing leads
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=1),
+            4,
+            "Assignment quota: 45 max on 1 days -> 1.5, compensation (45-30-1.5)/5 -> 2.7"
+        )
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=2),
+            5,
+            "Assignment quota: 45 max on 2 days -> 3, compensation (45-30-3)/5 -> 2.4"
+        )
+
+        # quota should not exceed maximum
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=30),
+            15,
+            "Assignment quota: anyway 15 max available (30 already assigned)"
+        )
+        self.assertEqual(
+            self.sales_team_1_m1._get_assignment_quota(work_days=60),
+            15,
+            "Assignment quota: anyway 15 max available (30 already assigned)"
+        )
 
     def test_assign_specific_won_lost(self):
         """ Test leads taken into account in assign process: won, lost, stage
