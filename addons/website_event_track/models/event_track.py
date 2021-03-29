@@ -134,7 +134,7 @@ class Track(models.Model):
         groups="event.group_event_user")
     wishlisted_by_default = fields.Boolean(
         string='Always Wishlisted',
-        help="""If set, the talk will be starred for each attendee registered to the event. The attendee won't be able to un-star this talk.""")
+        help="""If set, the talk will be set as favorite for each attendee registered to the event.""")
     # Call to action
     website_cta = fields.Boolean('Magic Button',
                                  help="Display a Call to Action button to your Attendees while they watch your Track.")

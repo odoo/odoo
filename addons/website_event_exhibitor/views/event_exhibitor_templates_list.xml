@@ -150,11 +150,11 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_card" name="Exhibitor Card">
-    <article t-att-class="'h-100 card border-0 shadow-sm o_wesponsor_card %s' % ('o_wesponsor_card_unpublished' if not sponsor.is_published else '')"
+    <article t-att-class="'h-100 card rounded-0 border-0 shadow-sm o_wesponsor_card %s' % ('o_wesponsor_card_unpublished' if not sponsor.is_published else '')"
         itemscope="itemscope" itemtype="http://schema.org/Event">
         <div class="h-100 row no-gutters">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
-            <header t-att-class="'overflow-hidden col-12 rounded-top %s' % ('bg-secondary' if not sponsor_image_url else '')">
+            <header t-att-class="'overflow-hidden col-12 %s' % ('bg-secondary' if not sponsor_image_url else '')">
                 <div class="d-block h-100 w-100 o_wesponsor_js_connect"
                      t-att-data-sponsor-url="sponsor.website_url"
                      t-attf-data-register-url="/event/#{slug(event)}/register?from_sponsor_id=#{sponsor.id}"
@@ -202,8 +202,8 @@
             <div class="col-12 h-100">
                 <main class="card-body">
                     <!-- Title -->
-                    <h5 class="card-title mt-0 mb-0 text-truncate d-flex align-items-top">
-                        <span t-field="sponsor.name" itemprop="name"/>
+                    <h5 class="card-title mt-0 mb-0 d-flex align-items-start">
+                        <span t-field="sponsor.name" itemprop="name" class="text-break"/>
                         <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
                             class="ml-auto badge badge-danger">Live
                         </span>

@@ -43,7 +43,7 @@
     </nav>
 </template>
 
-<!-- Option: Tracks display: optional wishlist -->
+<!-- Option: Tracks display: optional favorites -->
 <template id="agenda_topbar_wishlist"
     inherit_id="website_event_track.agenda_topbar"
     name="Allow Wishlists"
@@ -157,13 +157,13 @@
     <div class="d-flex flex-column h-100">
         <div class="d-flex justify-content-end flex-wrap-reverse align-items-center o_weagenda_track_badges">
             <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
-                class="mx-1 badge badge-danger">Live
+                class="mx-1 badge badge-danger rounded-sm">Live
             </small>
             <small t-if="not track.website_published and is_event_user and track.stage_id.is_accepted"
                    title="Unpublished"
-                   class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Unpublished</small>
+                   class="ml-1 badge badge-danger o_wevent_online_badge_unpublished rounded-sm">Unpublished</small>
             <small t-if="not track.stage_id.is_accepted" title="Not Accepted"
-                   class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Not Accepted</small>
+                   class="ml-1 badge badge-danger o_wevent_online_badge_unpublished rounded-sm">Not Accepted</small>
             <span t-if="option_track_wishlist">
                 <t t-call="website_event_track.track_widget_reminder">
                     <t t-set="reminder_light" t-value="True"/>
