@@ -91,7 +91,7 @@ class PaymentTransaction(models.Model):
         base_url = self.acquirer_id._get_base_url()
         if self.operation == 'online_redirect':
             return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
-                         f'?reference={self.reference}'
+                         f'?reference={urls.url_quote_plus(self.reference)}'
             # Specify a future usage for the payment intent to:
             # 1. attach the payment method to the created customer
             # 2. trigger a 3DS check if one if required, while the customer is still present
@@ -116,7 +116,7 @@ class PaymentTransaction(models.Model):
         else:  # 'validation'
             # {CHECKOUT_SESSION_ID} is a template filled by Stripe when the Session is created
             return_url = f'{urls.url_join(base_url, StripeController._validation_return_url)}' \
-                         f'?reference={self.reference}&checkout_session_id={{CHECKOUT_SESSION_ID}}'
+                         f'?reference={urls.url_quote_plus(self.reference)}&checkout_session_id={{CHECKOUT_SESSION_ID}}'
             checkout_session = self.acquirer_id._stripe_make_request(
                 'checkout/sessions', payload={
                     **common_session_values,
