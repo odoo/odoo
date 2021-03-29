@@ -72,11 +72,6 @@ ABSTRACT_MODULES = [
             'doc': 'maybe tourmanager instance?',
         }),
     }),
-    # OH FOR FUCK'S SAKE
-    jsdoc.ModuleDoc({
-        'module': 'summernote/summernote',
-        'exports': jsdoc.NSDoc({'doc': "totally real summernote"}),
-    })
 ]
 
 @click.group(context_settings={'help_option_names': ['-h', '--help']})
