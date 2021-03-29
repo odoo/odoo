@@ -59,7 +59,7 @@ class FleetVehicleLogContract(models.Model):
     def _compute_contract_name(self):
         for record in self:
             name = record.vehicle_id.name
-            if record.cost_subtype_id.name:
+            if name and record.cost_subtype_id.name:
                 name = record.cost_subtype_id.name + ' ' + name
             record.name = name
 
