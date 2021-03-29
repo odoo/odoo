@@ -520,9 +520,9 @@ class TestChannelModeration(MailCommon):
                  (self.cr.dbname, 'res.partner', self.partner_employee.id),
                  (self.cr.dbname, 'res.partner', self.partner_portal.id)],
                 message_items=[
-                    {'type': 'deletion', 'message_ids': [id2]},  # author of 1 message
-                    {'type': 'deletion', 'message_ids': [id2, id4]},  # moderator
-                    {'type': 'deletion', 'message_ids': [id4]}  # author of 1 message
+                    {'type': 'mail.message_deleted', 'payload': {'message_ids': [id2, id4]}},  # moderator
+                    {'type': 'mail.message_deleted', 'payload': {'message_ids': [id2]}},  # author of 1 message
+                    {'type': 'mail.message_deleted', 'payload': {'message_ids': [id4]}}  # author of 1 message
                 ]):
             (msg_c1_admin2 + msg_c1_portal).with_user(self.user_employee)._moderate_discard()
 

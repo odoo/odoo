@@ -581,7 +581,7 @@ class Channel(models.Model):
 
             message_format_values = message.message_format()[0]
             bus_notifications = self._channel_message_notifications(message, message_format_values)
-            self.env['bus.bus'].sudo().sendmany(bus_notifications)
+            self.env['bus.bus'].sudo()._send_notifications(bus_notifications)
 
             # Message from mailing channel should not make a notification in Odoo for users
             # with notification "Handled by Email", but web client should receive the message.

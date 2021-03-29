@@ -135,11 +135,10 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             self._reset_bus()
             with self.assertBus(
                     [(self.cr.dbname, 'res.partner', employee_partner.id)],
-                    message_items=[
-                        {'type': 'mark_as_read',
-                         'message_ids': [msg1.id],
-                         'needaction_inbox_counter': 0}
-                    ]):
+                    message_items=[{
+                        'type': 'mail.inbox_mark_all_messages_as_read',
+                        'payload': None,
+                    }]):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
@@ -160,11 +159,10 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             self._reset_bus()
             with self.assertBus(
                     [(self.cr.dbname, 'res.partner', employee_partner.id)],
-                    message_items=[
-                        {'type': 'mark_as_read',
-                         'message_ids': [msg2.id],
-                         'needaction_inbox_counter': 0}
-                    ]):
+                    message_items=[{
+                        'type': 'mail.inbox_mark_all_messages_as_read',
+                        'payload': None,
+                    }]):
                 employee_partner.env['mail.message'].mark_all_as_read(domain=[])
             na_count = employee_partner.get_needaction_count()
             self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")

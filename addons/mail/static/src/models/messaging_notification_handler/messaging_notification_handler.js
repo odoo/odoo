@@ -455,7 +455,8 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Object[]} messages
+         * @param {Object} payload
+         * @param {Object[]} payload.messages
          */
         _handleNotificationMessageNotificationUpdate(messages) {
             for (const messageData of messages) {

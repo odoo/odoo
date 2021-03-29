@@ -124,7 +124,7 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         })
         now = fields.Datetime.now()
         with patch.object(fields.Datetime, 'now', lambda: now):
-            with self.assertBus([(self.env.cr.dbname, 'calendar.alarm', self.partner.id)]):
+            with self.assertBus([(self.env.cr.dbname, 'res.partner', self.partner.id)]):
                 self.event.with_context(no_mail_to_attendees=True).write({
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),

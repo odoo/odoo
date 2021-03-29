@@ -612,8 +612,10 @@ class MailCase(MockEmail):
         self.assertBusNotifications(
             [(self.cr.dbname, 'res.partner', message.author_id.id)],
             [{
-                'type': 'message_notification_update',
-                'elements': message._message_notification_format(),
+                'type': 'mail.message_notification_update',
+                'payload': {
+                    'messages': message._message_notification_format(),
+                },
             }],
             check_unique=False
         )
@@ -629,8 +631,8 @@ class MailCase(MockEmail):
         ]
         :param message_items: if given, list of expected message making a valid
           pair (channel, message) to be found in bus.bus, like [
-            {'type': 'message_notification_update',
-             'elements': {self.msg.id: {
+            {'type': 'mail.message_notification_update',
+             'payload': {self.msg.id: {
                 'message_id': self.msg.id,
                 'message_type': 'sms',
                 'notifications': {...},

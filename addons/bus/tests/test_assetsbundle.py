@@ -28,11 +28,12 @@ class BusWebTests(odoo.tests.HttpCase):
 
         sent_notifications = []
 
-        def patched__send_notifications(self, channel, message):
+        def patched__send_notifications(self, notifications):
             """ Control API and number of messages posted to the bus linked to
             bundle_changed events """
-            if channel[1] == 'bundle_changed':
-                sent_notifications.append((channel, message))
+            for notification in notifications:
+                if notification['type'] == 'base.bundle_changed':
+                    sent_notifications.append(notification)
 
         self.patch(type(self.env['bus.bus']), '_send_notifications', patched__send_notifications)
 

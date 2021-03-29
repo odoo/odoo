@@ -739,6 +739,7 @@ class Message(models.Model):
         self.env['bus.bus']._send_notifications([{
             'target': self.env.user.partner_id,
             'type': 'mail.inbox_mark_all_messages_as_read',
+            'payload': None,
         }])
 
     def set_message_done(self):
@@ -1173,16 +1174,16 @@ class Message(models.Model):
                     continue
                 else:
                     messages |= message
-        notifications = [[
+        self.env['bus.bus']._send_notifications(
             {
                 'target': author,
                 'type': 'mail.message_notification_update',
                 'payload': {
-                    self.env['mail.message'].concat(*author_messages)._message_notification_format()
+                    'messages': self.env['mail.message'].concat(*author_messages)._message_notification_format(),
                 },
             }
-        ] for author, author_messages in groupby(messages.sorted('author_id'), itemgetter('author_id'))]
-        self.env['bus.bus']._send_notifications(notifications)
+            for author, author_messages in groupby(messages.sorted('author_id'), itemgetter('author_id'))
+        )
 
     # ------------------------------------------------------
     # TOOLS
