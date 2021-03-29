@@ -410,7 +410,9 @@ class AccountBankStatement(models.Model):
                 statement._set_next_sequence()
 
         self.write({'state': 'posted'})
-        self.line_ids.move_id._post(soft=False)
+        lines_of_moves_to_post = self.line_ids.filtered(lambda line: line.move_id.state != 'posted')
+        if lines_of_moves_to_post:
+            lines_of_moves_to_post.move_id._post(soft=False)
 
     def button_validate(self):
         if any(statement.state != 'posted' or not statement.all_lines_reconciled for statement in self):
