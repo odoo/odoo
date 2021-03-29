@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import fields, models, api
+from odoo import fields, models
+from odoo.tools.translate import html_translate
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    inventory_availability = fields.Selection([
-        ('never', 'Sell regardless of inventory'),
-        ('always', 'Show inventory on website and prevent sales if not enough stock'),
-        ('threshold', 'Show inventory below a threshold and prevent sales if not enough stock'),
-        ('custom', 'Show product-specific notifications'),
-    ], string='Inventory Availability', help='Adds an inventory availability status on the web product page.', default='never')
-    available_threshold = fields.Float(string='Availability Threshold', default=5.0)
-    custom_message = fields.Text(string='Custom Message', default='', translate=True)
+    allow_out_of_stock_order = fields.Boolean(string='Continue selling when out-of-stock', default=True)
+
+    available_threshold = fields.Float(string='Show Threshold', default=5.0)
+    show_availability = fields.Boolean(string='Show availability Qty', default=False)
+    out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
 
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         combination_info = super(ProductTemplate, self)._get_combination_info(
@@ -27,28 +24,29 @@ class ProductTemplate(models.Model):
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
-            free_qty = product.with_context(warehouse=website.warehouse_id.id).free_qty
+            product_with_context = product.with_context(warehouse=website.warehouse_id.id)
+
+            free_qty = product_with_context.free_qty
             combination_info.update({
                 'free_qty': free_qty,
-                'free_qty_formatted': self.env['ir.qweb.field.float'].value_to_html(free_qty, {'precision': 0}),
                 'product_type': product.type,
-                'inventory_availability': product.inventory_availability,
-                'available_threshold': product.available_threshold,
-                'custom_message': product.custom_message,
-                'product_template': product.product_tmpl_id.id,
+                'product_template': self.id,
+                'available_threshold': self.available_threshold,
                 'cart_qty': product.cart_qty,
                 'uom_name': product.uom_id.name,
+                'allow_out_of_stock_order': self.allow_out_of_stock_order,
+                'show_availability': self.show_availability,
+                'out_of_stock_message': self.out_of_stock_message,
             })
         else:
             product_template = self.sudo()
             combination_info.update({
                 'free_qty': 0,
                 'product_type': product_template.type,
-                'inventory_availability': product_template.inventory_availability,
+                'allow_out_of_stock_order': product_template.allow_out_of_stock_order,
                 'available_threshold': product_template.available_threshold,
-                'custom_message': product_template.custom_message,
                 'product_template': product_template.id,
-                'cart_qty': 0
+                'cart_qty': 0,
             })
 
         return combination_info
