@@ -670,7 +670,7 @@ class ResourceCalendar(models.Model):
         if compute_leaves:
             intervals = self._work_intervals_batch(from_datetime, to_datetime, domain=domain)[False]
         else:
-            intervals = self._attendance_intervals_batch(from_datetime, to_datetime)[False]
+            intervals = self._attendance_intervals_batch(from_datetime, to_datetime, domain=domain)[False]
 
         return self._get_days_data(intervals, day_total)
 
