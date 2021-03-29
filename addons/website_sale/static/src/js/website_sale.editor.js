@@ -695,29 +695,4 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         }).then(reload);
     },
 });
-
-options.registry.ProductsRecentlyViewed = options.Class.extend({
-    /**
-     * @override
-     */
-    onBuilt: function () {
-        this.displayNotification({
-            type: 'info',
-            title: '',
-            message: _t('The snippet will be visible once one has seen one product'),
-        });
-    },
-    /**
-     * @override
-     */
-    onTargetShow: async function () {
-        this.$target.removeClass('d-none');
-    },
-    /**
-     * @override
-     */
-    onTargetHide: function () {
-        this.$target.addClass('d-none');
-    },
-});
 });
