@@ -55,7 +55,7 @@
         <field name="res_model">project.task.burndown.chart.report</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="project_task_burndown_chart_report_view_search"/>
-        <field name="context">{}</field>
+        <field name="context">{'search_default_project_id': active_id}</field>
         <field name="domain">[('display_project_id', '!=', False)]</field>
         <field name="help">
         </field>
