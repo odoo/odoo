@@ -523,6 +523,49 @@ export class Message extends Component {
         ev.preventDefault();
         this.message.originThread.open();
     }
+
+    /**
+     * @private
+     */
+    _onClickSendAgain(ev) {
+        ev.preventDefault();
+        this.message.originThread.messageSender.sendMessage(this.message, { callback: () => this.trigger('o-message-posted') });
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickStar(ev) {
+        ev.stopPropagation();
+        this.message.toggleStar();
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickMarkAsRead(ev) {
+        ev.stopPropagation();
+        this.message.markAsRead();
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickReply(ev) {
+        // Use this._wasSelected because this.props.isSelected might be changed
+        // by a global capture click handler (for example the one from Composer)
+        // before the current handler is executed. Indeed because it does a
+        // toggle it needs to take into account the value before the click.
+        if (this._wasSelected) {
+            this.messaging.discuss.clearReplyingToMessage();
+        } else {
+            this.message.replyTo();
+        }
+    }
+
 }
 
 Object.assign(Message, {

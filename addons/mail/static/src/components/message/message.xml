@@ -12,6 +12,7 @@
                 'o-not-discussion': message and !(message.is_discussion or message.is_notification),
                 'o-notification': message and message.message_type === 'notification',
                 'o-selected': isSelected,
+                'o-isPendingSendOrHasSendError': message and (message.isPendingSend or message.hasSendError),
                 'o-squashed': props.isSquashed,
                 'o-starred': message and message.isStarred,
             }" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="message and message.localId"
@@ -36,7 +37,10 @@
                         </div>
                     </t>
                     <t t-else="">
-                        <t t-if="isActive and message.date">
+                        <t t-if="message.hasSendError">
+                            <t t-call="mail.Message_sendAgain"/>
+                        </t>
+                        <t t-if="!message.hasSendError and isActive and message.date">
                             <div class="o_Message_date o_Message_sidebarItem d-flex" t-att-class="{ 'o-message-selected': isSelected }">
                                 <t t-esc="shortTime"/>
                             </div>
@@ -73,6 +77,9 @@
                                 <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': isSelected }" t-att-title="datetime">
                                     - <t t-esc="message.dateFromNow"/>
                                 </div>
+                            </t>
+                            <t t-if="message.hasSendError">
+                                <t t-call="mail.Message_sendAgain"/>
                             </t>
                             <t t-if="message.isCurrentUserOrGuestAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
                                 <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadView.thread.localId"/>
@@ -116,7 +123,7 @@
                             hasMarkAsReadIcon="props.hasMarkAsReadIcon"
                         />
                         <div class="o_Message_content m-2" t-ref="content">
-                            <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
+                            <div class="o_Message_prettyBody" t-att-class="{ 'o-isPendingSendOrHasSendError': message and (message.isPendingSend or message.hasSendError) }" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
                             <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
                                 <p t-esc="message.subtype_description"/>
                             </t>
@@ -164,4 +171,17 @@
         </div>
     </t>
 
+    <t t-name="mail.Message_sendAgain" owl="1">
+        <div class="o_Message_sendAgain text-danger">
+            <Popover position="'top'">
+                <i class="o_Message_sendAgainPopover fa fa-exclamation-circle "/>
+                <t t-set="opened">
+                    <p>This message was not delivered</p>
+                    <button class="btn btn-primary o_Message_sendAgain_button" t-on-click="_onClickSendAgain">
+                        Retry
+                    </button>
+                </t>
+            </Popover>
+        </div>
+    </t>
 </templates>

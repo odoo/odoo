@@ -2,13 +2,11 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import emojis from '@mail/js/emojis';
 import {
-    addLink,
     escapeAndCompactTextContent,
-    parseAndTransform,
 } from '@mail/js/utils';
 
 function factory(dependencies) {
@@ -200,76 +198,34 @@ function factory(dependencies) {
         }
 
         /**
-         * Post a message in provided composer's thread based on current composer fields values.
+         * Create and insert a message that will be sent by messageSender.
+         *
+         * @param {Object} options
+         * @param {Object} options.callback function that will be trigger when a
+         * message has been posted.
          */
-        async postMessage() {
-            if (this.thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(this.textInputContent);
-                if (command) {
-                    command.execute({ channel: this.thread, body: this.textInputContent });
-                    return;
-                }
-            }
-            if (this.messaging.currentPartner) {
-                this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            }
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
-            const postData = {
-                attachment_ids: this.attachments.map(attachment => attachment.id),
-                body,
+        postMessage(options = {}) {
+            const message = this.messaging.models['mail.message'].create({
+                afterSendCallback: options.callback,
+                attachments: link(this.attachments),
+                author: link(this.messaging.currentPartner),
+                body: this.thread.messageSender.convertMessageToHtml(this.textInputContent),
+                channel_ids: this.mentionedChannels.map(channel => channel.id),
+                date: moment(),
+                id: this.messaging.models['mail.message'].getNextTemporaryId(),
+                isTemporary: true,
+                isTransient: true,
+                is_discussion: true,
                 message_type: 'comment',
-                partner_ids: this.recipients.map(partner => partner.id),
-            };
-            const params = {
-                'post_data': postData,
-                'thread_id': this.thread.id,
-                'thread_model': this.thread.model,
-            };
-            try {
-                this.update({ isPostingMessage: true });
-                if (this.thread.model === 'mail.channel') {
-                    Object.assign(postData, {
-                        subtype_xmlid: 'mail.mt_comment',
-                    });
-                } else {
-                    Object.assign(postData, {
-                        subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                    });
-                    if (!this.isLog) {
-                        params.context = { mail_post_autofollow: true };
-                    }
-                }
-                const messageData = await this.env.services.rpc({ route: `/mail/message/post`, params });
-                if (!this.messaging) {
-                    return;
-                }
-                const message = this.messaging.models['mail.message'].insert(
-                    this.messaging.models['mail.message'].convertData(messageData)
-                );
-                for (const threadView of message.originThread.threadViews) {
-                    // Reset auto scroll to be able to see the newly posted message.
-                    threadView.update({ hasAutoScrollOnMessageReceived: true });
-                }
-                if (message.originThread.model !== 'mail.channel') {
-                    message.originThread.refreshFollowers();
-                    message.originThread.fetchAndUpdateSuggestedRecipients();
-                }
-                this._reset();
-            } finally {
-                if (this.exists()) {
-                    this.update({ isPostingMessage: false });
-                }
-            }
+                originThread: insert({
+                    id: this.thread.id,
+                    model: this.thread.model,
+                }),
+                partnerIds: link(this.recipients),
+                subject: (this.subjectContent) ? this.subjectContent : undefined,
+            });
+            this.thread.messageSender.sendMessage(message);
+            this._reset();
         }
 
         /**

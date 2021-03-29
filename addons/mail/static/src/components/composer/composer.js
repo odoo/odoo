@@ -168,10 +168,7 @@ export class Composer extends Component {
             }
             return;
         }
-        await this.composer.postMessage();
-        // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
-        // task-2252858
-        this.trigger('o-message-posted');
+        this.composer.postMessage({ callback: () => this.trigger('o-message-posted') });
     }
 
     /**

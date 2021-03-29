@@ -135,7 +135,11 @@ function factory(dependencies) {
                     message.id > this.lastFetchedMessage.id
                 );
             }
-            return replace(this.fetchedMessages.concat(newerMessages));
+            return replace(this.fetchedMessages.concat(
+                newerMessages,
+                this.thread.messageSender.messagesPendingToBeSent,
+                this.thread.messageSender.messagesThatFailedToBeSent
+            ));
         }
 
         /**
@@ -160,7 +164,19 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
-            return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+            const sortedMessages = this.messages.sort((m1, m2) => {
+                if ((m1.isPendingSend || m1.hasSendError) && (m2.isPendingSend || m2.hasSendError)) {
+                    return m1.id > m2.id ? -1 : 1;
+                }
+                else if ((m1.isPendingSend || m1.hasSendError) && (!m2.isPendingSend && !m2.hasSendError)) {
+                    return 1;
+                }
+                else if ((!m1.isPendingSend && !m1.hasSendError) && (m2.isPendingSend || m2.hasSendError)) {
+                    return -1;
+                }
+                return m1.id < m2.id ? -1 : 1;
+            });
+            return replace(sortedMessages);
         }
 
         /**
@@ -423,6 +439,12 @@ function factory(dependencies) {
          */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
+        }),
+        /**
+         * Sender instance used by this thread to send message.
+         */
+        messageSender: one2one('mail.thread_message_sender', {
+            related: 'thread.messageSender',
         }),
         thread: one2one('mail.thread', {
             inverse: 'cache',

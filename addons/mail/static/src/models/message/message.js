@@ -289,7 +289,7 @@ function factory(dependencies) {
 
         /**
          * Updates the message's content.
-         * 
+         *
          * @param {Object} param0
          * @param {string} param0.body the new body of the message
          */
@@ -358,6 +358,17 @@ function factory(dependencies) {
             return replace(this.notifications.filter(notifications =>
                 ['exception', 'bounce'].includes(notifications.notification_status)
             ));
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasSendError() {
+            if (!this.originThread) {
+                return clear();
+            }
+            return this.originThread.messageSender.messagesThatFailedToBeSent.includes(this);
         }
 
         /**
@@ -433,6 +444,17 @@ function factory(dependencies) {
                 this.originThread &&
                 this.originThread.model === 'mail.channel'
             );
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsPendingSend() {
+            if (!this.originThread) {
+                return clear();
+            }
+            return this.originThread.messageSender.messagesPendingToBeSent.includes(this);
         }
 
         /**
@@ -532,6 +554,10 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
+        /**
+         * States the function that is triggered when the message has been sent.
+         */
+        afterSendCallback: attr(),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
@@ -575,6 +601,13 @@ function factory(dependencies) {
         }),
         guestAuthor: many2one('mail.guest', {
             inverse: 'authoredMessages',
+        }),
+        /**
+         * State whether that the message has not been sent to the server because of an
+         * error.
+         */
+        hasSendError: attr({
+            compute: '_computeHasSendError',
         }),
         id: attr({
             required: true,
@@ -668,6 +701,12 @@ function factory(dependencies) {
             compute: '_computeIsHighlighted',
         }),
         /**
+         * Determines whether the message is pending to be sent to the server.
+         */
+        isPendingSend: attr({
+            compute: '_computeIsPendingSend',
+        }),
+        /**
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
@@ -694,6 +733,10 @@ function factory(dependencies) {
             inverse: 'messagesAsOriginThread',
         }),
         /**
+         * Store the partner ids needed to create a message with postMessage.
+         */
+        partnerIds: one2many('mail.partner'),
+        /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
          * Do not use this value in a 't-raw' if the message has been created
@@ -716,6 +759,14 @@ function factory(dependencies) {
             default: [],
         }),
     };
+
+    Message.getNextTemporaryId = function() {
+        let tmpId = 0;
+        return () => {
+            tmpId -= 1;
+            return tmpId;
+        };
+    }();
 
     Message.modelName = 'mail.message';
 
