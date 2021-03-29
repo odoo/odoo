@@ -200,7 +200,7 @@ class Contract(models.Model):
         if vals.get('state') == 'open':
             self._assign_open_contract()
         if vals.get('state') == 'close':
-            for contract in self:
+            for contract in self.filtered(lambda c: not c.date_end):
                 contract.date_end = max(date.today(), contract.date_start)
 
         calendar = vals.get('resource_calendar_id')
