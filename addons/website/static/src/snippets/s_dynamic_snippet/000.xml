@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.grid">
         <!-- Content -->
-        <t t-set="colClass" t-value="'col-' + (12 / chunkSize).toString()"/>
+        <t t-set="colClass" t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / chunkSize).toString()"/>
         <t t-set="rowIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
         <t t-set="colIndexGenerator" t-value="Array.from(Array(chunkSize).keys())"/>
         <t t-foreach="rowIndexGenerator" t-as="rowIndex">

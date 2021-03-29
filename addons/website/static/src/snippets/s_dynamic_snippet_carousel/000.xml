@@ -4,7 +4,7 @@
         <div t-att-id="uniqueId" class="carousel slide" t-att-data-interval="interval">
             <!-- Content -->
             <div class="carousel-inner row w-100 mx-auto" role="listbox">
-                <t t-set="colClass" t-value="'col-' + (12 / chunkSize).toString()"/>
+                <t t-set="colClass" t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / chunkSize).toString()"/>
                 <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
                 <t t-set="itemIndexGenerator" t-value="Array.from(Array(chunkSize).keys())"/>
                 <t t-foreach="slideIndexGenerator" t-as="slideIndex">

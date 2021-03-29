@@ -42,11 +42,18 @@ const dynamicSnippetOptions = options.Class.extend({
             this.$target.get(0).dataset.numberOfRecords = filter.limit;
             this._filterUpdated(filter);
         }
+        if (params.attributeName === 'templateKey' && previewMode === false) {
+            this._templateUpdated(widgetValue, params.activeValue);
+        }
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    _getTemplateClass: function (templateKey) {
+        return templateKey.replace(/.*\.dynamic_filter_template_/, "s_");
+    },
 
     /**
      *
@@ -148,6 +155,7 @@ const dynamicSnippetOptions = options.Class.extend({
      */
     _renderDynamicFilterTemplatesSelector: async function (uiFragment) {
         const dynamicFilterTemplates = await this._fetchDynamicFilterTemplates();
+        this.dynamicFilterTemplates = {};
         for (let index in dynamicFilterTemplates) {
             this.dynamicFilterTemplates[dynamicFilterTemplates[index].key] = dynamicFilterTemplates[index];
         }
@@ -155,7 +163,10 @@ const dynamicSnippetOptions = options.Class.extend({
             const selectedTemplateId = this.$target.get(0).dataset['templateKey'];
             if (!this.dynamicFilterTemplates[selectedTemplateId]) {
                 this.$target.get(0).dataset['templateKey'] = dynamicFilterTemplates[0].key;
-                this._refreshPublicWidgets();
+                setTimeout(() => {
+                    this._templateUpdated(dynamicFilterTemplates[0].key, selectedTemplateId);
+                    this._refreshPublicWidgets();
+                });
             }
         } else {
             this._refreshPublicWidgets();
@@ -189,6 +200,18 @@ const dynamicSnippetOptions = options.Class.extend({
             this.currentModelName = filter.model_name;
             this._rerenderXML();
         }
+    },
+    /**
+     * Take the new template selection into account
+     * @param newTemplate
+     * @param oldTemplate
+     * @private
+     */
+    _templateUpdated: function (newTemplate, oldTemplate) {
+        if (oldTemplate) {
+            this.$target.removeClass(this._getTemplateClass(oldTemplate));
+        }
+        this.$target.addClass(this._getTemplateClass(newTemplate));
     },
     /**
      * Sets the option value.
