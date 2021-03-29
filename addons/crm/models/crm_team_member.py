@@ -119,21 +119,15 @@ class Team(models.Model):
             raise ValueError(
                 _('Leads team allocation should be done for at least 0.2 or maximum 30 work days, not %.2f.', work_days)
             )
-        # assignment_max is valid for "30 days" -> divide by requested work_days
-        # to have number of leads to assign
-        assign_ratio = work_days / 30.0
 
         members_data, population, weights = dict(), list(), list()
-        members = self.filtered(lambda member: not member.assignment_optout and member.assignment_max > member.lead_month_count)
+        members = self.filtered(lambda member: not member.assignment_optout and member.assignment_max > 0)
         if not members:
             return members_data
 
         # prepare a global lead count based on total leads to assign to salespersons
         lead_limit = sum(
-            min(
-                int(math.ceil(member.assignment_max * assign_ratio)),
-                (member.assignment_max - member.lead_month_count)
-            )
+            member._get_assignment_quota(work_days=work_days)
             for member in members
         )
 
@@ -146,7 +140,7 @@ class Team(models.Model):
 
             leads = self.env["crm.lead"].search(lead_domain, order='probability DESC', limit=lead_limit)
 
-            to_assign = min(member.assignment_max - member.lead_month_count, round(member.assignment_max * assign_ratio))
+            to_assign = member._get_assignment_quota(work_days=work_days)
             members_data[member.id] = {
                 "team_member": member,
                 "max": member.assignment_max,
@@ -199,7 +193,24 @@ class Team(models.Model):
             (member_info["team_member"], {"assigned": member_info["assigned"]})
             for member_id, member_info in members_data.items()
         )
-        _logger.info('Assigned %s leads to %s salesmen' % (len(leads_done_ids), len(members)))
+        _logger.info('Assigned %s leads to %s salesmen', len(leads_done_ids), len(members))
         for member, member_info in result_data.items():
-            _logger.info('-> member %s: assigned %d leads (%s)' % (member.id, len(member_info["assigned"]), member_info["assigned"]))
+            _logger.info('-> member %s: assigned %d leads (%s)', member.id, len(member_info["assigned"]), member_info["assigned"])
         return result_data
+
+    def _get_assignment_quota(self, work_days=1):
+        """ Compute assignment quota based on work_days. This quota includes
+        a compensation to speedup getting to the lead average (``assignment_max``).
+        As this field is a counter for "30 days" -> divide by requested work
+        days in order to have base assign number then add compensation. Limit
+        to max capacity of team member.
+
+        :param float work_days: see ``CrmTeam.action_assign_leads()``;
+        """
+        assign_ratio = work_days / 30.0
+        to_assign = self.assignment_max * assign_ratio
+        compensation = max(0, self.assignment_max - (self.lead_month_count + to_assign)) * 0.2
+        return min(
+            self.assignment_max - self.lead_month_count,
+            round(to_assign + compensation)
+        )
