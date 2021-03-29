@@ -92,6 +92,10 @@ const Wysiwyg = Widget.extend({
                     $field.attr('contenteditable', false);
                     $field.find('.oe_currency_value').attr('contenteditable', true);
                 }
+                if ($field.data('oe-type') === "image") {
+                    $field.attr('contenteditable', false);
+                    $field.find('img').attr('contenteditable', true);
+                }
                 if ($field.is('[data-oe-many2one-id]')) {
                     $field.attr('contenteditable', false);
                 }
