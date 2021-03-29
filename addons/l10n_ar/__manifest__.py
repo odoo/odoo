@@ -66,6 +66,7 @@ Master Data:
 * Partners: Consumidor Final and AFIP
 """,
     'author': 'ADHOC SA',
+    'website': 'https://www.odoo.com/documentation/user/13.0/accounting/fiscal_localizations/localizations/argentina.html'
     'category': 'Localization',
     'depends': [
         'l10n_latam_invoice_document',
