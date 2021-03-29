@@ -155,6 +155,10 @@
         }
     }
 
+    &.o-isPendingSendOrHasSendError {
+        opacity: 0.65;
+    }
+
     &.o-selected {
         background-color: gray('400');
 
@@ -226,14 +230,16 @@
 .o_Message_notificationIconClickable {
     color: gray('600');
     cursor: pointer;
-
-    &.o-error {
-        color: o-text-color('danger');
-    }
 }
 
 .o_Message_subject {
     font-style: italic;
+}
+
+// Server will add <p> when processing the message
+// This will add the margin on temporary message to avoid flickers
+.o_Message_prettyBody.o-pending {
+    margin-bottom: $paragraph-margin-bottom;
 }
 
 // Used to hide buttons on rating emails in chatter

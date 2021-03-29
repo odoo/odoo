@@ -111,6 +111,7 @@ export class MessageList extends Component {
                     break;
                 case 'message-received':
                 case 'messages-loaded':
+                case 'new-pending-message':
                 case 'new-messages-loaded':
                     // messages have been added at the end, either scroll to the
                     // end or keep the current position

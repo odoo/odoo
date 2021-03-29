@@ -14,6 +14,14 @@ function factory(dependencies) {
 
     class Message extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
+        _created() {
+            // bind handlers so they can be used in templates
+            this.onClickSendAgain = this.onClickSendAgain.bind(this);
+        }
+
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
@@ -239,6 +247,14 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         */
+        onClickSendAgain(ev) {
+            ev.preventDefault();
+            this.originThread.messageSender.sendMessage(this, { callback: () => this.trigger('o-message-posted') });
+        }
+
+        /**
          * Opens the view that allows to resend the message in case of failure.
          */
         openResendAction() {
@@ -398,6 +414,17 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
+        _computeHasSendError() {
+            if (!this.originThread) {
+                return clear();
+            }
+            return this.originThread.messageSender.messagesThatFailedToBeSent.includes(this);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsCurrentUserOrGuestAuthor() {
             return !!(
                 this.author &&
@@ -467,6 +494,17 @@ function factory(dependencies) {
                 this.originThread &&
                 this.originThread.model === 'mail.channel'
             );
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsPendingSend() {
+            if (!this.originThread) {
+                return clear();
+            }
+            return this.originThread.messageSender.messagesPendingToBeSent.includes(this);
         }
 
         /**
@@ -563,6 +601,10 @@ function factory(dependencies) {
         authorName: attr({
             compute: '_computeAuthorName',
         }),
+        /**
+         * States the function that is triggered when the message has been sent.
+         */
+        afterSendCallback: attr(),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
@@ -613,6 +655,13 @@ function factory(dependencies) {
         }),
         guestAuthor: many2one('mail.guest', {
             inverse: 'authoredMessages',
+        }),
+        /**
+         * State whether that the message has not been sent to the server because of an
+         * error.
+         */
+        hasSendError: attr({
+            compute: '_computeHasSendError',
         }),
         id: attr({
             readonly: true,
@@ -707,6 +756,12 @@ function factory(dependencies) {
             compute: '_computeIsHighlighted',
         }),
         /**
+         * Determines whether the message is pending to be sent to the server.
+         */
+        isPendingSend: attr({
+            compute: '_computeIsPendingSend',
+        }),
+        /**
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
@@ -774,6 +829,15 @@ function factory(dependencies) {
         }),
     };
     Message.identifyingFields = ['id'];
+
+    Message.getNextTemporaryId = function() {
+        let tmpId = 0;
+        return () => {
+            tmpId -= 1;
+            return tmpId;
+        };
+    }();
+
     Message.modelName = 'mail.message';
 
     return Message;

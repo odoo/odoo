@@ -135,7 +135,11 @@ function factory(dependencies) {
                     message.id > this.lastFetchedMessage.id
                 );
             }
-            return replace(this.fetchedMessages.concat(newerMessages));
+            return replace(this.fetchedMessages.concat(
+                newerMessages,
+                this.thread.messageSender.messagesPendingToBeSent,
+                this.thread.messageSender.messagesThatFailedToBeSent
+            ));
         }
 
         /**

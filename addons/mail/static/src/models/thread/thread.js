@@ -2299,6 +2299,14 @@ function factory(dependencies) {
             inverse: 'thread',
             isCausal: true,
         }),
+        /**
+         * Sender instance to use to send messages to this thread.
+         */
+        messageSender: one2one('mail.thread_message_sender', {
+            default: insertAndReplace(),
+            inverse: 'thread',
+            isCausal: true,
+        }),
         model: attr({
             readonly: true,
             required: true,

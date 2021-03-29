@@ -16,6 +16,7 @@
                 'o-squashed': messageView and messageView.isSquashed,
                 'o-starred': messageView and messageView.message.isStarred,
                 'mt-3': messageView and !messageView.isSquashed,
+                    'o-isPendingSendOrHasSendError': messageView and (messageView.message.isPendingSend or messageView.message.hasSendError),
             }" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
         >
             <t t-if="messageView" name="rootCondition">
@@ -43,10 +44,23 @@
                             </div>
                         </t>
                         <t t-else="">
-                            <t t-if="isActive and messageView.message.date">
+                            <t t-if="messageView.message.hasSendError">
+                                <t t-call="mail.Message_sendAgain"/>
+                            </t>
+                            <t t-if="!messageView.message.hasSendError and isActive and messageView.message.date">
                                 <div class="o_Message_date o_Message_sidebarItem mt-1" t-att-class="{ 'o-message-selected': isSelected }">
                                     <t t-esc="shortTime"/>
                                 </div>
+                            </t>
+                            <t t-else="">
+                                <t t-if="isActive and messageView.message.date">
+                                    <div class="o_Message_date o_Message_sidebarItem mt-1" t-att-class="{ 'o-message-selected': isSelected }">
+                                        <t t-esc="shortTime"/>
+                                    </div>
+                                </t>
+                                <t t-if="messageView.message.hasSendError">
+                                    <t t-call="mail.Message_sendAgain"/>
+                                </t>
                             </t>
                             <t t-if="!isActive and messageView.message.isCurrentUserOrGuestAuthor and threadView and threadView.thread and threadView.thread.hasSeenIndicators">
                                 <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="messageView.message.localId" threadLocalId="threadView.thread.localId"/>
@@ -169,4 +183,17 @@
         </div>
     </t>
 
+    <t t-name="mail.Message_sendAgain" owl="1">
+        <div class="o_Message_sendAgain text-danger">
+            <Popover position="'top'">
+                <i class="o_Message_sendAgainPopover fa fa-exclamation-circle "/>
+                <t t-set="opened">
+                    <p>This message was not delivered</p>
+                    <button class="btn btn-primary o_Message_sendAgain_button" t-on-click="messageView.message.onClickSendAgain">
+                        Retry
+                    </button>
+                </t>
+            </Popover>
+        </div>
+    </t>
 </templates>

@@ -548,6 +548,7 @@ export class Message extends Component {
         ev.preventDefault();
         this.messageView.message.originThread.open();
     }
+
 }
 
 Object.assign(Message, {
