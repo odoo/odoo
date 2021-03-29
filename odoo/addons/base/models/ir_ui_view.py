@@ -952,7 +952,9 @@ actual arch.
         if model not in self.env:
             self.handle_view_error(_('Model not found: %(model)s', model=model), node)
 
-        self._postprocess_on_change(model, node)
+        if not validate:
+            # validation mode does not care about on_change
+            self._postprocess_on_change(model, node)
 
         name_manager = NameManager(validate, self.env[model])
         self.postprocess(node, [], editable, name_manager)
@@ -960,7 +962,9 @@ actual arch.
         name_manager.check_view_fields(self)
         name_manager.update_view_fields()
 
-        self._postprocess_access_rights(model, node)
+        if not validate:
+            # validation mode does not care about access rights
+            self._postprocess_access_rights(model, node)
 
         return etree.tostring(node, encoding="unicode").replace('\t', ''), name_manager
 
