@@ -25,13 +25,12 @@ class StockPicking(models.Model):
         return vals
 
 
-class StockMove(models.Model):
-    _inherit = 'stock.move'
+class StockValuationLayer(models.Model):
+    _inherit = 'stock.valuation.layer'
 
-    def _prepare_common_svl_vals(self):
+    def _update_stock_move(self):
         # if we are subcontracting we want to have the receipt move
         # on the svl, not the MO
-        vals = super()._prepare_common_svl_vals()
-        if self.move_dest_ids and self.move_dest_ids[0].is_subcontract:
-            vals['stock_move_id'] = self.move_dest_ids[0].id
-        return vals
+        super()._update_stock_move()
+        if self.stock_move_id.move_dest_ids and self.stock_move_id.move_dest_ids[0].is_subcontract:
+            self.stock_move_id = self.stock_move_id.move_dest_ids[0].id
