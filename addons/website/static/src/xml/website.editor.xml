@@ -5,19 +5,6 @@
         <p class="lead d-none d-md-block">Click on <b>Edit</b> in the top right corner to start designing.</p>
     </div>
 
-    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
-    <t t-name="website.editorbar">
-        <div class="o_we_website_top_actions">
-            <div class="o_we_external_history_buttons">
-                <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo"/>
-                <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat"/>
-            </div>
-            <form class="ml-auto">
-                <button type="button" class="btn btn-secondary" data-action="cancel" accesskey="j">Discard</button>
-                <button type="button" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
-            </form>
-        </div>
-    </t>
     <!-- Custom checkbox (material-design-like toggle) -->
     <t t-name="website.components.switch">
         <label class="o_switch" t-att-for="id">
@@ -27,18 +14,34 @@
         </label>
     </t>
 
-    <t t-extend="wysiwyg.widgets.link">
-        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
-            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
-        </t>
-        <t t-jquery="div.o_url_input" t-operation="after">
-            <div class="form-group row o_link_dialog_page_anchor d-none">
-                <label class="col-form-label col-md-3" for="o_link_dialog_anchor_input">Page Anchor</label>
-                <div class="col-md-9">
-                    <select name="link_anchor" class="form-control link-style"></select>
-                    <small class="form-text font-weight-bold o_anchors_loading">Loading...</small>
-                </div>
+    <t t-extend="wysiwyg.widgets.linkTools">
+        <t t-jquery="#url_row" t-operation="after">
+            <div style="text-align: center" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+                <small>
+                    Type '<span class="highlighted-text">/</span>' to search a page.
+                    '<span class="highlighted-text">#</span>' to link to an anchor.
+                </small>
             </div>
+            <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+                <we-select class="o_we_user_value_widget">
+                    <we-title>⌙ Page Anchor</we-title>
+                    <div>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle"
+                                data-toggle="dropdown" title="" tabindex="-1"
+                                data-original-title="Link Size" aria-expanded="false">
+                                <we-toggler>
+                                    Loading...
+                                </we-toggler>
+                            </button>
+                            <we-selection-items name="link_anchor" class="dropdown-menu link-style">
+                                <we-button class="dropdown-item o_anchors_loading">Loading...</we-button>
+                            </we-selection-items>
+                            <span class="o_we_dropdown_caret"></span>
+                        </div>
+                    </div>
+                </we-select>
+            </we-row>
         </t>
     </t>
     <!-- Anchor Name option dialog -->

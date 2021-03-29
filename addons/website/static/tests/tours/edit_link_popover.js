@@ -20,7 +20,7 @@ tour.register('edit_link_popover', {
     {
         content: "Click on 'Link' to open Link Dialog",
         extra_trigger: '#wrap .s_text_image p:nth-child(2)',
-        trigger: ".note-air-popover [data-event='showLinkDialog']",
+        trigger: "#toolbar #create-link",
     },
     {
         content: "Type the link URL",
@@ -28,8 +28,8 @@ tour.register('edit_link_popover', {
         run: 'text /contactus'
     },
     {
-        content: "Save the Link Dialog modal",
-        trigger: '.modal-footer .btn-primary',
+        content: "Save the link by clickng on itself",
+        trigger: '#wrap .s_text_image p:nth-child(2)',
     },
     {
         content: "Click on newly created link",
@@ -50,8 +50,8 @@ tour.register('edit_link_popover', {
         run: "text /"
     },
     {
-        content: "Save the Link Dialog modal",
-        trigger: '.modal-footer .btn-primary',
+        content: "Save the link by clickng on itself",
+        trigger: '#wrap .s_text_image p:nth-child(2)',
     },
     {
         content: "Click on link",

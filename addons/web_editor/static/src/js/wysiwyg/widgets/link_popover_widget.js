@@ -161,7 +161,8 @@ const LinkPopoverWidget = Widget.extend({
      * @param {Event} ev
      */
     _onEditLinkClick(ev) {
-        $('.note-link-popover [data-event="showLinkDialog"]').click();
+        $('#toolbar #create-link').click();
+        ev.stopImmediatePropagation();
     },
     /**
      * Removes the link/anchor.
@@ -172,7 +173,8 @@ const LinkPopoverWidget = Widget.extend({
      * @param {Event} ev
      */
     _onRemoveLinkClick(ev) {
-        $('.note-link-popover [data-event="unlink"]').click();
+        $('#wrapwrap').data('wysiwyg').odooEditor.execCommand('unlink');
+        ev.stopImmediatePropagation();
     },
 });
 

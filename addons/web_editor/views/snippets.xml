@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="snippets" groups="base.group_user">
+    <div class="o_we_website_top_actions">
+        <div class="o_we_external_history_buttons">
+            <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo" disabled="true"/>
+            <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat" disabled="true"/>
+        </div>
+        <form class="ml-auto">
+            <!-- Uncomment the following line when the mobile preview will be available. -->
+            <!-- <button type="button" class="btn btn-secondary" name="mobile" data-action="mobilePreview"><i class="fa fa-mobile"></i></button> -->
+            <button type="button" class="btn btn-secondary" data-action="cancel" accesskey="j">Discard</button>
+            <button type="button" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
+        </form>
+    </div>
     <div id="snippets_menu">
         <button type="button" tabindex="1" class="o_we_add_snippet_btn active text-uppercase" accesskey="1">
             <span>Blocks</span>
@@ -352,6 +364,18 @@
 
     <div data-js="VersionControl"
          data-selector="[data-snippet]"/>
+
+    <!-- Replace a media -->
+    <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
+    <!-- TODO enable on span.fa, i.fa too but in current editor, this is problematic so best not waste more time for now -->
+    <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video">
+        <!-- Overlay button -->
+        <we-button data-name="replace_media_overlay_opt" title="Replace" class="fa fa-refresh" data-replace-media="true" data-no-preview="true"/>
+        <!-- Panel button-->
+        <we-row string="Media">
+            <we-button class="o_we_bg_success" data-replace-media="true" data-no-preview="true">Replace</we-button>
+        </we-row>
+    </div>
 
     <div data-js="ImageOptimize"
          data-selector="img">

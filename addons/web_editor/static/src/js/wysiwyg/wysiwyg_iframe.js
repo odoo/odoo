@@ -33,7 +33,7 @@ Wysiwyg.include({
      *
      * @override
      **/
-    willStart: function () {
+    willStart: async function () {
         if (!this.options.inIframe) {
             return this._super();
         }
@@ -52,9 +52,23 @@ Wysiwyg.include({
         this.defAsset = Promise.all([promiseWysiwyg, defAsset]);
 
         this.$target = this.$el;
-        return this.defAsset
-            .then(this._loadIframe.bind(this))
-            .then(this._super.bind(this));
+        const _super = this._super.bind(this);
+
+        await this.defAsset;
+        await _super();
+    },
+
+    /**
+     * @override
+     **/
+    start: async function () {
+        const _super = this._super.bind(this);
+        if (!this.options.inIframe) {
+            return _super();
+        } else {
+            await this._loadIframe();
+            return _super();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -78,25 +92,35 @@ Wysiwyg.include({
 
         // resolve promise on load
         var def = new Promise(function (resolve) {
-            window.top[self._onUpdateIframeId] = function (Editor, _avoidDoubleLoad) {
+            window.top[self._onUpdateIframeId] = function (_avoidDoubleLoad) {
                 if (_avoidDoubleLoad !== avoidDoubleLoad) {
                     console.warn('Wysiwyg iframe double load detected');
                     return;
                 }
                 delete window.top[self._onUpdateIframeId];
                 var $iframeTarget = self.$iframe.contents().find('#iframe_target');
+                // copy the html in itself to have the node prototypes relative
+                // to this window rather than the iframe window.
+                $iframeTarget.html($iframeTarget.html());
+                self.$iframeBody = $iframeTarget;
                 $iframeTarget.attr("isMobile", config.device.isMobile);
-                $iframeTarget.find('.o_editable').html(self.$target.val());
+                const $utilsZone = $('<div class="iframe-utils-zone">');
+                self.$utilsZone = $utilsZone;
+
+                const $iframeWrapper = $('<div class="iframe-editor-wrapper">');
+                self.$editable.attr('class', 'o_editable oe_structure');
+
+                $iframeTarget.append($iframeWrapper);
+                $iframeTarget.append($utilsZone);
+                $iframeWrapper.append(self.$editable);
+
                 self.options.toolbarHandler = $('#web_editor-top-edit', self.$iframe[0].contentWindow.document);
-                $(qweb.render('web_editor.FieldTextHtml.fullscreen'))
-                    .appendTo(self.options.toolbarHandler)
-                    .on('click', '.o_fullscreen', function () {
-                        $("body").toggleClass("o_field_widgetTextHtml_fullscreen");
-                        var full = $("body").hasClass("o_field_widgetTextHtml_fullscreen");
-                        self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
-                        $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
-                    });
-                self.Editor = Editor;
+                $iframeTarget.on('click', '.o_fullscreen_btn', function () {
+                    $("body").toggleClass("o_field_widgetTextHtml_fullscreen");
+                    var full = $("body").hasClass("o_field_widgetTextHtml_fullscreen");
+                    self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
+                    $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
+                });
                 resolve();
             };
         });
@@ -121,11 +145,20 @@ Wysiwyg.include({
                     .open("text/html", "replace")
                     .write(iframeContent);
             });
+            self.options.document = self.$iframe[0].contentWindow.document;
         });
 
-        this.$iframe.insertAfter(this.$target);
+        this.$iframe.insertAfter(this.$editable);
 
         return def;
+    },
+
+    _insertSnippetMenu: function () {
+        if (this.options.inIframe) {
+            return this.snippetsMenu.appendTo(this.$utilsZone);
+        } else {
+            return this._super.apply(this, arguments);
+        }
     },
 });
 

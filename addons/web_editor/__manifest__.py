@@ -37,6 +37,9 @@ Odoo Web Editor widget.
             'web_editor/static/lib/odoo-editor/odoo-editor.css',
             'web_editor/static/lib/odoo-editor/odoo-editor.js',
 
+            # utils
+            'web_editor/static/src/js/wysiwyg/wysiwyg_utils.js',
+
             # odoo utils
             ('include', 'web._assets_helpers'),
 
@@ -50,28 +53,29 @@ Odoo Web Editor widget.
 
             'web_editor/static/src/js/wysiwyg/fonts.js',
             'web_editor/static/src/js/base.js',
-            'web_editor/static/src/js/editor/editor.js',
             'web_editor/static/src/js/editor/image_processing.js',
+            'web_editor/static/src/js/editor/custom_colors.js',
 
             # widgets & plugins
             'web_editor/static/src/js/wysiwyg/widgets/**/*',
             'web_editor/static/src/js/editor/snippets.editor.js',
+            'web_editor/static/src/js/editor/toolbar.js',
             'web_editor/static/src/js/editor/snippets.options.js',
 
             # Launcher
             'web_editor/static/src/js/wysiwyg/wysiwyg.js',
-            'web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
         ],
         'web.assets_common': [
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',
-            'web_editor/static/src/js/wysiwyg/root.js',
         ],
         'web.assets_backend': [
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 
+            'web_editor/static/src/js/wysiwyg/dialog.js',
+            'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
         ],
         'web.assets_frontend_minimal': [
@@ -81,6 +85,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.frontend.scss',
 
+            'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
         ],
 
