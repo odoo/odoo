@@ -602,20 +602,7 @@ class AccountJournal(models.Model):
                 invoice = self.env['account.move'].create({})
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
             invoices += invoice
-
-        action_vals = {
-            'name': _('Generated Documents'),
-            'domain': [('id', 'in', invoices.ids)],
-            'res_model': 'account.move',
-            'views': [[False, "tree"], [False, "form"]],
-            'type': 'ir.actions.act_window',
-            'context': self._context
-        }
-        if len(invoices) == 1:
-            action_vals.update({'res_id': invoices[0].id, 'view_mode': 'form'})
-        else:
-            action_vals['view_mode'] = 'tree,form'
-        return action_vals
+        return invoices
 
     def _create_invoice_from_single_attachment(self, attachment):
         """ Creates an invoice and post the attachment. If the related modules
