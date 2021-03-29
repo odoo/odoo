@@ -163,10 +163,10 @@
     <!-- List -->
     <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size} mb-4">
         <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none">
-            <article t-attf-class="h-100 #{opt_events_list_cards and 'card border-0 shadow-sm'}" itemscope="itemscope" itemtype="http://schema.org/Event">
+            <article t-attf-class="h-100 #{opt_events_list_cards and 'card rounded-0 border-0 shadow-sm'}" itemscope="itemscope" itemtype="http://schema.org/Event">
                 <div class="h-100 row no-gutters">
                     <!-- Header -->
-                    <header t-attf-class="overflow-hidden bg-secondary #{opt_events_list_columns and 'col-12 rounded-top' or 'col-sm-4 col-lg-3 rounded-left'} #{(not opt_events_list_cards) and 'rounded shadow'} #{(not opt_events_list_cards and not opt_events_list_columns) and 'rounded-top'}">
+                    <header t-attf-class="overflow-hidden bg-secondary #{opt_events_list_columns and 'col-12' or 'col-sm-4 col-lg-3'} #{(not opt_events_list_cards) and 'shadow'}">
                         <!-- Image + Link -->
                         <div class="d-block h-100 w-100">
                             <t t-call="website.record_cover">
