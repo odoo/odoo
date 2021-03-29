@@ -1,15 +1,17 @@
 odoo.define('website_sale_stock.VariantMixin', function (require) {
 'use strict';
 
+const {Markup} = require('web.utils');
 var VariantMixin = require('sale.VariantMixin');
 var publicWidget = require('web.public.widget');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var QWeb = core.qweb;
-var xml_load = ajax.loadXML(
-    '/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml',
-    QWeb
-);
+
+const loadXml = async () => {
+    return ajax.loadXML('/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml', QWeb);
+};
+
 require('website_sale.website_sale');
 
 /**
@@ -28,32 +30,33 @@ require('website_sale.website_sale');
  * @param {Array} combination
  */
 VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
-    var product_id = 0;
+    let product_id = 0;
     // needed for list view of variants
     if ($parent.find('input.product_id:checked').length) {
         product_id = $parent.find('input.product_id:checked').val();
     } else {
         product_id = $parent.find('.product_id').val();
     }
-    var isMainProduct = combination.product_id &&
+    const isMainProduct = combination.product_id &&
         ($parent.is('.js_main_product') || $parent.is('.main_product')) &&
         combination.product_id === parseInt(product_id);
 
-    if (!this.isWebsite || !isMainProduct){
+    if (!this.isWebsite || !isMainProduct) {
         return;
     }
 
-    var qty = $parent.find('input[name="add_qty"]').val();
+    const $addQtyInput = $parent.find('input[name="add_qty"]');
+    let qty = $addQtyInput.val();
 
     $parent.find('#add_to_cart').removeClass('out_of_stock');
     $parent.find('.o_we_buy_now').removeClass('out_of_stock');
-    if (combination.product_type === 'product' && _.contains(['always', 'threshold'], combination.inventory_availability)) {
+    if (combination.product_type === 'product' && !combination.allow_out_of_stock_order) {
         combination.free_qty -= parseInt(combination.cart_qty);
+        $addQtyInput.data('max', combination.free_qty || 1);
         if (combination.free_qty < 0) {
             combination.free_qty = 0;
         }
         if (qty > combination.free_qty) {
-            var $addQtyInput = $parent.find('input[name="add_qty"]');
             qty = combination.free_qty || 1;
             $addQtyInput.val(qty);
         }
@@ -63,12 +66,13 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
     }
 
-    xml_load.then(function () {
+    loadXml().then(function (result) {
         $('.oe_website_sale')
             .find('.availability_message_' + combination.product_template)
             .remove();
-
-        var $message = $(QWeb.render(
+        combination.has_out_of_stock_message = $(combination.out_of_stock_message).text() !== '';
+        combination.out_of_stock_message = Markup(combination.out_of_stock_message);
+        const $message = $(QWeb.render(
             'website_sale_stock.product_availability',
             combination
         ));
@@ -81,9 +85,20 @@ publicWidget.registry.WebsiteSale.include({
      * Adds the stock checking to the regular _onChangeCombination method
      * @override
      */
-    _onChangeCombination: function (){
+    _onChangeCombination: function () {
         this._super.apply(this, arguments);
         VariantMixin._onChangeCombinationStock.apply(this, arguments);
+    },
+    /**
+     * Recomputes the combination after adding a product to the cart
+     * @override
+     */
+    _onClickAdd(ev) {
+        return this._super.apply(this, arguments).then(() => {
+            if ($('div.availability_messages').length) {
+                this._getCombinationInfo(ev);
+            }
+        });
     }
 });
 

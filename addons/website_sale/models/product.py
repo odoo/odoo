@@ -413,6 +413,12 @@ class ProductTemplate(models.Model):
             if product.id:
                 product.website_url = "/shop/%s" % slug(product)
 
+    def _is_sold_out(self):
+        return self.product_variant_id._is_sold_out()
+
+    def _get_website_ribbon(self):
+        return self.website_ribbon_id
+
     # ---------------------------------------------------------
     # Rating Mixin API
     # ---------------------------------------------------------
@@ -485,3 +491,7 @@ class Product(models.Model):
         # [1:] to remove the main image from the template, we only display
         # the template extra images here
         return variant_images + self.product_tmpl_id._get_images()[1:]
+
+    def _is_sold_out(self):
+        combination_info = self.with_context(website_sale_stock_get_quantity=True).product_tmpl_id._get_combination_info(product_id=self.id)
+        return combination_info['product_type'] == 'product' and combination_info['free_qty'] <= 0
