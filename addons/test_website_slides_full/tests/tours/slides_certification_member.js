@@ -2,6 +2,7 @@ odoo.define('test_website_slides_full.tour.slide.certification.member', function
 "use strict";
 
 var tour = require('web_tour.tour');
+const tourUtils = require('website_sale.tour_utils');
 
 /**
  * The purpose of this tour is to check the whole certification flow:
@@ -40,7 +41,9 @@ var initTourSteps = [{
 var buyCertificationSteps = [{
     content: 'eLearning: try to buy course',
     trigger: 'a:contains("Add to Cart")'
-}, {
+}, 
+    tourUtils.goToCart(),
+{
     content: 'eCommerce: Process Checkout',
     trigger: 'a:contains("Process Checkout")'
 }, {

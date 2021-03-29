@@ -3,6 +3,7 @@ odoo.define('website_sale.tour_shop_mail', function (require) {
 
 var rpc = require('web.rpc');
 var tour = require('web_tour.tour');
+const tourUtils = require('website_sale.tour_utils');
 
 require('web.dom_ready');
 
@@ -47,6 +48,7 @@ tour.register('shop_mail', {
         content: "click add to cart",
         trigger: '#product_details #add_to_cart',
     },
+        tourUtils.goToCart(),
     {
         content: "check product is in cart, get cart id, go to backend",
         trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',

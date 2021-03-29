@@ -35,7 +35,18 @@ publicWidget.registry.WebsiteSale.include({
 
         return this.optionalProductsModal.opened();
     },
-
+    /**
+     * Overridden to resolve _opened promise on modal
+     * when stayOnPageOption is activated.
+     *
+     * @override
+     */
+    _submitForm() {
+        if (this.optionalProductsModal && this.stayOnPageOption) {
+            this.optionalProductsModal._openedResolver();
+        }
+        return this._super(...arguments);
+    },
     /**
      * Update web shop base form quantity
      * when quantity is updated in the optional products window
