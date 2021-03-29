@@ -130,7 +130,7 @@ class Partner(models.Model):
             If channel_id is given, only members of this channel are returned.
         """
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
-        search_dom = expression.AND([[('active', '=', True)], search_dom])
+        search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
         if channel_id:
             search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
 
