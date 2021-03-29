@@ -4,7 +4,6 @@
     <!--=================-->
     <!-- Edition Iframe -->
     <!--=================-->
-
     <t t-name="wysiwyg.iframeContent"><head>
             <meta charset="utf-8"/>
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -43,18 +42,11 @@
             </script>
         </head>
         <body id="iframe_target" class="o_in_iframe">
-            <div id="web_editor-top-edit"></div>
-            <div id="wrapwrap">
-                <main>
-                    <div data-oe-model="model" data-oe-type="html" class="o_editable oe_structure"></div>
-                </main>
-            </div>
             <script type="text/javascript">
                 odoo.define('web_editor.wysiwyg.iniframe', function (require) {
                     'use strict';
-                    var editor = require('web_editor.editor');
                     if (window.top.<t t-esc="updateIframeId"/>) {
-                        window.top.<t t-esc="updateIframeId"/>(editor.Class, <t t-esc="avoidDoubleLoad"/>);
+                        window.top.<t t-esc="updateIframeId"/>(<t t-esc="avoidDoubleLoad"/>);
                     }
                 });
             </script>
@@ -86,6 +78,34 @@
             </div>
         </div>
     </form>
+
+    <!-- Alt Tools (allows to change alt and title of page images) -->
+    <t t-name="wysiwyg.widgets.altTools">
+        <we-customizeblock-option>
+            <we-row>
+                <we-title
+                    title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+                    ⌙ Description
+                </we-title>
+                <we-input class="o_we_user_value_widget">
+                    <div>
+                        <input id="alt" required="required" t-att-value="widget.alt" type="text"/>
+                    </div>
+                </we-input>
+            </we-row>
+            <we-row>
+                <we-title
+                    title="'Title tag' is shown as a tooltip when you hover the picture.">
+                    ⌙ Tooltip
+                </we-title>
+                <we-input class="o_we_user_value_widget">
+                    <div>
+                        <input id="title" required="required" t-att-value="widget.tag_title" type="text"/>
+                    </div>
+                </we-input>
+            </we-row>
+        </we-customizeblock-option>
+    </t>
 
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="wysiwyg.widgets.media">
@@ -543,6 +563,116 @@
             </div>
         </div>
     </div>
+
+    <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
+        <we-row t-attf-class="{{widget.needLabel ? '' : 'd-none'}}">
+            <we-title>⌙ Link Label</we-title>
+            <we-input class="o_we_user_value_widget">
+                <div>
+                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.text" type="text"/>
+                </div>
+            </we-input>
+        </we-row>
+        <we-row id="url_row" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+            <we-input class="o_we_user_value_widget">
+                <we-title class="o_short_title">⌙ </we-title>
+                <div class="o_url_input">
+                    <input name="url" id="o_link_dialog_url_input" type="text" placeholder="Your URL"/>
+                </div>
+            </we-input>
+        </we-row>
+        <we-row class="o_strip_domain d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
+            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper active">
+                <we-title class="o_long_title">⌙ Autoconvert to relative link</we-title>
+                    <div class="o_switch">
+                        <we-checkbox name="do_strip_domain" t-att-checked="widget.data.doStripDomain ? 'checked' : undefined"/>
+                    </div>
+            </we-button>
+        </we-row>
+        <we-row>
+            <we-select class="o_we_user_value_widget">
+                <we-title>⌙ Style</we-title>
+                <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-toggle="dropdown" title="" tabindex="-1"
+                            data-original-title="Link Style" aria-expanded="false">
+                            <we-toggler/>
+                        </button>
+                        <we-selection-items class="dropdown-menu" name="link_style_color">
+                            <t t-foreach="widget.colorsData" t-as="colorData">
+                                <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
+                                    <t t-esc="colorData.label"/>
+                                </we-button>
+                            </t>
+                        </we-selection-items>
+                        <span class="o_we_dropdown_caret"></span>
+                    </div>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-size-row">
+            <we-select class="o_we_user_value_widget">
+                <we-title>⌙ Size</we-title>
+                <div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-toggle="dropdown" title="" tabindex="-1"
+                            data-original-title="Link Size" aria-expanded="false">
+                            <we-toggler>
+                                Medium
+                            </we-toggler>
+                        </button>
+                        <we-selection-items name="link_style_size" class="dropdown-menu link-style">
+                            <we-button class="dropdown-item" href="#" data-value="sm">
+                                Small
+                            </we-button>
+                            <we-button class="dropdown-item active" href="#" data-value="">
+                                Medium
+                            </we-button>
+                            <we-button class="dropdown-item" href="#" data-value="lg">
+                                Large
+                            </we-button>
+                        </we-selection-items>
+                        <span class="o_we_dropdown_caret"></span>
+                    </div>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row class="link-shape-row">
+            <we-select class="o_we_user_value_widget">
+                <we-title>⌙ Shape</we-title>
+                <div>
+                    <div class="dropdown">
+                        <button class="dropdown-toggle"
+                            data-toggle="dropdown" title="" tabindex="-1"
+                            data-original-title="Link Shape" aria-expanded="false">
+                            <we-toggler>
+                                Default
+                            </we-toggler>
+                        </button>
+                        <we-selection-items name="link_style_shape" class="dropdown-menu link-style">
+                            <we-button class="dropdown-item active" data-value="">Default</we-button>
+                            <we-button class="dropdown-item" data-value="rounded-circle">Default + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="outline">Outline</we-button>
+                            <we-button class="dropdown-item" data-value="outline,rounded-circle">Outline + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="fill">Fill</we-button>
+                            <we-button class="dropdown-item" data-value="fill,rounded-circle">Fill + Rounded</we-button>
+                            <we-button class="dropdown-item" data-value="flat">Flat</we-button>
+                        </we-selection-items>
+                    </div>
+                </div>
+            </we-select>
+        </we-row>
+        <we-row  t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
+            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper">
+                <we-title class="o_long_title">⌙ Open in new window</we-title>
+                    <div class="o_switch">
+                        <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                    </div>
+            </we-button>
+        </we-row>
+    </we-customizeblock-option>
 
     <!-- ImageCropWidget controls (allows to crop images on the page) -->
     <div t-name="wysiwyg.widgets.crop" class="o_we_crop_widget" contenteditable="false">

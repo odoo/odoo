@@ -2,8 +2,10 @@ odoo.define('website.editMenu', function (require) {
 'use strict';
 
 var core = require('web.core');
-var EditorMenu = require('website.editor.menu');
+var dom = require('web.dom');
+var wysiwygLoader = require('web_editor.loader');
 var websiteNavbarData = require('website.navbar');
+var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
@@ -26,13 +28,19 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         snippet_dropped: '_onSnippetDropped',
         edition_will_stopped: '_onEditionWillStop',
         edition_was_stopped: '_onEditionWasStopped',
+        request_save: '_onSnippetRequestSave',
+        request_cancel: '_onSnippetRequestCancel',
+        get_clean_html: '_onGetCleanHTML',
+        snippets_loaded: '_onSnippetLoaded',
     }),
 
     /**
      * @constructor
      */
-    init: function () {
+    init: function (parent, options = {}) {
         this._super.apply(this, arguments);
+        this.options = options;
+        this.wysiwygOptions = options.wysiwygOptions || {};
         var context;
         this.trigger_up('context_get', {
             extra: true,
@@ -40,6 +48,14 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 context = ctx;
             },
         });
+        this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
+        this.oeFieldSelector = '#wrapwrap [data-oe-field]';
+        if (options.savableSelector) {
+            this.savableSelector = options.savableSelector;
+        } else {
+            this.savableSelector = `${this.oeStructureSelector}, ${this.oeFieldSelector}`;
+        }
+        this.editableFromEditorMenu = options.editableFromEditorMenu || this.editableFromEditorMenu;
         this._editorAutoStart = (context.editable && window.location.search.indexOf('enable_editor') >= 0);
         var url = new URL(window.location.href);
         url.searchParams.delete('enable_editor');
@@ -73,6 +89,104 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return def;
     },
 
+    /**
+     * Asks the snippets to clean themself, then saves the page, then reloads it
+     * if asked to.
+     *
+     * @param {boolean} [reload=true]
+     *        true if the page has to be reloaded after the save
+     * @returns {Promise}
+     */
+    save: async function (reload = true) {
+        if (this._saving) {
+            return false;
+        }
+        this.observer.disconnect();
+        var self = this;
+        this._saving = true;
+        this.trigger_up('edition_will_stopped');
+        const destroy = () => {
+            self.wysiwyg.destroy();
+            self.trigger_up('edition_was_stopped');
+            self.destroy();
+        };
+        if (!this.wysiwyg.isDirty()) {
+            return destroy();
+        }
+        return this.wysiwyg.saveContent(false).then((result) => {
+            var $wrapwrap = $('#wrapwrap');
+            self.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
+            if (reload) {
+                // remove top padding because the connected bar is not visible
+                $('body').removeClass('o_connected_user');
+                return self._reload();
+            } else {
+                destroy();
+            }
+            return true;
+        }).guardedCatch(() => {
+            this._saving = false;
+        });
+    },
+    /**
+     * Asks the user if they really wants to discard their changes (if any),
+     * then simply reloads the page if they want to.
+     *
+     * @param {boolean} [reload=true]
+     *        true if the page has to be reloaded when the user answers yes
+     *        (do nothing otherwise but add this to allow class extension)
+     * @returns {Deferred}
+     */
+    cancel: function (reload = true) {
+        var self = this;
+        var def = new Promise(function (resolve, reject) {
+            if (!self.wysiwyg.isDirty()) {
+                resolve();
+            } else {
+                var confirm = Dialog.confirm(self, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
+                    confirm_callback: resolve,
+                });
+                confirm.on('closed', self, reject);
+            }
+        });
+
+        return def.then(function () {
+            self.trigger_up('edition_will_stopped');
+            var $wrapwrap = $('#wrapwrap');
+            self.editableFromEditorMenu($wrapwrap).removeClass('o_editable');
+            if (reload) {
+                window.onbeforeunload = null;
+                self.wysiwyg.destroy();
+                return self._reload();
+            } else {
+                self.wysiwyg.destroy();
+                self.trigger_up('readonly_mode');
+                self.trigger_up('edition_was_stopped');
+                self.destroy();
+            }
+        });
+    },
+    /**
+     * Returns the editable areas on the page.
+     *
+     * @param {DOM} $wrapwrap
+     * @returns {jQuery}
+     */
+    editableFromEditorMenu: function ($wrapwrap) {
+        return $wrapwrap.find('[data-oe-model]')
+            .not('.o_not_editable')
+            .filter(function () {
+                var $parent = $(this).closest('.o_editable, .o_not_editable');
+                return !$parent.length || $parent.hasClass('o_editable');
+            })
+            .not('link, script')
+            .not('[data-oe-readonly]')
+            .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
+            .not('.oe_snippet_editor')
+            .not('hr, br, input, textarea')
+            .add('.o_editable');
+    },
+
     //--------------------------------------------------------------------------
     // Actions
     //--------------------------------------------------------------------------
@@ -93,11 +207,12 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             $target: this._targetForEdition(),
         });
         if (this.$welcomeMessage) {
-            this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by summernote
+            this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by wysiwyg.
         }
         this.editModeEnable = true;
-        await new EditorMenu(this).prependTo(document.body);
-        this._addEditorMessages();
+
+        await this._createWysiwyg();
+
         var res = await new Promise(function (resolve, reject) {
             self.trigger_up('widgets_start_request', {
                 editableMode: true,
@@ -105,9 +220,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 onFailure: reject,
             });
         });
-        // Trigger a mousedown on the main edition area to focus it,
-        // which is required for Summernote to activate.
-        this.$editorMessageElements.mousedown();
 
         const $loader = $('div.o_theme_install_loader_container');
         if ($loader) {
@@ -134,6 +246,70 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    async _createWysiwyg() {
+        var $wrapwrap = $('#wrapwrap');
+        $wrapwrap.removeClass('o_editable'); // clean the dom before edition
+        this.editableFromEditorMenu($wrapwrap).addClass('o_editable');
+
+        this.wysiwyg = await this._wysiwygInstance();
+
+        await this.wysiwyg.attachTo($('#wrapwrap'));
+        this.trigger_up('edit_mode');
+        this.$el.css({width: ''});
+
+        // Only make the odoo structure and fields editable.
+        this.wysiwyg.odooEditor.observerUnactive();
+        $('#wrapwrap').on('click.odoo-website-editor', '*', this, this._preventDefault);
+        this._addEditorMessages(); // Insert editor messages in the DOM without observing.
+        if (this.options.beforeEditorActive) {
+            this.options.beforeEditorActive();
+        }
+        this.wysiwyg.odooEditor.observerActive();
+
+        // Observe changes to mark dirty structures and fields.
+        this.observer = new MutationObserver(records => {
+            records = this.wysiwyg.odooEditor.filterMutationRecords(records);
+            // Skip the step for this stack because if the editor undo the first
+            // step that has a dirty element, the following code would have
+            // generated a new stack and break the "redo" of the editor.
+            this.wysiwyg.odooEditor.automaticStepSkipStack();
+
+            for (const record of records) {
+                const $savable = $(record.target).closest(this.savableSelector);
+
+                if (record.attributeName === 'contenteditable') {
+                    continue;
+                }
+                $savable.not('.o_dirty').each(function () {
+                    const $el = $(this);
+                    if (!$el.closest('[data-oe-readonly]').length) {
+                        $el.addClass('o_dirty');
+                    }
+                });
+            }
+        });
+
+        this.observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeOldValue: true,
+            characterData: true,
+        });
+        $('body').addClass('editor_started');
+    },
+
+    _getContentEditableAreas () {
+        return $(this.savableSelector).not('[data-oe-readonly]').toArray();
+    },
+    /**
+     * Call preventDefault of an event.
+     *
+     * @private
+     */
+    _preventDefault(e) {
+        e.preventDefault();
+    },
     /**
      * Adds automatic editor messages on drag&drop zone elements.
      *
@@ -155,6 +331,52 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _targetForEdition: function () {
         return $('#wrapwrap'); // TODO should know about this element another way
     },
+    /**
+     * Reloads the page in non-editable mode, with the right scrolling.
+     *
+     * @private
+     * @returns {Deferred} (never resolved, the page is reloading anyway)
+     */
+    _reload: function () {
+        $('body').addClass('o_wait_reload');
+        this.wysiwyg.destroy();
+        this.$el.hide();
+        window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
+        window.location.reload(true);
+        return new Promise(function () {});
+    },
+    /**
+     * @private
+     */
+    _wysiwygInstance: function () {
+        var context;
+        this.trigger_up('context_get', {
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
+        const params = {
+            snippets: 'website.snippets',
+            recordInfo: {
+                context: context,
+                data_res_model: 'website',
+                data_res_id: context.website_id,
+            },
+            enableWebsite: true,
+            discardButton: true,
+            saveButton: true,
+            devicePreview: true,
+            savableSelector: this.savableSelector,
+            isRootEditable: false,
+            controlHistoryFromDocument: true,
+            getContentEditableAreas: this._getContentEditableAreas.bind(this),
+        };
+        return wysiwygLoader.createWysiwyg(this,
+            Object.assign(params, this.wysiwygOptions),
+            ['website.compiled_assets_wysiwyg']
+        );
+    },
+
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -197,6 +419,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.trigger_up('widgets_stop_request', {
             $target: this._targetForEdition(),
         });
+        this.observer.disconnect();
     },
     /**
      * Called when edition was stopped. Notifies the
@@ -259,7 +482,52 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         this._addEditorMessages();
     },
+    /**
+     * Get the cleaned value of the editable element.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGetCleanHTML: function (ev) {
+        ev.data.callback(this.wysiwyg.getValue({$layout: ev.data.$layout}));
+    },
+    /**
+     * Snippet (menu_data) can request to save the document to leave the page
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {object} ev.data
+     * @param {function} ev.data.onSuccess
+     * @param {function} ev.data.onFailure
+     */
+    _onSnippetRequestSave: function (ev) {
+        ev.stopPropagation();
+        const restore = dom.addButtonLoadingEffect($('button[data-action=save]')[0]);
+        this.save(ev.data.reload).then(ev.data.onSuccess, ev.data.onFailure).then(restore).guardedCatch(restore);
+    },
+    /**
+     * Asks the user if they really wants to discard their changes (if any),
+     * then simply reloads the page if they want to.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetRequestCancel: function (ev) {
+        ev.stopPropagation();
+        this.cancel();
+    },
+    /**
+     * Add class that inform the SnippetMenu biend loaded.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetLoaded: function (ev) {
+        $('body.editor_enable').addClass('editor_has_snippets');
+    },
 });
 
 websiteNavbarData.websiteNavbarRegistry.add(EditPageMenu, '#edit-page-menu');
+
+return EditPageMenu;
 });

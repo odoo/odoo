@@ -17,7 +17,7 @@ tour.register('html_editor_multiple_templates', {
             content: "drop a snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail',
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop #oe_structure_test_ui",
+            run: "drag_and_drop #oe_structure_test_ui .oe_drop_zone",
         },
         {
             content: "save the page",

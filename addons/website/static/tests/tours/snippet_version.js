@@ -16,7 +16,7 @@ tour.register("snippet_version", {
 }, {
     content: "Drop s_text_image snippet",
     trigger: '#oe_snippets .oe_snippet:has(.s_text_image) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
-    run: "drag_and_drop #wrap",
+    run: "drag_and_drop #wrap .oe_drop_zone",
 }, {
     content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
     trigger: '#oe_snippets .o_panel_body > .oe_snippet.ui-draggable',

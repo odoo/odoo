@@ -26,7 +26,7 @@ tour.register('test_reset_page_view_complete_flow_part1', {
             content: "drop a snippet",
             trigger: "#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail",
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop #oe_structure_test_website_page",
+            run: "drag_and_drop #oe_structure_test_website_page .oe_drop_zone",
         },
         {
             content: "save the page",

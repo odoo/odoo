@@ -1,4 +1,4 @@
-odoo.define('web_editor.wysiwyg.multizone', function (require) {
+odoo.define('website.wysiwyg', function (require) {
 'use strict';
 
 var Wysiwyg = require('web_editor.wysiwyg');
@@ -43,22 +43,17 @@ function toggleDropdown($toggles, show) {
  * class non editable: o_not_editable
  *
  */
-var WysiwygMultizone = Wysiwyg.extend({
+Wysiwyg.include({
     /**
      * @override
      */
     start: function () {
-        var self = this;
         this.options.toolbarHandler = $('#web_editor-top-edit');
-        this.options.saveElement = function ($el, context, withLang) {
-            var outerHTML = this._getEscapedElement($el).prop('outerHTML');
-            return self._saveElement(outerHTML, self.options.recordInfo, $el[0]);
-        };
 
         // Mega menu initialization: handle dropdown openings by hand
         var $megaMenuToggles = this.$('.o_mega_menu_toggle');
         $megaMenuToggles.removeAttr('data-toggle').dropdown('dispose');
-        $megaMenuToggles.on('click.wysiwyg_multizone', ev => {
+        $megaMenuToggles.on('click.wysiwyg_megamenu', ev => {
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
@@ -73,7 +68,7 @@ var WysiwygMultizone = Wysiwyg.extend({
                 .then(dispose)
                 .then($el => {
                     var isShown = $el.parent().hasClass('show');
-                    this.editor.snippetsMenu.toggleMegaMenuSnippets(isShown);
+                    this.snippetsMenu.toggleMegaMenuSnippets(isShown);
                 });
         });
 
@@ -88,7 +83,7 @@ var WysiwygMultizone = Wysiwyg.extend({
         return this._super.apply(this, arguments).then(() => {
             // Showing Mega Menu snippets if one dropdown is already opened
             if (this.$('.o_mega_menu').hasClass('show')) {
-                this.editor.snippetsMenu.toggleMegaMenuSnippets(true);
+                this.snippetsMenu.toggleMegaMenuSnippets(true);
             }
         });
     },
@@ -96,13 +91,10 @@ var WysiwygMultizone = Wysiwyg.extend({
      * @override
      * @returns {Promise}
      */
-    save: function () {
+    _saveViewBlocks: async function () {
+        await this._super.apply(this, arguments);
         if (this.isDirty()) {
-            return this._restoreMegaMenus()
-                .then(() => this.editor.save(false))
-                .then(() => ({isDirty: true}));
-        } else {
-            return {isDirty: false};
+            return this._restoreMegaMenus();
         }
     },
     /**
@@ -117,15 +109,12 @@ var WysiwygMultizone = Wysiwyg.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _getEditableArea: function () {
-        return $(':o_editable');
-    },
     /**
      * @private
      * @param {HTMLElement} editable
      */
-    _saveCoverProperties: function (editable) {
-        var el = editable.closest('.o_record_cover_container');
+    _saveCoverProperties: function ($elementToSave) {
+        var el = $elementToSave.closest('.o_record_cover_container')[0];
         if (!el) {
             return;
         }
@@ -164,34 +153,13 @@ var WysiwygMultizone = Wysiwyg.extend({
         });
     },
     /**
-     * Saves one (dirty) element of the page.
-     *
-     * @private
-     * @param {jQuery} $el - the element to save
-     * @param {Object} context - the context to use for the saving rpc
-     * @param {boolean} [withLang=false]
-     *        false if the lang must be omitted in the context (saving "master"
-     *        page element)
+     * @override
      */
-    _saveElement: function (outerHTML, recordInfo, editable) {
+    _saveElement: async function ($el, context, withLang) {
         var promises = [];
 
-        var $el = $(editable);
-
         // Saving a view content
-        var viewID = $el.data('oe-id');
-        if (viewID) {
-            promises.push(this._rpc({
-                model: 'ir.ui.view',
-                method: 'save',
-                args: [
-                    viewID,
-                    outerHTML,
-                    !$el.data('oe-expression') && $el.data('oe-xpath') || null, // Note: hacky way to get the oe-xpath only if not a t-field
-                ],
-                context: recordInfo.context,
-            }));
-        }
+        await this._super.apply(this, arguments);
 
         // Saving mega menu options
         if ($el.data('oe-field') === 'mega_menu_content') {
@@ -214,7 +182,7 @@ var WysiwygMultizone = Wysiwyg.extend({
         }
 
         // Saving cover properties on related model if any
-        var prom = this._saveCoverProperties(editable);
+        var prom = this._saveCoverProperties($el);
         if (prom) {
             promises.push(prom);
         }
@@ -230,14 +198,14 @@ var WysiwygMultizone = Wysiwyg.extend({
      */
     _restoreMegaMenus: function () {
         var $megaMenuToggles = this.$('.o_mega_menu_toggle');
-        $megaMenuToggles.off('.wysiwyg_multizone')
+        $megaMenuToggles.off('.wysiwyg_megamenu')
             .attr('data-toggle', 'dropdown')
             .dropdown({});
         return toggleDropdown($megaMenuToggles, false);
     },
 });
 
-snippetsEditor.Class.include({
+snippetsEditor.SnippetsMenu.include({
     /**
      * @private
      * @param {boolean} show
@@ -272,6 +240,4 @@ snippetsEditor.Class.include({
         return $dropzone;
     },
 });
-
-return WysiwygMultizone;
 });

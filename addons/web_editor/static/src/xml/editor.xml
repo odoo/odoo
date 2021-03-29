@@ -4,9 +4,218 @@
     <!-- Base components -->
     <!--=================-->
 
-    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
-    <t t-name="web_editor.editorbar">
-        <div id="web_editor-toolbars"/>
+    <!-- Editor toolbar -->
+    <t t-name="web_editor.toolbar">
+        <div id="toolbar" class="oe-toolbar">
+            <div id="style" class="btn-group dropdown">
+                <button type="button" class="btn dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Style" aria-expanded="false">
+                    <i class="fa fa-paragraph"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li id="paragraph-dropdown-item">
+                        <a class="dropdown-item" href="#" id="paragraph">Normal</a>
+                    </li>
+                    <li id="pre-dropdown-item">
+                        <a class="dropdown-item" href="#" id="pre"><pre>Code</pre></a>
+                    </li>
+                    <li id="heading1-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading1"><h1>Header 1</h1></a>
+                    </li>
+                    <li id="heading2-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading2"><h2>Header 2</h2></a>
+                    </li>
+                    <li id="heading3-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading3"><h3>Header 3</h3></a>
+                    </li>
+                    <li id="heading4-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading4"><h4>Header 4</h4></a>
+                    </li>
+                    <li id="heading5-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading5"><h5>Header 5</h5></a>
+                    </li>
+                    <li id="heading6-dropdown-item">
+                        <a class="dropdown-item" href="#" id="heading6"><h6>Header 6</h6></a>
+                    </li>
+                    <li id="blockquote-dropdown-item">
+                        <a class="dropdown-item" href="#" id="blockquote">
+                            <blockquote>Quote</blockquote>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="decoration" class="btn-group">
+                <div id="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
+                <div id="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
+                <div id="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
+                <div id="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
+            </div>
+
+            <div id="colorInputButtonGroup" class="btn-group">
+                <div class="colorpicker-group note-fore-color-preview" data-name="color">
+                    <div class="btn color-button dropdown-toggle editor-ignore"
+                        data-toggle="dropdown" title="" tabindex="-1"
+                        data-original-title="Font Color">
+                        <i class="fa fa-font color-indicator fore-color"></i>
+                    </div>
+                    <ul class="dropdown-menu colorpicker-menu" style="min-width: 172px;">
+                        <li><div data-event-name="foreColor" class="colorPalette"></div></li>
+                    </ul>
+                </div>
+                <div class="colorpicker-group note-back-color-preview" data-name="color">
+                    <button type="button" class="btn dropdown-toggle editor-ignore"
+                        data-toggle="dropdown" title="" tabindex="-1"
+                        data-original-title="Background Color">
+                        <i class="fa fa-paint-brush color-indicator hilite-color"></i>
+                    </button>
+                    <ul class="dropdown-menu colorpicker-menu" style="min-width: 172px;">
+                        <li><div data-event-name="backColor" class="colorPalette"></div></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="font-size" class="btn-group dropdown">
+                <button type="button" class="btn dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Font Size" aria-expanded="false">
+                    <span id="fontSizeCurrentValue"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" data-font-size="medium">default</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="8px">8</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="9px">9</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="10px">10</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="11px">11</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="12px">12</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="14px">14</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="18px">18</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="24px">24</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="36px">36</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="48px">48</a></li>
+                    <li><a class="dropdown-item" href="#" data-font-size="62px">62</a></li>
+                </ul>
+            </div>
+
+            <div id="justify" class="btn-group dropdown">
+                <button type="button" class="btn dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Paragraph" aria-expanded="false">
+                    <i id="paragraphDropdownButton" class="fa fa-align-left fa-fw"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="btn-group">
+                        <div id="justifyLeft" class="btn"><i class="fa fa-align-left fa-fw"></i></div>
+                        <div id="justifyCenter" class="btn"><i class="fa fa-align-center fa-fw"></i></div>
+                        <div id="justifyRight" class="btn"><i class="fa fa-align-right fa-fw"></i></div>
+                        <div id="justifyFull" class="btn"><i class="fa fa-align-justify fa-fw"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="list" class="btn-group dropdown">
+                <button type="button" class="btn dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="List" aria-expanded="false">
+                    <i id="justifyDropdownButton" class="fa fa-list-ul fa-fw"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div class="btn-group">
+                        <div id="unordered" title="Toggle unordered list" class="btn"><i class="fa fa-list-ul fa-fw"></i></div>
+                        <div id="ordered" title="Toggle ordered list" class="btn"><i class="fa fa-list-ol fa-fw"></i></div>
+                        <div id="checklist" title="Toggle checklist" class="btn"><i class="fa fa-check-square-o fa-fw"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="table" class="btn-group">
+                <div class="dropdown">
+                    <button type="button" class="btn dropdown-toggle"
+                        data-toggle="dropdown" title="" tabindex="-1"
+                        data-original-title="Table" aria-expanded="false"
+                        id="tableDropdownButton">
+                        <i class="fa fa-table fa-fw"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <div class="tablepicker"></div>
+                        <div class="tablepicker-size">1x1</div>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button type="button" class="btn dropdown-toggle toolbar-edit-table"
+                        data-toggle="dropdown" title="" tabindex="-1"
+                        data-original-title="Edit table" aria-expanded="false">
+                        <i class="fa fa-columns fa-fw"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" id="table-add-column-left">Add a column left</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-column-right">Add a column right</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-row-above">Add a row above</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-row-below">Add a row below</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-remove-column">Remove current column</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-remove-row">Remove current row</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-delete-table">Delete current table</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="link" class="btn-group">
+                <div id="media-insert" title="Insert media" class="fa fa-file-image-o fa-fw btn editor-ignore"></div>
+                <div id="create-link" title="Insert or edit link" class="fa fa-link fa-fw btn editor-ignore"></div>
+                <div id="unlink" title="Remove link" class="fa fa-unlink fa-fw btn"></div>
+                <a id="media-description" href="#" title="Edit media description" class="btn editor-ignore">Description</a>
+            </div>
+
+            <div id="image-shape" class="btn-group">
+                <div id="rounded" title="Shape: Rounded" class="fa fa-square fa-fw btn editor-ignore"></div>
+                <div id="rounded-circle" title="Shape: Circle" class="fa fa-circle-o fa-fw btn editor-ignore"></div>
+                <div id="shadow" title="Shadow" class="fa fa-sun-o fa-fw btn editor-ignore"></div>
+                <div id="img-thumbnail" title="Shape: Thumbnail" class="fa fa-picture-o fa-fw btn editor-ignore"></div>
+            </div>
+
+            <div id="image-padding" class="btn-group dropdown">
+                <button type="button" class="btn dropdown-toggle"
+                    data-toggle="dropdown" title="" tabindex="-1"
+                    data-original-title="Image padding" aria-expanded="false">
+                    <span class="fa fa-plus-square-o"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="">None</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-small">Small</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-medium">Medium</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-large">Large</a></li>
+                    <li><a class="dropdown-item editor-ignore" href="#" data-class="padding-xl">XL</a></li>
+                </ul>
+            </div>
+
+            <div id="image-width" class="btn-group">
+                <div class="btn editor-ignore">Auto</div>
+                <div id="100%" title="Resize Full" class="btn editor-ignore">100%</div>
+                <div id="50%" title="Resize Half" class="btn editor-ignore">50%</div>
+                <div id="25%" title="Resize Quarter" class="btn editor-ignore">25%</div>
+            </div>
+
+            <div id="image-edit" class="btn-group">
+                <div id="image-crop" title="Crop Image" class="btn fa fa-crop editor-ignore"></div>
+                <div id="image-transform" class="btn editor-ignore fa fa-object-ungroup"
+                    title="Transform the picture (click twice to reset transformation)"></div>
+                <div id="media-replace" title="Replace media" class="btn editor-ignore">Replace</div>
+                <div id="image-delete" class="btn editor-ignore fa fa-trash-o" title="Remove (DELETE)"></div>
+            </div>
+
+            <div id="fa-resize" class="btn-group only_fa">
+                <div class="editor-ignore btn" data-value="1">1x</div>
+                <div class="editor-ignore btn" data-value="2">2x</div>
+                <div class="editor-ignore btn" data-value="3">3x</div>
+                <div class="editor-ignore btn" data-value="4">4x</div>
+                <div class="editor-ignore btn" data-value="5">5x</div>
+            </div>
+
+            <div class="btn-group only_fa">
+                <div id="fa-spin" class="editor-ignore btn fa fa-refresh"></div>
+            </div>
+        </div>
     </t>
 
     <!--=================-->
