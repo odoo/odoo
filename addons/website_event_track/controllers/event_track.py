@@ -353,11 +353,11 @@ class EventTrackController(http.Controller):
     @http.route("/event/track/toggle_reminder", type="json", auth="public", website=True)
     def track_reminder_toggle(self, track_id, set_reminder_on):
         """ Set a reminder a track for current visitor. Track visitor is created or updated
-        if it already exists. Exception made if un-wishlisting and no track_visitor
+        if it already exists. Exception made if un-favoriting and no track_visitor
         record found (should not happen unless manually done).
 
         :param boolean set_reminder_on:
-          If True, set as a wishlist, otherwise un-wishlist track;
+          If True, set as a favorite, otherwise un-favorite track;
           If the track is a Key Track (wishlisted_by_default):
             if set_reminder_on = False, blacklist the track_partner
             otherwise, un-blacklist the track_partner

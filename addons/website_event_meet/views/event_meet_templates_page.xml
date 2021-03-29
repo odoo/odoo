@@ -81,11 +81,12 @@
         </div>
         <!-- ROOM DESCRIPTION -->
         <div class="mx-3">
-            <span class="h5 d-inline-block mt-3 mb-1" t-esc="meeting_room.name"/>
-            <br/>
-            <span class="text-muted">A chat among <span class="font-weight-bold" t-esc="meeting_room.target_audience"/></span>
+            <div class="h5 my-3" t-esc="meeting_room.name"/>
+            <div t-if="meeting_room.room_participant_count > 0" class="text-muted mb-3">
+                A chat among <t t-esc="meeting_room.room_participant_count"/> <span class="font-weight-bold" t-esc="meeting_room.target_audience"/>
+            </div>
         </div>
-        <hr class="mt-2 mb-0"/>
+        <hr class="my-0"/>
         <div t-field="meeting_room.summary" class="my-2 mx-3 oe_no_empty"/>
      </div>
 </template>
@@ -95,9 +96,9 @@
 <!-- ============================================================ -->
 
 <template id="meeting_room_aside" name="Meeting Room: Aside">
-    <div t-att-class="'col-12 pl-0 pr-0 pr-md-3 o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+    <div t-att-class="'col-12 pl-0 pr-0 o_wevent_online_page_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
         <div class="bg-white o_wevent_online_page_aside_content">
-            <div class="d-flex align-items-center justify-content-between mx-2 py-1">
+            <div class="d-flex align-items-center justify-content-between mx-2">
                 <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other Rooms</span>
                 <a href="#collapse_meet_room_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
                     <i class="fa fa-chevron-down d-lg-none"/>
