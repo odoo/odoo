@@ -34,6 +34,8 @@ Odoo Web Editor widget.
             'web_editor/static/lib/jQuery.transfo.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
+            'web_editor/static/lib/odoo-editor/odoo-editor.css',
+            'web_editor/static/lib/odoo-editor/odoo-editor.js',
 
             # odoo utils
             ('include', 'web._assets_helpers'),
