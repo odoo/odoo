@@ -75,7 +75,9 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         text-align: center;
 
         img {
-            max-height: 100%;
+            height: 100%;
+            width: 100%;
+            object-fit: scale-down;
         }
     }
     .o_wsale_product_information {
@@ -447,6 +449,14 @@ a.no-decoration {
     .carousel-outer {
         height: 400px;
         max-height: 90vh;
+
+        .carousel-inner {
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: scale-down;
+            }
+        }
     }
 
     .carousel-control-prev, .carousel-control-next {
