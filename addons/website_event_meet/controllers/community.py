@@ -135,10 +135,10 @@ class WebsiteEventMeetController(EventCommunityController):
         )
 
     def _event_meeting_room_page_get_values(self, event, meeting_room):
-        # search for meeting room list
+        # search for meeting room list. Set a limit to 6 because it is better than 5 or 7
         meeting_rooms_other = request.env['event.meeting.room'].sudo().search([
             ('event_id', '=', event.id), ('id', '!=', meeting_room.id), ('is_published', '=', True),
-        ])
+        ], limit=6)
 
         if not request.env.user.has_group("event.group_event_manager"):
             # only the event manager can see meeting rooms which are full
