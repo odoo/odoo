@@ -527,6 +527,7 @@
                     <field name="rating_active" />
                     <field name="analytic_account_id"/>
                     <field name="date"/>
+                    <field name="doc_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
@@ -556,20 +557,45 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_manager" role="menu">
-                                        <div class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div role="menuitem">
-                                                <a name="%(portal.portal_share_action)d" type="action">Share</a>
+                                    <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu" groups="base.group_user">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>View</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="action_view_tasks" type="object">Tasks</a>
+                                                </div>
+                                                <div role="menuitem" t-if="record.doc_count.raw_value">
+                                                    <a name="attachment_tree_view" type="object">Documents</a>
+                                                </div>
                                             </div>
-                                            <div role="menuitem">
-                                                <a type="edit">Edit</a>
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_reporting" groups="project.group_project_manager">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Reporting</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="action_view_tasks_analysis" type="object">Tasks Analysis</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="%(action_project_task_burndown_chart_report)d" type="action">Burndown Chart</a>
+                                                </div>
+                                                <div role="menuitem" t-if="record.analytic_account_id.raw_value" groups="analytic.group_analytic_accounting">
+                                                    <a name="action_view_account_analytic_line" type="object">Profitability</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
-                                            <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                        <div class="o_kanban_card_manage_settings row" groups="project.group_project_manager">
+                                            <div role="menuitem" aria-haspopup="true" class="col-8">
+                                                <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                            </div>
+                                            <div role="menuitem" class="col-4">
+                                                <a class="dropdown-item" role="menuitem" name="%(portal.portal_share_action)d" type="action">Share</a>
+                                                <a class="dropdown-item" role="menuitem" type="edit">Edit</a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="base.group_user"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
                                 </div>
 
@@ -578,11 +604,6 @@
                                         <div>
                                             <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                             <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
-                                        </div>
-                                    </a>
-                                    <a t-if="record.analytic_account_id.raw_value" class="o_project_kanban_box o_project_timesheet_box" name="action_view_account_analytic_line" type="object" groups="analytic.group_analytic_accounting">
-                                        <div>
-                                            <span class="o_label">Profitability</span>
                                         </div>
                                     </a>
                                 </div>
