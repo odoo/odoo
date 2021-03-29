@@ -157,6 +157,7 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         """ Force values to stay consistent with integrity constraints """
+        super(ProductTemplate, self)._onchange_type()
         if self.type == 'consu':
             if not self.invoice_policy:
                 self.invoice_policy = 'order'
