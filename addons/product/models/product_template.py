@@ -1163,3 +1163,9 @@ class ProductTemplate(models.Model):
             'label': _('Import Template for Products'),
             'template': '/product/static/xls/product_template.xls'
         }]
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        """ Base onchange method
+        """
+        pass
