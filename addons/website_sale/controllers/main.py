@@ -73,7 +73,7 @@ class TableCompute(object):
                     self.table[(pos // ppr) + y2][(pos % ppr) + x2] = False
             self.table[pos // ppr][pos % ppr] = {
                 'product': p, 'x': x, 'y': y,
-                'ribbon': p.website_ribbon_id,
+                'ribbon': p._get_website_ribbon(),
             }
             if index <= ppg:
                 maxy = max(maxy, y + (pos // ppr))
