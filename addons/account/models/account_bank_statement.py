@@ -207,7 +207,7 @@ class AccountBankStatement(models.Model):
             # will find the record itself, so we have to add a condition in the search to ignore self.id
             if not isinstance(st.id, models.NewId):
                 domain.extend(['|', '&', ('id', '<', st.id), ('date', '=', st.date), '&', ('id', '!=', st.id), ('date', '!=', st.date)])
-            previous_statement = self.search(domain, limit=1)
+            previous_statement = self.search(domain, order='date desc, id desc, name desc', limit=1)
             st.previous_statement_id = previous_statement.id
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
