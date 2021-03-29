@@ -1330,8 +1330,7 @@ class Lead(models.Model):
         if include_lost:
             domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            domain += ['&', ('active', '=', True), '|', ('probability', '=', False), ('probability', '<', 100)]
-
+            domain += ['&', ('active', '=', True), ('stage_id.is_won', '=', False)]
         return self.with_context(active_test=False).search(domain)
 
     def _sort_by_confidence_level(self, reverse=False):

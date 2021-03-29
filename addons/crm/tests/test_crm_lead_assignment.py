@@ -110,7 +110,7 @@ class TestLeadAssign(TestLeadAssignCommon):
             lead_type='lead',
             user_ids=[False],
             partner_ids=[self.contact_1.id, self.contact_2.id, False, False, False],
-            count=50
+            count=200
         )
         self.assertInitialData()
 
@@ -122,26 +122,23 @@ class TestLeadAssign(TestLeadAssignCommon):
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
 
         with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=1)
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
-        self.assertEqual(len(leads_st1), 10)  # 2 * 2 * 75 / 30.0
-        self.assertEqual(len(leads_stc), 12)  # 2 * 2 * 90 / 30.0
+        self.assertLessEqual(len(leads_st1), 128)
+        self.assertLessEqual(len(leads_stc), 96)
+        self.assertEqual(len(leads_st1) + len(leads_stc), len(leads))  # Make sure all lead are assigned
 
         # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
-        self.assertMemberAssign(self.sales_team_1_m1, 3)  # 45 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m2, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_convert_m1, 2)  # 30 max on 15
-        self.assertMemberAssign(self.sales_team_convert_m2, 4)  # 60 max on 15
-
-        # run a second round to finish leads
-        with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+        self.assertMemberAssign(self.sales_team_1_m1, 10)  # 45 max on 2 days
+        self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days
+        self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days
+        self.assertMemberAssign(self.sales_team_convert_m1, 7)  # 30 max on 15
+        self.assertMemberAssign(self.sales_team_convert_m2, 14)  # 60 max on 15
 
         # teams assign: everything should be done due to duplicates
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -160,7 +157,7 @@ class TestLeadAssign(TestLeadAssignCommon):
             lead_type='lead',
             user_ids=[False],
             partner_ids=[False],
-            count=50
+            count=100
         )
         self.assertInitialData()
 
@@ -172,29 +169,30 @@ class TestLeadAssign(TestLeadAssignCommon):
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
 
         with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=1)
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
-        self.assertEqual(len(leads_st1), 10)  # 2 * 2 * 75 / 30.0
-        self.assertEqual(len(leads_stc), 12)  # 2 * 2 * 90 / 30.0
+        self.assertEqual(len(leads_st1) + len(leads_stc), 100)  # 2 * 2 * 75 / 30.0
+        self.assertLessEqual(len(leads_st1), 100)  # 2 * 2 * 75 / 30.0
+        self.assertLessEqual(len(leads_stc), 66)  # 2 * 2 * 90 / 30.0
 
         # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
-        self.assertMemberAssign(self.sales_team_1_m1, 3)  # 45 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m2, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_1_m3, 1)  # 15 max on 2 days
-        self.assertMemberAssign(self.sales_team_convert_m1, 2)  # 30 max on 15
-        self.assertMemberAssign(self.sales_team_convert_m2, 4)  # 60 max on 15
+        self.assertMemberAssign(self.sales_team_1_m1, 10)  # 45 max on 2 days
+        self.assertMemberAssign(self.sales_team_1_m2, 4)  # 15 max on 2 days
+        self.assertMemberAssign(self.sales_team_1_m3, 4)  # 15 max on 2 days
+        self.assertMemberAssign(self.sales_team_convert_m1, 7)  # 30 max on 15
+        self.assertMemberAssign(self.sales_team_convert_m2, 14)  # 60 max on 15
 
     @mute_logger('odoo.models.unlink')
     def test_assign_populated(self):
         """ Test assignment on a more high volume oriented test set in order to
         test more real life use cases. """
         # create leads enough to assign one month of work
-        _lead_count, _email_dup_count, _partner_count = 500, 50, 150
+        _lead_count, _email_dup_count, _partner_count = 750, 50, 150
         leads = self._create_leads_batch(
             lead_type='lead',
             user_ids=[False],
@@ -237,7 +235,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         })
         sales_teams = self.sales_teams | sales_team_3
         self.assertEqual(sum(team.assignment_max for team in sales_teams), 300)
-        self.assertEqual(len(leads), 550)
+        self.assertEqual(len(leads), 800)
 
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -249,6 +247,9 @@ class TestLeadAssign(TestLeadAssignCommon):
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
+        leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])
+        lead_team_assigned = leads.filtered_domain([('team_id', 'in', sales_teams.ids)])
+        self.assertEqual(len(lead_team_assigned), len(leads))
         self.members.invalidate_cache(fnames=['lead_month_count'])
         self.assertMemberAssign(self.sales_team_1_m1, 45)  # 45 max on one month
         self.assertMemberAssign(self.sales_team_1_m2, 15)  # 15 max on one month
@@ -258,3 +259,58 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertMemberAssign(sales_team_3_m1, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m2, 60)  # 60 max on one month
         self.assertMemberAssign(sales_team_3_m3, 15)  # 15 max on one month
+
+    @mute_logger('odoo.models.unlink')
+    def test_assign_keep_master_team(self):
+        """ Check existing opportunity keep its
+            team and salesman when merged with a new lead
+        """
+        sales_team_master = self.env['crm.team'].create({
+            'name': 'Sales Team Master',
+            'sequence': 15,
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': False,
+            'assignment_domain': [('country_id', '!=', False)],
+        })
+
+        sales_team_dupe = self.env['crm.team'].create({
+            'name': 'Sales Team Dupe',
+            'sequence': 15,
+            'alias_name': False,
+            'use_leads': True,
+            'use_opportunities': True,
+            'company_id': False,
+            'user_id': False,
+            'assignment_domain': "[]",
+        })
+
+        self.env['crm.team.member'].create({
+            'user_id': self.user_sales_leads.id,
+            'crm_team_id': sales_team_dupe.id,
+            'assignment_max': 10,
+            'assignment_domain': "[]",
+        })
+
+        master_opp = self.env['crm.lead'].create({
+            'type': 'opportunity',
+            'name': 'Master',
+            'partner_id': self.contact_1.id,
+            'team_id': sales_team_master.id,
+            'user_id': self.user_sales_manager.id,
+        })
+
+        dupe_lead = self.env['crm.lead'].create({
+            'type': 'lead',
+            'name': 'Dupe',
+            'partner_id': self.contact_1.id,
+            'team_id': False,
+            'user_id': False,
+        })
+
+        sales_team_dupe._action_assign_leads(work_days=2)
+        self.assertFalse(dupe_lead.exists())
+        self.assertEqual(master_opp.team_id, sales_team_master, 'Opportunity should keep its crm team')
+        self.assertEqual(master_opp.user_id, self.user_sales_manager, 'Opportunity should keep its salesman')
