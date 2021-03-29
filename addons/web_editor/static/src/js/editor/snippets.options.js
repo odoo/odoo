@@ -1661,7 +1661,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
             widgetParent: 'body',
 
             // Open the datetimepicker on focus not on click. This allows to
-            // take care of a bug which is due to the summernote editor:
+            // take care of a bug which is due to the wysiwyg editor:
             // sometimes, the datetimepicker loses the focus then get it back
             // in the same execution flow. This was making the datepicker close
             // for no apparent reason. Now, it only closes then reopens directly
