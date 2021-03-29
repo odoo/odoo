@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.addons.crm_iap_lead_enrich.tests.common import MockIAPEnrich
+from odoo.addons.iap.tests.common import MockIAPEnrich
 from odoo.tests.common import users
 
 
