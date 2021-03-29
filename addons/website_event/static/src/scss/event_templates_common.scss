@@ -72,6 +72,8 @@
         .dropdown-menu {
             margin-top: $navbar-padding-y;
             min-width: 12rem;
+            max-height: 250px;
+            overflow-y: auto;
         }
         .dropdown-item  {
             &.active .badge { // Invert badge display when the item is active
@@ -137,13 +139,6 @@
         }
 
         .o_wevent_online_page_container {
-            // Widescreen mode
-            @include media-breakpoint-up(md) {
-                &:not(.container) {
-                    padding-left: 0.5rem;
-                    padding-right: 0.5rem;
-                }
-            }
 
             // Main panel
             .o_wevent_online_page_main {
