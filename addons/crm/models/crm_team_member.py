@@ -21,6 +21,7 @@ class Team(models.Model):
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char('Assignment Domain', tracking=True)
+    assignment_optout = fields.Boolean('Skip auto assignment')
     assignment_max = fields.Integer('Max Leads (last 30 days)', default=30)
     lead_month_count = fields.Integer(
         'Leads (30 days)', compute='_compute_lead_month_count',
@@ -122,7 +123,7 @@ class Team(models.Model):
         assign_ratio = work_days / 30.0
 
         members_data, population, weights = dict(), list(), list()
-        members = self.filtered(lambda member: member.assignment_max > member.lead_month_count)
+        members = self.filtered(lambda member: not member.assignment_optout and member.assignment_max > member.lead_month_count)
         if not members:
             return members_data
 
