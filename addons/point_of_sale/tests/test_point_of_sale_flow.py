@@ -450,7 +450,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I test that the total of the attached invoice is correct
         invoice = self.env['account.move'].browse(res['res_id'])
-        invoice.action_post()
+        if invoice.state != 'posted':
+            invoice.action_post()
         self.assertAlmostEqual(
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
 
@@ -832,7 +833,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I test that the total of the attached invoice is correct
         invoice = self.env['account.move'].browse(res['res_id'])
-        invoice.action_post()
+        if invoice.state != 'posted':
+            invoice.action_post()
         self.assertAlmostEqual(
             invoice.amount_total, self.pos_order_pos1.amount_total, places=2, msg="Invoice not correct")
 
