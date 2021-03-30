@@ -1732,7 +1732,7 @@ var UrlWidget = InputField.extend({
         }
         let href = this.value;
         if (this.value && !this.websitePath) {
-            const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
+            const regex = /^((ftp|http)s?:\/)?\//i; // http(s)://... ftp(s)://... /...
             href = !regex.test(this.value) ? `http://${href}` : href;
         }
         this.el.classList.add("o_form_uri", "o_text_overflow");
