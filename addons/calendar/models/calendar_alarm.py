@@ -8,18 +8,6 @@ class Alarm(models.Model):
     _name = 'calendar.alarm'
     _description = 'Event Alarm'
 
-    @api.depends('interval', 'duration')
-    def _compute_duration_minutes(self):
-        for alarm in self:
-            if alarm.interval == "minutes":
-                alarm.duration_minutes = alarm.duration
-            elif alarm.interval == "hours":
-                alarm.duration_minutes = alarm.duration * 60
-            elif alarm.interval == "days":
-                alarm.duration_minutes = alarm.duration * 60 * 24
-            else:
-                alarm.duration_minutes = 0
-
     _interval_selection = {'minutes': 'Minutes', 'hours': 'Hours', 'days': 'Days'}
 
     name = fields.Char('Name', translate=True, required=True)
@@ -33,6 +21,18 @@ class Alarm(models.Model):
         'Duration in minutes', store=True,
         search='_search_duration_minutes', compute='_compute_duration_minutes',
         help="Duration in minutes")
+
+    @api.depends('interval', 'duration')
+    def _compute_duration_minutes(self):
+        for alarm in self:
+            if alarm.interval == "minutes":
+                alarm.duration_minutes = alarm.duration
+            elif alarm.interval == "hours":
+                alarm.duration_minutes = alarm.duration * 60
+            elif alarm.interval == "days":
+                alarm.duration_minutes = alarm.duration * 60 * 24
+            else:
+                alarm.duration_minutes = 0
 
     def _search_duration_minutes(self, operator, value):
         return [
