@@ -15,7 +15,7 @@ class TestSmsTemplateAccessRights(SavepointCase):
         super().setUpClass()
         cls.user_admin = mail_new_test_user(cls.env, login='user_system', groups='base.group_system')
         cls.basic_user = mail_new_test_user(cls.env, login='user_employee', groups='base.group_user')
-        sms_enabled_models = cls.env['ir.model'].search([('is_mail_thread_sms', '=', True), ('transient', '=', False)])
+        sms_enabled_models = cls.env['ir.model'].search([('is_mail_thread', '=', True), ('transient', '=', False)])
         vals = []
         for model in sms_enabled_models:
             vals.append({
