@@ -26,7 +26,7 @@ class ProductionLot(models.Model):
     product_qty = fields.Float('Quantity', compute='_product_qty')
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
-    company_id = fields.Many2one('res.company', 'Company', required=True, stored=True, index=True)
+    company_id = fields.Many2one('res.company', 'Company', required=True, store=True, index=True)
 
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, product_id, company_id)', 'The combination of serial number and product must be unique across a company !'),
