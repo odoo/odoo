@@ -74,10 +74,10 @@ const dynamicSnippetOptions = options.Class.extend({
      */
     _refreshPublicWidgets: function () {
         return this._super.apply(this, arguments).then(() => {
-            const templateKeys = this.$el ? this.$el.find("we-select[data-attribute-name='templateKey'] we-selection-items we-button") : [];
+            const selectedTemplateId = this.$target.get(0).dataset['templateKey'];
             this.$target.find('.missing_option_warning').toggleClass(
                 'd-none',
-                templateKeys.length > 0
+                !!this.dynamicFilterTemplates[selectedTemplateId]
             );
         });
     },
