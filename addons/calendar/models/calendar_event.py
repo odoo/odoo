@@ -635,7 +635,7 @@ class Meeting(models.Model):
 
     def _setup_alarms(self):
         """ Schedule cron triggers for future events """
-        cron = self.env.ref('calendar.ir_cron_scheduler_alarm')
+        cron = self.env.ref('calendar.ir_cron_scheduler_alarm').sudo()
         alarm_manager = self.env['calendar.alarm_manager']
         alarm_types = self._get_trigger_alarm_types()
 
