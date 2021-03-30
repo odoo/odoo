@@ -629,6 +629,10 @@ var ViewEditor = Widget.extend({
 
         var self = this;
         return Promise.all(defs).guardedCatch(function (results) {
+            // some overrides handle errors themselves
+            if (results === undefined) {
+                return;
+            }
             var error = results[1];
             Dialog.alert(self, '', {
                 title: _t("Server error"),
