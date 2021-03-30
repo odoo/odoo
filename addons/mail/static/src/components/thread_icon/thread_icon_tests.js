@@ -80,6 +80,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.containsOnce(
@@ -102,6 +103,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.containsOnce(

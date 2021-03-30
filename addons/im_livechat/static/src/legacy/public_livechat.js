@@ -104,6 +104,8 @@ var LivechatButton = Widget.extend({
                     setTimeout(this._openChat.bind(this), this._rule.auto_popup_timer * 1000);
             }
         }
+        // TODO SEB ensure env is available and adapt this
+        // this.env.services['bus.server_communication'].on('calendar.alarm', payload => this._handleNotificationAlaram(payload));
         this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
         if (this.options.button_background_color) {
             this.$el.css('background-color', this.options.button_background_color);

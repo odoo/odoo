@@ -16,6 +16,11 @@ export class LongpollingCommunication {
          */
         this._isActive;
         /**
+         * Determines whether a test is in progress. longpolling is not
+         * available in tests.
+         */
+        this._isInTestMode = false;
+        /**
          * Reference to the current RPC promise (if any). Useful to be able to
          * cancel it if the longpolling is disabled or if any param has to be
          * updated.
@@ -58,13 +63,75 @@ export class LongpollingCommunication {
      * @param {integer} [lastBusMessageId=0] bus messages that have a smaller or
      *  equal id will be ignored.
      */
-    start(lastBusMessageId = 0) {
+    async start(lastBusMessageId = 0) {
+        if (this._isInTestMode) {
+            return;
+        }
         if (this._isActive) {
             return;
         }
         this._isActive = true;
         this._lastBusMessageId = lastBusMessageId;
-        this._poll();
+        while (this._isActive) {
+            // Isolate RPC result handling and error handling outside of its
+            // try/catch/finally block to avoid incorrectly catching exceptions
+            // that are not RPC related.
+            let hasError;
+            let busMessages;
+            try {
+                this._currentRpcPromise = this.env.services.rpc({
+                    params: {
+                        // TODO SEB handle new channels (only for livechat?)
+                        channels: [],
+                        last_bus_message_id: this._lastBusMessageId,
+                    },
+                    route: '/longpolling/poll',
+                }, {
+                    shadow: true,
+                    timeout: 60000,
+                });
+                busMessages = await this._currentRpcPromise;
+            } catch (error) {
+                // ajax.js is using exception to communicate actual information
+                if (error && error.message === "XmlHttpRequestError abort") {
+                    // Necessary to prevent other parts of the code from
+                    // handling this as a "business exception".
+                    // Note that Firefox will still report this as an
+                    // "Uncaught (in promise)" even though it is caught here.
+                    error.event.preventDefault();
+                } else if (error && error.message && error.message.data && error.message.data.arguments && error.message.data.arguments[0] === "bus.Bus not available in test mode") {
+                    // TODO SEB detect test mode beforehand and don't even start polling
+                    // or even better, bus should be available in test mode...
+                    this._isInTestMode = true;
+                    this.stop();
+                    // Necessary to prevent other parts of the code from
+                    // handling this as a "business exception".
+                    // Note that Firefox will still report this as an
+                    // "Uncaught (in promise)" even though it is caught here.
+                    error.event.preventDefault();
+                } else {
+                    console.error(JSON.stringify(error));
+                    hasError = true;
+                }
+            } finally {
+                this._currentRpcPromise = undefined;
+            }
+            if (busMessages) {
+                for (const busMessage of busMessages) {
+                    this._lastBusMessageId = Math.max(busMessage.id, this._lastBusMessageId);
+                    this._notifyHandlers(busMessage);
+                }
+            }
+            if (hasError) {
+                // Randomize the retry delay between 10s and 30s to avoid
+                // deny of service if there are many other clients that would
+                // otherwise all retry at the same time.
+                const delay = 10000 + Math.random() * 20000;
+                await new Promise(resolve => {
+                    this._retryTimeoutId = setTimeout(resolve, delay);
+                });
+            }
+        }
     }
 
     /**
@@ -104,62 +171,6 @@ export class LongpollingCommunication {
             // request as soon as possible, without having to wait
             // for all handlers to terminate.
             setTimeout(() => handler(busMessage));
-        }
-    }
-
-    /**
-     * @private
-     */
-    async _poll() {
-        while (this._isActive) {
-            // Isolate RPC result handling and error handling outside of its
-            // try/catch/finally block to avoid incorrectly catching exceptions
-            // that are not RPC related.
-            let hasError;
-            let busMessages;
-            try {
-                this._currentRpcPromise = this.env.services.rpc({
-                    params: {
-                        // TODO SEB handle new channels (only for livechat?)
-                        channels: [],
-                        last_bus_message_id: this._lastBusMessageId,
-                    },
-                    route: '/longpolling/poll',
-                }, {
-                    shadow: true,
-                    timeout: 60000,
-                });
-                busMessages = await this._currentRpcPromise;
-            } catch (error) {
-                // ajax.js is using exception to communicate actual information
-                if (error.message === "XmlHttpRequestError abort") {
-                    // Necessary to prevent other parts of the code from
-                    // handling this as a "business exception".
-                    // Note that Firefox will still report this as an
-                    // "Uncaught (in promise)" even though it is caught here.
-                    error.event.preventDefault();
-                } else {
-                    console.error(error);
-                    hasError = true;
-                }
-            } finally {
-                this._currentRpcPromise = undefined;
-            }
-            if (busMessages) {
-                for (const busMessage of busMessages) {
-                    this._lastBusMessageId = Math.max(busMessage.id, this._lastBusMessageId);
-                    this._notifyHandlers(busMessage);
-                }
-            }
-            if (hasError) {
-                // Randomize the retry delay between 10s and 30s to avoid
-                // deny of service if there are many other clients that would
-                // otherwise all retry at the same time.
-                const delay = 10000 + Math.random() * 20000;
-                await new Promise(resolve => {
-                    this._retryTimeoutId = setTimeout(resolve, delay);
-                });
-            }
         }
     }
 

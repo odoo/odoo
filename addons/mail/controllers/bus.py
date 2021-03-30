@@ -18,7 +18,7 @@ class MailChatController(BusController):
     # --------------------------
     # Extends BUS Controller Poll
     # --------------------------
-    def _poll(self, dbname, channels, last, options):
+    def _poll(self, dbname, channels, last_bus_message_id, options):
         if request.session.uid:
             partner_id = request.env.user.partner_id.id
 
@@ -28,7 +28,7 @@ class MailChatController(BusController):
                     channels.append((request.db, 'mail.channel', mail_channel.id))
                 # personal and needaction channel
                 channels.append((request.db, 'res.partner', partner_id))
-        return super(MailChatController, self)._poll(dbname, channels, last, options)
+        return super(MailChatController, self)._poll(dbname=dbname, channels=channels, last_bus_message_id=last_bus_message_id, options=options)
 
     # --------------------------
     # Anonymous routes (Common Methods)

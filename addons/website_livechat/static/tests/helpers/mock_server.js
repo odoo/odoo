@@ -70,6 +70,7 @@ MockServer.include({
             // notify operator
             const channelInfo = this._mockMailChannelChannelInfo([livechatId], 'send_chat_request')[0];
             const notification = [[false, 'res.partner', this.currentPartnerId], channelInfo];
+            // TODO SEB adapt
             this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         }
     },

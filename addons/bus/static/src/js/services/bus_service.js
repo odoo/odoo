@@ -6,6 +6,7 @@ var core = require('web.core');
 var ServicesMixin = require('web.ServicesMixin');
 const session = require('web.session');
 
+// TODO SEB delete this
 var BusService =  CrossTab.extend(ServicesMixin, {
     dependencies : ['local_storage'],
 
@@ -148,6 +149,7 @@ var BusService =  CrossTab.extend(ServicesMixin, {
 
 });
 
+// TODO SEB delete this file
 core.serviceRegistry.add('bus_service', BusService);
 
 return BusService;

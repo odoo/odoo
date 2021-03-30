@@ -10,7 +10,7 @@ from odoo.http import Controller, request, route
 class BusController(main.BusController):
 
     @route('/longpolling/poll', type="json", auth="public")
-    def poll(self, channels, last, options=None):
+    def poll(self, channels, last_bus_message_id, options=None):
         if request.env.user.has_group('base.group_user'):
             ip_address = request.httprequest.remote_addr
             users_log = request.env['res.users.log'].search_count([
@@ -21,4 +21,4 @@ class BusController(main.BusController):
                 with registry(request.env.cr.dbname).cursor() as cr:
                     env = Environment(cr, request.env.user.id, {})
                     env['res.users.log'].create({'ip': ip_address})
-        return super(BusController, self).poll(channels, last, options=options)
+        return super(BusController, self).poll(channels=channels, last_bus_message_id=last_bus_message_id, options=options)

@@ -33,31 +33,26 @@ function factory(dependencies) {
          * the current users. This includes pinned channels for instance.
          */
         start() {
-            const {
-                services: {
-                    'bus.server_communication': serverCommunication,
-                },
-            } = this.env;
             // TODO SEB move this into auth_signup override
-            serverCommunication.on('mail.auth_signup', payload => this._handleNotificationFirstUserConnection(payload));
-            serverCommunication.on('mail.channel_create', payload => this._handleNotificationChannelCreate(payload));
-            serverCommunication.on('mail.channel_fetched', payload => this._handleNotificationChannelFetched(payload));
-            serverCommunication.on('mail.channel_fold_state_changed', payload => this._handleNotificationChannelFoldStateChanged(payload));
-            serverCommunication.on('mail.channel_info', payload => this._handleNotificationChannelInfo(payload));
-            serverCommunication.on('mail.channel_is_pinned_changed', payload => this._handleNotificationChannelIsPinnedChanged(payload));
-            serverCommunication.on('mail.channel_join', payload => this._handleNotificationChannelJoin(payload));
-            serverCommunication.on('mail.channel_new_message', payload => this._handleNotificationChannelNewMessage(payload));
-            serverCommunication.on('mail.channel_seen', payload => this._handleNotificationChannelSeen(payload));
-            serverCommunication.on('mail.channel_typing_status', payload => this._handleNotificationChannelTypingStatus(payload));
-            serverCommunication.on('mail.channel_unsubscribe', payload => this._handleNotificationChannelUnsubscribe(payload));
-            serverCommunication.on('mail.inbox_mark_all_messages_as_read', payload => this._handleNotificationInboxMarkAllMessagesAsRead(payload));
-            serverCommunication.on('mail.inbox_mark_messages_as_read', payload => this._handleNotificationInboxMarkMessagesAsRead(payload));
-            serverCommunication.on('mail.inbox_new_message', payload => this._handleNotificationInboxNewMessage(payload));
-            serverCommunication.on('mail.message_deleted', payload => this._handleNotificationMessageDeletion(payload));
-            serverCommunication.on('mail.message_notification_update', payload => this._handleNotificationMessageNotificationUpdate(payload));
-            serverCommunication.on('mail.message_pending_moderation', payload => this._handleNotificationMessagePendingModeration(payload));
-            serverCommunication.on('mail.message_toggle_star', payload => this._handleNotificationMessageToggleStar(payload));
-            serverCommunication.on('mail.simple_notification', payload => this._handleNotificationSimpleNotification(payload));
+            this.env.services['bus.server_communication'].on('mail.auth_signup', payload => this._handleNotificationFirstUserConnection(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_create', payload => this._handleNotificationChannelCreate(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_fetched', payload => this._handleNotificationChannelFetched(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_fold_state_changed', payload => this._handleNotificationChannelFoldStateChanged(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_info', payload => this._handleNotificationChannelInfo(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_is_pinned_changed', payload => this._handleNotificationChannelIsPinnedChanged(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_join', payload => this._handleNotificationChannelJoin(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_new_message', payload => this._handleNotificationChannelNewMessage(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_seen', payload => this._handleNotificationChannelSeen(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_typing_status', payload => this._handleNotificationChannelTypingStatus(payload));
+            this.env.services['bus.server_communication'].on('mail.channel_unsubscribe', payload => this._handleNotificationChannelUnsubscribe(payload));
+            this.env.services['bus.server_communication'].on('mail.inbox_mark_all_messages_as_read', payload => this._handleNotificationInboxMarkAllMessagesAsRead(payload));
+            this.env.services['bus.server_communication'].on('mail.inbox_mark_messages_as_read', payload => this._handleNotificationInboxMarkMessagesAsRead(payload));
+            this.env.services['bus.server_communication'].on('mail.inbox_new_message', payload => this._handleNotificationInboxNewMessage(payload));
+            this.env.services['bus.server_communication'].on('mail.message_deleted', payload => this._handleNotificationMessageDeletion(payload));
+            this.env.services['bus.server_communication'].on('mail.message_notification_update', payload => this._handleNotificationMessageNotificationUpdate(payload));
+            this.env.services['bus.server_communication'].on('mail.message_pending_moderation', payload => this._handleNotificationMessagePendingModeration(payload));
+            this.env.services['bus.server_communication'].on('mail.message_toggle_star', payload => this._handleNotificationMessageToggleStar(payload));
+            this.env.services['bus.server_communication'].on('mail.simple_notification', payload => this._handleNotificationSimpleNotification(payload));
         }
 
         //----------------------------------------------------------------------
@@ -204,6 +199,7 @@ function factory(dependencies) {
                 channel.correspondent === this.env.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
+                // TODO SEB adapt
                 // const isOdooFocused = this.env.services['bus_service'].isOdooFocused();
                 // Notify if out of focus
                 // if (!isOdooFocused && channel.isChatChannel) {
@@ -608,6 +604,7 @@ function factory(dependencies) {
             const partner = this.env.models['mail.partner'].insert(
                 this.env.models['mail.partner'].convertData(partnerData)
             );
+            // TODO SEB adapt
             this.env.services['bus_service'].sendNotification({
                 message: this.env._t("This is their first connection. Wish them luck."),
                 title: _.sprintf(this.env._t("%s connected"), owl.utils.escape(partner.nameOrDisplayName)),

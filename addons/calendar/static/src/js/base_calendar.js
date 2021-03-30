@@ -104,17 +104,15 @@ WebClient.include({
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
 
-        this.call('bus_service', 'addListener',  notifications => this._handleNotifications(notifications));
+        this.env.services['bus.server_communication'].on('calendar.alarm', payload => this._handleNotificationAlaram(payload));
         return this._super.apply(this, arguments).then(this.get_next_calendar_notif.bind(this));
     },
-    _handleNotifications(notifications) {
-        for (const { payload, type } of notifications) {
-            switch (type) {
-                case 'calendar.alarm':
-                    this.display_calendar_notif(payload);
-                    break;
-            }
-        }
+    /**
+     * @private
+     * @param {Object} payload
+     */
+    _handleNotificationAlaram(payload) {
+        this.display_calendar_notif(payload);
     },
 });
 

@@ -2262,7 +2262,7 @@ class MailThread(models.AbstractModel):
                 _context = self._context
 
                 @self.env.cr.postcommit.add
-                def _send_notifications():
+                def send_notifications():
                     db_registry = registry(dbname)
                     with api.Environment.manage(), db_registry.cursor() as cr:
                         env = api.Environment(cr, SUPERUSER_ID, _context)

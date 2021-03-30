@@ -71,6 +71,7 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
             partner_name: this.env.messaging.publicPartners[0].name,
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(

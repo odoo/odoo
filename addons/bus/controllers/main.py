@@ -11,13 +11,13 @@ class BusController(Controller):
     """
 
     # override to add channels
-    def _poll(self, dbname, channels, last, options):
+    def _poll(self, dbname, channels, last_bus_message_id, options):
         # update the user presence
         if request.session.uid and 'bus_inactivity' in options:
             request.env['bus.presence'].update(options.get('bus_inactivity'))
         request.cr.close()
         request._cr = None
-        return dispatch.poll(dbname, channels, last, options)
+        return dispatch.poll(dbname=dbname, channels=channels, last_bus_message_id=last_bus_message_id, options=options)
 
     @route('/longpolling/poll', type="json", auth="public", cors="*")
     def poll(self, channels, last_bus_message_id, options=None):
@@ -32,7 +32,7 @@ class BusController(Controller):
             raise Exception("bus.Bus only string channels are allowed.")
         if request.registry.in_test_mode():
             raise exceptions.UserError(_("bus.Bus not available in test mode"))
-        return self._poll(request.db, channels=channels, last=last_bus_message_id, options=options)
+        return self._poll(dbname=request.db, channels=channels, last_bus_message_id=last_bus_message_id, options=options)
 
     @route('/longpolling/im_status', type="json", auth="user")
     def im_status(self, partner_ids):

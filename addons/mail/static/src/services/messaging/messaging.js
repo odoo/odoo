@@ -2,8 +2,9 @@
 
 import AbstractService from 'web.AbstractService';
 
+require('@bus/js/main');
+
 export default AbstractService.extend({
-    dependencies: ['bus_service'],
     /**
      * @override {web.AbstractService}
      */

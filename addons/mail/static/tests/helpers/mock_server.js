@@ -558,6 +558,7 @@ MockServer.include({
      */
     _mockMailChannel_broadcast(ids, partner_ids) {
         const notifications = this._mockMailChannel_channelChannelNotifications(ids, partner_ids);
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
     /**
@@ -622,6 +623,7 @@ MockServer.include({
                     partner_id: this.currentPartnerId,
                 },
             ];
+            // TODO SEB adapt
             this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         }
     },
@@ -672,6 +674,7 @@ MockServer.include({
             ["dbName", 'res.partner', this.currentPartnerId],
             this._mockMailChannelChannelInfo([channel.id])[0]
         ];
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmFold]);
     },
     /**
@@ -791,6 +794,7 @@ MockServer.include({
         // moderation_guidelines not handled here for simplicity
         const channelInfo = this._mockMailChannelChannelInfo([channel.id], 'join')[0];
         const notification = [[false, 'res.partner', this.currentPartnerId], channelInfo];
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         return channelInfo;
     },
@@ -837,6 +841,7 @@ MockServer.include({
         } else {
             notification = [[false, 'res.partner', this.currentPartnerId], payload];
         }
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
     },
     /**
@@ -872,6 +877,7 @@ MockServer.include({
                     ["dbName", 'res.partner', this.currentPartnerId],
                     Object.assign({}, channel, { info: 'unsubscribe' })
                 ];
+                // TODO SEB adapt
                 this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmUnpin]);
             }
             return;
@@ -891,6 +897,7 @@ MockServer.include({
                         'res_id': channel.id,
                     }
                 ];
+                // TODO SEB adapt
                 this._widget.call('bus_service', 'trigger', 'notification', [notification]);
             }
             return;
@@ -1023,6 +1030,7 @@ MockServer.include({
             notifications.push([[false, 'mail.channel', channel.id], data]);
             notifications.push([channel.uuid, data]); // notify livechat users
         }
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
     /**
@@ -1110,6 +1118,7 @@ MockServer.include({
         }
         const notificationData = { type: 'mark_as_read', message_ids: messageIds, needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
         const notification = [[false, 'res.partner', this.currentPartnerId], notificationData];
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         return messageIds;
     },
@@ -1266,6 +1275,7 @@ MockServer.include({
             };
             const metaData = [dbName, 'res.partner', this.currentPartnerId];
             const notification = [metaData, notifData];
+            // TODO SEB adapt
             this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         } else if (decision === 'accept') {
             // simulate notification back (new accepted message in channel)
@@ -1342,6 +1352,7 @@ MockServer.include({
             ]);
             const data = { type: 'mark_as_read', message_ids: [message.id], needaction_inbox_counter: this._mockResPartnerGetNeedactionCount() };
             const busNotifications = [[[false, 'res.partner', this.currentPartnerId], data]];
+            // TODO SEB adapt
             this._widget.call('bus_service', 'trigger', 'notification', busNotifications);
         }
     },
@@ -1365,6 +1376,7 @@ MockServer.include({
                 type: 'toggle_star',
             };
             const notifications = [[[false, 'res.partner', this.currentPartnerId], notificationData]];
+            // TODO SEB adapt
             this._widget.call('bus_service', 'trigger', 'notification', notifications);
         }
     },
@@ -1387,6 +1399,7 @@ MockServer.include({
             type: 'toggle_star',
         };
         const notification = [[false, 'res.partner', this.currentPartnerId], notificationData];
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
     },
     /**
@@ -1645,6 +1658,7 @@ MockServer.include({
         for (const channel of channels) {
             notifications.push([[false, 'mail.channel', channel.id], messageFormat]);
         }
+        // TODO SEB adapt
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
     /**

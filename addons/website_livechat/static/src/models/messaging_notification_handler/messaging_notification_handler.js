@@ -14,6 +14,7 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'website_livec
      */
     _handleNotificationPartner(data) {
         const { info } = data;
+        // TODO SEB fix those overrides
         if (info === 'send_chat_request') {
             this._handleNotificationPartnerChannel(data);
             const channel = this.env.models['mail.thread'].findFromIdentifyingData({

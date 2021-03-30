@@ -81,6 +81,9 @@ export class CrossTabCommunication {
         this._clientBus.trigger(type, payload);
     }
 
+    // TODO SEB add "execute once" method whose goal is to ensure something is
+    // executed only once, no matter how many tabs are requesting it at the
+    // same time (so only execute it on the main tab)
 }
 
 export const crossTabCommunicationService = {

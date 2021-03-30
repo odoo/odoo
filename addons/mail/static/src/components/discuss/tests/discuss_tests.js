@@ -3227,6 +3227,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
             res_id: 20,
         };
         const notifications = [[['my-db', 'res_partner', 3], data]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.ok(
@@ -3269,6 +3270,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
             res_id: 20,
         };
         const notifications2 = [[['my-db', 'res_partner', 3], data2]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications2);
     });
     assert.strictEqual(
@@ -3884,6 +3886,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
     await this.start({
         env: { bus },
         services: {
+            // TODO SEB adapt
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
@@ -3902,6 +3905,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, channel)'
             res_id: 20,
         };
         const notifications = [[['my-db', 'mail.channel', 20], messageData]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.verifySteps(['set_title_part']);
@@ -3922,6 +3926,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
     await this.start({
         env: { bus },
         services: {
+            // TODO SEB adapt
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
@@ -3940,6 +3945,7 @@ QUnit.test('receive new chat message: out of odoo focus (notification, chat)', a
             res_id: 10,
         };
         const notifications = [[['my-db', 'mail.channel', 10], messageData]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.verifySteps(['set_title_part']);
@@ -3973,6 +3979,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
     await this.start({
         env: { bus },
         services: {
+            // TODO SEB adapt
             bus_service: BusService.extend({
                 _beep() {}, // Do nothing
                 _poll() {}, // Do nothing
@@ -3991,6 +3998,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             res_id: 20,
         };
         const notifications1 = [[['my-db', 'mail.channel', 20], messageData1]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications1);
     });
     assert.verifySteps(['set_title_part']);
@@ -4003,6 +4011,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             res_id: 10,
         };
         const notifications2 = [[['my-db', 'mail.channel', 10], messageData2]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications2);
     });
     assert.verifySteps(['set_title_part']);
@@ -4015,6 +4024,7 @@ QUnit.test('receive new chat messages: out of odoo focus (tab title)', async fun
             res_id: 10,
         };
         const notifications3 = [[['my-db', 'mail.channel', 10], messageData3]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications3);
     });
     assert.verifySteps(['set_title_part']);

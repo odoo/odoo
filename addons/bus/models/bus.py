@@ -91,13 +91,13 @@ class ImBus(models.Model):
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
 
     @api.model
-    def _poll(self, channels, last=0):
+    def _poll(self, channels, last_bus_message_id=0):
         # first poll return the notification in the 'buffer'
-        if last == 0:
+        if last_bus_message_id == 0:
             timeout_ago = datetime.datetime.utcnow() - datetime.timedelta(seconds=TIMEOUT)
             domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         else:  # else returns the unread notifications
-            domain = [('id', '>', last)]
+            domain = [('id', '>', last_bus_message_id)]
         channels = [json_dump(c) for c in channels]
         domain.append(('channel', 'in', channels))
         notifications = self.sudo().search_read(domain)
@@ -120,7 +120,7 @@ class ImDispatch(object):
         self.channels = {}
         self.started = False
 
-    def poll(self, dbname, channels, last, options=None, timeout=None):
+    def poll(self, dbname, channels, last_bus_message_id, options=None, timeout=None):
         if timeout is None:
             timeout = TIMEOUT
         if options is None:
@@ -139,7 +139,7 @@ class ImDispatch(object):
         # immediatly returns if past notifications exist
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
-            notifications = env['bus.bus']._poll(channels, last)
+            notifications = env['bus.bus']._poll(channels=channels, last_bus_message_id=last_bus_message_id)
 
         # immediatly returns in peek mode
         if options.get('peek'):
@@ -158,7 +158,7 @@ class ImDispatch(object):
                 event.wait(timeout=timeout)
                 with registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
-                    notifications = env['bus.bus']._poll(channels, last)
+                    notifications = env['bus.bus']._poll(channels=channels, last_bus_message_id=last_bus_message_id)
             except Exception:
                 # timeout
                 pass

@@ -143,6 +143,7 @@ export class ServerCommunication {
      * @param {*} busMessage
      */
     _handleBusMessageFromCrosstab(busMessage) {
+        console.log('_handleBusMessageFromCrosstab', busMessage);
         if (this._communicationType !== 'crosstab') {
             console.warn(`bus.server_communication message received while crosstab was inactive: ${busMessage}`);
         }
@@ -156,6 +157,7 @@ export class ServerCommunication {
      * @param {*} busMessage
      */
     _handleBusMessageFromLongpolling(busMessage) {
+        console.log('_handleBusMessageFromLongpolling', busMessage);
         if (this._communicationType !== 'longpolling') {
             console.warn(`bus.server_communication message received while longpolling was inactive: ${busMessage}`);
         }
@@ -170,6 +172,7 @@ export class ServerCommunication {
      * @param {*} serviceMessage
      */
     _handleServiceMessageFromCrosstab(serviceMessage) {
+        console.log('_handleServiceMessageFromCrosstab', serviceMessage);
         this._selectCommunicationType();
     }
 
@@ -179,6 +182,7 @@ export class ServerCommunication {
      * @private
      */
     _handleUserPresenceChange() {
+        console.log('_handleUserPresenceChange');
         this._selectCommunicationType();
     }
 }

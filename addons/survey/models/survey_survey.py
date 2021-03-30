@@ -932,6 +932,7 @@ class Survey(models.Model):
         self.env['bus.bus']._send_notifications([{
             'target': self,
             'type': 'survey.end_session',
+            'payload': None,
         }])
 
     def get_start_url(self):

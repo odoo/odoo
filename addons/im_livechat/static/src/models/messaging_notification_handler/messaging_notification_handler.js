@@ -12,10 +12,10 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
     /**
      * @override
      */
-    _handleNotificationChannelTypingStatus(channelId, data) {
-        const { partner_id, partner_name } = data;
+    _handleNotificationChannelTypingStatus(payload) {
+        const { channel_id, partner_id, partner_name } = payload;
         const channel = this.env.models['mail.thread'].findFromIdentifyingData({
-            id: channelId,
+            id: channel_id,
             model: 'mail.channel',
         });
         if (!channel) {
@@ -32,7 +32,7 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
             partnerId = partner_id;
             partnerName = partner_name;
         }
-        this._super(channelId, Object.assign(data, {
+        this._super(Object.assign(payload, {
             partner_id: partnerId,
             partner_name: partnerName,
         }));

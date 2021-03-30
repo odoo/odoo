@@ -32,8 +32,8 @@ odoo.define('bus.WebClient', function (require) {
             document.querySelectorAll('*[data-asset-bundle]').forEach(el => {
                 this._assets[el.getAttribute('data-asset-bundle')] = el.getAttribute('data-asset-version');
             });
-            this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
             // TODO SEB double check broadcast on non-id channel like (res.partner, false)
+            this.env.services['bus.server_communication'].on('base.bundle_changed', payload => this._handleNotificationBundleChanged(payload));
             return shown;
         },
 
@@ -87,22 +87,6 @@ odoo.define('bus.WebClient', function (require) {
         // Handlers
         //--------------------------------------------------------------------------
 
-        /**
-         * @private
-         * @param {Object[]} notifications
-         * @param {any} [notifications[].payload]
-         * @param {string} notifications[].type
-         */
-        _handleNotifications(notifications) {
-            for (const notification of notifications) {
-                const { payload, type } = notification;
-                switch (type) {
-                    case 'base.bundle_changed':
-                        this._handleNotificationBundleChanged(payload);
-                        break;
-                }
-            }
-        },
         /**
          * @private
          * @param {Object} payload

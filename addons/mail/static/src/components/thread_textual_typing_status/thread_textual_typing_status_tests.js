@@ -70,6 +70,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -109,6 +110,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -126,6 +128,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -167,6 +170,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -215,6 +219,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -232,6 +237,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
         partner_name: "Demo",
     };
     const notification = [[false, 'mail.channel', 20], typingData];
+    // TODO SEB adapt
     this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     await this.env.testUtils.advanceTime(50 * 1000);
     await nextAnimationFrame();
@@ -283,6 +289,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -300,6 +307,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other11",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -317,6 +325,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other12",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -334,6 +343,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(
@@ -351,6 +361,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     assert.strictEqual(

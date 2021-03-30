@@ -404,6 +404,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         }],
     ];
     await afterNextRender(() => {
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
 
@@ -469,6 +470,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         }],
     ];
     await afterNextRender(() => {
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.containsN(
@@ -534,6 +536,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         }],
     ];
     await afterNextRender(() => {
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.containsOnce(
@@ -551,6 +554,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         }],
     ];
     await afterNextRender(() => {
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     assert.containsN(

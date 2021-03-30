@@ -127,6 +127,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
             record_name: 'Channel 2019',
             res_id: 100,
         };
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [
             [['my-db', 'mail.channel', 100], messageData]
         ]);

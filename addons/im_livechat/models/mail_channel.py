@@ -38,20 +38,16 @@ class MailChannel(models.Model):
         """
         # TODO SEB clean this mess, probably not needed after proper changes
 
-        # livechat_channels = self.filtered(lambda x: x.channel_type == 'livechat')
-        # other_channels = self.filtered(lambda x: x.channel_type != 'livechat')
-        # notifications = super(MailChannel, livechat_channels)._channel_message_notifications(message.with_context(im_livechat_use_username=True)) + \
-        #                 super(MailChannel, other_channels)._channel_message_notifications(message, message_format)
-        # for channel in self:
-        #     # add uuid for private livechat channels to allow anonymous to listen
-        #     if channel.channel_type == 'livechat' and channel.public == 'private':
-        #         notifications.append([channel.uuid, notifications[0][1]])
-        # if not message.author_id:
-        #     unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
-        #     if unpinned_channel_partner:
-        #         unpinned_channel_partner.write({'is_pinned': True})
-        #         notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
-        # return notifications
+        livechat_channels = self.filtered(lambda x: x.channel_type == 'livechat')
+        other_channels = self.filtered(lambda x: x.channel_type != 'livechat')
+        notifications = super(MailChannel, livechat_channels)._channel_message_notifications(message.with_context(im_livechat_use_username=True)) + \
+                        super(MailChannel, other_channels)._channel_message_notifications(message, message_format)
+        if not message.author_id:
+            unpinned_channel_partner = self.channel_last_seen_partner_ids.filtered(lambda cp: not cp.is_pinned)
+            if unpinned_channel_partner:
+                unpinned_channel_partner.write({'is_pinned': True})
+                notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
+        return notifications
 
     def channel_fetch_message(self, last_id=False, limit=20):
         """ Override to add the context of the livechat username."""

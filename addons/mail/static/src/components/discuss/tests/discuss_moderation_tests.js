@@ -792,6 +792,7 @@ QUnit.test('as author, sent message accepted in moderated channel', async functi
             moderation_status: 'accepted',
         };
         const notification = [[false, 'mail.channel', 20], messageData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
 
@@ -866,6 +867,7 @@ QUnit.test('as author, sent message rejected in moderated channel', async functi
             message_ids: [100],
         };
         const notification = [[false, 'res.partner', this.env.messaging.currentPartner.id], notifData];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     // check no message
@@ -998,6 +1000,7 @@ QUnit.test('as moderator, new pending moderation message posted by someone else'
             ['my-db', 'res.partner', this.env.messaging.currentPartner.id],
             { type: 'moderator', message: messageData },
         ]];
+        // TODO SEB adapt
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
     });
     const message = this.env.models['mail.message'].findFromIdentifyingData({ id: 1 });

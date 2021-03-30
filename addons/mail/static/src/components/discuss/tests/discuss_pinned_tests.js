@@ -186,6 +186,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
                 state: 'open',
             }
         ];
+        // TODO SEB adapt
         this.env.services.bus_service.trigger('notification', [notif]);
     });
     assert.containsOnce(

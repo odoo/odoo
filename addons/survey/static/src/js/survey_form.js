@@ -858,6 +858,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
     _initSessionManagement: function () {
         var self = this;
         if (this.options.surveyToken && this.options.sessionInProgress) {
+            // TODO SEB adapt
             this.call('bus_service', 'addChannel', this.options.surveyToken);
             this.call('bus_service', 'startPolling');
 
@@ -869,6 +870,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
                      }
                 }, 2000);
             }
+            // TODO SEB adapt
             this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
         }
     },

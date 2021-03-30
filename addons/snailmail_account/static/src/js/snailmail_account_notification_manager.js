@@ -1,38 +1,31 @@
 odoo.define('snailmail_account.NotificationManager', function (require) {
 "use strict";
 
+require('@bus/js/main');
+
 var AbstractService = require('web.AbstractService');
 var core = require("web.core");
 
 var SnailmailAccountNotificationManager =  AbstractService.extend({
-    dependencies: ['bus_service'],
-
     /**
      * @override
      */
     start: function () {
         this._super.apply(this, arguments);
-        this.call('bus_service', 'addListener', notifications => this._handleNotifications(notifications));
+        this.env.services['bus.server_communication'].on('snailmail_account.invalid_address', payload => this._handleNotificationInvalidAddress(payload));
     },
 
     /**
      * @private
-     * @param {Object[]} notifications
-     * @param {any} [notifications[].payload]
-     * @param {string} notifications[].type
+     * @param {Object} payload
+     * @param {integer} payload.invalid_addresses_count
      */
-    _handleNotifications(notifications) {
-        const { _t } = owl.Component.env;
-        for (const { payload, type } of notifications) {
-            if (type === 'snailmail_account.invalid_address') {
-                const { invalid_addresses_count } = payload;
-                const message = _.sprintf(
-                    _t("%s of the selected partner(s) had an invalid address. The corresponding followups were not sent."),
-                    owl.utils.escape(invalid_addresses_count),
-                );
-                this.displayNotification({ message, title: _t("Invalid Addresses") });
-            }
-        }
+    _handleNotificationInvalidAddress({ invalid_addresses_count }) {
+        const message = _.sprintf(
+            this.env._t("%s of the selected partner(s) had an invalid address. The corresponding followups were not sent."),
+            owl.utils.escape(invalid_addresses_count),
+        );
+        this.displayNotification({ message, title: this.env._t("Invalid Addresses") });
     }
 
 });

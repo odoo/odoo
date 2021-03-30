@@ -13,6 +13,7 @@ function factory(dependencies) {
          * @override
          */
         _willDelete() {
+            // TODO SEB adapt
             if (this.env.services['bus_service']) {
                 this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
             }
@@ -24,6 +25,7 @@ function factory(dependencies) {
          */
         async start() {
             this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
+            // TODO SEB ADAPT
             // this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
             await this.async(() => this.initializer.start());
             this.notificationHandler.start();

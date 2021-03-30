@@ -86,7 +86,8 @@ class WebsiteVisitor(models.Model):
                 'fold_state': 'open',
                 'is_minimized': True,
             })
-            mail_channels_info = mail_channels.channel_info('send_chat_request')
+            # removed "send_chat_request" from info
+            mail_channels_info = mail_channels.channel_info()
             notifications = []
             for mail_channel_info in mail_channels_info:
                 notifications.append({
