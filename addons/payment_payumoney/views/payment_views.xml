@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="payment_acquirer_form_payumoney" model="ir.ui.view">
-        <field name="name">payment.acquirer.form.inherit</field>
+
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">PayUMoney Acquirer Form</field>
         <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
         <field name="arch" type="xml">
             <xpath expr='//group[@name="acquirer"]' position='inside'>
                 <group attrs="{'invisible': [('provider', '!=', 'payumoney')]}">
@@ -13,4 +14,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

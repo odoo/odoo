@@ -5,6 +5,7 @@ from . import account_move
 from . import crm_team
 from . import ir_http
 from . import mail_compose_message
+from . import payment
 from . import product_image
 from . import product
 from . import res_country

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="ACCOUNT.PSPID" t-att-value="ACCOUNT_PSPID"/>
+            <input type="hidden" name="ALIAS.ALIASID" t-att-value="ALIAS_ALIASID"/>
+            <input type="hidden" name="ALIAS.ORDERID" t-att-value="ALIAS_ORDERID"/>
+            <input type="hidden" name="ALIAS.STOREPERMANENTLY" t-att-value="ALIAS_STOREPERMANENTLY"/>
+            <input type="hidden" name="CARD.PAYMENTMETHOD" t-att-value="CARD_PAYMENTMETHOD"/>
+            <input type="hidden" name="LAYOUT.LANGUAGE" t-att-value="LAYOUT_LANGUAGE"/>
+            <input type="hidden" name="PARAMETERS.ACCEPTURL" t-att-value="PARAMETERS_ACCEPTURL"/>
+            <input type="hidden" name="PARAMETERS.EXCEPTIONURL" t-att-value="PARAMETERS_EXCEPTIONURL"/>
+            <input type="hidden" name="SHASIGNATURE.SHASIGN" t-att-value="SHASIGNATURE_SHASIGN"/>
+        </form>
+    </template>
+
+    <template id="directlink_feedback" name="Payment processing page">
+        <t t-call="web.layout">
+            <t t-call-assets="web.assets_common"/>
+            <t t-raw="redirect_html"/>
+        </t>
+    </template>
+
+</odoo>

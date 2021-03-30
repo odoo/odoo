@@ -62,7 +62,7 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="payment.view_partners_form_payment_defaultcreditcard"/>
             <field name="arch" type="xml">
-                <button name="%(payment.payment_token_action)d" position="attributes">
+                <button name="%(payment.action_payment_token)d" position="attributes">
                     <attribute name="groups">sales_team.group_sale_salesman</attribute>
                 </button>
             </field>
