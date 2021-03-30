@@ -1,87 +1,100 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import urls
-from lxml import objectify
-
-import odoo
-
+from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 from odoo.tools import mute_logger
-from odoo.addons.payment.models.payment_acquirer import ValidationError
-from odoo.addons.payment.tests.common import PaymentAcquirerCommon
-from odoo.addons.payment_alipay.controllers.main import AlipayController
 
-@odoo.tests.tagged('post_install', '-at_install', 'external', '-standard')
-class AlipayTest(PaymentAcquirerCommon):
+from .common import AlipayCommon
+from ..controllers.main import AlipayController
 
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.currency_yuan = cls.env['res.currency'].search([('name', '=', 'CNY'),
-                                                              '|',
-                                                              ('active', '=', True),
-                                                              ('active', '=', False)], limit=1)
-        cls.alipay = cls.env.ref('payment.payment_acquirer_alipay')
-        cls.alipay.write({
-            'alipay_merchant_partner_id': 'dummy',
-            'alipay_md5_signature_key': 'dummy',
-            'alipay_seller_email': 'dummy',
-            'state': 'test',
-        })
+@tagged('post_install', '-at_install')
+class AlipayTest(AlipayCommon):
 
-    def test_10_alipay_form_render(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        self.assertEqual(self.alipay.state, 'test', 'test without test environment')
+    def test_compatible_acquirers(self):
+        self.alipay.alipay_payment_method = 'express_checkout'
+        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            partner_id=self.partner.id,
+            currency_id=self.currency_yuan.id, # 'CNY'
+            company_id=self.company.id,
+        )
+        self.assertIn(self.alipay, acquirers)
+        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            partner_id=self.partner.id,
+            currency_id=self.currency_euro.id,
+            company_id=self.company.id,
+        )
+        self.assertNotIn(self.alipay, acquirers)
 
-        # ----------------------------------------
-        # Test: button direct rendering
-        # ----------------------------------------
+        self.alipay.alipay_payment_method = 'standard_checkout'
+        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            partner_id=self.partner.id,
+            currency_id=self.currency_yuan.id, # 'CNY'
+            company_id=self.company.id,
+        )
+        self.assertIn(self.alipay, acquirers)
+        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            partner_id=self.partner.id,
+            currency_id=self.currency_euro.id,
+            company_id=self.company.id,
+        )
+        self.assertIn(self.alipay, acquirers)
 
-        # render the button
-        res = self.alipay.render(
-            'test_ref0', 0.01, self.currency_euro.id,
-            values=self.buyer_values)
+    def test_01_redirect_form_standard_checkout(self):
+        self.alipay.alipay_payment_method = 'standard_checkout'
+        self._test_alipay_redirect_form()
 
-        form_values = {
+    def test_02_redirect_form_express_checkout(self):
+        self.alipay.alipay_payment_method = 'express_checkout'
+        self._test_alipay_redirect_form()
+
+    def _test_alipay_redirect_form(self):
+        tx = self.create_transaction(flow='redirect') # Only flow implemented
+
+        expected_values = {
             '_input_charset': 'utf-8',
-            'notify_url': urls.url_join(base_url, AlipayController._notify_url),
-            'out_trade_no': 'SO12345-1',
+            'notify_url': self._build_url(AlipayController._notify_url),
+            'out_trade_no': self.reference,
             'partner': self.alipay.alipay_merchant_partner_id,
-            'return_url': urls.url_join(base_url, AlipayController._return_url),
-            'subject': 'test_ref0',
-            'total_fee': '0.01',
+            'return_url': self._build_url(AlipayController._return_url),
+            'subject': self.reference,
+            'total_fee': str(self.amount), # Fees disabled by default
         }
 
         if self.alipay.alipay_payment_method == 'standard_checkout':
-            form_values.update({
+            expected_values.update({
                 'service': 'create_forex_trade',
-                'currency': 'EUR',
                 'product_code': 'NEW_OVERSEAS_SELLER',
+                'currency': self.currency_yuan.name,
             })
         else:
-            form_values.update({
-                'payment_type': '1',
+            expected_values.update({
+                'service': 'create_direct_pay_by_user',
+                'payment_type': str(1),
                 'seller_email': self.alipay.alipay_seller_email,
-                'service': 'create_direct_pay_by_user'
             })
-        sign = self.alipay._build_sign(form_values)
+        sign = self.alipay._alipay_build_sign(expected_values)
 
-        form_values.update({'sign': sign, 'sign_type': 'MD5'})
-        # check form result
-        tree = objectify.fromstring(res)
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = tx._get_processing_values()
+        redirect_form_data = self._extract_values_from_html_form(processing_values['redirect_form_html'])
 
-        data_set = tree.xpath("//input[@name='data_set']")
-        self.assertEqual(len(data_set), 1, 'Alipay: Found %d "data_set" input instead of 1' % len(data_set))
-        self.assertEqual(data_set[0].get('data-action-url'), 'https://openapi.alipaydev.com/gateway.do', 'alipay: wrong form POST url')
-        for form_input in tree.input:
-            if form_input.get('name') in ['submit', 'data_set', 'sign', 'out_trade_no']:
-                continue
-            self.assertEqual(form_input.get('value'), form_values[form_input.get('name')], 'alipay: wrong value for input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')]))
+        expected_values.update({
+            'sign': sign,
+            'sign_type': 'MD5',
+        })
 
-    def test_11_alipay_form_with_fees(self):
-        self.assertEqual(self.alipay.state, 'test', 'test without test environment')
+        self.assertEqual(
+            redirect_form_data['action'],
+            'https://openapi.alipaydev.com/gateway.do',
+        )
+        self.assertDictEqual(
+            expected_values,
+            redirect_form_data['inputs'],
+            "Alipay: invalid inputs specified in the redirect form.",
+        )
 
+    def test_03_redirect_form_with_fees(self):
         # update acquirer: compute fees
         self.alipay.write({
             'fees_active': True,
@@ -91,34 +104,41 @@ class AlipayTest(PaymentAcquirerCommon):
             'fees_int_var': 0.50,
         })
 
-        # render the button
-        res = self.alipay.render(
-            'test_ref0', 12.50, self.currency_euro.id,
-            values=self.buyer_values)
+        transaction_fees = self.currency.round(
+            self.alipay._compute_fees(
+                self.amount,
+                self.currency,
+                self.partner.country_id,
+            )
+        )
+        self.assertEqual(transaction_fees, 7.09)
+        total_fee = self.currency.round(self.amount + transaction_fees)
+        self.assertEqual(total_fee, 1118.2)
 
-        tree = objectify.fromstring(res)
+        tx = self.create_transaction(flow='redirect')
+        self.assertEqual(tx.fees, 7.09)
+        with mute_logger('odoo.addons.payment.models.payment_transaction'):
+            processing_values = tx._get_processing_values()
+        redirect_form_data = self._extract_values_from_html_form(processing_values['redirect_form_html'])
 
-        data_set = tree.xpath("//input[@name='data_set']")
-        self.assertEqual(len(data_set), 1, 'alipay: Found %d "data_set" input instead of 1' % len(data_set))
-        self.assertEqual(data_set[0].get('data-action-url'), 'https://openapi.alipaydev.com/gateway.do', 'alipay: wrong form POST url')
-        for form_input in tree.input:
-            if form_input.get('name') in ['total_fee']:
-                self.assertEqual(form_input.get('value'), '14.07', 'alipay: wrong computed fees')  # total amount = amount + fees
+        self.assertEqual(redirect_form_data['inputs']['total_fee'], str(total_fee))
 
-    @mute_logger('odoo.addons.payment_alipay.models.payment', 'ValidationError')
-    def test_20_alipay_form_management(self):
+    def test_21_standard_checkout_feedback(self):
         self.alipay.alipay_payment_method = 'standard_checkout'
-        self._test_20_alipay_form_management()
+        self.currency = self.currency_euro
+        self._test_alipay_feedback_processing()
+
+    def test_22_express_checkout_feedback(self):
         self.alipay.alipay_payment_method = 'express_checkout'
-        self._test_20_alipay_form_management()
+        self.currency = self.currency_yuan
+        self._test_alipay_feedback_processing()
 
-    def _test_20_alipay_form_management(self):
-        self.assertEqual(self.alipay.state, 'test', 'test without test environment')
-
+    def _test_alipay_feedback_processing(self):
         # typical data posted by alipay after client has successfully paid
+        custom_reference = 'test_ref_' + self.alipay.alipay_payment_method
         alipay_post_data = {
             'trade_no': '2017112321001003690200384552',
-            'reference': 'test_ref_' + self.alipay.alipay_payment_method,
+            'reference': custom_reference,
             'total_fee': 1.95,
             'trade_status': 'TRADE_CLOSED',
         }
@@ -132,33 +152,25 @@ class AlipayTest(PaymentAcquirerCommon):
                 'currency': 'EUR',
             })
 
-        alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
-        # should raise error about unknown tx
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction'].form_feedback(alipay_post_data, 'alipay')
+        alipay_post_data['sign'] = self.alipay._alipay_build_sign(alipay_post_data)
+        with self.assertRaises(ValidationError): # unknown transactiion
+            self.env['payment.transaction']._handle_feedback_data('alipay', alipay_post_data)
 
-        if self.alipay.alipay_payment_method == 'express_checkout':
-            currency = self.currency_yuan
-        else:
-            currency = self.currency_euro
-
-        # create tx
         tx = self.env['payment.transaction'].create({
             'amount': 1.95,
             'acquirer_id': self.alipay.id,
-            'currency_id': currency.id,
-            'reference': 'test_ref_' + self.alipay.alipay_payment_method,
-            'partner_name': 'Norbert Buyer',
-            'partner_country_id': self.country_france.id
+            'currency_id': self.currency.id,
+            'reference': custom_reference,
+            'partner_id': self.partner.id
         })
 
-        # validate tx
-        tx.form_feedback(alipay_post_data, 'alipay')
-        # check tx
-        self.assertEqual(tx.state, 'cancel', 'alipay: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
+        self.env['payment.transaction']._handle_feedback_data('alipay', alipay_post_data)
+        self.assertEqual(tx.state, 'cancel',
+            'Alipay: wrong state after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552',
+            'Alipay: wrong txn_id after receiving a valid pending notification')
 
-        # update tx
+        # reset the transaction
         tx.write({'state': 'draft', 'acquirer_reference': False})
 
         # update notification from alipay should not go through since it has already been set as 'done'
@@ -166,37 +178,16 @@ class AlipayTest(PaymentAcquirerCommon):
             alipay_post_data['trade_status'] = 'TRADE_FINISHED'
         else:
             alipay_post_data['trade_status'] = 'TRADE_SUCCESS'
-        alipay_post_data['sign'] = self.alipay._build_sign(alipay_post_data)
-        # validate tx
-        tx.form_feedback(alipay_post_data, 'alipay')
-        # check tx
-        self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: notification should not go throught since it has already been validated')
+        alipay_post_data['sign'] = self.alipay._alipay_build_sign(alipay_post_data)
+
+        self.env['payment.transaction']._handle_feedback_data('alipay', alipay_post_data)
+        self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552',
+            'Alipay: notification should not go throught since it has already been validated')
 
         # this time it should go through since the transaction is not validated yet
         tx.write({'state': 'draft', 'acquirer_reference': False})
-        tx.form_feedback(alipay_post_data, 'alipay')
-        self.assertEqual(tx.state, 'done', 'alipay: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
-
-    @mute_logger('odoo.addons.payment_alipay.models.payment', 'ValidationError')
-    def test_30_alipay_bad_configuration(self):
-        self.alipay.alipay_payment_method = 'express_checkout'
-
-        # should raise error since `express_checkout` must only be used with CNY currency
-        with self.assertRaises(ValidationError):
-            # create tx
-            tx = self.env['payment.transaction'].create({
-                'acquirer_id': self.alipay.id,
-                'amount': 4,
-                'currency_id': self.currency_euro.id,
-                'reference': 'test_ref_2',
-                'partner_country_id': self.country_france.id
-            })
-
-        tx = self.env['payment.transaction'].create({
-            'acquirer_id': self.alipay.id,
-            'amount': 4,
-            'currency_id': self.currency_yuan.id,
-            'reference': 'test_ref_2',
-            'partner_country_id': self.country_france.id
-        })
+        self.env['payment.transaction']._handle_feedback_data('alipay', alipay_post_data)
+        self.assertEqual(tx.state, 'done',
+            'Alipay: wrong state after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552',
+            'Alipay: wrong txn_id after receiving a valid pending notification')

@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import hashlib
-import hmac
 
 from werkzeug import urls
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import ustr, consteq, float_compare
+from odoo.tools import float_compare
+
+from odoo.addons.payment import utils as payment_utils
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -53,10 +52,10 @@ class PaymentLinkWizard(models.TransientModel):
 
     @api.depends('amount', 'description', 'partner_id', 'currency_id')
     def _compute_values(self):
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         for payment_link in self:
-            token_str = '%s%s%s' % (payment_link.partner_id.id, payment_link.amount, payment_link.currency_id.id)
-            payment_link.access_token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
+            payment_link.access_token = payment_utils.generate_access_token(
+                payment_link.partner_id.id, payment_link.amount, payment_link.currency_id.id
+            )
         # must be called after token generation, obvsly - the link needs an up-to-date token
         self._generate_link()
 
@@ -68,27 +67,12 @@ class PaymentLinkWizard(models.TransientModel):
 
     def _generate_link(self):
         for payment_link in self:
-            record = self.env[payment_link.res_model].browse(payment_link.res_id)
-            link = ('%s/website_payment/pay?reference=%s&amount=%s&currency_id=%s'
-                    '&partner_id=%s&access_token=%s') % (
-                        record.get_base_url(),
-                        urls.url_quote(payment_link.description),
-                        payment_link.amount,
-                        payment_link.currency_id.id,
-                        payment_link.partner_id.id,
-                        payment_link.access_token
-                    )
-            if payment_link.company_id:
-                link += '&company_id=%s' % payment_link.company_id.id
-            if payment_link.res_model == 'account.move':
-                link += '&invoice_id=%s' % payment_link.res_id
-            payment_link.link = link
-
-    @api.model
-    def check_token(self, access_token, partner_id, amount, currency_id):
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token_str = '%s%s%s' % (partner_id, amount, currency_id)
-        correct_token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
-        if consteq(ustr(access_token), correct_token):
-            return True
-        return False
+            related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
+            base_url = related_document.get_base_url()  # Don't generate links for the wrong website
+            payment_link.link = f'{base_url}/payment/pay' \
+                   f'?reference={urls.url_quote(payment_link.description)}' \
+                   f'&amount={payment_link.amount}' \
+                   f'&currency_id={payment_link.currency_id.id}' \
+                   f'&partner_id={payment_link.partner_id.id}' \
+                   f'&company_id={payment_link.company_id.id}' \
+                   f'&access_token={payment_link.access_token}'

@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import pprint
+
 import werkzeug
 
 from odoo import http
@@ -12,10 +14,8 @@ _logger = logging.getLogger(__name__)
 class TransferController(http.Controller):
     _accept_url = '/payment/transfer/feedback'
 
-    @http.route([
-        '/payment/transfer/feedback',
-    ], type='http', auth='public', csrf=False)
+    @http.route(_accept_url, type='http', auth='public', methods=['POST'], csrf=False)
     def transfer_form_feedback(self, **post):
-        _logger.info('Beginning form_feedback with post data %s', pprint.pformat(post))  # debug
-        request.env['payment.transaction'].sudo().form_feedback(post, 'transfer')
-        return werkzeug.utils.redirect('/payment/process')
+        _logger.info("beginning _handle_feedback_data with post data %s", pprint.pformat(post))
+        request.env['payment.transaction'].sudo()._handle_feedback_data('transfer', post)
+        return werkzeug.utils.redirect('/payment/status')

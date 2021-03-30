@@ -878,10 +878,10 @@ Reason(s) of this behavior could be:
 
     def action_done(self):
         for order in self:
-            tx = order.sudo().transaction_ids.get_last_transaction()
+            tx = order.sudo().transaction_ids._get_last()
             if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
-                tx._set_transaction_done()
-                tx.write({'is_processed': True})
+                tx._set_done()
+                tx.write({'is_post_processed': True})
         return self.write({'state': 'done'})
 
     def action_unlock(self):
@@ -995,72 +995,6 @@ Reason(s) of this behavior could be:
 
         return groups
 
-    def _create_payment_transaction(self, vals):
-        '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
-        current sales orders fields (e.g. the partner or the currency).
-        :param vals: The values to create a new payment.transaction.
-        :return: The newly created payment.transaction record.
-        '''
-        # Ensure the currencies are the same.
-        currency = self[0].pricelist_id.currency_id
-        if any(so.pricelist_id.currency_id != currency for so in self):
-            raise ValidationError(_('A transaction can\'t be linked to sales orders having different currencies.'))
-
-        # Ensure the partner are the same.
-        partner = self[0].partner_id
-        if any(so.partner_id != partner for so in self):
-            raise ValidationError(_('A transaction can\'t be linked to sales orders having different partners.'))
-
-        # Try to retrieve the acquirer. However, fallback to the token's acquirer.
-        acquirer_id = vals.get('acquirer_id')
-        acquirer = False
-        payment_token_id = vals.get('payment_token_id')
-
-        if payment_token_id:
-            payment_token = self.env['payment.token'].sudo().browse(payment_token_id)
-
-            # Check payment_token/acquirer matching or take the acquirer from token
-            if acquirer_id:
-                acquirer = self.env['payment.acquirer'].browse(acquirer_id)
-                if payment_token and payment_token.acquirer_id != acquirer:
-                    raise ValidationError(_('Invalid token found! Token acquirer %s != %s') % (
-                    payment_token.acquirer_id.name, acquirer.name))
-                if payment_token and payment_token.partner_id != partner:
-                    raise ValidationError(_('Invalid token found! Token partner %s != %s') % (
-                    payment_token.partner.name, partner.name))
-            else:
-                acquirer = payment_token.acquirer_id
-
-        # Check an acquirer is there.
-        if not acquirer_id and not acquirer:
-            raise ValidationError(_('A payment acquirer is required to create a transaction.'))
-
-        if not acquirer:
-            acquirer = self.env['payment.acquirer'].browse(acquirer_id)
-
-        # Check a journal is set on acquirer.
-        if not acquirer.journal_id:
-            raise ValidationError(_('A journal must be specified for the acquirer %s.', acquirer.name))
-
-        if not acquirer_id and acquirer:
-            vals['acquirer_id'] = acquirer.id
-
-        vals.update({
-            'amount': sum(self.mapped('amount_total')),
-            'currency_id': currency.id,
-            'partner_id': partner.id,
-            'sale_order_ids': [(6, 0, self.ids)],
-            'type': self[0]._get_payment_type(vals.get('type')=='form_save'),
-        })
-
-        transaction = self.env['payment.transaction'].create(vals)
-
-        # Process directly if payment_token
-        if transaction.payment_token_id:
-            transaction.s2s_do_transaction()
-
-        return transaction
-
     def preview_sale_order(self):
         self.ensure_one()
         return {
@@ -1077,14 +1011,14 @@ Reason(s) of this behavior could be:
                 line.qty_to_invoice = 0
 
     def payment_action_capture(self):
-        self.authorized_transaction_ids.s2s_capture_transaction()
+        self.authorized_transaction_ids._send_capture_request()
 
     def payment_action_void(self):
-        self.authorized_transaction_ids.s2s_void_transaction()
+        self.authorized_transaction_ids._send_void_request()
 
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.transaction_ids.get_last_transaction()
+        return self.transaction_ids._get_last()
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -1106,10 +1040,6 @@ Reason(s) of this behavior could be:
             auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
             return self.get_portal_url(query_string='&%s' % auth_param)
         return super(SaleOrder, self)._get_share_url(redirect, signup_partner, pid)
-
-    def _get_payment_type(self, tokenize=False):
-        self.ensure_one()
-        return 'form_save' if tokenize else 'form'
 
     def _get_portal_return_action(self):
         """ Return the action used to display orders when returning from customer portal. """

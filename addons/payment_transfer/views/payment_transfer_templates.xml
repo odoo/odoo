@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
-        <template id="transfer_form">
-            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
-            <t t-if="return_url">
-                <input type="hidden" name='return_url' t-att-value='return_url'/>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="reference" t-att-value="reference"/>
+        </form>
+    </template>
+
+    <template id="transfer_transaction_status" inherit_id="payment.transaction_status">
+        <xpath expr="//span[@t-raw='tx.acquirer_id.sudo().pending_msg']" position="after">
+            <t t-if="tx.acquirer_id.sudo().provider == 'transfer'">
+                <div t-if="tx.reference">
+                    <strong>Communication: </strong><span t-esc="tx.reference"/>
+                </div>
+                <div t-if="tx.acquirer_id.sudo().qr_code">
+                    <t t-set="qr_code" t-value="tx.acquirer_id.sudo().journal_id.bank_account_id.build_qr_code_url(tx.amount, tx.reference, None, tx.currency_id, tx.partner_id)"/>
+                    <div t-if="qr_code" class="mt-2">
+                        <h3>Or scan me with your banking app.</h3>
+                        <img class="border border-dark rounded" t-att-src="qr_code"/>
+                    </div>
+                </div>
             </t>
-            <input type="hidden" name='reference' t-att-value='reference'/>
-            <input type="hidden" name='amount' t-att-value='amount'/>
-            <input type="hidden" name='currency' t-att-value='currency.name'/>
-        </template>
-    </data>
+        </xpath>
+    </template>
+
 </odoo>
