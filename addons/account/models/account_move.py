@@ -3715,14 +3715,19 @@ class AccountMoveLine(models.Model):
 
     @api.constrains('account_id', 'tax_ids', 'tax_line_id', 'reconciled')
     def _check_off_balance(self):
+        checked_moves = set()
         for line in self:
-            if line.account_id.internal_group == 'off_balance':
-                if any(a.internal_group != line.account_id.internal_group for a in line.move_id.line_ids.account_id):
-                    raise UserError(_('If you want to use "Off-Balance Sheet" accounts, all the accounts of the journal entry must be of this type'))
-                if line.tax_ids or line.tax_line_id:
-                    raise UserError(_('You cannot use taxes on lines with an Off-Balance account'))
-                if line.reconciled:
-                    raise UserError(_('Lines from "Off-Balance Sheet" accounts cannot be reconciled'))
+            if line.account_id.internal_group != 'off_balance':
+                continue
+            if line.move_id.id in checked_moves:
+                continue
+            checked_moves.add(line.move_id.id)
+            if any(a.internal_group != 'off_balance' for a in line.move_id.line_ids.account_id):
+                raise UserError(_('If you want to use "Off-Balance Sheet" accounts, all the accounts of the journal entry must be of this type'))
+            if any(True for l in line.move_id.line_ids if l.tax_ids or l.tax_line_id):
+                raise UserError(_('You cannot use taxes on lines with an Off-Balance account'))
+            if any(True for l in line.move_id.line_ids if l.reconciled):
+                raise UserError(_('Lines from "Off-Balance Sheet" accounts cannot be reconciled'))
 
     def _affect_tax_report(self):
         self.ensure_one()
