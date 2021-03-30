@@ -104,6 +104,7 @@ def _create_empty_database(name):
             raise DatabaseExists("database %r already exists!" % (name,))
         else:
             # database-altering operations cannot be executed inside a transaction
+            cr.rollback()
             cr._cnx.autocommit = True
 
             # 'C' collate is only safe with template0, but provides more useful indexes
