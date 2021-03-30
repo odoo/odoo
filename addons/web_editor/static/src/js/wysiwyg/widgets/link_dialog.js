@@ -255,11 +255,11 @@ var LinkDialog = Dialog.extend({
     _getData: function () {
         var $url = this.$('input[name="url"]');
         var url = $url.val();
-        var label = this.$('input[name="label"]').val() || url;
+        var label = _.escape(this.$('input[name="label"]').val() || url);
 
         if (label && this.data.images) {
             for (var i = 0; i < this.data.images.length; i++) {
-                label = label.replace('<', "&lt;").replace('>', "&gt;").replace(/\[IMG\]/, this.data.images[i].outerHTML);
+                label = label.replace(/\[IMG\]/, this.data.images[i].outerHTML);
             }
         }
 
