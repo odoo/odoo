@@ -13,7 +13,6 @@
         'security/ir.model.access.csv',
         'data/purchase_stock_data.xml',
         'data/mail_templates.xml',
-        'views/assets.xml',
         'report/vendor_delay_report.xml',
         'views/purchase_views.xml',
         'views/stock_views.xml',
@@ -33,4 +32,9 @@
     'installable': True,
     'auto_install': True,
     'post_init_hook': '_create_buy_rules',
+    'assets': {
+        'web.assets_backend': [
+            'purchase_stock/static/**/*',
+        ],
+    }
 }

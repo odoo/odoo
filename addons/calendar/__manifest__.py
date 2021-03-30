@@ -33,8 +33,25 @@ If you need to manage your meetings, you should install the CRM module.
         'views/calendar_templates.xml',
         'views/calendar_views.xml',
     ],
-    'qweb': ['static/src/xml/base_calendar.xml'],
     'installable': True,
     'application': True,
     'auto_install': False,
+    'assets': {
+        'web.assets_backend': [
+            'calendar/static/src/scss/calendar.scss',
+            'calendar/static/src/js/base_calendar.js',
+            'calendar/static/src/js/calendar_renderer.js',
+            'calendar/static/src/js/calendar_controller.js',
+            'calendar/static/src/js/calendar_model.js',
+            'calendar/static/src/js/calendar_view.js',
+            'calendar/static/src/js/mail_activity.js',
+            'calendar/static/src/js/systray_activity_menu.js',
+        ],
+        'web.qunit_suite_tests': [
+            'calendar/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'calendar/static/src/xml/base_calendar.xml',
+        ],
+    }
 }

@@ -15,7 +15,6 @@
         'data/mail_data.xml',
         'data/mail_template_data.xml',
         'data/event_track_data.xml',
-        'views/assets.xml',
         'views/mail_templates.xml',
         'views/event_templates.xml',
         'views/event_track_templates_agenda.xml',
@@ -43,4 +42,15 @@
         'data/event_track_demo_description.xml',
         'data/event_track_visitor_demo.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'website_event_track/static/src/scss/event_track_templates.scss',
+            'website_event_track/static/src/scss/event_track_templates_online.scss',
+            'website_event_track/static/src/scss/pwa_frontend.scss',
+            'website_event_track/static/src/js/website_event_track.js',
+            'website_event_track/static/src/js/event_track_reminder.js',
+            'website_event_track/static/src/js/website_event_pwa_widget.js',
+            'website_event_track/static/lib/idb-keyval/idb-keyval.js',
+        ],
+    }
 }

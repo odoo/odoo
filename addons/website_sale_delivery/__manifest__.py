@@ -17,7 +17,14 @@ Configure your own methods with a pricing grid or integrate with carriers for a 
     'demo': [
         'data/website_sale_delivery_demo.xml'
     ],
-    'qweb': [],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_sale_delivery/static/src/**/*',
+        ],
+        'web.assets_tests': [
+            'website_sale_delivery/static/tests/**/*',
+        ],
+    }
 }

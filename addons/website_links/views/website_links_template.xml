@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <template id="assets_website_links" inherit_id="website.assets_frontend">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/website_links/static/src/js/website_links.js"/>
-                <script type="text/javascript" src="/website_links/static/src/js/website_links_code_editor.js"/>
-                <script type="text/javascript" src="/website_links/static/src/js/website_links_charts.js"/>
-                <link rel="stylesheet" type="text/css" href="/website_links/static/src/css/website_links.css"/>
-            </xpath>
-        </template>
-
-        <template id="assets_tests" name="Website Links Assets Tests" inherit_id="web.assets_tests">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/website_links/static/tests/tours/website_links.js"></script>
-            </xpath>
-        </template>
-
         <template id="share_page_menu" inherit_id="website.user_navbar">
             <xpath expr="//a[@data-action='promote-current-page']" position="after">
                 <a href="/r" id="o_website_links_share_page" class="dropdown-item">
@@ -23,12 +8,6 @@
                 </a>
             </xpath>
 
-        </template>
-
-        <template id="asset_website_links_menu" inherit_id="website.assets_editor">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/website_links/static/src/js/website_links_menu.js"></script>
-            </xpath>
         </template>
 
         <template id="create_shorten_url">

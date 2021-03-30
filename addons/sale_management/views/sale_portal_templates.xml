@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Quote frontend assets">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/sale_management/static/src/js/sale_management.js"></script>
-        </xpath>
-    </template>
-
     <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
 
         <xpath expr="//section[@id='details']//t[@t-set='display_discount']" position="after">

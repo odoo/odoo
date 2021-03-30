@@ -14,7 +14,6 @@
         'website_event_track',
     ],
     'data': [
-        'views/assets.xml',
         'views/event_track_templates_list.xml',
         'views/event_track_templates_page.xml',
         'views/event_track_views.xml',
@@ -22,9 +21,16 @@
     'demo': [
         'data/event_track_demo.xml'
     ],
-    'qweb': [
-        'static/src/xml/website_event_track_live_templates.xml'
-    ],
     'application': False,
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_event_track_live/static/src/scss/website_event_track_live.scss',
+            'website_event_track_live/static/src/js/website_event_track_suggestion.js',
+            'website_event_track_live/static/src/js/website_event_track_live.js',
+        ],
+        'web.assets_qweb': [
+            'website_event_track_live/static/src/xml/**/*',
+        ],
+    }
 }

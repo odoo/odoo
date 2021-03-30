@@ -16,11 +16,15 @@
         'data/maintenance_data.xml',
         'data/mail_data.xml',
         'views/maintenance_views.xml',
-        'views/maintenance_templates.xml',
         'views/mail_activity_views.xml',
         'data/maintenance_cron.xml',
     ],
     'demo': ['data/maintenance_demo.xml'],
     'installable': True,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'maintenance/static/src/**/*',
+        ],
+    }
 }

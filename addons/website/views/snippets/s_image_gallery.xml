@@ -2,9 +2,7 @@
 <odoo>
 
 <template id="s_image_gallery" name="Image Gallery">
-    <section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24"
-             data-vcss="001"
-             data-columns="3" style="height: 500px; overflow: hidden;">
+    <section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24" data-vcss="001" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
             <div id="slideshow_sample" class="carousel slide" data-ride="carousel" data-interval="0" style="margin: 0 12px;">
                 <div class="carousel-inner" style="padding: 0;">
@@ -43,9 +41,7 @@
 </template>
 
 <template id="s_images_wall" name="Images Wall">
-    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24"
-             data-vcss="001"
-             data-columns="3" style="overflow: hidden;">
+    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24" data-vcss="001" data-columns="3" style="overflow: hidden;">
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
@@ -85,10 +81,10 @@
                 <we-button data-mode="slideshow" data-name="slideshow_mode_opt">Slideshow</we-button>
             </we-select>
             <we-input string="Speed"
-                  data-dependencies="slideshow_mode_opt"
-                  data-apply-to=".carousel:first"
-                  data-select-data-attribute="0s" data-attribute-name="interval"
-                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+                data-dependencies="slideshow_mode_opt"
+                data-apply-to=".carousel:first"
+                data-select-data-attribute="0s" data-attribute-name="interval"
+                data-unit="s" data-save-unit="ms" data-step="0.1"/>
             <we-select string="Columns" data-dependencies="masonry_mode_opt, grid_mode_opt">
                 <we-button data-columns="1">1</we-button>
                 <we-button data-columns="2">2</we-button>
@@ -134,22 +130,23 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_image_gallery_css_000" inherit_id="website.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_image_gallery/000.scss"/>
-    </xpath>
-</template>
+<record id="website.s_image_gallery_000_js" model="ir.asset">
+    <field name="name">Image gallery 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_image_gallery/000.js</field>
+</record>
 
-<template id="assets_snippet_s_image_gallery_css_001" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_image_gallery/001.scss"/>
-    </xpath>
-</template>
+<record id="website.s_image_gallery_000_scss" model="ir.asset">
+    <field name="name">Image gallery 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_image_gallery/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
 
-<template id="assets_snippet_s_image_gallery_js_000" inherit_id="website.assets_frontend">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/snippets/s_image_gallery/000.js"/>
-    </xpath>
-</template>
+<record id="website.s_image_gallery_001_scss" model="ir.asset">
+    <field name="name">Image gallery 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_image_gallery/001.scss</field>
+</record>
 
 </odoo>

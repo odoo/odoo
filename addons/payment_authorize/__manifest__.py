@@ -9,7 +9,6 @@
     'description': """Authorize.Net Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/assets.xml',
         'views/payment_views.xml',
         'views/payment_authorize_templates.xml',
         'data/payment_acquirer_data.xml',
@@ -17,4 +16,10 @@
     'application': True,
     'post_init_hook': 'create_missing_journals',
     'uninstall_hook': 'uninstall_hook',
+    'assets': {
+        'web.assets_frontend': [
+            'payment_authorize/static/src/scss/payment_authorize.scss',
+            'payment_authorize/static/src/js/payment_form.js',
+        ],
+    }
 }

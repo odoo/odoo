@@ -10,8 +10,13 @@
     """,
     'depends': ['base_setup'],
     'data': [
-        'views/assets.xml',
         'views/res_config_settings_view.xml',
     ],
     'auto_install': False,
+    'assets': {
+        'web.assets_frontend': [
+            'google_recaptcha/static/src/scss/recaptcha.scss',
+            'google_recaptcha/static/src/js/recaptcha.js',
+        ],
+    }
 }

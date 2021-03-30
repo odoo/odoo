@@ -23,4 +23,15 @@
     'installable': True,
     'application': True,
     'auto_install': ['hr_recruitment', 'website_mail'],
+    'assets': {
+        'web.assets_frontend': [
+            'website_hr_recruitment/static/src/scss/**/*',
+        ],
+        'website.assets_editor': [
+            'website_hr_recruitment/static/src/js/**/*',
+        ],
+        'web.assets_tests': [
+            'website_hr_recruitment/static/tests/**/*',
+        ],
+    }
 }

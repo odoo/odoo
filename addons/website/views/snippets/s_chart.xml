@@ -21,8 +21,7 @@
 
 <template id="s_chart_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
-        <div data-js="InnerChart" string="Chart"
-            data-selector=".s_chart">
+        <div data-js="InnerChart" string="Chart" data-selector=".s_chart">
             <we-row string="Background">
                 <t t-call="web_editor.snippet_options_background_color_widget"/>
             </we-row>
@@ -34,8 +33,7 @@
                 <we-button data-select-data-attribute="doughnut">Doughnut</we-button>
                 <we-button data-select-data-attribute="radar">Radar</we-button>
             </we-select>
-            <we-checkbox string="Stacked" data-name="stacked_chart_opt" data-dependencies="bar_chart_opt, horizontal_bar_chart_opt"
-                        data-select-data-attribute="false|true" data-attribute-name="stacked" data-no-preview="true"/>
+            <we-checkbox string="Stacked" data-name="stacked_chart_opt" data-dependencies="bar_chart_opt, horizontal_bar_chart_opt" data-select-data-attribute="false|true" data-attribute-name="stacked" data-no-preview="true"/>
             <we-select string="Legend" data-attribute-name="legendPosition" data-attribute-default-value="top">
                 <we-button data-select-data-attribute="none">None</we-button>
                 <we-button data-select-data-attribute="top">Top</we-button>
@@ -68,10 +66,10 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_chart_js_000" inherit_id="website.assets_frontend">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/snippets/s_chart/000.js"/>
-    </xpath>
-</template>
+<record id="website.s_chart_000_js" model="ir.asset">
+    <field name="name">Chart 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_chart/000.js</field>
+</record>
 
 </odoo>

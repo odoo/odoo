@@ -42,16 +42,26 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'security/ir_rule.xml',
         'report/hr_expense_report.xml',
         'views/hr_department_views.xml',
-        'views/assets.xml',
         'views/res_config_settings_views.xml',
         'views/account_journal_dashboard.xml',
     ],
     'demo': ['data/hr_expense_demo.xml'],
-    'qweb': [
-        "static/src/xml/documents_upload_views.xml",
-        "static/src/xml/expense_dashboard.xml",
-        "static/src/xml/expense_qr_modal_template.xml",
-    ],
     'installable': True,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'hr_expense/static/src/js/expense_views.js',
+            'hr_expense/static/src/js/expense_form_view.js',
+            'hr_expense/static/src/js/expense_qr_code_action.js',
+            'hr_expense/static/src/js/upload_mixin.js',
+            'hr_expense/static/src/scss/hr_expense.scss',
+        ],
+        'web.assets_tests': [
+            'hr_expense/static/src/js/tours/hr_expense.js',
+            'hr_expense/static/tests/tours/expense_upload_tours.js',
+        ],
+        'web.assets_qweb': [
+            'hr_expense/static/src/xml/**/*',
+        ],
+    }
 }

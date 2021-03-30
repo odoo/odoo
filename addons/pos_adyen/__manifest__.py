@@ -12,10 +12,13 @@
         'views/adyen_account_views.xml',
         'views/pos_config_views.xml',
         'views/pos_payment_method_views.xml',
-        'views/point_of_sale_assets.xml',
         'views/res_config_settings_views.xml',
     ],
     'depends': ['adyen_platforms', 'point_of_sale'],
-    'qweb': ['static/src/xml/pos.xml'],
     'installable': True,
+    'assets': {
+        'point_of_sale.assets': [
+            'pos_adyen/static/**/*',
+        ],
+    }
 }

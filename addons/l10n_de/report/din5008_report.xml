@@ -16,12 +16,6 @@
             <field name="header_spacing">45</field>
         </record>
 
-        <template id="assets_common" name="l10n_de_din5008_report" inherit_id="web.report_assets_common">
-            <xpath expr="." position="inside">
-                <link rel="stylesheet" type="text/scss" href="/l10n_de/static/src/scss/report_din5008.scss"/>
-            </xpath>
-        </template>
-
         <!-- New report layout for din5008 format -->
         <template id="external_layout_din5008">
             <t t-if="not o and doc">

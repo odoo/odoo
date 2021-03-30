@@ -13,10 +13,14 @@
         'point_of_sale'
     ],
     'data': [
-        'views/templates.xml',
         'views/views.xml'
     ],
-    'qweb': [
-        'static/src/xml/pos.xml'
-    ],
+    'assets': {
+        'point_of_sale.assets': [
+            'l10n_co_pos/static/src/js/**/*',
+        ],
+        'web.assets_qweb': [
+            'l10n_co_pos/static/src/xml/**/*',
+        ],
+    }
 }

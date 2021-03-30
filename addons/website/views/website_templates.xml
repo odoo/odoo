@@ -1965,14 +1965,19 @@
 </template>
 
 <!-- Effect options -->
-<template id="option_ripple_effect" inherit_id="website.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/ripple_effect.scss"/>
-    </xpath>
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/content/ripple_effect.js"/>
-    </xpath>
-</template>
+<record id="website.ripple_effect_scss" model="ir.asset">
+    <field name="name">Ripple effect SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">/website/static/src/scss/options/ripple_effect.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.ripple_effect_js" model="ir.asset">
+    <field name="name">Ripple effect JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">/website/static/src/js/content/ripple_effect.js</field>
+    <field name="active" eval="False"/>
+</record>
 
 <!-- Error and special pages -->
 <template id="website_info" name="Odoo Information">

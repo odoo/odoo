@@ -16,5 +16,9 @@ Display orders to invoice in website dashboard.
     ],
     'demo': [
     ],
-    'qweb': ['static/src/xml/*.xml'],
+    'assets': {
+        'web.assets_qweb': [
+            'website_sale_management/static/src/xml/*.xml',
+        ],
+    }
 }

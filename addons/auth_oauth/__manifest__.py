@@ -18,4 +18,9 @@ Allow users to login through OAuth2 Provider.
         'views/auth_oauth_templates.xml',
         'security/ir.model.access.csv',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'auth_oauth/static/**/*',
+        ],
+    }
 }

@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="assets_backend" name="mass_mailing assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.scss"/>
-            <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing_mobile.scss"/>
-            <link rel="stylesheet" href="/mass_mailing/static/src/css/email_template.css"/>
-
-            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing.js"></script>
-            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_widget.js"></script>
-        </xpath>
-        <xpath expr="//script[last()]" position="after">
-            <script type="text/javascript" src="/mass_mailing/static/src/js/unsubscribe.js"></script>
-        </xpath>
-    </template>
-
-    <template id="assets_mail_themes">
-        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/themes/theme_basic.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/themes/theme_default.scss"/>
-    </template>
-
-    <template id="assets_mail_themes_edition"> <!-- maybe to remove and convert into a field dumy with attr invisible if the template is not selected -->
-        <t t-call="web._assets_helpers"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.ui.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss"/>
-    </template>
-
     <template id="iframe_css_assets_edit" groups="base.group_user">
         <t t-call-assets="mass_mailing.assets_mail_themes" t-js="false"/>
         <t t-call="mass_mailing.mass_mailing_mail_style"/>
@@ -36,27 +10,7 @@
         <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/css/basic_theme_readonly.css"/>
     </template>
 
-    <template id="assets_common" name="Mass Mailing Assets Common" inherit_id="web.assets_common">
-        <xpath expr="//script[last()]" position="after">
-            <script type="text/javscript" src="/mass_mailing/static/src/js/tours/mass_mailing_tour.js"/>
-        </xpath>
-    </template>
-
-    <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/mass_mailing/static/tests/field_html_test.js"/>
-            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_snippets.js"/>
-            <script type="text/javascript" src="/mass_mailing/static/tests/mass_mailing_html_tests.js"/>
-        </xpath>
-    </template>
-
     <template id="mass_mailing_mail_style">
-        <!--
-        Reference: https://litmus.com/community/learning/24-how-to-code-a-responsive-email-from-scratch
-        https://www.campaignmonitor.com/css/link-element/link-in-head/
-
-        This template is meant to put inline CSS into an email's head
-        -->
         <style>
             @media screen and (max-width: 768px) {
                 .o_mail_col_mv {
@@ -72,4 +26,5 @@
             }
         </style>
     </template>
-</odoo>
+
+    </odoo>

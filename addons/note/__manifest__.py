@@ -19,17 +19,25 @@
         'data/note_data.xml',
         'data/res_users_data.xml',
         'views/note_views.xml',
-        'views/note_templates.xml',
-    ],
+        ],
     'demo': [
         'data/note_demo.xml',
-    ],
-    'qweb': [
-        'static/src/xml/systray.xml',
     ],
     'test': [
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
+    'assets': {
+        'web.assets_backend': [
+            'note/static/src/scss/note.scss',
+            'note/static/src/js/systray_activity_menu.js',
+        ],
+        'web.qunit_suite_tests': [
+            'note/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'note/static/src/xml/**/*',
+        ],
+    }
 }
