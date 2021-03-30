@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="HeaderButton" owl="1">
-        <div class="header-button close_button" t-on-click="onClick">
-            Close
+        <div class="header-button" t-on-click="onClick">
+            <span><i class="fa fa-sign-out" role="img"/> <t t-if="!env.isMobile">Close</t></span>
         </div>
     </t>
 
