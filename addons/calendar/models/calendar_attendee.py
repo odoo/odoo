@@ -87,20 +87,19 @@ class Attendee(models.Model):
             partners = (event.attendee_ids & self).partner_id & event.message_partner_ids
             event.message_unsubscribe(partner_ids=partners.ids)
 
-    def _send_mail_to_attendees(self, template_xmlid, force_send=False):
+    def _send_mail_to_attendees(self, mail_template, force_send=False):
         """ Send mail for event invitation to event attendees.
-            :param template_xmlid: xml id of the email template to use to send the invitation
+            :param mail_template: a mail.template record
             :param force_send: if set to True, the mail(s) will be sent immediately (instead of the next queue processing)
         """
-        res = False
-
+        if isinstance(mail_template, str):
+            raise ValueError('Template should be a template record, not an XML ID anymore.')
         if self.env['ir.config_parameter'].sudo().get_param('calendar.block_mail') or self._context.get("no_mail_to_attendees"):
-            return res
+            return False
+        if not mail_template:
+            _logger.warning("No template passed to %s notification process. Skipped.", self)
+            return False
 
-        invitation_template = self.env.ref(template_xmlid, raise_if_not_found=False)
-        if not invitation_template:
-            _logger.warning("Template %s could not be found. %s not notified." % (template_xmlid, self))
-            return
         # get ics file for all meetings
         ics_files = self.mapped('event_id')._get_ics_file()
 
@@ -116,12 +115,12 @@ class Attendee(models.Model):
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
-                body = invitation_template._render_field(
+                body = mail_template._render_field(
                     'body_html',
                     attendee.ids,
                     compute_lang=True,
                     post_process=True)[attendee.id]
-                subject = invitation_template._render_field(
+                subject = mail_template._render_field(
                     'subject',
                     attendee.ids,
                     compute_lang=True)[attendee.id]
