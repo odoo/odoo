@@ -17,7 +17,6 @@
         'security/ir.model.access.csv',
         'wizard/create_company_global_time_off_views.xml',
         'data/hr_work_entry_data.xml',
-        'views/hr_work_entry_template.xml',
         'views/hr_work_entry_views.xml',
         'views/resource_views.xml',
         'wizard/hr_work_entry_regeneration_wizard_views.xml',
@@ -25,5 +24,9 @@
     'demo': [
         'data/hr_work_entry_demo.xml',
     ],
-
+    'assets': {
+        'web.assets_backend': [
+            'hr_work_entry_contract/static/src/**/*',
+        ],
+    }
 }

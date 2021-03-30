@@ -29,7 +29,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/sales_team_views.xml',
         'views/res_partner_views.xml',
         'views/mail_activity_views.xml',
-        'views/assets.xml',
         'views/variant_templates.xml',
         'views/sale_portal_templates.xml',
         'views/sale_onboarding_views.xml',
@@ -46,5 +45,31 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/sale_demo.xml',
     ],
     'installable': True,
-    'auto_install': False
+    'auto_install': False,
+    'assets': {
+        'web.assets_backend': [
+            'sale/static/src/scss/sale_onboarding.scss',
+            'sale/static/src/scss/product_configurator.scss',
+            'sale/static/src/js/sale.js',
+            'sale/static/src/js/tours/sale.js',
+            'sale/static/src/js/product_configurator_widget.js',
+            'sale/static/src/js/sale_order_view.js',
+            'sale/static/src/js/product_discount_widget.js',
+        ],
+        'web.report_assets_common': [
+            'sale/static/src/scss/sale_report.scss',
+        ],
+        'web.assets_frontend': [
+            'sale/static/src/scss/sale_portal.scss',
+            'sale/static/src/js/sale_portal_sidebar.js',
+            'sale/static/src/js/payment_form.js',
+        ],
+        'web.assets_tests': [
+            'sale/static/tests/tours/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'sale/static/tests/product_configurator_tests.js',
+            'sale/static/tests/sales_team_dashboard_tests.js',
+        ],
+    }
 }

@@ -29,8 +29,7 @@
                     <i class="fa fa-fw fa-eye"/>
                 </we-button>
             </we-row>
-            <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt"
-                        data-select-data-attribute="" placeholder="e.g. /my-awesome-page" data-attribute-name="redirectUrl"/>
+            <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt" data-select-data-attribute="" placeholder="e.g. /my-awesome-page" data-attribute-name="redirectUrl"/>
             <we-select string="Size" data-attribute-name="size">
                 <we-button data-select-data-attribute="80">Small</we-button>
                 <we-button data-select-data-attribute="120">Medium</we-button>
@@ -53,8 +52,7 @@
                 <we-button data-select-data-attribute="plain">Plain</we-button>
                 <we-button data-select-data-attribute="none" data-name="no_background_layout_opt">None</we-button>
             </we-select>
-            <we-colorpicker string="Layout Background Color" data-dependencies="!no_background_layout_opt"
-                            data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Layout Background Color" data-dependencies="!no_background_layout_opt" data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
             <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle" data-dependencies="circle_layout_opt, boxes_layout_opt">
                 <we-button data-select-data-attribute="surrounded">Surrounded</we-button>
                 <we-button data-select-data-attribute="disappear">Disappearing</we-button>
@@ -64,16 +62,15 @@
                 <we-button data-select-data-attribute="thin">Thin</we-button>
                 <we-button data-select-data-attribute="thick">Thick</we-button>
             </we-select>
-            <we-colorpicker string="Progress Bar Color" data-dependencies="!no_progressbar_style_opt"
-                            data-attribute-name="progressBarColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Progress Bar Color" data-dependencies="!no_progressbar_style_opt" data-attribute-name="progressBarColor" data-select-data-attribute=""/>
         </div>
     </xpath>
 </template>
 
-<template id="assets_snippet_s_countdown_js_000" inherit_id="website.assets_frontend">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/snippets/s_countdown/000.js"/>
-    </xpath>
-</template>
+<record id="website.s_countdown_000_js" model="ir.asset">
+    <field name="name">Countdown 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_countdown/000.js</field>
+</record>
 
 </odoo>

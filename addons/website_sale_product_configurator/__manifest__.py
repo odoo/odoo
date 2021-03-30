@@ -11,10 +11,21 @@
     'depends': ['website_sale', 'sale_product_configurator'],
     'auto_install': True,
     'data': [
-        'views/assets.xml',
         'views/website_sale_product_configurator_templates.xml',
     ],
     'demo': [
         'data/demo.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            ('before', 'website_sale/static/src/js/website_sale.js', 'sale_product_configurator/static/src/js/product_configurator_modal.js'),
+            ('before', 'website_sale/static/src/js/website_sale.js', 'website_sale_product_configurator/static/src/js/product_configurator_modal.js'),
+            'sale/static/src/scss/product_configurator.scss',
+            'website_sale_product_configurator/static/src/scss/website_sale_options.scss',
+            'website_sale_product_configurator/static/src/js/website_sale_options.js',
+        ],
+        'web.assets_tests': [
+            'website_sale_product_configurator/static/tests/**/*',
+        ],
+    }
 }

@@ -13,10 +13,11 @@
     </div>
 </template>
 
-<template id="assets_snippet_s_card_css_000" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_card/000.scss"/>
-    </xpath>
-</template>
+<record id="website.s_card_000_scss" model="ir.asset">
+    <field name="name">Card 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_card/000.scss</field>
+</record>
+
 
 </odoo>

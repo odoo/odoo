@@ -51,5 +51,9 @@ Here is how it works:
         'demo/demo_company.xml',
     ],
     'post_init_hook': 'post_init',
-
+    'assets': {
+        'web.report_assets_common': [
+            'l10n_ch/static/src/scss/**/*',
+        ],
+    }
 }

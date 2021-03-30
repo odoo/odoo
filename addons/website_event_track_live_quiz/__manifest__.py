@@ -14,16 +14,19 @@
         'website_event_track_quiz',
     ],
     'data': [
-        'views/assets.xml',
         'views/event_track_templates_page.xml',
     ],
     'demo': [
     ],
-    'qweb': [
-        'static/src/xml/website_event_track_live_templates.xml',
-        'static/src/xml/website_event_track_quiz_templates.xml',
-    ],
     'application': False,
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_event_track_live_quiz/static/src/js/**/*',
+        ],
+        'web.assets_qweb': [
+            'website_event_track_live_quiz/static/src/xml/**/*',
+        ],
+    }
 }

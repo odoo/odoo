@@ -11,7 +11,6 @@
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
-        'views/assets.xml',
         'views/slide_channel_views.xml',
         'views/slide_slide_views.xml',
         'views/survey_survey_views.xml',
@@ -30,4 +29,15 @@
         'data/slide_slide_demo.xml',
         'data/survey.user_input.line.csv',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'website_slides_survey/static/src/scss/website_slides_survey.scss',
+            'website_slides_survey/static/src/js/slides_upload.js',
+            'website_slides_survey/static/src/js/slides_course_fullscreen_player.js',
+            'website_slides_survey/static/src/js/slides_certification_upload_toast.js',
+        ],
+        'survey.survey_assets': [
+            'website_slides_survey/static/src/scss/website_slides_survey_result.scss',
+        ],
+    }
 }

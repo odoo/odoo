@@ -38,10 +38,10 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_channel_js_000" inherit_id="website.assets_frontend">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website_mail_channel/static/src/snippets/s_channel/000.js"/>
-    </xpath>
-</template>
+<record id="website_mail_channel.s_channel_000_js" model="ir.asset">
+    <field name="name">Channel 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website_mail_channel/static/src/snippets/s_channel/000.js</field>
+</record>
 
 </odoo>

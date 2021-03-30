@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Comparison assets frontend">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/website_sale_comparison/static/src/scss/website_sale_comparison.scss"/>
-            <script type="text/javascript" src="/website_sale_comparison/static/src/js/website_sale_comparison.js"></script>
-        </xpath>
-    </template>
-
-    <template id="assets_tests" inherit_id="web.assets_tests" name="Website Sale Comparison Assets Tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_sale_comparison/static/tests/tours/website_sale_comparison.js"></script>
-        </xpath>
-    </template>
-
     <template id="add_to_compare" inherit_id="website_sale.products_item" customize_show="True" name="Comparison List" priority="22">
         <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>

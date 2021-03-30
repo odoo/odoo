@@ -44,7 +44,16 @@ Key Features
     ],
     'installable': True,
     'auto_install': False,
-    'qweb': [
-        'static/src/xml/field_icon_selection.xml',
-    ],
+    'assets': {
+        'web.assets_backend': [
+            'event/static/src/scss/event.scss',
+            'event/static/src/js/field_icon_selection.js',
+        ],
+        'web.assets_common': [
+            'event/static/src/js/tours/**/*',
+        ],
+        'web.assets_qweb': [
+            'event/static/src/xml/**/*',
+        ],
+    }
 }

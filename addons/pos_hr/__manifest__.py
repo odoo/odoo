@@ -15,16 +15,26 @@ The actual till still requires one user but an unlimited number of employees can
 
     'data': [
         'views/pos_config.xml',
-        'views/point_of_sale.xml',
         'views/pos_order_view.xml',
         'views/pos_order_report_view.xml',
     ],
     'installable': True,
     'auto_install': True,
-    'qweb': [
-        'static/src/xml/HeaderLockButton.xml',
-        'static/src/xml/Chrome.xml',
-        'static/src/xml/CashierName.xml',
-        'static/src/xml/LoginScreen.xml',
-    ],
+    'assets': {
+        'point_of_sale.assets': [
+            'pos_hr/static/src/css/pos.css',
+            'pos_hr/static/src/js/models.js',
+            'pos_hr/static/src/js/useSelectEmployee.js',
+            'pos_hr/static/src/js/Chrome.js',
+            'pos_hr/static/src/js/HeaderLockButton.js',
+            'pos_hr/static/src/js/CashierName.js',
+            'pos_hr/static/src/js/LoginScreen.js',
+        ],
+        'web.assets_tests': [
+            'pos_hr/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'pos_hr/static/src/xml/**/*',
+        ],
+    }
 }

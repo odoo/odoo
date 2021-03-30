@@ -17,4 +17,12 @@ Allow shoppers of your eCommerce store to create personalized collections of pro
         'views/snippets.xml',
     ],
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_sale_wishlist/static/src/**/*',
+        ],
+        'web.assets_tests': [
+            'website_sale_wishlist/static/tests/**/*',
+        ],
+    }
 }

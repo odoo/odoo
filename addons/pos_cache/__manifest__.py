@@ -17,6 +17,10 @@ time it takes to load a POS session with a lot of products.
         'data/pos_cache_data.xml',
         'security/ir.model.access.csv',
         'views/pos_cache_views.xml',
-        'views/pos_cache_templates.xml',
-    ]
+        ],
+    'assets': {
+        'point_of_sale.assets': [
+            'pos_cache/static/**/*',
+        ],
+    }
 }

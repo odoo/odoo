@@ -11,11 +11,15 @@ Sell event tickets through eCommerce app.
     'depends': ['website_event', 'event_sale', 'website_sale'],
     'data': [
         'data/event_data.xml',
-        'views/assets.xml',
         'views/event_event_views.xml',
         'views/website_event_templates.xml',
         'views/website_sale_templates.xml',
         'security/website_event_sale_security.xml',
     ],
-    'auto_install': True
+    'auto_install': True,
+    'assets': {
+        'web.assets_tests': [
+            'website_event_sale/static/tests/**/*',
+        ],
+    }
 }

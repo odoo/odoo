@@ -157,21 +157,24 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_website_form_css_000" inherit_id="website.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website_form/static/src/snippets/s_website_form/000.scss"/>
-    </xpath>
-</template>
-<template id="assets_snippet_s_website_form_css_001" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website_form/static/src/snippets/s_website_form/001.scss"/>
-    </xpath>
-</template>
 
-<template id="assets_snippet_s_website_form_js_000" inherit_id="website.assets_frontend">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website_form/static/src/snippets/s_website_form/000.js"/>
-    </xpath>
-</template>
+<record id="website_form.s_website_form_000_scss" model="ir.asset">
+    <field name="name">Website form 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website_form/static/src/snippets/s_website_form/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website_form.s_website_form_001_scss" model="ir.asset">
+    <field name="name">Website form 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website_form/static/src/snippets/s_website_form/001.scss</field>
+</record>
+
+<record id="website_form.s_website_form_000_js" model="ir.asset">
+    <field name="name">Website form 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website_form/static/src/snippets/s_website_form/000.js</field>
+</record>
 
 </odoo>

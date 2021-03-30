@@ -16,12 +16,19 @@ to support In-App purchases inside Odoo. """,
     'data': [
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        'views/assets.xml',
         'views/iap_views.xml',
         'views/res_config_settings.xml',
     ],
-    'qweb': [
-        'static/src/xml/iap_templates.xml',
-    ],
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            'iap/static/src/js/**/*',
+        ],
+        'web.tests_assets': [
+            'iap/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'iap/static/src/xml/**/*',
+        ],
+    }
 }
