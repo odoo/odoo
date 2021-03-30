@@ -392,7 +392,6 @@ class AccountMove(models.Model):
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(self.ids),))
             self.invalidate_cache()
-        self._check_lock_date()
         return True
 
     @api.multi
