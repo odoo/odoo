@@ -168,7 +168,7 @@ class AlarmManager(models.AbstractModel):
         events = self._get_events_to_notify('email')
         attendees = events.attendee_ids.filtered(lambda a: a.state != 'declined')
         attendees.with_context(calendar_template_ignore_recurrence=True)._send_mail_to_attendees(
-            'calendar.calendar_template_meeting_reminder',
+            self.env.ref('calendar.calendar_template_meeting_reminder', raise_if_not_found=False),
             force_send=True,
         )
 
