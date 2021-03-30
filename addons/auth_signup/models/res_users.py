@@ -194,7 +194,8 @@ class ResUsers(models.Model):
             'partner_to': False,
             'scheduled_date': False,
         }
-        template.write(template_values)
+        if any(template[field] != value for (field, value) in template_values.items()):
+            template.write(template_values)
 
         for user in self:
             if not user.email:
