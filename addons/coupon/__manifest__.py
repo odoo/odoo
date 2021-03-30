@@ -21,9 +21,4 @@
         'demo/coupon_demo.xml',
     ],
     'installable': True,
-    'assets': {
-        'web.assets_backend': [
-            'coupon/static/**/*',
-        ],
-    }
 }
