@@ -33,6 +33,7 @@ from . import ir_demo_failure
 from . import report_layout
 from . import report_paperformat
 
+from . import ir_profile
 from . import image_mixin
 from . import avatar_mixin
 

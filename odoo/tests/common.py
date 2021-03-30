@@ -47,7 +47,7 @@ from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
 from odoo.service import security
 from odoo.sql_db import Cursor
-from odoo.tools import float_compare, single_email_re
+from odoo.tools import float_compare, single_email_re, profiler
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
@@ -657,6 +657,15 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
     def assertHTMLEqual(self, original, expected):
         return self._assertXMLEqual(original, expected, 'html')
 
+    def profile(self, **kwargs):
+        test_method = getattr(self, '_testMethodName', 'Unknown test method')
+        if not hasattr(self, 'profile_session'):
+            self.profile_session = profiler.make_session(test_method)
+        return profiler.Profiler(
+            description='%s %s %s' % (test_method, self.env.user.name, 'warm' if self.warm else 'cold'),
+            db=self.env.cr.dbname,
+            profile_session=self.profile_session,
+            **kwargs)
 
 savepoint_seq = itertools.count()
 
