@@ -95,6 +95,8 @@ class AccountMove(models.Model):
                 'quantity': qty,
                 'uom_name': lot_id.product_uom_id.name,
                 'lot_name': lot_id.name,
+                # The lot id is needed by localizations to inherit the method and add custom fields on the invoice's report.
+                'lot_id': lot_id.id
             })
         return lot_values
 
