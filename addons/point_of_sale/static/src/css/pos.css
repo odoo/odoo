@@ -385,7 +385,27 @@ td {
 .pos .status-buttons {
     display: flex;
     justify-content: flex-end;
-    flex: 1;
+    height: 100%;
+    color: white;
+}
+
+.pos .status-buttons > div {
+    display: flex;
+    align-items: center;
+    padding: 0 10px; /*$dropdown-item-padding-x * .5*/
+}
+
+.pos .status-buttons i.fa {
+    font-size: large;
+}
+
+.pos .status-buttons .avatar, .pos .status-buttons i.fa-sign-out {
+    vertical-align: middle;
+}
+
+.pos .status-buttons .avatar {
+    width: 25px;
+    border-radius: 50%;
 }
 
 .pos .order-button{
@@ -474,24 +494,12 @@ td {
 
 /*  c) The session buttons */
 
-.pos .pos-rightheader .header-button{
-    float: right;
-    height: 48px;
-    padding-left: 16px;
-    padding-right: 16px;
-    border-right: 1px solid #875A7B;
-    border-left: 1px solid #875A7B;
-    color: #DDD;
-    line-height: 48px;
-    text-align: center;
+.pos .pos-rightheader .header-button {
     cursor: pointer;
 
     -webkit-transition-property: background;
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
-}
-.pos .pos-rightheader .header-button:last-child{
-    border-left:  1px solid #875A7B;
 }
 .pos .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
@@ -501,22 +509,12 @@ td {
 /*  c) The notifications indicator */
 
 .pos .oe_status{
-    float:right;
-    color: rgba(255,255,255,0.4);
-    padding: 14px;
-    line-height: 20px;
-    font-size: 20px;
-    vertical-align:middle;
-    font-style: italic;
     cursor:pointer;
 }
 .pos .oe_status.oe_inactive{
     cursor: default;
 }
 .pos .oe_status .oe_icon{
-    display:inline-block;
-    cursor:pointer;
-    width:20px; height:16px;
     color: white;
 }
 .pos .oe_status .oe_red,
@@ -3627,7 +3625,7 @@ td {
     font-size: 17px;
 }
 
-.pos .pos-topheader .oe_status:hover {
+.pos .pos-topheader .status-buttons > div:hover {
     background: rgb(104,69,95);
 }
 
