@@ -63,7 +63,14 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
         const productCategoriesSelectorEl = uiFragment.querySelector('[data-name="product_category_opt"]');
         return this._renderSelectUserValueWidgetButtons(productCategoriesSelectorEl, this.productCategories);
     },
-
+    /**
+     * @override
+     * @private
+     */
+    _setOptionsDefaultValues: function () {
+        this._setOptionValue('productCategoryId', 'all');
+        this._super.apply(this, arguments);
+    },
 });
 
 options.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
