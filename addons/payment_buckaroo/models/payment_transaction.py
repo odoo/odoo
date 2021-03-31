@@ -7,6 +7,7 @@ from werkzeug import urls
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment_buckaroo.const import STATUS_CODES_MAPPING
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 
 _logger = logging.getLogger(__name__)
@@ -27,11 +28,6 @@ def _normalize_dataset(data):
 
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
-
-    # Buckaroo status codes
-    _pending_tx_status = [790, 791, 792, 793]
-    _valid_tx_status = [190]
-    _cancel_tx_status = [890, 891]
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Buckaroo-specific rendering values.
@@ -133,11 +129,11 @@ class PaymentTransaction(models.Model):
         self.acquirer_reference = transaction_keys.split(',')[0]
 
         status_code = int(normalized_data.get('BRQ_STATUSCODE') or 0)
-        if status_code in self._pending_tx_status:
+        if status_code in STATUS_CODES_MAPPING['pending']:
             self._set_pending()
-        elif status_code in self._valid_tx_status:
+        elif status_code in STATUS_CODES_MAPPING['done']:
             self._set_done()
-        elif status_code in self._cancel_tx_status:
+        elif status_code in STATUS_CODES_MAPPING['cancel']:
             self._set_canceled()
         else:
             _logger.warning("Buckaroo: received unknown status code: %s", status_code)
