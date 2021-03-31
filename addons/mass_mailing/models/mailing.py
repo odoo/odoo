@@ -677,6 +677,9 @@ class MassMailing(models.Model):
             if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
                 mass_mailing.action_send_mail()
+                # Re-trigger the cron to process remaining recipients
+                cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue')
+                cron._trigger(fields.Datetime.now() + relativedelta(hours=1))
             else:
                 mass_mailing.write({
                     'state': 'done',

@@ -5,6 +5,7 @@ from ast import literal_eval
 from datetime import datetime
 
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
@@ -205,6 +206,49 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
                         mailing.action_put_in_queue()
                     capt.records.ensure_one()
                     self.assertLessEqual(capt.records.call_at, truth)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_reentrant_cron_trigger(self):
+        """ Technical test the cron keeps retriggering itself until all
+        recipients received their message. """
+        _get_remaining_recipients = 'odoo.addons.mass_mailing.models.mailing.MassMailing._get_remaining_recipients'
+
+        mailing_model = self.env['mailing.mailing']
+        cron_id = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').id
+        partner = self.env['res.partner'].create({
+            'name': 'Jean-Alphonce',
+            'email': 'jeanalph@example.com',
+        })
+        mailing = mailing_model.create({
+            'name': 'Knock knock',
+            'subject': "Who's there?",
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            'mailing_domain': [('id', '=', partner.id)],
+            'body_html': 'The marketing mailing test.',
+            'schedule_type': 'scheduled',
+            'schedule_date': False,
+        })
+
+        with self.capture_triggers(cron_id) as capt:
+            self.assertEqual(mailing.state, 'draft')
+            mailing.action_put_in_queue()
+            self.assertEqual(mailing.state, 'in_queue')
+            capt.records.ensure_one()
+
+            # Fake cron execution, first call sets state="sending"
+            # and process a first batch of recipients
+            with patch(_get_remaining_recipients, return_value=[partner.id]):
+                mailing_model._process_mass_mailing_queue()
+            self.assertEqual(mailing.state, 'sending')
+            self.assertEqual(len(capt.records), 2, "The cron is re-triggered for remaining recipients")
+
+            # Fake cron re-execution, last call doesn't have anymore
+            # recipients to process, it sets state="done"
+            with patch(_get_remaining_recipients, return_value=[]):
+                mailing_model._process_mass_mailing_queue()
+            self.assertEqual(mailing.state, 'done')
+            self.assertEqual(len(capt.records), 2, "The cron is no more re-triggered")
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
