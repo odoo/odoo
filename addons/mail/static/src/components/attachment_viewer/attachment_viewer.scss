@@ -41,21 +41,25 @@
 .o_AttachmentViewer_header {
     display: flex;
     height: $o-navbar-height;
-    align-items: center;
-    padding: 0 15px;
     width: 100%;
 }
 
 .o_AttachmentViewer_headerItem {
-    margin: 0 5px;
+    display: flex;
+    align-items: center;
+}
 
-    &:first-child {
-        margin-left: 0;
-    }
+.o_AttachmentViewer_headerItemButton {
+    padding: 0 map-get($spacers, 3);
+}
 
-    &:last-child {
-        margin-right: 0;
-    }
+.o_AttachmentViewer_headerItemButtonIcon.o-hasLabel {
+    margin-right: map-get($spacers, 2);
+}
+
+.o_AttachmentViewer_icon {
+    margin-inline-start: map-get($spacers, 4);
+    margin-inline-end: map-get($spacers, 2);
 }
 
 .o_AttachmentViewer_loading {
@@ -79,6 +83,17 @@
     }
 }
 
+.o_AttachmentViewer_name {
+    margin: 0 map-get($spacers, 2);
+    min-width: 0;
+}
+
+.o_AttachmentViewer_nameText {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .o_AttachmentViewer_toolbar {
     position: absolute;
     bottom: 45px;
@@ -98,11 +113,20 @@
 .o_AttachmentViewer_viewIframe {
     width: 90%;
     height: 100%;
+
+    &.o-isMobile {
+        width: map-get($sizes, 100);
+    }
 }
 
 .o_AttachmentViewer_viewVideo {
     width: 75%;
     height: 75%;
+
+    &.o-isMobile {
+        width: map-get($sizes, 100);
+        height: map-get($sizes, 100);
+    }
 }
 
 .o_AttachmentViewer_zoomer {
@@ -144,7 +168,7 @@
     cursor: pointer;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba($white, 0.1);
         color: lighten(gray('400'), 15%);
     }
 }
