@@ -18,6 +18,7 @@ This module provides the core of the Odoo Web Client.
         'views/webclient_templates.xml',
         'views/report_templates.xml',
         'views/base_document_layout_views.xml',
+        'views/speedscope_template.xml',
         'data/report_layout.xml',
     ],
     'assets': {
@@ -61,6 +62,7 @@ This module provides the core of the Odoo Web Client.
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
 
+            'web/static/src/scss/debug_profiling.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_common_styles'),

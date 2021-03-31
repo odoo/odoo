@@ -16,6 +16,8 @@ var DebugManager = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/debug.xml'],
     events: {
         "click a[data-action]": "perform_callback",
+        "click .profiling": "handle_profiling",
+        "change .profiling_param": "handle_profiling",
     },
     init: function () {
         this._super.apply(this, arguments);
@@ -23,6 +25,12 @@ var DebugManager = Widget.extend({
         var debug = odoo.debug;
         this.debug_mode = debug;
         this.debug_mode_help = debug && debug !== '1' ? ' (' + debug + ')' : '';
+        this.profile_session = odoo.session_info && odoo.session_info.profile_session || false;
+        this.profile_collectors = odoo.session_info && odoo.session_info.profile_collectors;
+        if (! Array.isArray(this.profile_collectors)) {
+            this.profile_collectors = ['sql', 'traces_async'];  // use default value when not defined in session.
+        }
+        this.profile_params = odoo.session_info && odoo.session_info.profile_params || {};
     },
     start: function () {
         core.bus.on('rpc:result', this, function (req, resp) {
@@ -53,7 +61,62 @@ var DebugManager = Widget.extend({
             console.warn("No handler for ", callback);
         }
     },
+    /**
+     * Manage profiling actions.
+     * open_profiling_button should not prevent dropdown from closing
+     * other actions should keep dropdown open and interact with backend to enable or disable profiling features.
+     * The main switch, 'enable_profiling' is a special case since it will create or remove a profile session
+     */
+    handle_profiling: async function (evt) {
+        const $target = $(evt.target);
+        const target = $target[0];
+        if (target.id === 'open_profiling_button') {
+            this.do_action('base.action_menu_ir_profile');
+            return;
+        }
+        evt.stopPropagation(); // prevent dropdown from closing
+        const kwargs = {
+            params: {}
+        };
+        if (target.nodeName == "LABEL") {
+            return
+        }
+        kwargs.profile = $('#enable_profiling')[0].checked;
+        kwargs.collectors = $('input.profile_switch').toArray().filter(i => i.checked).map(i => i.id.replace(/^profile_/, ''));
+        $('.profile_param').toArray().forEach(i => kwargs.params[i.id.replace(/^profile_/, '')] = i.value);
 
+        try {
+            const resp = await this._rpc({
+                model: 'ir.profile',
+                method: 'set_profiling',
+                kwargs: kwargs,
+            });
+            this.profile_session = resp.session;
+            this.profile_collectors = resp.collectors;
+            this.profile_params = resp.params;
+        } catch (e) {
+            this.profite_session = false;
+        }
+        this.update_profiling_state();
+    },
+    /**
+     * Update the profiling dropdown menu state after any change to synchronyze server session and client
+     * This is mainly usefull to avoid desync in case of multiple tabs
+     */
+    update_profiling_state: function () {
+        const self = this;
+        this.$('#enable_profiling')[0].checked = Boolean(this.profile_session);
+        this.$('.profile_switch').each(function () {
+            this.checked = (self.profile_collectors.indexOf(this.id.replace(/^profile_/, '')) !== -1);
+            const params = self.$('.' + this.id);
+            params.toggleClass('d-none', !this.checked);
+            params.each(function () {
+                const params_input = $(this).find('.profile_param')[0];
+                params_input.value = self.profile_params[params_input.id.replace(/^profile_/, '')] || '';
+            });
+        });
+        this.$profiling_items.toggleClass('d-none', !this.profile_session);
+    },
     _debug_events: function (events) {
         if (!this._events) {
             return;
@@ -73,6 +136,9 @@ var DebugManager = Widget.extend({
             .append(QWeb.render('WebClient.DebugManager.Global', {
                 manager: this,
             }));
+        this.$profiling_items = this.$(".profiling_items");
+
+        this.update_profiling_state();
         return Promise.resolve();
     },
     split_assets: function () {

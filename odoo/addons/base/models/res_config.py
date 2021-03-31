@@ -475,8 +475,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 module = IrModule.sudo().search([('name', '=', name[7:])], limit=1)
                 modules.append((name, module))
             elif hasattr(field, 'config_parameter'):
-                if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one'):
-                    raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection' or 'many2one'" % field)
+                if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
+                    raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection', 'many2one' or 'datetime'" % field)
                 configs.append((name, field.config_parameter))
             else:
                 others.append(name)

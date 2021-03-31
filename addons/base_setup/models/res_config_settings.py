@@ -49,6 +49,7 @@ class ResConfigSettings(models.TransientModel):
     language_count = fields.Integer('Number of Languages', compute="_compute_language_count")
     company_name = fields.Char(related="company_id.display_name", string="Company Name")
     company_informations = fields.Text(compute="_compute_company_informations")
+    profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
 
     def open_company(self):
         return {

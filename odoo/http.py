@@ -52,6 +52,7 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .sql_db import flush_env
 from .tools.func import lazy_property
+from .tools import profiler
 from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 from .tools._vendor import sessions
@@ -307,7 +308,7 @@ class WebRequest(object):
         # WARNING: do not inline or it breaks: raise...from evaluates strictly
         # LTR so would first remove traceback then copy lack of traceback
         new_cause = Exception().with_traceback(exception.__traceback__)
-        new_cause.__cause__ = exception.__cause__
+        new_cause.__cause__ = exception.__cause__ or exception.__context__
         # tries to provide good chained tracebacks, just re-raising exception
         # generates a weird message as stacks just get concatenated, exceptions
         # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
@@ -1447,7 +1448,10 @@ class Root(object):
                     return request._handle_exception(e)
                 return result
 
-            with request:
+            with contextlib.ExitStack() as stack:
+                for manager in self.get_dispatch_context_managers(request):
+                    stack.enter_context(manager)
+
                 db = request.session.db
                 if db:
                     try:
@@ -1478,6 +1482,35 @@ class Root(object):
 
         except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
+
+    def get_dispatch_context_managers(self, request):
+        """ Return the context managers to use for dispatching a request.
+        This includes ``request`` itself, and optionally a profiler.
+        """
+        context_managers = [request]
+        if request.session.profile_session and request.session.db:
+            if 'set_profiling' in request.httprequest.path:
+                _logger.debug("Profiling disabled on route set_profiling")
+            elif request.session.profile_expiration < str(datetime.now()):
+                # avoid having session profiling for too long if user forgets to disable profiling
+                request.session.profile_session = None
+                _logger.warning("Profiling expiration reached, disabling profiling")
+            elif request.httprequest.path.startswith('/longpolling'):  # and odoo.multi_process:
+                # disable profiling for longpolling. This is mandatory for gevent server
+                _logger.debug('Profiling disabled for longpolling in worker mode')
+            else:
+                try:
+                    context_managers.append(profiler.Profiler(
+                        db=request.session.db,
+                        description=request.httprequest.full_path,
+                        profile_session=request.session.profile_session,
+                        collectors=request.session.profile_collectors,
+                        params=request.session.profile_params,
+                    ))
+                except Exception:
+                    _logger.exception('Failure during Profiler creation')
+                    request.session.profile_session = None
+        return context_managers
 
     def get_db_router(self, db):
         if not db:
