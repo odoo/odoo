@@ -68,7 +68,12 @@
   <record model="account.group.template" id="account_group_bienes_de_cambio">
     <field name="chart_template_id" ref="l10nar_base_chart_template"/>
     <field name="name">Bienes de Cambio</field>
+<<<<<<< HEAD
     <field name="code_prefix_start">1.1.5</field>
+=======
+    <field name="parent_id" ref="account_group_activo_corriente"/>
+    <field name="code_prefix">1.1.6</field>
+>>>>>>> 6fb9a25a6d6... temp
   </record>
   <record model="account.group.template" id="account_group_activo_no_corriente">
     <field name="chart_template_id" ref="l10nar_base_chart_template"/>
