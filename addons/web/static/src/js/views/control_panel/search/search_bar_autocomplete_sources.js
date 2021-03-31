@@ -320,7 +320,7 @@ var DateField = Field.extend({
             return Promise.resolve(null);
         }
 
-        var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
+        var m = moment(t === 'datetime' ? v : v.toJSON(), t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
         if (!m.isValid()) { return Promise.resolve(null); }
         var dateString = field_utils.format[t](m, {type: t});
         var label = this._getAutocompletionLabel(dateString);

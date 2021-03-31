@@ -44,8 +44,8 @@ class PaymentAcquirerStripe(models.Model):
             'line_items[][quantity]': 1,
             'line_items[][name]': tx_values['reference'],
             'client_reference_id': tx_values['reference'],
-            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % tx_values['reference'],
-            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % tx_values['reference'],
+            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
+            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
             'payment_intent_data[description]': tx_values['reference'],
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
