@@ -43,11 +43,6 @@
                          data-customize-website-views="website_blog.opt_blog_cards_design"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-checkbox string="Increase Readability"
-                         class="o_we_sublevel_1"
-                         data-customize-website-views="website_blog.opt_blog_readable"
-                         data-no-preview="true"
-                         data-reload="/"/>
             <we-checkbox string="Sidebar"
                          data-name="blog_posts_sidebar_opt"
                          data-customize-website-views="website_blog.opt_blog_sidebar_show"
@@ -97,11 +92,6 @@
                 <we-button data-customize-website-views="website_blog.opt_blog_post_regular_cover">Title Above Cover</we-button>
                 <we-button data-customize-website-views="">Title Inside Cover</we-button>
             </we-select>
-            <we-checkbox string="Increase Readability"
-                         class="o_we_sublevel_1"
-                         data-customize-website-views="website_blog.opt_blog_post_readable"
-                         data-no-preview="true"
-                         data-reload="/"/>
             <we-checkbox string="Sidebar"
                          data-name="blog_post_sidebar_opt"
                          data-customize-website-views="website_blog.opt_blog_post_sidebar"
@@ -166,11 +156,6 @@
     </xpath>
     <xpath expr="//*[@data-js='anchor']" position="attributes">
         <attribute name="data-exclude" add=".o_wblog_post_content_field > :not(div, section)" separator=","/>
-    </xpath>
-
-    <!-- Hides ContainerWidth option for content in blog posts -->
-    <xpath expr="//div[@data-js='ContainerWidth']" position="attributes">
-        <attribute name="data-exclude" add="#o_wblog_post_content *" separator=","/>
     </xpath>
 </template>
 

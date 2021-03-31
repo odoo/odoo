@@ -31,7 +31,6 @@ list of filtered posts (by date or tag).
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
         <t t-set="opt_blog_cards_design" t-value="is_view_active('website_blog.opt_blog_cards_design')"/>
         <t t-set="opt_blog_list_view" t-value="is_view_active('website_blog.opt_blog_list_view')"/>
-        <t t-set="opt_blog_readable" t-value="is_view_active('website_blog.opt_blog_readable')"/>
         <t t-set="opt_blog_sidebar_show" t-value="is_view_active('website_blog.opt_blog_sidebar_show')"/>
 
         <div id="o_wblog_blog_top">
@@ -163,11 +162,6 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_list_view" name="List View" inherit_id="website_blog.blog_post_short" active="False"/>
 
-<!-- (Option) Blog: Increase readability
-    Increase font-size, adapt layout
--->
-<template id="opt_blog_readable" name="Increase Readability" inherit_id="website_blog.blog_post_short" active="True"/>
-
 
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
@@ -175,7 +169,6 @@ list of filtered posts (by date or tag).
     <t t-call="website_blog.index">
 
         <!-- Check for active options: the stored value may be used in sub-templates too  -->
-        <t t-set="opt_blog_post_readable" t-value="is_view_active('website_blog.opt_blog_post_readable')"/>
         <t t-set="opt_blog_post_sidebar" t-value="is_view_active('website_blog.opt_blog_post_sidebar')"/>
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
@@ -208,28 +201,28 @@ list of filtered posts (by date or tag).
             </div>
         </section>
 
-        <section id="o_wblog_post_main" t-attf-class="container pt-4 pb-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">
+        <div id="o_wblog_post_main" t-attf-class="pb-5 #{'anim' in request.params and 'o_wblog_post_main_transition'}">
             <!-- Sidebar-enabled Layout -->
-            <div t-if="opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read_with_sidebar'}">
-                <div t-attf-class="d-flex flex-column flex-lg-row #{opt_blog_post_readable and 'justify-content-between'}">
-                    <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
+            <div t-if="opt_blog_post_sidebar" class="mx-auto container">
+                <div class="row justify-content-start mx-0">
+                    <div id="o_wblog_post_content" class="col-lg-9 col-12 px-0">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
-                    <div id="o_wblog_post_sidebar_col" t-attf-class="ps-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
+                    <div id="o_wblog_post_sidebar_col" class="ps-lg-4 pt-lg-4 col-lg-3">
                         <t t-call="website_blog.blog_post_sidebar"/>
                     </div>
                 </div>
             </div>
 
             <!-- No-Sidebar Layout -->
-            <div t-if="not opt_blog_post_sidebar" t-attf-class="#{opt_blog_post_readable and 'o_container_small'}">
+            <t t-if="not opt_blog_post_sidebar">
                 <div class="d-flex flex-column flex-lg-row">
-                    <div id="o_wblog_post_content" t-attf-class=" #{opt_blog_post_readable and 'o_container_small w-100 flex-shrink-0'}">
+                    <div id="o_wblog_post_content" class="w-100 flex-shrink-0">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
                 </div>
-            </div>
-        </section>
+            </t>
+        </div>
         <section id="o_wblog_post_footer"/>
     </t>
 </template>
@@ -238,14 +231,13 @@ list of filtered posts (by date or tag).
 ============================================================================ -->
 <template id="blog_post_content" name="Blog post content">
     <t t-if="opt_blog_post_breadcrumb and not opt_blog_post_regular_cover" t-call="website_blog.post_breadcrumbs">
-        <t t-set="additionnal_classes" t-value="'mb-3 bg-transparent'"></t>
+        <t t-set="additionnal_classes" t-value="'mb-0 pb-0 bg-transparent o_container_as_first pt-4'"></t>
     </t>
     <t t-set="editor_message">WRITE HERE OR DRAG BUILDING BLOCKS</t>
     <div t-field="blog_post.content"
         t-att-data-editor-message="editor_message"
-        t-attf-class="o_wblog_post_content_field #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''} #{'o_wblog_read_text' if opt_blog_post_readable else ''}"/>
-
-    <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="css_editable_mode_hidden text-muted">
+        t-attf-class="o_wblog_post_content_field o_wblog_read_text #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}"/>
+    <div t-if="len(blogs) > 1 or len(blog_post.tag_ids) > 0" class="text-muted o_wblog_post_tags o_container_as_first o_no_link_popover o_not_editable">
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
@@ -254,12 +246,6 @@ list of filtered posts (by date or tag).
         </div>
     </div>
 </template>
-
-
-<!-- (Option) Post: Increase readability
-    Increase font-size, adapt content width
--->
-<template id="opt_blog_post_readable" name="Increase Readability" inherit_id="website_blog.blog_post_complete" active="True"/>
 
 <!-- (Option) Post: Show Sidebar
     Show sidebar beside the post content
@@ -272,13 +258,11 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_post_regular_cover" name="'Regular' Cover" inherit_id="website_blog.blog_post_complete" active="False">
     <xpath expr="//div[@id='title']" position="replace">
         <div class="container">
-            <t t-set="readableClass" t-if="opt_blog_post_readable and opt_blog_post_sidebar" t-value="'o_wblog_read_with_sidebar mx-auto'"/>
-            <t t-set="readableClass" t-elif="opt_blog_post_readable" t-value="'container'"/>
 
-            <div id="title" t-attf-class="blog_header o_wblog_regular_cover_container #{readableClass}">
+            <div id="title" class="blog_header o_wblog_regular_cover_container">
 
                 <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs">
-                    <t t-set="additionnal_classes" t-value="'mt-4 mb-3 bg-transparent'"></t>
+                    <t t-set="additionnal_classes" t-value="'mt-4 mb-3 bg-transparent container'"></t>
                 </t>
 
                 <div t-att-class="not opt_blog_post_breadcrumb and 'pt-4'">
@@ -330,21 +314,16 @@ list of filtered posts (by date or tag).
 <!-- (Option) Post: Comments
     Enable comments
 -->
-<template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_complete" active="False">
-    <xpath expr="//section[@id='o_wblog_post_main']" position="inside">
-        <t t-set="readableClass" t-if="opt_blog_post_readable and opt_blog_post_sidebar" t-value="'o_wblog_read_with_sidebar'"/>
-        <t t-set="readableClass" t-elif="opt_blog_post_readable" t-value="'o_container_small'"/>
-
-        <div class="container">
-            <div t-attf-class="mx-auto #{readableClass}">
-                <div id="o_wblog_post_comments" t-attf-class="pt-4 o_container_small">
-                    <div groups="base.group_public" class="small mb-4">
-                        <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
-                    </div>
-                    <t t-call="portal.message_thread">
-                        <t t-set="object" t-value="blog_post"/>
-                    </t>
+<template id="opt_blog_post_comment" name="Allow Comments" inherit_id="website_blog.blog_post_content" active="False">
+    <xpath expr="//div[hasclass('o_wblog_post_tags')]" position="after">
+        <div class="mx-auto o_container_as_first">
+            <div id="o_wblog_post_comments" class="pt-4">
+                <div groups="base.group_public" class="small mb-4">
+                    <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
                 </div>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="blog_post"/>
+                </t>
             </div>
         </div>
     </xpath>
@@ -362,11 +341,8 @@ list of filtered posts (by date or tag).
     <xpath expr="//section[@id='o_wblog_post_footer']" position="inside">
         <div t-if="next_post" class="mt-5">
             <t t-if="opt_blog_post_regular_cover">
-                <t t-if="opt_blog_post_sidebar" t-set="readableClass" t-value="'o_wblog_read_with_sidebar'"/>
-                <t t-else="" t-set="readableClass" t-value="'o_container_small'"/>
-
-                <div class="container">
-                    <div t-attf-class="mb-4 mx-auto #{ readableClass if opt_blog_post_readable else ''}">
+                <div class="pb-5 container">
+                    <div class="mb-4 mx-auto">
                         <hr/>
                         <div class="d-flex text-end py-4">
                             <div class="flex-grow-1 pe-3">

@@ -35,7 +35,7 @@ according to the enabled options.
             </div>
         </div>
 
-        <div t-attf-class="row #{posts and not opt_blog_readable and 'mx-n2'}">
+        <div class="row">
             <!-- Filters -->
             <div t-if="tag or date_begin or search" class="col-12 mb-3">
                 <div t-if="posts" class="h4 mb-3">
@@ -86,14 +86,8 @@ according to the enabled options.
             <!-- Define 'colWidth' qWeb variable, to be assigned later.
             Adjust accordingly if sidebar and/or readability modes are active. -->
             <t t-if="not opt_blog_list_view">
-                <t t-if="opt_blog_readable">
-                    <t t-if="opt_blog_sidebar_show" t-set="colWidth" t-value="'col-md-6'"/>
-                    <t t-else="" t-set="colWidth" t-value="'col-md-6 col-xl-4'"/>
-                </t>
-                <t t-else="">
-                    <t t-if="opt_blog_sidebar_show" t-set="colWidth" t-value="'px-2 col-md-6 col-xl-4'"/>
-                    <t t-else="" t-set="colWidth" t-value="'px-2 col-sm-6 col-lg-4 col-xl-3'"/>
-                </t>
+                <t t-if="opt_blog_sidebar_show" t-set="colWidth" t-valuef="col-md-6"/>
+                <t t-else="" t-set="colWidth" t-valuef="col-md-6 col-xl-4"/>
             </t>
             <!-- Loop through posts: exclude the first one if already displayed as top banner -->
             <t t-foreach="posts" t-as="blog_post">
@@ -152,7 +146,7 @@ according to the enabled options.
 <template id="post_heading">
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
        t-field="blog_post.name"
-       t-attf-class="d-block text-reset text-decoration-none o_blog_post_title my-0 #{'h3' if opt_blog_list_view else ('h5' if opt_blog_readable else 'h6')}">
+       t-attf-class="d-block text-reset text-decoration-none o_blog_post_title my-0 #{'h3' if opt_blog_list_view else 'h5'}">
        Untitled Post
    </a>
 
@@ -204,7 +198,7 @@ according to the enabled options.
     <t t-cache="blog_post,str(active_tag_ids)">
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="text-reset text-decoration-none">
         <div t-if="opt_blog_list_view" t-field="blog_post.teaser" class="mt-2 o_wblog_read_text"/>
-        <div t-else="" t-field="blog_post.teaser" t-attf-class="mt-2 #{opt_blog_readable and 'o_wblog_normalize_font'}"/>
+        <div t-else="" t-field="blog_post.teaser" class="mt-2 o_wblog_normalize_font"/>
     </a>
 
     <!-- Tags -->

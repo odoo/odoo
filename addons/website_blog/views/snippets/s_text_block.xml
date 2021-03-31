@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+    Default text block for blogs: it was considered easier and more readable
+    to fully rewrite the snippet rather than parameterizing the base one or
+    primary inheriting that base one. All aspects are indeed changed and the
+    base structure is very simple (that's not a whole lot of duplication)
+-->
+<template id="s_text_block" name="Text">
+    <section class="s_text_block pt16 pb16" data-snippet="s_text_block">
+        <div t-attf-class="#{is_regular_cover and 'container' or 'o_container_small'} s_allow_columns">
+            <p>Start writing here...</p>
+        </div>
+    </section>
+</template>
+
+</odoo>
