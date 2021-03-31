@@ -11125,7 +11125,7 @@ QUnit.module('Views', {
         await concurrency.delay(MULTI_CLICK_TIME);
         assert.containsOnce(form, '.o_form_view.o_form_editable');
 
-        // FormController unpatch done in afterEach
+        testUtils.mock.unpatch(FormController);
         form.destroy();
     });
 
