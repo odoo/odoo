@@ -589,6 +589,13 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return the base field of an inherited field, or ``self``. """
         return self.inherited_field.base_field if self.inherited_field else self
 
+    @property
+    def groupable(self):
+        """
+        Return whether the field may be used for grouping in :meth:`~odoo.models.BaseModel.read_group`.
+        """
+        return self.store and self.column_type
+
     #
     # Company-dependent fields
     #
@@ -3636,6 +3643,10 @@ class Many2many(_RelationalMulti):
                 self.relation, self.column2, comodel._table, 'id', self.ondelete,
                 model, self._module,
             )
+
+    @property
+    def groupable(self):
+        return self.store
 
     def read(self, records):
         context = {'active_test': False}

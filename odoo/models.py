@@ -2044,7 +2044,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
-        to the query if order should be computed against m2o field. 
+        to the query if order should be computed against m2o field.
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
         :param annotated_groupbys: list of dictionaries returned by _read_group_process_groupby
@@ -2141,9 +2141,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'field': split[0],
             'groupby': gb,
-            'type': field_type, 
+            'type': field_type,
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
-            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'interval': time_intervals[gb_function or 'month'] if temporal else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field,
         }
@@ -2307,8 +2307,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
-            gb_field = self._fields[gb].base_field
-            assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
+            assert self._fields[gb].base_field.groupable, (
+                f"Field {gb} of model {self._name} is not a stored field, only stored fields "
+                "(regular or many2many) are valid for the 'groupby' parameter."
+            )
 
         aggregated_fields = []
         select_terms = []
@@ -2416,7 +2418,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
-            # in a sane way 
+            # in a sane way
             result = self._read_group_fill_results(
                 domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                 aggregated_fields, count_field, result, read_group_order=order,
@@ -2468,9 +2470,32 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 alias, parent_fname, parent_model._table, 'id', parent_fname,
             )
             model, alias, field = parent_model, parent_alias, field.related_field
-        # handle the case where the field is translated
-        if field.translate is True:
+
+        if field.type == 'many2many':
+            # special case for many2many fields: prepare a query on the comodel
+            # in order to reuse the mechanism _apply_ir_rules, then inject the
+            # query as an extra condition of the left join
+            comodel = self.env[field.comodel_name]
+            subquery = Query(self.env.cr, comodel._table)
+            comodel._apply_ir_rules(subquery)
+            # add the extra join condition only if there is an actual subquery
+            extra, extra_params = None, ()
+            if subquery.where_clause:
+                subquery_str, extra_params = subquery.select()
+                extra = '"{rhs}"."%s" IN (%s)' % (field.column2, subquery_str)
+            # LEFT JOIN field_relation ON
+            #     alias.id = field_relation.field_column1
+            #     AND field_relation.field_column2 IN (subquery)
+            rel_alias = query.left_join(
+                alias, 'id', field.relation, field.column1, field.name,
+                extra=extra, extra_params=extra_params,
+            )
+            return '"%s"."%s"' % (rel_alias, field.column2)
+
+        elif field.translate is True:
+            # handle the case where the field is translated
             return model._generate_translated_field(alias, fname, query)
+
         else:
             return '"%s"."%s"' % (alias, fname)
 
