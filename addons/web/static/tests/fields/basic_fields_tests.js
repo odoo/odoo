@@ -151,13 +151,6 @@ QUnit.module('basic_fields', {
                 }]
             },
         };
-
-        testUtils.mock.patch(FormController, {
-            'multiClickTime': 0,
-        });
-    },
-    afterEach() {
-        testUtils.mock.unpatch(FormController);
     },
 }, function () {
 
