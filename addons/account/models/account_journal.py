@@ -652,7 +652,8 @@ class AccountJournal(models.Model):
 
             :returns: the created invoice.
         """
-        return self.create_invoice_from_attachment(attachment.ids)
+        invoice_action = self.create_invoice_from_attachment(attachment.ids)
+        return self.env['account.move'].browse(invoice_action['res_id'])
 
     def _create_secure_sequence(self, sequence_fields):
         """This function creates a no_gap sequence on each journal in self that will ensure
