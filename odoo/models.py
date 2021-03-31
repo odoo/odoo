@@ -618,7 +618,7 @@ class BaseModel(metaclass=MetaModel):
             ModelClass._build_model_check_base(cls)
             check_parent = ModelClass._build_model_check_parent
         else:
-            ModelClass = type(name, (BaseModel,), {
+            ModelClass = type(name, (cls,), {
                 '_name': name,
                 '_register': False,
                 '_original_module': cls._module,
@@ -636,7 +636,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError("Model %r inherits from non-existing model %r." % (name, parent))
             parent_class = pool[parent]
             if parent == name:
-                for base in parent_class.__bases__:
+                for base in parent_class.__base_classes:
                     bases.add(base)
             else:
                 check_parent(cls, parent_class)
@@ -644,7 +644,9 @@ class BaseModel(metaclass=MetaModel):
                 ModelClass._inherit_module[parent] = cls._module
                 parent_class._inherit_children.add(name)
 
-        ModelClass.__bases__ = tuple(bases)
+        # ModelClass.__bases__ must be assigned those classes; however, this
+        # operation is quite slow, so we do it once in method _prepare_setup()
+        ModelClass.__base_classes = tuple(bases)
 
         # determine the attributes of the model's class
         ModelClass._build_model_attributes(pool)
@@ -701,7 +703,7 @@ class BaseModel(metaclass=MetaModel):
         cls._depends = {}
         cls._sql_constraints = {}
 
-        for base in reversed(cls.__bases__):
+        for base in reversed(cls.__base_classes):
             if is_definition_class(base):
                 # the following attributes are not taken from registry classes
                 if cls._name not in base._inherit and not base._description:
@@ -2838,6 +2840,10 @@ class BaseModel(metaclass=MetaModel):
         """ Prepare the setup of the model. """
         cls = type(self)
         cls._setup_done = False
+
+        # changing base classes is costly, do it only when necessary
+        if cls.__bases__ != cls.__base_classes:
+            cls.__bases__ = cls.__base_classes
 
         # reset those attributes on the model's class for _setup_fields() below
         for attr in ('_rec_name', '_active_name'):
