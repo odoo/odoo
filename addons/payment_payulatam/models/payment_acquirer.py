@@ -50,9 +50,11 @@ class PaymentAcquirer(models.Model):
                 self.payulatam_api_key,
                 self.payulatam_merchant_id,
                 values['referenceCode'],
-                # Observation from the sandbox: PayU Latam is using a rounded value to generate
-                # their signature despite saying otherwise in the doc:
                 # http://developers.payulatam.com/en/web_checkout/integration.html
+                # Section: 2. Response page > Signature validation
+                # PayU Latam use the "Round half to even" rounding method
+                # to generate their signature. This happens to be Python 3's
+                # default rounding method.
                 float_repr(float(values.get('TX_VALUE')), 1),
                 values['currency'],
                 values.get('transactionState'),
