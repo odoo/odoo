@@ -17,6 +17,7 @@ const Bus = require('web.Bus');
 const config = require('web.config');
 const core = require('web.core');
 const dom = require('web.dom');
+const FormController = require('web.FormController');
 const makeTestEnvironment = require('web.test_env');
 const MockServer = require('web.MockServer');
 const RamStorage = require('web.RamStorage');
@@ -366,6 +367,10 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
         });
     }
 
+    // remove the multi-click delay for the quick edit in form view
+    const initialQuickEditDelay = FormController.prototype.multiClickTime;
+    FormController.prototype.multiClickTime = params.formMultiClickTime || 0;
+
     // make sure the debounce value for input fields is set to 0
     const initialDebounceValue = DebouncedField.prototype.DEBOUNCE;
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
@@ -424,6 +429,8 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
                 service.destroy();
             }
         });
+
+        FormController.prototype.multiClickTime = initialQuickEditDelay;
 
         DebouncedField.prototype.DEBOUNCE = initialDebounceValue;
         dom.DEBOUNCE = initialDOMDebounceValue;
