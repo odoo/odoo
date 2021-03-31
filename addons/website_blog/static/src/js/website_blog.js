@@ -6,7 +6,8 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
-    events: {
+    disabledInEditableMode: false,
+    read_events: {
         'click #o_wblog_next_container': '_onNextBlogClick',
         'click #o_wblog_post_content_jump': '_onContentAnchorClick',
         'click .o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete': '_onShareArticle',
@@ -15,9 +16,78 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     /**
      * @override
      */
-    start: function () {
-        $('.js_tweet, .js_comment').share({});
-        return this._super.apply(this, arguments);
+    start() {
+        if (!this.editableMode) {
+            $('.js_tweet, .js_comment').share({});
+        }
+
+        this.widthClasses = ['o_container_small', 'container', 'container-fluid'];
+
+        // The 'o_container_as_first' class is used to mark blocks that need
+        // to be kept aligned with the first text block on the blog content.
+        // (e.g. breadcrumbs, tags...)
+        this.containerSizeUpdatingEls = this.el.querySelectorAll('.o_container_as_first');
+        this._adjustWidth();
+        for (const el of this.containerSizeUpdatingEls) {
+            // Removing the class triggers the fade-in animation.
+            el.classList.remove('o_container_as_first');
+        }
+        // Keep width adjusted upon further updates.
+        // TODO Remove event listener once page's core.bus can be reached from editor.
+        // core.bus.on('blog_width_update', this, this._adjustWidth);
+        this.__boundAdjustWidth = this._adjustWidth.bind(this);
+        this.el.addEventListener('blog_width_update', this.__boundAdjustWidth);
+
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+
+        // TODO Remove event listener once page's core.bus can be reached from editor.
+        this.el.removeEventListener('blog_width_update', this.__boundAdjustWidth);
+        // core.bus.off('blog_width_update', this, this._adjustWidth);
+
+        for (const el of this.containerSizeUpdatingEls) {
+            el.classList.remove(...this.widthClasses);
+            el.classList.add('o_container_as_first');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adjusts the containers'width class based on the first (text) section of
+     * the blog post content.
+     * If there is a text section it uses the first text section, otherwise it
+     * uses the first section.
+     *
+     * @private
+     */
+    _adjustWidth() {
+        const blogPostContentEl = this.el.querySelector('.o_wblog_post_content_field');
+        if (!blogPostContentEl) {
+            return;
+        }
+
+        let targetClass = 'o_container_small';
+        for (const extraSelector of ['.s_text_block ', ':first-of-type', ':first-of-type ']) {
+            const selector = this.widthClasses.map(cls => `section${extraSelector}.${cls}`);
+            const source = blogPostContentEl.querySelector(selector);
+            if (source) {
+                targetClass = this.widthClasses.find(cls => source.classList.contains(cls));
+                break;
+            }
+        }
+
+        for (const containerEl of this.containerSizeUpdatingEls) {
+            containerEl.classList.remove(...this.widthClasses);
+            containerEl.classList.add(targetClass);
+        }
     },
 
     //--------------------------------------------------------------------------
