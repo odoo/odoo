@@ -20,21 +20,20 @@
         <field name="arch" type="xml">
             <!-- Buttons / Actions -->
             <xpath expr="//button[@name='action_launch']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', '|', ('mailing_type', '!=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'), ('state', 'in', ('in_queue', 'sending', 'done'))]}</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_test']" position="before">
+            <xpath expr="//button[@name='action_schedule']" position="before">
                 <button name="action_put_in_queue" type="object"
-                    string="Launch" class="oe_highlight"
-                    attrs="{'invisible': ['|', '|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled'), ('sms_force_send', '=', True)]}"
+                    string="Send" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'sending', 'done')), ('sms_force_send', '=', True)]}"
                     confirm="This will send SMS to all recipients. Do you still want to proceed ?"/>
                 <button name="action_send_mail" type="object"
-                    string="Launch Now" class="oe_highlight"
+                    string="Send Now" class="oe_highlight"
                     attrs="{'invisible': ['|', '|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ('in_queue', 'done')), ('schedule_type', '=', 'scheduled'), ('sms_force_send', '!=', True)]}"
                     confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
             </xpath>
             <xpath expr="//div[@name='schedule_block']/div[hasclass('row')]" position="inside">
-                <div class="col-xs-12 col-md-9"
-                     attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ['in_queue', 'sending', 'done']), ('schedule_type', '=', 'scheduled')]}">
+                <div attrs="{'invisible': ['|', '|', ('mailing_type', '=', 'mail'), ('state', 'in', ['in_queue', 'sending', 'done']), ('schedule_type', '=', 'scheduled')]}">
                     <label for="sms_force_send" string="Skip Queue"/>
                     <field name="sms_force_send"/>
                 </div>
@@ -107,7 +106,7 @@
                     For an SMS Text Message, internal Title of the Message.</attribute>
             </xpath>
             <xpath expr="//field[@name='subject']" position="after">
-                <field class="o_text_overflow" name="sms_subject" string="Title" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
+                <field class="o_text_overflow" name="sms_subject" string="Title" placeholder="e.g. Black Friday SMS coupon" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))], 'required': [('mailing_type', '=', 'sms')]}"/>
             </xpath>
             <xpath expr="//field[@name='preview']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('sending', 'done'))], 'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
@@ -123,7 +122,7 @@
                 </page>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="sms_allow_unsubscribe" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}"/>
+                <field name="sms_allow_unsubscribe" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))]}"/>
             </xpath>
 
             <xpath expr="//field[@name='contact_list_ids']" position="attributes">
@@ -151,6 +150,16 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='mail_server_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mailing_type', '!=', 'mail'),
+                    ('mail_server_available', '=', False)], 'readonly': [('state', 'in', ('sending', 'done'))]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='unique_ab_testing']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='contact_ab_pc']" position="attributes">
+                <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='contact_ab_pc']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
         </field>

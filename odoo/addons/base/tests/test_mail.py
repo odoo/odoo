@@ -328,11 +328,13 @@ class TestHtmlTools(BaseCase):
         for content in void_strings_samples:
             self.assertTrue(is_html_empty(content))
 
-        void_html_samples = ['<p><br></p>', '<p><br> </p>', '<p><br /></p >']
+        void_html_samples = ['<p><br></p>', '<p><br> </p>', '<p><br /></p >', '<p style="margin: 4px"></p>',
+                             '<div style="margin: 4px"></div>']
         for content in void_html_samples:
             self.assertTrue(is_html_empty(content), 'Failed with %s' % content)
 
-        valid_html_samples = ['<p><br>1</p>', '<p>1<br > </p>']
+        valid_html_samples = ['<p><br>1</p>', '<p>1<br > </p>', '<p style="margin: 4px">Hello World</p>',
+                              '<div style="margin: 4px"><p>Hello World</p></div>']
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
 
