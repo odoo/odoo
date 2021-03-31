@@ -655,15 +655,6 @@ class AccountJournal(models.Model):
             })
         return action_vals
 
-    def _create_invoice_from_single_attachment(self, attachment):
-        """ Creates an invoice and post the attachment. If the related modules
-            are installed, it will trigger OCR or the import from the EDI.
-            DEPRECATED : use create_invoice_from_attachment instead
-
-            :returns: the created invoice.
-        """
-        return self.create_invoice_from_attachment(attachment.ids)
-
     def _create_secure_sequence(self, sequence_fields):
         """This function creates a no_gap sequence on each journal in self that will ensure
         a unique number is given to all posted account.move in such a way that we can always
