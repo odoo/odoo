@@ -55,7 +55,7 @@ const Renderer = qweb.Renderer.extend({
         // Highlight requested view as google does
         const reqViewId = this.$('.o_tree_container').data('requested-view-id');
         const $reqView = $(`[data-id="${reqViewId}"] span.js_fold`).first();
-        $reqView.addClass('text-info');
+        $reqView.css({'background-color': 'yellow'});
         $('.o_content').scrollTo($reqView[0], 300, {offset: -200});
     },
 
@@ -107,7 +107,7 @@ const Renderer = qweb.Renderer.extend({
             // Hide all website views
             this.$wNodes.addClass('d-none');
             // Show selected website views
-            const $selectedWebsiteNodes = this.$('li[data-website_name="${websiteName}"]');
+            const $selectedWebsiteNodes = this.$(`li[data-website_name="${websiteName}"]`);
             $selectedWebsiteNodes.removeClass('d-none');
             // Hide generic siblings
             $selectedWebsiteNodes.each(function () {
@@ -193,10 +193,10 @@ const Renderer = qweb.Renderer.extend({
         $(lastElements).addClass('o_last_visible_child');
 
         const selector = $('#o_show_inactive').prop('checked') ? '> li' : '> li:not(.o_is_inactive)';
-        this.$('.o_fold_icon').map(function() {
+        this.$('.o_fold_icon').map(function () {
             let $ico = $(this);
             let childs = $ico.parent().parent().first().find('ul').find(selector);
-            $ico.toggleClass('d-none',  !childs.length);
+            $ico.toggleClass('d-none', !childs.length);
         });
     },
     /**
