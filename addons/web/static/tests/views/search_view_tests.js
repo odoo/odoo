@@ -530,7 +530,7 @@ QUnit.module('Search View', {
     QUnit.module('FilterMenu');
 
     QUnit.test('Search date and datetime fields. Support of timezones', async function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
         this.data.partner.fields.birth_datetime = {string: "Birth DateTime", type: "datetime", store: true, sortable: true};
         this.data.partner.records = this.data.partner.records.slice(0,-1); // exclude wrong date record
@@ -545,6 +545,7 @@ QUnit.module('Search View', {
             }
         }
 
+        var TZOffset = 360;
         var searchReadSequence = 0;
         var actionManager = await createActionManager({
             actions: [{
@@ -570,15 +571,16 @@ QUnit.module('Search View', {
             data: this.data,
             session: {
                 getTZOffset: function() {
-                    return 360;
+                    return TZOffset;
                 }
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
-                    if (searchReadSequence === 1) { // The 0th time is at loading
+                    if (searchReadSequence === 1 || searchReadSequence === 3) {
+                        // The 0th time is at loading and 2nd time at closing of first facet
                         assert.deepEqual(args.domain, [["birthday", "=", "1983-07-15"]],
                             'A date should stay what the user has input, but transmitted in server\'s format');
-                    } else if (searchReadSequence === 3) { // the 2nd time is at closing the first facet
+                    } else if (searchReadSequence === 5) { // the 4th time is at closing the first facet
                         assert.deepEqual(args.domain, [["birth_datetime", "=", "1983-07-14 18:00:00"]],
                             'A datetime should be transformed in UTC and transmitted in server\'s format');
                     }
@@ -601,7 +603,19 @@ QUnit.module('Search View', {
         // Close Facet
         await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
 
+        TZOffset = -360;
+        $autocomplete = $('.o_searchview_input');
+        await stringToEvent($autocomplete, '07/15/1983');
+        await testUtils.fields.triggerKey('up', $autocomplete, 'enter');
+
+        assert.equal($('.o_searchview_facet .o_facet_values').text().trim(), '07/15/1983',
+            'The format of the date in the facet should be in locale');
+
+        // Close Facet
+        await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
+
         // DateTime case
+        TZOffset = 360;
         $autocomplete = $('.o_searchview_input');
         await stringToEvent($autocomplete, '07/15/1983 00:00:00');
         await testUtils.fields.triggerKey('down', $autocomplete, 'down');
