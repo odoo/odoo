@@ -32,13 +32,11 @@ Main Features
         'security/fleet_security.xml',
         'security/ir.model.access.csv',
         'views/fleet_vehicle_model_views.xml',
-        'views/assets.xml',
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
         'views/fleet_board_view.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
-        'views/assets.xml',
         'data/fleet_cars_data.xml',
         'data/fleet_data.xml',
         'data/mail_data.xml',
@@ -48,4 +46,9 @@ Main Features
 
     'installable': True,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'fleet/static/src/**/*',
+        ],
+    }
 }

@@ -25,7 +25,6 @@ following:
     'data': [
         'data/pos_mercury_data.xml',
         'security/ir.model.access.csv',
-        'views/pos_mercury_templates.xml',
         'views/pos_mercury_views.xml',
         'views/pos_mercury_transaction_templates.xml',
         'views/pos_config_setting_views.xml',
@@ -33,11 +32,20 @@ following:
     'demo': [
         'data/pos_mercury_demo.xml',
     ],
-    'qweb': [
-        'static/src/xml/OrderReceipt.xml',
-        'static/src/xml/PaymentScreenPaymentLines.xml',
-        'static/src/xml/PaymentTransactionPopup.xml',
-    ],
     'installable': True,
     'auto_install': False,
+    'assets': {
+        'point_of_sale.assets': [
+            'pos_mercury/static/src/js/pos_mercury.js',
+            'pos_mercury/static/src/js/OrderReceipt.js',
+            'pos_mercury/static/src/js/PaymentScreen.js',
+            'pos_mercury/static/src/js/PaymentScreenPaymentLines.js',
+            'pos_mercury/static/src/js/PaymentTransactionPopup.js',
+            'pos_mercury/static/src/js/ProductScreen.js',
+            'pos_mercury/static/src/css/pos_mercury.css',
+        ],
+        'web.assets_qweb': [
+            'pos_mercury/static/src/xml/**/*',
+        ],
+    }
 }

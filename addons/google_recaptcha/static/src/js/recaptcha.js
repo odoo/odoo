@@ -12,7 +12,7 @@ const ReCaptcha = Class.extend({
      * @override
      */
     init: function () {
-        this._publicKey = odoo.reCaptchaPublicKey;
+        this._publicKey = odoo.session_info.recaptcha_public_key;
     },
     /**
      * Loads the recaptcha libraries.

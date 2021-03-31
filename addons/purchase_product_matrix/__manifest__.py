@@ -13,9 +13,19 @@
     'version': '1.0',
     'depends': ['purchase', 'product_matrix'],
     'data': [
-        'views/assets.xml',
         'views/purchase_views.xml',
         'report/purchase_quotation_templates.xml',
         'report/purchase_order_templates.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'purchase_product_matrix/static/src/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'purchase_product_matrix/static/tests/section_and_note_widget_tests.js',
+        ],
+        'web.assets_tests': [
+            'purchase_product_matrix/static/tests/tours/**/*',
+        ],
+    }
 }

@@ -176,11 +176,6 @@
 </template>
 
 <!-- Portal -->
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_crm_partner_assign/static/src/js/crm_partner_assign.js" />
-        </xpath>
-    </template>
     <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="portal.portal_breadcrumbs" priority="15">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'lead' or lead" t-attf-class="breadcrumb-item #{'active ' if not lead else ''}">

@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Sale Stock">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_sale_stock/static/src/js/variant_mixin.js" />
-        </xpath>
-    </template>
-
     <!-- Shopping Cart Lines -->
     <template id="website_sale_stock_cart_lines" inherit_id="website_sale.cart_lines" name="Shopping Cart Lines">
         <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">

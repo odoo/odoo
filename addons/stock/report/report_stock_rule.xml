@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template id="assets_common" name="report_stock_rule assets" inherit_id="web.report_assets_common">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/report_stock_rule.scss"/>
-        </xpath>
-    </template>
-
     <template id="report_stock_rule">
         <t t-set="data_report_landscape" t-value="True"/>
         <t t-set="full_width" t-value="True"/>

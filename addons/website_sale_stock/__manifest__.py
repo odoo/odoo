@@ -25,4 +25,9 @@ Then it can be made specific at the product level.
         'data/website_sale_stock_demo.xml',
     ],
     'auto_install': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_sale_stock/static/src/js/**/*',
+        ],
+    }
 }

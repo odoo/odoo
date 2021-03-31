@@ -47,8 +47,35 @@
     'demo': [
         'data/mass_mailing_demo.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml',
-    ],
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'mass_mailing/static/src/scss/mass_mailing.scss',
+            'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
+            'mass_mailing/static/src/css/email_template.css',
+            'mass_mailing/static/src/js/mass_mailing.js',
+            'mass_mailing/static/src/js/mass_mailing_widget.js',
+            'mass_mailing/static/src/js/unsubscribe.js',
+        ],
+        'mass_mailing.assets_mail_themes': [
+            'mass_mailing/static/src/scss/themes/**/*',
+        ],
+        'mass_mailing.assets_mail_themes_edition': [
+            ('include', 'web._assets_helpers'),
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'mass_mailing/static/src/scss/mass_mailing.ui.scss',
+            'web/static/src/scss/webclient.scss',
+        ],
+        'web.assets_common': [
+            'mass_mailing/static/src/js/tours/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'mass_mailing/static/tests/field_html_test.js',
+            'mass_mailing/static/src/js/mass_mailing_snippets.js',
+            'mass_mailing/static/tests/mass_mailing_html_tests.js',
+        ],
+        'web.assets_qweb': [
+            'mass_mailing/static/src/xml/*.xml',
+        ],
+    }
 }

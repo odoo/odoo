@@ -29,8 +29,20 @@
     ],
     'test': [
     ],
-    'qweb': [
-    ],
     'installable': True,
     'application': True,
+    'assets': {
+        'website.assets_wysiwyg': [
+            'website_blog/static/src/snippets/s_blog_posts/options.js',
+        ],
+        'website.assets_editor': [
+            'website_blog/static/src/js/website_blog.editor.js',
+            'website_blog/static/src/js/tours/website_blog.js',
+        ],
+        'web.assets_frontend': [
+            'website_blog/static/src/scss/website_blog.scss',
+            'website_blog/static/src/js/contentshare.js',
+            'website_blog/static/src/js/website_blog.js',
+        ],
+    }
 }

@@ -8,7 +8,7 @@
             <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
             <footer class="blockquote-footer">
                 <img src="/web/image/website.s_blockquote_default_image" class="s_blockquote_avatar img rounded-circle mr-2" alt=""/>
-                <span class="s_blockquote_author"><b>John DOE</b> • CEO of MyCompany</span>
+                <span class="s_blockquote_author"><b>John DOE</b> &#8226; CEO of MyCompany</span>
             </footer>
         </div>
     </blockquote>
@@ -50,10 +50,10 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_blockquote_css_000" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_blockquote/000.scss"/>
-    </xpath>
-</template>
+<record id="website.s_blockquote_000_scss" model="ir.asset">
+    <field name="name">Blockquote 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_blockquote/000.scss</field>
+</record>
 
 </odoo>

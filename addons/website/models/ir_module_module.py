@@ -21,6 +21,7 @@ class IrModuleModule(models.Model):
     # The order is important because of dependencies (page need view, menu need page)
     _theme_model_names = OrderedDict([
         ('ir.ui.view', 'theme.ir.ui.view'),
+        ('ir.asset', 'theme.ir.asset'),
         ('website.page', 'theme.website.page'),
         ('website.menu', 'theme.website.menu'),
         ('ir.attachment', 'theme.ir.attachment'),
@@ -415,6 +416,20 @@ class IrModuleModule(models.Model):
                         'res_model': self._name,
                         'res_id': theme.id,
                     })
+
+    def get_themes_domain(self):
+        """Returns the 'ir.module.module' search domain matching all available themes."""
+        def get_id(model_id):
+            return self.env['ir.model.data'].xmlid_to_res_id(model_id)
+        return [
+            ('category_id', 'not in', [
+                get_id('base.module_category_hidden'),
+                get_id('base.module_category_theme_hidden'),
+            ]),
+            '|',
+            ('category_id', '=', get_id('base.module_category_theme')),
+            ('category_id.parent_id', '=', get_id('base.module_category_theme'))
+        ]
 
     def _check(self):
         super()._check()

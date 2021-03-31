@@ -75,12 +75,6 @@
         </div>
     </template>
 
-    <template id="assets_stock_print_report" inherit_id="web.assets_common">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/stock_traceability_report.scss"/>
-        </xpath>
-    </template>
-
     <template id="report_stock_inventory_print">
         <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
         <t t-call="web.html_container">

@@ -9,7 +9,15 @@
     'depends': ['base_setup', 'web_editor'],
     'data': [
         'views/res_config_settings_view.xml',
-        'views/web_unsplash_templates.xml',
-    ],
+        ],
     'auto_install': True,
+    'assets': {
+        'web_editor.assets_wysiwyg': [
+            'web_unsplash/static/src/js/unsplashapi.js',
+            'web_unsplash/static/src/js/unsplash_image_widget.js',
+        ],
+        'web.assets_frontend': [
+            'web_unsplash/static/src/js/unsplash_beacon.js',
+        ],
+    }
 }

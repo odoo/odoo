@@ -25,10 +25,10 @@ automatic lead generation, full Online support, ...
         'website_event_track_live',
         'website_event_track_quiz',
     ],
-    'data': [
-        'views/assets.xml',
-    ],
-    'demo': [
-    ],
     'installable': True,
+    'assets': {
+        'web.assets_tests': [
+            'test_event_full/static/**/*',
+        ],
+    }
 }

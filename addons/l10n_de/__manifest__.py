@@ -25,4 +25,9 @@ German accounting chart and localization.
         'report/din5008_report.xml',
         'data/report_layout.xml',
     ],
+    'assets': {
+        'web.report_assets_common': [
+            'l10n_de/static/src/**/*',
+        ],
+    }
 }

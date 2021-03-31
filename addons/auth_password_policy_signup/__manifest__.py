@@ -4,7 +4,11 @@
     'category': 'Hidden/Tools',
     'auto_install': True,
     'data': [
-        'views/assets.xml',
         'views/signup_templates.xml',
-    ]
+    ],
+    'assets': {
+        'web.assets_frontend': [
+            'auth_password_policy_signup/static/**/*',
+        ],
+    }
 }

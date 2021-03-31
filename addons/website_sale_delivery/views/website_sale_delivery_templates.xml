@@ -15,19 +15,6 @@
         </xpath>
     </template>
 
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
-      <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_sale_delivery/static/src/js/website_sale_delivery.js"></script>
-        <link rel="stylesheet" type="text/scss" href="/website_sale_delivery/static/src/scss/website_sale_delivery.scss"/>
-      </xpath>
-    </template>
-
-    <template id="assets_tests" name="Website Sale Delivery Assets Tests" inherit_id="web.assets_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_sale_delivery/static/tests/tours/website_free_delivery.js"></script>
-        </xpath>
-    </template>
-
     <template id="payment_delivery_methods">
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
         <label class="label-optional" t-field="delivery.name"/>

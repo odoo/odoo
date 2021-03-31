@@ -13,12 +13,6 @@
             <field name="attachment">'QR-bill-' + object.name + '.pdf'</field>
         </record>
 
-        <template id="assets_common_qr" inherit_id="web.report_assets_common">
-            <xpath expr="." position="inside">
-                <link type="text/scss" rel="stylesheet" href="/l10n_ch/static/src/scss/report_swissqr.scss"/>
-            </xpath>
-        </template>
-
         <template id="l10n_ch_swissqr_template">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
             <t t-call="web.external_layout">

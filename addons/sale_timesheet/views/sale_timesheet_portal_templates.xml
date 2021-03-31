@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="assets_frontend" name="report timesheet assets" inherit_id="web.assets_frontend">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet_portal.scss"/>
-        </xpath>
-    </template>
-
     <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
         <xpath expr="//li[.//a[@id='print_invoice_report']]" position="after">
             <li t-if="sale_order.timesheet_count > 0 and sale_order.state in ('sale', 'done')" class="list-group-item flex-grow-1">

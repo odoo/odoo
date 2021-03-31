@@ -8,9 +8,20 @@
         'data/barcodes_data.xml',
         'views/barcodes_view.xml',
         'security/ir.model.access.csv',
-        'views/barcodes_templates.xml',
-    ],
+        ],
     'installable': True,
     'auto_install': False,
     'post_init_hook': '_assign_default_nomeclature_id',
+    'assets': {
+        'web.assets_backend': [
+            'barcodes/static/src/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'barcodes/static/tests/barcode_tests.js',
+            'barcodes/static/tests/barcode_parser_tests.js',
+        ],
+        'web.qunit_mobile_suite_tests': [
+            'barcodes/static/tests/barcode_mobile_tests.js',
+        ],
+    }
 }

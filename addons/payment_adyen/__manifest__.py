@@ -9,7 +9,6 @@
     'description': """Adyen Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/assets.xml',
         'views/payment_adyen_templates.xml',
         'views/payment_views.xml',
         'data/payment_acquirer_data.xml',  # Depends on views/payment_adyen_templates.xml
@@ -17,4 +16,11 @@
     'application': True,
     'post_init_hook': 'create_missing_journals',
     'uninstall_hook': 'uninstall_hook',
+    'assets': {
+        'web.assets_frontend': [
+            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.9.4/adyen.css',
+            'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.9.4/adyen.js',
+            'payment_adyen/static/src/js/payment_form.js',
+        ],
+    }
 }

@@ -249,6 +249,14 @@ def module_manifest(path):
         if os.path.isfile(opj(path, manifest_name)):
             return opj(path, manifest_name)
 
+def read_manifest(addons_path, module):
+    mod_path = opj(addons_path, module)
+    manifest_path = module_manifest(mod_path)
+    if manifest_path:
+        with tools.file_open(manifest_path, 'r') as fd:
+            manifest_data = fd.read()
+        return ast.literal_eval(manifest_data)
+
 def get_module_root(path):
     """
     Get closest module's root beginning from path

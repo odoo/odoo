@@ -29,7 +29,6 @@ sent mails with personal token for the invitation of the survey.
         'data/ir_actions_data.xml',
         'security/survey_security.xml',
         'security/ir.model.access.csv',
-        'views/assets.xml',
         'views/survey_menus.xml',
         'views/survey_survey_views.xml',
         'views/survey_user_views.xml',
@@ -56,4 +55,42 @@ sent mails with personal token for the invitation of the survey.
     'auto_install': False,
     'application': True,
     'sequence': 220,
+    'assets': {
+        'survey.survey_assets': [
+            'web/static/lib/Chart/Chart.js',
+            'web/static/src/js/fields/field_utils.js',
+            'survey/static/src/js/survey_quick_access.js',
+            'survey/static/src/js/survey_timer.js',
+            'survey/static/src/js/survey_breadcrumb.js',
+            'survey/static/src/js/survey_form.js',
+            'survey/static/src/js/survey_print.js',
+            'survey/static/src/js/survey_result.js',
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'survey/static/src/css/survey_print.css',
+            'survey/static/src/css/survey_result.css',
+            'survey/static/src/scss/survey_form.scss',
+        ],
+        'survey.survey_user_input_session_assets': [
+            'survey/static/src/js/libs/chartjs-plugin-datalabels.min.js',
+            'survey/static/src/js/survey_session_colors.js',
+            'survey/static/src/js/survey_session_chart.js',
+            'survey/static/src/js/survey_session_text_answers.js',
+            'survey/static/src/js/survey_session_leaderboard.js',
+            'survey/static/src/js/survey_session_manage.js',
+        ],
+        'web.report_assets_pdf': [
+            'survey/static/src/scss/survey_reports.scss',
+        ],
+        'web.assets_backend': [
+            'survey/static/src/css/survey_result.css',
+            'survey/static/src/js/fields_section_one2many.js',
+            'survey/static/src/js/fields_form_page_description.js',
+            'survey/static/src/scss/survey_views.scss',
+        ],
+        'web.assets_tests': [
+            'survey/static/tests/**/*',
+        ],
+    }
 }

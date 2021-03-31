@@ -29,22 +29,14 @@
                 <we-button data-set-icons="fa-heart"><i class="fa fa-fw fa-heart"/> Hearts</we-button>
                 <we-button data-set-icons="custom" class="d-none">Custom</we-button>
             </we-select>
-            <we-row string="⌙ Active">
-                <we-colorpicker
-                    data-select-style=""
-                    data-apply-to=".s_rating_active_icons"
-                    data-css-property="color"
-                    data-color-prefix="text-"/>
+            <we-row string="&#8985; Active">
+                <we-colorpicker data-select-style="" data-apply-to=".s_rating_active_icons" data-css-property="color" data-color-prefix="text-"/>
                 <we-button data-custom-icon="true" data-custom-active-icon="true" data-no-preview="true">
                     <i class="fa fa-fw fa-refresh mr-1"/> Replace Icon
                 </we-button>
             </we-row>
-            <we-row string="⌙ Inactive">
-                <we-colorpicker
-                    data-select-style=""
-                    data-apply-to=".s_rating_inactive_icons"
-                    data-css-property="color"
-                    data-color-prefix="text-"/>
+            <we-row string="&#8985; Inactive">
+                <we-colorpicker data-select-style="" data-apply-to=".s_rating_inactive_icons" data-css-property="color" data-color-prefix="text-"/>
                 <we-button data-custom-icon="true" data-custom-active-icon="false" data-no-preview="true">
                     <i class="fa fa-fw fa-refresh mr-1"/> Replace Icon
                 </we-button>
@@ -55,31 +47,26 @@
                 <we-input data-total-icons-number="true" data-step="1"/>
             </we-row>
             <we-button-group string="Size" data-apply-to=".s_rating_icons">
-                <we-button data-select-class=""
-                           title="Small"
-                           data-img="/website/static/src/img/snippets_options/size_small.svg"/>
-                <we-button data-select-class="fa-2x"
-                           title="Medium"
-                           data-img="/website/static/src/img/snippets_options/size_medium.svg"/>
-                <we-button data-select-class="fa-3x"
-                           title="Large"
-                           data-img="/website/static/src/img/snippets_options/size_large.svg"/>
+                <we-button data-select-class="" title="Small" data-img="/website/static/src/img/snippets_options/size_small.svg"/>
+                <we-button data-select-class="fa-2x" title="Medium" data-img="/website/static/src/img/snippets_options/size_medium.svg"/>
+                <we-button data-select-class="fa-3x" title="Large" data-img="/website/static/src/img/snippets_options/size_large.svg"/>
             </we-button-group>
             <we-checkbox string="Display Inline" data-select-class="s_rating_inline" data-no-preview="true"/>
         </div>
     </xpath>
 </template>
 
-<template id="assets_snippet_s_rating_css_000" inherit_id="website.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_rating/000.scss"/>
-    </xpath>
-</template>
+<record id="website.s_rating_000_scss" model="ir.asset">
+    <field name="name">Rating 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_rating/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
 
-<template id="assets_snippet_s_rating_css_001" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_rating/001.scss"/>
-    </xpath>
-</template>
+<record id="website.s_rating_001_scss" model="ir.asset">
+    <field name="name">Rating 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_rating/001.scss</field>
+</record>
 
 </odoo>

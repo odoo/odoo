@@ -122,6 +122,7 @@ class AssetsBundle(object):
         self.user_direction = self.env['res.lang']._lang_get(
             self.env.context.get('lang') or self.env.user.lang
         ).direction
+        # asset-wide html "media" attribute
         for f in files:
             if css:
                 if f['atype'] == 'text/sass':
@@ -154,7 +155,7 @@ class AssetsBundle(object):
                     ["type", "text/css"],
                     ["rel", "stylesheet"],
                     ["href", href],
-                    ['data-asset-xmlid', self.name],
+                    ['data-asset-bundle', self.name],
                     ['data-asset-version', self.version],
                 ])
                 response.append(("link", attr, None))
@@ -171,7 +172,7 @@ class AssetsBundle(object):
                 ["defer", "defer" if defer_load or lazy_load else None],
                 ["type", "text/javascript"],
                 ["data-src" if lazy_load else "src", src],
-                ['data-asset-xmlid', self.name],
+                ['data-asset-bundle', self.name],
                 ['data-asset-version', self.version],
             ])
             response.append(("script", attr, None))
@@ -343,7 +344,7 @@ class AssetsBundle(object):
             channel = (self.env.registry.db_name, 'bundle_changed')
             message = (self.name, self.version)
             self.env['bus.bus'].sendone(channel, message)
-            _logger.debug('Asset Changed:  xml_id: %s -- version: %s' % message)
+            _logger.debug('Asset Changed: bundle: %s -- version: %s', message, message)
 
         return attachment
 
@@ -822,14 +823,14 @@ class JavascriptAsset(WebAsset):
             return ("script", OrderedDict([
                 ["type", "text/javascript"],
                 ["src", self.html_url],
-                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-bundle', self.bundle.name],
                 ['data-asset-version', self.bundle.version],
             ]), None)
         else:
             return ("script", OrderedDict([
                 ["type", "text/javascript"],
                 ["charset", "utf-8"],
-                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-bundle', self.bundle.name],
                 ['data-asset-version', self.bundle.version],
             ]), self.with_header())
 
@@ -927,7 +928,7 @@ class StylesheetAsset(WebAsset):
                 ["rel", "stylesheet"],
                 ["href", self.html_url],
                 ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-bundle', self.bundle.name],
                 ['data-asset-version', self.bundle.version],
             ])
             return ("link", attr, None)
@@ -935,7 +936,7 @@ class StylesheetAsset(WebAsset):
             attr = OrderedDict([
                 ["type", "text/css"],
                 ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-xmlid', self.bundle.name],
+                ['data-asset-bundle', self.bundle.name],
                 ['data-asset-version', self.bundle.version],
             ])
             return ("style", attr, self.with_header())

@@ -7,7 +7,6 @@
     'category': 'Productivity',
     'description': "",
     'depends': ['microsoft_account', 'calendar'],
-    'qweb': ['static/src/xml/*.xml'],
     'data': [
         'data/microsoft_calendar_data.xml',
         'security/ir.model.access.csv',
@@ -15,10 +14,19 @@
         'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
         'views/microsoft_calendar_views.xml',
-        'views/microsoft_calendar_templates.xml',
-    ],
+        ],
     'demo': [],
     'installable': True,
     'auto_install': False,
     'post_init_hook': 'init_initiating_microsoft_uuid',
+    'assets': {
+        'web.assets_backend': [
+            'microsoft_calendar/static/src/js/microsoft_calendar_popover.js',
+            'microsoft_calendar/static/src/js/microsoft_calendar.js',
+            'microsoft_calendar/static/src/scss/microsoft_calendar.scss',
+        ],
+        'web.assets_qweb': [
+            'microsoft_calendar/static/src/xml/*.xml',
+        ],
+    }
 }

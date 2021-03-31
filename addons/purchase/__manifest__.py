@@ -14,7 +14,6 @@
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'data/digest_data.xml',
-        'views/assets.xml',
         'views/account_move_views.xml',
         'data/purchase_data.xml',
         'data/ir_cron_data.xml',
@@ -31,14 +30,24 @@
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',
     ],
-    'qweb': [
-        "static/src/xml/purchase_dashboard.xml",
-        "static/src/xml/purchase_toaster_button.xml",
-    ],
     'demo': [
         'data/purchase_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'purchase/static/src/scss/purchase.scss',
+            'purchase/static/src/js/purchase_dashboard.js',
+            'purchase/static/src/js/purchase_toaster_button.js',
+            'purchase/static/src/js/tours/purchase.js',
+        ],
+        'web.assets_frontend': [
+            'purchase/static/src/js/purchase_datetimepicker.js',
+        ],
+        'web.assets_qweb': [
+            'purchase/static/src/xml/**/*',
+        ],
+    }
 }

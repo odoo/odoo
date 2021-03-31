@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Hr Recruitment Assets Frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website_hr_recruitment/static/src/scss/website_hr_recruitment.scss"/>
-    </xpath>
-</template>
-
 <template id="job_edit_options" inherit_id="website.user_navbar" name="Edit Job Options">
     <xpath expr="//li[@id='edit-page-menu']" position="after">
         <t t-if="main_object._name == 'hr.job'" t-set="action" t-value="'hr_recruitment.action_hr_job'"/>
@@ -609,18 +603,6 @@
         <attribute name="t-att-data-module-id"/>
         <attribute name="t-att-data-module-shortdesc"/>
         <attribute name="t-if">is_designer</attribute>
-    </xpath>
-</template>
-
-<template id="website_hr_recuitment_assets_editor" name="Website HR Recruitment Assets Editor" inherit_id="website.assets_editor">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js"></script>
-    </xpath>
-</template>
-
-<template id="assets_tests" name="Website HR Recruitment Assets Tests" inherit_id="web.assets_tests">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_hr_recruitment/static/tests/tours/website_hr_recruitment.js"></script>
     </xpath>
 </template>
 

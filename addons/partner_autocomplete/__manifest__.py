@@ -16,14 +16,28 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/partner_autocomplete_assets.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'data/cron.xml',
     ],
-    'qweb': [
-        'static/src/xml/partner_autocomplete.xml',
-    ],
     'auto_install': True,
+    'assets': {
+        'web.assets_backend': [
+            'partner_autocomplete/static/src/scss/partner_autocomplete.scss',
+            'partner_autocomplete/static/src/js/partner_autocomplete_core.js',
+            'partner_autocomplete/static/src/js/partner_autocomplete_fieldchar.js',
+            'partner_autocomplete/static/src/js/partner_autocomplete_many2one.js',
+            'partner_autocomplete/static/src/js/web_company_autocomplete.js',
+        ],
+        'web.tests_assets': [
+            'partner_autocomplete/static/lib/**/*',
+        ],
+        'web.qunit_suite_tests': [
+            'partner_autocomplete/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'partner_autocomplete/static/src/xml/**/*',
+        ],
+    }
 }

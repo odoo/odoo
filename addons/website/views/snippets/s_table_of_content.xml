@@ -5,9 +5,7 @@
     <section class="s_table_of_content pt24 pb24 o_cc o_cc1">
         <div class="container">
             <div class="row s_nb_column_fixed">
-                <div class="col-lg-3 s_table_of_content_navbar_wrap s_table_of_content_navbar_sticky
-                        s_table_of_content_vertical_navbar d-print-none d-none d-lg-block o_not_editable o_cc o_cc1"
-                        data-name="Navbar">
+                <div class="col-lg-3 s_table_of_content_navbar_wrap s_table_of_content_navbar_sticky                         s_table_of_content_vertical_navbar d-print-none d-none d-lg-block o_not_editable o_cc o_cc1" data-name="Navbar">
                     <div class="s_table_of_content_navbar list-group"/>
                 </div>
                 <div class="col-lg-9 s_table_of_content_main oe_structure oe_empty" data-name="Content">
@@ -63,16 +61,16 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_table_of_content_css_000" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_table_of_content/000.scss"/>
-    </xpath>
-</template>
+<record id="website.s_table_of_content_000_scss" model="ir.asset">
+    <field name="name">Table of content 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_table_of_content/000.scss</field>
+</record>
 
-<template id="assets_snippet_s_table_of_content_js_000" inherit_id="website.assets_frontend">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/snippets/s_table_of_content/000.js"/>
-    </xpath>
-</template>
+<record id="website.s_table_of_content_000_js" model="ir.asset">
+    <field name="name">Table of content 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_table_of_content/000.js</field>
+</record>
 
 </odoo>
