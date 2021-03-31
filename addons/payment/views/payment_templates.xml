@@ -173,9 +173,10 @@
               t-att-data-allow-token-selection="bool(assign_token_route)">
             <t t-set="acquirer_count" t-value="len(acquirers) if acquirers else 0"/>
             <t t-set="token_count" t-value="len(tokens) if tokens else 0"/>
+            <t t-set="no_selectable_token" t-value="token_count == 0 or not assign_token_route"/>
             <t t-set="default_payment_option_id"
                t-value="default_token_id if default_token_id and token_count > 0
-                        else acquirers[0].id if acquirer_count == 1 and token_count == 0
+                        else acquirers[0].id if acquirer_count == 1 and no_selectable_token
                         else None"/>
             <t t-set="footer_template_id"
                t-value="footer_template_id or 'payment.footer'"/>

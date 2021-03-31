@@ -8,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_paypal.const import PAYMENT_STATUS_MAPPING
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 
 _logger = logging.getLogger(__name__)
@@ -107,16 +108,16 @@ class PaymentTransaction(models.Model):
 
         payment_status = data.get('payment_status')
 
-        if payment_status in ('Pending', 'Processed', 'Completed') and not all(
-            (self.acquirer_id.paypal_pdt_token, self.acquirer_id.paypal_seller_account)
-        ):  # If a payment is made on an account waiting for configuration, send a reminder email
+        if payment_status in PAYMENT_STATUS_MAPPING['pending'] + PAYMENT_STATUS_MAPPING['done'] \
+            and not (self.acquirer_id.paypal_pdt_token and self.acquirer_id.paypal_seller_account):
+            # If a payment is made on an account waiting for configuration, send a reminder email
             self.acquirer_id._paypal_send_configuration_reminder()
 
-        if payment_status in ('Processed', 'Completed'):
-            self._set_done()
-        elif payment_status == 'Pending':
+        if payment_status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending(state_message=data.get('pending_reason'))
-        elif payment_status == 'Expired':
+        elif payment_status in PAYMENT_STATUS_MAPPING['done']:
+            self._set_done()
+        elif payment_status in PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         else:
             _logger.info("received data with invalid payment status: %s", payment_status)

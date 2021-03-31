@@ -17,15 +17,19 @@ class PaypalController(http.Controller):
     _return_url = '/payment/paypal/dpn/'
     _notify_url = '/payment/paypal/ipn/'
 
-    @http.route(_return_url, type='http', auth='public', methods=['POST'], csrf=False)
+    @http.route(_return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False)
     def paypal_dpn(self, **data):
         """ Route used by the PDT notification.
 
         The "PDT notification" is actually POST data sent along the user redirection.
+        The route also allows the GET method in case the user clicks on "go back to merchant site".
         """
         _logger.info("beginning DPN with post data:\n%s", pprint.pformat(data))
         self._validate_data_authenticity(**data)
-        request.env['payment.transaction']._handle_feedback_data('paypal', data)
+        if data:
+            request.env['payment.transaction']._handle_feedback_data('paypal', data)
+        else:
+            pass  # The customer has cancelled the payment, don't do anything
         return werkzeug.utils.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False)
