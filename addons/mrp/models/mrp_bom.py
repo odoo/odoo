@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round
 
 from itertools import groupby
+from collections import defaultdict
 
 
 class MrpBom(models.Model):
@@ -187,35 +188,37 @@ class MrpBom(models.Model):
         return self.search(domain, order='sequence, product_id', limit=1)
 
     @api.model
-    def _get_product2bom(self, products, bom_type=False):
+    def _get_product2bom(self, products, bom_type=False, picking_type=False, company_id=False):
         """Optimized variant of _bom_find to work with recordset"""
-        products = products.filtered(lambda product: product.type != 'service')
+
+        bom_by_product = defaultdict(lambda: self.env['mrp.bom'])
+        products = products.filtered(lambda p: p.type != 'service')
         if not products:
-            return {}
+            return bom_by_product
         product_templates = products.mapped('product_tmpl_id')
         domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_templates.ids)]
-        if self.env.context.get('company_id'):
-            domain = domain + ['|', ('company_id', '=', False), ('company_id', '=', self.env.context.get('company_id'))]
+        if picking_type:
+            domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
+        if company_id or self.env.context.get('company_id'):
+            domain = domain + ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]
         if bom_type:
             domain += [('type', '=', bom_type)]
 
-        boms = self.search(domain, order='sequence, product_id')
-        template2bom = {}
-        variant2bom = {}
-        for bom in boms:
-            # Use "setdefault" to take only first bom if we have few ones for
-            # the same product
-            if bom.product_id:
-                variant2bom.setdefault(bom.product_id, bom)
-            else:
-                template2bom.setdefault(bom.product_tmpl_id, bom)
-
-        result = {}
-        for p in products:
-            bom = variant2bom.get(p) or template2bom.get(p.product_tmpl_id)
+        if len(products) == 1:
+            bom = self.search(domain, order='sequence, product_id', limit=1)
             if bom:
-                result[p] = bom
-        return result
+                bom_by_product[products] = bom
+            return bom_by_product
+
+        boms = self.search(domain, order='sequence, product_id')
+
+        products_ids = set(products.ids)
+        for bom in boms:
+            products_implies = bom.product_id or bom.product_tmpl_id.product_variant_ids
+            for product in products_implies:
+                if product.id in products_ids and product not in bom_by_product:
+                    bom_by_product[product] = bom
+        return bom_by_product
 
     def explode(self, product, quantity, picking_type=False):
         """
@@ -240,14 +243,29 @@ class MrpBom(models.Model):
             recStack[v] = False
             return False
 
+        product_ids = set()
+        product_boms = {}
+        def update_product_boms():
+            products = self.env['product.product'].browse(product_ids)
+            product_boms.update(self._get_product2bom(products, bom_type='phantom',
+                picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id))
+            # Set missing keys to default value
+            for product in products:
+                product_boms.setdefault(product, self.env['mrp.bom'])
+
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
         V |= set([product.product_tmpl_id.id])
 
-        bom_lines = [(bom_line, product, quantity, False) for bom_line in self.bom_line_ids]
+        bom_lines = []
         for bom_line in self.bom_line_ids:
-            V |= set([bom_line.product_id.product_tmpl_id.id])
-            graph[product.product_tmpl_id.id].append(bom_line.product_id.product_tmpl_id.id)
+            product_id = bom_line.product_id
+            V |= set([product_id.product_tmpl_id.id])
+            graph[product.product_tmpl_id.id].append(product_id.product_tmpl_id.id)
+            bom_lines.append((bom_line, product, quantity, False))
+            product_ids.add(product_id.id)
+        update_product_boms()
+        product_ids.clear()
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
@@ -256,15 +274,20 @@ class MrpBom(models.Model):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
-            bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id, bom_type='phantom')
+            if not current_line.product_id in product_boms:
+                update_product_boms()
+                product_ids.clear()
+            bom = product_boms.get(current_line.product_id)
             if bom:
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
-                bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
+                bom_lines += [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids]
                 for bom_line in bom.bom_line_ids:
                     graph[current_line.product_id.product_tmpl_id.id].append(bom_line.product_id.product_tmpl_id.id)
                     if bom_line.product_id.product_tmpl_id.id in V and check_cycle(bom_line.product_id.product_tmpl_id.id, {key: False for  key in V}, {key: False for  key in V}, graph):
                         raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
                     V |= set([bom_line.product_id.product_tmpl_id.id])
+                    if not bom_line.product_id in product_boms:
+                        product_ids.add(bom_line.product_id.id)
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
