@@ -76,7 +76,7 @@ Master Data:
         'data/l10n_latam_identification_type_data.xml',
         'data/l10n_ar_afip_responsibility_type_data.xml',
         'data/account_chart_template_data.xml',
-        'data/account_group_data.xml',
+        'data/account.group.template.csv',
         'data/account.account.template.csv',
         'data/account_chart_template_data2.xml',
         'data/account_tax_group.xml',
