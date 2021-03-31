@@ -7,7 +7,7 @@ from odoo import api, models
 from odoo.http import request
 from odoo.tools import ustr
 
-from odoo.addons.web.controllers.main import module_boot, HomeStaticTemplateHelpers
+from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
 import odoo
 
@@ -48,8 +48,10 @@ class Http(models.AbstractModel):
             # but is still included in some other calls (e.g. '/web/session/authenticate')
             # to avoid access errors and unnecessary information, it is only included for users
             # with access to the backend ('internal'-type users)
-            mods = module_boot()
-            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(addons=mods, debug=request.session.debug)
+            mods = odoo.conf.server_wide_modules or []
+            if request.db:
+                mods = list(request.registry._init_modules) + mods
+            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug)
             lang = user_context.get("lang")
             translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
             menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()

@@ -5,44 +5,6 @@
         <!--
             Integrate Livechat Conversation in the Discuss
         -->
-        <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_view.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_controller.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/bugfix/bugfix.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/discuss/discuss.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/notification_list/notification_list.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/thread_needaction_preview/thread_needaction_preview.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/thread_preview/thread_preview.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/models/messaging_initializer/messaging_initializer.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/models/partner/partner.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/models/thread/thread.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/widgets/discuss/discuss.js"></script>
-
-                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/bugfix/bugfix.scss"/>
-                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_history.scss"/>
-                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_form.scss"/>
-            </xpath>
-        </template>
-
-        <template id="qunit_suite" name="livechat_tests" inherit_id="web.qunit_suite_tests">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/im_livechat/static/src/bugfix/bugfix_tests.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/chat_window_manager/chat_window_manager_tests.js"/>
-                <script type="text/javascript" src="/im_livechat/static/src/components/composer/composer_tests.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/discuss/discuss_tests.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/messaging_menu/messaging_menu_tests.js"/>
-                <script type="text/javascript" src="/im_livechat/static/src/components/thread_icon/thread_icon_tests.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/components/thread_textual_typing_status/thread_textual_typing_status_tests.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/legacy/public_livechat.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/tests/helpers/mock_models.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/tests/helpers/mock_server.js"></script>
-            </xpath>
-        </template>
-
         <!--
             Template rendering the external HTML support page
         -->
@@ -186,6 +148,7 @@
             <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/legacy/public_livechat.js"></script>
             <t t-call="web._assets_helpers"/>
+            <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
             <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_bootstrap.scss"/>
             <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/legacy/public_livechat.scss"/>
         </template>

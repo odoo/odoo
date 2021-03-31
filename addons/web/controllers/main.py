@@ -33,14 +33,14 @@ import unicodedata
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
-from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
+from odoo.modules import get_module_path, get_resource_path, module
+from odoo.tools import image_process, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
 from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
-from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
+from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
@@ -183,83 +183,9 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_installed(environment):
-    # Candidates module the current heuristic is the /static dir
-    loadable = list(http.addons_manifest)
-
-    # Retrieve database installed modules
-    # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = environment['ir.module.module']
-    domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = OrderedDict(
-        (module.name, module.dependencies_id.mapped('name'))
-        for module in Modules.search(domain)
-    )
-
-    sorted_modules = topological_sort(modules)
-    return sorted_modules
-
-def module_installed_bypass_session(dbname):
-    try:
-        registry = odoo.registry(dbname)
-        with registry.cursor() as cr:
-            return module_installed(
-                environment=Environment(cr, odoo.SUPERUSER_ID, {}))
-    except Exception:
-        pass
-    return {}
-
-def module_boot(db=None):
-    server_wide_modules = odoo.conf.server_wide_modules or []
-    serverside = ['base', 'web']
-    dbside = []
-    for i in server_wide_modules:
-        if i in http.addons_manifest and i not in serverside:
-            serverside.append(i)
-    monodb = db or db_monodb()
-    if monodb:
-        dbside = module_installed_bypass_session(monodb)
-        dbside = [i for i in dbside if i not in serverside]
-    addons = serverside + dbside
-    return addons
-
-
 def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
-
-def manifest_glob(extension, addons=None, db=None, include_remotes=False):
-    if addons is None:
-        addons = module_boot(db=db)
-
-    r = []
-    for addon in addons:
-        manifest = http.addons_manifest.get(addon, None)
-        if not manifest:
-            continue
-        # ensure does not ends with /
-        addons_path = os.path.join(manifest['addons_path'], '')[:-1]
-        globlist = manifest.get(extension, [])
-        for pattern in globlist:
-            if pattern.startswith(('http://', 'https://', '//')):
-                if include_remotes:
-                    r.append((None, pattern, addon))
-            else:
-                for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append((path, fs2web(path[len(addons_path):]), addon))
-    return r
-
-
-def manifest_list(extension, mods=None, db=None, debug=None):
-    """ list resources to load specifying either:
-    mods: a comma separated string listing modules
-    db: a database name (return all installed modules in that database)
-    """
-    if debug is not None:
-        _logger.warning("odoo.addons.web.main.manifest_list(): debug parameter is deprecated")
-    mods = mods.split(',')
-    files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
-    return [wp for _fp, wp, addon in files]
 
 def get_last_modified(files):
     """ Returns the modification time of the most recently modified
@@ -584,18 +510,13 @@ class HomeStaticTemplateHelpers(object):
             if re.match(COMMENT_PATTERN, comment.text.strip()):
                 comment.getparent().remove(comment)
 
-    def _manifest_glob(self):
-        '''Proxy for manifest_glob
-        Usefull to make 'self' testable'''
-        return manifest_glob('qweb', self.addons, self.db)
-
     def _read_addon_file(self, file_path):
         """Reads the content of a file given by file_path
         Usefull to make 'self' testable
         :param str file_path:
         :returns: str
         """
-        with open(file_path, 'rb') as fp:
+        with file_open(file_path, 'rb') as fp:
             contents = fp.read()
         return contents
 
@@ -621,7 +542,7 @@ class HomeStaticTemplateHelpers(object):
                     xml = self._compute_xml_tree(addon, fname, contents)
 
                     if root is None:
-                        root = etree.Element(xml.tag)
+                        root = etree.Element('templates')
 
         for addon in self.template_dict.values():
             for template in addon.values():
@@ -629,22 +550,34 @@ class HomeStaticTemplateHelpers(object):
 
         return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
 
+    def _get_asset_paths(self):
+        """Proxy for ir_asset._get_asset_paths
+        Useful to make 'self' testable.
+        """
+        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle='web.assets_qweb', xml=True)
+
     def _get_qweb_templates(self):
         """One and only entry point that gets and evaluates static qweb templates
 
         :rtype: (str, str)
         """
-        files = OrderedDict([(addon, list()) for addon in self.addons])
-        [files[f[2]].append(f[0]) for f in self._manifest_glob()]
-        content, checksum = self._concat_xml(files)
+        xml_paths = defaultdict(list)
+
+        # group paths by module, keeping them in order
+        for path, addon, _ in self._get_asset_paths():
+            addon_paths = xml_paths[addon]
+            if path not in addon_paths:
+                addon_paths.append(path)
+
+        content, checksum = self._concat_xml(xml_paths)
         return content, checksum
 
     @classmethod
-    def get_qweb_templates_checksum(cls, addons, db=None, debug=False):
+    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False):
         return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates()[1]
 
     @classmethod
-    def get_qweb_templates(cls, addons, db=None, debug=False):
+    def get_qweb_templates(cls, addons=None, db=None, debug=False):
         return cls(addons, db, debug=debug)._get_qweb_templates()[0]
 
 
@@ -979,14 +912,6 @@ class Home(http.Controller):
 
 class WebClient(http.Controller):
 
-    @http.route('/web/webclient/csslist', type='json', auth="none")
-    def csslist(self, mods=None):
-        return manifest_list('css', mods=mods)
-
-    @http.route('/web/webclient/jslist', type='json', auth="none")
-    def jslist(self, mods=None):
-        return manifest_list('js', mods=mods)
-
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
         magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
@@ -1011,6 +936,10 @@ class WebClient(http.Controller):
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
     def qweb(self, unique, mods=None, db=None):
+
+        if not request.db and mods is None:
+            mods = odoo.conf.server_wide_modules or []
+
         content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug)
 
         return request.make_response(content, [
@@ -1019,7 +948,7 @@ class WebClient(http.Controller):
             ])
 
     @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
-    def bootstrap_translations(self, mods):
+    def bootstrap_translations(self, mods=None):
         """ Load local translations from *.po files, as a temporary solution
             until we have established a valid session. This is meant only
             for translating the login page and db management chrome, using
@@ -1031,9 +960,15 @@ class WebClient(http.Controller):
         request.session._fix_lang(context)
         lang = context['lang'].split('_')[0]
 
+        if mods is None:
+            mods = odoo.conf.server_wide_modules or []
+            if request.db:
+                mods = request.env.registry._init_modules | set(mods)
+
         translations_per_module = {}
         for addon_name in mods:
-            if http.addons_manifest[addon_name].get('bootstrap'):
+            manifest = http.addons_manifest.get(addon_name)
+            if manifest and manifest.get('bootstrap'):
                 addons_path = http.addons_manifest[addon_name]['addons_path']
                 f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
                 if not os.path.exists(f_name):
@@ -1057,6 +992,9 @@ class WebClient(http.Controller):
 
         if mods:
             mods = mods.split(',')
+        elif mods is None:
+            mods = list(request.env.registry._init_modules) + (odoo.conf.server_wide_modules or [])
+
         translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
@@ -1285,7 +1223,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return module_installed(environment=request.env(user=odoo.SUPERUSER_ID))
+        return request.env.registry._init_modules | set([module.current_test] if module.current_test else [])
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):

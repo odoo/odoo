@@ -1,9 +1,4 @@
 <odoo>
-    <template id="assets_tests" inherit_id="web.assets_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/auth_totp/static/tests/totp_flow.js"></script>
-        </xpath>
-    </template>
     <template id="auth_totp_form">
         <t t-call="web.login_layout">
             <t t-set="disable_footer">1</t>

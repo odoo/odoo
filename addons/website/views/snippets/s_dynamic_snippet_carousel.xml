@@ -16,7 +16,7 @@
             <t t-raw="0"/>
         </t>
     </template>
-    <template id="s_dynamic_snippet_carousel_options"  inherit_id="website.snippet_options">
+    <template id="s_dynamic_snippet_carousel_options" inherit_id="website.snippet_options">
         <xpath expr="." position="inside">
             <t t-call="website.dynamic_snippet_carousel_options_template">
                 <t t-set="snippet_name" t-value="'dynamic_snippet_carousel'"/>
@@ -24,14 +24,17 @@
             </t>
         </xpath>
     </template>
-    <template id="assets_snippet_s_dynamic_snippet_carousel_css_000" inherit_id="website.assets_snippet_s_dynamic_snippet_css_000">
-        <xpath expr="//link[last()]" position="after">
-            <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_dynamic_snippet_carousel/000.scss"/>
-        </xpath>
-    </template>
-    <template id="assets_snippet_s_dynamic_snippet_carousel_js_000" inherit_id="website.assets_snippet_s_dynamic_snippet_js_000">
-        <xpath expr="//script[last()]" position="after">
-            <script type="text/javascript" src="/website/static/src/snippets/s_dynamic_snippet_carousel/000.js"/>
-        </xpath>
-    </template>
+
+<record id="website.s_dynamic_snippet_carousel_000_scss" model="ir.asset">
+    <field name="name">Dynamic snippet carousel 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_dynamic_snippet_carousel/000.scss</field>
+</record>
+
+<record id="website.s_dynamic_snippet_carousel_000_js" model="ir.asset">
+    <field name="name">Dynamic snippet carousel 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_dynamic_snippet_carousel/000.js</field>
+</record>
+
 </odoo>

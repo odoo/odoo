@@ -19,7 +19,9 @@
         'views/hr_employee_views.xml',
         'views/resource_calendar_views.xml',
     ],
-    'qweb': [
-        "static/src/xml/work_entry_templates.xml",
-    ],
+    'assets': {
+        'web.assets_qweb': [
+            'hr_work_entry/static/**/*',
+        ],
+    }
 }

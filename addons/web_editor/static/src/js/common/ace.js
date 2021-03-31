@@ -520,7 +520,7 @@ var ViewEditor = Widget.extend({
             // Store the URL ungrouped by bundle and use the URL as key (resource ID)
             var resources = type === 'scss' ? this.scss : this.js;
             _.each(data, function (bundleInfos) {
-                _.each(bundleInfos[1], function (info) { info.bundle_xmlid = bundleInfos[0].xmlid; });
+                _.each(bundleInfos[1], function (info) { info.bundle = bundleInfos[0]; });
                 _.extend(resources, _.indexBy(bundleInfos[1], 'url'));
             });
         }
@@ -548,7 +548,7 @@ var ViewEditor = Widget.extend({
                 route: '/web_editor/reset_asset',
                 params: {
                     url: resID,
-                    bundle_xmlid: resource.bundle_xmlid,
+                    bundle: resource.bundle,
                 },
             });
         }
@@ -565,13 +565,13 @@ var ViewEditor = Widget.extend({
     _saveSCSSorJS: function (session) {
         var self = this;
         var sessionIdEndsWithJS = _.string.endsWith(session.id, '.js');
-        var bundleXmlID = sessionIdEndsWithJS ? this.js[session.id].bundle_xmlid : this.scss[session.id].bundle_xmlid;
+        var bundle = sessionIdEndsWithJS ? this.js[session.id].bundle : this.scss[session.id].bundle;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
         return self._rpc({
             route: '/web_editor/save_asset',
             params: {
                 url: session.id,
-                bundle_xmlid: bundleXmlID,
+                bundle,
                 content: session.text,
                 file_type: fileType,
             },
@@ -806,7 +806,7 @@ var ViewEditor = Widget.extend({
         function _populateList(sortedData, $list, lettersToRemove) {
             _.each(sortedData, function (bundleInfos) {
                 var $optgroup = $('<optgroup/>', {
-                    label: bundleInfos[0].name,
+                    label: bundleInfos[0],
                 }).appendTo($list);
                 _.each(bundleInfos[1], function (dataInfo) {
                     var name = dataInfo.url.substring(_.lastIndexOf(dataInfo.url, '/') + 1, dataInfo.url.length - lettersToRemove);

@@ -29,8 +29,8 @@ odoo.define('bus.WebClient', function (require) {
          */
         show_application() {
             const shown = this._super(...arguments);
-            document.querySelectorAll('*[data-asset-xmlid]').forEach(el => {
-                this._assets[el.getAttribute('data-asset-xmlid')] = el.getAttribute('data-asset-version');
+            document.querySelectorAll('*[data-asset-bundle]').forEach(el => {
+                this._assets[el.getAttribute('data-asset-bundle')] = el.getAttribute('data-asset-version');
             });
             this.call('bus_service', 'onNotification', this, this._onNotification);
             this.call('bus_service', 'addChannel', 'bundle_changed');

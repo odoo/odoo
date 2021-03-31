@@ -87,7 +87,6 @@ Master Data:
         'data/res_partner_data.xml',
         'data/res.currency.csv',
         'data/res.country.csv',
-        'views/l10n_ar.xml',
         'views/account_move_view.xml',
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
@@ -122,4 +121,9 @@ Master Data:
     'installable': True,
     'auto_install': False,
     'application': False,
+    'assets': {
+        'web.assets_backend': [
+            'l10n_ar/static/src/**/*',
+        ],
+    }
 }

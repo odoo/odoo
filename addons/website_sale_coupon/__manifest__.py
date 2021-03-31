@@ -17,4 +17,9 @@ Coupon & promotion programs can be edited in the Catalog menu of the Website app
         'views/sale_coupon_program_views.xml',
     ],
     'auto_install': True,
+    'assets': {
+        'web.assets_tests': [
+            'website_sale_coupon/static/tests/**/*',
+        ],
+    }
 }

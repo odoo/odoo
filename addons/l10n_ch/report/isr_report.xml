@@ -31,12 +31,6 @@
             report is only available to be printed for out invoices after
             'draft' state, if the fields required by the ISR have been set.-->
 
-        <template id="assets_common" name="l10n_ch_isr_report" inherit_id="web.report_assets_common">
-            <xpath expr="." position="inside">
-                <link rel="stylesheet" type="text/scss" href="/l10n_ch/static/src/scss/report_isr.scss"/>
-            </xpath>
-        </template>
-
         <template id="l10n_ch_isr_report_template">
             <t t-call="web.external_layout">
                 <t t-set="split_total_amount" t-value="invoice.split_total_amount()"/>

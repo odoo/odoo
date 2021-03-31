@@ -10,9 +10,17 @@ Visitors can join public mail channels managed in the Discuss app in order to ge
     'depends': ['website_mail'],
     'data': [
         'data/mail_template_data.xml',
-        'views/assets.xml',
         'views/snippets/s_channel.xml',
         'views/snippets/snippets.xml',
         'views/website_mail_channel_templates.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'website_mail_channel/static/src/css/website_mail_channel.css',
+            'website_mail_channel/static/src/js/website_mail_channel.js',
+        ],
+        'website.assets_wysiwyg': [
+            'website_mail_channel/static/src/snippets/s_channel/options.js',
+        ],
+    }
 }

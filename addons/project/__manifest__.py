@@ -32,7 +32,6 @@
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
         'views/mail_activity_views.xml',
-        'views/project_assets.xml',
         'views/project_portal_templates.xml',
         'data/ir_cron_data.xml',
         'data/mail_data.xml',
@@ -41,10 +40,31 @@
         'wizard/project_task_type_delete_views.xml',
     ],
     'demo': ['data/project_demo.xml'],
-    'qweb': ['static/src/xml/project_templates.xml'],
     'test': [
     ],
     'installable': True,
     'auto_install': False,
     'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'project/static/src/css/project.css',
+            'project/static/src/js/project_form.js',
+            'project/static/src/js/project_kanban.js',
+            'project/static/src/js/project_list.js',
+            'project/static/src/js/project_rating_reporting.js',
+            'project/static/src/js/project_name_with_subtask_count_widget.js',
+            'project/static/src/js/project_task_kanban_examples.js',
+            'project/static/src/js/tours/project.js',
+            'project/static/src/js/project_calendar.js',
+            'project/static/src/scss/project_dashboard.scss',
+            'project/static/src/scss/project_form.scss',
+        ],
+        'web.assets_frontend': [
+            'project/static/src/scss/portal_rating.scss',
+            'project/static/src/js/portal_rating.js',
+        ],
+        'web.assets_qweb': [
+            'project/static/src/xml/**/*',
+        ],
+    }
 }

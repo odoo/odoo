@@ -13,6 +13,13 @@ logger = logging.getLogger(__name__)
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
+    def session_info(self):
+        session_info = super().session_info()
+        public_key = self.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')
+        if public_key:
+            session_info['recaptcha_public_key'] = public_key
+        return session_info
+
     @api.model
     def _verify_request_recaptcha_token(self, action):
         """ Verify the recaptcha token for the current request.

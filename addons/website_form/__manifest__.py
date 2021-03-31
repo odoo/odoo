@@ -9,8 +9,8 @@
     'version': '1.0',
     'depends': ['website', 'mail', 'google_recaptcha'],
     'data': [
+        'data/ir_asset.xml',
         'data/mail_mail_data.xml',
-        'views/assets.xml',
         'views/ir_model_views.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_website_form.xml',
@@ -18,4 +18,13 @@
     ],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'website.assets_editor': [
+            'website_form/static/src/snippets/s_website_form/options.js',
+            'website_form/static/src/js/website_form_editor_registry.js',
+        ],
+        'web.assets_tests': [
+            'website_form/static/tests/**/*',
+        ],
+    }
 }

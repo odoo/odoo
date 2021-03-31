@@ -1,16 +1,4 @@
 <odoo>
-    <template id="auth_totp_frontend" name="TOTP frontend (portal)" inherit_id="portal.assets_frontend">
-        <xpath expr="." position="inside">
-            <script type="application/javascript"
-                    src="/auth_totp_portal/static/src/js/totp_frontend.js"/>
-        </xpath>
-    </template>
-    <template id="assets_tests" inherit_id="web.assets_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/auth_totp_portal/static/tests/totp_portal.js"></script>
-        </xpath>
-    </template>
-
     <template id="totp_portal_hook" name="TOTP Portal hook" inherit_id="portal.portal_my_security">
         <xpath expr="//div[hasclass('o_portal_security_body')]">
             <!--

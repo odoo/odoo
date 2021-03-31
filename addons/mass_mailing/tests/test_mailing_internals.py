@@ -20,7 +20,13 @@ class TestMassMailValues(MassMailCommon):
 
     @users('user_marketing')
     def test_mailing_body_responsive(self):
-        """ Testing mail mailing responsive mail body """
+        """ Testing mail mailing responsive mail body
+
+        Reference: https://litmus.com/community/learning/24-how-to-code-a-responsive-email-from-scratch
+        https://www.campaignmonitor.com/css/link-element/link-in-head/
+
+        This template is meant to put inline CSS into an email's head
+        """
         recipient = self.env['res.partner'].create({
             'name': 'Mass Mail Partner',
             'email': 'Customer <test.customer@example.com>',
@@ -48,6 +54,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertIn('<!DOCTYPE html>', body_html)
         self.assertIn('<head>', body_html)
         self.assertIn('viewport', body_html)
+        # This is important: we need inline css, and not <link/>
         self.assertIn('@media', body_html)
         self.assertIn('I am Responsive body', body_html)
 

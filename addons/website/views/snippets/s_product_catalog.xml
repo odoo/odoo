@@ -2,9 +2,7 @@
 <odoo>
 
 <template id="s_product_catalog" name="Pricelist">
-    <section class="s_product_catalog oe_img_bg o_bg_img_center oe_custom_bg pt48 pb32"
-             style="background-image: url('/web/image/website.s_product_catalog_default_image');"
-             data-vcss="001">
+    <section class="s_product_catalog oe_img_bg o_bg_img_center oe_custom_bg pt48 pb32" style="background-image: url('/web/image/website.s_product_catalog_default_image');" data-vcss="001">
         <div class="container">
             <h2>Menu</h2>
             <p>Add a menu description.</p>
@@ -60,10 +58,9 @@
 <template id="s_product_catalog_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="ProductCatalog" data-selector=".s_product_catalog">
-            <we-checkbox string="Descriptions" data-toggle-description="true"
-                         data-no-preview="true"/>
+            <we-checkbox string="Descriptions" data-toggle-description="true" data-no-preview="true"/>
             <t t-call="website.snippet_options_border_line_widgets">
-                <t t-set="label">⌙ Separator</t>
+                <t t-set="label">&#8985; Separator</t>
                 <t t-set="direction" t-value="'top'"/>
                 <t t-set="apply_to" t-value="'.s_product_catalog_dish_description'"/>
                 <!-- Note: no need of extra dependency thanks to the apply-to -->
@@ -77,10 +74,10 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_product_catalog_css_001" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_product_catalog/001.scss"/>
-    </xpath>
-</template>
+<record id="website.s_product_catalog_001_scss" model="ir.asset">
+    <field name="name">Product catalog 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_product_catalog/001.scss</field>
+</record>
 
 </odoo>

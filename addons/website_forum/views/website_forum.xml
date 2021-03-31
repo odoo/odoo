@@ -3,29 +3,6 @@
     <data>
 
 <!-- Editor custom -->
-<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_forum/static/src/js/tours/website_forum.js"/>
-        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
-    </xpath>
-</template>
-
-<template id="assets_tests" name="Website Forum Assets Tests" inherit_id="web.assets_tests">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_forum/static/tests/tours/website_forum_question.js"></script>
-    </xpath>
-</template>
-
-<template id="assets_frontend" inherit_id="website.assets_frontend">
-    <xpath expr="link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website_forum/static/src/scss/website_forum.scss"/>
-    </xpath>
-    <xpath expr="script[last()]" position="after">
-        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
-        <script type="text/javascript" src="/website_forum/static/src/js/website_forum.share.js"/>
-    </xpath>
-</template>
-
 <!-- helper -->
 <template id="link_button">
     <form  t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and 'btn btn-sm border'}">

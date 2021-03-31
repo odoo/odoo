@@ -12,14 +12,19 @@ Please refer to Sale Matrix or Purchase Matrix for the use of this module.
     'version': '1.0',
     'depends': ['account'],
     # Account dependency for section_and_note widget.
-    'qweb': [
-        "static/src/xml/product_matrix.xml",
-    ],
     'data': [
-        'views/assets.xml',
         'views/matrix_templates.xml',
     ],
     'demo': [
         'data/product_matrix_demo.xml',
-    ]
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'product_matrix/static/src/js/section_and_note_widget.js',
+            'product_matrix/static/src/scss/product_matrix.scss',
+        ],
+        'web.assets_qweb': [
+            'product_matrix/static/src/xml/**/*',
+        ],
+    }
 }

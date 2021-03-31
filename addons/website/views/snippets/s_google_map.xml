@@ -12,10 +12,10 @@
     <xpath expr="//div[@data-js='Box']" position="before">
         <div data-js="GoogleMap" data-selector=".s_google_map">
             <we-gpspicker string="Address"
-                          data-select-data-attribute="" data-attribute-name="mapGps"
-                          data-set-formatted-address=""
-                          placeholder="e.g. De Brouckere, Brussels, Belgium"
-                          data-no-preview="true"/>
+                data-select-data-attribute="" data-attribute-name="mapGps"
+                data-set-formatted-address=""
+                placeholder="e.g. De Brouckere, Brussels, Belgium"
+                data-no-preview="true"/>
             <we-select string="Marker style" data-attribute-name="pinStyle">
                 <we-button data-select-data-attribute="">Default</we-button>
                 <we-button data-select-data-attribute="flat">Flat</we-button>
@@ -26,27 +26,17 @@
                 <we-button data-select-data-attribute="SATELLITE">Satellite</we-button>
                 <we-button data-select-data-attribute="HYBRID">Hybrid</we-button>
             </we-select>
-            <we-select string="⌙ Style" data-dependencies="roadmap_opt" data-no-preview="true" data-attribute-name="mapColor">
-                <we-button data-select-data-attribute=""
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg"/>
-                <we-button data-select-data-attribute="lightMonoMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg"/>
-                <we-button data-select-data-attribute="cupertinoMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg"/>
-                <we-button data-select-data-attribute="retroMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg"/>
-                <we-button data-select-data-attribute="cobaltMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg"/>
-                <we-button data-select-data-attribute="flatMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg"/>
-                <we-button data-select-data-attribute="blueMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg"/>
-                <we-button data-select-data-attribute="lillaMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg"/>
-                <we-button data-select-data-attribute="carMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg"/>
-                <we-button data-select-data-attribute="bwMap"
-                           data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg"/>
+            <we-select string="&#8985; Style" data-dependencies="roadmap_opt" data-no-preview="true" data-attribute-name="mapColor">
+                <we-button data-select-data-attribute="" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg"/>
+                <we-button data-select-data-attribute="lightMonoMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg"/>
+                <we-button data-select-data-attribute="cupertinoMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg"/>
+                <we-button data-select-data-attribute="retroMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg"/>
+                <we-button data-select-data-attribute="cobaltMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg"/>
+                <we-button data-select-data-attribute="flatMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg"/>
+                <we-button data-select-data-attribute="blueMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg"/>
+                <we-button data-select-data-attribute="lillaMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg"/>
+                <we-button data-select-data-attribute="carMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg"/>
+                <we-button data-select-data-attribute="bwMap" data-img="/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg"/>
             </we-select>
             <we-input string="Zoom" data-select-data-attribute="12" data-no-preview="true" data-attribute-name="mapZoom" data-step="1"/>
             <we-checkbox string="Description" data-no-preview="true" data-show-description="true"/>
@@ -54,16 +44,16 @@
     </xpath>
 </template>
 
-<template id="assets_snippet_s_google_map_css_000" inherit_id="website.assets_frontend">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_google_map/000.scss"/>
-    </xpath>
-</template>
+<record id="website.s_google_map_000_scss" model="ir.asset">
+    <field name="name">Google map 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_google_map/000.scss</field>
+</record>
 
-<template id="assets_snippet_s_google_map_js_000" inherit_id="website.assets_frontend">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/snippets/s_google_map/000.js"/>
-    </xpath>
-</template>
+<record id="website.s_google_map_000_js" model="ir.asset">
+    <field name="name">Google map 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="glob">website/static/src/snippets/s_google_map/000.js</field>
+</record>
 
 </odoo>

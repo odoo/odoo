@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 import odoo
 import odoo.tests
 
@@ -142,18 +144,23 @@ class TestUi(odoo.tests.HttpCase):
     def test_05_specific_website_editor(self):
         website_default = self.env['website'].search([], limit=1)
         new_website = self.env['website'].create({'name': 'New Website'})
-        website_editor_assets_view = self.env.ref('website.assets_wysiwyg')
-        self.env['ir.ui.view'].create({
-            'name': 'Editor Extension',
-            'type': 'qweb',
-            'inherit_id': website_editor_assets_view.id,
-            'website_id': new_website.id,
-            'arch': """
-                <xpath expr="." position="inside">
-                    <script type="text/javascript">document.body.dataset.hello = 'world';</script>
-                </xpath>
-            """,
+
+        code = b"document.body.dataset.hello = 'world';"
+        attach = self.env['ir.attachment'].create({
+            'name': 'EditorExtension.js',
+            'mimetype': 'text/javascript',
+            'datas': base64.b64encode(code),
         })
+        custom_url = '/web/content/%s/%s' % (attach.id, attach.name)
+        attach.url = custom_url
+
+        self.env['ir.asset'].create({
+            'name': 'EditorExtension',
+            'bundle': 'website.assets_wysiwyg',
+            'glob': custom_url,
+            'website_id': new_website.id,
+        })
+
         self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
         self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')
 
