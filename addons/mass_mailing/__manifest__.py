@@ -30,6 +30,7 @@
         'wizard/mailing_contact_to_list_views.xml',
         'wizard/mailing_list_merge_views.xml',
         'wizard/mailing_mailing_test_views.xml',
+        'wizard/mailing_mailing_schedule_date_views.xml',
         'views/mailing_mailing_views_menus.xml',
         'views/mailing_trace_views.xml',
         'views/link_tracker_views.xml',

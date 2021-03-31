@@ -88,14 +88,18 @@ class MassMailing(models.Model):
     sent_date = fields.Datetime(string='Sent Date', copy=False)
 
     schedule_type = fields.Selection([('now', 'Send now'), ('scheduled', 'Send on')], string='Schedule',
-        default='now', required=True, readonly=True, states={'draft': [('readonly', False)]})
-    schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True, states={'draft': [('readonly', False)]},
-        compute='_compute_schedule_date', store=True, copy=True)
+                                     default='now', required=True, readonly=True,
+                                     states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]})
+    schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True,
+                                    states={'draft': [('readonly', False)], 'in_queue': [('readonly', False)]},
+                                    compute='_compute_schedule_date', store=True, copy=True)
     calendar_date = fields.Datetime('Calendar Date', compute='_compute_calendar_date', store=True, copy=False,
         help="Technical field for the calendar view.")
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
     body_html = fields.Html(string='Body converted to be sent by mail', sanitize_attributes=False)
+    is_body_empty = fields.Boolean(compute="_compute_is_body_empty",
+                                   help='Technical field used to determine if the mail body is empty')
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
@@ -132,6 +136,9 @@ class MassMailing(models.Model):
     mailing_domain = fields.Char(
         string='Domain', compute='_compute_mailing_domain',
         readonly=False, store=True)
+    mail_server_available = fields.Boolean(
+        compute='_compute_mail_server_available',
+        help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
     mail_server_id = fields.Many2one('ir.mail_server', string='Mail Server',
         default=_get_default_mail_server_id,
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.")
@@ -290,6 +297,14 @@ class MassMailing(models.Model):
             else:
                 mailing.calendar_date = False
 
+    @api.depends('body_html')
+    def _compute_is_body_empty(self):
+        for mailing in self:
+            mailing.is_body_empty = tools.is_html_empty(mailing.body_html)
+
+    def _compute_mail_server_available(self):
+        self.mail_server_available = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.outgoing_mail_server')
+
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
@@ -353,10 +368,17 @@ class MassMailing(models.Model):
         }
 
     def action_launch(self):
+        self.write({'schedule_type': 'now'})
         return self.action_put_in_queue()
 
     def action_schedule(self):
-        return self.action_put_in_queue()
+        self.ensure_one()
+        if self.schedule_date:
+            return self.action_put_in_queue()
+        else:
+            action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_schedule_date_action")
+            action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
+            return action
 
     def action_put_in_queue(self):
         self.write({'state': 'in_queue'})

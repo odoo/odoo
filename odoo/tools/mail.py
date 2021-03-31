@@ -270,16 +270,16 @@ def validate_url(url):
 
 
 def is_html_empty(html_content):
-    """Check if a html content is empty. If there are only formatting tags or
-    a void content return True. Famous use case if a '<p><br></p>' added by
-    some web editor.
+    """Check if a html content is empty. If there are only formatting tags with style
+    attributes or a void content  return True. Famous use case if a
+    '<p style="..."><br></p>' added by some web editor.
 
     :param str html_content: html content, coming from example from an HTML field
     :returns: bool, True if no content found or if containing only void formatting tags
     """
     if not html_content:
         return True
-    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*/?\s*\>')
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*(?:style=\".+\")?/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
 
 

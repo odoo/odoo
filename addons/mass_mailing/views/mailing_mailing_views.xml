@@ -54,13 +54,13 @@
             <field name="name">mailing.mailing.form</field>
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
-                <form string="Mailing">
+                <form string="Mailing" class="o_mass_mailing_mailing_form">
                     <header style="min-height:31px;">
-                        <button name="action_launch" type="object" class="oe_highlight" string="Launch"
-                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue',  'sending', 'done')), ('schedule_type', '=', 'scheduled')]}"
+                        <button name="action_launch" type="object" class="oe_highlight" string="Send"
+                            attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
-                        <button name="action_schedule" type="object" class="oe_highlight" string="Schedule"
-                            attrs="{'invisible': ['|', ('state', 'in', ('in_queue',  'sending', 'done')), ('schedule_type', '=', 'now')]}"/>
+                        <button name="action_schedule" type="object" class="btn-secondary" string="Schedule"
+                            attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test"/>
                         <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
                         <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
@@ -156,12 +156,11 @@
                             </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <group>
+                        <group class="o_mass_mailing_mailing_group">
                             <field name="active" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
                                 attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field class="o_text_overflow" name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
-                            <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
                                 <div class="row">
@@ -187,28 +186,30 @@
                                     attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                 </div>
                             </div>
-                            <label for="schedule_type" string="Schedule"/>
-                            <div name="schedule_block">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-3">
-                                        <field name="schedule_type"/>
-                                    </div>
-                                    <div class="col-xs-12 col-md-3" attrs="{'invisible': [('schedule_type', '=', 'now')]}">
-                                        <field name="schedule_date" attrs="{'required': [('schedule_type', '=', 'scheduled')]}" />
-                                    </div>
-                                </div>
-                            </div>
                         </group>
                         <notebook>
                             <page string="Mail Body" name="mail_body">
-                                <field name="body_html" class="oe_read_only" widget="html"
-                                    options="{'cssReadonly': 'mass_mailing.iframe_css_assets_readonly'}"/>
-                                <field name="body_arch" class="o_mail_body oe_edit_only" widget="mass_mailing_html"
-                                    options="{
-                                        'snippets': 'mass_mailing.email_designer_snippets',
-                                        'cssEdit': 'mass_mailing.iframe_css_assets_edit',
-                                        'inline-field': 'body_html'
-                                }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                <div class="mt-n2">
+                                    <field name="body_html" class="o_mail_body oe_read_only" widget="html"
+                                        options="{'cssReadonly': 'mass_mailing.iframe_css_assets_readonly'}"/>
+                                    <field name="body_arch" class="o_mail_body oe_edit_only" widget="mass_mailing_html"
+                                        options="{
+                                            'snippets': 'mass_mailing.email_designer_snippets',
+                                            'cssEdit': 'mass_mailing.iframe_css_assets_edit',
+                                            'inline-field': 'body_html'
+                                    }" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                </div>
+                                <field name="is_body_empty" invisible="1"/>
+                                <div class="o_view_nocontent oe_read_only" attrs="{'invisible': ['|', ('is_body_empty', '=', False), ('state', 'in', ('sending', 'done'))]}">
+                                    <div class="o_nocontent_help">
+                                        <p class="o_view_nocontent_smiling_face">
+                                            No template picked yet.
+                                        </p>
+                                        <p>
+                                            Start editing your mailing to design something awesome.
+                                        </p>
+                                    </div>
+                                </div>
                             </page>
                             <page string="Dynamic Placeholder Generator"
                                 name="dynamic_placeholder_generator"
@@ -227,9 +228,19 @@
                             </page>
                             <page string="Settings" name="settings">
                                 <group>
-                                    <group>
-                                        <field name="id" invisible="1"/>
-                                        <field name="name" required="False" groups="base.group_no_one" class="o_text_overflow" string="Name"/>
+                                    <group string="Extra Options">
+                                        <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
+                                        <label for="schedule_type" string="Schedule"/>
+                                        <div name="schedule_block">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-md-6">
+                                                    <field name="schedule_type"/>
+                                                </div>
+                                                <div class="col-xs-12 col-md-6" attrs="{'invisible': [('schedule_type', '=', 'now')]}">
+                                                    <field name="schedule_date" attrs="{'required': [('schedule_type', '=', 'scheduled')]}" />
+                                                </div>
+                                            </div>
+                                        </div>
                                         <field name="user_id" domain="[('share', '=', False)]"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
@@ -258,15 +269,18 @@
                                             <field name="attachment_ids"  widget="many2many_binary" string="Attach a file" class="oe_inline"
                                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         </div>
-                                        <field name="mail_server_id" groups="base.group_no_one" options="{'no_create': True, 'no_open': True}"/>
-                                        <field name="keep_archives" groups="base.group_no_one" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </group>
-                                    <group string="Marketing" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
+                                    <group string="Tracking" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
                                         <field name="campaign_id"
                                             string="Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
                                                     'required': [('unique_ab_testing', '=', True)]}"/>
+                                        <field name="medium_id"
+                                             string="Medium"
+                                             required="True"
+                                             groups="base.group_no_one"
+                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="source_id"
                                             string="Source"
                                             readonly="1"
@@ -274,20 +288,22 @@
                                             class="o_text_overflow"
                                             groups="base.group_no_one"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                                        <field name="medium_id"
-                                             string="Medium"
-                                             required="True"
-                                             groups="base.group_no_one"
-                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
-                                        <field name="unique_ab_testing" 
+                                        <field name="unique_ab_testing"
                                             groups="mass_mailing.group_mass_mailing_campaign"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
-                                        <div groups="mass_mailing.group_mass_mailing_campaign">
+                                        <div name="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign">
                                             <field name="contact_ab_pc"
                                                 class="oe_inline"
                                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/> %
                                         </div>
+                                    </group>
+                                    <group string="Advanced" groups="base.group_no_one">
+                                        <field name="mail_server_available" invisible="1"/>
+                                        <field name="name" required="False" string="Name" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="mail_server_id" attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
+                                         'invisible': [('mail_server_available', '=', False)]}"/>
+                                        <field name="keep_archives" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                     </group>
                                 </group>
                             </page>

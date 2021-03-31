@@ -347,6 +347,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this._super();
         this.wysiwyg.odooEditor.observerFlush();
         this.wysiwyg.odooEditor.resetHistory();
+        //this will make the editor take all the bottom space
+        this.wysiwyg.$iframe.css({
+            'min-height': '100vh',
+            width: '100%'
+        });
     },
     /**
      * @private
@@ -441,6 +446,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (firstChoice) {
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
+
+        this.wysiwyg.$iframeBody.addClass("o_mass_mailing_iframe")
 
         /**
          * Add proposition to install enterprise themes if not installed.
