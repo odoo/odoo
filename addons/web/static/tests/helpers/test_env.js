@@ -45,7 +45,10 @@ odoo.define('web.test_env', async function (require) {
                 fetch: (window.fetch || (() => { })).bind(window),
             }, env.browser),
             bus: env.bus || new Bus(),
-            device: Object.assign({ isMobile: false }, env.device),
+            device: Object.assign({
+                isMobile: false,
+                SIZES: { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 },
+            }, env.device),
             isDebug: env.isDebug || (() => false),
             qweb,
             services: Object.assign({

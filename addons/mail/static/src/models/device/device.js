@@ -51,6 +51,7 @@ function factory(dependencies) {
                 globalWindowInnerHeight: this.env.browser.innerHeight,
                 globalWindowInnerWidth: this.env.browser.innerWidth,
                 isMobile: this.env.device.isMobile,
+                sizeClass: this.env.device.size_class,
             });
         }
     }
@@ -59,6 +60,15 @@ function factory(dependencies) {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
         isMobile: attr(),
+        /**
+         * Size class of the device.
+         *
+         * This is an integer representation of the size.
+         * Useful for conditional based on a device size, including
+         * lower/higher. Device size classes are defined in sizeClasses
+         * attribute.
+         */
+        sizeClass: attr(),
     };
 
     Device.modelName = 'mail.device';

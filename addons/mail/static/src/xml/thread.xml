@@ -20,10 +20,16 @@
                     <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
                     <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
                     <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
-                    <t t-esc="widget.activeAttachment.name"/>
-                    <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                    <span class="o_viewer_document_name" t-esc="widget.activeAttachment.name"/>
                 </span>
-                <a role="button" class="o_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
+                <div class="o-autogrow"/>
+                <a class="o_download_btn o_document_viewer_topbar_button btn" href="#" title="Download">
+                    <i class="fa fa-fw fa-download" role="img" aria-label="Download"/>
+                    <span class="d-none d-md-inline ml-2">Download</span>
+                </a>
+                <a role="button" href="#" class="o_close_btn o_document_viewer_topbar_button btn" title="Close">
+                    <i class="fa fa-fw fa-close" role="img" aria-label="Close"/>
+                </a>
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
@@ -34,9 +40,9 @@
                         <t t-set="unique" t-value="widget.activeAttachment.checksum ? widget.activeAttachment.checksum.slice(-8) : ''"/>
                         <img class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=#{unique}&amp;model=#{model}" alt="Viewer"/>
                     </t>
-                    <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}%26filename%3D#{window.encodeURIComponent(widget.activeAttachment.name)}" />
-                    <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
-                    <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
+                    <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}%26filename%3D#{window.encodeURIComponent(widget.activeAttachment.name)}" />
+                    <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
+                    <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
                     <video t-if="widget.activeAttachment.fileType == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}?model=#{model}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
