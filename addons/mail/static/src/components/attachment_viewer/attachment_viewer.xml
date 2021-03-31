@@ -21,12 +21,15 @@
                     </div>
                 </t>
                 <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_name">
-                    <t t-esc="attachmentViewer.attachment.displayName"/>
-                </div>
-                <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton" t-on-click="_onClickDownload" role="button" title="Download">
-                    <i class="fa fa-download fa-fw" role="img"/>
+                    <span class="o_AttachmentViewer_nameText" t-esc="attachmentViewer.attachment.displayName"/>
                 </div>
                 <div class="o-autogrow"/>
+                <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton" t-on-click="_onClickDownload" role="button" title="Download">
+                    <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw" t-att-class="{ 'o-hasLabel': env.messaging.device.sizeClass > env.device.SIZES.MD }" role="img"/>
+                    <t t-if="env.messaging.device.sizeClass > env.device.SIZES.MD">
+                        <span>Download</span>
+                    </t>
+                </div>
                 <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton o_AttachmentViewer_headerItemButtonClose" t-on-click="_onClickClose" role="button" title="Close (Esc)" aria-label="Close">
                     <i class="fa fa-fw fa-times" role="img"/>
                 </div>
@@ -43,7 +46,7 @@
                     </div>
                 </t>
                 <t t-if="attachmentViewer.attachment.fileType === 'application/pdf'">
-                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-att-src="attachmentViewer.attachment.defaultSource"/>
+                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-att-class="{ 'o-isMobile': env.messaging.device.isMobile }" t-att-src="attachmentViewer.attachment.defaultSource"/>
                 </t>
                 <t t-if="attachmentViewer.attachment.isTextFile">
                     <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text" t-att-src="attachmentViewer.attachment.defaultSource"/>
@@ -52,7 +55,7 @@
                     <iframe allow="autoplay; encrypted-media" class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_youtube" t-att-src="attachmentViewer.attachment.defaultSource" height="315" width="560"/>
                 </t>
                 <t t-if="attachmentViewer.attachment.fileType === 'video'">
-                    <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo" t-on-click="_onClickVideo" controls="controls">
+                    <video class="o_AttachmentViewer_view o_AttachmentViewer_viewVideo" t-att-class="{ 'o-isMobile': env.messaging.device.isMobile }" t-on-click="_onClickVideo" controls="controls">
                         <source t-att-data-type="attachmentViewer.attachment.mimetype" t-att-src="attachmentViewer.attachment.defaultSource"/>
                     </video>
                 </t>

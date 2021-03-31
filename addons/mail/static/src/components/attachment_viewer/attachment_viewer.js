@@ -24,6 +24,7 @@ class AttachmentViewer extends Component {
         useShouldUpdateBasedOnProps();
         useStore(props => {
             const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
+            const device = this.env.messaging && this.env.messaging.device;
             return {
                 attachment: attachmentViewer && attachmentViewer.attachment
                     ? attachmentViewer.attachment.__state
@@ -32,6 +33,8 @@ class AttachmentViewer extends Component {
                     ? attachmentViewer.attachments.map(attachment => attachment.__state)
                     : [],
                 attachmentViewer: attachmentViewer ? attachmentViewer.__state : undefined,
+                deviceIsMobile: device && device.isMobile,
+                deviceSizeClass: device && device.sizeClass,
             };
         });
         /**
