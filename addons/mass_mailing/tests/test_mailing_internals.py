@@ -370,3 +370,26 @@ Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
                     link_info,
                     link_params=link_params,
                 )
+
+class TestMailingScheduleDateWizard(MassMailCommon):
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @users('user_marketing')
+    def test_mailing_schedule_date(self):
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'mailing',
+            'subject': 'some subject'
+        })
+        # create a schedule date wizard
+        wizard_form = Form(
+            self.env['mailing.mailing.schedule.date'].with_context(default_mass_mailing_id=mailing.id))
+
+        # set a schedule date
+        wizard_form.schedule_date = datetime(2021, 4, 30, 9, 0)
+        wizard = wizard_form.save()
+        wizard.action_schedule_date()
+
+        # assert that the schedule_date and schedule_type fields are correct and that the mailing is put in queue
+        self.assertEqual(mailing.schedule_date, datetime(2021, 4, 30, 9, 0))
+        self.assertEqual(mailing.schedule_type, 'scheduled')
+        self.assertEqual(mailing.state, 'in_queue')
