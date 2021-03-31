@@ -151,13 +151,6 @@ QUnit.module('Views', {
             type: 'ir.actions.act_window',
             views: [[false, 'kanban'], [false, 'form']],
         }];
-
-        testUtils.mock.patch(FormController, {
-            'multiClickTime': 0,
-        });
-    },
-    afterEach: function () {
-        testUtils.mock.unpatch(FormController);
     },
 }, function () {
 
@@ -11080,10 +11073,6 @@ QUnit.module('Views', {
 
         const MULTI_CLICK_TIME = 50;
 
-        testUtils.mock.patch(FormController, {
-            'multiClickTime': MULTI_CLICK_TIME,
-        });
-
         const form = await createView({
             View: FormView,
             model: 'partner',
@@ -11094,6 +11083,7 @@ QUnit.module('Views', {
                         <field name="display_name"/>
                     </group>
                 </form>`,
+            formMultiClickTime: MULTI_CLICK_TIME,
             res_id: 1,
         });
 
@@ -11125,7 +11115,6 @@ QUnit.module('Views', {
         await concurrency.delay(MULTI_CLICK_TIME);
         assert.containsOnce(form, '.o_form_view.o_form_editable');
 
-        // FormController unpatch done in afterEach
         form.destroy();
     });
 
