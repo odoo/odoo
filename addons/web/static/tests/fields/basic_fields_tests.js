@@ -1962,7 +1962,7 @@ QUnit.module('basic_fields', {
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', async function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         var form = await createView({
             View: FormView,
@@ -2005,6 +2005,13 @@ QUnit.module('basic_fields', {
             "should have proper new href link");
         assert.strictEqual(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a').text(), 'limbo',
             'the new value should be displayed');
+
+        await testUtils.form.clickEdit(form);
+        testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), '/web/limbo');
+
+        await testUtils.form.clickSave(form);
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a'), 'href', '/web/limbo',
+            "should'nt have change link");
 
         form.destroy();
     });

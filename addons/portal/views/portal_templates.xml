@@ -151,7 +151,7 @@
     <template id="user_sign_in" name="User Sign In" inherit_id="portal.placeholder_user_sign_in">
         <xpath expr="." position="inside">
             <li groups="base.group_public" t-attf-class="#{_item_class} o_no_autohide_item">
-                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in</a>
+                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in<span t-if="request.session.profile_session" class="text-danger fa fa-circle"/></a>
             </li>
         </xpath>
     </template>
