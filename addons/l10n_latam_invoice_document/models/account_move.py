@@ -250,7 +250,7 @@ class AccountMove(models.Model):
             # generate a tax line.
             zero_taxes = set()
             for line in move.line_ids:
-                for tax in line.tax_ids.flatten_taxes_hierarchy():
+                for tax in line.l10n_latam_tax_ids.flatten_taxes_hierarchy():
                     if tax.tax_group_id not in res or tax.id in zero_taxes:
                         res.setdefault(tax.tax_group_id, {'base': 0.0, 'amount': 0.0})
                         res[tax.tax_group_id]['base'] += tax_balance_multiplicator * (line.amount_currency if line.currency_id else line.balance)
