@@ -96,13 +96,9 @@ QUnit.module('web_editor', {}, function () {
                     throw 'Wrong template';
                 },
             });
-            testUtils.mock.patch(FormController, {
-                'multiClickTime': 0,
-            });
         },
         afterEach: function () {
             testUtils.mock.unpatch(ajax);
-            testUtils.mock.unpatch(FormController);
         },
     }, function () {
 
