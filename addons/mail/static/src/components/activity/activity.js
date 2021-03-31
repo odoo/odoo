@@ -5,6 +5,7 @@ const components = {
     ActivityMarkDonePopover: require('mail/static/src/components/activity_mark_done_popover/activity_mark_done_popover.js'),
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
     MailTemplate: require('mail/static/src/components/mail_template/mail_template.js'),
+    Popover: require('web.Popover'),
 };
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');

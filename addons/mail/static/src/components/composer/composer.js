@@ -7,6 +7,7 @@ const components = {
     DropZone: require('mail/static/src/components/drop_zone/drop_zone.js'),
     EmojisPopover: require('mail/static/src/components/emojis_popover/emojis_popover.js'),
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
+    Popover: require('web.Popover'),
     TextInput: require('mail/static/src/components/composer_text_input/composer_text_input.js'),
     ThreadTextualTypingStatus: require('mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status.js'),
 };
