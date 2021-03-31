@@ -555,6 +555,7 @@ class MrpWorkorder(models.Model):
                 continue
             workorder.end_all()
             vals = {
+                'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
                 'state': 'done',
                 'date_finished': end_date,
                 'date_planned_finished': end_date
