@@ -52,13 +52,13 @@ class PaymentAcquirer(models.Model):
              "Use this if you want to charge your customers cards only when\n"
              "you are sure you can ship the goods to them.")
     redirect_form_view_id = fields.Many2one(
-        name="Redirect Form Template", comodel_name='ir.ui.view',
+        string="Redirect Form Template", comodel_name='ir.ui.view',
         help="The template rendering a form submitted to redirect the user when making a payment",
-        domain=[('type', '=', 'qweb')], ondelete='restrict')
+        domain=[('type', '=', 'qweb')])
     inline_form_view_id = fields.Many2one(
         string="Inline Form Template", comodel_name='ir.ui.view',
         help="The template rendering the inline payment form when making a direct payment",
-        domain=[('type', '=', 'qweb')], ondelete='restrict')
+        domain=[('type', '=', 'qweb')])
     country_ids = fields.Many2many(
         string="Countries", comodel_name='res.country', relation='payment_country_rel',
         column1='payment_id', column2='country_id',
@@ -359,23 +359,17 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def _get_compatible_acquirers(
-        self, company_id, partner_id, currency_id=None, force_tokenization=False,
-        preferred_acquirer_id=None, **kwargs
+        self, company_id, partner_id, currency_id=None, force_tokenization=False, **kwargs
     ):
         """ Select and return the acquirers matching the criteria.
 
         The base criteria are that acquirers must not be disabled, be in the company that is
         provided, and support the country of the partner if it exists.
 
-        If a `preferred_acquirer_id` is specified, only the corresponding acquirer is returned *if*
-        it exists and matches the criteria. Otherwise, we fallback on the default behavior that is
-        returning only the acquirers that do match the criteria.
-
         :param int company_id: The company to which acquirers must belong, as a `res.company` id
         :param int partner_id: The partner making the payment, as a `res.partner` id
         :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
         :param bool force_tokenization: Whether only acquirers allowing tokenization can be matched
-        :param int preferred_acquirer_id: The preferred acquirer, as a `payment.acquirer` id
         :param dict kwargs: Optional data. This parameter is not used here
         :return: The compatible acquirers
         :rtype: recordset of `payment.acquirer`
@@ -395,15 +389,7 @@ class PaymentAcquirer(models.Model):
         if force_tokenization or self._is_tokenization_required(**kwargs):
             domain = expression.AND([domain, [('allow_tokenization', '=', True)]])
 
-        # Handle preferred acquirer
-        compatible_acquirers = self.env['payment.acquirer']
-        if preferred_acquirer_id:  # If an acquirer is preferred, check that it matches the criteria
-            compatible_acquirers = self.env['payment.acquirer'].search(expression.AND([
-                domain, [('id', '=', preferred_acquirer_id)]
-            ]))
-        if not compatible_acquirers:  # If not found or incompatible, fallback on the others
-            compatible_acquirers = self.env['payment.acquirer'].search(domain)
-
+        compatible_acquirers = self.env['payment.acquirer'].search(domain)
         return compatible_acquirers
 
     @api.model
