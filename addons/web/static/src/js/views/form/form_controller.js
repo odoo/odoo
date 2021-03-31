@@ -696,16 +696,21 @@ var FormController = BasicController.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onQuickEdit: async function (ev) {
+    _onQuickEdit: function (ev) {
         ev.stopPropagation();
         clearTimeout(this.quickEditTimeout);
         if (this.activeActions.edit && !window.getSelection().toString()) {
-            this.quickEditTimeout = setTimeout(async () => {
+            const quickEdit = async () => {
                 if (!this.isDestroyed()) {
                     await this._setEditMode();
                     this.renderer.quickEdit(ev.data);
                 }
-            }, this.multiClickTime);
+            };
+            if (this.multiClickTime > 0) {
+                this.quickEditTimeout = setTimeout(quickEdit, this.multiClickTime);
+            } else {
+                quickEdit();
+            }
         }
     },
     /**

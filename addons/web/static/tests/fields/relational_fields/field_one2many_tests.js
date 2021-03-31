@@ -164,13 +164,6 @@ QUnit.module('fields', {}, function () {
                     }]
                 },
             };
-
-            testUtils.mock.patch(FormController, {
-                'multiClickTime': 0,
-            });
-        },
-        afterEach: function () {
-            testUtils.mock.unpatch(FormController);
         },
     }, function () {
         QUnit.module('FieldOne2Many');

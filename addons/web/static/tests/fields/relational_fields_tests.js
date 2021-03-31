@@ -170,13 +170,6 @@ QUnit.module('relational_fields', {
                 onchanges: {},
             },
         };
-
-        testUtils.mock.patch(FormController, {
-            'multiClickTime': 0,
-        });
-    },
-    afterEach: function () {
-        testUtils.mock.unpatch(FormController);
     },
 }, function () {
 
