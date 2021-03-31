@@ -110,11 +110,13 @@ class PaymentPortal(portal.CustomerPortal):
 
         # Select all acquirers and tokens that match the constraints
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            company_id, partner_sudo.id, currency_id=currency.id, preferred_acquirer_id=acquirer_id
+            company_id, partner_sudo.id, currency_id=currency.id
         )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
+        if acquirer_id in acquirers_sudo.ids:  # Only keep the desired acquirer if it's suitable
+            acquirers_sudo = acquirers_sudo.browse(acquirer_id)
         payment_tokens = request.env['payment.token'].search(
             [('acquirer_id', 'in', acquirers_sudo.ids), ('partner_id', '=', partner_sudo.id)]
-        ) if logged_in else request.env['payment.token']  #
+        ) if logged_in else request.env['payment.token']
 
         # Compute the fees taken by acquirers supporting the feature
         fees_by_acquirer = {
@@ -335,6 +337,9 @@ class PaymentPortal(portal.CustomerPortal):
             elif tx_sudo.state in ('authorized', 'done'):
                 status = 'success'
                 message = tx_sudo.acquirer_id.done_msg
+            elif tx_sudo.state == 'cancel':
+                status = 'danger'
+                message = tx_sudo.acquirer_id.cancel_msg
             else:
                 status = 'danger'
                 message = tx_sudo.state_message \

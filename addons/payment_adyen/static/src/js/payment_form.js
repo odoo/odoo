@@ -210,7 +210,13 @@ odoo.define('payment_adyen.payment_form', require => {
             if (provider !== 'adyen' || flow === 'token') {
                 return this._super(...arguments); // Tokens are handled by the generic flow
             }
-            return this.adyenDropin.submit();
+            if (this.adyenDropin === undefined) { // The drop-in has not been properly instantiated
+                this._displayError(
+                    _t("Server Error"), _t("We are not able to process your payment.")
+                );
+            } else {
+                return this.adyenDropin.submit();
+            }
         },
 
     };

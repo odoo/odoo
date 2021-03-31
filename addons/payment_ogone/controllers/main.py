@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 class OgoneController(http.Controller):
-    _flexcheckout_return_url = '/payment/ogone/flexchekout'
+    _flexcheckout_return_url = '/payment/ogone/flexcheckout'
     _directlink_return_url = '/payment/ogone/directlink'
 
     @http.route(
