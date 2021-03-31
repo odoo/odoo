@@ -5,13 +5,14 @@
 # Translators:
 # Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2017
 # Adriel Kotviski <kotviski@gmail.com>, 2017
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2017
 # falexandresilva <falexandresilva@gmail.com>, 2017
 # grazziano <gra.negocia@gmail.com>, 2017
 # Mateus Lopes <mateus1@gmail.com>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
 # Martin Trigaux, 2018
 # Maurício Liell <mauricio@liell.com.br>, 2020
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 09:08+0000\n"
 "PO-Revision-Date: 2017-09-20 10:17+0000\n"
-"Last-Translator: Maurício Liell <mauricio@liell.com.br>, 2020\n"
+"Last-Translator: Marcel Savegnago <marcel.savegnago@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -206,7 +207,7 @@ msgstr "Lavagem de carro"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
 msgid "Catalog Value (VAT Incl.)"
-msgstr ""
+msgstr "Valor de Compra (Imp. Incl.)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -239,13 +240,14 @@ msgstr "Número do chassis"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_state
 msgid "Choose whether the contract is still valid or not"
-msgstr ""
+msgstr "Escolha se o contrato ainda é válido ou não"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type_category
 msgid ""
 "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
+"Escolha se o serviço se refere a contratos, serviços de veículos ou ambos"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
@@ -587,7 +589,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_acquisition_date
 msgid "Date when the vehicle has been immatriculated"
-msgstr ""
+msgstr "Data em que o veículo foi imatriculado"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
@@ -648,6 +650,8 @@ msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Cada contrato (por exemplo: locação) pode incluir vários serviços\n"
+"            (reparação, seguros, manutenção periódica)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
@@ -721,7 +725,7 @@ msgstr "Expirado"
 #: selection:fleet.vehicle.log.contract,state:0
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Expiring Soon"
-msgstr ""
+msgstr "Expira em breve"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -734,7 +738,7 @@ msgstr "Frota"
 #: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
 #: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr ""
+msgstr "Frota: Gerar custos de contratos com base na frequência de custos"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
@@ -917,7 +921,7 @@ msgstr "Substituição da bobina de ignição"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
 msgid "Immatriculation Date"
-msgstr ""
+msgstr "Data de Imatriulação"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -1129,6 +1133,9 @@ msgid ""
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
+"Gerencie todos os seus contratos (locação, seguros, etc.) com\n"
+"            seus serviços relacionados, custos. Odoo avisará automaticamente\n"
+"            você quando alguns contratos têm que ser renovados."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1184,7 +1191,7 @@ msgstr "Marca do Modelo"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_year
 msgid "Model Year"
-msgstr ""
+msgstr "Ano Modelo"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
@@ -1255,7 +1262,7 @@ msgstr "Não"
 #: code:addons/fleet/models/fleet_vehicle.py:81
 #, python-format
 msgid "No Plate"
-msgstr ""
+msgstr "Placa alternativa"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet_vehicle.py:212
@@ -1326,7 +1333,7 @@ msgstr "Valores do Odômetro por Veículo"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer
 msgid "Odometer at creation"
-msgstr ""
+msgstr "Odômetro na criação"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1341,7 +1348,7 @@ msgstr "Registros de odômetro do veículo"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer
 msgid "Odometer measure of the vehicle at the moment of the contract creation"
-msgstr ""
+msgstr "Medida do odômetro do veículo no momento da criação do contrato"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer
@@ -2074,7 +2081,7 @@ msgstr "Ano"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_year
 msgid "Year of the model"
-msgstr ""
+msgstr "Ano do modelo"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
