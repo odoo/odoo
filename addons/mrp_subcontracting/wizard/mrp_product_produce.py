@@ -26,7 +26,8 @@ class MrpProductProduce(models.TransientModel):
                 lambda move: move.state not in ('done', 'cancel')
             )
             for move in moves:
-                qty_to_consume = wizard._prepare_component_quantity(move, wizard.qty_producing)
+                qty_producing = wizard.product_uom_id._compute_quantity(wizard.qty_producing, wizard.production_id.product_uom_id)
+                qty_to_consume = wizard._prepare_component_quantity(move, qty_producing)
                 vals = wizard._generate_lines_values(move, qty_to_consume)
                 line_values += vals
         self.env['mrp.product.produce.line'].create(line_values)
