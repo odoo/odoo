@@ -31,24 +31,9 @@ const Wysiwyg = Widget.extend({
     xmlDependencies: [
     ],
     defaultOptions: {
-        'focus': false,
-        'toolbar': [
-            ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline', 'clear']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture']],
-            ['history', ['undo', 'redo']],
-        ],
-        'styleWithSpan': false,
-        'inlinemedia': ['p'],
-        'lang': 'odoo',
-        'colors': customColors,
-        recordInfo: {
-            context: {},
-        },
+        lang: 'odoo',
+        colors: customColors,
+        recordInfo: {context: {}},
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -1022,10 +1007,6 @@ const Wysiwyg = Widget.extend({
     _editorOptions: function () {
         var self = this;
         var options = Object.assign({}, this.defaultOptions, this.options);
-        if (this.options.generateOptions) {
-            options = this.options.generateOptions(options);
-        }
-        options.airPopover = options.toolbar;
         options.onChange = function (html, $editable) {
             $editable.trigger('content_changed');
             self.trigger_up('wysiwyg_change');
