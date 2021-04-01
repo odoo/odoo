@@ -690,6 +690,30 @@ class IrActionsReport(models.Model):
         close_streams(streams)
         return result
 
+    def _get_unreadable_pdfs(self, streams):
+        unreadable_streams = []
+
+        writer = PdfFileWriter()
+        for stream in streams:
+            try:
+                reader = PdfFileReader(stream)
+                writer.appendPagesFromReader(reader)
+            except utils.PdfReadError:
+                unreadable_streams.append(stream)
+
+        return unreadable_streams
+
+    def _raise_on_unreadable_pdfs(self, streams, stream_record):
+        unreadable_pdfs = self._get_unreadable_pdfs(streams)
+        if unreadable_pdfs:
+            records = [stream_record[s].name for s in unreadable_pdfs if s in stream_record]
+            raise UserError(_(
+                "Odoo is unable to merge the PDFs attached to the following records:\n"
+                "%s\n\n"
+                "Please exclude them from the selection to continue. It's possible to "
+                "still retrieve those PDFs by selecting each of the affected records "
+                "individually, which will avoid merging.") % "\n".join(records))
+
     def _merge_pdfs(self, streams):
         writer = PdfFileWriter()
         for stream in streams:
@@ -741,6 +765,8 @@ class IrActionsReport(models.Model):
             return self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
         save_in_attachment = OrderedDict()
+        # Maps the streams in `save_in_attachment` back to the records they came from
+        stream_record = dict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
@@ -751,7 +777,9 @@ class IrActionsReport(models.Model):
                 for record_id in record_ids:
                     attachment = self_sudo.retrieve_attachment(record_id)
                     if attachment:
-                        save_in_attachment[record_id.id] = self_sudo._retrieve_stream_from_attachment(attachment)
+                        stream = self_sudo._retrieve_stream_from_attachment(attachment)
+                        save_in_attachment[record_id.id] = stream
+                        stream_record[stream] = record_id
                     if not self_sudo.attachment_use or not attachment:
                         wk_record_ids += record_id
             else:
@@ -763,6 +791,7 @@ class IrActionsReport(models.Model):
         # - The report is not fully present in attachments.
         if save_in_attachment and not res_ids:
             _logger.info('The PDF report has been generated from attachments.')
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
             return self_sudo._post_pdf(save_in_attachment), 'pdf'
 
         if self.get_wkhtmltopdf_state() == 'install':
@@ -792,6 +821,7 @@ class IrActionsReport(models.Model):
             set_viewport_size=context.get('set_viewport_size'),
         )
         if res_ids:
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
             _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
             return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
