@@ -54,6 +54,69 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         self.assertEqual(mail.email_cc, self.email_template.email_cc)
         self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_template_translation(self):
+        self.env['res.lang']._activate_lang('es_ES')
+        self.env.ref('base.module_base')._update_translations(['es_ES'])
+
+        partner = self.env['res.partner'].create({'name': "test", 'lang': 'es_ES'})
+        email_template = self.env['mail.template'].create({
+            'name': 'TestTemplate',
+            'subject': 'English Subject',
+            'body_html': '<p>English Body</p>',
+            'model_id': self.env['ir.model']._get(partner._name).id,
+            'lang': '${object.lang}'
+        })
+        # Make sure Spanish translations have not been altered
+        description_translations = self.env['ir.translation'].search([('module', '=', 'base'), ('src', '=', partner._description), ('lang', '=', 'es_ES')])
+        description_translations.update({'value': 'Spanish description'})
+
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'mail.template,subject',
+            'module': 'mail',
+            'lang': 'es_ES',
+            'res_id': email_template.id,
+            'value': 'Spanish Subject',
+            'state': 'translated',
+        })
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'mail.template,body_html',
+            'module': 'mail',
+            'lang': 'es_ES',
+            'res_id': email_template.id,
+            'value': '<p>Spanish Body</p>',
+            'state': 'translated',
+        })
+        view = self.env['ir.ui.view'].create({
+            'name': 'test_layout',
+            'key': 'test_layout',
+            'type': 'qweb',
+            'arch_db': '<body><t t-raw="message.body"/> English Layout <t t-esc="model_description"/></body>'
+        })
+        self.env['ir.model.data'].create({
+            'name': 'test_layout',
+            'module': 'test_mail',
+            'model': 'ir.ui.view',
+            'res_id': view.id
+        })
+        self.env['ir.translation'].create({
+            'type': 'model_terms',
+            'name': 'ir.ui.view,arch_db',
+            'module': 'test_mail',
+            'lang': 'es_ES',
+            'res_id': view.id,
+            'src': 'English Layout',
+            'value': 'Spanish Layout',
+            'state': 'translated',
+        })
+
+        mail_id = email_template.send_mail(partner.id, notif_layout='test_mail.test_layout')
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        self.assertEqual(mail.subject, 'Spanish Subject')
+        self.assertEqual(mail.body_html, '<body><p>Spanish Body</p> Spanish Layout Spanish description</body>')
+
     def test_template_add_context_action(self):
         self.email_template.create_action()
 
