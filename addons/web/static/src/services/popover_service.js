@@ -3,6 +3,7 @@
 import { useBus } from "../core/hooks";
 import { mainComponentRegistry } from "../webclient/main_component_registry";
 import { serviceRegistry } from "../webclient/service_registry";
+import { Popover } from "../components/popover/popover";
 
 const { Component } = owl;
 const { EventBus } = owl.core;
@@ -73,6 +74,7 @@ export class PopoverManager extends Component {
     }
   }
 }
+PopoverManager.components = { Popover }; // remove this as soon as Popover is globally registered
 PopoverManager.template = xml`
   <div class="o_popover_manager">
     <div class="o_popover_container" />

@@ -8,6 +8,7 @@ import {
   KeyAlreadyExistsError,
   KeyNotFoundError,
 } from "../../src/services/popover_service";
+import { Popover } from "../../src/components/popover/popover";
 
 const { Component, mount } = owl;
 const { xml } = owl.tags;
@@ -51,6 +52,7 @@ QUnit.test("Render custom popover component", async function (assert) {
   assert.expect(10);
 
   class CustomPopover extends Component {}
+  CustomPopover.components = { Popover };
   CustomPopover.template = xml`
     <Popover target="props.target">
       <t t-set-slot="content">
