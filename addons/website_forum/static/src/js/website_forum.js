@@ -124,16 +124,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
 
             var options = {
-                height: 200,
-                minHeight: 80,
                 toolbarTemplate: 'website_forum.web_editor_toolbar',
-                styleWithSpan: false,
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
-                disableFullMediaDialog: true,
                 resizable: true,
             };
             if (!hasFullEdit) {
