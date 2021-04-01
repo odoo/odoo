@@ -14,7 +14,7 @@
         border-spacing: 0;
 
         thead {
-            color: $o-main-text-color;
+            color: $table-head-color;
             border-bottom: 1px solid #cacaca;
             > tr > th:not(.o_list_record_selector) {
                 border-left: 1px solid #dfdfdf;
@@ -377,19 +377,5 @@
         .o_list_button_save, .o_list_button_discard {
             display: inline-block
         }
-    }
-}
-
-// Selection box (next to the buttons, in ControlPanel)
-$selected-box-color: #e7f2f6;
-.o_list_selection_box {
-    display: inline-block;
-    padding: $btn-padding-y $btn-padding-x;
-    vertical-align: middle; // align with the buttons
-    border: 1px solid $selected-box-color;
-    background-color: $selected-box-color;
-    .o_list_select_domain {
-        font-weight: bold;
-        margin-left: 4px;
     }
 }
