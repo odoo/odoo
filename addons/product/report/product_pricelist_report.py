@@ -14,7 +14,7 @@ class ProductPricelistReport(models.AbstractModel):
     @api.model
     def get_html(self, data):
         render_values = self._get_report_data(data, 'html')
-        return self.env.ref('product.report_pricelist_page')._render(render_values)
+        return self.env['ir.qweb']._render('product.report_pricelist_page', render_values)
 
     def _get_report_data(self, data, report_type='html'):
         quantities = data['quantities'] or [1]

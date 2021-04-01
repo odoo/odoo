@@ -493,7 +493,7 @@ class PaymentTransaction(models.Model):
                     "%(ref)s:\n%(values)s",
                     {'ref': self.reference, 'values': pprint.pformat(rendering_values)},
                 )
-                redirect_form_html = redirect_form_view._render(rendering_values, engine='ir.qweb')
+                redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
 
         return processing_values

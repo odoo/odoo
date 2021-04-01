@@ -461,6 +461,7 @@ class TestProfiling(TransactionCase):
         template = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'root',
             'arch_db': '''<t t-name="root">
                 <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
                     [<t t-esc="item_index"/>: <t t-call="base.dummy" t-set-record="item"/> <t t-esc="item_value"/>]
@@ -470,6 +471,7 @@ class TestProfiling(TransactionCase):
         child_template = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
+            'key': 'dummy',
             'arch_db': '<t t-name="dummy"><span t-attf-class="myclass"><t t-esc="record"/> <t t-esc="add_one_query()"/></span></t>'
         })
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"

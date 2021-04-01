@@ -263,8 +263,7 @@ Kind Regards,</p>"""
             body = self.alias_bounced_content
         else:
             body = self._get_alias_bounced_body_fallback(message_dict)
-        template = self.env.ref('mail.mail_bounce_alias_security', raise_if_not_found=True)
-        return template._render({
+        return self.env['ir.qweb']._render('mail.mail_bounce_alias_security', {
             'body': body,
             'message': message_dict
-        }, engine='ir.qweb', minimal_qcontext=True)
+        }, minimal_qcontext=True)

@@ -1871,7 +1871,6 @@ class Task(models.Model):
         template_id = self.env['ir.model.data']._xmlid_to_res_id('project.project_message_user_assigned', raise_if_not_found=False)
         if not template_id:
             return
-        view = self.env['ir.ui.view'].browse(template_id)
         task_model_description = self.env['ir.model']._get(self._name).display_name
         for task, users in users_per_task.items():
             if not users:
@@ -1883,7 +1882,7 @@ class Task(models.Model):
             }
             for user in users:
                 values.update(assignee_name=user.sudo().name)
-                assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
+                assignation_msg = self.env['ir.qweb']._render('project.project_message_user_assigned', values, minimal_qcontext=True)
                 assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
                 task.message_notify(
                     subject=_('You have been assigned to %s', task.display_name),

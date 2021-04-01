@@ -35,7 +35,7 @@ class AccountTourUploadBill(models.TransientModel):
             self.env.company.country_id.name,
         ] if x]
         ref = 'INV/%s/0001' % invoice_date.strftime('%Y/%m')
-        html = self.env.ref('account.bill_preview')._render({
+        html = self.env['ir.qweb']._render('account.bill_preview', {
             'company_name': self.env.company.name,
             'company_street_address': addr,
             'invoice_name': 'Invoice ' + ref,

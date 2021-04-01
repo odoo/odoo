@@ -201,7 +201,7 @@ class PortalMailGroup(http.Controller):
             'msg_more_count': message_count - self._replies_per_page,
             'replies_per_page': self._replies_per_page,
         }
-        return request.env.ref('mail_group.messages_short')._render(values, engine='ir.qweb')
+        return request.env['ir.qweb']._render('mail_group.messages_short', values)
 
     # ------------------------------------------------------------
     # SUBSCRIPTION

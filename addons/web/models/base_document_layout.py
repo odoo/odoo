@@ -252,13 +252,9 @@ class BaseDocumentLayout(models.TransientModel):
         '_get_css_for_preview' processing later.
         :return:
         """
-        template_style = self.env.ref('web.styles_company_report', raise_if_not_found=False)
-        if not template_style:
-            return b''
-
-        company_styles = template_style._render({
+        company_styles = self.env['ir.qweb']._render('web.styles_company_report', {
             'company_ids': self,
-        })
+        }, raise_if_not_found=False)
 
         return company_styles
 

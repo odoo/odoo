@@ -10,8 +10,7 @@ from odoo.tools import mute_logger, append_content_to_html
 
 class TestMailGroup(TestMailListCommon):
     def test_clean_email_body(self):
-        template = self.env.ref('mail_group.mail_group_footer')
-        footer = template._render({'group_url': 'Test remove footer'}, engine='ir.qweb', minimal_qcontext=True)
+        footer = self.env['ir.qweb']._render('mail_group.mail_group_footer', {'group_url': 'Test remove footer'}, minimal_qcontext=True)
         body = append_content_to_html("<div>Test email body</div>", footer, plaintext=False)
 
         result = self.env['mail.group']._clean_email_body(body)

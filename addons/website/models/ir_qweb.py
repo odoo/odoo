@@ -9,7 +9,6 @@ from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
-from odoo.tools import html_escape as escape
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
@@ -47,23 +46,86 @@ class IrQWeb(models.AbstractModel):
         'img':    'src',
     }
 
+    # assume cache will be invalidated by third party on write to ir.ui.view
+    def _get_template_cache_keys(self):
+        """ Return the list of context keys to use for caching ``_compile``. """
+        return super()._get_template_cache_keys() + ['website_id']
+
+    def _prepare_frontend_environment(self, values):
+        """ Update the values and context with website specific value
+            (required to render website layout template)
+        """
+        irQweb = super()._prepare_frontend_environment(values)
+
+        Website = irQweb.env['website']
+        editable = request.website.is_publisher()
+        translatable = editable and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
+        editable = not translatable and editable
+
+        current_website = Website.get_current_website()
+
+        has_group_publisher = irQweb.env.user.has_group('website.group_website_publisher')
+        if has_group_publisher and irQweb.env.user.has_group('website.group_multi_website'):
+            values['multi_website_websites_current'] = current_website.name
+            values['multi_website_websites'] = [
+                {'website_id': website.id, 'name': website.name, 'domain': website.domain}
+                for website in Website.search([('id', '!=', current_website.id)])
+            ]
+
+            cur_company = irQweb.env.company
+            values['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
+            values['multi_website_companies'] = [
+                {'company_id': comp.id, 'name': comp.name}
+                for comp in irQweb.env.user.company_ids if comp != cur_company
+            ]
+
+        # update values
+
+        values.update(dict(
+            website=current_website,
+            is_view_active=current_website.is_view_active,
+            res_company=request.env['res.company'].browse(current_website._get_cached('company_id')).sudo(),
+            translatable=translatable,
+            editable=editable,
+        ))
+
+        if editable:
+            # form editable object, add the backend configuration link
+            if 'main_object' in values and has_group_publisher:
+                func = getattr(values['main_object'], 'get_backend_menu_id', False)
+                values['backend_menu_id'] = func and func() or irQweb.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration')
+
+        # update options
+
+        irQweb = irQweb.with_context(website_id=current_website.id)
+
+        if 'inherit_branding' not in irQweb.env.context and not self.env.context.get('rendering_bundle'):
+            if editable:
+                # in edit mode add brancding on ir.ui.view tag nodes
+                irQweb = irQweb.with_context(inherit_branding=True)
+            elif has_group_publisher and not translatable:
+                # will add the branding on fields (into values)
+                irQweb = irQweb.with_context(inherit_branding_auto=True)
+
+        return irQweb
+
     def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
         return AssetsBundleMultiWebsite(xmlid, files, env=env)
 
-    def _post_processing_att(self, tagName, atts, options):
+    def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):
             return atts
 
-        atts = super(IrQWeb, self)._post_processing_att(tagName, atts, options)
+        atts = super()._post_processing_att(tagName, atts)
 
         website = ir_http.get_request_website()
-        if not website and options.get('website_id'):
-            website = self.env['website'].browse(options['website_id'])
+        if not website and self.env.context.get('website_id'):
+            website = self.env['website'].browse(self.env.context['website_id'])
         if website and tagName == 'img' and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto
 
-        if options.get('inherit_branding') or options.get('rendering_bundle') or \
-           options.get('edit_translations') or options.get('debug') or (request and request.session.debug):
+        if self.env.context.get('inherit_branding') or self.env.context.get('rendering_bundle') or \
+           self.env.context.get('edit_translations') or self.env.context.get('debug') or (request and request.session.debug):
             return atts
 
         if not website:

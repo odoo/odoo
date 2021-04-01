@@ -407,73 +407,15 @@ class View(models.Model):
                 return False
         return True
 
-    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):
+    def _render_template(self, template, values=None):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
-        self._handle_visibility(do_raise=True)
-        new_context = dict(self._context)
-        if request and getattr(request, 'is_frontend', False):
-
-            editable = request.website.is_publisher()
-            translatable = editable and self._context.get('lang') != request.website.default_lang_id.code
-            editable = not translatable and editable
-
-            # in edit mode ir.ui.view will tag nodes
-            if not translatable and not self.env.context.get('rendering_bundle'):
-                if editable:
-                    new_context = dict(self._context, inherit_branding=True)
-                elif request.env.user.has_group('website.group_website_publisher'):
-                    new_context = dict(self._context, inherit_branding_auto=True)
-            if values and 'main_object' in values:
-                if request.env.user.has_group('website.group_website_publisher'):
-                    func = getattr(values['main_object'], 'get_backend_menu_id', False)
-                    values['backend_menu_id'] = func and func() or self.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration')
-
-        if self._context != new_context:
-            self = self.with_context(new_context)
-        return super(View, self)._render(values, engine=engine, minimal_qcontext=minimal_qcontext, options=options)
-
-    @api.model
-    def _prepare_qcontext(self):
-        """ Returns the qcontext : rendering context with website specific value (required
-            to render website layout template)
-        """
-        qcontext = super(View, self)._prepare_qcontext()
-
-        if request and getattr(request, 'is_frontend', False):
-            Website = self.env['website']
-            editable = request.website.is_publisher()
-            translatable = editable and self._context.get('lang') != request.env['ir.http']._get_default_lang().code
-            editable = not translatable and editable
-
-            cur = Website.get_current_website()
-            if self.env.user.has_group('website.group_website_publisher') and self.env.user.has_group('website.group_multi_website'):
-                qcontext['multi_website_websites_current'] = cur.name
-                qcontext['multi_website_websites'] = [
-                    {'website_id': website.id, 'name': website.name, 'domain': website.domain}
-                    for website in Website.search([]) if website != cur
-                ]
-
-                cur_company = self.env.company
-                qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
-                qcontext['multi_website_companies'] = [
-                    {'company_id': comp.id, 'name': comp.name}
-                    for comp in self.env.user.company_ids if comp != cur_company
-                ]
-
-            qcontext.update(dict(
-                main_object=self,
-                website=request.website,
-                is_view_active=request.website.is_view_active,
-                res_company=request.env['res.company'].browse(request.website._get_cached('company_id')).sudo(),
-                translatable=translatable,
-                editable=editable,
-            ))
-
-            # fetch non-prefetchable fields of the mixin SeoMetadata, as they
-            # will be read later in non-sudo mode
-            self.sudo().read(['website_meta_title', 'website_meta_description', 'website_meta_keywords'])
-
-        return qcontext
+        view = self.sudo().browse(self.get_view_id(template))
+        view._handle_visibility(do_raise=True)
+        if values is None:
+            values = {}
+        if 'main_object' not in values:
+            values['main_object'] = view
+        return super()._render_template(template, values=values)
 
     @api.model
     def get_default_lang_code(self):

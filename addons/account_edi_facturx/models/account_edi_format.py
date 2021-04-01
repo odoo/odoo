@@ -42,12 +42,13 @@ class AccountEdiFormat(models.Model):
                 pdf_writer.convert_to_pdfa()
             except Exception as e:
                 _logger.exception("Error while converting to PDF/A: %s", e)
-            metadata_template = self.env.ref('account_edi_facturx.account_invoice_pdfa_3_facturx_metadata', raise_if_not_found=False)
-            if metadata_template:
-                pdf_writer.add_file_metadata(metadata_template._render({
+            html = self.env['ir.qweb']._render('account_edi_facturx.account_invoice_pdfa_3_facturx_metadata', {
                     'title': edi_document.move_id.name,
                     'date': fields.Date.context_today(self),
-                }).encode())
+                },
+                raise_if_not_found=False)
+            if html:
+                pdf_writer.add_file_metadata(html.encode())
 
     def _export_facturx(self, invoice):
 
@@ -71,7 +72,7 @@ class AccountEdiFormat(models.Model):
         }
 
         xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
-        xml_content += self.env.ref('account_edi_facturx.account_invoice_facturx_export')._render(template_values)
+        xml_content += self.env['ir.qweb']._render('account_edi_facturx.account_invoice_facturx_export', template_values)
         return self.env['ir.attachment'].create({
             'name': 'factur-x.xml',
             'raw': xml_content.encode(),

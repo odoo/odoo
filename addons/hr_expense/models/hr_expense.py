@@ -846,8 +846,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
     # TODO: Make api.multi
     def _send_expense_success_mail(self, msg_dict, expense):
         mail_template_id = 'hr_expense.hr_expense_template_register' if expense.employee_id.user_id else 'hr_expense.hr_expense_template_register_no_user'
-        expense_template = self.env.ref(mail_template_id)
-        rendered_body = expense_template._render({'expense': expense}, engine='ir.qweb')
+        rendered_body = self.env['ir.qweb']._render(mail_template_id, {'expense': expense})
         body = self.env['mail.render.mixin']._replace_local_links(rendered_body)
         # TDE TODO: seems louche, check to use notify
         if expense.employee_id.user_id.partner_id:

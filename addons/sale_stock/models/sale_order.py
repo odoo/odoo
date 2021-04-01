@@ -232,7 +232,7 @@ class SaleOrder(models.Model):
                 'impacted_pickings': impacted_pickings,
                 'cancel': cancel
             }
-            return self.env.ref('sale_stock.exception_on_so')._render(values=values)
+            return self.env['ir.qweb']._render('sale_stock.exception_on_so', values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
 
