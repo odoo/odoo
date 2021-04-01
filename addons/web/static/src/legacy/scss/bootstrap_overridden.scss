@@ -10,14 +10,15 @@
 // All of those are BS default
 $white:    #fff !default;
 $gray-100: $o-gray-100 !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #6c757d !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
+$gray-200: $o-gray-200 !default;
+$gray-300: $o-gray-300 !default;
+$gray-400: $o-gray-400 !default;
+$gray-500: $o-gray-500 !default;
+$gray-600: $o-gray-600 !default;
+$gray-700: $o-gray-700 !default;
+$gray-800: $o-gray-800 !default;
+$gray-900: $o-gray-900 !default;
+
 $black:    #000 !default;
 
 $primary: $o-brand-primary !default;
@@ -34,13 +35,14 @@ $body-color: $o-main-text-color !default;
 //
 // Style anchor elements.
 
+$link-color: $o-main-link-color !default;
 $link-hover-decoration: none !default;
 
 // Muted
 //
 // Style .text-muted elements
 
-$text-muted: $gray-500 !default;
+$text-muted: $o-main-color-muted !default;
 
 // Grid columns
 //
@@ -53,6 +55,7 @@ $grid-gutter-width: $o-horizontal-padding * 2 !default;
 // Define common padding and border radius sizes and more.
 
 $border-radius: 3px !default;
+$border-color: $o-gray-300 !default;
 
 $component-active-color: $o-brand-primary !default;
 $component-active-bg: $gray-200 !default;
@@ -73,6 +76,7 @@ $h4-font-size: $font-size-base * 1.2 !default;
 $h5-font-size: $font-size-base * 1.1 !default;
 
 $headings-font-weight: bold !default;
+$headings-color: $o-main-headings-color !default;
 
 // Tables
 //
