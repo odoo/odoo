@@ -1075,6 +1075,13 @@ class Task(models.Model):
         default_stage = dict()
         for vals in vals_list:
             project_id = vals.get('project_id') or self.env.context.get('default_project_id')
+            if not vals.get('parent_id'):
+                # 1) We must initialize display_project_id to follow project_id if there is no parent_id
+                vals['display_project_id'] = project_id
+            elif vals.get("display_project_id"):
+                # 2) We must make the project_id follows the display_project_id if set in the child.
+                vals['project_id'] = vals.get("display_project_id")
+                project_id = vals['project_id']
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
@@ -1088,8 +1095,6 @@ class Task(models.Model):
                         default_project_id=project_id
                     ).default_get(['stage_id']).get('stage_id')
                 vals["stage_id"] = default_stage[project_id]
-            if project_id and "display_project_id" not in vals and not vals.get('parent_id'):
-                vals["display_project_id"] = project_id
             # user_id change: update date_assign
             if vals.get('user_id'):
                 vals['date_assign'] = fields.Datetime.now()
@@ -1127,8 +1132,6 @@ class Task(models.Model):
         # user_id change: update date_assign
         if vals.get('user_id') and 'date_assign' not in vals:
             vals['date_assign'] = now
-        if vals.get('display_project_id') and 'project_id' not in vals:
-            vals['project_id'] = vals['display_project_id']
 
         # recurrence fields
         rec_fields = vals.keys() & self._get_recurrence_fields()
@@ -1160,12 +1163,15 @@ class Task(models.Model):
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
             self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
-        if 'project_id' in vals and 'display_project_id' not in vals:
-            for task in self.filtered(lambda self: self.display_project_id or self.project_id != self.parent_id.project_id):
-                task.display_project_id = task.project_id
-        if 'display_project_id' in vals and not vals['display_project_id']:
-            for task in self:
-                task.project_id = task.parent_id.project_id
+        for task in self:
+            if not task.parent_id:
+                if 'project_id' in vals or 'parent_id' in vals:
+                    # We must make the display_project_id follow the project_id if no parent_id set
+                    task.display_project_id = task.project_id
+            elif 'display_project_id' in vals:
+                # We must make the project_id follow the display_project_id if parent_id is set
+                # and display_project_id changed
+                task.project_id = task.display_project_id or task.parent_id.project_id
         return result
 
     def update_date_end(self, stage_id):
