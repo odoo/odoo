@@ -19,7 +19,7 @@ var _t = core._t;
  **/
 var Dialog = Widget.extend({
     tagName: 'main',
-    xmlDependencies: ['/web/static/src/xml/dialog.xml'],
+    xmlDependencies: ['/web/static/src/legacy/xml/dialog.xml'],
     custom_events: _.extend({}, Widget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
         close_dialog: '_onCloseDialog',

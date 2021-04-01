@@ -652,7 +652,7 @@ var FieldDateRange = InputField.extend({
     tagName: 'span',
     jsLibs: [
         '/web/static/lib/daterangepicker/daterangepicker.js',
-        '/web/static/src/js/libs/daterangepicker.js',
+        '/web/static/src/legacy/js/libs/daterangepicker.js',
     ],
     cssLibs: [
         '/web/static/lib/daterangepicker/daterangepicker.css',

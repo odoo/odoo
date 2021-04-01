@@ -20,7 +20,7 @@ odoo.define('web.ribbon', function (require) {
 
     var RibbonWidget = Widget.extend({
         template: 'web.ribbon',
-        xmlDependencies: ['/web/static/src/xml/ribbon.xml'],
+        xmlDependencies: ['/web/static/src/legacy/xml/ribbon.xml'],
 
         /**
          * @param {Object} options

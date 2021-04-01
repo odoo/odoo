@@ -41,7 +41,7 @@ QUnit.module('signature', {
 
     QUnit.module('Signature Field', {
         before: function () {
-            return ajax.loadXML('/web/static/src/xml/name_and_signature.xml', core.qweb);
+            return ajax.loadXML('/web/static/src/legacy/xml/name_and_signature.xml', core.qweb);
         },
     });
 

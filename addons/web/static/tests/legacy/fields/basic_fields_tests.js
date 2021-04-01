@@ -7893,7 +7893,7 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldColor', {
         before: function () {
-            return ajax.loadXML('/web/static/src/xml/colorpicker.xml', core.qweb);
+            return ajax.loadXML('/web/static/src/legacy/xml/colorpicker.xml', core.qweb);
         },
     });
 
