@@ -380,6 +380,14 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.$target.removeClass('d-none');
             this.$message.addClass("d-none");
         }
+
+        // Clear default values coming from data-for/data-values attributes
+        this.$target.find('input[name],textarea[name]').each(function () {
+            var original = $(this).data('website_form_original_default_value');
+            if (original !== undefined && $(this).val() === original) {
+                $(this).val('').removeAttr('value');
+            }
+        });
     },
     /**
      * @override
