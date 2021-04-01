@@ -5,6 +5,7 @@ from collections import OrderedDict
 
 from odoo import models
 from odoo.http import request
+from odoo.tools import lazy
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
@@ -60,31 +61,32 @@ class IrQWeb(models.AbstractModel):
         Website = irQweb.env['website']
         editable = request.website.is_publisher()
         translatable = editable and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
-        editable = not translatable and editable
+        editable = editable and not translatable
 
         current_website = Website.get_current_website()
 
         has_group_publisher = irQweb.env.user.has_group('website.group_website_publisher')
         if has_group_publisher and irQweb.env.user.has_group('website.group_multi_website'):
-            values['multi_website_websites_current'] = current_website.name
-            values['multi_website_websites'] = [
+            values['multi_website_websites_current'] = lazy(lambda: current_website.name)
+            values['multi_website_websites'] = lazy(lambda: [
                 {'website_id': website.id, 'name': website.name, 'domain': website.domain}
                 for website in Website.search([('id', '!=', current_website.id)])
-            ]
+            ])
 
             cur_company = irQweb.env.company
-            values['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
-            values['multi_website_companies'] = [
+            values['multi_website_companies_current'] = lazy(lambda: {'company_id': cur_company.id, 'name': cur_company.name})
+            values['multi_website_companies'] = lazy(lambda: [
                 {'company_id': comp.id, 'name': comp.name}
                 for comp in irQweb.env.user.company_ids if comp != cur_company
-            ]
+            ])
+
 
         # update values
 
         values.update(dict(
             website=current_website,
-            is_view_active=current_website.is_view_active,
-            res_company=request.env['res.company'].browse(current_website._get_cached('company_id')).sudo(),
+            is_view_active=lazy(lambda: current_website.is_view_active),
+            res_company=lazy(request.env['res.company'].browse(current_website._get_cached('company_id')).sudo),
             translatable=translatable,
             editable=editable,
         ))
@@ -93,7 +95,7 @@ class IrQWeb(models.AbstractModel):
             # form editable object, add the backend configuration link
             if 'main_object' in values and has_group_publisher:
                 func = getattr(values['main_object'], 'get_backend_menu_id', False)
-                values['backend_menu_id'] = func and func() or irQweb.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration')
+                values['backend_menu_id'] = lazy(lambda: func and func() or irQweb.env['ir.model.data']._xmlid_to_res_id('website.menu_website_configuration'))
 
         # update options
 

@@ -39,15 +39,17 @@
         <t t-set="html_data" t-value="{
             'lang': lang and lang.replace('_', '-'),
             'data-website-id': website.id if website else None,
+            'data-edit_translations': '1' if edit_translations else None,
+        }"/>
+        <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
             'data-editable': '1' if editable else None,
             'data-translatable': '1' if translatable else None,
-            'data-edit_translations': '1' if edit_translations else None,
-            'data-view-xmlid': xmlid if editable or translatable else None,
-            'data-viewid': viewid if editable or translatable else None,
-            'data-main-object': repr(main_object),
+            'data-view-xmlid': xmlid,
+            'data-viewid': viewid,
+            'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
             'data-oe-company-name': res_company.name,
-        }"/>
+        })"/>
     </xpath>
     <xpath expr="//head" position="before">
         <t t-if="not title">
@@ -70,12 +72,12 @@
         <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
         <meta t-if="(main_object and 'website_indexed' in main_object
-            and not main_object.website_indexed) or (website.domain and website.domain not in request.httprequest.url_root)" name="robots" content="noindex"/>
-            <t t-set="seo_object" t-value="seo_object or main_object"/>
-            <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
-                and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
-            <t t-set="meta_keywords" t-value="seo_object and 'website_meta_keywords' in seo_object
-                and seo_object.website_meta_keywords or website_meta_keywords"/>
+        and not main_object.website_indexed) or (website.domain and website.domain not in request.httprequest.url_root)" name="robots" content="noindex"/>
+        <t t-set="seo_object" t-value="seo_object or main_object"/>
+        <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
+            and seo_object.website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
+        <t t-set="meta_keywords" t-value="seo_object and 'website_meta_keywords' in seo_object
+            and seo_object.website_meta_keywords or website_meta_keywords"/>
         <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
         <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
         <t t-if="seo_object">
@@ -100,13 +102,15 @@
                 <t t-foreach="twitter_meta" t-as="t_meta">
         <meta t-att-name="t_meta" t-att-content="twitter_meta[t_meta]"/>
                 </t>
-            </t>
-        </t>
 
-        <t t-if="request and request.is_frontend_multilang and website">
-            <t t-set="alternate_languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
-            <t t-foreach="alternate_languages" t-as="lg">
-                <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
+                <t t-if="request and request.is_frontend_multilang and website">
+                    <t t-cache="website,canonical_params">
+                        <t t-set="alternate_languages" t-value="website._get_alternate_languages(canonical_params=canonical_params)"/>
+                        <t t-foreach="alternate_languages" t-as="lg">
+                            <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
+                        </t>
+                    </t>
+                </t>
             </t>
         </t>
         <link t-if="request and website" rel="canonical" t-att-href="website._get_canonical_url(canonical_params=canonical_params)"/>
@@ -124,6 +128,10 @@
         <attribute name="data-name">Header</attribute>
     </xpath>
 
+    <xpath expr="//header/t[@t-cache]" position="attributes">
+        <attribute name="t-cache">xmlid,website</attribute>
+    </xpath>
+
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
         <t t-set="cta_btn_href">/contactus</t>
@@ -133,6 +141,7 @@
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
+        <attribute name="t-cache">no_footer,no_copyright,website</attribute>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -2004,8 +2013,8 @@
          t-att-data-use_size="use_size"
          t-att-data-use_filters="use_filters"
          t-att-data-use_text_align="use_text_align"
-         t-att-data-res-model="request.env.user.has_group('website.group_website_publisher') and _name"
-         t-att-data-res-id="request.env.user.has_group('website.group_website_publisher') and _id"
+         t-att-data-res-model="_name"
+         t-att-data-res-id="_id"
          t-attf-class="o_record_cover_container d-flex flex-column h-100 o_colored_level o_cc #{_cp.get('background_color_class')} #{use_size and _cp.get('resize_class')} #{use_text_align and _cp.get('text_align_class')} #{additionnal_classes}">
         <div t-attf-class="o_record_cover_component o_record_cover_image #{snippet_autofocus and 'o_we_snippet_autofocus'}" t-attf-style="background-image: #{_bg};"/>
         <div t-if="use_filters" t-attf-class="o_record_cover_component o_record_cover_filter oe_black" t-attf-style="opacity: #{_cp.get('opacity', 0.0)};"/>

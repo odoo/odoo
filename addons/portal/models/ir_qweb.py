@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tools import is_html_empty
+from odoo.tools import is_html_empty, lazy
 
 
 class IrQWeb(models.AbstractModel):
@@ -15,9 +15,9 @@ class IrQWeb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
         values.update(
             is_html_empty=is_html_empty,
-            languages=[lang for
+            languages=lazy(lambda: [lang for
                     lang in irQweb.env['res.lang'].get_available()
-                    if lang[0] in irQweb.env['ir.http']._get_frontend_langs()]
+                    if lang[0] in irQweb.env['ir.http']._get_frontend_langs()])
         )
         for key in irQweb.env.context:
             if key not in values:
