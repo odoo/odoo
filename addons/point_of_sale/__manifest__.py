@@ -58,7 +58,7 @@
             'point_of_sale/static/src/css/pos.css',
             'point_of_sale/static/src/css/keyboard.css',
             'point_of_sale/static/src/css/pos_receipts.css',
-            'web/static/src/scss/fontawesome_overridden.scss',
+            'web/static/src/legacy/scss/fontawesome_overridden.scss',
             'point_of_sale/static/lib/html2canvas.js',
             'point_of_sale/static/lib/backbone/backbone.js',
             'point_of_sale/static/lib/waitfont.js',

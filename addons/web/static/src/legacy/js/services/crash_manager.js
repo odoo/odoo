@@ -17,7 +17,7 @@ var Dialog = require('web.Dialog');
 var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
 var Widget = require('web.Widget');
 var config = require('web.config');
-var { formatTraceback, annotateTraceback} = require("@web/js/core/error_utils");
+var { formatTraceback, annotateTraceback} = require("@web/legacy/js/core/error_utils");
 
 var _t = core._t;
 var _lt = core._lt;
@@ -36,7 +36,7 @@ let active = true;
  */
 var CrashManagerDialog = Dialog.extend({
     xmlDependencies: (Dialog.prototype.xmlDependencies || []).concat(
-        ['/web/static/src/xml/crash_manager.xml']
+        ['/web/static/src/legacy/xml/crash_manager.xml']
     ),
 
     /**

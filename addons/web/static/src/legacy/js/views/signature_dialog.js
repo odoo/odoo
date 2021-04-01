@@ -11,7 +11,7 @@ var _t = core._t;
 var SignatureDialog = Dialog.extend({
     template: 'web.signature_dialog',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web/static/src/xml/name_and_signature.xml']
+        ['/web/static/src/legacy/xml/name_and_signature.xml']
     ),
     custom_events: {
         'signature_changed': '_onChangeSignature',
