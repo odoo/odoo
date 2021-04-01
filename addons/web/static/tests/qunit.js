@@ -20,7 +20,9 @@
    */
   function containsN(target, selector, n, msg) {
     let $el;
-    if (target instanceof Component) {
+    if (target._widgetRenderAndInsert) {
+      $el = target.$el; // legacy widget
+    } else if (target instanceof Component) {
       if (!target.el) {
         throw new Error(
           `containsN assert with selector '${selector}' called on an unmounted component`
@@ -60,12 +62,19 @@
    * Helper function, to check if a given element has (or has not) classnames.
    *
    * @private
-   * @param {HTMLElement} el
+   * @param {HTMLElement|jQuery|Widget} el
    * @param {string} classNames
    * @param {boolean} shouldHaveClass
    * @param {string} [msg]
    */
   function _checkClass(el, classNames, shouldHaveClass, msg) {
+    if (el) {
+      if (el._widgetRenderAndInsert) {
+        el = el.el; // legacy widget
+      } else if (!(el instanceof HTMLElement)) {
+        el = el[0];
+      }
+    }
     msg = msg || `target should ${shouldHaveClass ? "have" : "not have"} classnames ${classNames}`;
     const isFalse = classNames.split(" ").some((cls) => {
       const hasClass = el.classList.contains(cls);
@@ -97,16 +106,56 @@
   }
 
   /**
+   * Checks that the target element (described by widget/jquery or html element)
+   * - exists
+   * - is unique
+   * - has the given attribute with the proper value
+   *
+   * @param {Widget|jQuery|HTMLElement|owl.Component} w
+   * @param {string} attr
+   * @param {string} value
+   * @param {string} [msg]
+   */
+  function hasAttrValue(target, attr, value, msg) {
+    let $el;
+    if (target._widgetRenderAndInsert) {
+      $el = target.$el; // legacy widget
+    } else if (target instanceof Component) {
+      if (!target.el) {
+        throw new Error(`hasAttrValue assert with attr '${attr}' called on an unmounted component`);
+      }
+      $el = $(target.el);
+    } else {
+      $el = target instanceof HTMLElement ? $(target) : target;
+    }
+
+    if ($el.length !== 1) {
+      const descr = `hasAttrValue (${attr}: ${value})`;
+      QUnit.assert.ok(false, `Assertion '${descr}' targets ${$el.length} elements instead of 1`);
+    } else {
+      msg = msg || `attribute '${attr}' of target should be '${value}'`;
+      QUnit.assert.strictEqual($el.attr(attr), value, msg);
+    }
+  }
+
+  /**
    * Helper function, to check if a given element
    * - is unique (if it is a jquery node set)
    * - is (or not) visible
    *
    * @private
-   * @param {HTMLElement} el
+   * @param {HTMLElement|jQuery|Widget} el
    * @param {boolean} shouldBeVisible
    * @param {string} [msg]
    */
   function _checkVisible(el, shouldBeVisible, msg) {
+    if (el) {
+      if (el._widgetRenderAndInsert) {
+        el = el.el; // legacy widget
+      } else if (!(el instanceof HTMLElement)) {
+        el = el[0];
+      }
+    }
     msg = msg || `target should ${shouldBeVisible ? "" : "not"} be visible`;
     let isVisible = el && el.offsetWidth && el.offsetHeight;
     if (isVisible) {
@@ -129,6 +178,7 @@
   QUnit.assert.containsOnce = containsOnce;
   QUnit.assert.doesNotHaveClass = doesNotHaveClass;
   QUnit.assert.hasClass = hasClass;
+  QUnit.assert.hasAttrValue = hasAttrValue;
   QUnit.assert.isVisible = isVisible;
   QUnit.assert.isNotVisible = isNotVisible;
 
