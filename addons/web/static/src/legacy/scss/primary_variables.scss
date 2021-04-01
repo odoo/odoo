@@ -4,39 +4,51 @@
 ///
 
 // Font sizes
-$o-root-font-size: 12px;
-$o-font-size-base: 13rem * (1px / $o-root-font-size);
-$o-line-height-base: 1.5; // This is BS default
+$o-root-font-size: 12px !default;
+$o-font-size-base: 13rem * (1px / $o-root-font-size) !default;
+$o-line-height-base: 1.5 !default; // This is BS default
 
 // Colors
-$o-community-color: #7C7BAD;
-$o-enterprise-color: #875A7B;
-$o-enterprise-primary-color: #00A09D;
+$o-community-color: #7C7BAD !default;
+$o-enterprise-color: #875A7B !default;
+$o-enterprise-primary-color: #00A09D !default;
 
-$o-brand-odoo: $o-community-color;
-$o-brand-primary: $o-community-color;
+$o-brand-odoo: $o-community-color !default;
+$o-brand-primary: $o-community-color !default;
 
-$o-brand-secondary: #f0eeee;
-$o-brand-lightsecondary: #e2e2e0;
-$o-gray-100: #f8f9fa; // This is BS default
+$o-brand-secondary: #f0eeee !default;
+$o-brand-lightsecondary: #e2e2e0 !default;
 
-$o-main-color-muted: #a8a8a8;
-$o-main-text-color: #4c4c4c;
+// This is BS default
+$o-gray-100: #f8f9fa !default;
+$o-gray-200: #e9ecef !default;
+$o-gray-300: #dee2e6 !default;
+$o-gray-400: #ced4da !default;
+$o-gray-500: #adb5bd !default;
+$o-gray-600: #6c757d !default;
+$o-gray-700: #495057 !default;
+$o-gray-800: #343a40 !default;
+$o-gray-900: #212529 !default;
 
-$o-view-background-color: white;
-$o-shadow-color: #303030;
+$o-main-text-color: $o-gray-700 !default;
+$o-main-color-muted: rgba($o-main-text-color, .7) !default;
+$o-main-headings-color: $o-gray-900 !default;
+$o-main-link-color: darken($o-brand-primary, 5%) !default;
 
-$o-form-lightsecondary: #ccc;
+$o-view-background-color: white !default;
+$o-shadow-color: #303030 !default;
 
-$o-list-footer-bg-color: #eee;
-$o-list-footer-font-weight: bold;
+$o-form-lightsecondary: #ccc !default;
 
-$o-tooltip-background-color: white;
-$o-tooltip-color: #666666;
-$o-tooltip-arrow-color: white;
-$o-tooltip-text-color: #777777;
-$o-tooltip-title-text-color: black;
-$o-tooltip-title-background-color: #F7F7F7;
+$o-list-footer-bg-color: #eee !default;
+$o-list-footer-font-weight: bold !default;
+
+$o-tooltip-background-color: white !default;
+$o-tooltip-color: #666666 !default;
+$o-tooltip-arrow-color: white !default;
+$o-tooltip-text-color: #777777 !default;
+$o-tooltip-title-text-color: black !default;
+$o-tooltip-title-background-color: #F7F7F7 !default;
 
 // Layout
 //
@@ -53,66 +65,65 @@ $o-extra-grid-breakpoints: (
     lg: 992px,
     xl: 1200px,
     xxl: 1534px,
-);
+) !default;
+$o-form-group-cols: 12 !default;
+$o-form-spacing-unit: 5px !default;
+$o-horizontal-padding: 16px !default;
+$o-innergroup-rpadding: 45px !default;
+$o-dropdown-hpadding: 20px !default;
 
-$o-form-group-cols: 12;
-$o-form-spacing-unit: 5px;
-$o-horizontal-padding: 16px;
-$o-innergroup-rpadding: 45px;
-$o-dropdown-hpadding: 20px;
+$o-sheet-vpadding: 24px !default;
 
-$o-sheet-vpadding: 24px;
+$o-statbutton-height: 44px !default;
+$o-statbutton-vpadding: 0px !default;
+$o-statbutton-spacing: 6px !default;
 
-$o-statbutton-height: 44px;
-$o-statbutton-vpadding: 0px;
-$o-statbutton-spacing: 6px;
-
-$o-modal-lg: 980px;
-$o-modal-md: 650px;
+$o-modal-lg: 980px !default;
+$o-modal-md: 650px !default;
 
 // Needed for having no spacing between sheet and mail body in mass_mailing:
 // Different required cancel paddings between web and web_enterprise
-$o-sheet-cancel-tpadding: 0px;
+$o-sheet-cancel-tpadding: 0px !default;
 
-$o-avatar-size: 90px;
+$o-avatar-size: 90px !default;
 
-$o-statusbar-height: 33px;
+$o-statusbar-height: 33px !default;
 
-$o-label-font-size-factor: 0.8;
-$o-navbar-height: 46px;
+$o-label-font-size-factor: 0.8 !default;
+$o-navbar-height: 46px !default;
 
-$o-nb-calendar-colors: 24;
+$o-nb-calendar-colors: 24 !default;
 
-$o-base-settings-mobile-tabs-height: 40px;
-$o-base-settings-mobile-tabs-overflow-gap: 3%;
+$o-base-settings-mobile-tabs-height: 40px !default;
+$o-base-settings-mobile-tabs-overflow-gap: 3% !default;
 
-$o-cp-breadcrumb-height: 30px;
+$o-cp-breadcrumb-height: 30px !default;
 
-$o-datepicker-week-color: #8f8f8f;
+$o-datepicker-week-color: #8f8f8f !default;
 
-$o-card-body-bg-opacity: 0.9;
+$o-card-body-bg-opacity: 0.9 !default;
 
 // Kanban
 
-$o-kanban-default-record-width: 300px;
-$o-kanban-small-record-width: 240px;
+$o-kanban-default-record-width: 300px !default;
+$o-kanban-small-record-width: 240px !default;
 
-$o-kanban-header-title-height: 50px;
+$o-kanban-header-title-height: 50px !default;
 
-$o-kanban-image-width: 64px;
-$o-kanban-image-fill-width: 95px;
-$o-kanban-inside-vgutter: 8px;
-$o-kanban-inside-hgutter: 8px;
-$o-kanban-color-border-width: 3px;
-$o-kanban-inner-hmargin: 5px;
-$o-kanban-progressbar-height: 20px;
+$o-kanban-image-width: 64px !default;
+$o-kanban-image-fill-width: 95px !default;
+$o-kanban-inside-vgutter: 8px !default;
+$o-kanban-inside-hgutter: 8px !default;
+$o-kanban-color-border-width: 3px !default;
+$o-kanban-inner-hmargin: 5px !default;
+$o-kanban-progressbar-height: 20px !default;
 
-$o-kanban-mobile-tabs-height: 40px;
-$o-kanban-mobile-empty-height: $o-kanban-image-width;
+$o-kanban-mobile-tabs-height: 40px !default;
+$o-kanban-mobile-empty-height: $o-kanban-image-width !default;
 // ------- Kanban dashboard variables -------
 
 // Used to manage spacing in complex dropdown menu
-$o-kanban-dashboard-dropdown-complex-gap: 5px;
+$o-kanban-dashboard-dropdown-complex-gap: 5px !default;
 
 // Form view
 
