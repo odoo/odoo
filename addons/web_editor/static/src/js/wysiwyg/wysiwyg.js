@@ -147,7 +147,11 @@ const Wysiwyg = Widget.extend({
 
         return _super.apply(this, arguments).then(() => {
             if (this.options.autohideToolbar) {
-                $(document.body).append(this.toolbar.$el);
+                if (this.odooEditor.isMobile) {
+                    $(this.odooEditor.editable).before(this.toolbar.$el);
+                } else {
+                    $(document.body).append(this.toolbar.$el);
+                }
             }
         });
     },
