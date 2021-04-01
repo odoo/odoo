@@ -466,7 +466,7 @@ class StockMoveLine(models.Model):
                             # checkboxes on the picking type, he's allowed to enter tracked
                             # products without a `lot_id`.
                             continue
-                    elif ml.move_id.inventory_id:
+                    elif ml.move_id.inventory_id or self.env.context.get('inventory_mode'):
                         # If an inventory adjustment is linked, the user is allowed to enter
                         # tracked products without a `lot_id`.
                         continue
