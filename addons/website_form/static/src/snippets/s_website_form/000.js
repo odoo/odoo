@@ -71,6 +71,7 @@ odoo.define('website_form.s_website_form', function (require) {
                         var $field = self.$target.find('input[name="' + field + '"], textarea[name="' + field + '"]');
                         if (!$field.val()) {
                             $field.val(values[field]);
+                            $field.data('website_form_original_default_value', $field.val());
                         }
                     }
                 });
