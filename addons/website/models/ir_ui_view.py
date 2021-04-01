@@ -361,8 +361,9 @@ class View(models.Model):
         Archived views are ignored (unless the active_test context is set, but
         then the ormcache_context will not work as expected).
         """
-        if 'website_id' in self._context and not isinstance(xml_id, int):
-            current_website = self.env['website'].browse(self._context.get('website_id'))
+        website_id = self._context.get('website_id')
+        if website_id and not isinstance(xml_id, int):
+            current_website = self.env['website'].browse(int(website_id))
             domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
 
             view = self.sudo().search(domain, order='website_id', limit=1)
@@ -371,6 +372,10 @@ class View(models.Model):
                 raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
             return view.id
         return super(View, self.sudo())._get_view_id(xml_id)
+
+    @tools.ormcache('self.id')
+    def _get_cached_visibility(self):
+        return self.visibility
 
     def _handle_visibility(self, do_raise=True):
         """ Check the visibility set on the main view and raise 403 if you should not have access.
@@ -382,10 +387,12 @@ class View(models.Model):
 
         self = self.sudo()
 
-        if self.visibility and not request.env.user.has_group('website.group_website_designer'):
-            if (self.visibility == 'connected' and request.website.is_public_user()):
+        visibility = self._get_cached_visibility()
+
+        if visibility and not request.env.user.has_group('website.group_website_designer'):
+            if (visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
-            elif self.visibility == 'password' and \
+            elif visibility == 'password' and \
                     (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
                 pwd = request.params.get('visibility_password')
                 if pwd and self.env.user._crypt_context().verify(
@@ -394,7 +401,7 @@ class View(models.Model):
                 else:
                     error = werkzeug.exceptions.Forbidden('website_visibility_password_required')
 
-            if self.visibility not in ('password', 'connected'):
+            if visibility not in ('password', 'connected'):
                 try:
                     self._check_view_access()
                 except AccessError:

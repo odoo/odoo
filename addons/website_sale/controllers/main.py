@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
+from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
@@ -19,7 +20,9 @@ from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.osv import expression
+from odoo.tools import lazy
 from odoo.tools.json import scriptsafe as json_scriptsafe
+
 _logger = logging.getLogger(__name__)
 
 
@@ -249,7 +252,12 @@ class WebsiteSale(http.Controller):
 
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, min_price=min_price, max_price=max_price, order=post.get('order'))
 
-        pricelist = website.get_current_pricelist()
+        now = datetime.timestamp(datetime.now())
+        pricelist = request.env['product.pricelist'].browse(request.session.get('website_sale_current_pl'))
+        if not pricelist or request.session.get('website_sale_pricelist_time', 0) < now - 60*60: # test: 1 hour in session
+            pricelist = website.get_current_pricelist()
+            request.session['website_sale_pricelist_time'] = now
+            request.session['website_sale_current_pl'] = pricelist.id
 
         request.update_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
 
@@ -349,6 +357,9 @@ class WebsiteSale(http.Controller):
                 layout_mode = 'list'
             else:
                 layout_mode = 'grid'
+            request.session['website_sale_shop_layout_mode'] = layout_mode
+
+        products_prices = lazy(lambda: products._get_sales_prices(pricelist))
 
         values = {
             'search': fuzzy_search_term or search,
@@ -361,7 +372,7 @@ class WebsiteSale(http.Controller):
             'add_qty': add_qty,
             'products': products,
             'search_count': product_count,  # common for all searchbox
-            'bins': TableCompute().process(products, ppg, ppr),
+            'bins': lazy(lambda: TableCompute().process(products, ppg, ppr)),
             'ppg': ppg,
             'ppr': ppr,
             'categories': categs,
@@ -369,6 +380,8 @@ class WebsiteSale(http.Controller):
             'keep': keep,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
+            'products_prices': products_prices,
+            'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
         }
         if filter_by_price_enabled:
             values['min_price'] = min_price or available_min_price

@@ -15,10 +15,10 @@ tour.register('course_publisher', {
     test: true
 }, [{
     content: 'eLearning: click on New (top-menu)',
-    trigger: 'div.o_new_content_menu a'
+    trigger: '#new-content-menu > a'
 }, {
     content: 'eLearning: click on New Course',
-    trigger: 'a:contains("Course")'
+    trigger: '#o_new_content_menu_choices a:contains("Course")'
 }, {
     content: 'eLearning: set name',
     trigger: 'input[name="name"]',
