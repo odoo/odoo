@@ -88,8 +88,8 @@
     'post_init_hook': '_assign_default_mail_template_picking_id',
     'assets': {
         'web.report_assets_common': [
-            'web/static/src/scss/views.scss',
-            'web/static/src/scss/graph_view.scss',
+            'web/static/src/legacy/scss/views.scss',
+            'web/static/src/legacy/scss/graph_view.scss',
             'stock/static/src/scss/report_stock_forecasted.scss',
             'stock/static/src/scss/report_stock_rule.scss',
         ],

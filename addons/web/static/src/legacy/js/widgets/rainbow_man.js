@@ -19,7 +19,7 @@ var _t = core._t;
 
 var RainbowMan = Widget.extend({
     template: 'rainbow_man.notification',
-    xmlDependencies: ['/web/static/src/xml/rainbow_man.xml'],
+    xmlDependencies: ['/web/static/src/legacy/xml/rainbow_man.xml'],
     /**
      * @override
      * @constructor
