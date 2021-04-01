@@ -229,9 +229,9 @@
         <field name="name">Sick day</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
         <field eval="(datetime.now() + relativedelta(day=1, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="date_from"/>
-        <field eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(day=2)).strftime('%Y-%m-%d 23:00:00')" name="date_to"/>
+        <field eval="(datetime.now() + relativedelta(day=2, weekday=0)).strftime('%Y-%m-%d 23:00:00')" name="date_to"/>
         <field eval="(datetime.now() + relativedelta(day=1, weekday=0)).strftime('%Y-%m-%d 01:00:00')" name="request_date_from"/>
-        <field eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(day=2)).strftime('%Y-%m-%d 23:00:00')" name="request_date_to"/>
+        <field eval="(datetime.now() + relativedelta(day=2, weekday=0)).strftime('%Y-%m-%d 23:00:00')" name="request_date_to"/>
         <field name="employee_id" ref="hr.employee_qdp"/>
         <field name="state">confirm</field>
     </record>
