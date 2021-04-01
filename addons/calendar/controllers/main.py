@@ -83,6 +83,16 @@ class CalendarController(http.Controller):
             })
         return request.make_response(response_content, headers=[('Content-Type', 'text/html')])
 
+    @http.route('/calendar/meeting/join', type='http', auth="user", website=True)
+    def calendar_join_meeting(self, token, **kwargs):
+        event = request.env['calendar.event'].sudo().search([
+            ('access_token', '=', token)])
+        if not event:
+            return request.not_found()
+        event.action_join_meeting(request.env.user.partner_id.id)
+        attendee = request.env['calendar.attendee'].sudo().search([('partner_id', '=', request.env.user.partner_id), ('event_id', '=', event.id)])
+        return request.redirect('/calendar/meeting/view?token=%s&id=%s' % (attendee.access_token, event.id))
+
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/notify', type='json', auth="user")
     def notify(self):
