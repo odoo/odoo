@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Dialog" owl="1">
+        <Portal target="'.o_dialog_container'">
+            <div class="o_dialog">
+                <div role="dialog" class="modal"
+                    tabindex="-1"
+                    t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                    t-ref="modal"
+                    >
+                    <div class="modal-dialog" t-att-class="props.size">
+                        <div class="modal-content" t-att-class="props.contentClass">
+                            <header t-if="props.renderHeader" class="modal-header">
+                                <h4 class="modal-title">
+                                    <t t-esc="props.title"/>
+                                </h4>
+                                <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="_close">×</button>
+                            </header>
+                            <main class="modal-body">
+                                <t t-slot="default"/>
+                            </main>
+                            <footer t-if="props.renderFooter" class="modal-footer">
+                                <t t-slot="buttons">
+                                    <button class="btn btn-primary" t-on-click="_close">
+                                        <t>Ok</t>
+                                    </button>
+                                </t>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Portal>
+    </t>
+
+</templates>

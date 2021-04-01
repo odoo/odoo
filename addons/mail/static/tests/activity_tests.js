@@ -351,7 +351,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
 
     activity.destroy();
 });
-QUnit.test('activity view: no group_by_menu and no comparison_menu', async function (assert) {
+QUnit.skip('activity view: no group_by_menu and no comparison_menu', async function (assert) {
     assert.expect(4);
 
     var actionManager = await createActionManager({
@@ -459,7 +459,7 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
     activity.destroy();
 });
 
-QUnit.test('Activity view: discard an activity creation dialog', async function (assert) {
+QUnit.skip('Activity view: discard an activity creation dialog', async function (assert) {
     assert.expect(2);
 
     var actionManager = await createActionManager({

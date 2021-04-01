@@ -91,7 +91,7 @@ QUnit.module('base_settings_tests', {
         form.destroy();
     });
 
-    QUnit.test('settings views does not read existing id when coming back in breadcrumbs', async function (assert) {
+    QUnit.skip('settings views does not read existing id when coming back in breadcrumbs', async function (assert) {
         assert.expect(8);
 
         var actions = [{
@@ -148,7 +148,7 @@ QUnit.module('base_settings_tests', {
         actionManager.destroy();
     });
 
-    QUnit.test('clicking on any button in setting should show discard warning if setting form is dirty', async function (assert) {
+    QUnit.skip('clicking on any button in setting should show discard warning if setting form is dirty', async function (assert) {
         assert.expect(11);
 
         var actions = [{
@@ -365,7 +365,7 @@ QUnit.module('base_settings_tests', {
         form.destroy();
     });
 
-    QUnit.test('execute action from settings view with several actions in the breadcrumb', async function (assert) {
+    QUnit.skip('execute action from settings view with several actions in the breadcrumb', async function (assert) {
         // This commit fixes a race condition, that's why we artificially slow down a read rpc
         assert.expect(4);
 
@@ -477,7 +477,7 @@ QUnit.module('base_settings_tests', {
         form.destroy();
     });
 
-    QUnit.test('call "call_button/execute" when clicking on a button in dirty settings', async function (assert) {
+    QUnit.skip('call "call_button/execute" when clicking on a button in dirty settings', async function (assert) {
         assert.expect(7);
 
         const actions = [{

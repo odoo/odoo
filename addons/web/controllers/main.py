@@ -844,7 +844,7 @@ class Home(http.Controller):
         :param unique: this parameters is not used, but mandatory: it is used by the HTTP stack to make a unique request
         :return: the menus (including the images in Base64)
         """
-        menus = request.env["ir.ui.menu"].load_menus(request.session.debug)
+        menus = request.env["ir.ui.menu"].load_menus_flat(request.session.debug)
         body = json.dumps(menus, default=ustr)
         response = request.make_response(body, [
             # this method must specify a content-type application/json instead of using the default text/html set because

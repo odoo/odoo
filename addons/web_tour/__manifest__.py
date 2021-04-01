@@ -30,7 +30,7 @@ Odoo Web tours.
             'web_tour/static/src/js/tour_utils.js',
         ],
         'web.assets_backend': [
-            'web_tour/static/src/js/debug_manager.js',
+            # 'web_tour/static/src/js/debug_manager.js',
         ],
         'web.assets_frontend': [
             'web_tour/static/src/js/public/**/*',

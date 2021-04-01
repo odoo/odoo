@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<li t-name="web.SwitchCompanyMenu" class="o_switch_company_menu" owl="1">
+    <Dropdown>
+        <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
+            <t t-if="!env.isSmall"><t t-esc="user.current_company.name"/></t>
+        </span>
+        <t t-set-slot="menu">
+            <t t-foreach="user.allowed_companies" t-as="company_id">
+                <t t-call="web.SwitchCompanyItem">
+                    <t t-set="company" t-value="user.allowed_companies[company_id]" />
+                </t>
+            </t>
+        </t>
+    </Dropdown>
+</li>
+
+<div t-name="web.SwitchCompanyItem" owl="1">
+    <t t-set="isCompanySelected" t-value="user.context.allowed_company_ids.includes(company.id)"/>
+    <t t-set="isCurrent" t-value="company.id === user.current_company.id"/>
+    <DropdownItem>
+        <div class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company.id">
+            <div role="menuitemcheckbox"
+                t-att-aria-checked="isCompanySelected" t-att-aria-label="company.name" tabindex="0" class="ml-auto pl-3 pr-3 border border-top-0 border-left-0   border-bottom-0 toggle_company o_py"
+                t-on-click="toggleCompany(company.id)">
+                <span style="height: 2rem;">
+                    <i class="fa fa-fw pt-2" t-attf-class="{{isCompanySelected ? 'fa-check-square' : 'fa-square-o'}}"/>
+                </span>
+            </div>
+            <div role="button" t-att-aria-pressed="isCurrent" aria-label="Switch to this company" tabindex="0" class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-attf-style="{{isCurrent ? 'background-color: lightgrey;' : ''}}"
+                t-on-click="logIntoCompany(company.id)">
+                <span class='mr-3 company_label' t-attf-class="{{isCompanySelected ? '' : 'text-muted'}}">
+                    <t t-esc="company.name"/>
+                </span>
+            </div>
+        </div>
+    </DropdownItem>
+</div>
+
+</templates>

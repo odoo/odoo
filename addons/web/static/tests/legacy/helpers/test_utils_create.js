@@ -10,13 +10,10 @@ odoo.define('web.test_utils_create', function (require) {
      * testUtils file.
      */
 
-    const ActionManager = require('web.ActionManager');
     const ActionMenus = require('web.ActionMenus');
     const concurrency = require('web.concurrency');
-    const config = require('web.config');
     const ControlPanel = require('web.ControlPanel');
     const customHooks = require('web.custom_hooks');
-    const DebugManager = require('web.DebugManager.Backend');
     const dom = require('web.dom');
     const makeTestEnvironment = require('web.test_env');
     const ActionModel = require('web.ActionModel');
@@ -27,72 +24,6 @@ odoo.define('web.test_utils_create', function (require) {
     const { Component } = owl;
     const { useRef, useState } = owl.hooks;
     const { xml } = owl.tags;
-
-    /**
-     * Create and return an instance of ActionManager with all rpcs going through a
-     * mock method using the data, actions and archs objects as sources.
-     *
-     * @param {Object} [params={}]
-     * @param {Object} [params.actions] the actions given to the mock server
-     * @param {Object} [params.archs] this archs given to the mock server
-     * @param {Object} [params.data] the business data given to the mock server
-     * @param {function} [params.mockRPC]
-     * @returns {Promise<ActionManager>}
-     */
-    async function createActionManager(params = {}) {
-        const target = prepareTarget(params.debug);
-
-        const widget = new Widget();
-        // when 'document' addon is installed, the sidebar does a 'search_read' on
-        // model 'ir_attachment' each time a record is open, so we monkey-patch
-        // 'mockRPC' to mute those RPCs, so that the tests can be written uniformly,
-        // whether or not 'document' is installed
-        const mockRPC = params.mockRPC;
-        Object.assign(params, {
-            async mockRPC(route, args) {
-                if (args.model === 'ir.attachment') {
-                    return [];
-                }
-                if (mockRPC) {
-                    return mockRPC.apply(this, arguments);
-                }
-                return this._super(...arguments);
-            },
-        });
-        const mockServer = await testUtilsMock.addMockEnvironment(widget, Object.assign({ debounce: false }, params));
-        await widget.prependTo(target);
-        widget.el.classList.add('o_web_client');
-        if (config.device.isMobile) {
-            widget.el.classList.add('o_touch_device');
-        }
-
-        params.server = mockServer;
-
-        const userContext = params.context && params.context.user_context || {};
-        const actionManager = new ActionManager(widget, userContext);
-
-        // Override the ActionMenus registry unless told otherwise.
-        let actionMenusRegistry = ActionMenus.registry;
-        if (params.actionMenusRegistry !== true) {
-            ActionMenus.registry = new Registry();
-        }
-
-        const originalDestroy = ActionManager.prototype.destroy;
-        actionManager.destroy = function () {
-            actionManager.destroy = originalDestroy;
-            widget.destroy();
-            if (params.actionMenusRegistry !== true) {
-                ActionMenus.registry = actionMenusRegistry;
-            }
-        };
-        const fragment = document.createDocumentFragment();
-        await actionManager.appendTo(fragment);
-        dom.append(widget.el, fragment, {
-            callbacks: [{ widget: actionManager }],
-            in_DOM: true,
-        });
-        return actionManager;
-    }
 
     /**
      * Similar as createView, but specific for calendar views. Some calendar
@@ -270,42 +201,6 @@ odoo.define('web.test_utils_create', function (require) {
         controlPanel.getQuery = () => parent.searchModel.get('query');
 
         return controlPanel;
-    }
-
-    /**
-     * Create and return an instance of DebugManager with all rpcs going through a
-     * mock method, assuming that the user has access rights, and is an admin.
-     *
-     * @param {Object} [params={}]
-     * @returns {Promise<DebugManager>}
-     */
-    async function createDebugManager(params = {}) {
-        const mockRPC = params.mockRPC;
-        Object.assign(params, {
-            async mockRPC(route, args) {
-                if (args.method === 'check_access_rights') {
-                    return true;
-                }
-                if (args.method === 'xmlid_to_res_id') {
-                    return true;
-                }
-                if (mockRPC) {
-                    return mockRPC.apply(this, arguments);
-                }
-                return this._super(...arguments);
-            },
-            session: {
-                async user_has_group(group) {
-                    if (group === 'base.group_no_one') {
-                        return true;
-                    }
-                    return this._super(...arguments);
-                },
-            },
-        });
-        const debugManager = new DebugManager();
-        await testUtilsMock.addMockEnvironment(debugManager, params);
-        return debugManager;
     }
 
     /**
@@ -502,11 +397,9 @@ odoo.define('web.test_utils_create', function (require) {
     }
 
     return {
-        createActionManager,
         createCalendarView,
         createComponent,
         createControlPanel,
-        createDebugManager,
         createModel,
         createParent,
         createView,

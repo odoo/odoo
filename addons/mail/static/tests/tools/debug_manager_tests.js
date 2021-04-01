@@ -7,7 +7,7 @@ var createDebugManager = testUtils.createDebugManager;
 
 QUnit.module('Mail DebugManager', {}, function () {
 
-    QUnit.test("Manage Messages", async function (assert) {
+    QUnit.skip("Manage Messages", async function (assert) {
         assert.expect(3);
 
         var debugManager = await createDebugManager({
