@@ -101,7 +101,7 @@ class AccountEdiFormat(models.Model):
                 if elements:
                     partner_mail = elements[0].text
                     domains.append([('email', '=', partner_mail)])
-                elements = partner_element.xpath('//cac:AccountingSupplierParty/cac:Party//cbc:ID', namespaces=namespaces)
+                elements = partner_element.xpath('//cac:AccountingSupplierParty/cac:Party//cbc:CompanyID', namespaces=namespaces)
                 if elements:
                     partner_id = elements[0].text
                     domains.append([('vat', 'like', partner_id)])
