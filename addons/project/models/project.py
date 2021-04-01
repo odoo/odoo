@@ -1402,28 +1402,17 @@ class Task(models.Model):
             'context': self._context
         }
 
+    # ------------
+    # Actions
+    # ------------
+
     def action_open_task(self):
         return {
-            'name': _('View Task'),
             'view_mode': 'form',
             'res_model': 'project.task',
             'res_id': self.id,
             'type': 'ir.actions.act_window',
             'context': self._context
-        }
-
-    # ------------
-    # Actions
-    # ------------
-
-    def action_open_task_form(self):
-        """ Opens the form view of the task """
-        return {
-            'view_mode': 'form',
-            'res_model': 'project.task',
-            'res_id': self.id,
-            'type': 'ir.actions.act_window',
-            'context': dict(self._context, create=False)
         }
 
     def action_recurring_tasks(self):
