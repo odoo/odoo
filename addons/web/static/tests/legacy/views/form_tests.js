@@ -489,7 +489,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('Form and subview with _view_ref contexts', async function (assert) {
+    QUnit.skip('Form and subview with _view_ref contexts', async function (assert) {
         assert.expect(2);
 
         this.data.product.fields.partner_type_ids = {string: "one2many field", type: "one2many", relation: "partner_type"},
@@ -6812,7 +6812,7 @@ QUnit.module('Views', {
         _t.database.multi_lang = multi_lang;
     });
 
-    QUnit.test('translation alerts preseved on reverse breadcrumb', async function (assert) {
+    QUnit.skip('translation alerts preseved on reverse breadcrumb', async function (assert) {
         assert.expect(2);
 
         this.data['ir.translation'] = {
@@ -8819,7 +8819,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('discard after a failed save', async function (assert) {
+    QUnit.skip('discard after a failed save', async function (assert) {
         assert.expect(2);
 
         var actionManager = await createActionManager({
@@ -9725,7 +9725,7 @@ QUnit.module('Views', {
         assert.verifySteps(['mounted', 'willUnmount']);
     });
 
-    QUnit.test('Auto save: save when page changed', async function (assert) {
+    QUnit.skip('Auto save: save when page changed', async function (assert) {
         assert.expect(10);
 
         const actions = [{
@@ -9789,7 +9789,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('Auto save: save when breadcrumb clicked', async function (assert) {
+    QUnit.skip('Auto save: save when breadcrumb clicked', async function (assert) {
         assert.expect(7);
 
         const actions = [{
@@ -9849,7 +9849,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('Auto save: save when action changed', async function (assert) {
+    QUnit.skip('Auto save: save when action changed', async function (assert) {
         assert.expect(6);
 
         const actions = [{
@@ -10025,7 +10025,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('Auto save: save on closing tab/browser (detached form)', async function (assert) {
+    QUnit.skip('Auto save: save on closing tab/browser (detached form)', async function (assert) {
         assert.expect(3);
 
         const actions = [{

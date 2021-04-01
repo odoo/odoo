@@ -34,7 +34,7 @@ QUnit.module('Product Pricelist', {
             };
         },
 }, function () {
-    QUnit.test('Pricelist Client Action', async function (assert) {
+    QUnit.skip('Pricelist Client Action', async function (assert) {
         assert.expect(21);
 
         const self = this;

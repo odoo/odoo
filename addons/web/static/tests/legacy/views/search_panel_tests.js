@@ -2317,7 +2317,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('search panel is available on list and kanban by default', async function (assert) {
+    QUnit.skip('search panel is available on list and kanban by default', async function (assert) {
         assert.expect(8);
 
         var actionManager = await createActionManager({
@@ -2346,7 +2346,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('search panel with view_types attribute', async function (assert) {
+    QUnit.skip('search panel with view_types attribute', async function (assert) {
         assert.expect(6);
 
         this.archs['partner,false,search'] =
@@ -2379,7 +2379,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('search panel state is shared between views', async function (assert) {
+    QUnit.skip('search panel state is shared between views', async function (assert) {
         assert.expect(16);
 
         var actionManager = await createActionManager({
@@ -2427,7 +2427,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('search panel filters are kept between switch views', async function (assert) {
+    QUnit.skip('search panel filters are kept between switch views', async function (assert) {
         assert.expect(17);
 
         const actionManager = await createActionManager({
@@ -2479,7 +2479,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('search panel filters are kept when switching to a view with no search panel', async function (assert) {
+    QUnit.skip('search panel filters are kept when switching to a view with no search panel', async function (assert) {
         assert.expect(13);
 
         var actionManager = await createActionManager({
@@ -2515,7 +2515,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('after onExecuteAction, selects "All" as default category value', async function (assert) {
+    QUnit.skip('after onExecuteAction, selects "All" as default category value', async function (assert) {
         assert.expect(4);
 
         var actionManager = await createActionManager({
@@ -2536,7 +2536,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('search panel is not instantiated if stated in context', async function (assert) {
+    QUnit.skip('search panel is not instantiated if stated in context', async function (assert) {
         assert.expect(2);
 
         this.actions[0].context = {search_panel: false};
@@ -2555,7 +2555,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('categories and filters are not reloaded when switching between views', async function (assert) {
+    QUnit.skip('categories and filters are not reloaded when switching between views', async function (assert) {
         assert.expect(3);
 
         var actionManager = await createActionManager({
@@ -2582,7 +2582,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('scroll position is kept when switching between controllers', async function (assert) {
+    QUnit.skip('scroll position is kept when switching between controllers', async function (assert) {
         assert.expect(6);
 
         const originalDebounce = SearchPanel.scrollDebounce;

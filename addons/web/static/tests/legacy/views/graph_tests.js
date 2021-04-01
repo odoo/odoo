@@ -783,7 +783,7 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    QUnit.test('measure dropdown consistency', async function (assert) {
+    QUnit.skip('measure dropdown consistency', async function (assert) {
         assert.expect(2);
 
         const actionManager = await testUtils.createActionManager({

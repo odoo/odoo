@@ -72,7 +72,7 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
             report.destroy();
         });
 
-        QUnit.test("mounted is called once when returning on 'Stock report' from breadcrumb", async assert => {
+        QUnit.skip("mounted is called once when returning on 'Stock report' from breadcrumb", async assert => {
             // This test can be removed as soon as we don't mix legacy and owl layers anymore.
             assert.expect(7);
 
