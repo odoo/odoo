@@ -45,13 +45,13 @@ class ReportBomStructure(models.AbstractModel):
         res['lines']['report_type'] = 'html'
         res['lines']['report_structure'] = 'all'
         res['lines']['has_attachments'] = res['lines']['attachments'] or any(component['attachments'] for component in res['lines']['components'])
-        res['lines'] = self.env.ref('mrp.report_mrp_bom')._render({'data': res['lines']})
+        res['lines'] = self.env['ir.qweb']._render('mrp.report_mrp_bom', {'data': res['lines']})
         return res
 
     @api.model
     def get_bom(self, bom_id=False, product_id=False, line_qty=False, line_id=False, level=False):
         lines = self._get_bom(bom_id=bom_id, product_id=product_id, line_qty=line_qty, line_id=line_id, level=level)
-        return self.env.ref('mrp.report_mrp_bom_line')._render({'data': lines})
+        return self.env['ir.qweb']._render('mrp.report_mrp_bom_line', {'data': lines})
 
     @api.model
     def get_operations(self, product_id=False, bom_id=False, qty=0, level=0):
@@ -64,7 +64,7 @@ class ReportBomStructure(models.AbstractModel):
             'operations': lines,
             'extra_column_count': self._get_extra_column_count()
         }
-        return self.env.ref('mrp.report_mrp_operation_line')._render({'data': values})
+        return self.env['ir.qweb']._render('mrp.report_mrp_operation_line', {'data': values})
 
     @api.model
     def get_byproducts(self, bom_id=False, qty=0, level=0, total=0):
@@ -76,7 +76,7 @@ class ReportBomStructure(models.AbstractModel):
             'byproducts': lines,
             'extra_column_count': self._get_extra_column_count(),
         }
-        return self.env.ref('mrp.report_mrp_byproduct_line')._render({'data': values})
+        return self.env['ir.qweb']._render('mrp.report_mrp_byproduct_line', {'data': values})
 
     @api.model
     def _get_report_data(self, bom_id, searchQty=0, searchVariant=False):

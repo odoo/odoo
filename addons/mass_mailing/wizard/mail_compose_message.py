@@ -41,11 +41,14 @@ class MailComposeMessage(models.TransientModel):
                 self.mass_mailing_id = mass_mailing.id
 
             recipients_info = self._process_recipient_values(res)
-            mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout', raise_if_not_found=False)
             for res_id in res_ids:
                 mail_values = res[res_id]
-                if mail_values.get('body_html') and mass_mail_layout:
-                    mail_values['body_html'] = mass_mail_layout._render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
+                if mail_values.get('body_html'):
+                    body = self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout',
+                                {'body': mail_values['body_html']},
+                                minimal_qcontext=True, raise_if_not_found=False)
+                    if body:
+                        mail_values['body_html'] = body
 
                 trace_vals = {
                     'model': self.model,

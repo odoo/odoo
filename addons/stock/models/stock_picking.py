@@ -1300,7 +1300,7 @@ class Picking(models.Model):
                 'moves_information': rendering_context.values(),
                 'impacted_pickings': impacted_pickings,
             }
-            return self.env.ref('stock.exception_on_picking')._render(values=values)
+            return self.env['ir.qweb']._render('stock.exception_on_picking', values)
 
         documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_groupby)
         documents = self._less_quantities_than_expected_add_documents(moves, documents)

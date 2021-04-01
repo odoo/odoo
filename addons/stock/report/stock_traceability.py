@@ -236,7 +236,7 @@ class MrpStockReport(models.TransientModel):
         rcontext = {}
         context = dict(self.env.context)
         rcontext['lines'] = self.with_context(context).get_lines()
-        result['html'] = self.env.ref('stock.report_stock_inventory')._render(rcontext)
+        result['html'] = self.env['ir.qweb']._render('stock.report_stock_inventory', rcontext)
         return result
 
     @api.model

@@ -435,17 +435,12 @@ class MailActivityMixin(models.AbstractModel):
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 
+        view_ref = views_or_xmlid.id if isinstance(views_or_xmlid, models.BaseModel) else views_or_xmlid
         render_context = render_context or dict()
-        if isinstance(views_or_xmlid, str):
-            views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
-        else:
-            views = views_or_xmlid
-        if not views:
-            return
         activities = self.env['mail.activity']
         for record in self:
             render_context['object'] = record
-            note = views._render(render_context, engine='ir.qweb', minimal_qcontext=True)
+            note = self.env['ir.qweb']._render(view_ref, render_context, minimal_qcontext=True, raise_if_not_found=False)
             activities |= record.activity_schedule(act_type_xmlid=act_type_xmlid, date_deadline=date_deadline, summary=summary, note=note, **act_values)
         return activities
 

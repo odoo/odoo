@@ -436,25 +436,23 @@ class MailActivity(models.Model):
     def action_notify(self):
         if not self:
             return
-        original_context = self.env.context
         body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
             if activity.user_id.lang:
                 # Send the notification in the assigned user's language
-                self = self.with_context(lang=activity.user_id.lang)
-                body_template = body_template.with_context(lang=activity.user_id.lang)
                 activity = activity.with_context(lang=activity.user_id.lang)
-            model_description = self.env['ir.model']._get(activity.res_model).display_name
-            body = body_template._render(
+
+            model_description = activity.env['ir.model']._get(activity.res_model).display_name
+            body = activity.env['ir.qweb']._render(
+                'mail.message_activity_assigned',
                 dict(
                     activity=activity,
                     model_description=model_description,
-                    access_link=self.env['mail.thread']._notify_get_action_link('view', model=activity.res_model, res_id=activity.res_id),
+                    access_link=activity.env['mail.thread']._notify_get_action_link('view', model=activity.res_model, res_id=activity.res_id),
                 ),
-                engine='ir.qweb',
                 minimal_qcontext=True
             )
-            record = self.env[activity.res_model].browse(activity.res_id)
+            record = activity.env[activity.res_model].browse(activity.res_id)
             if activity.user_id:
                 record.message_notify(
                     partner_ids=activity.user_id.partner_id.ids,
@@ -466,8 +464,6 @@ class MailActivity(models.Model):
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_light',
                 )
-            body_template = body_template.with_context(original_context)
-            self = self.with_context(original_context)
 
     def action_done(self):
         """ Wrapper without feedback because web button add context as

@@ -84,20 +84,18 @@ class SlideChannelInvite(models.TransientModel):
         # optional support of default_email_layout_xmlid in context
         email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
         if email_layout_xmlid:
-            try:
-                template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
-            except ValueError:
-                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layout.', email_layout_xmlid)
-            else:
-                # could be great to use ``_notify_by_email_prepare_rendering_context`` someday
-                template_ctx = {
-                    'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.channel_id.name)),
-                    'model_description': self.env['ir.model']._get('slide.channel').display_name,
-                    'record': slide_channel_partner,
-                    'company': self.env.company,
-                    'signature': self.channel_id.user_id.signature,
-                }
-                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+            # could be great to use ``_notify_by_email_prepare_rendering_context`` someday
+            template_ctx = {
+                'message': self.env['mail.message'].sudo().new({'body': mail_values['body_html'], 'record_name': self.channel_id.name}),
+                'model_description': self.env['ir.model']._get('slide.channel').display_name,
+                'record': slide_channel_partner,
+                'company': self.env.company,
+                'signature': self.channel_id.user_id.signature,
+            }
+            body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, engine='ir.qweb', minimal_qcontext=True, raise_if_not_found=False)
+            if body:
                 mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+            else:
+                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layout.', email_layout_xmlid)
 
         return mail_values

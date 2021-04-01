@@ -382,7 +382,7 @@ class Http(models.AbstractModel):
                         lambda v: line in v.arch
                     )
                     values['view'] = values['view'] and values['view'][0]
-        # Needed to show reset template on translated pages (`_prepare_qcontext` will set it for main lang)
+        # Needed to show reset template on translated pages (`_prepare_environment` will set it for main lang)
         values['editable'] = request.uid and request.website.is_publisher()
         return values
 

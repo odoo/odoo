@@ -207,7 +207,7 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         # Create file content.
         xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
-        xml_content += self.env.ref('account_edi_ubl.export_ubl_invoice')._render(self._get_ubl_values(invoice))
+        xml_content += self.env['ir.qweb']._render('account_edi_ubl.export_ubl_invoice', self._get_ubl_values(invoice))
         xml_name = '%s_ubl_2_1.xml' % (invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({
             'name': xml_name,

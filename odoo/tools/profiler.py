@@ -292,14 +292,14 @@ class QwebTracker():
     @classmethod
     def wrap_compile(cls, method_compile):
         @functools.wraps(method_compile)
-        def _tracked_compile(self, template, options):
-            if not options.get('profile'):
-                return method_compile(self, template, options)
+        def _tracked_compile(self, template):
+            if not self.env.context.get('profile'):
+                return method_compile(self, template)
 
-            render_template = method_compile(self, template, options)
+            render_template = method_compile(self, template)
             def profiled_method_compile(self, values):
-                ref = options.get('ref')
-                ref_xml = options.get('ref_xml')
+                ref = render_template.options.get('ref')
+                ref_xml = render_template.options.get('ref_xml')
                 qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
                 self = self.with_context(qweb_tracker=qweb_tracker)
                 if qweb_tracker.execution_context_enabled:
@@ -348,6 +348,8 @@ class QwebTracker():
                         directive_info[key] = repr(attrib[key])
             elif directive == 'foreach':
                 directive_info['t-as'] = repr(attrib['t-as'])
+            elif directive == 'groups' and 'groups' in attrib and not directive_info.get('t-groups'):
+                directive_info['t-groups'] = repr(attrib['groups'])
             elif directive == 'att':
                 for key in attrib:
                     if key.startswith('t-att-') or key.startswith('t-attf-'):

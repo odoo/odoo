@@ -30,11 +30,10 @@ class ProductWishlist(models.Model):
         notified = self.env['product.wishlist']
 
         # cannot group by product_id because it depend of website_id -> warehouse_id
-        tmpl = self.env.ref("website_sale_stock_wishlist.availability_email_body")
         for wishlist in to_notify:
             product = wishlist.with_context(website_id=wishlist.website_id.id).product_id
             if not product._is_sold_out():
-                body_html = tmpl._render({"wishlist": wishlist})
+                body_html = self.env['ir.qweb']._render('website_sale_stock_wishlist.availability_email_body', {"wishlist": wishlist})
                 msg = self.env["mail.message"].sudo().new(dict(body=body_html, record_name=product.name))
                 full_mail = self.env["mail.render.mixin"]._render_encapsulate(
                     "mail.mail_notification_light",

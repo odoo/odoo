@@ -74,7 +74,7 @@
                     <t t-if="not event.is_done">
                         <span>This room is not open right now!</span><br />
                         Join us here on the
-                        <strong itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'medium'}"/>
+                        <strong itemprop="startDate" t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'format': 'medium'}"/>
                         <strong>(<t t-out="event.date_tz"/>)</strong>
                         to have a chat with us!
                     </t>

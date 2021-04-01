@@ -94,8 +94,7 @@ class ProjectUpdate(models.Model):
     # ---------------------------------
     @api.model
     def _build_description(self, project):
-        template = self.env.ref('project.project_update_default_description')
-        return template._render(self._get_template_values(project), engine='ir.qweb')
+        return self.env['ir.qweb']._render('project.project_update_default_description', self._get_template_values(project))
 
     @api.model
     def _get_template_values(self, project):

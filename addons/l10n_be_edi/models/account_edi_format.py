@@ -23,7 +23,7 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         # Create file content.
         xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
-        xml_content += self.env.ref('l10n_be_edi.export_efff_invoice')._render(self._get_efff_values(invoice))
+        xml_content += self.env['ir.qweb']._render('l10n_be_edi.export_efff_invoice', self._get_efff_values(invoice))
         xml_name = '%s.xml' % invoice._get_efff_name()
         return self.env['ir.attachment'].create({
             'name': xml_name,

@@ -116,7 +116,7 @@ class TestWebsitePerformance(UtilPerf):
         # website.page with no call to layout templates
         self.page.arch = '<div>I am a blank page</div>'
         self.assertEqual(self._get_url_hot_query(self.page.url), 5)
-        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 6)
+        self.assertEqual(self._get_url_hot_query(self.page.url, cache=False), 5)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests

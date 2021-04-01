@@ -58,14 +58,13 @@ class ImLivechatChannel(models.Model):
             channel.are_you_inside = bool(self.env.uid in [u.id for u in channel.user_ids])
 
     def _compute_script_external(self):
-        view = self.env.ref('im_livechat.external_loader')
         values = {
             "dbname": self._cr.dbname,
         }
         for record in self:
             values["channel_id"] = record.id
             values["url"] = record.get_base_url()
-            record.script_external = view._render(values) if record.id else False
+            record.script_external = self.env['ir.qweb']._render('im_livechat.external_loader', values) if record.id else False
 
     def _compute_web_page_link(self):
         for record in self:

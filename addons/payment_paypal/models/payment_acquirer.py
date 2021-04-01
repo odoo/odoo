@@ -51,11 +51,12 @@ class PaymentAcquirer(models.Model):
             return 'https://www.sandbox.paypal.com/cgi-bin/webscr'
 
     def _paypal_send_configuration_reminder(self):
-        template = self.env.ref(
-            'payment_paypal.mail_template_paypal_invite_user_to_configure', raise_if_not_found=False
+        render_template = self.env['ir.qweb']._render(
+            'payment_paypal.mail_template_paypal_invite_user_to_configure',
+            {'acquirer': self},
+            raise_if_not_found=False,
         )
-        if template:
-            render_template = template._render({'acquirer': self}, engine='ir.qweb')
+        if render_template:
             mail_body = self.env['mail.render.mixin']._replace_local_links(render_template)
             mail_values = {
                 'body_html': mail_body,

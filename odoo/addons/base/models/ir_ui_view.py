@@ -15,9 +15,6 @@ import time
 import uuid
 import warnings
 
-from dateutil.relativedelta import relativedelta
-
-import werkzeug, werkzeug.urls
 from lxml import etree
 from lxml.etree import LxmlError
 from lxml.builder import E
@@ -28,11 +25,9 @@ from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node
 from odoo.tools.convert import _fix_multiple_roots
-from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools import safe_eval, lazy_property, frozendict
 from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
-from odoo.tools.image import image_data_uri
 from odoo.models import check_method_name
 from odoo.osv.expression import expression
 
@@ -120,29 +115,6 @@ def transfer_modifiers_to_node(modifiers, node):
     if modifiers:
         simplify_modifiers(modifiers)
         node.set('modifiers', json.dumps(modifiers))
-
-
-def keep_query(*keep_params, **additional_params):
-    """
-    Generate a query string keeping the current request querystring's parameters specified
-    in ``keep_params`` and also adds the parameters specified in ``additional_params``.
-
-    Multiple values query string params will be merged into a single one with comma seperated
-    values.
-
-    The ``keep_params`` arguments can use wildcards too, eg:
-
-        keep_query('search', 'shop_*', page=4)
-    """
-    if not keep_params and not additional_params:
-        keep_params = ('*',)
-    params = additional_params.copy()
-    qs_keys = list(request.httprequest.args) if request else []
-    for keep_param in keep_params:
-        for param in fnmatch.filter(qs_keys, keep_param):
-            if param not in additional_params and param in qs_keys:
-                params[param] = request.httprequest.args.getlist(param)
-    return werkzeug.urls.url_encode(params)
 
 
 class ViewCustom(models.Model):
@@ -1842,7 +1814,7 @@ actual arch.
 
     def _read_template_keys(self):
         """ Return the list of context keys to use for caching ``_read_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations']
+        return ['lang', 'inherit_branding', 'edit_translations']
 
     # apply ormcache_context decorator unless in dev mode...
     @api.model
@@ -1963,46 +1935,10 @@ actual arch.
     def render_public_asset(self, template, values=None):
         template = self.sudo().browse(self.get_view_id(template))
         template._check_view_access()
-        return template.sudo()._render(values, engine="ir.qweb")
+        return self.env['ir.qweb'].sudo()._render(template, values)
 
-    def _render_template(self, template, values=None, engine='ir.qweb'):
-        return self.browse(self.get_view_id(template))._render(values, engine)
-
-    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):
-        assert isinstance(self.id, int)
-
-        qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
-        qcontext.update(values or {})
-
-        return self.env[engine]._render(self.id, qcontext, **(options or {}))
-
-    @api.model
-    def _prepare_qcontext(self):
-        """ Returns the qcontext : rendering context with website specific value (required
-            to render website layout template)
-        """
-        qcontext = dict(
-            env=self.env,
-            user_id=self.env["res.users"].browse(self.env.user.id),
-            res_company=self.env.company.sudo(),
-            keep_query=keep_query,
-            request=request,  # might be unbound if we're not in an httprequest context
-            debug=request.session.debug if request else '',
-            test_mode_enabled=bool(config['test_enable'] or config['test_file']),
-            json=json_scriptsafe,
-            quote_plus=werkzeug.urls.url_quote_plus,
-            time=safe_eval.time,
-            datetime=safe_eval.datetime,
-            relativedelta=relativedelta,
-            xmlid=self.sudo().key,
-            viewid=self.id,
-            to_text=pycompat.to_text,
-            image_data_uri=image_data_uri,
-            # specific 'math' functions to ease rounding in templates and lessen controller marshmalling
-            floor=math.floor,
-            ceil=math.ceil,
-        )
-        return qcontext
+    def _render_template(self, template, values=None):
+        return self.env['ir.qweb']._render(template, values)
 
     #------------------------------------------------------
     # Misc

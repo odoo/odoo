@@ -988,7 +988,7 @@ class WebsiteSlides(WebsiteProfile):
         ]).write({'completed': False})
 
         slide_question = request.env['slide.question'].create(new_question_values)
-        return request.env.ref('website_slides.lesson_content_quiz_question')._render({
+        return request.env['ir.qweb']._render('website_slides.lesson_content_quiz_question', {
             'slide': slide,
             'question': slide_question,
         })

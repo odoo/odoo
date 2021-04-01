@@ -31,8 +31,6 @@ class TestMassMailing(models.TransientModel):
                 invalid_candidates.append(candidate)
 
         mailing = self.mass_mailing_id
-        mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout')
-
         record = self.env[mailing.mailing_model_real].search([], limit=1)
 
         # If there is atleast 1 record for the model used in this mailing, then we use this one to render the template
@@ -56,7 +54,7 @@ class TestMassMailing(models.TransientModel):
                 'reply_to': mailing.reply_to,
                 'email_to': valid_email,
                 'subject': subject,
-                'body_html': mass_mail_layout._render({'body': full_body}, engine='ir.qweb', minimal_qcontext=True),
+                'body_html': self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout', {'body': full_body}, minimal_qcontext=True),
                 'is_notification': True,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],

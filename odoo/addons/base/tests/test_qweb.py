@@ -17,7 +17,7 @@ from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException, render
 from odoo.tools import misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.exceptions import MissingError
+from odoo.exceptions import UserError, ValidationError, MissingError
 
 unsafe_eval = eval
 
@@ -79,7 +79,7 @@ class TestQWebTField(TransactionCase):
                 <t t-name="base.dummy"><root><span t-esc="5" t-options="{'widget': 'char'}" t-options-widget="'float'" t-options-precision="4"/></root></t>
             """
         })
-        text = etree.fromstring(view1._render()).find('span').text
+        text = etree.fromstring(self.env['ir.qweb']._render(view1.id)).find('span').text
         self.assertEqual(text, '5.0000')
 
     def test_xss_breakout(self):
@@ -95,7 +95,7 @@ class TestQWebTField(TransactionCase):
                 </t>
             """
         })
-        rendered = view._render({'malicious': '1</script><script>alert("pwned")</script><script>'})
+        rendered = self.env['ir.qweb']._render(view.id, {'malicious': '1</script><script>alert("pwned")</script><script>'})
         self.assertIn('alert', rendered, "%r doesn't seem to be rendered" % rendered)
         doc = etree.fromstring(rendered)
         self.assertEqual(len(doc.xpath('//script')), 1)
@@ -126,7 +126,7 @@ class TestQWebNS(TransactionCase):
             """ % expected_result
         })
 
-        self.assertEqual(etree.fromstring(view1._render()), etree.fromstring(expected_result))
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), etree.fromstring(expected_result))
 
     def test_render_static_xml_with_namespace_2(self):
         """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
@@ -164,7 +164,7 @@ class TestQWebNS(TransactionCase):
             """ % expected_result
         })
 
-        self.assertEqual(etree.fromstring(view1._render()), etree.fromstring(expected_result))
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), etree.fromstring(expected_result))
 
     def test_render_static_xml_with_useless_distributed_namespace(self):
         """ Test that redundant namespaces are stripped upon rendering.
@@ -197,7 +197,7 @@ class TestQWebNS(TransactionCase):
             </root>
         """)
 
-        self.assertEqual(etree.fromstring(view1._render()), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_static_xml_with_namespace_3(self):
         expected_result = """
@@ -212,7 +212,7 @@ class TestQWebNS(TransactionCase):
             """ % expected_result
         })
 
-        self.assertEqual(etree.fromstring(view1._render()), etree.fromstring(expected_result))
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), etree.fromstring(expected_result))
 
     def test_render_static_xml_with_namespace_dynamic(self):
         """ Test the rendering on a namespaced view with dynamic URI (need default namespace uri).
@@ -248,7 +248,7 @@ class TestQWebNS(TransactionCase):
             """ % tempate
         })
 
-        rendering = view1._render(values, engine='ir.qweb')
+        rendering = self.env['ir.qweb']._render(view1.id, values)
 
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result % values))
 
@@ -293,7 +293,7 @@ class TestQWebNS(TransactionCase):
             """ % tempate
         })
 
-        rendering = view1._render(values, engine='ir.qweb')
+        rendering = self.env['ir.qweb']._render(view1.id, values)
 
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result % values))
 
@@ -313,7 +313,7 @@ class TestQWebNS(TransactionCase):
 
         expected_result = etree.fromstring("""<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">test</Invoice>""")
 
-        self.assertEqual(etree.fromstring(view1._render()), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_dynamic_xml_with_namespace_t_esc_with_useless_distributed_namespace(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-esc attribute correctly
@@ -337,7 +337,7 @@ class TestQWebNS(TransactionCase):
             </Invoice>
         """)
 
-        self.assertEqual(etree.fromstring(view1._render()), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_dynamic_xml_with_namespace_t_attf(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-attf attribute correctly
@@ -377,7 +377,7 @@ class TestQWebNS(TransactionCase):
             </root>
         """)
 
-        self.assertEqual(etree.fromstring(view1._render()), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_dynamic_xml_with_namespace_t_attf_with_useless_distributed_namespace(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-attf attribute correctly
@@ -419,7 +419,7 @@ class TestQWebNS(TransactionCase):
 
         """)
 
-        self.assertEqual(etree.fromstring(view1._render()), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_dynamic_xml_with_namespace_2(self):
         view1 = self.env['ir.ui.view'].create({
@@ -452,7 +452,7 @@ class TestQWebNS(TransactionCase):
             </Invoice>
         """)
 
-        self.assertEqual(etree.fromstring(view1._render({'version_id': 1.0})), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id, {'version_id': 1.0})), expected_result)
 
     def test_render_static_xml_with_namespaced_attributes(self):
         view1 = self.env['ir.ui.view'].create({
@@ -467,7 +467,7 @@ class TestQWebNS(TransactionCase):
 
         expected_result = etree.fromstring("""<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>""")
 
-        self.assertEqual(etree.fromstring(view1._render()), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_dynamic_xml_with_namespaced_attributes(self):
         view1 = self.env['ir.ui.view'].create({
@@ -482,7 +482,7 @@ class TestQWebNS(TransactionCase):
 
         expected_result = etree.fromstring("""<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>""")
 
-        self.assertEqual(etree.fromstring(view1._render()), expected_result)
+        self.assertEqual(etree.fromstring(self.env['ir.qweb']._render(view1.id)), expected_result)
 
     def test_render_static_xml_with_t_call(self):
         view1 = self.env['ir.ui.view'].create({
@@ -516,7 +516,7 @@ class TestQWebNS(TransactionCase):
             """
         })
 
-        result = view2._render()
+        result = self.env['ir.qweb']._render(view2.id)
         result_etree = etree.fromstring(result)
 
         # check that the root tag has all its xmlns
@@ -580,7 +580,7 @@ class TestQWebNS(TransactionCase):
         """)
 
         self.assertEqual(
-            etree.fromstring(view1.with_context(check_view_ids=[view1.id, view2.id])._render()),
+            etree.fromstring(self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render(view1.id)),
             expected_result
         )
 
@@ -606,7 +606,7 @@ class TestQWebNS(TransactionCase):
             error_msg = e.args[0]
 
         with self.assertRaises(QWebException, msg=error_msg):
-            view1._render()
+            self.env['ir.qweb']._render(view1.id)
 
 class TestQWebBasic(TransactionCase):
     def test_compile_expr(self):
@@ -667,10 +667,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            t._render()
+            self.env['ir.qweb']._render(t.id)
 
         try:
-            t._render()
+            self.env['ir.qweb']._render(t.id)
         except QWebException as e:
             error = str(e)
             self.assertIn("KeyError: 't-as'", error)
@@ -687,10 +687,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            t._render()
+            self.env['ir.qweb']._render(t.id)
 
         try:
-            t._render()
+            self.env['ir.qweb']._render(t.id)
         except QWebException as e:
             error = str(e)
             self.assertIn("KeyError: 't-as'", error)
@@ -707,10 +707,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            t._render()
+            self.env['ir.qweb']._render(t.id)
 
         try:
-            t._render()
+            self.env['ir.qweb']._render(t.id)
         except QWebException as e:
             error = str(e)
             self.assertIn("The varname 'b-2' can only contain alphanumeric characters and underscores", error)
@@ -970,10 +970,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            t._render()
+            self.env['ir.qweb']._render(t.id)
 
         try:
-            t._render()
+            self.env['ir.qweb']._render(t.id)
         except QWebException as e:
             error = str(e)
             self.assertIn("KeyError: 't-set'", error)
@@ -989,10 +989,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            t._render()
+            self.env['ir.qweb']._render(t.id)
 
         try:
-            t._render()
+            self.env['ir.qweb']._render(t.id)
         except QWebException as e:
             error = str(e)
             self.assertIn("The varname can only contain alphanumeric characters and underscores", error)
@@ -1114,7 +1114,7 @@ class TestQWebBasic(TransactionCase):
                 <t t-name="base.dummy"><root><span t-out="text" t-options-widget="'text'"/></root></t>
             """
         })
-        html = view1._render({'text': """a
+        html = self.env['ir.qweb']._render(view1.id, {'text': """a
         b <b>c</b>"""})
         self.assertEqual(html, """<root><span data-oe-type="text" data-oe-expression="text">a<br>
         b &lt;b&gt;c&lt;/b&gt;</span></root>""")
@@ -1286,6 +1286,104 @@ class TestQWebBasic(TransactionCase):
         except AssertionError as e:
             self.assertIn('template is required', str(e))
 
+    def test_error_message_5(self):
+        # Error not found a first rendering.
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test">
+                <section>
+                    <div t-esc="abc + def + (">
+                        <span>content</span>
+                    </div>
+                </section>
+            </t>'''
+        })
+
+        def load(ref_alias):
+            raise ValueError(f'Not Found: {ref_alias}')
+
+        with self.assertRaises(ValueError, msg=f"Not Found: {t.id}"):
+            self.env['ir.qweb']._render(t.id, load=load)
+
+    @mute_logger('odoo.addons.base.models.ir_qweb') # warning for template not found
+    def test_error_message_6(self):
+        # Error not found a second rendering (first rendering with option hide this error).
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test">
+                <section>
+                    <div t-esc="abc + def + (">
+                        <span>content</span>
+                    </div>
+                </section>
+            </t>'''
+        })
+
+        def load(ref_alias):
+            raise ValueError(f'Not Found: {ref_alias}')
+
+        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        self.assertEqual('', html)
+
+        # re try this rendering without any error (use cached method)
+        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        self.assertEqual('', html)
+
+        # re try this rendering but raise (use cached method)
+        with self.assertRaises(ValueError, msg=f"Not Found: {t.id}"):
+            self.env['ir.qweb']._render(t.id, load=load)
+
+    def test_error_message_7(self):
+        # UserError not found a first rendering.
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test">
+                <section>
+                    <div t-esc="abc + def + (">
+                        <span>content</span>
+                    </div>
+                </section>
+            </t>'''
+        })
+
+        def load(ref_alias):
+            raise ValidationError(f'Not Found: {ref_alias}')
+
+        with self.assertRaises(UserError, msg=f"Not Found: {t.id}"):
+            self.env['ir.qweb']._render(t.id, load=load)
+
+    @mute_logger('odoo.addons.base.models.ir_qweb') # warning for template not found
+    def test_error_message_8(self):
+        # UserError not found a second rendering (first rendering with option hide this error).
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="test">
+                <section>
+                    <div t-esc="abc + def + (">
+                        <span>content</span>
+                    </div>
+                </section>
+            </t>'''
+        })
+
+        def load(ref_alias):
+            raise ValidationError(f'Not Found: {ref_alias}')
+
+        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        self.assertEqual('', html)
+
+        # re try this rendering without any error (use cached method)
+        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        self.assertEqual('', html)
+
+        # re try this rendering but raise (use cached method)
+        with self.assertRaises(UserError, msg=f"Not Found: {t.id}"):
+            self.env['ir.qweb']._render(t.id, load=load)
+
     def test_call_set(self):
         view0 = self.env['ir.ui.view'].create({
             'name': "dummy",
@@ -1320,7 +1418,7 @@ class TestQWebBasic(TransactionCase):
             """
         })
 
-        result = view1._render({})
+        result = self.env['ir.qweb']._render(view1.id, {})
         self.assertEqual(etree.fromstring(result), etree.fromstring("""
             <div>
                 <table>
@@ -1359,7 +1457,7 @@ class TestQWebBasic(TransactionCase):
             """
         })
 
-        result = view1._render({})
+        result = self.env['ir.qweb']._render(view1.id, {})
         self.assertEqual(etree.fromstring(result), etree.fromstring("""
             <div>
                 <table>
@@ -1398,10 +1496,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            view1._render()
+            self.env['ir.qweb']._render(view1.id)
 
         try:
-            view1._render()
+            self.env['ir.qweb']._render(view1.id)
         except QWebException as e:
             error = str(e)
             self.assertIn("The varname 'a-2' can only contain alphanumeric characters and underscores", error)
@@ -1421,10 +1519,10 @@ class TestQWebBasic(TransactionCase):
         })
 
         with self.assertRaises(QWebException):
-            view1._render()
+            self.env['ir.qweb']._render(view1.id)
 
         try:
-            view1._render()
+            self.env['ir.qweb']._render(view1.id)
         except QWebException as e:
             error = str(e)
             self.assertIn('External ID not found in the system: base.dummy', error)
@@ -1466,7 +1564,7 @@ class TestQWebBasic(TransactionCase):
             """ % other_lang
         })
 
-        rendered = view2.with_context(lang=current_lang)._render().strip()
+        rendered = self.env['ir.qweb'].with_context(lang=current_lang)._render(view2.id).strip()
         self.assertEqual(rendered, '9/000/000*00')
 
     def test_render_barcode(self):
@@ -1481,16 +1579,16 @@ class TestQWebBasic(TransactionCase):
         })
 
         view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'width': 100, 'height': 30}"/>"""
-        rendered = view._render(values={'partner': partner}).strip()
+        rendered = self.env['ir.qweb']._render(view.id, values={'partner': partner}).strip()
         self.assertRegex(rendered, r'<div><img alt="Barcode test" src="data:image/png;base64,\S+"></div>')
 
         partner.barcode = '4012345678901'
         view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
-        ean_rendered = view._render(values={'partner': partner}).strip()
+        ean_rendered = self.env['ir.qweb']._render(view.id, values={'partner': partner}).strip()
         self.assertRegex(ean_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
         view.arch = """<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
-        auto_rendered = view._render(values={'partner': partner}).strip()
+        auto_rendered = self.env['ir.qweb']._render(view.id, values={'partner': partner}).strip()
         self.assertRegex(auto_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
     def test_render_comment_tail(self):
@@ -1513,7 +1611,7 @@ class TestQWebBasic(TransactionCase):
         })
         emptyline = '\n                '
         expected = markupsafe.Markup('Text 1' + emptyline + emptyline + 'Text 2' + emptyline + 'ok')
-        self.assertEqual(view1._render().strip(), expected)
+        self.assertEqual(self.env['ir.qweb']._render(view1.id).strip(), expected)
 
     def test_void_element(self):
         view = self.env['ir.ui.view'].create({
@@ -1676,7 +1774,7 @@ class FileSystemLoader(object):
             if name:
                 yield name
 
-    def __call__(self, name, options):
+    def __call__(self, name):
         for node in self.doc:
             if node.get('t-name') == name:
                 return (deepcopy(node), name)
@@ -1719,7 +1817,7 @@ class TestQWebStaticXml(TransactionCase):
                 </t>
             """)
         }
-        def load(template_name, options):
+        def load(template_name):
             return (templates[template_name], template_name)
         rendering = render('html', {'val': 3}, load).strip()
 

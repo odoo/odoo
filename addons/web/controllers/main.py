@@ -1058,7 +1058,7 @@ class Database(http.Controller):
         with file_open("web/static/src/public/database_manager.create_form.qweb.html", "r") as fd:
             templates['create_form'] = fd.read()
 
-        def load(template_name, options):
+        def load(template_name):
             fromstring = html.document_fromstring if template_name == 'database_manager' else html.fragment_fromstring
             return (fromstring(templates[template_name]), template_name)
 

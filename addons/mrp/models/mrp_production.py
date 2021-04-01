@@ -1875,7 +1875,7 @@ class MrpProduction(models.Model):
                 'impacted_pickings': False,
                 'cancel': cancel
             }
-            return self.env.ref('mrp.exception_on_mo')._render(values=values)
+            return self.env['ir.qweb']._render('mrp.exception_on_mo', values)
 
         documents = self.env['stock.picking']._log_activity_get_documents(moves_modification, 'move_dest_ids', 'DOWN', _keys_in_groupby)
         documents = self.env['stock.picking']._less_quantities_than_expected_add_documents(moves_modification, documents)
@@ -1901,7 +1901,7 @@ class MrpProduction(models.Model):
                 'impacted_object': impacted_object,
                 'cancel': cancel
             }
-            return self.env.ref('mrp.exception_on_mo')._render(values=values)
+            return self.env['ir.qweb']._render('mrp.exception_on_mo', values)
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_mo, documents)
 
