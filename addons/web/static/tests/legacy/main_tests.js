@@ -4,6 +4,8 @@ odoo.define('web.web_client', async function (require) {
 
     const session = require("web.session");
     const { bus } = require('web.core');
+    const makeTestEnvironment = require('web.test_env');
+    require('web.test_utils');
 
     // listen to unhandled rejected promises, and when the rejection is not due
     // to a crash, prevent the browser from displaying an 'unhandledrejection'
@@ -22,4 +24,16 @@ odoo.define('web.web_client', async function (require) {
 
     await session.is_bound;
     session.owlTemplates = session.owlTemplates.replace(/t-transition/g, 'transition');
+
+
+    /**
+     * Before each test, we want owl.Component.env to be a fresh test environment.
+     */
+    QUnit.on('OdooBeforeTestHook', function () {
+        owl.Component.env = makeTestEnvironment();
+    });
+
+    // this is done with the hope that tests are
+    // only started all together...
+    QUnit.start();
 });

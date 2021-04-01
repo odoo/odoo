@@ -133,10 +133,6 @@ odoo.define('web.test_utils', async function (require) {
         // with a delay, so we force this delay to 0 s.t. the dropdown is filtered
         // directly on the next tick
         relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-
-        // this is done with the hope that tests are
-        // only started all together...
-        QUnit.start();
     }, 0);
     return {
         mock: {

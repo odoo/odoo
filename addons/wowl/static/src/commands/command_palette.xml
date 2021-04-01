@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <div t-name="wowl.CommandPalette" owl="1">
+    <div class="o_command_palette_search">
+      <input type="text" class="o_command_palette_search" t-on-input="onSearchInput" autofocus="" placeholder="Search for an action..." />
+      <i title="Search for an action..." role="img" aria-label="Search for an action..." class="fa fa-search"></i>
+    </div>
+
+    <div class="o_command_palette_listbox">
+
+      <div t-if="!categories.length" class="o_command_palette_listbox_empty">No action found</div>
+
+      <t t-foreach="categories" t-as="category">
+
+        <div class="o_command_category">
+
+          <t t-foreach="category.commands" t-as="command">
+            <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
+            <span t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)">
+              <span t-esc="command.name" />
+              <span t-if="command.hotkey">
+                <t t-foreach="command.hotkey.toUpperCase().split('+')" t-as="key">
+                  <kbd t-esc="key" />
+                  <span t-if="!key_last"> + </span>
+                </t>
+              </span>
+            </span>
+          </t>
+
+        </div>
+
+        <hr t-if="!category_last" />
+
+      </t>
+
+    </div>
+
+  </div>
+
+</templates>

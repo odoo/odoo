@@ -6,8 +6,6 @@ var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
-var AbstractWebClient = require('web.AbstractWebClient');
-var Loading = require('web.Loading');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -801,9 +799,6 @@ var DataImport = AbstractAction.extend({
             {tracking_disable: tracking_disable}
         );
         var self = this;
-        this.trigger_up('with_client', {callback: function () {
-            this.loading.ignore_events = true;
-        }});
         $.blockUI({message: QWeb.render('Throbber')});
         $(document.body).addClass('o_ui_blocked');
         var opts = this.import_options();
@@ -852,9 +847,6 @@ var DataImport = AbstractAction.extend({
             }).finally(function () {
                 $(document.body).removeClass('o_ui_blocked');
                 $.unblockUI();
-                self.trigger_up('with_client', {callback: function () {
-                    delete this.loading.ignore_events;
-                }});
             });
     }, /**
      *
@@ -878,6 +870,8 @@ var DataImport = AbstractAction.extend({
             method: 'execute_import',
             args: args.concat([opts]),
             kwargs: kwargs
+        }, {
+            shadow: true,
         }).then(function (results) {
             _.each(results.messages, offset_by(opts.skip));
             if (!kwargs.dryrun && !results.ids) {
@@ -1172,18 +1166,6 @@ StateMachine.create({
         { name: 'import_failed', from: 'importing', to: 'results' }
     ],
 });
-
-Loading.include({
-    on_rpc_event: function () {
-        if (this.ignore_events) {
-            return
-        }
-        this._super.apply(this, arguments);
-    }
-});
-AbstractWebClient.prototype.custom_events['with_client'] = function (ev) {
-    ev.data.callback.call(this);
-};
 
 function offset_by(by) {
     return function offset_message(msg) {
