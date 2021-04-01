@@ -192,7 +192,7 @@ function factory(dependencies) {
                     options: {
                         active_id: this.threadToActiveId(this),
                         clear_breadcrumbs: false,
-                        on_reverse_breadcrumb: () => this.close(),
+                        on_reverse_breadcrumb: () => this.close(), // this is useless, close is called by destroy anyway
                     },
                 });
             }

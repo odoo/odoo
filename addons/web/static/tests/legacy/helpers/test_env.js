@@ -81,12 +81,5 @@ odoo.define('web.test_env', async function (require) {
         return Object.assign(env, defaultEnv);
     }
 
-    /**
-     * Before each test, we want owl.Component.env to be a fresh test environment.
-     */
-    QUnit.on('OdooBeforeTestHook', function () {
-        owl.Component.env = makeTestEnvironment();
-    });
-
     return makeTestEnvironment;
 });

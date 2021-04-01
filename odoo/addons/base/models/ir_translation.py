@@ -876,7 +876,6 @@ class IrTranslation(models.Model):
                 "week_start": langs.week_start,
             }
             lang_params['week_start'] = int(lang_params['week_start'])
-            lang_params['code'] = lang
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.

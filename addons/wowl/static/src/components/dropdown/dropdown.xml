@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+  <div class="o_dropdown" t-name="wowl.Dropdown" t-on-dropdown-item-selected="onItemSelected" owl="1">
+    <button
+      t-attf-class="o_dropdown_toggler {{ props.togglerClass || '' }}"
+      t-att-class="{ 'o_dropdown_active': state.open }"
+      t-on-click="onTogglerClick"
+      t-on-mouseenter="onTogglerMouseEnter"
+      t-att-title="props.title"
+      t-att-data-hotkey="props.hotkey">
+      <span>
+        <t t-slot="default" />
+      </span>
+    </button>
+    <ul t-if="state.open" class="o_dropdown_menu" t-att-class="props.menuClass">
+      <t t-slot="menu" />
+    </ul>
+  </div>
+</templates>

@@ -1,0 +1,79 @@
+.o_command_palette {
+  &.modal-content {
+    border: none;
+    border-radius: 3px !important;
+    overflow: hidden;
+  }
+
+  > .modal-body {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  &_search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+    padding: 0.5rem 1em;
+
+    input {
+      border: none;
+      padding: 0;
+      line-height: 1.8em;
+    }
+  }
+
+  &_listbox {
+    max-height: 50vh;
+    overflow-y: auto;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &_empty {
+      padding: 0.7rem 1em;
+      line-height: 1.8em;
+    }
+
+    .o_command_category {
+      padding: 0.5rem 0;
+    }
+
+    hr {
+      margin: 0;
+    }
+
+    .o_command {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.2rem 1em;
+      position: relative;
+      line-height: 1.8em;
+
+      &.focused {
+        background: $o-brand-secondary;
+      }
+
+      kbd {
+        background-color: #f4f7f8;
+        border-radius: 3px;
+        border: 1px solid #b4b4b4;
+        $shadowvalue: 0px 1px 1px rgba(0, 0, 0, 0.2),
+          inset 0px -1px 1px 1px rgba(230, 230, 230, 0.8),
+          inset 0px 2px 0px 0px rgba(255, 255, 255, 0.8);
+        color: #4c4c4c;
+        display: inline-block;
+        font-family: Consolas, "Liberation Mono", Courier, monospace;
+        font-size: 0.85em;
+        padding: 0 0.65rem;
+      }
+    }
+  }
+}
